@@ -1,0 +1,28 @@
+CFFI SDL Wrapper and sample code
+(C)2006 Justin Heyes-Jones
+
+See COPYING for license
+
+I've tested these only with lispworks personal edition 4.4.6 although it 
+should work on any lisp with working asdf and cffi.
+
+To use:
+
+Start asdf and cffi
+Change to the directory with the files in 
+(load "load") ; sets up the sdl package, loads the sdl wrapper and a test program
+(sdl:test-1) ; run the simple test program
+
+To make the wrappers:
+
+Copy sdlswig.i (the swig interface file) to the SDL include directory
+run 'swig -cffi sdlswig.i'
+
+Currently you then have to go into sdl.lisp and find any structures that have 
+a data type :void and change it to :pointer. This is something in swig that I need
+fixing, I think Surendra has a fix but it's not yet checked in to the SWIG release.
+
+Then you have to find the SDL_Event macros which is doing a lot of 1<< stuff. You need
+to comment out all of them to load without error. 
+
+

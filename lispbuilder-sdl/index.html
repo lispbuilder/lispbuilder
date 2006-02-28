@@ -1,0 +1,58 @@
+<HTML>
+<head>
+<title>Creating SDL GUI applications with CFFI and CLISP</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<style type="text/css">
+UNKNOWN {
+	FONT-SIZE: small; COLOR: #000000; FONT-FAMILY: verdana, sans-serif
+}
+BODY {
+	FONT-SIZE: small; FONT-FAMILY: verdana, sans-serif
+}
+pre {background:#eeeeee;border:1px solid #777777;padding:4px}
+
+</style>
+</head>
+<BODY BGCOLOR=#FFFFFF >
+<h1>Using SDL with CFFI and CLISP on Windows</h1>
+<p>This is a step-by-step manual, how you use CLISP with SDL. See the <a href="README">README 
+  file</a> for details of the SDL package.</p>
+<ul>
+  <li> install <a href="http://clisp.cons.org/">CLISP</a>, e.g. to c:\programme\clisp-2.38</li>
+  <li> create a directory asdf in the clisp-2.38 directory</li>
+  <li> save <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
+    in the asdf directory</li>
+  <li> download <a href="http://common-lisp.net/project/cffi/tarballs/cffi-060225.tar.gz">CFFI</a> 
+    and unpack it (use <a href="http://www.7-zip.org/">7-Zip</a> or another program 
+    for unpack tgz files) in the asdf directory, rename the directory to &quot;cffi&quot; 
+    (so you should have a file like c:\programme\clisp-2.38\asdf\cffi\cffi.asd)</li>
+  <li> copy this directory to and unpack it to the asd directory (so you should 
+    have a file like c:\programme\clisp-2.38\asfi\lispbuilder-sdl\lispbuilder-sdl.asd)</li>
+  <li>download <a href="http://www.libsdl.org/release/SDL-1.2.9-win32.zip">SDL</a> 
+    and copy the SDL.dll to c:\windows\system32</li>
+  <li> edit *central-registry* in the asdf.lisp file: 
+    <pre>
+(defvar *central-registry*
+  '("c:/programme/clisp-2.38/asdf/cffi"
+    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl"))
+</pre>
+  </li>
+</ul>
+  <p>Now you can start CLISP and enter the following:</p>
+<pre>
+(load "c:/programme/clisp-2.38/asdf/asdf.lisp")
+(asdf:operate 'asdf:load-op :cffi)
+(cffi:load-foreign-library "sdl.dll")
+(asdf:operate 'asdf:load-op :lispbuilder-sdl)
+(load "c:/programme/clisp-2.38/asdf/lispbuilder-sdl/sdl_recursive_rects.lisp")
+(lispbuilder-sdl::recursive-rects)
+</pre>
+<p>You should see a window like this:</p>
+<img src="sdl1.png" width="646" height="512">
+<p>After closing it, you can try the painter demo, where you can draw with the mouse:</p>
+<pre>
+(load "c:/programme/clisp-2.38/asdf/lispbuilder-sdl/sdl_drawing.lisp")
+(lispbuilder-sdl::mouse-painter)
+</pre>
+</body>
+</html>
