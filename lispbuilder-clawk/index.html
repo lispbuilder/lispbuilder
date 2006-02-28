@@ -1,0 +1,333 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+  <head>
+	<title>CLAWK Package</title>
+  </head>
+
+  <body>
+          <p><em>Text copied from
+          <a href="http://www.geocities.com/mparker762/clawk">http://www.geocities.com/mparker762/clawk</a></em></p>
+
+          <h2>CLAWK Package</h2>
+
+          <p>This package implements nearly all the features provided
+          by the Unix AWK language, albeit with a pretty lisp-y
+          flavor.  In addition, it provides a large set of macros for
+          doing more complicated processing beyond that provided by
+          AWK.</p>
+
+          <p>To give you an idea of the flavor of CLAWK programming,
+          here's an example from Ch 1 of <cite>The Awk Programming
+          Language</cite> that calculates the number of employees,
+          total pay for all employees, and average pay.</p>
+
+<code><pre>
+        { pay = pay + $2 * $3 }
+    END { print NR, "employees"
+          print "total pay is", pay
+          print "average pay is", pay/NR
+        }
+</pre></code>
+
+          <p>The book gives the text file &quot;emp.data&quot; as example
+            input.</p>
+
+<pre>
+Beth    4.00    0
+Dan     3.75    0
+Kathy   4.00    10
+Mark    5.00    20
+Mary    5.50    22
+Suzie   4.25    18
+</pre>
+
+          <p>When the awk program (called say, SAMPLE.AWK) is executed
+          with the command <br><br><em>$ awk -f sample.awk
+          emp.data</em></br><br> it produces the following output:</p>
+
+<pre>
+6 employees
+total pay is 337.5
+average pay is 56.25
+</pre>
+<br>
+
+          <p>Here's a straightforward translation of SAMPLE.AWK using
+          the CLAWK package:</p>
+
+<code><pre>
+    (defawk sample (&aux (pay 0))
+      (t   (incf pay ($* $2 $3)))
+      (END ($print *NR* "employees")
+           ($print "total pay is" pay)
+           ($print "average pay is " (/ pay *NR*))) )
+</pre></code>
+
+          <p>When this function is executed with <em>(sample
+          &quot;emp.data&quot;)</em>, it produces the same output:</p>
+
+<pre>
+6 employees 
+total pay is 337.5 
+average pay is 56.25 
+NIL
+</pre>
+
+          <p>(the NIL is the return value from the <em>SAMPLE</em>
+          function).</p>
+
+          <p>That's nearly as concise as the original AWK.  Here's a
+          version that doesn't use the DEFAWK macro, and tries to be a
+          bit more Lispish.</p>
+
+<code><pre>
+    (defun sample (filename &aux (pay 0))
+      (do-file-fields (filename (name payrate hrsworked))
+        (declare (ignore name))
+        (incf pay (* (num payrate) (num hrsworked))))
+      (format t "~%~D employees" *NR*)
+      (format t "~%total pay is ~F" pay)
+      (format t "~%average pay is ~F" (/ pay *NR*)) )
+</pre></code>
+
+          <p>... which prints out the same thing as above.</p>
+
+          <p>Here's another example from <cite>The AWK Programming
+          Language</cite> that shows off the regular expressions a
+          little better.  This program performs some basic validity
+          checks on a Unix password file.</p>
+
+<code><pre>
+    BEGIN {
+        FS = ";" }
+    NF != 7 {
+        printf("line %d, does not have 7 fields: %s\n", NR, $0)}
+    $1 ~ /[^A-Za-z0-9]/ {
+        printf("line %d, nonalphanumeric user id: %s\n", NR, $0)}
+    $2 == "" {
+        printf("line %d, no password: %s\n", NR, $0)}
+    $3 ~ /[^0-9]/ {
+        printf("line %d, nonnumeric user id: %s\n", NR, $0)}
+    $4 ~ /[^0-9]/ {
+        printf("line %d, nonnumeric group id: %s\n", NR, $0)}
+    $6 !~ /^\// {
+        printf("line %d, invalid login directory: %s\n", NR, $0)}
+</pre></code>
+
+          <p>And this is the same program using CLAWK:</p>
+
+<code><pre>
+    (defawk checkpass ()
+      (BEGIN
+       (setq *FS* ";"))
+      ((/= *NF* 7)
+       (format t "~%line ~D, does not have 7 fields: ~S" *NR* $0))
+      ((~ $1 #/[^A-Za-z0-9]/)
+       (format t "~%line ~D, nonalphanumeric user id: ~S" *NR* $0))
+      (($== $2 "")
+       (format t "~%line ~D, no password: ~S" *NR* $0))
+      ((~ $3 #/[^0-9]/)
+       (format t "~%line ~D, nonnumeric user id: ~S" *NR* $0))
+      ((~ $4 #/[^0-9]/)
+       (format t "~%line ~D, nonnumeric group id: ~S" *NR* $0))
+      ((!~ $6 #/^\//)
+       (format t "~%line ~D, invalid login directory: ~S" *NR* $0)) )
+</pre></code>
+
+          <p>Which you must admit is awfully close to the original
+          AWK.  Since this uses the #/ readmacro you must evaluate
+          <em>(clawk:install-regex-syntax)</em> before evaluating this
+          sample.</p>
+
+
+          <h2>CLAWK summary</h2>
+
+          <p>The <em>INSTALL-REGEX-SYNTAX</em> function sets up a
+          readmacro on #\/ that parses to an unescaped #\/, and
+          interns the resulting string in the current package.  This
+          (a) gives a nice AWK-ish syntax (b) results in an object
+          that can be printed readably and interacts well in the
+          listener even without Dynamic Windows, and (c) gives CLAWK a
+          convenient place to hook the compiled matcher and some
+          associated information, speeding things up nicely.  You can
+          still specify these things using the |...| syntax, but it's
+          not quite as nice, since #\| is a common character in regex
+          patterns.</p>
+
+          <p>The <em>INSTALL-CMD-SYNTAX</em> function sets up a
+          readmacro on #` that parses to an unescaped ` character, and
+          expands into a call to
+          <em>CLAWK::CALL-SYSTEM-CATCHING-OUTPUT</em>.  This function
+          sends the command to the shell and returns an input stream
+          containing the output of the command.  This stream can
+          then be used by <em>CLAWK:FOR-STREAM-LINES</em> or any of
+          the CL stream functions.  The readmacro is defined for all
+          non-Symbolics systems, although currently only LispWorks is
+          supported by <em>CALL-SYSTEM-CATCHING-OUTPUT</em>.</p>
+
+          <p>The various special variables <em>*FS*</em>, <em>*NR*</em>,
+          <em>*NF*</em>, <em>*RSTART*</em>, <em>*RLENGTH*</em>, etc
+          are fairly obvious if you've ever used AWK, as are the
+          <em>SUB</em>, <em>GSUB</em>, <em>SPLIT</em>, <em>INDEX</em>,
+          <em>MATCH</em>, <em>SUBSTR</em>, and <em>~</em> and
+          <em>!~</em> functions.
+          <em>$SUB</em>, <em>$GSUB</em>, <em>$SPLIT</em>, <em>$INDEX</em>,
+          <em>$MATCH</em>, and <em>$SUBSTR</em> do the same, but they
+          attempt to coerce the various parameters to the right type
+          (so you can pass in a string for a parameter that expects a
+          number).</p>
+
+          <p><em>WITH-PATTERNS</em> is a macro that cleans up the
+          syntax for using dynamically-generated regex patterns.  A
+          future extension is for this to use the fast regex compiler
+          instead of the closure-based regex compiler when the
+          compiler is available and the pattern is a string literal.</p>
+
+          <p><em>WITH-FIELDS</em> is a macro for doing line-splitting
+          into variables.  <em>WITH-FIELDS</em> takes a optional field
+          list (in destructuring-bind syntax) and an optional string
+          (default is the current line -- see <em>DO-LINES</em>) and
+          field-separator (default is *FS*).  If you don't give a set
+          of variables to use, it will use the $ variables.  It splits
+          the line using <EM>SPLIT</EM>, and executes the body forms
+          in an environment containing the variables.  The $n
+          variables are locally bound special, so they will revert on
+          exit.</p>
+
+          <p><em>WITH-SUBMATCHES</em> is a macro for processing
+          register submatches.  It takes a list of variables and a set
+          of body forms, and binds the variables to the strings
+          corresponding to the register submatches (or nil if the
+          register didn't match), and evaluates the body forms in this
+          environment.  This is particularly handy for use in the
+          consequent clauses of <em>match-case</em>.</p>
+
+          <p><em>MATCH-CASE</em> is similar to <em>CASE</em> except
+          that the value must be a string, and the cases are strings
+          or regex symbols.  Handy for simulating the implicit outer
+          match structure of an AWK program, without being limited to
+          just the toplevel.  I tend to find that my serious AWK
+          programs pretty quickly devolve into a BEGIN clause that
+          calls a bunch of functions to do the real work, and this
+          macro (along with the next few) really make this cleaner;
+          allowing me to reuse that nifty auto-looping / splitting /
+          matching mechanism wherever I need it.</p>
+
+          <p><em>MATCH-WHEN</em> takes a set of forms similar to the
+          toplevel CLAWK forms (with BEGIN, END, and other pattern
+          clauses), but unlike the toplevel it does no looping.  It
+          executes all the BEGIN clauses first, then conditionally
+          executes each of the pattern clauses, then executes all the
+          END clauses.  It winds up looking a lot like <em>COND</em>,
+          except that it recognizes several special flavors of test
+          expression, and is basically equivalent to</p>
+
+<code><pre>
+    (progn (when test1 . consequent1)
+           (when test2 . consequent2)
+           ...)
+</pre></code>
+
+          <p>As with real AWK, the default action is to print the
+          current line.</p>
+
+          <p><em>DO-FILE-LINES</em> is a macro that takes a filename
+          and a set of body forms.  It opens the file in read mode,
+          and loops over the lines in the file binding the line
+          variable to the current line and executing the body forms.
+          It doesn't do any line splitting, though it maintain the
+          *NR*, *FNR*, and $0 variables.  Executing <em>(NEXT)</em>
+          within the body will restart the body at the next input
+          line.</p>
+
+          <p><em>DO-STREAM-LINES</em> is a closely related version
+          that takes a stream (or t for the standard input
+          stream).</p>
+
+          <p><em>DO-FILE-FIELDS</em> is a macro that takes a filename,
+          an optional field-list, and a set of body forms.  It opens
+          the file in read mode, and loops over the lines in the file
+          splitting them into the specified field variables (or the $n
+          variables if no field list was given), and executes the body
+          forms in this new environment.  Because of the splitting
+          overhead, it's not as snappy as <em>FOR-FILE-LINES</em>.
+          Executing <em>(NEXT)</em> within the body will restart the
+          processing at the next input line.</p>
+
+          <p><em>DO-STREAM-FIELDS</em> is a closely related version
+          that takes a stream (or t for the standard input
+          stream).</p>
+
+          <p><em>WHEN-STREAM-FIELDS</em> and <em>WHEN-FILE-FIELDS</em>
+          implement most of the CLAWK toplevel as a reusable special
+          form.  It takes an input stream (or file) and an optional
+          field list, and a set of <em>MATCH-WHEN</em> clauses.  The
+          BEGIN clauses will be executed before the file is opened,
+          the pattern clauses will be executed as with
+          <em>MATCH-WHEN</em>, and the END clauses will executed after
+          the file is closed, and the body.  One limitation is it
+          doesn't currently support range patterns (it's pretty simple
+          to add, I just haven't gotten around to it).</p>
+
+          <p><em>DEFAWK</em> is the highest-level macro, and one that
+          closely mimics the awk toplevel.  It takes a name, a
+          parameter list consisting of &key and &aux parameters, and a
+          set of <em>MATCH-WHEN</em> clauses.  It binds the parameter
+          list to the variable ARGS, and evaluates the BEGIN clauses.
+          The BEGIN clauses are free to modify ARGS.  Then it loops
+          through the (possibly modified) ARGS, executing the pattern
+          clauses for each stream and pathname in the list.  It
+          handles docstrings correctly.</p>
+
+          <p>The handling of the parameter list is perhaps the oddest
+          thing about the <em>DEFAWK</em> macro.  It is intended to
+          closely match the behavior of a command-line AWK.  A
+          pleasant difference is that keyword parameters are
+          automatically parsed out, instead of requiring you to do it
+          manually like in real AWK.</p>
+
+          <p>The <em>$+ </em>, <em>$-</em>, <em>$*</em>, <em>$/</em>,
+          <em>$REM</em>, <em>$EXPT</em>, <em>$++</em>, <em>#=</em>,
+          <em>$<</em>, <em>$></em>, <em>$<=</em>, <em>$>=</em>,
+          <em>$/=</em>, <em>$MIN</em>, <em>$MAX</em>, <em>$ZEROP</em>,
+          <em>$LENGTH</em>, <em>$PRINT</em> functions can take numbers
+          and strings and do the AWK thing, coercing the arguments
+          back and forth as necessary.  <em>$++</em> is the
+          concatenation operator (in AWK this is indicated by space,
+          which clearly doesn't work in the Lisp world).
+          <em>$LENGTH</em> is overloaded on associative arrays
+          (i.e. hashtables) to return the
+          <em>HASH-TABLE-COUNT</em>.</p>
+
+          <p>The generic functions <em>INT</em>, <em>STR</em>, and
+          <em>NUM</em> handle the common coercions.  AWK does provide
+          an INT function, but string coercions are done by
+          concatenating the value with the empty string, and numeric
+          coercions are done by adding 0 to the value.  While these
+          kludges also work in CLAWK, the <em>NUM</em> and <em>STR</em>
+          functions are to be preferred.</p>
+
+          <p>The <em>$ARRAY</em>, <em>$AREF</em>, <em>$FOR</em>
+          <em>$IN</em> and <em>$DELETE</em> functions (and macros)
+          implement AWK-like associative arrays (including the amusing
+          SUBSEP behavior for multiple indices), except that unlike
+          AWK there's nothing to keep you from nesting these
+          "arrays".</p>
+
+          <p><em>$0</em>, <em>$1</em>, ..., <em>$20</em> are
+          symbol-macros that access the fields of the current line.
+          <em>$#0</em>, <em>$#1</em>, ..., <em>$#20</em> do also,
+          but they attempt to interpret the value as a number.</p>
+
+          <p><em>%0</em>, <em>%1</em>, ..., <em>%20</em> are
+          symbol-macros that index into the recent submatches.
+          <em>%#0</em>, <em>%#1</em>, ..., <em>%#20</em> do also,
+          but they attempt to interpret the submatch value as a
+          number.</p>
+
+          <p>This system also defines a <em>clawk-user</em> package.
+    <hr>
+    <address><a href="mailto:mparker762@hotmail.com">Michael Parker</a></address>
+  </body>
+</html>

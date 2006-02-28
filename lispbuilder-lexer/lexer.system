@@ -1,0 +1,19 @@
+;;; -*- Mode: Lisp; Syntax: ANSI-Common-lisp; Package: CL-USER; Base: 10 -*-
+
+(in-package "CL-USER")
+
+(load-logical-pathname-translations "LEXER")
+
+(mk:defsystem "LEXER"
+	      :source-extension "lisp"
+	      :source-pathname (translate-logical-pathname "LEXER:SRC;")
+	      :components (
+                       (:file "packages")
+                       (:file "lexer")))
+
+
+
+(defun lc-lexer ()
+  (mk:compile-system "LEXER"))
+(defun ld-lexer ()
+  (mk:load-system "LEXER"))

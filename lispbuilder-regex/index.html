@@ -1,0 +1,226 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+  <head>
+	<title>REGEX Package</title>
+  </head>
+
+  <body>
+          <p><em>Text copied from
+          <a href="http://www.geocities.com/mparker762/clawk">http://www.geocities.com/mparker762/clawk</a></em></p>
+
+          <h2>REGEX package</h2>
+
+          <p>The regex engine is a pretty full-featured matcher, and
+          thus is useful by itself.  It was originally written as a
+          prototype for a C++ matcher, though it has since diverged
+          greatly.</p>
+            
+          <p>The regex compiler supports the following pattern syntax:</p>
+
+          <ul>
+
+            <li>^ matches the start of a string.</li>
+
+            <li>$ matches the end of a string.</li>
+
+            <li>[...] denotes a character class.</li>
+
+            <li>[^...] denotes a negated character class.</li>
+
+            <li>[:...:] denotes a special character class.
+
+              <ul>
+
+                <li>[:alpha:] == [A-Za-z]</li>
+
+                <li>[:upper:] == [A-Z]</li>
+
+                <li>[:lower:] == [a-z]</li>
+
+                <li>[:digit:] == [0-9]</li>
+
+                <li>[:alnum:] == [A-Za-z0-9]</li>
+
+                <li>[:xdigit:] == [A-Fa-f0-9]</li>
+
+                <li>[:space:] == whitespace</li>
+
+                <li>[:punct:] == punctuation marks</li>
+
+                <li>[:graph:] == printable characters other than space</li>
+
+                <li>[:cntrl:] == control characters</li>
+
+                <li>[:word:] == wordlike characters</li>
+
+                <li>[^:...:] denotes a negated special character class.</li>
+
+              </ul>
+
+            </li>
+
+            <li>. matches any character.</li>
+
+            <li>(...) delimits a regex subexpression.  Also denotes a
+            register pattern.</li>
+
+            <li>(?...) denotes a regex subexpression that <em>will
+            not be captured in a register</em>.</li>
+
+            <li>(?=...) denotes a regex
+            subexpression that will be used as a forward lookahead.
+            If the subexpression matches, then the rest of the match
+            will continue as if the lookahead match had not occurred
+            (i.e. it does not consume the candidate string).  It will
+            not be captured in a register, though it can contain
+            subexpressions that may be captured.</li>
+
+            <li>(?!...) denotes a regex subexpression that will be used
+            as a negative forward lookahead (the match will continue only
+            if the lookahead <em>failed</em> to match). It will not be
+            captured in a register, though it can contain
+            subexpressions that may be captured.</li>
+
+            <li>* denotes the kleene closure of the previous regex
+            subexpression.</li>
+
+            <li>+ denotes the positive closure of the previous regex
+            subexpression.</li>
+
+            <li>*? denotes the non-greedy kleene closure of the
+            previous regex subexpression.</li>
+
+            <li>+? denotes the non-greedy positive closure of the
+            previous regex subexpression.</li>
+
+            <li>? denotes the greedy match of 0 or 1 occurrences of
+            the previous regex subexpression.</li>
+
+            <li>?? denotes the non-greedy match of 0 or 1 occurrences
+            of the previous regex subexpression.</li>
+
+            <li>\nn denotes a back-match against the contents of a
+            previously-matched register.</li>
+
+            <li>{nn,mm} denotes a bounded repetition.</li>
+
+            <li>{nn,mm}? denotes a non-greedy bounded repetition.</li>
+
+            <li>\n, \t, \r have their normal meanings.</li>
+
+            <li>\d matches any decimal character,
+            \D matches any nondecimal character.</li>
+
+            <li>\w matches any wordlike
+            character, \W matches any nonwordlike character.</li>
+
+            <li>\s matches any whitespace
+            character, \S matches any nonspace character.</li>
+
+            <li>\&lt; matches at the start of a
+            word. \&gt; matches at the end of a word.</li>
+            
+            <li>\&lt;char&gt; that character (escapes an otherwise
+            special meaning).</li>
+
+            <li>Special characters lose their specialness when
+            escaped.  There is a flag to control this.</li>
+
+            <li>All other characters are matched literally.</li>
+
+          </ul>
+
+          <p>There are a variety of functions in the REGEX package
+          that allow the programmer to adjust the allowable regular
+          expression syntax:</p>
+
+          <ul>
+
+            <li>The function ESCAPE-SPECIAL-CHARS allows you to change
+            whether the meta-characters have their magic meaning when
+            escaped or unescaped. The default behavior (per AWK
+            syntax) is that special chars are unescaped.</li>
+
+            <li>The function ALLOW-BACKMATCH allows you to change
+            whether or not the \nn syntax is allowed.  By default it
+            is allowed.</li>
+
+            <li>The function ALLOW-RANGEMATCH allows you to change
+            whether or not the the {nn,mm} bounded repetition syntax
+            is allowed.  By default it is allowed.</li>
+
+            <li>The function ALLOW-NONGREEDY-QUANTIFIERS allows you to
+            change whether or not the *?, +?, ??, and {nn,mm}?
+            quantifiers are recognized.  By default they are
+            allowed.</li>
+
+            <li>The function ALLOW-NONREGISTER-GROUPS allows you to
+            change whether or not the (?...) syntax is recognized.  By
+            default it is allowed.</li>
+
+            <li>The function DOT-MATCHES-NEWLINE allows you to change
+            whether '.' in a pattern matches the newline character.
+            This is false by default.</li>
+
+          </ul>
+
+          <p>Parenthesized expressions within the pattern are
+          considered a register pattern, and will be recorded for use
+          after the match.  There is an implicit set of parentheses
+          around the entire expression, so the bounds of the matched
+          text itself will always occupy register 0.</p>
+
+          <p>Extensions that will be coming soon include:</p>
+          <ol>
+            <li>I am working on a second backend for the regex
+            compiler that generates an even faster matcher (~4-20x
+            faster on Symbolics, ~ 2x faster on LWW). The compilation
+            process itself is substantially slower.  I've got some
+            more work to do to get the speed up even further on
+            Lispworks, although the current system is already much,
+            much faster than GNU Regex.</li>
+
+            <li>Optionally allowing a negated regex pattern using the
+            &lt;pattern&gt; '^' syntax.  This also subsumes the
+            negated character class in that <code>[^...]</code> ===
+            <code>[...]^</code>.</li>
+
+            <li>Faster scans by using a possible-prefix set.  This
+            isn't real high priority at the moment since matching is
+            plenty fast already :-)</li>
+
+            <li>Prefix and postfix context patterns ala LEX.</li>
+
+          </ol>
+
+          <p>Regex has been recently enhanced.  Everything from the
+          parser back has been completely rewritten.  The regex system
+          now includes a bunch of functions for manipulating regex
+          parse trees directly, a multipass optimizer and code
+          generator, and a new matching engine.</p>
+
+          <p>The new regex system does a better job of optimizing a
+          wider range of patterns. It also supports an extension that
+          allows you to provide an "accept" function to the match-str
+          function.  This acceptfn takes the start and end position as
+          parameters, and can find the string itself in the special
+          variable *STR* and the registers in the special variable
+          *regs*.  It returns either nil to force the matcher to
+          backtrack, or a non-nil value which will be returned as
+          the success code for the match.</p>
+
+          <p>An additional change is that register patterns within
+          quantified patterns now return the leftmost occurrence in
+          the source string.  There is a flag to force the more usual
+          rightmost match, but this will reduce the applicability of
+          many critical optimizations.</p>
+
+          <p>The latest version of regex supports the Perl \d, \D, \w,
+          \W, \s, and \S metasequences, as well as the egrep \&lt;
+          start-of-word and \&gt; end-of-word metasequences.</p>
+
+    <hr>
+    <address><a href="mailto:mparker762@hotmail.com">Michael Parker</a></address>
+  </body>
+</html>

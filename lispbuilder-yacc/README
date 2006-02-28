@@ -1,0 +1,11 @@
+> (compile-file "yacc.lisp")
+> (load *)
+> (compile-file "yacc-tests.lisp")
+> (load *)
+> (yacc-tests:tests)
+
+The most recent version should be available from
+
+  http://www.pps.jussieu.fr/~jch/software/cl-yacc/
+
+                                        Juliusz Chroboczek

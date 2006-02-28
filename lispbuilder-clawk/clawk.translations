@@ -1,0 +1,7 @@
+
+
+#+:Lispworks
+(setf (logical-pathname-translations "CLAWK")
+      '(("CLAWK:SYS;*" "d:/lisp/*")
+        ("CLAWK:SRC;*" "d:/lisp/clawk/*")))
+
