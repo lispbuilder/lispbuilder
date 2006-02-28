@@ -1,0 +1,6 @@
+
+#+:Lispworks
+(setf (logical-pathname-translations "LEXER")
+      '(("LEXER:SYS;*" "d:/lisp/*")
+        ("LEXER:SRC;*" "d:/lisp/lexer/*")))
+

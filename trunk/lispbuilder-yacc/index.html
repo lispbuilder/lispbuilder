@@ -1,0 +1,393 @@
+<html lang="en">
+<head>
+<title>The CL-Yacc Manual</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="The CL-Yacc Manual">
+<meta name="generator" content="makeinfo 4.8">
+<link title="Top" rel="top" href="#Top">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2005 by Juliusz Chroboczek.-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc    { font-variant:small-caps }
+  span.roman { font-family:serif; font-weight:normal; } 
+  span.sansserif { font-family:sans-serif; font-weight:normal; } 
+--></style>
+</head>
+<body>
+<h1 class="settitle">The CL-Yacc Manual</h1>
+<div class="contents">
+<h2>Table of Contents</h2>
+<ul>
+<li><a name="toc_Top" href="#Top">CL-Yacc</a>
+<li><a name="toc_Example" href="#Example">1 A complete example</a>
+<li><a name="toc_Reference" href="#Reference">2 Reference</a>
+<ul>
+<li><a href="#Invoking-a-parser">2.1 Running the parser</a>
+<li><a href="#Macro-interface">2.2 Macro interface</a>
+<li><a href="#Functional-interface">2.3 Functional interface</a>
+<li><a href="#Conditions">2.4 Conditions</a>
+<ul>
+<li><a href="#Compile_002dtime">2.4.1 Compile-time conditions</a>
+<li><a href="#Runtime">2.4.2 Runtime conditions</a>
+</li></ul>
+</li></ul>
+<li><a name="toc_Runtime" href="#Runtime">Acknowledgements</a>
+<li><a name="toc_Runtime" href="#Runtime">Copying</a>
+<li><a name="toc_Function-index" href="#Function-index">Function index</a>
+<li><a name="toc_Type-index" href="#Type-index">Type index</a>
+</li></ul>
+</div>
+
+
+
+<p><a name="Top"></a>
+
+<h2 class="unnumbered">CL-Yacc</h2>
+
+<p>CL-Yacc is a LALR(1) parser generator for Common Lisp, somewhat like
+Yacc, GNU Bison, Zebu, lalr.cl or lalr.scm.
+
+   <p>The latest version of CL-Yacc can be found on
+<a href="http://www.pps.jussieu.fr/~jch/software/cl-yacc/">the CL-Yacc web page</a>.
+
+   <p>This manual was written by
+<a href="http://www.pps.jussieu.fr/~jch/">Juliusz Chroboczek</a>.
+
+<p><a name="Example"></a>
+
+<h2 class="chapter">1 A complete example</h2>
+
+<p>CL-Yacc exports its symbols from the package <code>yacc</code>:
+
+<pre class="lisp">     (use-package 'yacc)
+</pre>
+   <p>A parser consumes the output of a lexer, that produces a stream of
+terminals.  CL-Yacc expects the lexer to be a function of no arguments
+(a <dfn>thunk</dfn>) that returns two values: the next terminal symbol, and
+the value of the symbol, which will be passed to the action associated
+with a production.  At end of input, the lexer should simply return
+<code>nil</code>.
+
+   <p>A very simple lexer that grabs tokens from a list:
+
+<pre class="lisp">     (defun list-lexer (list)
+       #'(lambda ()
+           (let ((value (pop list)))
+             (if (null value)
+                 (values nil nil)
+                 (let ((terminal
+                        (cond ((member value '(+ - * / |(| |)|)) value)
+                              ((integerp value) 'int)
+                              ((symbolp value) 'id)
+                              (t (error "Unexpected value ~S" value)))))
+                   (values terminal value))))))
+</pre>
+   <p>We will implement the following grammar:
+
+<pre class="display">     expression ::= expression <code>+</code> expression
+     expression ::= expression <code>-</code> expression
+     expression ::= expression <code>*</code> expression
+     expression ::= expression <code>/</code> expression
+     expression ::= term
+     
+     term ::= id
+     term ::= int
+     term ::= <code>-</code> term
+     term ::= <code>(</code> expression <code>)</code>
+</pre>
+   <p>As this grammar is ambiguous, we need to specify the precedence and
+associativity of the operators. The operators <code>*</code> and <code>/</code>
+will have the highest precedence, <code>+</code> and <code>-</code> will have a
+lower one.  All operators will be left-associative.
+
+   <p>CL-Yacc provides default semantic actions that are often adequate. 
+For building a Lisp-like parse tree with this grammar, we will need
+two <em>ad hoc</em> actions:
+
+<pre class="lisp">     (eval-when (compile load eval)
+       (defun i2p (a b c)
+         "Infix to prefix"
+         (list b a c))
+     
+       (defun k-2-3 (a b c)
+         (declare (ignore a c))
+         b)
+     )
+</pre>
+   <p>The parser definition itself:
+<pre class="lisp">     (define-parser *expression-parser*
+       (:start-symbol expression)
+       (:terminals (int id + - * / |(| |)|))
+       (:precedence ((:left * /) (:left + -)))
+     
+       (expression
+        (expression + expression #'i2p)
+        (expression - expression #'i2p)
+        (expression * expression #'i2p)
+        (expression / expression #'i2p)
+        term)
+     
+       (term
+        id
+        int
+        (- term)
+        (|(| expression |)| #'k-2-3)))
+</pre>
+   <p>The parser is now the value of the special variable
+<code>*expression-parser*</code>, which can be passed to
+<code>parse-with-lexer</code>:
+
+<pre class="lisp">     (parse-with-lexer (list-lexer '(x * - - 2 + 3 * y)) *expression-parser*)
+         =&gt; (+ (* X (- (- 2))) (* 3 Y))
+</pre>
+   <p><a name="Reference"></a>
+
+<h2 class="chapter">2 Reference</h2>
+
+<p><a name="Invoking-a-parser"></a>
+
+<h3 class="section">2.1 Running the parser</h3>
+
+<p>The main entry point to the parser is <code>parse-with-lexer</code>.
+
+<div class="defun">
+&mdash; Function: <b>parse-with-lexer</b><var> lexer parser<a name="index-parse_002dwith_002dlexer-1"></a></var><br>
+<blockquote><p>Parse the input provided by the lexer <var>lexer</var> using the parser
+<var>parser</var>.
+
+        <p>The value of <var>lexer</var> should be a function of no arguments that
+returns two values: the terminal symbol of the next token (a non-null
+symbol), and its value (anything that the associated productions can
+take as argument).  It should return <code>(values nil nil)</code> when the
+end of the input is reached.
+
+        <p>The value of <var>parser</var> should be a <code>parser</code> structure, as
+computed by <code>make-parser</code> and <code>define-parser</code>. 
+</p></blockquote></div>
+
+<p><a name="Macro-interface"></a>
+
+<h3 class="section">2.2 Macro interface</h3>
+
+<div class="defun">
+&mdash; Macro: <b>define-grammar</b><var> name option... production...<a name="index-define_002dgrammar-2"></a></var><br>
+<blockquote><pre class="format"><var>option</var> ::= <code>(</code> <var>keyword</var> <var>value</var> <code>)</code>
+     <var>production</var> ::= <code>(</code> <var>symbol</var> <var>rhs</var>... <code>)</code>
+     <var>rhs</var> ::= <var>symbol</var>
+     <var>rhs</var> ::= <code>(</code> <var>symbol</var>... [<var>action</var>] <code>)</code>
+</pre>
+        <p>Makes grammar be the value of the special variable <var>name</var>.
+
+        <p>Every production is a list of a non-terminal symbol and one or more
+right hand sides.  Every right hand side is either a symbol or a list
+of symbols.
+
+        <p>The action should be a non-atomic form that evaluates to a function in
+a null lexical environment.  If omitted, it defaults to
+<code>#'identity</code> in the first form of <var>rhs</var>, and to <code>#'list</code>
+in the second form.
+
+        <p>The legal options are:
+
+          <dl>
+<dt><code>:start-symbol</code><dd>Defines the start symbol of the grammar.  This is required.
+
+          <br><dt><code>:terminals</code><dd>Defines the list of terminals of the grammar.  This is required.
+
+          <br><dt><code>:precedence</code><dd>
+The value of this option should be a list of items of the form
+<code>(</code><var>associativity</var><code> . </code><var>terminals</var><code>)</code>, where
+<var>associativity</var> is one of <code>:left</code>, <code>:right</code> or
+<code>:nonassoc</code>, and <var>terminals</var> is a list of terminal symbols. 
+<var>Associativity</var> specifies the associativity of the terminals, and
+earlier items will give their elements a precedence higher than that of
+later ones. 
+</dl>
+        </p></blockquote></div>
+
+<div class="defun">
+&mdash; Macro: <b>define-parser</b><var> name option... production...<a name="index-define_002dparser-3"></a></var><br>
+<blockquote><p>Makes a parser be the value of the special variable <var>name</var>. 
+The syntax is the same as that of <code>define-grammar</code>, except that
+the following additional options are allowed:
+
+          <dl>
+<dt><code>:muffle-conflicts</code><dd>
+If <code>nil</code> (the default), a warning is signalled for every
+conflict.  If the symbol <code>:some</code>, then only a summary of the
+number of conflicts is signalled.  If <code>T</code>, then no warnings at
+all are signalled for conflicts.  Otherwise, its value should be a
+list of two integers (<var>sr</var> <var>rr</var>), in which case a summary
+warning will be signalled unless exactly <var>sr</var> shift-reduce and
+<var>rr</var> reduce-reduce conflicts were found.
+
+          <br><dt><code>:print-derives-epsilon</code><dd>If true, print the list of nonterminal symbols that derive the empty
+string.
+
+          <br><dt><code>:print-first-terminals</code><dd>If true, print for every nonterminal symbol the list of terminals that
+it may start with.
+
+          <br><dt><code>:print-states</code><dd>If true, print the computed kernels of LR(0) items.
+
+          <br><dt><code>:print-goto-graph</code><dd>If true, print the computed goto graph.
+
+          <br><dt><code>:print-lookaheads</code><dd>If true, print the computed kernels of LR(0) items with their
+lookaheads. 
+</dl>
+        </p></blockquote></div>
+
+<p><a name="Functional-interface"></a>
+
+<h3 class="section">2.3 Functional interface</h3>
+
+<p>The macros <code>define-parser</code> and <code>define-grammar</code> expand into
+calls to <code>defparameter</code>, <code>make-parser</code>, <code>make-grammar</code>
+and <code>make-production</code> with suitable <code>make-load-form</code> magic
+to ensure that the time consuming parser generation happens at
+compile time rather than at load time.  The underlying functions are
+exported in case you want to design a different syntax for grammars,
+or generate grammars automatically.
+
+   <p>The symbol <code>yacc-eof-symbol</code> is used for marking the EOF token;
+it should never appear in a production, and never be returned by a
+lexer.  It is exported for the sake of condition handlers, which might
+find it embedded within parse errors.
+
+<div class="defun">
+&mdash; Function: <b>make-production</b><var> symbol derives </var><tt>&amp;key</tt><var> action action-form<a name="index-make_002dproduction-4"></a></var><br>
+<blockquote><p>Returns a production for non-terminal <var>symbol</var> with
+right-hand-side <var>derives</var> (a list of symbols).  <var>Action</var> is
+the associated action, and should be a function; it defaults to
+<code>#'list</code>.  <var>Action-form</var> should be a form that evaluates to
+<var>action</var> in a null lexical environment; if null (the default), the
+production (and hence any grammar or parser that it is used by) will
+not be fasdumpable. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>make-grammar</b> <tt>&amp;key</tt><var> name start-symbol terminals precedence productions<a name="index-make_002dgrammar-5"></a></var><br>
+<blockquote><p>Returns a grammar.  <var>Name</var> is the name of the grammar (gratuitious
+documentation).  <var>Start-symbol</var>, <var>terminals</var> and <var>precedence</var>
+are as in <code>define-grammar</code>.  <var>Productions</var> is a list of productions. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Function: <b>make-parser</b><var> grammar </var><tt>&amp;key</tt><var> discard-memos muffle-conflicts print-derives-epsilon print-first-terminals print-states print-goto-graph print-lookaheads<a name="index-make_002dparser-6"></a></var><br>
+<blockquote><p>Computes and returns a parser for grammar <var>grammar</var>. 
+<var>discard-memos</var> specifies whether temporary data associated with
+the grammar should be discarded.  <var>Muffle-conflicts</var>,
+<var>print-derives-epsilon</var>, <var>print-first-terminals</var>,
+<var>print-states</var>, <var>print-goto-graph</var> and <var>print-lookaheads</var>
+are as in <code>define-parser</code>. 
+</p></blockquote></div>
+
+<p><a name="Conditions"></a>
+
+<h3 class="section">2.4 Conditions</h3>
+
+<p>CL-Yacc may signal warnings at compile time when it finds
+conflicts.  It may also signal an error at parse time when it finds
+that the input is incorrect.
+
+<p><a name="Compile-time"></a>
+<a name="Compile_002dtime"></a>
+
+<h4 class="subsection">2.4.1 Compile-time conditions</h4>
+
+<p>If the grammar given to CL-Yacc is ambiguous, a warning of type
+<code>conflict-warning</code> will be signalled for every conflict as it is
+found, and a warning of type <code>conflict-summary-warning</code> will be
+signalled at the end of parser generation.
+
+<div class="defun">
+&mdash; Condition: <b>conflict-warning</b><var> kind state terminal<a name="index-conflict_002dwarning-7"></a></var><br>
+<blockquote><p>Signalled whenever a conflict is found.  <var>Kind</var> is one of
+<code>:shift-reduce</code> or <code>:reduce-reduce</code>.  <var>State</var> (an
+integer) and <var>terminal</var> (a symbol) are the state and terminal for
+which the conflict arises. 
+</p></blockquote></div>
+
+<div class="defun">
+&mdash; Condition: <b>conflict-summary-warning</b><var> shift-reduce reduce-reduce<a name="index-conflict_002dsummary_002dwarning-8"></a></var><br>
+<blockquote><p>Signalled at the end of parser generation if there were any conflicts. 
+<var>Shift-reduce</var> and <var>reduce-reduce</var> are integers that indicate
+how many conflicts were found. 
+</p></blockquote></div>
+
+<p><a name="Runtime"></a>
+
+<h4 class="subsection">2.4.2 Runtime conditions</h4>
+
+<p>If the output cannot be parsed, the parser will signal a condition of
+type <code>yacc-parse-error</code>.  It should be possible to invoke a
+restart from a handler for <code>yacc-parse-error</code> in order to trigger
+error recovery, but this hasn't been implemented yet.
+
+<div class="defun">
+&mdash; Condition: <b>yacc-parse-error</b><var> terminal value expected-terminals<a name="index-yacc_002dparse_002derror-9"></a></var><br>
+<blockquote><p>Signalled whenever the input cannot be parsed.  The symbol
+<var>terminal</var> is the terminal that couldn't be accepted; <var>value</var>
+is its value.  <var>Expected-terminals</var> is the list of terminals that
+could have been accepted in that state. 
+</p></blockquote></div>
+
+<h2 class="unnumbered">Acknowledgements</h2>
+
+<p>I am grateful to Marc Zeitoun, Antonio Bucciarelli and especially Guy
+Cousineau for their help with implementing CL-Yacc.
+
+<h2 class="unnumbered">Copying</h2>
+
+<blockquote>
+Copyright &copy; 2005 by Juliusz Chroboczek
+
+        <p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+        <p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+       <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE. 
+</blockquote>
+
+<p><a name="Function-index"></a>
+
+<h2 class="unnumbered">Function index</h2>
+
+<ul class="index-fn" compact>
+<li><a href="#index-define_002dgrammar-2"><code>define-grammar</code></a>: <a href="#Macro-interface">Macro interface</a></li>
+<li><a href="#index-define_002dparser-3"><code>define-parser</code></a>: <a href="#Macro-interface">Macro interface</a></li>
+<li><a href="#index-make_002dgrammar-5"><code>make-grammar</code></a>: <a href="#Functional-interface">Functional interface</a></li>
+<li><a href="#index-make_002dparser-6"><code>make-parser</code></a>: <a href="#Functional-interface">Functional interface</a></li>
+<li><a href="#index-make_002dproduction-4"><code>make-production</code></a>: <a href="#Functional-interface">Functional interface</a></li>
+<li><a href="#index-parse_002dwith_002dlexer-1"><code>parse-with-lexer</code></a>: <a href="#Invoking-a-parser">Invoking a parser</a></li>
+   </ul><p><a name="Type-index"></a>
+
+<h2 class="unnumbered">Type index</h2>
+
+
+
+<ul class="index-tp" compact>
+<li><a href="#index-conflict_002dsummary_002dwarning-8"><code>conflict-summary-warning</code></a>: <a href="#Compile_002dtime">Compile-time</a></li>
+<li><a href="#index-conflict_002dwarning-7"><code>conflict-warning</code></a>: <a href="#Compile_002dtime">Compile-time</a></li>
+<li><a href="#index-yacc_002dparse_002derror-9"><code>yacc-parse-error</code></a>: <a href="#Runtime">Runtime</a></li>
+   </ul></body></html>
+

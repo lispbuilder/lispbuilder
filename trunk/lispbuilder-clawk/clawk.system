@@ -1,0 +1,21 @@
+;;; -*- Mode: Lisp; Syntax: ANSI-Common-lisp; Package: CL-USER; Base: 10 -*-
+
+(in-package "CL-USER")
+
+(load-logical-pathname-translations "CLAWK")
+
+(mk:defsystem "CLAWK"
+	      :source-extension "lisp"
+	      :source-pathname (translate-logical-pathname "CLAWK:SRC;")
+          :depends-on ("REGEX")
+	      :components (
+                       (:file "packages")
+                       (:file "clawk" :depends-on ("packages"))
+                       (:file "clawktest" :depends-on ("packages" "clawk"))))
+
+
+
+(defun lc-clawk ()
+  (mk:compile-system "CLAWK"))
+(defun ld-clawk ()
+  (mk:load-system "CLAWK"))
