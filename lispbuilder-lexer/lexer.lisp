@@ -83,12 +83,7 @@
 ;;;
 
 
-(defmacro deflexer (name &rest rules)
-  "Create a lexical analyser.  This analyser function takes a string :position,
-:end, :end-token and :end-value keyword parameters, and returns a function of
-no arguments that returns the next token and value each time it is called,
-or (values end-token end-value) when the input string is exhausted.
-By default, position = 0, end = length of str, and end-token and end-value = nil."
+(defun gen-flexy-lexer (name options patterns actions)
   (let ((matchervar (intern (concatenate 'string (symbol-name name) "-MATCHER")
                             *package*))
         (rcvar (gensym))
@@ -97,10 +92,77 @@ By default, position = 0, end = length of str, and end-token and end-value = nil
         (matchregsvar (gensym))
         (strvar (gensym))
         (prevposvar (gensym)))
-    (multiple-value-bind (patterns actions)
-        (extract-patterns-and-actions rules)
       `(progn
-         (defparameter ,matchervar (macroexpand-regex-expr ',(combine-patterns patterns)))
+         (defparameter ,matchervar (macroexpand-regex-expr ',(combine-flexy-patterns patterns)))
+         (defun ,name (,strvar &key (start 0)
+                                    (end (length ,strvar))
+                                    (end-token nil)
+                                    (end-value nil)
+                               &aux (,prevposvar -1)
+                                    ,rcvar ,matchstartvar ,matchlenvar ,matchregsvar)
+           (declare (string ,strvar) (fixnum start end))
+           (flet ((%n (n)
+                    (let* ((rstart (lispbuilder-regex:register-start ,matchregsvar n))
+                           (rend (lispbuilder-regex:register-end ,matchregsvar n)))
+                      (if (and (numberp rstart) (numberp rend))
+                          (subseq ,strvar rstart rend))))
+                  (nextch ()
+                    (when (< start end)
+                      (prog1
+                          (char ,strvar start)
+                        (incf start)
+                        )))
+                  (ungetch (ch)
+                    (when (and (characterp ch) (> start 0))
+                      (decf start)
+                      )))
+             (symbol-macrolet ((%0 (%n 0)) (%1 (%n 1)) (%2 (%n 2)) (%3 (%n 3))
+                               (%4 (%n 4)) (%5 (%n 5)) (%6 (%n 6)) (%7 (%n 7))
+                               (%8 (%n 8)) (%9 (%n 9)) (%10 (%n 10)))
+               (lambda (&aux (*flexy-match-rulenum* -1)
+                             (*flexy-match-end* -1)
+                             *flexy-match-start* *flexy-match-regs*)
+                 (declare (special *flexy-match-rulenum*)
+                          (special *flexy-match-end*)
+                          (special *flexy-match-start*)
+                          (special *flexy-match-regs*))
+                 (loop :while (< start end)
+                       :when (= start ,prevposvar)
+                         :do (error "Lexer unable to recognize a token in ~S, position ~D (~S)"
+                                    ,strvar start
+                                    (subseq ,strvar start (min end (+ start 20))))
+                       :do (progn
+                            (setq ,prevposvar start)
+                            (multiple-value-setq (,rcvar ,matchstartvar ,matchlenvar ,matchregsvar)
+                                (match-str ,matchervar ,strvar :start start))
+                            (if (and ,rcvar (>= *flexy-match-rulenum* 0) (>= *flexy-match-end* 0))
+                                (progn
+                                  (setf ,matchlenvar (- *flexy-match-end* ,prevposvar)
+                                        ,matchregsvar *flexy-match-regs*
+                                        ,rcvar *flexy-match-rulenum*)
+                                  (incf start ,matchlenvar))
+                              (error "~A lexing failure (no token recognized) in ~S @ ~D"
+                                     ',name ,strvar start))
+                            (case ,rcvar
+                              ,@(make-lexer-actions actions)
+                              (otherwise
+                               (error "~A lexing failure (unknown token) in ~S @ ~D, ~S ~S ~S ~S"
+                                      ',name ,strvar start
+                                      ,rcvar ,matchstartvar ,matchlenvar ,matchregsvar))))
+                       :finally (return (values end-token end-value))))))))))
+
+
+(defun gen-fast-lexer (name options patterns actions)
+  (let ((matchervar (intern (concatenate 'string (symbol-name name) "-MATCHER")
+                            *package*))
+        (rcvar (gensym))
+        (matchstartvar (gensym))
+        (matchlenvar (gensym))
+        (matchregsvar (gensym))
+        (strvar (gensym))
+        (prevposvar (gensym)))
+      `(progn
+         (defparameter ,matchervar (macroexpand-regex-expr ',(combine-fast-patterns patterns)))
          (defun ,name (,strvar &key (start 0)
                                     (end (length ,strvar))
                                     (end-token nil)
@@ -146,23 +208,35 @@ By default, position = 0, end = length of str, and end-token and end-value = nil
                                (error "~A lexing failure (unknown token) in ~S @ ~D, ~S ~S ~S ~S"
                                       ',name ,strvar start
                                       ,rcvar ,matchstartvar ,matchlenvar ,matchregsvar))))
-                       :finally (return (values end-token end-value)))))))))))
+                       :finally (return (values end-token end-value))))))))))
+
+
+(defmacro deflexer (name &rest rules)
+  "Create a lexical analyser.  This analyser function takes a string :position,
+:end, :end-token and :end-value keyword parameters, and returns a function of
+no arguments that returns the next token and value each time it is called,
+or (values end-token end-value) when the input string is exhausted.
+By default, position = 0, end = length of str, and end-token and end-value = nil."
+  (multiple-value-bind (options patterns actions)
+      (extract-patterns-and-actions rules)
+    (if (member :flex-compatible options)
+        (gen-flexy-lexer name options patterns actions)
+      (gen-fast-lexer name options patterns actions))))
 #+:Lispworks (editor:setup-indent "deflexer" 1 2 10)
 
-; Pull out the patterns and actions, with rule numbers so we can keep them associated
-(defun extract-patterns-and-actions (rules &aux patterns actions)
+; Pull out the options, patterns and actions, with rule numbers so we can keep them associated
+(defun extract-patterns-and-actions (rules &aux options patterns actions)
   (loop for rule in rules
         for rulenum from 0
-        for pat = (first rule)
-        for action = (rest rule)
-        do (progn
-             (push `(,pat ,rulenum) patterns)
-             (push `(,action ,rulenum) actions))
-        finally (return (values (nreverse patterns) (nreverse actions)))))
+        do (cond ((atom rule)
+                  (push rule options))
+                 (t (push (list (first rule) rulenum) patterns)
+                    (push (list (rest rule) rulenum) actions)))
+        finally (return (values (nreverse options) (nreverse patterns) (nreverse actions)))))
 
 ; Combines patterns into one big ALT, with clause extended with a new success node
 ; that returns the pattern number that matched.
-(defun combine-patterns (pats)
+(defun combine-fast-patterns (pats)
   (flet ((make-specialized-parsetree (patstr hooknum)
            (let ((parsetree (lispbuilder-regex:parse-str patstr)))
              (when (null parsetree)
@@ -174,6 +248,46 @@ By default, position = 0, end = length of str, and end-token and end-value = nil
      (mapcar #'make-specialized-parsetree
              (mapcar #'first pats)
              (mapcar #'second pats)))))
+
+; Combines patterns into one big ALT, with clause extended with a new hook node
+; that records the pattern number that matched
+(defun copy-matchregs (regs)
+  (loop with l = (length regs)
+        with newregs = (make-array l)
+        for i from 0 below l
+        for reg = (aref regs i) then (aref regs i)
+        do (setf (aref newregs i) (cons (car reg) (cdr reg)))
+        finally (return newregs)))
+        
+
+(defun make-flexy-hookfn (rulenum)
+  #'(lambda (pos)
+      (declare (fixnum pos)
+               (special *flexy-match-end*)
+               (special *flexy-match-regs*)
+               (special *flexy-match-rulenum*)
+               (special lispbuilder-regex::*regs*))
+      (when (> pos *flexy-match-end*)
+        (setf *flexy-match-end* pos
+              *flexy-match-regs* (copy-matchregs lispbuilder-regex::*regs*)
+              *flexy-match-rulenum* rulenum))
+      nil))
+
+
+(defun combine-flexy-patterns (pats)
+  (flet ((make-specialized-parsetree (patstr hooknum)
+           (let ((parsetree (lispbuilder-regex:parse-str patstr)))
+             (when (null parsetree)
+               (error "Regex compile error in ~S" patstr))
+             (lispbuilder-regex:make-seq-node-args
+              parsetree
+              (lispbuilder-regex:make-hook-node (make-flexy-hookfn hooknum))))))
+    (make-alt-node-list
+     (append
+      (mapcar #'make-specialized-parsetree
+              (mapcar #'first pats)
+              (mapcar #'second pats))
+      (list (lispbuilder-regex:make-success-node t))))))
 
 
 ; Build the body of the case statement that performs the action corresponding to
@@ -237,6 +351,41 @@ By default, position = 0, end = length of str, and end-token and end-value = nil
 ;
 ; >
 
+#|
+; flex-compatibility test
+(deflexer c-lexer
+  :flex-compatible
+  ("int" (return (values 'INT %0)))
+  ("([:alpha:]|_)([:alnum:]|_)*" (return (values 'IDENTIFIER %0)))
+  ("[:space:]"))
+
+(setq *lex* (c-lexer "int intelligence integer"))
+(funcall *lex*)
+
+
+(defun test ()
+  (loop with lexer = (c-lexer "int intelligence integer") 
+        with tokens = '()
+        finally (return (nreverse tokens)) do
+        (multiple-value-bind (token value) (funcall lexer)
+          (if token
+              (push (cons token value) tokens)
+            (loop-finish)))))
+
+
+
+(deflexer test-lexer
+  :flex-compatible
+  ("[0-9]+"
+    (return (values 'int (int %0))))
+  ("[0-9]+([.][0-9]+([Ee][0-9]+)?)"
+    (return (values 'flt (num %0))))
+  ("[:space:]+")
+ )
+
+(setq *lex* (test-lexer "1.0 12 10.23e12"))
+
+|#
 
 
 

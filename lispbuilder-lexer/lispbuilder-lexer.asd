@@ -8,4 +8,4 @@
   
   :components
   ((:file "packages")
-   (:file "lexer")))
+   (:file "lexer" :depends-on ("packages"))))
