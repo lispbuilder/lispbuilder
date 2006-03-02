@@ -1,5 +1,9 @@
-Application Project Leader - Frank Buss 
-SDL Wrappers and examples - Justin Heyes-Jones
-SWIG and CFFI - Surendra Singh
-Additional SDL work and Clisp testing - Jeremy Smith
+Application-Builder project leader - Frank Buss fb@frank-buss.de
+SDL wrappers, documentation  and examples - Justin Heyes-Jones justinhj@gmail.com
+SDL utilities, SDL_gfx and other library wrappers - Luke Crook luke@balooga.com
+
+SWIG and CFFI - Surendra Singh EFuzzyONE@netscape.net
+Additional SDL work and Clisp testing - Jeremy Smith jeremy@decompiler.org
+
+
 
