@@ -14,7 +14,7 @@ bindings should work on any lisp with a working asdf and cffi.
 	(asdf:operate 'asdf:load-op :lispbuilder-sdl)
 1.3) Start lispbuilder-sdl-gfx;
 	(asdf:operate 'asdf:load-op :lispbuilder-sdl-gfx)
-1.4) Set the location of the SDL_gfx DLL;
+1.4) Set the location of the SDL_gfx* DLL;
         (defparameter *sdl-gfx-dll-filepath* "C:\\SDL_gfx-2.0.13\\lib\\SDL_gfx")
 	
 2) To execute any of the example applications;
@@ -28,3 +28,8 @@ bindings should work on any lisp with a working asdf and cffi.
 3) To create the SDL_gfx CFFI wrappers using SWIG;
 3.1) Copy sdlswig.i (the swig interface file) to the SDL_gfx directory.
 3.2) Run 'swig -cffi sdlswig.i'
+
+
+* Precompiled binaries for SDL_gfx are available in the 'binaries' package as part of 
+this project (lispbuilder) on Sourceforge. For example, a win32 compatible DLL is located in
+the 'lispbuilder-sdl-gfx-binaries_v2.0.13.zip' package.
