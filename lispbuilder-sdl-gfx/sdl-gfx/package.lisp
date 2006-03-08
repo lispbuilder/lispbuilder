@@ -124,5 +124,7 @@
   (:export :gfxPrimitivesSetFont)
   ;; util-sdl_gfx
   ;;
+  (:export :*sdl-gfx-binaries-load-path*)
+  (:export :*sdl-gfx-binaries-user-path*)
   (:export :load-sdl-gfx-library)
   (:export :unload-sdl-gfx-library))
