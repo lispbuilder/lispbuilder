@@ -9,7 +9,10 @@
 ;;;; (sdl::bmp_sample) 
 
 (in-package :sdl-examples) 
-  
+
+(defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
+(defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
+
 ; window or screen height
 (defparameter *SCREEN-WIDTH* 640)
 (defparameter *SCREEN-HEIGHT* 480)
@@ -24,8 +27,7 @@
   (loop for filename in lst do
 	(let ((bmp-surface (sdl::load-bmp filename)))
 	  (let ((display-surface (sdl::convert-surface-to-display-format bmp-surface)))
-	    (setf *loaded-bmps* (cons display-surface *loaded-bmps*))
-	    (sdl::SDL_FreeSurface bmp-surface)))))
+	    (setf *loaded-bmps* (cons display-surface *loaded-bmps*))))))
 
 (defun close-bmps()
   "free up the surfaces we loaded the bmps into"
@@ -33,28 +35,17 @@
 	(sdl::SDL_FreeSurface surface))
   (setf *loaded-bmps* nil))
 
-(defun bmp_sample()
-  "demonstrates how to manage and display images from .bmp files"
-  (sdl::load-sdl-library)
-  (if (= 0 (sdl::sdl_init (logior sdl::SDL_INIT_AUDIO sdl::SDL_INIT_VIDEO)))
-      (let ((*display-surface* (sdl::SDL_SetVideoMode *SCREEN-WIDTH* *SCREEN-HEIGHT* 0 sdl::SDL_ANYFORMAT)))
-	(load-bmps '("sdl.bmp" "lisp.bmp"))
-	(let ((dest-rect-1 (sdl::make-sdl-rect 0 50 100 100))
-	      (dest-rect-2 (sdl::make-sdl-rect 200 50 100 100)))
-	  (with-foreign-object (event_ptr 'sdl::SDL_Event)
-	    (do
-	     ((event-type 0))
-	     ((eql event-type sdl::SDL_QUIT))
-	      (if (sdl::SDL_PollEvent event_ptr)
-		  (setf event-type (cffi:foreign-slot-value event_ptr 'sdl::SDL_Event 'sdl::type)))
-	      (sdl::blit-surface (first *loaded-bmps*) *display-surface* 10 10)
-	      (sdl::blit-surface (second *loaded-bmps*) *display-surface* 300 10)
-	      (sdl::SDL_UpdateRect *display-surface* 0 0 0 0)
-	      (sdl::SDL_Flip *display-surface*))))
-	(close-bmps)
-	(sdl::SDL_FreeSurface *display-surface*)
-	(setf *display-surface* nil)
-	(sdl::SDL_Quit))
-      (error "Unable to start SDL~%")))
 
+(defun bmp_sample () "demonstrates how to manage and display images from .bmp files"
+  (sdl::load-sdl-library)
+  (sdl::with-init ()
+    (let ((display (sdl::set-window 640 480)))
+      (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
+      (sdl::with-events
+	(:quit t)
+	(:idle
+	 (sdl::blit-surface (first *loaded-bmps*) display 10 10)
+	 (sdl::blit-surface (second *loaded-bmps*) display 300 10)
+	 (sdl::update-surface display)))
+      (close-bmps))))
 

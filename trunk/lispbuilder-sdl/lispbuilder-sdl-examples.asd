@@ -11,7 +11,7 @@
     ((:module "examples"
 	      :components
 	      ((:file "package")
-;	       (:file "sdl_bmp_example")
+	       (:file "sdl_bmp_example")
 	       (:file "sdl_pixels")
 	       (:file "sdl_recursive_rects")
 	       (:file "sdl_drawing")
