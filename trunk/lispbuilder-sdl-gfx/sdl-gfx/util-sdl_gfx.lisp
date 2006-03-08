@@ -54,7 +54,8 @@
 		(setf *sdl-gfx-binaries-load-path* (merge-pathnames *sdl-gfx-binaries-asdf-path* (eval path))))))
 	;;Attempt to load binary.
 	(if *sdl-gfx-binaries-load-path*
-	    (format t "Found \"~A\".... " (concatenate 'string (namestring *sdl-gfx-binaries-load-path*) ".dll")))
+	    (format t "Found \"~A\".... " (concatenate 'string (namestring *sdl-gfx-binaries-load-path*) ".dll"))
+	    (setf *sdl-gfx-binaries-load-path* #P"SDL_gfx"))
 	(format t "attempting to load SDL_gfx runtime.~%")
 	(cffi:load-foreign-library *sdl-gfx-binaries-load-path*)
 	(setf *SDL-GFX-LOADED* t)
