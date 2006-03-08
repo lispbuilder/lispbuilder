@@ -9,11 +9,22 @@
   
 (defparameter *SDL-GFX-LOADED* nil)
 
-; CHANGE THIS TO LOCATE YOUR SDL_GFX DLL
+; CHANGE *sdl-gfx-binaries-user-path* TO LOCATE YOUR SDL_GFX DLL
 ; Justin TODO Frank had some ideas on how to make this more flexible
-(defparameter *sdl-gfx-dll-filepath* "C:\\SDL_gfx-2.0.13\\lib\\SDL_gfx")
 
-(defparameter *default-sdl-gfx-binaries-path* "SDL_gfx")
+; First priority, try load the binary from the user-specified location.
+(defparameter *sdl-gfx-binaries-user-path* #P"C:/SDL_gfx-2.0.13/lib/SDL_gfx")
+
+; Second priority, try load the binary from the sdl-gfx-binaries package-specified location.
+(defparameter *sdl-gfx-binaries-default-path* #P"")
+
+; Third priority, try search all directories in the ASDF:*central-registry*
+; for the binary and load the first one found.
+(defparameter *sdl-gfx-binaries-asdf-path* #P"SDL_gfx")
+
+; This parameter stores the location from where the binary was loaded,
+; in case the user wants to know.
+(defparameter *sdl-gfx-binaries-load-path* nil)
 
 ; sdl library and sdl init helpers
 (defun load-sdl-gfx-library()
@@ -21,23 +32,39 @@
   (if *SDL-GFX-LOADED*
       (format t "SDL_gfx runtime already loaded~%")
       (progn
-	(let ((path-to-binary nil))
+	(setf *sdl-gfx-binaries-load-path* nil)
+	;; Search priority 1
+	(if (probe-file (concatenate 'string (namestring *sdl-gfx-binaries-user-path*) ".dll"))
+	    (setf *sdl-gfx-binaries-load-path* *sdl-gfx-binaries-user-path*))
+	;; Search priority 2
+	(unless *sdl-gfx-binaries-load-path*
 	  (dolist (path asdf:*central-registry*)
-	    (if (probe-file (merge-pathnames (concatenate 'string *default-sdl-gfx-binaries-path* ".dll")
+	    (if (probe-file (merge-pathnames (concatenate 'string
+							  (namestring *sdl-gfx-binaries-default-path*)
+							  ".dll")
 					     (eval path)))
-		(setf path-to-binary (merge-pathnames *default-sdl-gfx-binaries-path* (eval path)))))
-	  (if path-to-binary
-	      (format t "SDL_gfx.dll found in location \"~A\"~%" path-to-binary)
-	      (setf path-to-binary *sdl-gfx-dll-filepath*))
-	  (format t "Loading SDL_gfx runtime~%")
-	  (cffi:load-foreign-library path-to-binary)
-	  (setf *SDL-GFX-LOADED* t)))))
+		(setf *sdl-gfx-binaries-load-path* (merge-pathnames *sdl-gfx-binaries-default-path* (eval path))))))
+	;; Search priority 3
+	(unless *sdl-gfx-binaries-load-path*
+	  (dolist (path asdf:*central-registry*)
+	    (if (probe-file (merge-pathnames (concatenate 'string
+							  (namestring *sdl-gfx-binaries-asdf-path*)
+							  ".dll")
+					     (eval path)))
+		(setf *sdl-gfx-binaries-load-path* (merge-pathnames *sdl-gfx-binaries-asdf-path* (eval path))))))
+	;;Attempt to load binary.
+	(if *sdl-gfx-binaries-load-path*
+	    (format t "Found \"~A\".... " (concatenate 'string (namestring *sdl-gfx-binaries-load-path*) ".dll")))
+	(format t "attempting to load SDL_gfx runtime.~%")
+	(cffi:load-foreign-library *sdl-gfx-binaries-load-path*)
+	(setf *SDL-GFX-LOADED* t)
+	(format t "Runtime loaded.~%"))))
 
 (defun unload-sdl-gfx-library()
   "Unload the library when done"
   (if *SDL-GFX-LOADED*
       (progn 
-	(cffi::close-foreign-library *sdl-gfx-dll-filepath*)
+	(cffi::close-foreign-library *sdl-gfx-binaries-load-path*)
 	(format t "Closed SDL_gfx runtime library~%")
 	(setf *SDL-GFX-LOADED* nil))
       (format t "SDL_gfx runtime library is not loaded~%")))
