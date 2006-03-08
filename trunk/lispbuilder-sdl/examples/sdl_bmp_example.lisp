@@ -38,7 +38,7 @@
   (sdl::load-sdl-library)
   (if (= 0 (sdl::sdl_init (logior sdl::SDL_INIT_AUDIO sdl::SDL_INIT_VIDEO)))
       (let ((*display-surface* (sdl::SDL_SetVideoMode *SCREEN-WIDTH* *SCREEN-HEIGHT* 0 sdl::SDL_ANYFORMAT)))
-	(load-bmps '("examples/sdl.bmp" "examples/lisp.bmp"))
+	(load-bmps '("sdl.bmp" "lisp.bmp"))
 	(let ((dest-rect-1 (sdl::make-sdl-rect 0 50 100 100))
 	      (dest-rect-2 (sdl::make-sdl-rect 200 50 100 100)))
 	  (with-foreign-object (event_ptr 'sdl::SDL_Event)
