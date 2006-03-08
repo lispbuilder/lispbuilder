@@ -2,8 +2,7 @@
 
 (defpackage lispbuilder-sdl-system
   (:use :common-lisp :asdf :cffi))
-
-(in-package lispbuilder-sdl-system)
+(in-package :lispbuilder-sdl-system)
 
 (defsystem lispbuilder-sdl
     :description "lispbuilder-sdl: SDL library wrapper and tools"
@@ -16,8 +15,16 @@
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "BSD"
     :components
-    ((:doc-file "README")
-     (:file "packages")
-     (:file "sdl")
-     (:file "util")))
+;    ((:doc-file "README")
+;     (:doc-file "COPYING")
+;     (:doc-file "CONTRIBUTORS")
+;     (:static-file "sdlswig.i")
+;     (:html-file "index")
+    ((:module "sdl"
+	      :components
+	      ((:file "package")
+	       (:file "sdl")
+	       (:file "util-sdl" :depends-on ("sdl"))))))
+
+;)
 
