@@ -8,21 +8,30 @@ should work on any lisp with working asdf and cffi.
 
 To use:
 
-Start asdf and cffi
-Change to the directory with the files in 
-(load "load") ; sets up the sdl package, loads the sdl wrapper and a test program
+Start asdf and cffi:
+
+(asdf:operate 'asdf:load-op :cffi)
+
+Then load the lispbuilder-sdl and, optionally, the examples:
+
+(asdf:operate 'asdf:load-op :lispbuilder-sdl)
+(asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+
 (sdl:test-1) ; run the simple test program
 
-To make the wrappers:
+To make the wrappers (which you don't have to do unless you want to since they're
+already made for SDL-1.2.9)
 
 Copy sdlswig.i (the swig interface file) to the SDL include directory
+
+Check the file headerchanges.txt, there are instructions for a handful of things in SDL
+that CFFI does not yet handle. You have to manually patch these.
+
 run 'swig -cffi sdlswig.i'
 
-Currently you then have to go into sdl.lisp and find any structures that have 
-a data type :void and change it to :pointer. This is something in swig that I need
-fixing, I think Surendra has a fix but it's not yet checked in to the SWIG release.
+This generates the file sdl.lisp which is the wrapper.
 
-Then you have to find the SDL_Event macros which is doing a lot of 1<< stuff. You need
-to comment out all of them to load without error. 
+
+
 
 
