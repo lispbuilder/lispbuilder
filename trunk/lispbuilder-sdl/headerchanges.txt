@@ -1,0 +1,42 @@
+SDL_error.h
+
+Removed SDL_SetError function because it uses variable length parameter list
+
+SDL_events.h
+
+Removed SDL_Event declared as a union
+
+Removed event bit masks (SDL_EVENTMASK) as it uses macros 
+
+SDL_joystick.h
+
+SDL_HAT_RIGHTUP etc are made by or operations
+		I changed it so they are declared explicitly
+
+SDL_keysym.h
+
+enums cannot have the same value, so I changed SDLK_FIRST to be 1
+
+KMOD_CTRL etc used or operator in a macro, now explicit
+
+SDL_opengl.h
+
+Redefined APIENTRYP to be nothing
+
+SDL_types.h
+
+Removed SDL_COMPILE_TYPE_ASSERT, complicated macro
+
+SDL_timer.h
+
+Parameter for SDL_RemoveTimer was called t, causes an error
+
+
+
+
+
+
+
+
+
+
