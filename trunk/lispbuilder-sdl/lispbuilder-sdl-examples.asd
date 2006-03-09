@@ -16,6 +16,5 @@
 	       (:file "sdl_recursive_rects")
 	       (:file "sdl_drawing")
 	       (:file "sdl_random_rects")
-	       (:static-file "sdl1.png")
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")))))
