@@ -1,58 +1,442 @@
-<HTML>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
 <head>
-<title>Creating SDL GUI applications with CFFI and CLISP</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Creating Applications using the lispbuilder-SDL (SDL bindings)</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
 <style type="text/css">
-UNKNOWN {
-	FONT-SIZE: small; COLOR: #000000; FONT-FAMILY: verdana, sans-serif
+
+body {
+margin: 10px 20px 20px 200px;
+padding: 0px;
+font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+font-size: small;
+text-align: justify;
+max-width: 50em;
+background-color: white;
 }
-BODY {
-	FONT-SIZE: small; FONT-FAMILY: verdana, sans-serif
+
+a, a:visited {
+text-decoration: none;
+color: maroon;
 }
-pre {background:#eeeeee;border:1px solid #777777;padding:4px}
+
+/* index */
+
+div.index {
+position: fixed;
+top: 0px;
+left: 0px;
+width: 160px;
+height: 100%;
+margin: 0px;
+padding: 5px;
+font-size: 12px;
+background-color: #DCDCDC;
+border-right: thin black solid;
+}
+
+div.index ol {
+color: navy;
+margin: 0px;
+padding-left: 0px;
+}
+
+div.index ol li {
+list-style: none;
+}
+
+div.index ol li:before {
+display: marker;
+content: counter(heading1) ". ";
+counter-increment: heading1;
+}
+
+div.index ol ol {
+padding-left: 10px;
+font-size: 10px;
+list-style: none;
+counter-reset: heading2;
+}
+
+div.index ol ol li:before {
+display: marker;
+content: counter(heading1)"." counter(heading2)" ";
+counter-increment: heading2;
+}
+
+/* heading styles */
+
+body > h1 {
+margin-top: 0px;
+}
+
+h1 {
+margin-top: 40px;
+margin-bottom: 0px;
+color: #4682B4;
+}
+
+h1:before {
+display: marker;
+content: counter(chapter) ". ";
+counter-increment: chapter;
+counter-reset: section1;
+}
+
+h1 + p {
+margin-top: 5px;
+}
+
+h2 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h2:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "  ";
+counter-increment: section1;
+}
+
+h2 + p {
+margin-top: 0px;
+}
+
+h3 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h3:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "." counter(section2) "  ";
+counter-increment: section2;
+}
+
+h3 + p {
+margin-top: 0px;
+}
+
+h4 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h4:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "." counter(section2) "." counter(section3) "  ";
+counter-increment: section3;
+}
+
+h4 + p {
+margin-top: 0px;
+}
+
+/* generated content for images and tables */
+
+img:after {
+content: "[" counter(image) "] " attr(title);
+counter-increment: image;
+display: block;
+font-size: 10px;
+font-weight: bold;
+margin-top: 5px;
+margin-bottom: 20px;
+color: black;
+}
+
+table:after {
+content: "Table " counter(table) ": " attr(summary);
+counter-increment: table;
+display: table-caption;
+caption-side: bottom;
+font-size: 10px;
+font-weight: bold;
+margin-top: 5px;
+margin-bottom: 20px;
+white-space: nowrap;
+color: black;
+}
+
+/* code for examples, code and pathnames*/
+
+div.example table {
+color: black;
+}
+
+div.example, div.code, div.path, div.sequence {
+margin: 10px 0px;
+border: 1px black solid;
+padding: 10px;
+background-color: #F4F4F4;
+counter-reset: image;
+color: maroon;
+}
+
+div.example:before {
+content: "Example " counter(example);
+counter-increment: example;
+display: block;
+}
+
+div.example + p {
+margin-bottom: 0px;
+}
+
+div.code:before {
+content: "Code";
+}
+
+div.path:before {
+content: "Path";
+}
+
+div.sequence:before {
+content: "Sequence";
+}
+
+p.reference:before {
+display: marker;
+content: "[" counter(reference) "]";
+counter-increment: reference;
+font-weight: bold;
+margin-right: 5px;
+}
+
+div.code:before, div.example:before, div.path:before, div.sequence:before {
+font-weight: bold;
+font-size: 15px;
+margin-bottom: 20px;
+color: black;
+}
+
+pre {
+color: Green;
+margin: 0px;
+padding: 0px;
+}
+
+
+/* equation counter */
+
+e:after {
+content: "[" counter(equation) "]";
+counter-increment: equation;
+display: block;
+float: right;
+margin-right: 10px;
+}
+
+/* to prevent the CC image from being numbered */
+
+img[alt="Creative Commons License"] {
+display: inline;
+}
+
+img[alt="Creative Commons License"]:after {
+display: none;
+}
+
+div#cc {
+background-color: #DCDCDC;
+border: thin black solid;
+padding: 10px;
+font-size: 10px;
+}
 
 </style>
 </head>
+
+<!--
+(CC) 2003 Luke Crook. Some Rights Reserved.
+http://creativecommons.org/licenses/by/1.0
+This page is licensed under a Creative Commons License.
+
+Maintained by the Common Lisp Application Builder project at www.lispbuilder.org
+
+The entire styleguide was copied wholesale from http://www.markschenk.com/cssexp/publication/article.xml
+
+(CC) 2003 Mark Schenk. Some Rights Reserved.
+http://creativecommons.org/licenses/by/1.0
+This page is licensed under a Creative Commons License.
+-->
+
 <BODY BGCOLOR=#FFFFFF >
-<h1>Using SDL with CFFI and CLISP on Windows</h1>
-<p>This is a step-by-step manual, how you use CLISP with SDL. See the <a href="README">README 
-  file</a> for details of the SDL package.</p>
+
+<div class="index">
+<ol>
+<li><a href="#lispbuilder-SDL">lispbuilder-SDL</a></li>
+    <ol>
+    <li><a href="#Overview">Overview</a></li>
+    <li><a href="#Implementations">Supported Lisp Implementations</a></li>
+	<li><a href="#Prerequisites">Prerequisites</a></li>
+    <li><a href="#Installation">Download and Installation on Win32 Platforms</a></li>
+	<ol>
+	<li><a href="#Win32: ASDF and CFFI">ASDF and CFFI</a></li>
+	<li><a href="#Win32: lispbuilder-sdl and the SDL binary">lispbuilder-sdl and the SDL binary</a></li>
+	</ol>
+    <li><a href="#Win32: Configuration">Configuration on Win32 Platforms</a></li>
+        <ol>
+	<li><a href="#Win32: ASDF Configuration">ASDF Configuration</a></li>
+	</ol>
+    <li><a href="#Running the included SDL examples">Running the included SDL examples</a></li>
+    </ol>
+</ol>
+
+</div>
+
+
+<h1 id="lispbuilder-SDL">lispbuilder-SDL</h1>
+
+<h2 id="Overview">Overview</h2>
+<p>The lispbuilder-SDL package is a part of the <a href="http://www.lispbuilder.org/">Common Lisp Application Builder</a> 
+project	which is in turn a part of the umbrella <a href="http://www.lispniks.com/cl-gardeners/">Common Lisp Gardeners</a>
+project.</p>
+<p>The purpose of this documement is to describe a step-by-step process by which the user may install, configure and
+begin using the lispbuilder-SDL package to create applications using one of the 
+<a href="#Implementations">supported Lisp implementations</a>.</p>
+
+<h2 id="Implementations">Supported Implementations</h2>
+<p>The following table describes the status of the Lisp implementations that have been tested with lispbuilder-SDL:</p>
+
+<table border="1" cellpadding="2" cellspacing="0" summary="Supported Implementations"> 
+     <tr bgcolor="yellow">
+       <td><b>Lisp Implementation</b></td>
+       <td colspan="3"><b>lispbuilder-SDL Status</b></td>
+       <td><b>Comments</b></td>
+     </tr>	
+     <tr bgcolor="yellow">
+       <td colspan="1"></td>
+       <td><b>Win32</b></td>
+       <td><b>Linux</b></td>
+       <td><b>MacOS</b></td>
+       <td colspan ="1"</td>
+    </tr>
+     <tr>
+       <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
+       <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+    </tr>
+    <tr>
+      <td><a href="http://www.lispworks.com/">Lispworks v2.4.6 Personal</a></td>
+      <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+    </tr>
+    <tr>
+      <td><a href="http://openmcl.clozure.com/">OpenMCL</a></td>
+      <td bgcolor=blue>NA</td>
+      <td bgcolor=blue>NA</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+</table>
+
+<h2 id="Prerequisites">Prerequisites</h2>
+<p>The <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
+ and <a href="http://common-lisp.net/project/cffi/tarballs/cffi-060225.tar.gz">CFFI</a> packages are required 
+ prior to the installation of lispbuilder-SDL. The installation of these packages is descibed in <a href="#Win32: ASDF and CFFI">following section</a>.</p>
+
+<h2 id="Installation">Download and Installation on Win32 Platforms</h2>
+
+<h3 id="Win32: ASDF and CFFI">ASDF and CFFI</h3>
+<p>This section describes the installation of the ASDF and CFFI packages for CLISP in Windows.</p>
 <ul>
-  <li> install <a href="http://clisp.cons.org/">CLISP</a>, e.g. to c:\programme\clisp-2.38</li>
+  <li> install <a href="http://clisp.cons.org/">CLISP</a> to, e.g.  
+  <pre>c:\programme\clisp-2.38\</pre></li>
   <li> create a directory asdf in the clisp-2.38 directory</li>
+  <pre>c:\programme\clisp-2.38\asdf\</pre></li>
   <li> save <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
-    in the asdf directory</li>
+    in the asdf directory
+  <pre>c:\programme\clisp-2.38\asdf\asdf.lisp</pre></li>
   <li> download <a href="http://common-lisp.net/project/cffi/tarballs/cffi-060225.tar.gz">CFFI</a> 
     and unpack it (use <a href="http://www.7-zip.org/">7-Zip</a> or another program 
-    for unpack tgz files) in the asdf directory, rename the directory to &quot;cffi&quot; 
-    (so you should have a file like c:\programme\clisp-2.38\asdf\cffi\cffi.asd)</li>
-  <li> copy this directory to and unpack it to the asd directory (so you should 
-    have a file like c:\programme\clisp-2.38\asfi\lispbuilder-sdl\lispbuilder-sdl.asd)</li>
-  <li>download <a href="http://www.libsdl.org/release/SDL-1.2.9-win32.zip">SDL</a> 
-    and copy the SDL.dll to c:\windows\system32</li>
-  <li> edit *central-registry* in the asdf.lisp file: 
-    <pre>
+    for unpack tgz files) in the asdf directory, rename the directory to &quot;cffi&quot;. So you should have 
+    a file like:
+    <pre>c:\programme\clisp-2.38\asdf\cffi\cffi.asd</pre>
+    </li>
+</ul>
+
+<h3 id="Win32: lispbuilder-sdl and the SDL binary">lispbuilder-sdl and the SDL binary</h3>
+<p>This section describes the installation of the lispbuilder-sdl package and SDL binaries for Windows.</p>
+<ul>
+    <li> download the latest version of the 
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-sdl-binaries</a> 
+package from sourceforge and unpack it to the asdf directory, e.g.
+    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\lispbuilder-sdl.asd</pre>
+    </li>
+  <li> install the SDL dynamic library by doing one of the following: 
+  <ul>
+    <li> download <a href="http://www.libsdl.org/release/SDL-1.2.9-win32.zip">SDL</a> and 
+    copy the SDL.dll to 
+    <pre>c:\windows\system32</pre>
+    </li>
+    <li> download the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-sdl-binaries</a> package from sourceforge and unpack it into the asdf directory, e.g.
+    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl-binaries\lispbuilder-sdl-binaries.asd</pre>
+    </li>
+  </ul>
+  <li>download the latest version of the lispbuilder-sdl-examples package from sourceforge and unpack it to 
+  the asdf directory, e.g.
+ <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\lispbuilder-sdl-examples.asd</pre>
+ </li>
+</ul>
+
+<h2 id="Win32: Configuration">Configuration on Win32 Platforms</h2>
+
+<h3 id="Win32: ASDF Configuration">ASDF Configuration</h3>
+<div class="code">
+<p>Create a *central-registry* parameter in the asdf.lisp file:</p>
+<pre>
 (defvar *central-registry*
   '("c:/programme/clisp-2.38/asdf/cffi"
-    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl"))
+    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl"
+    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl-binaries"))
 </pre>
-  </li>
-</ul>
-  <p>Now you can start CLISP and enter the following:</p>
+</div>
+
+<h2 id="Running the included SDL examples">Running the included SDL examples</h2>
+<div class="sequence">
+ <p>Now you can start CLISP and enter the following at the prompt:</p>
 <pre>
 (load "c:/programme/clisp-2.38/asdf/asdf.lisp")
 (asdf:operate 'asdf:load-op :cffi)
-(cffi:load-foreign-library "sdl.dll")
 (asdf:operate 'asdf:load-op :lispbuilder-sdl)
-(load "c:/programme/clisp-2.38/asdf/lispbuilder-sdl/sdl_recursive_rects.lisp")
-(lispbuilder-sdl::recursive-rects)
+(asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
 </pre>
-<p>You should see a window like this:</p>
-<img src="sdl1.png" width="646" height="512">
-<p>After closing it, you can try the painter demo, where you can draw with the mouse:</p>
+
+<p>If you installed the lispbuilder-sdl-binaries package as described above, then enter the following:<p>
 <pre>
-(load "c:/programme/clisp-2.38/asdf/lispbuilder-sdl/sdl_drawing.lisp")
-(lispbuilder-sdl::mouse-painter)
+(asdf:operate 'asdf:load-op :lispbuilder-sdl-binaries)
 </pre>
+</div>
+
+<div class="example">
+<p>To verify that lispbuilder-sdl is installed correctly, run one of the examples by entering:</p>
+<pre>
+(sdl-examples:recursive-rects)
+</pre>
+
+<p>You should see a window like this:</p>
+<img src="sdl1.png" width="320" height="253" title="(sdl-examples:recursive-rects)" alt="recursive-rects" />
+</div>
+
+<div class="example">
+<p>After closing the, you can try the painter demo where you can draw with the mouse:</p>
+<pre>
+(sdl-examples:mouse-painter)
+</pre>
+
+<p>Groovy. You should see a window like this:</p>
+<img src="groovy1.png" width="320" height="253" title="(sdl-examples:mouse-painter)" alt="mouse-painter" />
+</div>
+
+</div>
+
 </body>
 </html>
