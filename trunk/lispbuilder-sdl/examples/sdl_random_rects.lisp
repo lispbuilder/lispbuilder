@@ -13,7 +13,6 @@
 (in-package :sdl-examples) 
   
 (defun random-rects1 ()
-  (sdl::load-sdl-library)
   (format t "Starting.....~%")
   (let ((width 640) (height 480)
 	(rectangle (sdl::new-rect)))
@@ -36,7 +35,6 @@
 (defun random-rects2 ()
   (let ((width 640) (height 480)
 	(rectangle (sdl::new-rect)))
-    (sdl::load-sdl-library)
     (format t "Starting.....~%")
     (sdl::with-init ()			;Initialize Systems
       (let ((display-surface (sdl::set-window width height)))
@@ -62,7 +60,6 @@
     (cffi:foreign-free rectangle)))
 
 (defun random-rects3 ()
-  (sdl::load-sdl-library)
   (format t "Starting.....~%")
   (let ((width 640) (height 480))
     (sdl::with-init ();Initialize Systems

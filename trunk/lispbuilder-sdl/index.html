@@ -368,7 +368,7 @@ begin using the lispbuilder-SDL package to create applications using one of the
 <p>This section describes the installation of the lispbuilder-sdl package and SDL binaries for Windows.</p>
 <ul>
     <li> download the latest version of the 
-    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-sdl-binaries</a> 
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
 package from sourceforge and unpack it to the asdf directory, e.g.
     <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\lispbuilder-sdl.asd</pre>
     </li>
@@ -382,22 +382,19 @@ package from sourceforge and unpack it to the asdf directory, e.g.
     <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl-binaries\lispbuilder-sdl-binaries.asd</pre>
     </li>
   </ul>
-  <li>download the latest version of the lispbuilder-sdl-examples package from sourceforge and unpack it to 
-  the asdf directory, e.g.
- <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\lispbuilder-sdl-examples.asd</pre>
- </li>
 </ul>
 
 <h2 id="Win32: Configuration">Configuration on Win32 Platforms</h2>
 
 <h3 id="Win32: ASDF Configuration">ASDF Configuration</h3>
 <div class="code">
-<p>Create a *central-registry* parameter in the asdf.lisp file:</p>
-<pre>
+  <p>Change the *central-registry* parameter in the asdf.lisp file (somewhere 
+    at line 346):</p>
+  <pre>
 (defvar *central-registry*
-  '("c:/programme/clisp-2.38/asdf/cffi"
-    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl"
-    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl-binaries"))
+  '("c:/programme/clisp-2.38/asdf/cffi/"
+    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl/"
+    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl-binaries/"))
 </pre>
 </div>
 
