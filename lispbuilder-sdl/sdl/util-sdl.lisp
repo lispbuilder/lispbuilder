@@ -422,7 +422,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 (defstruct fpsmanager
   (framecount 0 :type fixnum)
   (rate 30 :type fixnum)
-  (rateticks (/ 1000 30) :type float)
+  (rateticks (/ 1000.0 30.0) :type float)
   (lastticks 0 :type fixnum))
 
 (let ((fpsmngr (make-fpsmanager)) (fps-upper-limit 200) (fps-lower-limit 1)
