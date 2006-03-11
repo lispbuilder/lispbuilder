@@ -412,6 +412,9 @@ package from sourceforge and unpack it to the asdf directory, e.g.
 <pre>
 (asdf:operate 'asdf:load-op :lispbuilder-sdl-binaries)
 </pre>
+
+<p>Great. If you received any errors during this processes then go back and verify that the pathnames entered into the
+*central-registry* match the directories where the packages were installed.</p>
 </div>
 
 <h2 id="Running the included SDL examples">Running the included SDL examples</h2>
@@ -426,7 +429,7 @@ package from sourceforge and unpack it to the asdf directory, e.g.
 </div>
 
 <div class="example">
-<p>After closing the, you can try the painter demo where you can draw with the mouse:</p>
+<p>After closing the window, you can try the painter demo where you can draw with the mouse:</p>
 <pre>
 (sdl-examples:mouse-painter)
 </pre>
