@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 
 <head>
-<title>Creating Applications using the lispbuilder-SDL (SDL bindings)</title>
+<title>Creating Applications using the lispbuilder-SDL (CFFI SDL bindings)</title>
 <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
 <style type="text/css">
 
@@ -286,6 +286,7 @@ This page is licensed under a Creative Commons License.
 	</ol>
     <li><a href="#Fire it Up">Fire it Up</a></li>
     <li><a href="#Running the included SDL examples">Running the included SDL examples</a></li>
+    <li><a href="#Rebuilding the CFFI bindings">Rebuilding the CFFI bindings</a></li>
     </ol>
 </ol>
 
@@ -301,6 +302,8 @@ project.</p>
 <p>The purpose of this documement is to describe a step-by-step process by which the user may install, configure and
 begin using the lispbuilder-SDL package to create applications using one of the 
 <a href="#Implementations">supported Lisp implementations</a>.</p>
+<p>The list of credits is contained in <a href="../CONTRIBUTORS">lispbuilder-sdl/CONTRIBUTORS</a>. A copy of the license is contained in 
+<a href="../COPYING">lispbuilder-sdl/COPYING</a>.</p>
 
 <h2 id="Implementations">Supported Implementations</h2>
 <p>The following table describes the status of the Lisp implementations that have been tested with lispbuilder-SDL:</p>
@@ -335,6 +338,20 @@ begin using the lispbuilder-SDL package to create applications using one of the
       <td bgcolor=blue>NA</td>
       <td bgcolor=blue>NA</td>
       <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.sbcl.org/">SBCL</a></td>
+      <td bgcolor=blue>When, oh when?</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor=blue>NA</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.cons.org/cmucl/">CMUCL</a></td>
+      <td bgcolor=blue>When already?</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor=blue>NA</td>
       <td></td>
     </tr>
 </table>
@@ -437,6 +454,18 @@ package from sourceforge and unpack it to the asdf directory, e.g.
 <p>Groovy. You should see a window like this:</p>
 <img src="groovy1.png" width="320" height="253" title="(sdl-examples:mouse-painter)" alt="mouse-painter" />
 </div>
+
+<h2 id="Rebuilding the CFFI bindings">Rebuilding the CFFI Bindings using SWIG</h2>
+<p>The Common Lisp Application Builder project relies on <a href="http://www.swig.org">SWIG</a> to create the
+CFFI bindings for SDL. SWIG requires an interface (.i) file (<a href="../sdlswig.i">lispbuilder-sdl/sdlswig.i</a>) to 
+create the CFFI bindings from the SDL C headers. To recreate the SDL CFFI bindings, download the SDL development 
+libraries from <a href="http://www.libsdl.org/">SDL</a> (these contain the SDL C header files) and place the sdlswig.i 
+interface file into the include/ directory. Retrieve and install the latest version of 
+<a href="http://www.swig.org">SWIG</a> from CVS (the CVS version contains additions necessary to 
+perform the CFFI conversion). Run swig using:</p>
+<pre>
+swig -cffi -ILib -ILib\cffi sdlswig.i
+</pre>
 
 </div>
 
