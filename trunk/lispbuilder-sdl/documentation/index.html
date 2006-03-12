@@ -326,12 +326,21 @@ begin using the lispbuilder-SDL package to create applications using one of the
        <td bgcolor="#60c060">Working</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
     </tr>
     <tr>
       <td><a href="http://www.lispworks.com/">Lispworks v2.4.6 Personal</a></td>
       <td bgcolor="#60c060">Working</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.franz.com/">Allegro Trial Edition 7.0</a></td>
+      <td bgcolor="#60c060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
     </tr>
     <tr>
       <td><a href="http://openmcl.clozure.com/">OpenMCL</a></td>
@@ -349,7 +358,8 @@ begin using the lispbuilder-SDL package to create applications using one of the
       <td bgcolor="#ff6060">Unknown</td>
       
     <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
-      <td></td>
+      <td>
+      </td>
     </tr>
     <tr>
       <td><a href="http://www.cons.org/cmucl/">CMUCL</a></td>
@@ -358,7 +368,9 @@ begin using the lispbuilder-SDL package to create applications using one of the
       <td bgcolor="#ff6060">Unknown</td>
       
     <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
-      <td></td>
+      <td>
+      Justin WIP Debian (sarge)
+      </td>
     </tr>
 </table>
 
@@ -468,7 +480,12 @@ create the CFFI bindings from the SDL C headers. To recreate the SDL CFFI bindin
 libraries from <a href="http://www.libsdl.org/">SDL</a> (these contain the SDL C header files) and place the sdlswig.i 
 interface file into the include/ directory. Retrieve and install the latest version of 
 <a href="http://www.swig.org">SWIG</a> from CVS (the CVS version contains additions necessary to 
-perform the CFFI conversion). Run swig using:</p>
+perform the CFFI conversion). <br><br>
+
+Currently SWIG does not get us 100% of the way with the header wrappers, there are a few things you need to change in the SDL headers, see the file headerchanges.txt in the same directory as the sdlswig.i interface file. There are only a handful of changes, and you can wrap them in "#ifdef SWIG" blocks so you can still use the headers unchanged if you rebuild SDL.<br><br>
+
+
+Run swig using:</p>
 <pre>
 swig -cffi -ILib -ILib\cffi sdlswig.i
 </pre>
