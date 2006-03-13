@@ -17,7 +17,8 @@
   (defparameter *SDL-LOADED* nil)
 
   ;; First priority, try load the binary from the user-specified location.
-  (defparameter *sdl-binaries-user-path* #P"C:/SDL-1.2.9/lib/SDL")
+#+windows  (defparameter *sdl-binaries-user-path* #P"C:/SDL-1.2.9/lib/SDL")
+#+unix  (defparameter *sdl-binaries-user-path* #P"/usr/lib")
 
   ;; Second priority, try load the binary from the sdl-binaries package-specified location.
   (defparameter *sdl-binaries-default-path* #P"")
@@ -33,7 +34,7 @@
   (defun load-sdl-library()
     "load the sdl library"
     (if *SDL-LOADED*
-        (format t "SDL runtime already loaded~%")
+        (format t "SDL library already loaded~%")
       (progn
 	(setf *sdl-binaries-load-path* nil)
 	;; Search priority 1
@@ -64,7 +65,9 @@
 	(setf *SDL-LOADED* t)
 	(format t "Runtime loaded.~%"))))
 
-  (load-sdl-library))
+#+windows  (load-sdl-library)
+#+(and unix cmu) (ext:load-foreign "/usr/lib/libSDL.so")
+)
 
 (defun unload-sdl-library()
   "Unload the library when done"
