@@ -17,7 +17,7 @@
   (defparameter *SDL-LOADED* nil)
 
   ;; First priority, try load the binary from the user-specified location.
-#+windows  (defparameter *sdl-binaries-user-path* #P"C:/SDL-1.2.9/lib/SDL")
+#+win32  (defparameter *sdl-binaries-user-path* #P"C:/SDL-1.2.9/lib/SDL")
 #+unix  (defparameter *sdl-binaries-user-path* #P"/usr/lib")
 
   ;; Second priority, try load the binary from the sdl-binaries package-specified location.
@@ -65,7 +65,7 @@
 	(setf *SDL-LOADED* t)
 	(format t "Runtime loaded.~%"))))
 
-#+windows  (load-sdl-library)
+#+win32  (load-sdl-library)
 #+(and unix cmu) (ext:load-foreign "/usr/lib/libSDL.so")
 )
 
