@@ -10,8 +10,8 @@
 
 (in-package :sdl-examples) 
 
-(defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
-(defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
+(defvar *bmp1-path* (merge-pathnames "examples/sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
+(defvar *bmp2-path* (merge-pathnames "examples/lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
 
 ; window or screen height
 (defparameter *SCREEN-WIDTH* 640)
