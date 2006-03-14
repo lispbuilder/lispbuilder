@@ -14,6 +14,7 @@
     :author "Justin Heyes-Jones <justinhj@gmail.com.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "BSD"
+    :depends-on (cffi)
     :components
 ;    ((:doc-file "README")
 ;     (:doc-file "COPYING")
