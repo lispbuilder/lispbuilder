@@ -20,6 +20,22 @@
 	(padf :int)	
 	(padg :int))
 
+;;;; SDL_VideoInfo uses nasty bitfields. CFFI does not yet support these.
+(defcstruct SDL_VideoInfo
+  (int1 :uint8)
+  (int2 :uint8)
+  (int3 :uint16)
+  (video_mem :unsigned-int)
+  (vfmt :pointer))
+
+;;;; SDL_keysym is redefined here as CFFI treats 'sym' and 'mod' as pointers and not enums.
+(defcstruct SDL_keysym
+  (scancode :unsigned-char)
+  (sym :int)
+  (mod :int)
+  (unicode :unsigned-short))
+
+
 ;;;; This is to handle a C macro where 1 is shifted left n times
 (defun 1<<(x) (ash 1 x))
 
@@ -50,6 +66,11 @@
 
 
 %}
+
+%ignore SDL_Event;
+%ignore SDL_VideoInfo;
+%ignore SDL_keysym;
+
 
 %include "begin_code.h"
 %include "SDL_types.h"

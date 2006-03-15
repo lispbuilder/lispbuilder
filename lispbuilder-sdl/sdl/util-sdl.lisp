@@ -7,21 +7,6 @@
 
 (in-package :lispbuilder-sdl) 
   
-;; LJC: These need to be moved into "sdlswig.i", or something.
-(defcstruct SDL_VideoInfo
-  (int1 :uint8)
-  (int2 :uint8)
-  (int3 :uint16)
-  (video_mem :unsigned-int)
-  (vfmt :pointer))
-
-(defcstruct SDL_keysym
-  (scancode :unsigned-char)
-  (sym :int)
-  (mod :int)
-  (unicode :unsigned-short))
-
-
 ; drawing to surfaces
 
 ;; (defun draw-rect(surface_ptr x y w h color)
