@@ -5,7 +5,7 @@
 (in-package :lispbuilder-windows)
 
 (defsystem lispbuilder-windows
-  :description "lispbuilder-sdl: Windows library wrapper and tools"
+  :description "lispbuilder-windows: Windows library wrapper and tools"
   :version "0.1"
   :author "Frank Buss <fb@frank-buss.de>"
   :maintainer "Common Lisp Application Builder http://www.lispbuilder.org"
