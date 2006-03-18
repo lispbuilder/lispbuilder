@@ -1,0 +1,410 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>lispbuilder-windows</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
+<style type="text/css">
+
+body {
+margin: 10px 20px 20px 200px;
+padding: 0px;
+font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+font-size: small;
+text-align: justify;
+max-width: 50em;
+background-color: white;
+}
+
+a, a:visited {
+text-decoration: none;
+color: maroon;
+}
+
+/* index */
+
+div.index {
+position: fixed;
+top: 0px;
+left: 0px;
+width: 160px;
+height: 100%;
+margin: 0px;
+padding: 5px;
+font-size: 12px;
+background-color: #DCDCDC;
+border-right: thin black solid;
+}
+
+div.index ol {
+color: navy;
+margin: 0px;
+padding-left: 0px;
+}
+
+div.index ol li {
+list-style: none;
+}
+
+div.index ol li:before {
+display: marker;
+content: counter(heading1) ". ";
+counter-increment: heading1;
+}
+
+div.index ol ol {
+padding-left: 10px;
+font-size: 10px;
+list-style: none;
+counter-reset: heading2;
+}
+
+div.index ol ol li:before {
+display: marker;
+content: counter(heading1)"." counter(heading2)" ";
+counter-increment: heading2;
+}
+
+/* heading styles */
+
+body > h1 {
+margin-top: 0px;
+}
+
+h1 {
+margin-top: 40px;
+margin-bottom: 0px;
+color: #4682B4;
+}
+
+h1:before {
+display: marker;
+content: counter(chapter) ". ";
+counter-increment: chapter;
+counter-reset: section1;
+}
+
+h1 + p {
+margin-top: 5px;
+}
+
+h2 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h2:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "  ";
+counter-increment: section1;
+}
+
+h2 + p {
+margin-top: 0px;
+}
+
+h3 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h3:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "." counter(section2) "  ";
+counter-increment: section2;
+}
+
+h3 + p {
+margin-top: 0px;
+}
+
+h4 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h4:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "." counter(section2) "." counter(section3) "  ";
+counter-increment: section3;
+}
+
+h4 + p {
+margin-top: 0px;
+}
+
+/* generated content for images and tables */
+
+img:after {
+content: "[" counter(image) "] " attr(title);
+counter-increment: image;
+display: block;
+font-size: 10px;
+font-weight: bold;
+margin-top: 5px;
+margin-bottom: 20px;
+color: black;
+}
+
+table:after {
+content: "Table " counter(table) ": " attr(summary);
+counter-increment: table;
+display: table-caption;
+caption-side: bottom;
+font-size: 10px;
+font-weight: bold;
+margin-top: 5px;
+margin-bottom: 20px;
+white-space: nowrap;
+color: black;
+}
+
+/* code for examples, code and pathnames*/
+
+div.example table {
+color: black;
+}
+
+div.example, div.code, div.path, div.sequence {
+margin: 10px 0px;
+border: 1px black solid;
+padding: 10px;
+background-color: #F4F4F4;
+counter-reset: image;
+color: maroon;
+}
+
+div.example:before {
+content: "Example " counter(example);
+counter-increment: example;
+display: block;
+}
+
+div.example + p {
+margin-bottom: 0px;
+}
+
+div.code:before {
+content: "Code";
+}
+
+div.path:before {
+content: "Path";
+}
+
+div.sequence:before {
+content: "Sequence";
+}
+
+p.reference:before {
+display: marker;
+content: "[" counter(reference) "]";
+counter-increment: reference;
+font-weight: bold;
+margin-right: 5px;
+}
+
+div.code:before, div.example:before, div.path:before, div.sequence:before {
+font-weight: bold;
+font-size: 15px;
+margin-bottom: 20px;
+color: black;
+}
+
+pre {
+color: Green;
+margin: 0px;
+padding: 0px;
+}
+
+
+/* equation counter */
+
+e:after {
+content: "[" counter(equation) "]";
+counter-increment: equation;
+display: block;
+float: right;
+margin-right: 10px;
+}
+
+/* to prevent the CC image from being numbered */
+
+img[alt="Creative Commons License"] {
+display: inline;
+}
+
+img[alt="Creative Commons License"]:after {
+display: none;
+}
+
+div#cc {
+background-color: #DCDCDC;
+border: thin black solid;
+padding: 10px;
+font-size: 10px;
+}
+
+</style>
+</head>
+<!--
+(CC) 2003 Luke Crook. Some Rights Reserved.
+http://creativecommons.org/licenses/by/1.0
+This page is licensed under a Creative Commons License.
+
+Maintained by the Common Lisp Application Builder project at www.lispbuilder.org
+
+The entire styleguide was copied wholesale from http://www.markschenk.com/cssexp/publication/article.xml
+
+(CC) 2003 Mark Schenk. Some Rights Reserved.
+http://creativecommons.org/licenses/by/1.0
+This page is licensed under a Creative Commons License.
+-->
+<BODY BGCOLOR=#FFFFFF >
+<h1>lispbuilder-windows</h1>
+<h2>Overview</h2>
+<p>The lispbuilder-windows package is a part of the <a href="http://www.lispbuilder.org/">Common 
+  Lisp Application Builder</a> project which is in turn a part of the umbrella 
+  <a href="http://www.lispniks.com/cl-gardeners/">Common Lisp Gardeners</a> project. 
+  The goal is to provide all Microsoft Windows API function, which are available 
+  for C programs when you include the standard windows.h header file.</p>
+<h2>Supported Implementations</h2>
+<p>The following table describes the status of the Lisp implementations that have 
+  been tested with lispbuilder-windows:</p>
+<table border="1" cellpadding="2" cellspacing="0" summary="Supported Implementations">
+  <tr bgcolor="yellow"> 
+    <td><b>Lisp Implementation</b></td>
+    <td ><b>lispbuilder-windows Status</b></td>
+    <td><b>Comments</b></td>
+  </tr>
+  <tr> 
+    <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
+    <td bgcolor="#60c060">Working</td>
+    <td></td>
+  </tr>
+  <tr> 
+    <td><a href="http://www.lispworks.com/">Lispworks v2.4.6 Personal</a></td>
+    <td bgcolor="#60c060">Working</td>
+    <td></td>
+  </tr>
+  <tr> 
+    <td><a href="http://www.franz.com/">Allegro Trial Edition 7.0</a></td>
+    <td bgcolor="#60c060">Unknown</td>
+    <td></td>
+  </tr>
+  <tr> 
+    <td><a href="http://www.sbcl.org/">SBCL</a></td>
+    <td bgcolor="#60c060">Unknown</td>
+    <td> </td>
+  </tr>
+  <tr> 
+    <td><a href="http://www.cons.org/cmucl/">CMUCL</a></td>
+    <td bgcolor="#60c060">Unknown</td>
+    <td></td>
+  </tr>
+</table>
+<h2>Prerequisites</h2>
+<p>The <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
+  and <a href="http://common-lisp.net/project/cffi/tarballs/cffi-060225.tar.gz">CFFI</a> 
+  packages are required prior to the installation of lispbuilder-windows. The 
+  installation of these packages is descibed in the lispbuilder-sdl documentation.</p>
+<h2>Fire it Up</h2>
+<div class="sequence"> 
+  <p>Now you can start CLISP and enter the following at the prompt:</p>
+  <pre>
+(pushnew "/programme/clisp-2.38/asdf/lispbuilder-windows/" asdf:*central-registry*)
+(asdf:operate 'asdf:load-op :lispbuilder-windows)
+(asdf:operate 'asdf:load-op :lispbuilder-windows-examples)
+</pre>
+</div>
+<h2>Running the included examples</h2>
+<div class="example"> 
+  <p>To verify that lispbuilder-sdl is installed correctly, run one of the examples 
+    by entering:</p>
+  <pre>
+(in-package :lispbuilder-windows-examples)
+(gui-eval)
+</pre>
+  <p>You should see a window with a text field with &quot;(timer)&quot; and a 
+    button. When you click the &quot;Eval&quot; button, the text is evaluated 
+    as Lisp. &quot;timer&quot; is a predefined function for an animated timer 
+    like this:</p>
+  <p><img src="timer.jpg" width="606" height="432" /></p>
+  <p>There are three demo functions defined:</p>
+  <pre>
+(defun hello ()
+  (clear)
+  (draw-string 250 180 "Hello World!")
+  (move-to 200 200)
+  (line-to 390 200)
+  (repaint))
+
+(defun painter ()
+  (let ((is-down nil))
+    (install-mouse-down-handler #'(lambda (x y)
+                                    (move-to x y)
+                                    (setf is-down t)))
+    (install-mouse-up-handler #'(lambda (x y)
+                                  (declare (ignore x y))
+                                  (setf is-down nil)))
+    (install-mouse-move-handler #'(lambda (x y)
+                                    (when is-down
+                                      (line-to x y)
+                                      (repaint))))))
+
+(defun timer ()
+  (set-font 200)
+  (let ((start (get-internal-real-time)))
+    (install-timer 100
+                   #'(lambda ()
+                       (let ((elapsed (- (get-internal-real-time) start)))
+                         (draw-string 100 100
+                                      (format nil "~a"
+                                              (floor elapsed
+                                                     INTERNAL-TIME-UNITS-PER-SECOND)))
+                         (repaint))))))
+</pre>
+  <p>You can enter your own Lisp code and execute it with the &quot;eval&quot; 
+    button, e.g.:</p>
+  <pre>
+  	(message-box (format nil "~a"(loop for i from 1 to 10 collect i)))
+  </pre>
+  <img src="messagebox.jpg" width="176" height="126" /></div>
+<p>All available functions: </p>
+<ul>
+  <li>(clear) : clears the offscreen image</li>
+  <li>(draw-string x y text) : draws a text to the offscreen image</li>
+  <li>(move-to x y) : moves the cursor</li>
+  <li>(line-to x y) : draws a line from the current cursor position to x/y</li>
+  <li>(repaint) : paints the offscreen image to the screen</li>
+  <li>(install-mouse-down-handler function) : installs a handler, which is called 
+    on mouse button down events with the current x/y coordinates of the mouse</li>
+  <li>(install-mouse-up-handler function) : installs a handler, which is called 
+    on mouse button up events with the current x/y coordinates of the mouse</li>
+  <li>(install-mouse-move-handler function) : installs a handler, which is called 
+    on mouse move events with the current x/y coordinates of the mouse</li>
+  <li>(install-timer intervall function) : installs the specified function, which 
+    is called every "intervall" milliseconds</li>
+  <li>(message-box text) : shows a message box with the specified text</li>
+</ul>
+<p>All other Common Lisp functions are available, too and some Windows GDI functions.</p>
+<h2>GUI Eval Binary Distribution</h2>
+<p>If you don't want to install all the packages, like CLISP, ASDF, CFFI etc., 
+  then you can download a standalone binary distribution with CLISP integrated. 
+  You need the gui-eval.exe, only, but included is the delivery script and files, 
+  if you want to deliver your own applications.</p>
+<h2>Rebuilding the CFFI Bindings using SWIG</h2>
+<p>The Common Lisp Application Builder project relies on <a href="http://www.swig.org">SWIG</a> 
+  to create the CFFI bindings for Windows. Currently SWIG does not get us 100% 
+  of the way with the header wrappers, there are a few things you need to change 
+  in the Windows headers, see &quot;windows.h&quot;, which is a small and modified 
+  subset of all windows functions.<br>
+  <br>
+  Run swig using and prepare to edit lots of the generated file:</p>
+<pre>
+swig -cffi winswig.i
+</pre></div>
+</body>
+</html>
