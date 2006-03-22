@@ -65,8 +65,8 @@
 	(setf *SDL-LOADED* t)
 	(format t "Runtime loaded.~%"))))
 
-#+win32  (load-sdl-library)
-#+(and unix cmu) (ext:load-foreign "/usr/lib/libSDL.so")
+  #+(and :win32 :clisp) (load-sdl-library)
+  #+(and unix cmu) (ext:load-foreign "/usr/lib/libSDL.so")
 )
 
 (defun unload-sdl-library()
