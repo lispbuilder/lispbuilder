@@ -1,42 +1,32 @@
-SDL_error.h
+"SDL_events.h"
+- Remove event bit masks (SDL_EVENTMASK) by enclosing in SWIG defines as follows:
 
-Removed SDL_SetError function because it uses variable length parameter list
-
-SDL_events.h
-
-Removed SDL_Event declared as a union
-
-Removed event bit masks (SDL_EVENTMASK) as it uses macros 
-
-SDL_joystick.h
-
-SDL_HAT_RIGHTUP etc are made by or operations
-		I changed it so they are declared explicitly
-
-SDL_keysym.h
-
-enums cannot have the same value, so I changed SDLK_FIRST to be 1
-
-KMOD_CTRL etc used or operator in a macro, now explicit
-
-SDL_opengl.h
-
-Redefined APIENTRYP to be nothing
-
-SDL_types.h
-
-Removed SDL_COMPILE_TYPE_ASSERT, complicated macro
-
-SDL_timer.h
-
-Parameter for SDL_RemoveTimer was called t, causes an error
-
-
-
-
-
-
-
-
-
-
+#ifndef SWIG
+/* Predefined event masks */
+#define SDL_EVENTMASK(X)	(1<<(X))
+enum {
+	SDL_ACTIVEEVENTMASK	= SDL_EVENTMASK(SDL_ACTIVEEVENT),
+	SDL_KEYDOWNMASK		= SDL_EVENTMASK(SDL_KEYDOWN),
+	SDL_KEYUPMASK		= SDL_EVENTMASK(SDL_KEYUP),
+	SDL_MOUSEMOTIONMASK	= SDL_EVENTMASK(SDL_MOUSEMOTION),
+	SDL_MOUSEBUTTONDOWNMASK	= SDL_EVENTMASK(SDL_MOUSEBUTTONDOWN),
+	SDL_MOUSEBUTTONUPMASK	= SDL_EVENTMASK(SDL_MOUSEBUTTONUP),
+	SDL_MOUSEEVENTMASK	= SDL_EVENTMASK(SDL_MOUSEMOTION)|
+	                          SDL_EVENTMASK(SDL_MOUSEBUTTONDOWN)|
+	                          SDL_EVENTMASK(SDL_MOUSEBUTTONUP),
+	SDL_JOYAXISMOTIONMASK	= SDL_EVENTMASK(SDL_JOYAXISMOTION),
+	SDL_JOYBALLMOTIONMASK	= SDL_EVENTMASK(SDL_JOYBALLMOTION),
+	SDL_JOYHATMOTIONMASK	= SDL_EVENTMASK(SDL_JOYHATMOTION),
+	SDL_JOYBUTTONDOWNMASK	= SDL_EVENTMASK(SDL_JOYBUTTONDOWN),
+	SDL_JOYBUTTONUPMASK	= SDL_EVENTMASK(SDL_JOYBUTTONUP),
+	SDL_JOYEVENTMASK	= SDL_EVENTMASK(SDL_JOYAXISMOTION)|
+	                          SDL_EVENTMASK(SDL_JOYBALLMOTION)|
+	                          SDL_EVENTMASK(SDL_JOYHATMOTION)|
+	                          SDL_EVENTMASK(SDL_JOYBUTTONDOWN)|
+	                          SDL_EVENTMASK(SDL_JOYBUTTONUP),
+	SDL_VIDEORESIZEMASK	= SDL_EVENTMASK(SDL_VIDEORESIZE),
+	SDL_VIDEOEXPOSEMASK	= SDL_EVENTMASK(SDL_VIDEOEXPOSE),
+	SDL_QUITMASK		= SDL_EVENTMASK(SDL_QUIT),
+	SDL_SYSWMEVENTMASK	= SDL_EVENTMASK(SDL_SYSWMEVENT)
+};
+#endif
