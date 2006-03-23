@@ -15,11 +15,8 @@
 (defconstant SDL_BIG_ENDIAN 4321)
 
 ;; Set the byte order for the current CPU
-;; For some reason Lispworks on x86 has :little-endian on the *features* list. Weird considering x86 is
-;; big endian.
-;#-little-endian (defconstant SDL_BYTEORDER SDL_BIG_ENDIAN)
-;#+little-endian (defconstant SDL_BYTEORDER SDL_LIL_ENDIAN)
-(defconstant SDL_BYTEORDER SDL_BIG_ENDIAN)
+#-(or little-endian PC386 X86) (defconstant SDL_BYTEORDER SDL_BIG_ENDIAN)
+#+(or little-endian PC386 X86) (defconstant SDL_BYTEORDER SDL_LIL_ENDIAN)
 ;;;; End
 
 ;;;; the SDL_Event is a union which doesn't work yet with swig

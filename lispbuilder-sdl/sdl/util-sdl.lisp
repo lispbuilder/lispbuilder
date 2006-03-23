@@ -12,10 +12,10 @@
 
 ;;;; "SDL_audio.h"
 ;;;; Must define the CPU byte order.
-(defconstant AUDIO_U16SYS AUDIO_U16MSB) ;; Big Endian
-(defconstant AUDIO_S16SYS AUDIO_S16MSB) ;; Big Endian
-;;(defconstant AUDIO_U16SYS AUDIO_U16LSB) ;; Little Endian
-;;(defconstant AUDIO_S16SYS AUDIO_S16LSB) ;; Little Endian
+#-(or little-endian PC386 X86) (defconstant AUDIO_U16SYS AUDIO_U16MSB) ;; Big Endian
+#-(or little-endian PC386 X86) (defconstant AUDIO_S16SYS AUDIO_S16MSB) ;; Big Endian
+#+(or little-endian PC386 X86) (defconstant AUDIO_U16SYS AUDIO_U16LSB) ;; Little Endian
+#+(or little-endian PC386 X86) (defconstant AUDIO_S16SYS AUDIO_S16LSB) ;; Little Endian
 ;;;; end "SDL_audio.h"
 
 ;;;; "SDL_joystick.h"
