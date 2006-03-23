@@ -15,8 +15,8 @@
 (defconstant SDL_BIG_ENDIAN 4321)
 
 ;; Set the byte order for the current CPU
-#-(or little-endian PC386 X86) (defconstant SDL_BYTEORDER SDL_BIG_ENDIAN)
-#+(or little-endian PC386 X86) (defconstant SDL_BYTEORDER SDL_LIL_ENDIAN)
+#-(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_BIG_ENDIAN)
+#+(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_LIL_ENDIAN)
 ;;;; End
 
 ;;;; the SDL_Event is a union which doesn't work yet with swig
