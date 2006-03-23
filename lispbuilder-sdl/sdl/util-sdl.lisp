@@ -7,6 +7,198 @@
 
 (in-package :lispbuilder-sdl) 
   
+;;;; Implementation of SDL macros follows
+
+
+;;;; "SDL_audio.h"
+;;;; Must define the CPU byte order.
+(defconstant AUDIO_U16SYS AUDIO_U16MSB) ;; Big Endian
+(defconstant AUDIO_S16SYS AUDIO_S16MSB) ;; Big Endian
+;;(defconstant AUDIO_U16SYS AUDIO_U16LSB) ;; Little Endian
+;;(defconstant AUDIO_S16SYS AUDIO_S16LSB) ;; Little Endian
+;;;; end "SDL_audio.h"
+
+;;;; "SDL_joystick.h"
+(defconstant SDL_HAT_RIGHTUP   (logior SDL_HAT_RIGHT SDL_HAT_UP))
+(defconstant SDL_HAT_RIGHTDOWN (logior SDL_HAT_RIGHT SDL_HAT_DOWN))
+(defconstant SDL_HAT_LEFTUP    (logior SDL_HAT_LEFT SDL_HAT_UP))
+(defconstant SDL_HAT_LEFTDOWN  (logior SDL_HAT_LEFT SDL_HAT_DOWN))
+;;;; end "SDL_joystick.h"
+
+;;;; "SDL_keysym.h"
+(defconstant KMOD_CTRL	(logior  (cffi:foreign-enum-value 'SDLMod :KMOD_LCTRL)
+				 (cffi:foreign-enum-value 'SDLMod :KMOD_RCTRL)))
+(defconstant KMOD_SHIFT	(logior  (cffi:foreign-enum-value 'SDLMod :KMOD_LSHIFT)
+				 (cffi:foreign-enum-value 'SDLMod :KMOD_RSHIFT)))
+(defconstant KMOD_ALT	(logior  (cffi:foreign-enum-value 'SDLMod :KMOD_LALT)
+				 (cffi:foreign-enum-value 'SDLMod :KMOD_RALT)))
+(defconstant KMOD_META	(logior  (cffi:foreign-enum-value 'SDLMod :KMOD_LMETA)
+				 (cffi:foreign-enum-value 'SDLMod :KMOD_RMETA)))
+;;;; end "SDL_keysym.h"
+
+;;;; "SDL_version.h"
+(defun SDL_VERSION (x)
+  (cffi:with-foreign-slots ((major minor patch) x SDL_version)
+    (setf major SDL_MAJOR_VERSION
+          minor SDL_MINOR_VERSION
+          patch SDL_PATCHLEVEL)))
+
+(defun SDL_VERSIONNUM (major minor patch)
+        (+  (* major 1000)
+            (* minor 100)
+            patch))
+
+(defun SDL_COMPILEDVERSION ()
+        (SDL_VERSIONNUM SDL_MAJOR_VERSION SDL_MINOR_VERSION SDL_PATCHLEVEL))
+
+(defun SDL_VERSION_ATLEAST (x y z)
+  (if (>= (SDL_COMPILEDVERSION) (SDL_VERSIONNUM x y z))
+      1
+      0))
+;;;; end "SDL_version.h"
+
+;;;; "SDL_mutex.h"
+(defun SDL_LockMutex (m)
+  (SDL_mutexP m))
+
+(defun SDL_UnlockMutex (m)
+  (SDL_mutexV m))
+;;;; end "SDL_mutex.h"
+
+;;;; "SDL_video.h"
+(defun SDL_MUSTLOCK (surface)
+  (if (> 0 (cffi:foreign-slot-value surface 'SDL_Surface 'offset))
+      (values 1)
+    (if (not (eql 0 (logand (cffi:foreign-slot-value surface 'SDL_Surface 'flags)
+                            (logior SDL_HWSURFACE SDL_ASYNCBLIT SDL_RLEACCEL))))
+        (values 1)
+      (values 0))))
+
+(defun SDL_LoadBMP (file)
+  (SDL_LoadBMP_RW (SDL_RWFROMFILE file "rb") 1))
+
+;; (defun SDL_AllocSurface ()
+;;   (SDL_CreateRGBSurface))
+
+(defun SDL_SaveBMP (surface file)
+  (SDL_SaveBMP_RW surface (SDL_RWFROMFILE file "wb") 1))
+
+(defun SDL_BlitSurface (src srcrect dst dstrect)
+  (SDL_UpperBlit src srcrect dst dstrect))
+;;;; end "SDL_video.h"
+
+;;;; "SDL_cdrom.h"
+(defun CD_INDRIVE (status)
+  (if (> status 0)
+      t
+    nil))
+
+(defconstant CD_FPS 75)
+(defun FRAMES_TO_MSF (f)
+  (values 
+   (mod f CD_FPS)
+   (mod (/ f CD_FPS) 60)
+   (/ (/ f CD_FPS) 60)))
+
+(defun MSF_TO_FRAMES (M S F)
+  (+ 
+   (* M 60 CD_FPS)
+   (* S CD_FPS)
+   F))
+;;;; end "SDL_cdrom.h"
+
+;;;; "SDL_audio.h"
+(defun SDL_LoadWAV (file spec audio-buf audio-len)
+  (SDL_LoadWAV_RW (SDL_RWFROMFILE file "rb")
+		  1
+		  spec
+		  audio-buf
+		  audio-len))
+;;;; end "SDL_audio.h"
+
+;;;; "SDL_error.h"
+(defun SDL_OutOfMemory ()
+  (SDL_Error (cffi:foreign-enum-value 'SDL_errorcode :SDL_ENOMEM)))
+;;;; end "SDL_error.h"
+
+;;;; "SDL_mouse.h"
+(defun SDL_BUTTON (X)
+  (ash SDL_PRESSED (- X 1)))
+
+(defun SDL_BUTTON_LMASK ()
+  (SDL_BUTTON SDL_BUTTON_LEFT))
+
+(defun SDL_BUTTON_MMASK ()
+  (SDL_BUTTON SDL_BUTTON_MIDDLE))
+
+(defun SDL_BUTTON_RMASK ()
+  (SDL_BUTTON SDL_BUTTON_RIGHT))
+;;;; end "SDL_mouse.h"
+
+;;;; "SDL_events.h"
+(defun SDL_EVENTMASK (X)
+  (ash 1 X ))
+
+(defun SDL_ACTIVEEVENTMASK ()
+  (SDL_EVENTMASK SDL_ACTIVEEVENT))
+
+(defun SDL_KEYDOWNMASK ()
+  (SDL_EVENTMASK SDL_KEYDOWN))
+
+(defun SDL_KEYUPMASK ()
+  (SDL_EVENTMASK SDL_KEYUP))
+
+(defun SDL_MOUSEMOTIONMASK ()
+  (SDL_EVENTMASK SDL_MOUSEMOTION))
+
+(defun SDL_MOUSEBUTTONDOWNMASK ()
+  (SDL_EVENTMASK SDL_MOUSEBUTTONDOWN))
+
+(defun SDL_MOUSEBUTTONUPMASK ()
+  (SDL_EVENTMASK SDL_MOUSEBUTTONUP))
+
+(defun SDL_MOUSEEVENTMASK ()
+  (logior (SDL_EVENTMASK SDL_MOUSEMOTION)
+          (SDL_EVENTMASK SDL_MOUSEBUTTONDOWN)
+          (SDL_EVENTMASK SDL_MOUSEBUTTONUP)))
+
+(defun SDL_JOYAXISMOTIONMASK ()
+  (SDL_EVENTMASK SDL_JOYAXISMOTION))
+
+(defun SDL_JOYBALLMOTIONMASK ()
+  (SDL_EVENTMASK SDL_JOYBALLMOTION))
+
+(defun SDL_JOYHATMOTIONMASK ()
+  (SDL_EVENTMASK SDL_JOYHATMOTION))
+
+(defun SDL_JOYBUTTONDOWNMASK ()
+  (SDL_EVENTMASK SDL_JOYBUTTONDOWN))
+
+(defun SDL_JOYBUTTONUPMASK ()
+  (SDL_EVENTMASK SDL_JOYBUTTONUP))
+
+(defun SDL_JOYEVENTMASK ()
+  (logior (SDL_EVENTMASK SDL_JOYAXISMOTION)
+          (SDL_EVENTMASK SDL_JOYBALLMOTION)
+          (SDL_EVENTMASK SDL_JOYHATMOTION)
+          (SDL_EVENTMASK SDL_JOYBUTTONDOWN)
+          (SDL_EVENTMASK SDL_JOYBUTTONUP)))
+
+(defun SDL_VIDEORESIZEMASK () 
+  (SDL_EVENTMASK SDL_VIDEORESIZE))
+
+(defun SDL_VIDEOEXPOSEMASK ()
+  (SDL_EVENTMASK SDL_VIDEOEXPOSE))
+
+(defun SDL_QUITMASK ()
+  (SDL_EVENTMASK SDL_QUIT))
+
+(defun SDL_SYSWMEVENTMASK ()
+  (SDL_EVENTMASK SDL_SYSWMEVENT))
+;;;; end "SDL_events.h"
+
+;;;; end Lisp Macros
+
 ; drawing to surfaces
 
 ;; (defun draw-rect(surface_ptr x y w h color)
@@ -19,16 +211,17 @@
 ;;     (if (< 0 (SDL_FillRect surface_ptr rect_ptr color))
 ;; 	(error "SDL_FillRect failed"))))
 
+
 (defun draw-rect(surface_ptr x y w h color &optional rect_ptr)
   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
   (if rect_ptr
       (if (< 0 (SDL_FillRect surface_ptr rect_ptr color))
 	  (error "SDL_FillRect failed"))
       (with-foreign-object (rect_ptr 'SDL_Rect)
-	(setf (foreign-slot-value rect_ptr 'SDL_Rect 'x) x)
-	(setf (foreign-slot-value rect_ptr 'SDL_Rect 'y) y)
-	(setf (foreign-slot-value rect_ptr 'SDL_Rect 'w) w)
-	(setf (foreign-slot-value rect_ptr 'SDL_Rect 'h) h)
+	(setf (cffi:foreign-slot-value rect_ptr 'SDL_Rect 'x) x)
+	(setf (cffi:foreign-slot-value rect_ptr 'SDL_Rect 'y) y)
+	(setf (cffi:foreign-slot-value rect_ptr 'SDL_Rect 'w) w)
+	(setf (cffi:foreign-slot-value rect_ptr 'SDL_Rect 'h) h)
 	(if (< 0 (SDL_FillRect surface_ptr rect_ptr color))
 	    (error "SDL_FillRect failed"))))
   rect_ptr)
@@ -227,7 +420,7 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
   "Get the pixel at (x, y) as a Uint32 color value
 NOTE: The surface must be locked before calling this.
 Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
-  (let* ((format (foreign-slot-value surface 'SDL_Surface 'format))
+  (let* ((format (cffi:foreign-slot-value surface 'SDL_Surface 'format))
 	 (bpp (foreign-slot-value format 'SDL_PixelFormat 'BytesPerPixel))
 	 (offset (+ (* y (foreign-slot-value surface 'SDL_Surface 'Pitch)) (* x bpp)))
 	 (pixel-address (foreign-slot-value surface 'SDL_Surface 'Pixels)))
@@ -284,8 +477,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
   Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
   (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
 
-(defun 1<<(x)
-  (ash x 1))
+;; (defun 1<<(x)
+;;   (ash x 1))
 
 (defun get-video-info (&key (video-info (SDL_GetVideoInfo)) (info nil))
   "Returns information about the video hardware.
