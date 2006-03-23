@@ -4,14 +4,17 @@
 ;;;; see COPYING for license
 
 ;;;; To run this sample
-;;;; (load "setup") which just loads the cffi and lispbuilder-sdl packages
 ;;;; (load "sdl_bmp_sample.lisp")
 ;;;; (sdl::bmp_sample) 
 
 (in-package :sdl-examples) 
 
-(defvar *bmp1-path* (merge-pathnames "examples/sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
-(defvar *bmp2-path* (merge-pathnames "examples/lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
+#-:lispworks (defvar *bmp1-path* (merge-pathnames "examples/sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
+#-:lispworks (defvar *bmp2-path* (merge-pathnames "examples/lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
+
+#+:lispworks (defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
+#+:lispworks (defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
+
 
 ; window or screen height
 (defparameter *SCREEN-WIDTH* 640)
@@ -37,6 +40,7 @@
 
 
 (defun bmp_sample () "demonstrates how to manage and display images from .bmp files"
+  (sdl::load-sdl-library)
   (sdl::with-init ()
     (let ((display (sdl::set-window 640 480)))
       (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
