@@ -185,6 +185,10 @@
 	(setf *SDL-GFX-LOADED* t)
 	(format t "Runtime loaded.~%"))))
 
+#+(and :win32 :clisp) (load-sdl-gfx-library)
+#+(and unix cmu) (ext:load-foreign "/usr/lib/libSDL_gfx.so")
+)
+
 (defun unload-sdl-gfx-library()
   "Unload the library when done"
   (if *SDL-GFX-LOADED*
@@ -193,4 +197,3 @@
 	(format t "Closed SDL_gfx runtime library~%")
 	(setf *SDL-GFX-LOADED* nil))
       (format t "SDL_gfx runtime library is not loaded~%")))
-)
