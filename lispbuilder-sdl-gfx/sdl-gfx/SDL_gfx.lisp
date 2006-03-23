@@ -139,20 +139,9 @@
     "0x6c" "0x36" "0x36" "0x36" "0x36" "0x00" "0x00" "0x00" "0x78" "0x0c" "0x18" "0x30" "0x7c" "0x00" "0x00" "0x00"
     "0x00" "0x00" "0x3c" "0x3c" "0x3c" "0x3c" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00")))
    (dotimes (i 2048)
-     (setf (cffi:mem-aref gfxPrimitivesFontdata :char i) (parse-integer (first font-data) 
-                                                                        :junk-allowed t :start 2 :radix 16))
+     (setf (cffi:mem-aref gfxPrimitivesFontdata :unsigned-char i) (parse-integer (first font-data) 
+										 :junk-allowed t :start 2 :radix 16))
      (setf font-data (cdr font-data))))
-
-;; Need to redefine SDL_imageFilterBinarizeUsingThreshold as it contains a parameter "T"
-;; that the SWIG CFFI converter cannot process.
-;(defcfun ("SDL_imageFilterBinarizeUsingThreshold" SDL_imageFilterBinarizeUsingThreshold) :int
-;  (Src1 :pointer)
-;  (Dest :pointer)
-;  (length :int)
-;  (t-param :unsigned-char))
-
-
-
 
 ;;;SWIG wrapper code starts here
 
