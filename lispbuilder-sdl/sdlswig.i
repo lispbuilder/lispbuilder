@@ -33,9 +33,9 @@
 
 ;;;; SDL_VideoInfo uses nasty bitfields. CFFI does not yet support these.
 (defcstruct SDL_VideoInfo
-  (int1 :uint8)
-  (int2 :uint8)
-  (int3 :uint16)
+  (int1 :unsigned-char)
+  (int2 :unsigned-char)
+  (int3 :unsigned-short)
   (video_mem :unsigned-int)
   (vfmt :pointer))
 
