@@ -9,11 +9,14 @@
 
 (in-package :sdl-examples) 
 
-#-:lispworks (defvar *bmp1-path* (merge-pathnames "examples/sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
-#-:lispworks (defvar *bmp2-path* (merge-pathnames "examples/lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
+;; #-:lispworks (defvar *bmp1-path* (merge-pathnames "examples/sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
+;; #-:lispworks (defvar *bmp2-path* (merge-pathnames "examples/lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
 
-#+:lispworks (defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
-#+:lispworks (defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
+;; #+:lispworks (defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
+;; #+:lispworks (defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
+
+(defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
+(defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
 
 
 ; window or screen height
