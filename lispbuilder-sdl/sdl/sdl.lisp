@@ -76,6 +76,16 @@
 (defconstant SDL_RELEASED #x00)
 ;;;; end "SDL_types.h"
 
+;;;; "SDL_video.h"
+(defcfun ("SDL_GL_SetAttribute" SDL_GL_SetAttribute) :int
+  (attr :int)
+  (value :int))
+
+(defcfun ("SDL_GL_GetAttribute" SDL_GL_GetAttribute) :int
+  (attr :int)
+  (value :pointer))
+;;;; end "SDL_video.h"
+
 ;;;; "SDL_syswm.h"
 #+win32 (defcstruct SDL_SysWMmsg
 	(version :pointer)
@@ -1326,14 +1336,6 @@
 
 (defcfun ("SDL_GL_GetProcAddress" SDL_GL_GetProcAddress) :pointer
   (proc :string))
-
-(defcfun ("SDL_GL_SetAttribute" SDL_GL_SetAttribute) :int
-  (attr :pointer)
-  (value :int))
-
-(defcfun ("SDL_GL_GetAttribute" SDL_GL_GetAttribute) :int
-  (attr :pointer)
-  (value :pointer))
 
 (defcfun ("SDL_GL_SwapBuffers" SDL_GL_SwapBuffers) :void)
 
