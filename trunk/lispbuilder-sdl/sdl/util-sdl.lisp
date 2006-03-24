@@ -925,9 +925,9 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
       (apply #'logior keyword-args)))
 
 (defun init-sdl (&key (flags SDL_INIT_VIDEO))
-  (if (> 0 (SDL_Init (set-flags flags)))
-      nil
-      t))
+  (if (equal 0 (SDL_Init (set-flags flags)))
+      t
+      nil))
 
 (defmacro with-init (init-flags &body body)
   "Attempts to initialize the SDL subsystems using SDL_Init.
@@ -937,9 +937,8 @@ if any fatal error occurs within &body.
 SDL_INIT_JOYSTICK, SDL_INIT_NOPARACHUTE, SDL_INIT_EVENTTHREAD or SDL_INIT_EVERYTHING."
   `(block nil
     (unwind-protect
-	 (let ((init-succ (init-sdl :flags (list ,@init-flags))))
-	   (when (not (equal init-succ -1))
-	     ,@body))
+	 (when (init-sdl :flags (list ,@init-flags))
+	   ,@body)
       (SDL_Quit))))
 
 (defun to-radian (degree)
