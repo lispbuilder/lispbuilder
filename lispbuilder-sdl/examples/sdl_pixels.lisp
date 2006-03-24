@@ -33,6 +33,7 @@
 (defparameter *test-color* nil)
 
 (defun pixels()
+  (sdl::load-sdl-library)
   "demonstrates put-pixel and get-pixel as well as color and locking functions"
   (if (= 0 (sdl::sdl_init sdl::SDL_INIT_VIDEO))
       (let ((*display-surface* (sdl::SDL_SetVideoMode *SCREEN-WIDTH* *SCREEN-HEIGHT* 0 sdl::SDL_ANYFORMAT)))

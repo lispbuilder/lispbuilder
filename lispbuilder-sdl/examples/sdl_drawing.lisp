@@ -120,6 +120,7 @@
      (sdl::SDL_UpdateRect surface 0 0 0 0))))
 
 (defun mouse-painter ()
+ (sdl::load-sdl-library)
  (unless (zerop (sdl::sdl_init sdl::SDL_INIT_VIDEO)) (error "Unable to start SDL"))
  (sdl::SDL_WM_SetCaption "Mouse Painter" "Mouse Painter")
  (let ((surface (sdl::SDL_SetVideoMode +screen-width+ +screen-height+ 0
