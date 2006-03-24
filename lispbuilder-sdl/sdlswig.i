@@ -77,6 +77,16 @@
 (defconstant SDL_RELEASED #x00)
 ;;;; end "SDL_types.h"
 
+;;;; "SDL_video.h"
+(defcfun ("SDL_GL_SetAttribute" SDL_GL_SetAttribute) :int
+  (attr :int)
+  (value :int))
+
+(defcfun ("SDL_GL_GetAttribute" SDL_GL_GetAttribute) :int
+  (attr :int)
+  (value :pointer))
+;;;; end "SDL_video.h"
+
 ;;;; "SDL_syswm.h"
 #+win32 (defcstruct SDL_SysWMmsg
 	(version :pointer)
@@ -206,6 +216,9 @@ typedef long LPARAM;
 %ignore AUDIO_U16SYS;
 %ignore AUDIO_S16SYS;
 %ignore CD_FPS;
+%ignore SDL_GL_SetAttribute;
+%ignore SDL_GL_GetAttribute;
+
 
 %include "begin_code.h"
 //%include "SDL_types.h"
