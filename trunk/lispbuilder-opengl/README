@@ -1,0 +1,17 @@
+CFFI gl.h Mesa v 6.4.2 Wrapper and sample code
+(C)2006 Luke Crook
+
+See COPYING for license
+
+I've tested this with Lispworks Personal Edition 4.4.6, and CLISP 2.38, although it 
+should work on any lisp with working asdf and cffi.
+
+To use:
+
+Start asdf, cffi, lispbuilder-sdl, lispbuilder-sdl-binaries and lispbuilder-opengl
+Run (gl-examples:opengl-gears)
+
+To make the wrappers:
+
+Copy sdlswig.i (the swig interface file) to the opengl include directory 
+run 'swig -cffi openglswig.i'
