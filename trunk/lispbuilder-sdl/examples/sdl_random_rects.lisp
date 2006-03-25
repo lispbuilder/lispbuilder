@@ -10,7 +10,7 @@
 ;;;; (sdl::random-rects2)
 ;;;; (sdl::random-rects3)
 
-(in-package :sdl-examples) 
+(in-package #:sdl-examples) 
   
 (defun random-rects1 ()
   (sdl::load-sdl-library)

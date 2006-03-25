@@ -5,7 +5,7 @@
 ;; This file contains some useful functions for using SDL_gfx from Common lisp
 ;; using sdl_gfx.lisp (the CFFI wrapper)
 
-(in-package :lispbuilder-sdl-gfx)
+(in-package #:lispbuilder-sdl-gfx)
   
 
 ;; (defun load-font (path width height)

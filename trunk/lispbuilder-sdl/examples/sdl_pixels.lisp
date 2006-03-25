@@ -8,7 +8,7 @@
 ;;;; (load "sdl_pixels.lisp")
 ;;;; (lispbuilder-sdl::pixels) 
 
-(in-package :sdl-examples) 
+(in-package #:sdl-examples) 
   
 ; window or screen height
 (defparameter *SCREEN-WIDTH* 640)

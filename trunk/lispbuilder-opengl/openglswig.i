@@ -9,7 +9,7 @@
 ;;;; Note: (1) "gl.h" contains a LOT of typedef void (APIENTRYP blah blah blah) and
 ;;;;           none of these are yet defined.
 
-(in-package :lispbuilder-opengl)
+(in-package #:lispbuilder-opengl)
 
 (defctype GLenum :unsigned-int)
 (defctype GLboolean :unsigned-char)

@@ -1,13 +1,16 @@
 ;;; -*- lisp -*-
 
-(in-package :common-lisp-user)
+(in-package #:cl-user)
 
-(defpackage :lispbuilder-sdl
+(defpackage #:lispbuilder-sdl
   (:nicknames :sdl)
-  (:use :common-lisp :cffi)
-  (:documentation "The main package of `lispbuilder-sdl'."))
+  (:use #:cl #:cffi)
+  (:documentation "The main package of `lispbuilder-sdl'.")
+  (:export
+   #:*sdl-binaries-user-path*
+   #:load-sdl-library #:unload-sdl-library))
 
-(in-package :lispbuilder-sdl) 
+(in-package #:lispbuilder-sdl) 
 
 ; sdl library and sdl init helpers
 (eval-when (:compile-toplevel :load-toplevel :execute)

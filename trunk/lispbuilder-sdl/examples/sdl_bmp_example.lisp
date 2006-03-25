@@ -7,7 +7,7 @@
 ;;;; (load "sdl_bmp_sample.lisp")
 ;;;; (sdl::bmp_sample) 
 
-(in-package :sdl-examples) 
+(in-package #:sdl-examples) 
 
 ;; #-:lispworks (defvar *bmp1-path* (merge-pathnames "examples/sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
 ;; #-:lispworks (defvar *bmp2-path* (merge-pathnames "examples/lisp.bmp" (or *load-truename* *default-pathname-defaults*)))

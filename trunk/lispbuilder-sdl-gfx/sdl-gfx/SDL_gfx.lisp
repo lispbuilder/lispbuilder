@@ -5,7 +5,7 @@
 ;;;; (C)2006 Luke J Crook
 ;;;; See COPYING for license
 
-(in-package :lispbuilder-sdl-gfx)
+(in-package #:lispbuilder-sdl-gfx)
 
 (defconstant gfxPrimitivesFontdata (cffi:foreign-alloc :char :count 2048 :initial-element 0))
 

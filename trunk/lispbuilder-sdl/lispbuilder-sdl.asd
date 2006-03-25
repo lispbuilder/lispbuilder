@@ -1,8 +1,8 @@
 ;;; -*- lisp -*-
 
-(defpackage lispbuilder-sdl-system
-  (:use :common-lisp :asdf :cffi))
-(in-package :lispbuilder-sdl-system)
+(defpackage #:lispbuilder-sdl-system
+  (:use #:cl #:asdf))
+(in-package #:lispbuilder-sdl-system)
 
 (defsystem lispbuilder-sdl
     :description "lispbuilder-sdl: SDL library wrapper and tools"
