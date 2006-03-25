@@ -1,8 +1,8 @@
 ;;; -*- lisp -*-
 
-(defpackage :lispbuilder-sdl-gfx-system
-  (:use :common-lisp :asdf :cffi))
-(in-package :lispbuilder-sdl-gfx-system)
+(defpackage #:lispbuilder-sdl-gfx-system
+  (:use #:cl #:asdf))
+(in-package #:lispbuilder-sdl-gfx-system)
 
 (defsystem lispbuilder-sdl-gfx
     :description "lispbuilder-sdl-gfx: SDL_gfx v2.0.13 library wrapper and tools"
@@ -16,6 +16,7 @@
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "BSD"
+    :depends-on (cffi lispbuilder-sdl)
     :components
     ((:module "sdl-gfx"
 	      :components

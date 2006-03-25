@@ -1,7 +1,7 @@
 ;;; -*- lisp -*-
 
-(defpackage :lispbuilder-sdl-gfx-examples-system
-  (:use :common-lisp :asdf :cffi))
+(defpackage #:lispbuilder-sdl-gfx-examples-system
+  (:use #:cl #:asdf))
 (in-package :lispbuilder-sdl-gfx-examples-system)
 
 (defsystem lispbuilder-sdl-gfx-examples

@@ -1,13 +1,13 @@
 ;;; -*- lisp -*-
 
-(in-package :common-lisp-user)
+(in-package #:cl-user)
 
-(defpackage :lispbuilder-opengl
+(defpackage #:lispbuilder-opengl
   (:nicknames :gl)
-  (:use :common-lisp :cffi)
+  (:use #:cl #:cffi)
   (:documentation "The main package of `lispbuilder-opengl'."))
 
-(in-package :lispbuilder-opengl)
+(in-package #:lispbuilder-opengl)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   #+win32 (load-foreign-library "OPENGL32.dll")

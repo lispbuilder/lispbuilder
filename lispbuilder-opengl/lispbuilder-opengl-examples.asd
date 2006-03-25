@@ -1,8 +1,8 @@
 ;;; -*- lisp -*-
 
-(defpackage lispbuilder-opengl-examples-system
-  (:use :common-lisp :asdf :cffi))
-(in-package lispbuilder-opengl-examples-system)
+(defpackage #:lispbuilder-opengl-examples-system
+  (:use #:cl #:asdf))
+(in-package #:lispbuilder-opengl-examples-system)
 
 (defsystem lispbuilder-opengl-examples
     :description "Examples for the lispbuilder-opengl package."

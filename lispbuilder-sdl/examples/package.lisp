@@ -1,16 +1,11 @@
 ;;; -*- lisp -*-
 
-(in-package :common-lisp-user)
+(in-package #:cl-user)
 
-(defpackage :lispbuilder-sdl-examples
+(defpackage #:lispbuilder-sdl-examples
   (:nicknames :sdl-examples)
-  (:use :common-lisp :cffi :lispbuilder-sdl)
+  (:use #:cl #:cffi)
   (:documentation "Examples for `lispbuilder-sdl'.")
-  (:export :bmp_sample)
-  (:export :pixels)
-  (:export :recursive-rects)
-  (:export :mouse-painter)
-  (:export :random-rects1)
-  (:export :random-rects2)
-  (:export :random-rects3))
+  (:export #:bmp_sample #:pixels #:recursive-rects #:mouse-painter #:random-rects1
+	   #:random-rects2 #:random-rects3))
 

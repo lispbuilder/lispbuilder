@@ -9,7 +9,7 @@
 ;; (load "sdl_drawing")
 ;; (lispbuilder-sdl::mouse-painter)
 
-(in-package :sdl-examples)
+(in-package #:sdl-examples)
 
 (defconstant +screen-width+ 640)
 (defconstant +screen-height+ 480)

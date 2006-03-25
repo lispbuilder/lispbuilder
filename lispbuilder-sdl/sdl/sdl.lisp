@@ -7,7 +7,7 @@
 ;;;;
 ;;;; This .i file has been tested with SDL version 1.2.9
 
-(in-package :sdl)
+(in-package #:lispbuilder-sdl)
 
 ;;;; First, set the byte-order: "SDL_byteorder.h"
 (defconstant SDL_LIL_ENDIAN 1234)

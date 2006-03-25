@@ -7,7 +7,7 @@
 ;; (load "sdl_recursive_rects.lisp")
 ;; (sdl::recursive-rects) recursively and randomly divides up the screen with rectangles
 
-(in-package :sdl-examples)
+(in-package #:sdl-examples)
   
 ; window or screen height
 (defparameter *SCREEN-WIDTH* 640)

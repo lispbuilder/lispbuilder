@@ -1,8 +1,8 @@
 ;;; -*- lisp -*-
 
-(defpackage lispbuilder-opengl-system
-  (:use :common-lisp :asdf :cffi))
-(in-package lispbuilder-opengl-system)
+(defpackage #:lispbuilder-opengl-system
+  (:use #:cl #:asdf))
+(in-package #:lispbuilder-opengl-system)
 
 (defsystem lispbuilder-opengl
     :description "lispbuilder-opengl: gl Mesa v6.4.2 library wrapper and tools"
@@ -14,6 +14,7 @@
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "BSD"
+    :depends-on (cffi)
     :components
     ((:module "opengl"
 	      :components

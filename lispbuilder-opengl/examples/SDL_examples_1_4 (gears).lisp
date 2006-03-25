@@ -16,7 +16,7 @@
 ;;;; To run these samples
 ;;;; (opengl-gears)
 
-(in-package :gl-examples)
+(in-package #:lispbuilder-opengl-examples)
 
 ;; Generic parameters
 (defparameter *world-ticks* 15)	; decouples any rotation or movement from the speed of the hardware. 
