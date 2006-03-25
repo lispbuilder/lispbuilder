@@ -3,6 +3,6 @@
 (in-package #:cl-user)
 
 (defpackage #:lispbuilder-sdl-gfx-examples
-  (:nicknames :sdl-gfx-examples)
   (:use #:cl #:cffi)
+  (:nicknames #:sdl-gfx-examples)
   (:export #:inbuilt-font :export #:random-circles))

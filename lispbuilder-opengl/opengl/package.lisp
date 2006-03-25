@@ -3,8 +3,8 @@
 (in-package #:cl-user)
 
 (defpackage #:lispbuilder-opengl
-  (:nicknames :gl)
   (:use #:cl #:cffi)
+  (:nicknames #:gl)
   (:documentation "The main package of `lispbuilder-opengl'."))
 
 (in-package #:lispbuilder-opengl)

@@ -3,11 +3,11 @@
 (in-package #:cl-user)
 
 (defpackage #:lispbuilder-sdl
-  (:nicknames :sdl)
   (:use #:cl #:cffi)
+  (:nicknames #:sdl)
   (:documentation "The main package of `lispbuilder-sdl'.")
   (:export
-   #:*sdl-binaries-user-path*
+   #:*sdl-binaries-user-path* #:*sdl-binaries-load-path*
    #:load-sdl-library #:unload-sdl-library))
 
 (in-package #:lispbuilder-sdl) 

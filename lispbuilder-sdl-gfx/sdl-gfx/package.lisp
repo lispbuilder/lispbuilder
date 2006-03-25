@@ -3,8 +3,8 @@
 (in-package #:cl-user)
 
 (defpackage #:lispbuilder-sdl-gfx
-  (:nicknames :sdl-gfx)
   (:use #:cl #:cffi)
+  (:nicknames #:sdl-gfx)
   (:documentation "The main package of `lispbuilder-gfx-sdl'.")
   ;; SDL_gfx
   ;;
