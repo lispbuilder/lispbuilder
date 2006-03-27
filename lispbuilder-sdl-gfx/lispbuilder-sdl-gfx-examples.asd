@@ -10,7 +10,6 @@
     :components
     ((:module "examples"
 	      :components
-	      ((:doc-file "README")
-	       (:file "package")
+	      ((:file "package")
 	       (:file "font" :depends-on ("package"))
 	       (:file "random_circles" :depends-on ("package"))))))
