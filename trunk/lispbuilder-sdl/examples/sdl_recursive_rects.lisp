@@ -44,7 +44,6 @@
 ; main function
 
 (defun recursive-rects()
-  (sdl::load-sdl-library)
   "recursively and randomly divides up the screen with rectangles"
   (if (= 0 (sdl::sdl_init (logior sdl::SDL_INIT_AUDIO sdl::SDL_INIT_VIDEO)))
       (let ((surface_ptr (sdl::SDL_SetVideoMode *SCREEN-WIDTH* *SCREEN-HEIGHT* 0 sdl::SDL_ANYFORMAT)))

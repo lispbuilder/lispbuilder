@@ -43,7 +43,6 @@
 
 
 (defun bmp_sample () "demonstrates how to manage and display images from .bmp files"
-  (sdl::load-sdl-library)
   (sdl::with-init ()
     (let ((display (sdl::set-window 640 480)))
       (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
