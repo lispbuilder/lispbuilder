@@ -19,5 +19,13 @@
     ((:module "opengl"
 	      :components
 	      ((:file "package")
-	       (:file "gl")))))
-    
+	       (:file "library")
+	       (:file "gl" :depends-on ("package" "library"))))
+     (:module "documentation"
+	      :components
+	      ((:doc-file "COPYING")
+	       (:doc-file "README")))
+     (:module "build"
+	      :components
+	      ((:static-file "openglswig.i")))))
+

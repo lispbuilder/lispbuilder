@@ -349,7 +349,6 @@
     (gl::glEnable gl::GL_NORMALIZE)))
     
 (defun opengl-gears ()
-  (sdl::load-sdl-library)
   (sdl::with-init ()
 ;;     (sdl::SDL_GL_SetAttribute (cffi:foreign-enum-value 'sdl::SDL_GLattr :SDL_GL_RED_SIZE) 5)
 ;;     (sdl::SDL_GL_SetAttribute (cffi:foreign-enum-value 'sdl::SDL_GLattr :SDL_GL_GREEN_SIZE) 5)
