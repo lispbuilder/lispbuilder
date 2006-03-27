@@ -11,5 +11,5 @@
     ((:module "examples"
 	      :components
 	      ((:file "package")
-	       (:file "SDL_examples_1_4 (gears)")))))
+	       (:file "SDL_examples_1_4 (gears)" :depends-on ("package"))))))
     
