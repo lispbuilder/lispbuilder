@@ -11,9 +11,6 @@
       (sdl::sdl_maprgb (sdl::pixelformat surface) r g b)))
 
 (defun random-circles ()
-  (sdl::load-sdl-library)
-  (sdl-gfx:load-sdl-gfx-library)
-  (format t "Starting.....~%")
   (let ((width 640) (height 480))
     (sdl::with-init ()
       (let ((display (sdl::set-window width height)))

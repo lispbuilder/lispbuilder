@@ -6,9 +6,6 @@
 (in-package #:sdl-gfx-examples) 
 
 (defun inbuilt-font ()
-  (sdl::load-sdl-library)
-  (sdl-gfx:load-sdl-gfx-library)
-  (format t "Starting.....~%")
   (let ((width 640) (height 480))
     (sdl::with-init ()
       (let ((display (sdl::set-window width height)))

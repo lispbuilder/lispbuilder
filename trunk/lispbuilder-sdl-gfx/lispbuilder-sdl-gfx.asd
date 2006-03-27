@@ -20,7 +20,16 @@
     :components
     ((:module "sdl-gfx"
 	      :components
+	      ((:file "package")
+	       (:file "library")
+	       (:file "sdl_gfx" :depends-on ("package" "library"))
+	       (:file "util-sdl_gfx" :depends-on ("sdl_gfx"))))
+     (:module "documentation"
+	      :components
 	      ((:doc-file "README")
-	       (:file "package")
-	       (:file "sdl_gfx")
-	       (:file "util-sdl_gfx" :depends-on ("sdl_gfx"))))))
+	       (:doc-file "COPYING")
+	       (:doc-file "CONTRIBUTORS")))
+     (:module "build"
+	      :components
+	      ((:static-file "sdlgfxswig.i")))))
+
