@@ -21,7 +21,8 @@
 	      ((:file "package")
 	       (:file "library")
 	       (:file "sdl" :depends-on ("package" "library"))
-	       (:file "util-sdl" :depends-on ("sdl"))))
+	       (:file "post-swig" :depends-on ("sdl"))
+	       (:file "util-sdl" :depends-on ("sdl" "post-swig"))))
      (:module "documentation"
 	      :components
 	      ((:html-file "index")
@@ -32,5 +33,4 @@
 	       (:doc-file "CONTRIBUTORS")))
      (:module "build"
 	      :components
-	      ((:static-file "sdlswig.i")
-	       (:doc-file "headerchanges.txt")))))
+	      ((:static-file "sdlswig.i")))))
