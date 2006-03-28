@@ -19,25 +19,24 @@
 #+(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_LIL_ENDIAN)
 ;;;; End
 
-;;;; the SDL_Event is a union which doesn't work yet with swig
-;;;; todo need some way to handle this better
-(defcstruct SDL_Event
-	(type :unsigned-char)
-	(pada :int)	
-	(padb :int)	
-	(padc :int)	
-	(padd :int)	
-	(pade :int)	
-	(padf :int)	
-	(padg :int))
-
+;;;; "SDL_video.h"
 ;;;; SDL_VideoInfo uses nasty bitfields. CFFI does not yet support these.
+(defbitfield hardware-flags
+  (:hw_available #x0000)
+  (:wm_available #x0001)
+  (:blit_hw #x0200)
+  (:blit_hw_CC #x0400)
+  (:blit_hw_A #x0800)
+  (:blit_sw #x1000)
+  (:blit_sw_CC #x2000)
+  (:blit_sw_A #x4000)
+  (:blit_fill #x8000))
+
 (defcstruct SDL_VideoInfo
-  (int1 :unsigned-char)
-  (int2 :unsigned-char)
-  (int3 :unsigned-short)
+  (flags hardware-flags)
   (video_mem :unsigned-int)
   (vfmt :pointer))
+;;;; end "SDL_video.h"
 
 ;;;; SDL_keysym is redefined here as CFFI treats 'sym' and 'mod' as pointers and not enums.
 (defcstruct SDL_keysym
