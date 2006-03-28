@@ -7,6 +7,26 @@
 
 (in-package #:lispbuilder-sdl) 
   
+;;;; "SDL_events.h"
+;;;; the SDL_Event is a union which is not yet correctly converted by SWIG
+(cffi:defcunion SDL_Event
+  (type :unsigned-char)
+  (active-event SDL_ActiveEvent)
+  (keyboard-event SDL_KeyboardEvent)
+  (mouse-motion-event SDL_MouseMotionEvent)
+  (mouse-button-event SDL_MouseButtonEvent)
+  (joy-axis-event SDL_JoyAxisEvent)
+  (joy-ball-event SDL_JoyBallEvent)
+  (joy-hat-event SDL_JoyHatEvent)
+  (joy-button-event SDL_JoyButtonEvent)
+  (resize-event SDL_ResizeEvent)
+  (expose-event SDL_ExposeEvent)
+  (quit-event SDL_QuitEvent)
+  (user-event SDL_UserEvent)
+  (sys-wm-event SDL_SysWMEvent))
+;;;; "SDL_events.h"
+
+
 ;;;; Implementation of SDL macros follows
 
 
@@ -477,75 +497,27 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
   Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
   (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
 
-;; (defun 1<<(x)
-;;   (ash x 1))
-
-(defun get-video-info (&key (video-info (SDL_GetVideoInfo)) (info nil))
+(defun get-video-info (&key (video-info (SDL_GetVideoInfo)) (info :video-mem))
   "Returns information about the video hardware.
   GET-VIDEO-INFO :video-info <pointer to a SDL_VIDEOINFO structure>
-                 :info :hw-available | :wm-available |
-                       :blit-hw | :blit-hw-cc | :blit-hw-a |
-                       :blit-sw | :blit-sw-cc | :blit-sw-a |
-                       :blit-fill |
-                       :video-mem |
+                 :info :hw_available | :wm_available |
+                       :blit_hw | :blit_hw_cc | :blit_hw_a |
+                       :blit_sw | :blit_sw_cc | :blit_sw_a |
+                       :blit_fill |
+                       :video_mem |
                        :pixelformat
   Usage: get-video-info should be called after sdl_init but before sdl_setvideomode.
-         e.g (get-video-info :info :video-mem), or
-             (get-video-info :video-info (sdl_getvideoinfo) :info :video-mem)
+         e.g (get-video-info :info :video_mem), or
+             (get-video-info :video-info (sdl_getvideoinfo) :info :video_mem)
          Will return the amount video memory available."
   (if (is-valid-ptr video-info)
       (case info
-	(:hw-available
-	 (if (eql (1<< 0)
-		  (logand (1<< 0) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int1)))
-	     t
-	     nil))
-	(:wm-available
-	 (if (eql (1<< 1)
-		  (logand (1<< 1) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int1)))
-	     t
-	     nil))
-	(:blit-hw
-	 (if (eql (1<< 1)
-		  (logand (1<< 1) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int2)))
-	     t
-	     nil))
-	(:blit-hw-cc
-	 (if (eql (1<< 2)
-		  (logand (1<< 2) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int2)))
-	     t
-	     nil))
-	(:blit-hw-a
-	 (if (eql (1<< 3)
-		  (logand (1<< 3) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int2)))
-	     t
-	     nil))
-	(:blit-sw
-	 (if (eql (1<< 4)
-		  (logand (1<< 4) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int2)))
-	     t
-	     nil))
-	(:blit-sw-cc
-	 (if (eql (1<< 5)
-		  (logand (1<< 5) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int2)))
-	     t
-	     nil))
-	(:blit-sw-a
-	 (if (eql (1<< 6)
-		  (logand (1<< 6) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int2)))
-	     t
-	     nil))
-	(:blit-fill
-	 (if (eql (1<< 7)
-		  (logand (1<< 7) (cffi:foreign-slot-value video-info 'sdl_videoinfo 'int2)))
-	     t
-	     nil))
 	(:video-mem
 	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'video_mem))
 	(:pixelformat
 	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'vfmt))
-	(t
-	 nil))
+	(otherwise
+	 (member info (cffi:foreign-slot-value video-info 'sdl_videoinfo 'flags))))
       nil))
 
 (defun is-key (key1 key2)
@@ -1028,13 +1000,25 @@ stored in surface->format."
 	(update-surface surface :template template)))
   template)
 
-(defun blit-surface3 (source destination &key 
-		      (source-template (cffi:null-pointer))
-		      (destination-template (cffi:null-pointer)))
+(defun apply-surface (source destination &key 
+		      (source-rect (cffi:null-pointer))
+		      (destination-rect (cffi:null-pointer)))
   "Blits the entire SOURCE SDL_Surface to the DESTINATION SDL_Surface using SDL_BlitSurface.
-   use :destination-template SDL_Rect to position the SOURCE on the DESTINATION surface.
-   Use :source-template SDL_Rect to blit only a portion of the SOURCE to the DESTINATION surface."
-  (SDL_UpperBlit source source-template destination destination-template))
+   use :source-rect SDL_Rect to position the SOURCE on the DESTINATION surface.
+   Use :destination-rect SDL_Rect to blit only a portion of the SOURCE to the DESTINATION surface."
+  (sdl::SDL_UpperBlit source source-rect destination destination-rect))
+
+(defun apply-surface-free (source destination &key (source-rect (cffi:null-pointer))
+			   (destination-x 0) (destination-y 0))
+  "Like APPLY-SURFACE just that DESTINATION-X and DESTINATION-Y define where the SOURCE is blitted to. The height and
+   width of the destination rectangle is taken from SOURCE-RECT, if available. If no keys are used then the whole SOURCE
+   is blit to (0,0) on DESTINATION."
+  (let ((drect (if (is-valid-ptr source-rect)
+		   (sdl::rectangle destination-x destination-y (sdl::rect-w source-rect) (sdl::rect-h source-rect))
+		   (cffi:null-pointer))))
+    (apply-surface source destination :source-rect source-rect :destination-rect drect)
+    (when (is-valid-ptr drect)
+      (cffi:foreign-free drect))))
 
 (defun set-colorkey (surface r g b &key (accel nil))
   "Sets the key color for the given surface. The key color is made transparent."
