@@ -10,17 +10,33 @@
 
 (in-package #:lispbuilder-sdl)
 
-;;;; First, set the byte-order: "SDL_byteorder.h"
+;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature
+; this handles anonymous enum types differently
+
+(defmacro defenum (&body enums)	
+ `(progn ,@(loop for value in enums
+                 for index = 0 then (1+ index)
+                 when (listp value) do (setf index (second value)
+                                             value (first value))
+                 collect `(defconstant ,value ,index))))
+
+;;; This is to handle a C macro where 1 is shifted left n times
+(defun 1<<(x) (ash 1 x))
+
+
+;;;; Overrides to C header files follow:
+;;;;
+;;; First, set the byte-order: "SDL_byteorder.h"
 (defconstant SDL_LIL_ENDIAN 1234)
 (defconstant SDL_BIG_ENDIAN 4321)
 
-;; Set the byte order for the current CPU
+;;; Set the byte order for the current CPU
 #-(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_BIG_ENDIAN)
 #+(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_LIL_ENDIAN)
-;;;; End
+;;; End "SDL_byteorder.h"
 
-;;;; "SDL_video.h"
-;;;; SDL_VideoInfo uses nasty bitfields. CFFI does not yet support these.
+;;; "SDL_video.h"
+;;; SDL_VideoInfo uses nasty bitfields. CFFI does not yet support these.
 (defbitfield hardware-flags
   (:hw_available #x0000)
   (:wm_available #x0001)
@@ -36,29 +52,16 @@
   (flags hardware-flags)
   (video_mem :unsigned-int)
   (vfmt :pointer))
-;;;; end "SDL_video.h"
+;;; end "SDL_video.h"
 
-;;;; SDL_keysym is redefined here as CFFI treats 'sym' and 'mod' as pointers and not enums.
+;;; "SDL_keyboard.h"
+;;; SDL_keysym is redefined here as CFFI treats 'sym' and 'mod' as pointers and not enums.
 (defcstruct SDL_keysym
   (scancode :unsigned-char)
   (sym :int)
   (mod :int)
   (unicode :unsigned-short))
-
-
-;;;; This is to handle a C macro where 1 is shifted left n times
-(defun 1<<(x) (ash 1 x))
-
-;;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature
-; this handles anonymous enum types differently
-
-(defmacro defenum (&body enums)	
- `(progn ,@(loop for value in enums
-                 for index = 0 then (1+ index)
-                 when (listp value) do (setf index (second value)
-                                             value (first value))
-                 collect `(defconstant ,value ,index))))
-
+;;; end "SDL_keyboard.h"
 
 ;;;; "SDL_types.h"
 (defcenum SDL_bool
@@ -129,6 +132,11 @@
 (defcfun ("SDL_GetWMInfo" SDL_GetWMInfo) :int
   (info :pointer))
 ;;;; end "SDL_syswm.h"
+
+;;;;
+;;;; end Overrides
+
+
 
 %}
 
