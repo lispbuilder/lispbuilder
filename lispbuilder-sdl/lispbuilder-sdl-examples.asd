@@ -1,6 +1,6 @@
 ;;; -*- lisp -*-
 
-(defpackage lispbuilder-sdl-examples-system
+(defpackage #:lispbuilder-sdl-examples-system
   (:use #:cl #:asdf))
 (in-package #:lispbuilder-sdl-examples-system)
 
