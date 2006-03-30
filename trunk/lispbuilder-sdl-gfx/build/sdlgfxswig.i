@@ -144,14 +144,6 @@
                                                                         :junk-allowed t :start 2 :radix 16))
      (setf font-data (cdr font-data))))
 
-;; Need to redefine SDL_imageFilterBinarizeUsingThreshold as it contains a parameter "T"
-;; that the SWIG CFFI converter cannot process.
-;(defcfun ("SDL_imageFilterBinarizeUsingThreshold" SDL_imageFilterBinarizeUsingThreshold) :int
-;  (Src1 :pointer)
-;  (Dest :pointer)
-;  (length :int)
-;  (t-param :unsigned-char))
-
 %}
 
 %module SDL_gfx
