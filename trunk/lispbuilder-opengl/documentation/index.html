@@ -1,0 +1,358 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>lispbuilder-opengl</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
+<style type="text/css">
+
+body {
+margin: 10px 20px 20px 200px;
+padding: 0px;
+font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+font-size: small;
+text-align: justify;
+max-width: 50em;
+background-color: white;
+}
+
+a, a:visited {
+text-decoration: none;
+color: maroon;
+}
+
+/* index */
+
+div.index {
+position: fixed;
+top: 0px;
+left: 0px;
+width: 160px;
+height: 100%;
+margin: 0px;
+padding: 5px;
+font-size: 12px;
+background-color: #DCDCDC;
+border-right: thin black solid;
+}
+
+div.index ol {
+color: navy;
+margin: 0px;
+padding-left: 0px;
+}
+
+div.index ol li {
+list-style: none;
+}
+
+div.index ol li:before {
+display: marker;
+content: counter(heading1) ". ";
+counter-increment: heading1;
+}
+
+div.index ol ol {
+padding-left: 10px;
+font-size: 10px;
+list-style: none;
+counter-reset: heading2;
+}
+
+div.index ol ol li:before {
+display: marker;
+content: counter(heading1)"." counter(heading2)" ";
+counter-increment: heading2;
+}
+
+/* heading styles */
+
+body > h1 {
+margin-top: 0px;
+}
+
+h1 {
+margin-top: 40px;
+margin-bottom: 0px;
+color: #4682B4;
+}
+
+h1:before {
+display: marker;
+content: counter(chapter) ". ";
+counter-increment: chapter;
+counter-reset: section1;
+}
+
+h1 + p {
+margin-top: 5px;
+}
+
+h2 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h2:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "  ";
+counter-increment: section1;
+}
+
+h2 + p {
+margin-top: 0px;
+}
+
+h3 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h3:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "." counter(section2) "  ";
+counter-increment: section2;
+}
+
+h3 + p {
+margin-top: 0px;
+}
+
+h4 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h4:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "." counter(section2) "." counter(section3) "  ";
+counter-increment: section3;
+}
+
+h4 + p {
+margin-top: 0px;
+}
+
+/* generated content for images and tables */
+
+img:after {
+content: "[" counter(image) "] " attr(title);
+counter-increment: image;
+display: block;
+font-size: 10px;
+font-weight: bold;
+margin-top: 5px;
+margin-bottom: 20px;
+color: black;
+}
+
+table:after {
+content: "Table " counter(table) ": " attr(summary);
+counter-increment: table;
+display: table-caption;
+caption-side: bottom;
+font-size: 10px;
+font-weight: bold;
+margin-top: 5px;
+margin-bottom: 20px;
+white-space: nowrap;
+color: black;
+}
+
+/* code for examples, code and pathnames*/
+
+div.example table {
+color: black;
+}
+
+div.example, div.code, div.path, div.sequence {
+margin: 10px 0px;
+border: 1px black solid;
+padding: 10px;
+background-color: #F4F4F4;
+counter-reset: image;
+color: maroon;
+}
+
+div.example:before {
+content: "Example " counter(example);
+counter-increment: example;
+display: block;
+}
+
+div.example + p {
+margin-bottom: 0px;
+}
+
+div.code:before {
+content: "Code";
+}
+
+div.path:before {
+content: "Path";
+}
+
+div.sequence:before {
+content: "Sequence";
+}
+
+p.reference:before {
+display: marker;
+content: "[" counter(reference) "]";
+counter-increment: reference;
+font-weight: bold;
+margin-right: 5px;
+}
+
+div.code:before, div.example:before, div.path:before, div.sequence:before {
+font-weight: bold;
+font-size: 15px;
+margin-bottom: 20px;
+color: black;
+}
+
+pre {
+color: Green;
+margin: 0px;
+padding: 0px;
+}
+
+
+/* equation counter */
+
+e:after {
+content: "[" counter(equation) "]";
+counter-increment: equation;
+display: block;
+float: right;
+margin-right: 10px;
+}
+
+/* to prevent the CC image from being numbered */
+
+img[alt="Creative Commons License"] {
+display: inline;
+}
+
+img[alt="Creative Commons License"]:after {
+display: none;
+}
+
+div#cc {
+background-color: #DCDCDC;
+border: thin black solid;
+padding: 10px;
+font-size: 10px;
+}
+
+</style>
+</head>
+<!--
+(CC) 2003 Luke Crook. Some Rights Reserved.
+http://creativecommons.org/licenses/by/1.0
+This page is licensed under a Creative Commons License.
+
+Maintained by the Common Lisp Application Builder project at www.lispbuilder.org
+
+The entire styleguide was copied wholesale from http://www.markschenk.com/cssexp/publication/article.xml
+
+(CC) 2003 Mark Schenk. Some Rights Reserved.
+http://creativecommons.org/licenses/by/1.0
+This page is licensed under a Creative Commons License.
+-->
+<BODY BGCOLOR=#FFFFFF >
+<h1>lispbuilder-opengl</h1>
+<p>CFFI gl.h Mesa v 6.4.2 Wrapper and sample code<br />
+  (C) 2006 Luke Crook</p>
+<p>See <a href="COPYING">COPYING</a> for license</p>
+<h2>Overview</h2>
+<p>The lispbuilder-opengl package is a part of the <a href="http://www.lispbuilder.org/">Common 
+  Lisp Application Builder</a> project which is in turn a part of the umbrella 
+  <a href="http://www.lispniks.com/cl-gardeners/">Common Lisp Gardeners</a> project. 
+  The goal is to provide OpenGL for Lisp. This packages needs lispbuilder-sdl.</p>
+<h2>Supported Implementations</h2>
+<p>The following table describes the status of the Lisp implementations that have 
+  been tested with lispbuilder-opengl:</p>
+<table border="1" cellpadding="2" cellspacing="0" summary="Supported Implementations"> 
+     <tr bgcolor="yellow">
+       <td><b>Lisp Implementation</b></td>
+       <td colspan="3"><b>lispbuilder-SDL Status</b></td>
+       <td><b>Comments</b></td>
+     </tr>	
+     <tr bgcolor="yellow">
+       <td colspan="1"></td>
+       <td><b>Win32</b></td>
+       <td><b>Linux</b></td>
+       <td><b>MacOS</b></td>
+       <td></td></td>
+    </tr>
+     <tr>
+       <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
+        <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.lispworks.com/">Lispworks</a></td>
+      <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <td><a href="http://www.franz.com/">Allegro Trial Edition 7.0</a></td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://openmcl.clozure.com/">OpenMCL</a></td>
+      
+    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+      
+    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.sbcl.org/">SBCL</a></td>
+      
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td>      </td>
+    </tr>
+    <tr>
+      <td><a href="http://www.cons.org/cmucl/">CMUCL</a></td>
+      
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      
+    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+      <td>&nbsp;</td>
+    </tr>
+</table>
+<h2>Prerequisites</h2>
+<p>lispbuilder-sdl and related packages are required prior to the installation of lispbuilder-opengl. The 
+  installation of these packages are descibed in the lispbuilder-sdl documentation.</p>
+<h2>Running the included example</h2>
+<div class="example"> 
+  <p>To verify that lispbuilder-opengl is installed correctly, run the gears example 
+    by entering:</p>
+  <pre>
+(asdf:operate 'asdf:load-op :lispbuilder-opengl)
+(gl-examples:opengl-gears)
+  </pre>
+<p>And you should see the animated gears demo. You can drag the mouse to change the viewing angles. </p>
+  <p><img src="gears.gif" alt="Gears" width="646" height="512" /></p>
+</div>
+<h2>To make the wrappers:</h2>
+<p>Copy sdlswig.i (the swig interface file) to the opengl include directory <br />
+  run 'swig -cffi openglswig.i'<br />
+</p>
+</body>
+</html>
