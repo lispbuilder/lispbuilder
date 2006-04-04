@@ -374,7 +374,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
             (progn
               (setf (fpsmanager-framecount fpsmngr) 0)
               (setf (fpsmanager-rate fpsmngr) rate)
-              (setf (fpsmanager-rateticks fpsmngr) (/ 1000 rate))
+              (setf (fpsmanager-rateticks fpsmngr) (/ 1000.0 rate))
               t)
 	    nil)
 	(setf (fpsmanager-rate fpsmngr) rate)))
