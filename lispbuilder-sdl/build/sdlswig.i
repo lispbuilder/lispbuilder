@@ -89,49 +89,6 @@
   (value :pointer))
 ;;;; end "SDL_video.h"
 
-;;;; "SDL_syswm.h"
-#+win32 (defcstruct SDL_SysWMmsg
-	(version :pointer)
-	(hwnd :pointer)
-	(msg :pointer)
-	(wParam :unsigned-int)
-	(lParam :long))
-
-#+win32 (defcstruct SDL_SysWMinfo
-	(version :pointer)
-	(window :pointer)
-	(hglrc :pointer))
-
-#-win32 (defcenum SDL_SYSWM_TYPE
-	:SDL_SYSWM_X11)
-
-#-win32 (defcstruct SDL_SysWMmsg
-	(version :pointer)
-	(subsystem :pointer)
-	(event :pointer))
-
-#-win32 (defcunion SDL_SysWMmsg_event
-	(xevent :pointer))
-
-#-win32 (defcstruct SDL_SysWMinfo
-	(version :pointer)
-	(subsystem :pointer)
-	(info :pointer))
-
-#-win32 (defcunion SDL_SysWMinfo_info
-	(x11 :pointer))
-
-#-win32 (defcstruct SDL_SysWMinfo_info_x11
-	(display :pointer)
-	(window :pointer)
-	(lock_func :pointer)
-	(unlock_func :pointer)
-	(fswindow :pointer)
-	(wmwindow :pointer))
-
-(defcfun ("SDL_GetWMInfo" SDL_GetWMInfo) :int
-  (info :pointer))
-;;;; end "SDL_syswm.h"
 
 ;;;;
 ;;;; end Overrides
@@ -201,7 +158,7 @@ typedef unsigned int WPARAM;
 typedef long LPARAM;
 
 
-
+%ignore SDL_KeyboardEvent;
 %ignore SDL_Event;
 %ignore SDL_VideoInfo;
 %ignore SDL_keysym;
