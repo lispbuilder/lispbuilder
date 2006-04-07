@@ -1,10 +1,10 @@
 ;;; -*- lisp -*-
 
-(defpackage #:lispbuilder-opengl-system
+(defpackage #:lispbuilder-opengl-1-1-system
   (:use #:cl #:asdf))
-(in-package #:lispbuilder-opengl-system)
+(in-package #:lispbuilder-opengl-1-1-system)
 
-(defsystem lispbuilder-opengl
+(defsystem lispbuilder-opengl-1-1
     :description "lispbuilder-opengl: gl Mesa v6.4.2 library wrapper and tools"
     :long-description
     "lispbuilder-opengl is a wrapper for the Mesa OpenGL \"gl.h\" library, v 6.4.2. 
@@ -20,12 +20,12 @@
 	      :components
 	      ((:file "package")
 	       (:file "library")
-	       (:file "gl" :depends-on ("package" "library"))))
+	       (:file "gl_1_1" :depends-on ("package" "library"))))
      (:module "documentation"
 	      :components
 	      ((:doc-file "COPYING")
 	       (:doc-file "README")))
      (:module "build"
 	      :components
-	      ((:static-file "openglswig.i")))))
+	      ((:static-file "opengl_1_1_swig.i")))))
 

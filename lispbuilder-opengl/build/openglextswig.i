@@ -9,7 +9,7 @@
 ;;;; Note: (1) "gl.h" contains a LOT of typedef void (APIENTRYP blah blah blah) and
 ;;;;           none of these are yet defined.
 
-(in-package #:lispbuilder-opengl)
+(in-package #:lispbuilder-opengl-ext)
 
 (defctype GLenum :unsigned-int)
 (defctype GLboolean :unsigned-char)
@@ -29,14 +29,16 @@
 
 %}
 
-%module gl
+%module gl_ext
 %{
 #include "gl.h"
+
+#define GL_GLEXT_PROTOTYPES
+
 #include "glext.h"
 %}
 
 %ignore APIENTRYP;
 %ignore GLAPIENTRYP;
 
-%include "gl.h"
 %include "glext.h"

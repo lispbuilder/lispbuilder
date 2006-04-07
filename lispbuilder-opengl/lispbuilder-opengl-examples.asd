@@ -6,7 +6,7 @@
 
 (defsystem lispbuilder-opengl-examples
     :description "Examples for the lispbuilder-opengl package."
-    :depends-on (cffi lispbuilder-sdl lispbuilder-opengl)
+    :depends-on (cffi lispbuilder-sdl lispbuilder-opengl-1-1)
     :components
     ((:module "examples"
 	      :components
