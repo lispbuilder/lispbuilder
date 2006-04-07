@@ -10,6 +10,15 @@
 ;;;; Overrides to C header files follow:
 ;;;;
 ;;;; "SDL_events.h"
+
+;;;; Have to manually define SDL_KeyboardEvent as SWIG does not differentiate between an aggregate structute
+;;;; and a pointer to a struct.
+(defcstruct SDL_KeyboardEvent
+	(type :unsigned-char)
+	(which :unsigned-char)
+	(state :unsigned-char)
+	(keysym sdl_keysym))
+
 ;;;; the SDL_Event is a union which is not yet correctly converted by SWIG
 (cffi:defcunion SDL_Event
   (type :unsigned-char)
@@ -53,6 +62,51 @@
 (defconstant KMOD_META	(logior  (cffi:foreign-enum-value 'SDLMod :KMOD_LMETA)
 				 (cffi:foreign-enum-value 'SDLMod :KMOD_RMETA)))
 ;;;; end "SDL_keysym.h"
+
+;;;; "SDL_syswm.h"
+#+win32 (defcstruct SDL_SysWMmsg
+;; 	(version :pointer)
+	(version SDL_version)
+	(hwnd :pointer)
+	(msg :pointer)
+	(wParam :unsigned-int)
+	(lParam :long))
+
+#+win32 (defcstruct SDL_SysWMinfo
+	(version SDL_version)
+	(window :pointer)
+	(hglrc :pointer))
+
+#-win32 (defcenum SDL_SYSWM_TYPE
+	:SDL_SYSWM_X11)
+
+#-win32 (defcstruct SDL_SysWMmsg
+	(version SDL_version)
+	(subsystem :pointer)
+	(event :pointer))
+
+#-win32 (defcunion SDL_SysWMmsg_event
+	(xevent :pointer))
+
+#-win32 (defcstruct SDL_SysWMinfo
+	(version SDL_version)
+	(subsystem :pointer)
+	(info :pointer))
+
+#-win32 (defcunion SDL_SysWMinfo_info
+	(x11 :pointer))
+
+#-win32 (defcstruct SDL_SysWMinfo_info_x11
+	(display :pointer)
+	(window :pointer)
+	(lock_func :pointer)
+	(unlock_func :pointer)
+	(fswindow :pointer)
+	(wmwindow :pointer))
+
+(defcfun ("SDL_GetWMInfo" SDL_GetWMInfo) :int
+  (info :pointer))
+;;;; end "SDL_syswm.h"
 
 
 ;;;; Implementation of SDL macros follows
