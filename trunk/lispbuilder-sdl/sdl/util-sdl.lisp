@@ -128,6 +128,8 @@
       (let ((pstr-filename (cffi:foreign-string-alloc filename))
 	    (pstr-mode (cffi:foreign-string-alloc "rb")))
 	(let ((prwops (SDL_RWFromFile pstr-filename pstr-mode)))
+	  (cffi:foreign-string-free pstr-filename)
+	  (cffi:foreign-string-free pstr-mode)
 	  (let ((psurface (SDL_LoadBMP_RW prwops 1)))
 	    psurface)))
       nil))
