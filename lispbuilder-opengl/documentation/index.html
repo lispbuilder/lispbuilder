@@ -270,9 +270,8 @@ This page is licensed under a Creative Commons License.
 <h2>Overview</h2>
 <p>The lispbuilder-opengl package is a part of the <a href="http://www.lispbuilder.org/">Common 
   Lisp Application Builder</a> project which is in turn a part of the umbrella 
-  <a href="http://www.lispniks.com/cl-gardeners/">Common Lisp Gardeners</a> project. 
-  The goal is to provide a set of OpenGL CFFI bindings for Lisp. The examples in the this package requires
- lispbuilder-sdl.</p>
+  <a href="http://www.lispniks.com/cl-gardeners/">Common Lisp Gardeners</a> project.</p> 
+<p>The goal of lispbuilder-opengl is to provide a set of OpenGL CFFI bindings for Lisp.</p>
 <h2>Supported Implementations</h2>
 <p>The following table describes the status of the Lisp implementations that have 
   been tested with lispbuilder-opengl:</p>
@@ -337,22 +336,79 @@ This page is licensed under a Creative Commons License.
       <td>&nbsp;</td>
     </tr>
 </table>
+<h2>Description</h2>
+<p>The OpenGL bindings in lispbuilder-opengl are grouped by OpenGL version. OpenGL v1.1 bindings are
+placed into the lispbuilder-openrm-1-1 package. OpenGL v1.2 bindings are in lispbuilder-openrm-1-2, and 
+OpenGL v1.3 bindings are in lispbuilder-openrm-1-3. Bindings for glext are placed in the 
+lispbuilder-opengl-ext package.</p>
+
+<p>The reasons for not placing all OpenGL bindings into a single package are due to the FFI implementation in CLISP. 
+CLISP will attempt to verify that each binding is available in the DLL at load time. This is not a problem in Linux as
+Linux users will more than likely have the latest OpenGL drivers installed.
+However Microsoft only provides a default v1.1 OpenGL driver for Windows. Newer OpenGL drivers supporting OpenGL v1.2 
+and v1.3 functionality must be retrieved from the graphics card manufacturer's website and installed by the user.
+In Windows therefore we can safely assume only OpenGL v1.1 support. The user is free to use the 1-2 and 1-3
+bindings if the latest OpenGL drivers are installed.</p>
+<p>
+
 <h2>Prerequisites</h2>
-<p>lispbuilder-sdl and related packages are required prior to the installation of lispbuilder-opengl. The 
-  installation of these packages are descibed in the lispbuilder-sdl documentation.</p>
-<h2>Running the included example</h2>
-<div class="example"> 
-  <p>To verify that lispbuilder-opengl is installed correctly, run the gears example 
-    by entering:</p>
+<p>ASDF and CFFI are prerequisites for running lispbuilder-opengl. Instructions for the installation of these packages 
+are described in the 
+<a href="../../lispbuilder-sdl/documentation/index.html#Prerequisites">lispbuilder-sdl documentation</a>. 
+The lispbuilder-sdl package is not a prerequisite for use of the general lispbuilder-opengl bindings. 
+However lispbuilder-sdl is required to run the example 'opengl-gears' in the lispbuilder-opengl-examples package. 
+This example relies on SDL to create the OpenGL context and process incoming events. 
+Make sure that lispbuilder-sdl is installed prior to loading lispbuilder-opengl-examples. 
+The installation of lispbuilder-sdl is also described in the 
+<a href="../../lispbuilder-sdl/documentation/index.html#Win32: lispbuilder-sdl and the SDL binary">lispbuilder-sdl documentation</a>.</p>
+
+<h2>Configuration on Win32 Platforms</h2>
+
+<h3>ASDF Configuration</h3>
+<div class="code">
+  <p>Add the following to the ASDF *central-registry*:</p>
   <pre>
-(asdf:operate 'asdf:load-op :lispbuilder-opengl)
+(pushnew "/programme/clisp-2.38/asdf/lispbuilder-opengl/" asdf:*central-registry*)
+</pre>
+</div>
+
+<h2>Fire it Up</h2>
+<div class="sequence">
+ <p>Start CLISP and enter the following at the prompt:</p>
+<pre>
+(load "c:/programme/clisp-2.38/asdf/asdf.lisp")
+(asdf:operate 'asdf:load-op :lispbuilder-opengl-examples)
+</pre>
+</div>
+
+<p>ASDF will take care of loading the CFFI, lispbuilder-sdl and lispbuilder-opengl-1-1 dependencies. The OpenGL library 
+will also be loaded into the Lisp image at this time.</p>
+
+<div class="sequence">
+ <p>To manually load the OpenGL bindings, or to load the additional bindings enter the following:</p>
+<pre>
+(asdf:operate 'asdf:load-op :lispbuilder-opengl-1-1)
+(asdf:operate 'asdf:load-op :lispbuilder-opengl-1-2)
+(asdf:operate 'asdf:load-op :lispbuilder-opengl-1-3)
+(asdf:operate 'asdf:load-op :lispbuilder-opengl-ext)
+</pre>
+
+<p>Note that loading a higher version binding will automatically pull in the lower versions.</p> 
+</div>
+
+<h2>Running the included examples</h2>
+<div class="example"> 
+  <p>To verify that lispbuilder-opengl is installed correctly, run the gears example by entering:</p>
+  <pre>
+(asdf:operate 'asdf:load-op :lispbuilder-opengl-examples)
 (gl-examples:opengl-gears)
   </pre>
-<p>And you should see the animated gears demo. You can drag the mouse to change the viewing angles. </p>
+<p>The example will automatically pull in the bindings for OpenGL v1.1. You should see the animated gears demo appear
+in a window. Click-drag the mouse to change the viewing angles. </p>
   <p><img src="gears.gif" alt="Gears" width="646" height="512" /></p>
 </div>
 <h2>To make the wrappers:</h2>
-<p>The build/ directory contains three C header files, 'gl_1_1.h', 'gl_1_2.h' and 'gl_1_2.h' containing
+<p>The <a href="../build/">build/</a> directory contains three C header files, 'gl_1_1.h', 'gl_1_2.h' and 'gl_1_2.h' containing
 the declarations and definitions from the Mesa v 6.4.2 gl.h header file for the the respective versions of OpenGL. 
 Run the swig interface files (opengl_1_1_swig.i, opengl_1_2_swig.i, opengl_1_3_swig.i and openglextswig.i) in 
 the build/ directory to create the CFFI bindings.<br />
