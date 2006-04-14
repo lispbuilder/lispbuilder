@@ -271,7 +271,8 @@ This page is licensed under a Creative Commons License.
 <p>The lispbuilder-opengl package is a part of the <a href="http://www.lispbuilder.org/">Common 
   Lisp Application Builder</a> project which is in turn a part of the umbrella 
   <a href="http://www.lispniks.com/cl-gardeners/">Common Lisp Gardeners</a> project. 
-  The goal is to provide OpenGL for Lisp. This packages needs lispbuilder-sdl.</p>
+  The goal is to provide a set of OpenGL CFFI bindings for Lisp. The examples in the this package requires
+ lispbuilder-sdl.</p>
 <h2>Supported Implementations</h2>
 <p>The following table describes the status of the Lisp implementations that have 
   been tested with lispbuilder-opengl:</p>
@@ -322,7 +323,7 @@ This page is licensed under a Creative Commons License.
       <td><a href="http://www.sbcl.org/">SBCL</a></td>
       
       <td bgcolor="#ff6060">Unknown</td>
-      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#60c060">Working</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td>      </td>
     </tr>
@@ -351,8 +352,16 @@ This page is licensed under a Creative Commons License.
   <p><img src="gears.gif" alt="Gears" width="646" height="512" /></p>
 </div>
 <h2>To make the wrappers:</h2>
-<p>Copy sdlswig.i (the swig interface file) to the opengl include directory <br />
-  run 'swig -cffi openglswig.i'<br />
+<p>The build/ directory contains three C header files, 'gl_1_1.h', 'gl_1_2.h' and 'gl_1_2.h' containing
+the declarations and definitions from the Mesa v 6.4.2 gl.h header file for the the respective versions of OpenGL. 
+Run the swig interface files (opengl_1_1_swig.i, opengl_1_2_swig.i, opengl_1_3_swig.i and openglextswig.i) in 
+the build/ directory to create the CFFI bindings.<br />
+<pre>
+  swig -cffi opengl_1_1_swig.i
+  swig -cffi opengl_1_2_swig.i
+  swig -cffi opengl_1_3_swig.i
+  swig -cffi openglextswig.i
+</pre>
 </p>
 </body>
 </html>
