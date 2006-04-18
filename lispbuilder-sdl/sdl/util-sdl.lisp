@@ -282,6 +282,16 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 
 |#
 
+(defun create-surface(display width height key-r key-g key-b)
+  "create a surface compatible with the supplied surface"
+  (let ((format (cffi:foreign-slot-value display 'SDL_Surface 'format))
+	(surface nil))
+    (with-foreign-slots ((BitsPerPixel Rmask Gmask Bmask Amask) format SDL_PixelFormat)
+			(setf surface (SDL_CreateRGBSurface (logior SDL_SWSURFACE SDL_SRCCOLORKEY)
+					      width height BitsPerPixel Rmask Gmask Bmask Amask))
+			(set-colorkey surface key-r key-g key-b))
+    surface))
+
 (defun is-valid-ptr (pointer)
   "IS-VALID-PTR <CFFI pointer>
   Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
