@@ -77,6 +77,16 @@
 ;;       (cffi:foreign-free src-rect)
 ;;       (cffi:foreign-free dest-rect))))
 
+(defun get-surface-width(surface)
+  "get the width of a surface"
+  (cffi:with-foreign-slots ((w) surface SDL_Surface)
+			   w))
+
+(defun get-surface-height(surface)
+  "get the height of a surface"
+  (cffi:with-foreign-slots ((h) surface SDL_Surface)
+			   h))
+
 (defun copy-surf-to-rect (surface rect)
   "Copy the width and height of the surface to the rectangle.
    The x and y do not need to be copied as these values have no meaning for a surface." 
