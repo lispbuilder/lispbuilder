@@ -275,7 +275,7 @@ This page is licensed under a Creative Commons License.
     <li><a href="#Overview">Overview</a></li>
     <li><a href="#Implementations">Supported Lisp Implementations</a></li>
 	<li><a href="#Prerequisites">Prerequisites</a></li>
-    <li><a href="#Installation">Download and Installation on Win32 Platforms</a></li>
+    <li><a href="#Installation">Installation on Win32 Platforms</a></li>
 	<ol>
 	<li><a href="#Win32: ASDF and CFFI">ASDF and CFFI</a></li>
 	<li><a href="#Win32: lispbuilder-sdl and the SDL binary">lispbuilder-sdl and the SDL binary</a></li>
@@ -378,7 +378,7 @@ begin using the lispbuilder-SDL package to create applications using one of the
  and <a href="http://common-lisp.net/project/cffi/tarballs/cffi-060225.tar.gz">CFFI</a> packages are required 
  prior to the installation of lispbuilder-SDL. The installation of these packages is descibed in <a href="#Win32: ASDF and CFFI">following section</a>.</p>
 
-<h2 id="Installation">Download and Installation on Win32 Platforms</h2>
+<h2 id="Installation">Installation on Win32 Platforms</h2>
 
 <h3 id="Win32: ASDF and CFFI">ASDF and CFFI</h3>
 <p>This section describes the installation of the ASDF and CFFI packages for CLISP in Windows.</p>
@@ -398,18 +398,23 @@ begin using the lispbuilder-SDL package to create applications using one of the
     </li>
 </ul>
 
-<h3 id="Win32: lispbuilder-sdl and the SDL binary">lispbuilder-sdl and the SDL binary</h3>
-<p>This section describes the installation of the lispbuilder-sdl package and SDL binaries for Windows.</p>
+<h3 id="Win32: lispbuilder-sdl and the SDL binary">Installation of lispbuilder-sdl</h3>
+<p>This section describes the installation of the lispbuilder-sdl package.</p>
 <ul>
     <li> download the latest version of the 
     <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
 package from sourceforge and unpack it to the asdf directory, e.g.
     <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\lispbuilder-sdl.asd</pre>
     </li>
-  <li> install the SDL dynamic library by doing one of the following: 
+</ul>
+
+<h3 id="Win32: lispbuilder-sdl and the SDL binary">Installation of the SDL binary</h3>
+<p>This section describes the installation of the SDL binaries for Windows.</p>
+<ul>
+  <li> install the SDL dynamic library by doing <u>one</u> of the following: 
   <ul>
     <li> download <a href="http://www.libsdl.org/release/SDL-1.2.9-win32.zip">SDL</a> and 
-    copy the SDL.dll to 
+    copy the SDL.dll to following system folder:
     <pre>c:\windows\system32</pre>
     </li>
     <li> download the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-sdl-binaries</a> package from sourceforge and unpack it into the asdf directory, e.g.
@@ -418,6 +423,28 @@ package from sourceforge and unpack it to the asdf directory, e.g.
     </li>
   </ul>
 </ul>
+
+<h2 id="Installation">Installation on Linux Platforms</h2>
+<h3 id="Linux: ASDF and CFFI">ASDF and CFFI</h3>
+<p>For users of SBCL, OpenMCL, ECL or ACL, ASDF is already installed. Otherwise, Linux users please refer to the official
+<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/README?rev=HEAD&content-type=text/plain">ASDF README</a> for installation instructions.</p>
+
+<h3 id="Linux: lispbuilder-sdl">Installation of lispbuilder-sdl</h3>
+<p>This section describes the installation of the lispbuilder-sdl package for Linux users.</p>
+<ul>
+    <li> download the latest version of the 
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
+package from sourceforge and unpack it to the correct asdf systems directory.
+    </li>
+</ul>
+
+<h3 id="Linux: The SDL binary">Installation of the SDL binary</h3>
+<p>This section describes the installation of the SDL binaries for Linux.</p>
+<ul>
+  <li> download and install the SDL RPMs from the <a href="http://www.libsdl.org/download-1.2.php">official SDL site</a>
+  </li>
+</ul>
+
 
 <h2 id="Win32: Configuration">Configuration on Win32 Platforms</h2>
 
