@@ -913,4 +913,9 @@ stored in surface->format."
   "return the height of the SDL_Surface." 
   (cffi:foreign-slot-value surface 'SDL_Surface 'h))
 
-
+(defun get-hwnd ()
+  (let ((wm-info (cffi:foreign-alloc 'sdl::SDL_SysWMinfo)))
+      ;; Set the wm-info structure to the current SDL version.
+      (sdl::sdl_version (cffi:foreign-slot-value wm-info 'sdl::SDL_SysWMinfo 'sdl::version))
+      (sdl::SDL_GetWMInfo wm-info)
+      (cffi:foreign-slot-pointer wm-info 'sdl::SDL_SysWMinfo 'sdl::window)))
