@@ -138,6 +138,8 @@
 (defun rmColor3DDelete (a)
 	(rmVertex3DDelete a))
 
+;; See "rmaux.h" below.
+(defconstant RMAUX_DEFAULT_SPIN_THRESHOLD 3.0)
 
 
 
@@ -2833,5 +2835,170 @@
 
 (defcfun ("rmPSGetSortMethod" rmPSGetSortMethod) :int
   (p :pointer))
+
+(defconstant RM_NUM_BUTTONS 5)
+
+(defconstant RM_BUTTON1 #x1)
+
+(defconstant RM_BUTTON2 #x2)
+
+(defconstant RM_BUTTON3 #x3)
+
+(defconstant RM_BUTTON4 #x4)
+
+(defconstant RM_BUTTON5 #x5)
+
+(defconstant Button1 #x1)
+
+(defconstant Button2 #x2)
+
+(defconstant Button3 #x3)
+
+(defconstant Button4 #x4)
+
+(defconstant Button5 #x5)
+
+(defconstant RM_NUM_BUTTON_MODIFIERS 3)
+
+(defconstant RM_NONE_MODMASK 0)
+
+(defconstant RM_NO_MODIFIER 0)
+
+(defconstant RM_SHIFT_MODIFIER 1)
+
+(defconstant RM_CONTROL_MODIFIER 2)
+
+(defconstant RM_SHIFT_MODMASK 1)
+
+(defconstant RM_CONTROL_MODMASK 2)
+
+(defcfun ("rmauxEventLoop" rmauxEventLoop) :void
+  (drawToPipe :pointer)
+  (subTreeToDraw :pointer)
+  (msg :pointer))
+
+(defcfun ("rmauxSetGeomTransform" rmauxSetGeomTransform) :void
+  (target :pointer)
+  (pipe :pointer))
+
+(defcfun ("rmauxSetSpinEnable" rmauxSetSpinEnable) :void
+  (spinEnableBool :int))
+
+(defcfun ("rmauxGetSpinEnable" rmauxGetSpinEnable) :int)
+
+(defcfun ("rmauxSetCamera3DTransform" rmauxSetCamera3DTransform) :void
+  (target :pointer)
+  (pipe :pointer))
+
+(defcfun ("rmauxUI" rmauxUI) :void
+  (target :pointer)
+  (pipe :pointer))
+
+(defcfun ("rmauxSetInitFunc" rmauxSetInitFunc) :void
+  (userinitfunc :pointer))
+
+(defcfun ("rmauxSetIdleFunc" rmauxSetIdleFunc) :void
+  (arg0 :pointer)
+  (userfunc :pointer))
+
+(defcfun ("rmauxSetKeyFunc" rmauxSetKeyFunc) :void
+  (arg0 :pointer)
+  (userfunc :pointer))
+
+(defcfun ("rmauxDefaultKeyFunc" rmauxDefaultKeyFunc) :int
+  (currentPipe :pointer)
+  (key :char)
+  (code :int))
+
+(defcfun ("rmauxSetResizeFunc" rmauxSetResizeFunc) :void
+  (arg0 :pointer)
+  (cameraNode :pointer)
+  (userfunc :pointer))
+
+(defcfun ("rmauxDefaultResizeFunc" rmauxDefaultResizeFunc) :int
+  (currentPipe :pointer)
+  (cameraNode :pointer)
+  (pointerX :int)
+  (pointerY :int))
+
+(defcfun ("rmauxSetRenderFunc" rmauxSetRenderFunc) :void
+  (userfunc :pointer))
+
+(defcfun ("rmauxSetButtonDownFunc" rmauxSetButtonDownFunc) :void
+  (buttonnum :unsigned-int)
+  (modmask :unsigned-int)
+  (userfunc :pointer))
+
+(defcfun ("rmauxSetButtonUpFunc" rmauxSetButtonUpFunc) :void
+  (whichbutton :unsigned-int)
+  (modmask :unsigned-int)
+  (userfunc :pointer))
+
+(defcfun ("rmauxSetButtonMotionFunc" rmauxSetButtonMotionFunc) :void
+  (whichbutton :unsigned-int)
+  (modmask :unsigned-int)
+  (userfunc :pointer))
+
+(defcfun ("rmauxCreateW32Window" rmauxCreateW32Window) :pointer
+  (useMe :pointer)
+  (parent :pointer)
+  (xpos :int)
+  (ypos :int)
+  (width :int)
+  (height :int)
+  (wtitle :string)
+  (hInstance :pointer)
+  (event_loop_fptr :pointer))
+
+(defcfun ("rmauxCreateOffscreenDrawable" rmauxCreateOffscreenDrawable) :pointer
+  (pipe :pointer)
+  (width :int)
+  (height :int)
+  (depth :int)
+  (hCurrentInst :pointer)
+  (eventLoopFuncPtr :pointer))
+
+(defcfun ("rmauxFlyUI" rmauxFlyUI) :void
+  (cameraNode :pointer)
+  (drawNode :pointer)
+  (pipe :pointer)
+  (orientationScale :float)
+  (translateScale :float))
+
+(defcfun ("rmauxFlyResetCamera" rmauxFlyResetCamera) :int
+  (p :pointer)
+  (xbutton :int)
+  (ybutton :int))
+
+(defcfun ("rmauxFlyToggleMotion" rmauxFlyToggleMotion) :int
+  (p :pointer)
+  (xbutton :int)
+  (ybutton :int))
+
+(defcfun ("rmauxFlyMotionFunc" rmauxFlyMotionFunc) :int
+  (p :pointer)
+  (xbutton :int)
+  (ybutton :int))
+
+(defcfun ("rmauxArcBall" rmauxArcBall) :void
+  (x1 :pointer)
+  (y1 :pointer)
+  (x2 :pointer)
+  (y2 :pointer)
+  (result :pointer))
+
+(defcfun ("rmauxDolly" rmauxDolly) :void
+  (toModify :pointer)
+  (x1 :pointer)
+  (y1 :pointer)
+  (x2 :pointer)
+  (y2 :pointer))
+
+(defcfun ("rmauxTranslate" rmauxTranslate) :void
+  (toModify :pointer)
+  (x1 :pointer)
+  (y1 :pointer)
+  (x2 :pointer)
+  (y2 :pointer))
 
 

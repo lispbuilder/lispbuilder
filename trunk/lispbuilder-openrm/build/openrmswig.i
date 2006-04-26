@@ -139,6 +139,8 @@
 (defun rmColor3DDelete (a)
 	(rmVertex3DDelete a))
 
+;; See "rmaux.h" below.
+(defconstant RMAUX_DEFAULT_SPIN_THRESHOLD 3.0)
 
 %}
 
@@ -156,6 +158,7 @@
 #include "rmpublic.h"
 #include "rmdeflts.h"
 #include "rmps.h"
+#include "rmaux.h"
 #include "rm.h"
 %}
 
@@ -296,6 +299,13 @@ typedef struct HDC__ *HDC;
 // "rmps.h"
 // VERIFY:
 %include "rmps.h"
+
+// Remove the following from rmaux.h
+//#ifdef RM_WIN
+//RM_EXPORT_API  LONG WINAPI rmauxWndProc (HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+//#endif
+%ignore RMAUX_DEFAULT_SPIN_THRESHOLD;
+%include "rmaux.h"
 
 // "rm.h"
 // VERIFY:
