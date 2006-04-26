@@ -4,27 +4,23 @@
 
 (in-package #:rm-examples)
 
-(let ((button-state nil))
-  (defun aux-handle-motion-sdl (node button-state x y width height)
-    (cond
-      ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_LEFT) button-state) 1)
-       (rm::arc node width height x y))
-      ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_RIGHT) button-state) 4)
-       (rm::dolly node width height y))
-      ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_MIDDLE) button-state) 2)
-       (rm::translate node width height x y))))
+(defun aux-handle-motion-sdl (node button-state x y width height)
+  (cond
+    ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_LEFT) button-state) 1)
+     (rm::arc node width height x y))
+    ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_RIGHT) button-state) 4)
+     (rm::dolly node width height y))
+    ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_MIDDLE) button-state) 2)
+     (rm::translate node width height x y))))
   
-  (defun aux-handle-buttons-sdl (node button x y width height)
-    (setf button-state (cond
-			 ((equal button sdl::sdl_button_left)
-			  (rm::reset-arc node width height x y)
-			  sdl::sdl_button_left)
-			 ((equal button sdl::sdl_button_right)
-			  (rm::reset-dolly width height y)
-			  sdl::sdl_button_right)
-			 ((equal button sdl::sdl_button_middle)
-			  (rm::reset-translate width height x y)
-			  sdl::sdl_button_middle)))))
+(defun aux-handle-buttons-sdl (node button x y width height)
+  (cond
+    ((equal button sdl::sdl_button_left)
+     (rm::reset-arc node width height x y))
+    ((equal button sdl::sdl_button_right)
+     (rm::reset-dolly width height y))
+    ((equal button sdl::sdl_button_middle)
+     (rm::reset-translate width height x y))))
 
 (defun jballs ()
   (let ((width 640) (height 480)
