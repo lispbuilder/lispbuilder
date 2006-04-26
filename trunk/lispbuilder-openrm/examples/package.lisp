@@ -6,23 +6,6 @@
   (:use #:cl #:cffi)
   (:nicknames #:rm-examples)
   (:documentation "Examples for `lispbuilder-openrm'.")
-  (:export #:rm-example-1
-
-	   #:GET-ID #:ACTOR #:SET-SCRIPT #:ADD-PRIMITIVE #:ADD-PRIMITIVES #:NEW-ACTOR #:MOVE-ACTOR-BY #:MOVE-ACTOR-TO
-	   #:ROTATE-ACTOR
-	   #:OBJECTS #:SET-OBJECTS #:INIT-OBJECTS #:GET-OBJECT #:DELETE-OBJECT #:ADD-OBJECT #:SEND-MESSAGE 
-	   #:ADD #:ADD-ACTOR #:UNION-ALL-BOXES #:COMPUTE-CENTER #:DEL
-	   #:UPDATE-ALL
-	   #:RANDOM+1
-	   #:ACTION #:SET-ACTION #:UPDATE-ACTOR #:SCRIPT #:DEFSCRIPT
-	   #:HOLD #:SINUS #:ROTATE #:NEW-HOLD #:NEW-SINUS #:NEW-ROTATE #:NEW-SYNC-ACTOR
-	   #:GRAPH-NODE
-	   #:PRIMITIVE #:SCRIPT #:ADD-TO-PARENT-NODE
-	   #:CUBE #:COLOR #:VERTICES #:DIMENSIONS #:POSITION #:MASS
-	   #:WITH-ENGINE
-	   #:WORLD #:GRAVITY #:MU #:GET-MU #:GET-WORLD #:GET-SPACE #:INIT #:NEW-SPACE
-	   #:PLANE #:ORIENTATION #:SUBDIVISIONS #:SIGN
-	   #:NEAR-CALLBACK-1 #:NEAR-CALLBACK-2
-	   #:VECT
-	   #:SIMPLE-SPACE #:HASH-SPACE))
-
+  (:export #:jballs
+	   #:rm-example-1
+	   #:rm-example-2))
