@@ -26,8 +26,6 @@
      (:module "documentation"
 	      :components
 	      ((:html-file "index")
-	       (:static-file "sdl1.png")
-	       (:static-file "groovy1.png")
 	       (:doc-file "README")
 	       (:doc-file "COPYING")
 	       (:doc-file "CONTRIBUTORS")))
