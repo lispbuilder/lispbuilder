@@ -26,7 +26,9 @@
 	       (:file "util-sdl_gfx" :depends-on ("sdl_gfx"))))
      (:module "documentation"
 	      :components
-	      ((:doc-file "README")
+	      ((:html-file "index")
+             (:static-file "sdl_gfx1.jpg")
+		 (:doc-file "README")
 	       (:doc-file "COPYING")
 	       (:doc-file "CONTRIBUTORS")))
      (:module "build"
