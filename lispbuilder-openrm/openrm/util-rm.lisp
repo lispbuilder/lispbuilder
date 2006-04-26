@@ -138,7 +138,7 @@
 		  vertices)
 	  ,@body))))
 
-(defmacro with-light-new (light &body body)
+(defmacro with-light (light &body body)
   `(let ((,light (rm::rmLightNew)))
     (labels ((set-light-position (vert)
 	       (rm::LightSetXYZ ,light vert))
@@ -201,23 +201,17 @@
 
 
 ;; Dolly Functions
-(let ((prev-buttony 0.0)
-      (h-pointer (cffi:foreign-alloc 'rm::rmcamera3d)))
+(let ((prev-buttony 0.0))
   (defun dolly (node screen-width screen-height mousey)
+    (cffi:with-foreign-object (h-pointer :pointer)
       (let ((buttony (* -1.0 (rm::pixel-to-viewport mousey screen-height))))
 	(when (equal (rm::rmnodegetscenecamera3d node h-pointer)
 		     (cffi:foreign-enum-value 'rm::rmenum :rm_true))
-	  (rm::auxdolly ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
-	   h-pointer
+	  (rm::auxdolly (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d)
 			0.0 prev-buttony 0.0 buttony)
-	  (rm::rmNodeSetSceneCamera3D node ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
-				      h-pointer
-				      )
-	  (rm::rmCamera3DDelete ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
-	   h-pointer
-				) ;NOTE: Deleteing the camera when it is created only once as a closure
- 					                       ;Might break something in the future.
-	  (setf prev-buttony buttony))))
+	  (rm::rmNodeSetSceneCamera3D node (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d))
+	  (rm::rmCamera3DDelete (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d))
+	  (setf prev-buttony buttony)))))
   (defun reset-dolly (screen-width screen-height y)
     (setf prev-buttony (* -1.0 (rm::pixel-to-viewport y screen-height)))))
 
@@ -241,25 +235,19 @@
 
 ;; Translate Functions
 (let ((prev-buttonx 0.0)
-      (prev-buttony 0.0)
-      (h-pointer (cffi:foreign-alloc 'rm::rmcamera3d)))
+      (prev-buttony 0.0))
   (defun translate (node screen-width screen-height mousex mousey)
+    (cffi:with-foreign-object (h-pointer :pointer)
       (let ((buttonx (rm::pixel-to-viewport mousex screen-width))
 	    (buttony (* -1.0 (rm::pixel-to-viewport mousey screen-height))))
 	(when (equal (rm::rmnodegetscenecamera3d node h-pointer)
 		     (cffi:foreign-enum-value 'rm::rmenum :rm_true))
-	  (rm::auxtranslate ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
-	   h-pointer
+	  (rm::auxtranslate (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d)
 			    prev-buttonx prev-buttony buttonx buttony)
-	  (rm::rmNodeSetSceneCamera3D node ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
-				      h-pointer
-				      )
-	  (rm::rmCamera3DDelete ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
-	   h-pointer
-				) ;NOTE: Deleteing the camera when it is created
-					;only once in a closure may break something in the future.
+	  (rm::rmNodeSetSceneCamera3D node (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d))
+	  (rm::rmCamera3DDelete (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d))
 	  (setf prev-buttonx buttonx
-		prev-buttony buttony))))
+		prev-buttony buttony)))))
   (defun reset-translate (screen-width screen-height x y)
     (setf prev-buttonx (rm::pixel-to-viewport x screen-width)
 	  prev-buttony (* -1.0 (rm::pixel-to-viewport y screen-height)))))
@@ -786,12 +774,6 @@
 							    :RM_COPY_DATA
 							    (cffi:null-pointer)))
 	  bbox))))
-
-(defun delete-node-primitive (node primitive)
-  (let ((num (rm::rmNodeGetNumPrims node)))
-    (dotimes (i num)
-      (if (cffi:pointer-eq (rm::rmNodeGetPrimitive node i) node)
-	  (rm::rmNodeDeletePrimitive node i)))))
 
 (defun create-rm-pipe (&key
 		       (target-platform :RM_PIPE_NOPLATFORM)
