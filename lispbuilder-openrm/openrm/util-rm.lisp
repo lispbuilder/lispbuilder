@@ -140,22 +140,14 @@
 
 (defmacro with-light-new (light &body body)
   `(let ((,light (rm::rmLightNew)))
-    (labels ((set-position (x y z)
-	       (with-rmvertex-3d position
-		 (set-vertex x y z)
-		 (rm::rmLightSetXYZ ,light position)))
-	     (set-abient-color (r g b &optional (a 1.0))
-	       (with-rmcolor-4d color
-		 (set-color r g b a)
-		 (rm::rmLightSetColor ,light color (cffi:null-pointer) (cffi:null-pointer))))
-	     (set-diffuse-color (r g b &optional (a 1.0))
-	       (with-rmcolor-4d color
-		 (set-color r g b a)
-		 (rm::rmLightSetColor ,light (cffi:null-pointer) color (cffi:null-pointer))))
-	     (set-specular-color (r g b &optional (a 1.0))
-	       (with-rmcolor-4d color
-		 (set-color r g b a)
-		 (rm::rmLightSetColor ,light (cffi:null-pointer) (cffi:null-pointer) color)))
+    (labels ((set-light-position (vert)
+	       (rm::LightSetXYZ ,light vert))
+	     (set-abient-color (color)
+	       (rm::LightSetColor ,light color nil nil))
+	     (set-diffuse-color (color)
+	       (rm::LightSetColor ,light nil color nil))
+	     (set-specular-color (color)
+	       (rm::LightSetColor ,light nil nil color))
 	     (set-type (type)
 	       (setf type (case type
 			    (:point (cffi:foreign-enum-value 'rm::rmenum :rm_light_point))
@@ -178,60 +170,34 @@
 
 (defun build-XZ-Quad-mesh (p vmin vmax subdivisions ysign color)
   "Build a quadmesh parallel to the X-Z plane."
-  (let ((v (rm::rmVertex3DNew (* subdivisions subdivisions)))
-	(n (rm::rmVertex3DNew (* subdivisions subdivisions)))
-	(c (rm::rmcolor3dnew (* subdivisions subdivisions)))
-	(cnt 0) (dx 0) (dz 0))
-    (cffi:with-foreign-objects ((ref-normal 'rm::rmvertex3d)
-				(w 'rm::rmvertex3d))
-      (rm::copy-to-foreign-vertex (rm::vertex 0.0 1.0 0.0) ref-normal)
-      (rm::copy-to-foreign-vertex (rm::vertex 0.0 0.0 0.0) w)
-
-    (cffi:with-foreign-slots ((rm::y) ref-normal rm::rmvertex3d)
-      (setf rm::y (* rm::y ysign)))
+  (let ((ref-normal (vector 0.0 (* 1.0 ysign) 0.0))
+	(w (vector (vertex-x vmin) (vertex-y vmin) (vertex-z vmin)))
+	(dx (/ (- (vertex-x vmax) (vertex-x vmin))
+	       (- subdivisions 1)))
+	(dz (/ (- (vertex-z vmax) (vertex-z vmin))
+	       (- subdivisions 1)))
+	(v nil) (n nil) (c nil))
+    
     (rm::rmPrimitiveSetQmeshDims p subdivisions subdivisions)
     
-    (setf dx (/ (- (cffi:foreign-slot-value vmax 'rm::rmvertex3d 'rm::x)
-		   (cffi:foreign-slot-value vmin 'rm::rmvertex3d 'rm::x))
-		(- subdivisions 1)))
-    (setf dz (/ (- (cffi:foreign-slot-value vmax 'rm::rmvertex3d 'rm::z)
-		   (cffi:foreign-slot-value vmin 'rm::rmvertex3d 'rm::z))
-		(- subdivisions 1)))
+    (setf v (loop for i from 1 upto subdivisions
+		  for w-z = (vertex-z w) then (+ w-z dz)
+		  append (loop for j from 1 upto subdivisions
+				for w-x = (vertex-x w) then (+ w-x dx)
+				collect (vector w-x (vertex-y w) w-z))))
+
+    (setf c (loop repeat (* subdivisions subdivisions)
+		  collect (vector (color-r color) (color-g color) (color-b color) (color-a color))))
+
+    (setf n (loop repeat (* subdivisions subdivisions)
+		  collect ref-normal))
+
     
-    (copy-slots vmin w 'rm::rmVertex3D 'rm::y 'rm::z)
-    
-    (dotimes (j subdivisions)
-      (copy-slots vmin w 'rm::rmVertex3D 'rm::x)
-      (dotimes (i subdivisions)
-	(copy-slots w (cffi:mem-aref v 'rm::rmVertex3D cnt) 'rm::rmVertex3D 'rm::x 'rm::y 'rm::z)
-	(copy-slots ref-normal (cffi:mem-aref n 'rm::rmVertex3D cnt) 'rm::rmVertex3D 'rm::x 'rm::y 'rm::z)
-	(copy-slots color (cffi:mem-aref c 'rm::rmColor3D cnt) 'rm::rmColor3D 'rm::r 'rm::g 'rm::b)
-	(incf cnt)
-	(setf (cffi:foreign-slot-value w 'rm::rmvertex3d 'rm::x) (+ (cffi:foreign-slot-value w 'rm::rmvertex3d 'rm::x)
-								    dx)))
-      (setf (cffi:foreign-slot-value w 'rm::rmvertex3d 'rm::z) (+ (cffi:foreign-slot-value w 'rm::rmvertex3d 'rm::z)
-								  dz)))
-    
-    (rm::rmPrimitiveSetVertex3D p
-				(* subdivisions subdivisions)
-				v
-				(cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-				(cffi:null-pointer))
-    (rm::rmPrimitiveSetNormal3D p
-				(* subdivisions subdivisions)
-				n
-				(cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-				(cffi:null-pointer))
-    (rm::rmPrimitiveSetColor3D p
-			       (* subdivisions subdivisions)
-			       c
-			       (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-			       (cffi:null-pointer))
-    
-    (rm::rmVertex3DDelete v)
-    (rm::rmVertex3DDelete n)
-    (rm::rmcolor3ddelete c))
-    p))
+    (set-primitive-vertices p v)
+    (set-primitive-normals p n)
+    (set-primitive-colors p c)
+    )
+  p)
 
 
 ;; Dolly Functions
@@ -241,9 +207,15 @@
       (let ((buttony (* -1.0 (rm::pixel-to-viewport mousey screen-height))))
 	(when (equal (rm::rmnodegetscenecamera3d node h-pointer)
 		     (cffi:foreign-enum-value 'rm::rmenum :rm_true))
-	  (rm::rmauxDolly (cffi:mem-ref h-pointer 'rm::rmcamera3d) 0.0 prev-buttony 0.0 buttony)
-	  (rm::rmNodeSetSceneCamera3D node (cffi:mem-ref h-pointer 'rm::rmcamera3d))
-	  (rm::rmCamera3DDelete (cffi:mem-ref h-pointer 'rm::rmcamera3d)) ;NOTE: Deleteing the camera when it is created only once as a closure
+	  (rm::auxdolly ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
+	   h-pointer
+			0.0 prev-buttony 0.0 buttony)
+	  (rm::rmNodeSetSceneCamera3D node ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
+				      h-pointer
+				      )
+	  (rm::rmCamera3DDelete ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
+	   h-pointer
+				) ;NOTE: Deleteing the camera when it is created only once as a closure
  					                       ;Might break something in the future.
 	  (setf prev-buttony buttony))))
   (defun reset-dolly (screen-width screen-height y)
@@ -257,7 +229,7 @@
   (defun arc (node screen-width screen-height mousex mousey)
     (let ((buttonx (rm::pixel-to-viewport mousex screen-width))
 	  (buttony (* -1.0 (rm::pixel-to-viewport mousey screen-height))))
-      (rm::rmauxArcBall prev-buttonX prev-buttonY buttonx buttony result-transform)
+      (rm::auxarcball prev-buttonX prev-buttonY buttonx buttony result-transform)
       (rm::rmMatrixMultiply initial-transform result-transform result-transform)
       (rm::rmNodeSetRotateMatrix node result-transform)))
   (defun reset-arc (node screen-width screen-height x y)
@@ -276,9 +248,15 @@
 	    (buttony (* -1.0 (rm::pixel-to-viewport mousey screen-height))))
 	(when (equal (rm::rmnodegetscenecamera3d node h-pointer)
 		     (cffi:foreign-enum-value 'rm::rmenum :rm_true))
-	  (rm::rmauxTranslate (cffi:mem-ref h-pointer 'rm::rmcamera3d) prev-buttonx prev-buttony buttonx buttony)
-	  (rm::rmNodeSetSceneCamera3D node (cffi:mem-ref h-pointer 'rm::rmcamera3d))
-	  (rm::rmCamera3DDelete (cffi:mem-ref h-pointer 'rm::rmcamera3d)) ;NOTE: Deleteing the camera when it is created
+	  (rm::auxtranslate ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
+	   h-pointer
+			    prev-buttonx prev-buttony buttonx buttony)
+	  (rm::rmNodeSetSceneCamera3D node ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
+				      h-pointer
+				      )
+	  (rm::rmCamera3DDelete ;; (cffi:mem-ref h-pointer 'rm::rmcamera3d)
+	   h-pointer
+				) ;NOTE: Deleteing the camera when it is created
 					;only once in a closure may break something in the future.
 	  (setf prev-buttonx buttonx
 		prev-buttony buttony))))
@@ -295,8 +273,7 @@
   node)
   
 (defun move-node-to (node vert)
-  (with-rmvertex-3d m
-    (rm::rmNodeSetTranslateVector node (copy-to-foreign-vertex vert m)))
+  (rm::set-node-position node vert)
   node)
 
 ;;; Code below is verified as correct.
@@ -402,43 +379,190 @@
 	,@body)
     (error (format nil "ERROR: ~A returned :rm_whacked~%" ',(first body)))))
 
-(defstruct vertex
-  (x 0.0 :type float)
-  (y 0.0 :type float)
-  (z 0.0 :type float))
+;;; Wrapper functions here
 
-(defstruct rotation
-  (ax 0.0 :type float)
-  (ay 0.0 :type float)
-  (az 0.0 :type float))
 
-(defstruct color
-  (r 0.0 :type float)
-  (g 0.0 :type float)
-  (b 0.0 :type float))
+(defun vertex-x (vertex)
+  (elt vertex 0))
+(defun (setf vertex-x) (x-val vertex)
+  (setf (elt vertex 0) x-val))
 
-(defstruct color-a
-  (r 0.0 :type float)
-  (g 0.0 :type float)
-  (b 0.0 :type float)
-  (a 0.0 :type float))
+(defun vertex-y (vertex)
+  (elt vertex 1))
+(defun (setf vertex-y) (y-val vertex)
+  (setf (elt vertex 1) y-val))
 
-(defun color (r g b &optional a)
-  (if (floatp a)
-      (make-color-a :r r :g g :b b :a a)
-      (if (and (floatp r) (floatp g) (floatp b))
-	  (make-color :r r :g g :b b)
-	  (error "ERROR: color must be of type float."))))
+(defun vertex-z (vertex)
+  (elt vertex 2))
+(defun (setf vertex-z) (z-val vertex)
+  (setf (elt vertex 2) z-val))
 
-(defun vertex (x y z)
-  (if (and (floatp x) (floatp y) (floatp z))
-      (make-vertex :x x :y y :z z)
-      (error "ERROR: vertex must be of type float.")))
+(defun color-r (color)
+  (elt color 0))
+(defun (setf color-r) (r-val color)
+  (setf (elt color 0) r-val))
 
-(defun rotation (ax ay az)
-  (if (and (floatp ax) (floatp ay) (floatp az))
-      (make-rotation :ax ax :ay ay :az az)
-      (error "ERROR: rotation must be of type float.")))
+(defun color-g (color)
+  (elt color 1))
+(defun (setf color-g) (g-val color)
+  (setf (elt color 1) g-val))
+
+(defun color-b (color)
+  (elt color 2))
+(defun (setf color-b) (b-val color)
+  (setf (elt color 2) b-val))
+
+(defun color-a (color)
+  (elt color 3))
+(defun (setf color-a) (a-val color)
+  (setf (elt color 3) a-val))
+
+(defctype rm-vertex-3d rm::rmvertex3d)
+
+(defcfun ("rmNodeSetTranslateVector" set-node-position) :int
+  (toModify :pointer)
+  (newVector rm-vertex-3d))
+
+(defcfun ("rmPrimitiveSetVertex3D" PrimitiveSetVertex3D) :int
+  (toModify :pointer)
+  (nVertices :int)
+  (vertexData rm-vertex-3d)
+  (copyEnum rmenum)
+  (appFreeFunc :pointer))
+
+(defcfun ("rmNodeSetCenter" NodeSetCenter) :int
+  (toModify :pointer)
+  (newVertex rm-vertex-3d))
+
+(defcfun ("rmLightSetXYZ" LightSetXYZ) :int
+  (toModify :pointer)
+  (newXYZ rm-vertex-3d))
+
+(defctype float-pointer :pointer)
+
+(defcfun ("rmauxArcBall" auxArcBall) :void
+  (x1 float-pointer)
+  (y1 float-pointer)
+  (x2 float-pointer)
+  (y2 float-pointer)
+  (result :pointer))
+
+(defcfun ("rmauxDolly" auxDolly) :void
+  (toModify :pointer)
+  (x1 float-pointer)
+  (y1 float-pointer)
+  (x2 float-pointer)
+  (y2 float-pointer))
+
+(defcfun ("rmauxTranslate" auxTranslate) :void
+  (toModify :pointer)
+  (x1 float-pointer)
+  (y1 float-pointer)
+  (x2 float-pointer)
+  (y2 float-pointer))
+
+(defmethod translate-to-foreign (value (type (eql 'rm::float-pointer)))
+  (let ((float-ptr (cffi:foreign-alloc :float)))
+    (setf (cffi:mem-aref float-ptr :float) value)
+    (values float-ptr t)))
+
+(defmethod free-translated-object (ptr (name (eql 'rm::float-pointer)) free-p)
+  (if free-p
+      (cffi:foreign-free ptr)))
+
+(defmethod free-translated-object (ptr (name (eql 'rm::rm-vertex-3d)) array-p)
+  (if array-p
+      (rm::rmVertex3DDelete ptr)
+      (cffi:foreign-free ptr)))
+
+(defmethod translate-to-foreign (value (type (eql 'rm::rm-vertex-3d)))
+  (let* ((value (create-list-if-not value))
+	 (vertex-array (rm::rmVertex3DNew (length value))))
+    (vertex-copy value vertex-array)
+    (values vertex-array t)))
+
+(defmethod translate-to-foreign (value (type (eql 'rm::rmenum)))
+  (cffi:foreign-enum-value 'rm::rmenum value))
+
+(defctype rm-color-3d rm::rmcolor3d)
+(defctype rm-color-4d rm::rmcolor4d)
+
+(defctype float-array :pointer)
+
+(defcfun ("rmLightSetColor" LightSetColor) :int
+  (toModify :pointer)
+  (newAmbientColor rm-color-4d)
+  (newDiffuseColor rm-color-4d)
+  (newSpecularColor rm-color-4d))
+
+(defcfun ("rmNodeSetSceneBackgroundColor" NodeSetSceneBackgroundColor) :int
+  (toModify :pointer)
+  (newColor rm-color-4d))
+
+(defcfun ("rmPrimitiveSetColor3D" PrimitiveSetColor3D) :int
+  (toModify :pointer)
+  (nColors :int)
+  (colorData rm-color-3d)
+  (copyEnum rmenum)
+  (appFreeFunc :pointer))
+
+(defcfun ("rmPrimitiveSetColor4D" PrimitiveSetColor4D) :int
+  (toModify :pointer)
+  (nColors :int)
+  (colorData rm-color-4d)
+  (copyEnum rmenum)
+  (appFreeFunc :pointer))
+
+(defcfun ("rmPrimitiveSetRadii" PrimitiveSetRadii) :int
+  (toModify :pointer)
+  (nRadii :int)
+  (radii float-array)
+  (copyEnum rmenum)
+  (freeFunc :pointer))
+
+(defcfun ("rmPrimitiveNew" PrimitiveNew) :pointer
+  (primType rmenum))
+
+(defcfun ("rmPrimitiveSetNormal3D" PrimitiveSetNormal3D) :int
+  (toModify :pointer)
+  (nNormals :int)
+  (normalsData rm-vertex-3d)
+  (copyEnum rmenum)
+  (freeFunc :pointer))
+
+(defmethod translate-to-foreign (value (type (eql 'rm::rm-color-4d)))
+  (if (null value)
+      (values (cffi:null-pointer) nil)
+      (let* ((value (create-list-if-not value))
+	     (color-array (rm::rmColor4DNew (length value))))
+	(color-copy value color-array)
+	(values color-array t))))
+
+(defmethod translate-to-foreign (value (type (eql 'rm::rm-color-3d)))
+  (if (null value)
+      (values (cffi:null-pointer) nil)
+      (let* ((value (create-list-if-not value))
+	     (color-array (rm::rmColor3DNew (length value))))
+	(color-copy value color-array)
+	(values color-array t))))
+
+(defmethod free-translated-object (ptr (name (eql 'rm::rm-color-4d)) array-p)
+  (if array-p
+      (rm::rmColor4DDelete ptr)
+      (cffi:foreign-free ptr)))
+
+(defmethod free-translated-object (ptr (name (eql 'rm::rm-color-3d)) array-p)
+  (if array-p
+      (rm::rmColor3DDelete ptr)
+      (cffi:foreign-free ptr)))
+
+(defmethod translate-to-foreign (value (type (eql 'rm::float-array)))
+  (values (cffi:foreign-alloc :float :count (length value) :initial-contents value) t))
+
+(defmethod free-translated-object (ptr (name (eql 'rm::float-array)) free-p)
+  (if free-p
+      (cffi:foreign-free ptr)))
+
 
 (defclass engine-object ()
   ((id :accessor id :initform (get-id) :initarg :id)
@@ -465,16 +589,22 @@
 
 (defun copy-to-foreign-vertex (src dst)
   (cffi:with-foreign-slots ((rm::x rm::y rm::z) dst rm::rmvertex3d)
-    (setf rm::x (vertex-x src)
-	  rm::y (vertex-y src)
-	  rm::z (vertex-z src)))
+    (setf rm::x (elt src 0)
+	  rm::y (elt src 1)
+	  rm::z (elt src 2)))
   dst)
 
 (defun copy-to-foreign-color (src dst)
-  (cffi:with-foreign-slots ((rm::r rm::g rm::b) dst rm::rmcolor3d)
-    (setf rm::r (color-r src)
-	  rm::g (color-g src)
-	  rm::b (color-b src)))
+  (if (eq (length src) 4)
+      (cffi:with-foreign-slots ((rm::r rm::g rm::b rm::a) dst rm::rmcolor4d)
+	(setf rm::r (elt src 0)
+	      rm::g (elt src 1)
+	      rm::b (elt src 2)
+	      rm::a (elt src 3)))
+      (cffi:with-foreign-slots ((rm::r rm::g rm::b) dst rm::rmcolor3d)
+	(setf rm::r (elt src 0)
+	      rm::g (elt src 1)
+	      rm::b (elt src 2))))
   dst)
 
 (defun vertex-copy (vertices vertex-array)
@@ -488,7 +618,7 @@
 (defun color-copy (colors col-array)
   (let ((index 0))
     (mapcar #'(lambda (color)
-		(copy-to-foreign-color color (cffi:mem-aref col-array 'rm::RMcolor3D index))
+		(copy-to-foreign-color color (cffi:mem-aref col-array 'rm::RMcolor4D index))
 		(incf index))
 	    colors))
   col-array)
@@ -506,90 +636,103 @@
       (list var)))
 
 (defun set-primitive-vertices (primitive vertices)
-  (let* ((vertices (create-list-if-not vertices))
-	 (vertex-array (rm::rmVertex3DNew (length vertices))))
-    (vertex-copy vertices vertex-array)
-    (rm::error-if-not-chill (rm::rmPrimitiveSetVertex3D primitive
-							(length vertices)
-							vertex-array
-							(cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-							(cffi:null-pointer)))
-    (rm::rmVertex3DDelete vertex-array))
+  (let ((vertices (create-list-if-not vertices)))
+    (rm::error-if-not-chill (rm::PrimitiveSetVertex3D primitive
+						      (length vertices)
+						      vertices
+						      :RM_COPY_DATA
+						      (cffi:null-pointer))))
   primitive)
 
-(defun set-primitive-color (primitive colors)
-  (let* ((colors (create-list-if-not colors))
-	 (color-array (rm::rmColor3DNew (length colors))))
-    (color-copy colors color-array)
-    (rm::error-if-not-chill (rm::rmPrimitiveSetColor3D primitive
-						       (length colors)
-						       color-array
-						       (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-						       (cffi:null-pointer)))
-    (rm::rmColor3DDelete color-array))
+(defun set-primitive-normals (primitive normals)
+  (let ((normals (create-list-if-not normals)))
+    (rm::error-if-not-chill (rm::PrimitiveSetNormal3D primitive
+						      (length normals)
+						      normals
+						      :RM_COPY_DATA
+						      (cffi:null-pointer))))
+  primitive)
+
+
+(defun set-primitive-colors (primitive colors)
+  (let ((colors (create-list-if-not colors)))
+    (if (> (length (first colors)) 3)
+	(rm::error-if-not-chill (rm::PrimitiveSetColor4D primitive
+							 (length colors)
+							 colors
+							 :RM_COPY_DATA
+							 (cffi:null-pointer)))
+	(rm::error-if-not-chill (rm::PrimitiveSetColor3D primitive
+							 (length colors)
+							 colors
+							 :RM_COPY_DATA
+							 (cffi:null-pointer)))))
   primitive)
 
 (defun set-primitive-position (primitive vertex)
-  (with-rmvertex-3d position
-    (copy-to-foreign-vertex vertex position)
-    (rm::error-if-not-chill (rm::rmPrimitiveSetVertex3D primitive 1 position
-							(cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-							(cffi:null-pointer))))
+  (let ((vertex (create-list-if-not vertex)))
+    (rm::error-if-not-chill (rm::PrimitiveSetVertex3D primitive
+						      (length vertex)
+						      vertex
+						      :RM_COPY_DATA
+						      (cffi:null-pointer))))
   primitive)
 
-(defun set-node-position (node vertex)
-  (with-rmvertex-3d position
-    (copy-to-foreign-vertex vertex position)
-    (rm::error-if-not-chill (rm::rmNodeSetTranslateVector node position)))
-  node)
+;; (defun set-node-position (node vertex)
+;;   (with-rmvertex-3d position
+;;     (copy-to-foreign-vertex vertex position)
+;;     (rm::error-if-not-chill (rm::rmNodeSetTranslateVector node position)))
+;;   node)
 
 (defun new-cube-primitive (&key (vertices nil)
-			   (dimensions (rm::vertex 0.0 0.0 0.0))
-			   (color (rm::color 0.0 0.0 0.0))
-			   (position (rm::vertex 0.0 0.0 0.0)))
-  (let ((primitive (rm::rmPrimitiveNew (cffi:foreign-enum-value 'rm::rmenum :rm_box3d))))
+			   (dimensions #(0.0 0.0 0.0))
+			   (color #(0.0 0.0 0.0))
+			   (position #(0.0 0.0 0.0)))
+  (let ((primitive (rm::PrimitiveNew :rm_box3d)))
     (if vertices
-      (set-primitive-vertices primitive vertices)
-      (if dimensions
-	  (set-primitive-vertices primitive (list position
-						  (rm::vertex (+ (vertex-x dimensions) (vertex-x position))
-							      (+ (vertex-y dimensions) (vertex-y position))
-							      (+ (vertex-z dimensions) (vertex-z position)))))))
+	(set-primitive-vertices primitive vertices)
+	(if dimensions
+	    (set-primitive-vertices primitive (list position
+						    (vector (+ (elt dimensions 0) (elt position 0))
+							    (+ (elt dimensions 1) (elt position 1))
+							    (+ (elt dimensions 2) (elt position 2)))))))
     (if color
-      (set-primitive-color primitive color))
+      (set-primitive-colors primitive color))
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
 
-(defun new-sphere-primitive (&key (radius 1.0) (tesselate 32) (color (color 0.0 0.0 0.0 0.0))
-			     (position (vertex 0.0 0.0 0.0)))
-  (let ((primitive (rm::rmPrimitiveNew (cffi:foreign-enum-value 'rm::rmenum :rm_spheres)))
+(defun set-primitive-radius (primitive radius)
+  (let ((radius (create-list-if-not radius)))
+    (rm::error-if-not-chill (rm::PrimitiveSetRadii primitive
+						   (length radius)
+						   radius
+						   :RM_COPY_DATA
+						   (cffi:null-pointer))))
+  primitive)
+
+(defun new-sphere-primitive (&key (radius 1.0) (tesselate 32) (color #(0.0 0.0 0.0 0.0))
+			     (position #(0.0 0.0 0.0)))
+  (let ((primitive (rm::PrimitiveNew :rm_spheres))
 	(tesselate (case tesselate
 		     (8 rm::RM_SPHERES_8)
 		     (32 rm::RM_SPHERES_32)
 		     (128 rm::RM_SPHERES_128)
 		     (512 rm::RM_SPHERES_512)
 		     (otherwise rm::RM_SPHERES_32))))
-    (cffi:with-foreign-object (rad :float)
-      (setf (cffi:mem-aref rad :float) radius)
-      (rm::error-if-not-chill (rm::rmPrimitiveSetRadii primitive 1 rad
-						       (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-						       (cffi:null-pointer))))
+    (set-primitive-radius primitive radius)
     (rm::error-if-not-chill (rm::rmPrimitiveSetModelFlag primitive tesselate))
-    (set-primitive-color primitive color)
+    (set-primitive-colors primitive color)
     (set-primitive-position primitive position)
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
 
-(defun new-plane-primitive (&key vertices (color (rm::color 1.0 1.0 1.0)) (orientation :xz) (subdivisions 20) (sign 1))
-  (let ((primitive (rm::rmprimitivenew (cffi:foreign-enum-value 'rm::rmenum :rm_quadmesh))))
-    (with-rmvertex-3d+ (vmin vmax)
-      (copy-to-foreign-vertex (first vertices) vmin)
-      (copy-to-foreign-vertex (second vertices) vmax)
-      (with-rmcolor-3d col
-	(copy-to-foreign-color color col)
-	(case orientation
-	  (:xz (build-xz-quad-mesh primitive vmin vmax subdivisions sign col))
-	  (otherwise (build-xz-quad-mesh primitive vmin vmax subdivisions sign col)))))
+(defun new-plane-primitive (&key vertices (color #(1.0 1.0 1.0)) (orientation :xz) (subdivisions 20) (sign 1))
+  (let ((primitive (rm::primitivenew :rm_quadmesh))
+	(vmin (first vertices))
+	(vmax (second vertices)))
+    (case orientation
+      (:xz (build-xz-quad-mesh primitive vmin vmax subdivisions sign color))
+      (otherwise (build-xz-quad-mesh primitive vmin vmax subdivisions sign color)))
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
 
@@ -598,21 +741,36 @@
 ;;     (vertex-copy vertices vertex-array)
 ;;     vertex-array))
 
-(defun compute-bounds-from-primitive (primitive)
-  (let ((bbox (rm::rmprimitivenew (cffi:foreign-enum-value 'rm::rmenum :RM_BOX3D_WIRE))))
+(defun vector-from-rmvertex (rmvertex)
+  (cffi:with-foreign-slots ((rm::x rm::y rm::z) rmvertex rm::rmvertex3d)
+    (vector rm::x rm::y rm::z)))
+
+(defun get-primitive-bounding-box (primitive)
+  (let ((vertices nil))
     (with-rmvertex-3d+ (vmin vmax)
       (rm::rmPrimitivegetBoundingBox primitive vmin vmax)
-      (let ((vertex-array (rm::rmVertex3DNew 2)))
-	(rm::copy-slots vmin (cffi:mem-aref vertex-array 'rm::rmVertex3D 0) 'rm::rmvertex3d 'rm::x 'rm::y 'rm::z)
-	(rm::copy-slots vmax (cffi:mem-aref vertex-array 'rm::rmVertex3D 1) 'rm::rmvertex3d 'rm::x 'rm::y 'rm::z)
-	(rm::error-if-not-chill (rm::rmPrimitiveSetVertex3D bbox
-							    2
-							    vertex-array
-							    (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-							    (cffi:null-pointer)))
-	(rm::rmVertex3DDelete vertex-array)))
-    (rm::rmPrimitiveComputeBoundingBox bbox)
-    bbox))
+      (setf vertices (list (vector-from-rmvertex vmin)
+			   (vector-from-rmvertex vmax))))
+    vertices))
+
+(defun compute-bounds-from-primitive (primitive)
+  (let ((bbox (rm::primitivenew :RM_BOX3D_WIRE))
+	(vertices (get-primitive-bounding-box primitive)))
+      (rm::error-if-not-chill (rm::PrimitiveSetVertex3D bbox
+							(length vertices)
+							vertices
+							:RM_COPY_DATA
+							(cffi:null-pointer)))
+      (rm::rmPrimitiveComputeBoundingBox bbox)
+      bbox))
+
+(defun get-node-bounding-box (node)
+  (let ((vertices nil))
+    (with-rmvertex-3d+ (vmin vmax)
+      (rm::rmNodegetBoundingBox node vmin vmax)
+      (setf vertices (list (vector-from-rmvertex vmin)
+			   (vector-from-rmvertex vmax))))
+    vertices))
 
 (defun create-bounds-from-node (node &key primitives)
   (if primitives
@@ -620,19 +778,20 @@
 	(loop for i from 0 to (- num 1)
 	      collect (rm::compute-bounds-from-primitive (rm::rmNodeGetPrimitive node i))))
       (progn
-	(let ((bbox (rm::rmprimitivenew (cffi:foreign-enum-value 'rm::rmenum :RM_BOX3D_WIRE))))
-	  (with-rmvertex-3d+ (vmin vmax)
-	    (rm::rmNodegetBoundingBox node vmin vmax)
-	    (let ((vertex-array (rm::rmVertex3DNew 2)))
-	      (rm::copy-slots vmin (cffi:mem-aref vertex-array 'rm::rmVertex3D 0) 'rm::rmvertex3d 'rm::x 'rm::y 'rm::z)
-	      (rm::copy-slots vmax (cffi:mem-aref vertex-array 'rm::rmVertex3D 1) 'rm::rmvertex3d 'rm::x 'rm::y 'rm::z)
-	      (rm::error-if-not-chill (rm::rmPrimitiveSetVertex3D bbox
-								  2
-								  vertex-array
-								  (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-								  (cffi:null-pointer)))
-	      (rm::rmVertex3DDelete vertex-array)))
+	(let ((bbox (rm::primitivenew :RM_BOX3D_WIRE))
+	      (vertices (get-node-bounding-box node)))
+	  (rm::error-if-not-chill (rm::PrimitiveSetVertex3D bbox
+							    (length vertices)
+							    vertices
+							    :RM_COPY_DATA
+							    (cffi:null-pointer)))
 	  bbox))))
+
+(defun delete-node-primitive (node primitive)
+  (let ((num (rm::rmNodeGetNumPrims node)))
+    (dotimes (i num)
+      (if (cffi:pointer-eq (rm::rmNodeGetPrimitive node i) node)
+	  (rm::rmNodeDeletePrimitive node i)))))
 
 (defun create-rm-pipe (&key
 		       (target-platform :RM_PIPE_NOPLATFORM)
@@ -671,16 +830,14 @@
   (rm::rmNodeUnionAllBoxes look-node)
   (rm::rmNodeComputeCenterFromBoundingBox look-node)
     
-  (with-rmcolor-4d background-color
-    (rm::set-color 0.2 0.1 0.2 0.0)
-    (rm::rmNodeSetSceneBackgroundColor look-node background-color))
+  (rm::NodeSetSceneBackgroundColor look-node #(0.2 0.1 0.2 0.0))
 
   (with-rmcamera-3d camera
     (rm::rmDefaultCamera3D camera)
     (rm::rmCamera3DComputeViewFromGeometry camera look-node width height)
     (rm::rmNodeSetSceneCamera3D look-node camera))
     
-  (rm::rmDefaultLighting look-node) 
+  (rm::rmDefaultLighting look-node)
   look-node)
 
 (defun new-node (&key (name "") (dims :3d) (opacity :all))
@@ -706,7 +863,17 @@
   (rm::error-if-not-chill (rm::rmNodeComputeCenterFromBoundingBox node))
   node)
 
-(defun rotate-node (node x y z)
+(defun inverse-rotation (node matrix)
+  (cffi:with-foreign-objects ((old 'rm::rmmatrix))
+    (rm::rmMatrixInverse matrix matrix)
+    (when (equal (cffi:foreign-enum-value 'rm::rmenum :RM_WHACKED)
+		 (rm::rmNodeGetRotateMatrix node old))
+      (rm::rmMatrixIdentity old))
+    (rm::rmMatrixMultiply old matrix old)
+    (rm::rmNodeSetRotateMatrix node old))
+  node)
+
+(defun rotate-node (node x y z &key (only-this-node nil))
   (cffi:with-foreign-objects ((m 'rm::rmmatrix)
 			      (old 'rm::rmmatrix))
     (rm::rmmatrixidentity m)
@@ -715,9 +882,17 @@
 		 (rm::rmNodeGetRotateMatrix node old))
       (rm::rmMatrixIdentity old))
     (rm::rmMatrixMultiply old m old)
-    (rm::rmNodeSetRotateMatrix node old))
-  node)
+    (rm::rmNodeSetRotateMatrix node old)
 
+    ;;Reverse the rotation for all child nodes if :only-this-node is T
+    (if only-this-node
+	(progn
+	  (rm::rmMatrixInverse m m)
+	  (dotimes (i (rm::rmNodeGetNumChildren node))
+	    (let ((child (rm::rmNodeGetIthChild node i)))
+	      (inverse-rotation child m))))))
+  node)
+    
 (defun add-node (parent-node child-node &key (union nil) (compute-center nil))
 ;;   (if (listp child-node)
 ;;       (dolist (child child-node)
@@ -742,4 +917,6 @@
 		 ,@body)
 	    (rm::rmPipeDelete ,pipe))
 	  (error "ERROR: with-rmpipe cannot create pipe")))))
+
+
 
