@@ -1,11 +1,10 @@
-(sdl-examples:recursive-rects)CFFI SDL Wrapper and sample code
-(C)2006 Justin Heyes-Jones
+CFFI OpenRM Wrapper and sample code
+(C)2006 Luke John Crook
 
 See COPYING for license.
 
 See CONTRIBUTORS for the list of credits.
 
-See "documentation/index.html" for instructions on the download and installation of lispbuilder-sdl.
-Instructions on rebuilding the CFFI SDL bindings are also located in "documentation/index.html".
+See "documentation/index.html" for instructions on the download and installation of lispbuilder-openrm.
 
-The lispbuilder-sdl homepage is located at http://lispbuilder.sourceforge.net/
+The lispbuilder homepage is located at http://lispbuilder.sourceforge.net/
