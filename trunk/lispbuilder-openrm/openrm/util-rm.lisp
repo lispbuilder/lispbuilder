@@ -274,6 +274,8 @@
   "converts radians to degrees."
   (/ radian (/ PI 180)))
 
+(defun single-float (num)
+  (coerce num 'single-float))
 
 (defmacro with-matrix-symbols (matrix &body body)
   `(symbol-macrolet (,@(let ((result nil))
@@ -299,8 +301,8 @@
 	  ;;   |0  sin(a)   cos(a)    0|
 	  ;;   |0       0        0    1|
 	  
-	  (let ((cos (cos (to-radian x-angle)))
-		(sin (sin (to-radian x-angle))))
+	  (let ((cos (single-float (cos (to-radian x-angle))))
+		(sin (single-float (sin (to-radian x-angle)))))
 	    (setf r1.c1 cos
 		  r1.c2 (- sin)
 		  r2.c1 sin
@@ -315,8 +317,8 @@
 	  ;;   |-sin(a)  0  cos(a)    0|
 	  ;;   |      0  0       0    1|
 	  
-	  (let ((cos (cos (to-radian y-angle)))
-		(sin (sin (to-radian y-angle))))
+	  (let ((cos (single-float (cos (to-radian y-angle))))
+		(sin (single-float (sin (to-radian y-angle)))))
 	    (setf r0.c0 cos
 		  r0.c2 sin
 		  r2.c0 (- sin)
@@ -331,8 +333,8 @@
 	  ;;   |     0        0  1   0|
 	  ;;   |     0        0  0   1|
 	  
-	  (let ((cos (cos (to-radian z-angle)))
-		(sin (sin (to-radian z-angle))))
+	  (let ((cos (single-float (cos (to-radian z-angle))))
+		(sin (single-float (sin (to-radian z-angle)))))
 	    (setf r0.c0 cos
 		  r0.c1 (- sin)
 		  r1.c0 sin
