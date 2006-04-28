@@ -31,10 +31,14 @@
 (defctype rm-vertex-3d rm::rmvertex3d)
 (defctype rm-color-3d rm::rmcolor3d)
 (defctype rm-color-4d rm::rmcolor4d)
+(defctype rm-enum rm::rmenum)
 
 (defctype float-pointer :pointer)
 (defctype float-array :pointer)
+(defctype s-float :float)
 
+(defcstruct matrix
+  (m s-float :count 16))
 
 (defcfun ("rmNodeSetTranslateVector" set-node-position) :int
   (toModify :pointer)
@@ -117,6 +121,67 @@
   (copyEnum rmenum)
   (freeFunc :pointer))
 
+(defcfun ("rmNodeSetDiffuseColor" NodeSetDiffuseColor) :int
+  (toModify :pointer)
+  (newColor rm-color-4d))
+
+(defcfun ("rmNodeSetSpecularColor" NodeSetSpecularColor) :int
+  (toModify :pointer)
+  (newColor rm-color-4d))
+
+(defcfun ("rmNodeSetAmbientColor" NodeSetAmbientColor) :int
+  (toModify :pointer)
+  (newColor rm-color-4d))
+
+(defcfun ("rmLightSetSpotDirection" LightSetSpotDirection) :int
+  (toModify :pointer)
+  (newSpotDirection rm-vertex-3d))
+
+(defcfun ("rmLightSetSpotCutoff" LightSetSpotCutoff) :int
+  (toModify :pointer)
+  (newValue s-float))
+
+(defcfun ("rmLightSetSpotExponent" LightSetSpotExponent) :int
+  (toModify :pointer)
+  (newValue s-float))
+
+(defcfun ("rmPipeSetRenderPassEnable" PipeSetRenderPassEnable) :int
+  (t_arg0 :pointer)
+  (opaque3DEnable rm-enum)
+  (transparent3DEnable rm-enum)
+  (opaque2DEnable rm-enum))
+
+(defcfun ("rmPipeSetProcessingMode" PipeSetProcessingMode) :int
+  (toModify :pointer)
+  (newMode rm-enum))
+
+(defcfun ("rmPipeNew" PipeNew) :pointer
+  (targetPlatform rmenum))
+
+(defcfun ("rmNodeGetRotateMatrix" NodeGetRotateMatrix) rm::rm-enum
+  (toQuery :pointer)
+  (matrixReturn :pointer))
+
+(defcfun ("rmNodeGetSceneCamera3D" NodeGetSceneCamera3D) rm::rm-enum
+  (toQuery :pointer)
+  (returnCamera :pointer))
+
+(defcfun ("rmNodeGetTranslateVector" NodeGetTranslateVector) rm::rm-enum
+  (toQuery :pointer)
+  (returnVector :pointer))
+
+
+(defmethod translate-from-foreign (value (type (eql 'rm::rm-enum)))
+  (case value
+    (-1 :RM_WHACKED)
+    (0 :RM_FALSE)
+    (1 :RM_TRUE)
+    (2 :RM_CHILL)
+    (otherwise value)))
+
+(defmethod translate-to-foreign (value (type (eql 'rm::s-float)))
+  (coerce value 'single-float))
+
 (defmethod translate-to-foreign (value (type (eql 'rm::float-pointer)))
   (let ((float-ptr (cffi:foreign-alloc :float)))
     (setf (cffi:mem-aref float-ptr :float) value)
@@ -137,9 +202,12 @@
     (vertex-copy value vertex-array)
     (values vertex-array t)))
 
-(defmethod translate-to-foreign (value (type (eql 'rm::rmenum)))
-  (cffi:foreign-enum-value 'rm::rmenum value))
-
+(defmethod translate-to-foreign (value (type (eql 'rm::rm-enum)))
+  (if (keywordp value)
+      (cffi:foreign-enum-value 'rm::rmenum value)
+      (if (null value)
+	  (cffi:foreign-enum-value 'rm::rmenum :RM_FALSE)
+	  (cffi:foreign-enum-value 'rm::rmenum :RM_TRUE))))
 
 
 (defmethod translate-to-foreign (value (type (eql 'rm::rm-color-4d)))

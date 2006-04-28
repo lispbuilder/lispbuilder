@@ -76,101 +76,14 @@
 (defconstant  RM_CACHEKEY_UNINITIALIZED_VALUE 2147483649)
 
 
-(defcstruct RMmatrix
-	(m :float :count 16))
-
-;; See "rmtypes.h" below.
-(defcstruct _object_info
-	(name :char :count 64)
-	(posted :int)
-	(rpass_vdims :int)
-	(rpass_opacity :int)
-	(channel :int)
-	(pickEnable :int))
-
-;; See "rmtypes.h" below.
-(defcstruct RMpipe
-	(offscreen :int)
-	(processingMode :int)
-	(channel_format :int)
-	(xwindow_width :int)
-	(xwindow_height :int)
-	(xflags :int)
-	(opaque3DEnable :int)
-	(transparent3DEnable :int)
-	(opaque2DEnable :int)
-	(initMatrixStack :int)
-	(frameNumber :int)
-	(displayListEnableBool :int)
-	(contextCache :pointer)
-	(displayLists :pointer)
-	(mtControl :pointer)
-	(hdc :pointer)
-	(hwnd :pointer)
-	(hRC :pointer)
-	(myRank :int)
-	(globalNPE :int)
-	(targetPlatform :int)
-	(channel_render_func :pointer)
-	(postRenderBarrierFunc :pointer)
-	(postrenderfunc :pointer)
-	(postrender_depthbufferfunc :pointer)
-	(swapBuffersFunc :pointer)
-	(shutdownFunc :pointer)
-	(postFBClearBarrierFunc :pointer)
-	(createContextFunc :pointer)
-	(targetFrameRate :int)
-	(timePerFrame :pointer)
-	(timePerFrameMS :double)
-	(lastTimeStart :pointer)
-	(lastRenderTime :pointer)
-	(timeSyncFunc :pointer)
-	(caps :pointer)
-	(fbClearNode :pointer)
-	(localMaskStack :int :count 65)
-	(localMaskStackTop :int))
-
-;; See "rmpublic.h" below.
-(defun rmColor3DNew (a)
-	(rmVertex3DNew a))
-
-;; See "rmpublic.h" below.
-(defun rmColor3DDelete (a)
-	(rmVertex3DDelete a))
-
-;; See "rmaux.h" below.
-(defconstant RMAUX_DEFAULT_SPIN_THRESHOLD 3.0)
-
-
-
-
-;;;SWIG wrapper code starts here
-
-(defmacro defanonenum (&body enums)
-   "Converts anonymous enums to defconstants."
-  `(progn ,@(loop for value in enums
-                  for index = 0 then (1+ index)
-                  when (listp value) do (setf index (second value)
-                                              value (first value))
-                  collect `(defconstant ,value ,index))))
-
-;;;SWIG wrapper code ends here
-
-
-(defconstant RM_VERSION_MAJOR 1)
-
-(defconstant RM_VERSION_MINOR 5)
-
-(defconstant RM_VERSION_REV 2)
-
 (defcenum RMenum
 	(:RM_WHACKED -1)
 	(:RM_FALSE 0)
 	(:RM_TRUE 1)
-	(:RM_CHILL 1)
-	(:RM_MUTEX_UNLOCK 0)
-	(:RM_MUTEX_LOCK 1)
-	(:RM_MUTEX_BUSY 2)
+	(:RM_CHILL 2)
+	(:RM_MUTEX_UNLOCK 3)
+	(:RM_MUTEX_LOCK 4)
+	(:RM_MUTEX_BUSY 5)
 	(:RM_NATIVE_OPENGL #x010)
 	(:RM_MESA_OPENGL #x011)
 	(:RM_HARDWARE #x020)
@@ -344,6 +257,94 @@
 	(:RM_PIPE_NOPLATFORM #x0653)
 	(:RM_DEFAULT_NODE_PICK_TRAVERSAL_MASK #x0700)
 	(:RM_DEFAULT_NODE_TRAVERSAL_MASK #x0701))
+
+
+(defcstruct RMmatrix
+	(m :float :count 16))
+
+;; See "rmtypes.h" below.
+(defcstruct _object_info
+	(name :char :count 64)
+	(posted :int)
+	(rpass_vdims :int)
+	(rpass_opacity :int)
+	(channel :int)
+	(pickEnable :int))
+
+;; See "rmtypes.h" below.
+(defcstruct RMpipe
+	(offscreen :int)
+	(processingMode :int)
+	(channel_format :int)
+	(xwindow_width :int)
+	(xwindow_height :int)
+	(xflags :int)
+	(opaque3DEnable :int)
+	(transparent3DEnable :int)
+	(opaque2DEnable :int)
+	(initMatrixStack :int)
+	(frameNumber :int)
+	(displayListEnableBool :int)
+	(contextCache :pointer)
+	(displayLists :pointer)
+	(mtControl :pointer)
+	(hdc :pointer)
+	(hwnd :pointer)
+	(hRC :pointer)
+	(myRank :int)
+	(globalNPE :int)
+	(targetPlatform :int)
+	(channel_render_func :pointer)
+	(postRenderBarrierFunc :pointer)
+	(postrenderfunc :pointer)
+	(postrender_depthbufferfunc :pointer)
+	(swapBuffersFunc :pointer)
+	(shutdownFunc :pointer)
+	(postFBClearBarrierFunc :pointer)
+	(createContextFunc :pointer)
+	(targetFrameRate :int)
+	(timePerFrame :pointer)
+	(timePerFrameMS :double)
+	(lastTimeStart :pointer)
+	(lastRenderTime :pointer)
+	(timeSyncFunc :pointer)
+	(caps :pointer)
+	(fbClearNode :pointer)
+	(localMaskStack :int :count 65)
+	(localMaskStackTop :int))
+
+;; See "rmpublic.h" below.
+(defun rmColor3DNew (a)
+	(rmVertex3DNew a))
+
+;; See "rmpublic.h" below.
+(defun rmColor3DDelete (a)
+	(rmVertex3DDelete a))
+
+;; See "rmaux.h" below.
+(defconstant RMAUX_DEFAULT_SPIN_THRESHOLD 3.0)
+
+
+
+
+;;;SWIG wrapper code starts here
+
+(defmacro defanonenum (&body enums)
+   "Converts anonymous enums to defconstants."
+  `(progn ,@(loop for value in enums
+                  for index = 0 then (1+ index)
+                  when (listp value) do (setf index (second value)
+                                              value (first value))
+                  collect `(defconstant ,value ,index))))
+
+;;;SWIG wrapper code ends here
+
+
+(defconstant RM_VERSION_MAJOR 1)
+
+(defconstant RM_VERSION_MINOR 5)
+
+(defconstant RM_VERSION_REV 2)
 
 (defconstant RM_PI 3.1415926535897931)
 

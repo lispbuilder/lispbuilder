@@ -63,7 +63,7 @@
 			(if (sdl::is-key key :SDLK_ESCAPE)
 			    (sdl::push-quitevent)))
 	      (:idle
- 	       (rm::rotate-node a-node 0.0 1.0 0.0)
+ 	       (rm::rotate-node a-node :direction #(0.0 1.0 0.0))
 	       (rm::RMFRAME a-pipe root-node)
 	       (sdl::SDL_GL_SwapBuffers)))))))))
 
@@ -96,7 +96,7 @@
 			(if (sdl::is-key key :SDLK_ESCAPE)
 			    (sdl::push-quitevent)))
 	      (:idle
- 	       (rm::rotate-node a-node 0.0 1.0 0.0)
+ 	       (rm::rotate-node a-node :direction #(0.0 1.0 0.0))
 	       (rm::RMFRAME a-pipe root-node)
 	       (sdl::SDL_GL_SwapBuffers)))))))))
 

@@ -13,4 +13,5 @@
 	    :components
 	    ((:file "package")
 	     (:file "rm_example_1" :depends-on ("package"))
-	     (:file "jballs" :depends-on ("package"))))))
+	     (:file "jballs" :depends-on ("package"))
+	     (:file "spotlight" :depends-on ("package"))))))

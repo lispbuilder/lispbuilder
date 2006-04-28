@@ -164,7 +164,13 @@
 			    (:light5 (cffi:foreign-enum-value 'rm::rmenum :rm_light5))
 			    (:light6 (cffi:foreign-enum-value 'rm::rmenum :rm_light6))
 			    (:light7 (cffi:foreign-enum-value 'rm::rmenum :rm_light7))))
-	       (rm::rmNodeSetSceneLight node type ,light)))
+	       (rm::rmNodeSetSceneLight node type ,light))
+	     (set-spot-direction (direction)
+	       (rm::LightSetSpotDirection ,light direction))
+	     (set-spot-cutoff (cut-off)
+	       (rm::LightSetSpotCutoff ,light cut-off))
+	     (set-spot-exponent (exponent)
+	       (rm::LightSetSpotExponent ,light exponent)))
       ,@body
       (rm::rmLightDelete ,light))))
 
@@ -186,8 +192,9 @@
 				for w-x = (vertex-x w) then (+ w-x dx)
 				collect (vector w-x (vertex-y w) w-z))))
 
-    (setf c (loop repeat (* subdivisions subdivisions)
-		  collect (vector (color-r color) (color-g color) (color-b color) (color-a color))))
+    (if color
+	(setf c (loop repeat (* subdivisions subdivisions)
+		      collect (vector (color-r color) (color-g color) (color-b color) (color-a color)))))
 
     (setf n (loop repeat (* subdivisions subdivisions)
 		  collect ref-normal))
@@ -195,9 +202,74 @@
     
     (set-primitive-vertices p v)
     (set-primitive-normals p n)
-    (set-primitive-colors p c)
-    )
+    (if color
+	(set-primitive-colors p c)))
   p)
+
+(defun build-XY-Quad-mesh (p vmin vmax subdivisions ysign color)
+  "Build a quadmesh parallel to the X-Y plane."
+  (let ((ref-normal (vector 0.0 0.0 (* 1.0 ysign)))
+	(w (vector (vertex-x vmin) (vertex-y vmin) (vertex-z vmin)))
+	(dx (/ (- (vertex-x vmax) (vertex-x vmin))
+	       (- subdivisions 1)))
+	(dy (/ (- (vertex-y vmax) (vertex-y vmin))
+	       (- subdivisions 1)))
+	(v nil) (n nil) (c nil))
+    
+    (rm::rmPrimitiveSetQmeshDims p subdivisions subdivisions)
+    
+    (setf v (loop for i from 1 upto subdivisions
+		  for w-y = (vertex-y w) then (+ w-y dy)
+		  append (loop for j from 1 upto subdivisions
+				for w-x = (vertex-x w) then (+ w-x dx)
+				collect (vector w-x w-y (vertex-z w)))))
+
+    (if color
+	(setf c (loop repeat (* subdivisions subdivisions)
+		      collect (vector (color-r color) (color-g color) (color-b color) (color-a color)))))
+
+    (setf n (loop repeat (* subdivisions subdivisions)
+		  collect ref-normal))
+
+    
+    (set-primitive-vertices p v)
+    (set-primitive-normals p n)
+    (if color
+	(set-primitive-colors p c)))
+  p)
+
+(defun build-YZ-Quad-mesh (p vmin vmax subdivisions ysign color)
+  "Build a quadmesh parallel to the Y-Z plane."
+  (let ((ref-normal (vector (* 1.0 ysign) 0.0 0.0))
+	(w (vector (vertex-x vmin) (vertex-y vmin) (vertex-z vmin)))
+	(dz (/ (- (vertex-z vmax) (vertex-z vmin))
+	       (- subdivisions 1)))
+	(dy (/ (- (vertex-y vmax) (vertex-y vmin))
+	       (- subdivisions 1)))
+	(v nil) (n nil) (c nil))
+    
+    (rm::rmPrimitiveSetQmeshDims p subdivisions subdivisions)
+    
+    (setf v (loop for i from 1 upto subdivisions
+		  for w-y = (vertex-y w) then (+ w-y dy)
+		  append (loop for j from 1 upto subdivisions
+				for w-z = (vertex-z w) then (+ w-z dz)
+				collect (vector (vertex-x w) w-y w-z))))
+
+    (if color
+	(setf c (loop repeat (* subdivisions subdivisions)
+		      collect (vector (color-r color) (color-g color) (color-b color) (color-a color)))))
+
+    (setf n (loop repeat (* subdivisions subdivisions)
+		  collect ref-normal))
+
+    
+    (set-primitive-vertices p v)
+    (set-primitive-normals p n)
+    (if color 
+	(set-primitive-colors p c)))
+  p)
+
 
 
 ;; Dolly Functions
@@ -205,8 +277,7 @@
   (defun dolly (node screen-width screen-height mousey)
     (cffi:with-foreign-object (h-pointer :pointer)
       (let ((buttony (* -1.0 (rm::pixel-to-viewport mousey screen-height))))
-	(when (equal (rm::rmnodegetscenecamera3d node h-pointer)
-		     (cffi:foreign-enum-value 'rm::rmenum :rm_true))
+	(when (equal (rm::nodegetscenecamera3d node h-pointer) :rm_true)
 	  (rm::auxdolly (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d)
 			0.0 prev-buttony 0.0 buttony)
 	  (rm::rmNodeSetSceneCamera3D node (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d))
@@ -218,8 +289,8 @@
 ;; Arc Functions
 (let ((prev-buttonx 0.0)
       (prev-buttony 0.0)
-      (initial-transform (cffi:foreign-alloc 'rm::RMmatrix))
-      (result-transform (cffi:foreign-alloc 'rm::RMmatrix)))
+      (initial-transform (cffi:foreign-alloc 'rm::matrix))
+      (result-transform (cffi:foreign-alloc 'rm::matrix)))
   (defun arc (node screen-width screen-height mousex mousey)
     (let ((buttonx (rm::pixel-to-viewport mousex screen-width))
 	  (buttony (* -1.0 (rm::pixel-to-viewport mousey screen-height))))
@@ -229,8 +300,7 @@
   (defun reset-arc (node screen-width screen-height x y)
     (setf prev-buttonx (rm::pixel-to-viewport x screen-width)
 	  prev-buttony (* -1.0 (rm::pixel-to-viewport y screen-height)))
-    (if (equal (rm::rmNodeGetRotateMatrix node initial-transform)
-	       (cffi:foreign-enum-value 'rm::rmenum :rm_whacked))
+    (if (equal (rm::NodeGetRotateMatrix node initial-transform)	:rm_whacked)
 	(rm::rmMatrixIdentity initial-transform))))
 
 ;; Translate Functions
@@ -240,8 +310,7 @@
     (cffi:with-foreign-object (h-pointer :pointer)
       (let ((buttonx (rm::pixel-to-viewport mousex screen-width))
 	    (buttony (* -1.0 (rm::pixel-to-viewport mousey screen-height))))
-	(when (equal (rm::rmnodegetscenecamera3d node h-pointer)
-		     (cffi:foreign-enum-value 'rm::rmenum :rm_true))
+	(when (equal (rm::nodegetscenecamera3d node h-pointer) :rm_true)
 	  (rm::auxtranslate (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d)
 			    prev-buttonx prev-buttony buttonx buttony)
 	  (rm::rmNodeSetSceneCamera3D node (cffi:mem-aref (cffi:mem-aref h-pointer :pointer) 'rm::rmcamera3d))
@@ -254,9 +323,8 @@
 
 (defun move-node-by (node vert)
   (with-rmvertex-3d m
-    (when (equal (cffi:foreign-enum-value 'rm::rmenum :RM_WHACKED)
-		 (rm::rmNodeGetTranslateVector node m))
-      (copy-to-foreign-vertex (vertex 0.0 0.0 0.0) m))
+    (if (equal (rm::NodeGetTranslateVector node m) :RM_WHACKED)
+	(copy-to-foreign-vertex (vertex 0.0 0.0 0.0) m))
     (rm::rmNodeSetTranslateVector node (add-to-foreign-vertex vert m)))
   node)
   
@@ -274,8 +342,8 @@
   "converts radians to degrees."
   (/ radian (/ PI 180)))
 
-(defun single-float (num)
-  (coerce num 'single-float))
+;; (defun single-float (num)
+;;   (coerce num 'single-float))
 
 (defmacro with-matrix-symbols (matrix &body body)
   `(symbol-macrolet (,@(let ((result nil))
@@ -283,63 +351,62 @@
 			      (dotimes (j 4)
 				(setf result (cons `(,(intern (string-upcase (format nil "r~D.c~D" i j)))
 						     (cffi:mem-aref
-						      (cffi:foreign-slot-pointer ,matrix 'rm::rmmatrix 'rm::m)
-						      :float (+ (* 4 ,i) ,j)))
+						      (cffi:foreign-slot-pointer ,matrix 'rm::matrix 'rm::m)
+						      'rm::s-float (+ (* 4 ,i) ,j)))
 						   result))))
 			    result))
     ,@body))
 
-(defun rotate-matrix (matrix x-angle y-angle z-angle)
-  (if (not (and (floatp x-angle) (floatp y-angle) (floatp z-angle)))
-      (error "rotate-matrix :  x-angle, y-angle, z-angle must be of type 'float")
-      (cffi:with-foreign-object (work 'rm::rmmatrix)
-	(rm::rmmatrixidentity work)
-	(with-matrix-symbols work
-	  ;;   Rotation about the X axis by an angle a:
-	  ;;   |1       0        0    0|
-	  ;;   |0  cos(a)  -sin(a)    0|
-	  ;;   |0  sin(a)   cos(a)    0|
-	  ;;   |0       0        0    1|
-	  
-	  (let ((cos (single-float (cos (to-radian x-angle))))
-		(sin (single-float (sin (to-radian x-angle)))))
-	    (setf r1.c1 cos
-		  r1.c2 (- sin)
-		  r2.c1 sin
-		  r2.c2 cos))
-	  (rm::rmMatrixMultiply matrix work matrix)
-	  (rm::rmmatrixidentity work))
-
-	(with-matrix-symbols work
-	  ;;   Rotation about the Y axis by an angle a:
-	  ;;   | cos(a)  0  sin(a)    0|
-	  ;;   |      0  1       0    0|
-	  ;;   |-sin(a)  0  cos(a)    0|
-	  ;;   |      0  0       0    1|
-	  
-	  (let ((cos (single-float (cos (to-radian y-angle))))
-		(sin (single-float (sin (to-radian y-angle)))))
-	    (setf r0.c0 cos
+(defun rotate-matrix (matrix direction)
+  (let ((x-angle (vertex-x direction)) (y-angle (vertex-y direction)) (z-angle (vertex-z direction)))
+    (cffi:with-foreign-object (work 'rm::matrix)
+      (rm::rmmatrixidentity work)
+      (with-matrix-symbols work
+	;;   Rotation about the X axis by an angle a:
+	;;   |1       0        0    0|
+	;;   |0  cos(a)  -sin(a)    0|
+	;;   |0  sin(a)   cos(a)    0|
+	;;   |0       0        0    1|
+	
+	(let ((cos (cos (to-radian x-angle)))
+	      (sin (sin (to-radian x-angle))))
+	  (setf r1.c1 cos
+		r1.c2 (- sin)
+		r2.c1 sin
+		r2.c2 cos))
+	(rm::rmMatrixMultiply matrix work matrix)
+	(rm::rmmatrixidentity work))
+      
+      (with-matrix-symbols work
+	;;   Rotation about the Y axis by an angle a:
+	;;   | cos(a)  0  sin(a)    0|
+	;;   |      0  1       0    0|
+	;;   |-sin(a)  0  cos(a)    0|
+	;;   |      0  0       0    1|
+	
+	(let ((cos (cos (to-radian y-angle)))
+	      (sin (sin (to-radian y-angle))))
+	  (setf r0.c0 cos
 		  r0.c2 sin
 		  r2.c0 (- sin)
 		  r2.c2 cos))
-	  (rm::rmMatrixMultiply matrix work matrix)
-	  (rm::rmmatrixidentity work))
-
-	(with-matrix-symbols work
-	  ;;   Rotation about the Z axis by an angle a:
-	  ;;   |cos(a)  -sin(a)  0   0|
-	  ;;   |sin(a)   cos(a)  0   0|
-	  ;;   |     0        0  1   0|
-	  ;;   |     0        0  0   1|
-	  
-	  (let ((cos (single-float (cos (to-radian z-angle))))
-		(sin (single-float (sin (to-radian z-angle)))))
-	    (setf r0.c0 cos
-		  r0.c1 (- sin)
-		  r1.c0 sin
-		  r1.c1 cos))
-	  (rm::rmMatrixMultiply matrix work matrix))))
+	(rm::rmMatrixMultiply matrix work matrix)
+	(rm::rmmatrixidentity work))
+      
+      (with-matrix-symbols work
+	;;   Rotation about the Z axis by an angle a:
+	;;   |cos(a)  -sin(a)  0   0|
+	;;   |sin(a)   cos(a)  0   0|
+	;;   |     0        0  1   0|
+	;;   |     0        0  0   1|
+	
+	(let ((cos (cos (to-radian z-angle)))
+	      (sin (sin (to-radian z-angle))))
+	  (setf r0.c0 cos
+		r0.c1 (- sin)
+		r1.c0 sin
+		r1.c1 cos))
+	(rm::rmMatrixMultiply matrix work matrix))))
   matrix)
 
 (defmacro with-init (args &body body)
@@ -489,8 +556,8 @@
 	(rm::error-if-not-chill (rm::PrimitiveSetColor3D primitive
 							 (length colors)
 							 colors
-							 :RM_COPY_DATA
-							 (cffi:null-pointer)))))
+							     :RM_COPY_DATA
+							     (cffi:null-pointer)))))
   primitive)
 
 (defun set-primitive-position (primitive vertex)
@@ -550,12 +617,33 @@
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
 
+(defun new-cone-primitive (&key (radius 1.0) (tesselate 8) (color #(0.0 0.0 0.0 0.0))
+			   (vertices (list #(0.0 0.0 0.0) #(0.0 1.0 0.0))))
+  (let ((primitive (rm::PrimitiveNew :rm_cones))
+	(tesselate (case tesselate
+		     (4 rm::RM_CONES_4)
+		     (8 rm::RM_CONES_8)
+		     (12 rm::RM_CONES_12)
+		     (16 rm::RM_CONES_16)
+		     (32 rm::RM_CONES_32)
+		     (128 rm::RM_CONES_128)
+		     (otherwise rm::RM_CONES_8))))
+    (set-primitive-radius primitive radius)
+    (rm::error-if-not-chill (rm::rmPrimitiveSetModelFlag primitive tesselate))
+    (set-primitive-colors primitive color)
+    (set-primitive-vertices primitive vertices)
+    (rm::rmPrimitiveComputeBoundingBox primitive)
+    primitive))
+
+
 (defun new-plane-primitive (&key vertices (color #(1.0 1.0 1.0)) (orientation :xz) (subdivisions 20) (sign 1))
   (let ((primitive (rm::primitivenew :rm_quadmesh))
 	(vmin (first vertices))
 	(vmax (second vertices)))
     (case orientation
       (:xz (build-xz-quad-mesh primitive vmin vmax subdivisions sign color))
+      (:xy (build-xy-quad-mesh primitive vmin vmax subdivisions sign color))
+      (:yz (build-yz-quad-mesh primitive vmin vmax subdivisions sign color))
       (otherwise (build-xz-quad-mesh primitive vmin vmax subdivisions sign color)))
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
@@ -565,7 +653,7 @@
 ;;     (vertex-copy vertices vertex-array)
 ;;     vertex-array))
 
-(defun vector-from-rmvertex (rmvertex)
+(defun vector-from-foreign-vertex (rmvertex)
   (cffi:with-foreign-slots ((rm::x rm::y rm::z) rmvertex rm::rmvertex3d)
     (vector rm::x rm::y rm::z)))
 
@@ -573,8 +661,8 @@
   (let ((vertices nil))
     (with-rmvertex-3d+ (vmin vmax)
       (rm::rmPrimitivegetBoundingBox primitive vmin vmax)
-      (setf vertices (list (vector-from-rmvertex vmin)
-			   (vector-from-rmvertex vmax))))
+      (setf vertices (list (vector-from-foreign-vertex vmin)
+			   (vector-from-foreign-vertex vmax))))
     vertices))
 
 (defun compute-bounds-from-primitive (primitive)
@@ -592,8 +680,8 @@
   (let ((vertices nil))
     (with-rmvertex-3d+ (vmin vmax)
       (rm::rmNodegetBoundingBox node vmin vmax)
-      (setf vertices (list (vector-from-rmvertex vmin)
-			   (vector-from-rmvertex vmax))))
+      (setf vertices (list (vector-from-foreign-vertex vmin)
+			   (vector-from-foreign-vertex vmax))))
     vertices))
 
 (defun create-bounds-from-node (node &key primitives)
@@ -617,32 +705,10 @@
 		       (render-opaque3D t)
 		       (render-transparent3D nil)
 		       (render-all2D nil))
-  (let ((target-platform (case target-platform
-			   (:RM_PIPE_NOPLATFORM (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_NOPLATFORM))
-			   (:RM_PIPE_GLX (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_GLX))
-			   (:RM_PIPE_WGL (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_WGL))
-			   (:RM_PIPE_CR (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_CR))
-			   (otherwise (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_NOPLATFORM))))
-	(processing-mode (case processing-mode
-			   (:RM_PIPE_MULTISTAGE (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_MULTISTAGE))
-			   (:RM_PIPE_MULTISTAGE_PARALLEL
-			    (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_MULTISTAGE_PARALLEL))
-			   (:RM_PIPE_MULTISTAGE_VIEW_PARALLEL
-			    (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_MULTISTAGE_VIEW_PARALLEL))
-			   (otherwise (cffi:foreign-enum-value 'rm::rmenum :RM_PIPE_MULTISTAGE))))
-	(render-opaque3D (if render-opaque3D
-			     (cffi:foreign-enum-value 'rm::rmenum :RM_TRUE)
-			     (cffi:foreign-enum-value 'rm::rmenum :RM_FALSE)))
-	(render-transparent3D (if render-transparent3D
-				(cffi:foreign-enum-value 'rm::rmenum :RM_TRUE)
-				(cffi:foreign-enum-value 'rm::rmenum :RM_FALSE)))
-	(render-all2D (if render-all2D
-			  (cffi:foreign-enum-value 'rm::rmenum :RM_TRUE)
-			  (cffi:foreign-enum-value 'rm::rmenum :RM_FALSE))))
-    (let ((pipe (rm::rmPipeNew target-platform)))
-      (rm::rmPipeSetRenderPassEnable pipe render-opaque3D render-transparent3D render-all2D)
-      (rm::rmPipeSetProcessingMode pipe processing-mode)
-    pipe)))
+  (let ((pipe (rm::PipeNew target-platform)))
+    (rm::PipeSetRenderPassEnable pipe render-opaque3D render-transparent3D render-all2D)
+    (rm::PipeSetProcessingMode pipe processing-mode)
+    pipe))
 
 (defun set-default-scene (look-node width height)
   (rm::rmNodeUnionAllBoxes look-node)
@@ -682,24 +748,26 @@
   node)
 
 (defun inverse-rotation (node matrix)
-  (cffi:with-foreign-objects ((old 'rm::rmmatrix))
+  (cffi:with-foreign-objects ((old 'rm::matrix))
     (rm::rmMatrixInverse matrix matrix)
-    (when (equal (cffi:foreign-enum-value 'rm::rmenum :RM_WHACKED)
-		 (rm::rmNodeGetRotateMatrix node old))
-      (rm::rmMatrixIdentity old))
+    (if (equal (rm::NodeGetRotateMatrix node old) :rm_whacked)
+	(rm::rmMatrixIdentity old))
     (rm::rmMatrixMultiply old matrix old)
     (rm::rmNodeSetRotateMatrix node old))
   node)
 
-(defun rotate-node (node x y z &key (only-this-node nil))
-  (cffi:with-foreign-objects ((m 'rm::rmmatrix)
-			      (old 'rm::rmmatrix))
-    (rm::rmmatrixidentity m)
-    (rotate-matrix m x y z) ;set matrix values
-    (when (equal (cffi:foreign-enum-value 'rm::rmenum :RM_WHACKED)
-		 (rm::rmNodeGetRotateMatrix node old))
-      (rm::rmMatrixIdentity old))
-    (rm::rmMatrixMultiply old m old)
+(defun rotate-node (node &key (direction #(0.0 0.0 0.0)) (match-node nil) (only-this-node nil))
+  (cffi:with-foreign-objects ((m 'rm::matrix)
+			      (old 'rm::matrix))
+    (if match-node
+	(if (equal (rm::NodeGetRotateMatrix match-node old) :rm_whacked)
+	    (rm::rmMatrixIdentity old))
+	(progn
+	  (rm::rmmatrixidentity m)
+	  (rotate-matrix m direction) ;set matrix values
+	  (if (equal (rm::NodeGetRotateMatrix node old) :rm_whacked)
+	      (rm::rmMatrixIdentity old))
+	  (rm::rmMatrixMultiply old m old)))
     (rm::rmNodeSetRotateMatrix node old)
 
     ;;Reverse the rotation for all child nodes if :only-this-node is T
@@ -736,5 +804,11 @@
 	    (rm::rmPipeDelete ,pipe))
 	  (error "ERROR: with-rmpipe cannot create pipe")))))
 
+(defun point-matrix-transform (node direction)
+  (cffi:with-foreign-objects ((m 'rm::matrix) (dir 'rm::rmvertex3d))
+    (rm::copy-to-foreign-vertex direction dir)
+    (unless (equal (rm::NodeGetRotateMatrix node m) :rm_whacked)
+      (rm::rmPointMatrixTransform dir m dir))
+    (rm::vector-from-foreign-vertex dir)))
 
 

@@ -95,7 +95,7 @@
 	      (:mousebuttonup (button state x y)
 			      (setf button-state nil))
 	      (:idle
- 	       (rm::rotate-node moving-group 0.0 1.0 0.0 :only-this-node t)
+ 	       (rm::rotate-node moving-group :direction #(0.0 1.0 0.0) :only-this-node t)
 	       (rm::RMFRAME a-pipe root-node)
 	       (sdl::SDL_GL_SwapBuffers)))))))))
 
