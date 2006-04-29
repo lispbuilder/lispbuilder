@@ -6,6 +6,10 @@
 
 (defsystem lispbuilder-sdl-gfx-examples
     :description "Examples describing the use of lispbuilder-sdl-gfx."
+    :version "0.4"
+    :author "Luke Crook <luke@balooga.com>"
+    :maintainer "Application Builder <application-builder@lispniks.com>"
+    :licence "BSD"
     :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-gfx)
     :components
     ((:module "examples"
