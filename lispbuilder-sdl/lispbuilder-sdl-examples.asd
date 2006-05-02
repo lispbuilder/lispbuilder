@@ -12,10 +12,13 @@
     ((:module "examples"
 	      :components
 	      ((:file "package")
+	       (:file "sdl_simplefont" :depends-on ("package"))
+	       (:file "sdl_simplefontdemo" :depends-on ("package"))
 	       (:file "sdl_bmp_example" :depends-on ("package"))
 	       (:file "sdl_pixels" :depends-on ("package"))
 	       (:file "sdl_recursive_rects" :depends-on ("package"))
 	       (:file "sdl_drawing" :depends-on ("package"))
 	       (:file "sdl_random_rects" :depends-on ("package"))
+	       (:static-file "font.bmp")
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")))))
