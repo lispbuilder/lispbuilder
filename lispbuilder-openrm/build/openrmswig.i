@@ -343,6 +343,8 @@
 #include "rmps.h"
 #include "rmaux.h"
 #include "rm.h"
+#include "rmppm.h"
+#include "rmjpeg.h"
 %}
 
 // "rmdefs.h"
@@ -494,3 +496,6 @@ typedef struct HDC__ *HDC;
 // "rm.h"
 // VERIFY:
 %include "rm.h"
+
+%include "rmppm.h"
+%include "rmjpeg.h"

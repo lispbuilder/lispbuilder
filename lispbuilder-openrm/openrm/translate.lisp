@@ -1,9 +1,7 @@
 
 ;; OpenRM library using CFFI for foreign function interfacing...
 ;; (C)2006 Luke Crook <luke@balooga.com>
-;; Thanks to Frank Buss and Surendra Singh
 ;; see COPYING for license
-;; This file contains some useful functions for using OpenRM from Common lisp
 
 (in-package #:lispbuilder-openrm)
 
@@ -36,6 +34,7 @@
 (defctype float-pointer :pointer)
 (defctype float-array :pointer)
 (defctype s-float :float)
+(defctype int-array :pointer)
 
 (defcstruct matrix
   (m s-float :count 16))
@@ -50,6 +49,14 @@
   (vertexData rm-vertex-3d)
   (copyEnum rmenum)
   (appFreeFunc :pointer))
+
+(defcfun ("rmPrimitiveSetIndices" PrimitiveSetIndices) :int
+  (toModify :pointer)
+  (numIndices :int)
+  (indicesArray int-array)
+  (copyEnum rmenum)
+  (appFreeFunc :pointer))
+
 
 (defcfun ("rmNodeSetCenter" NodeSetCenter) :int
   (toModify :pointer)
@@ -121,17 +128,23 @@
   (copyEnum rmenum)
   (freeFunc :pointer))
 
-(defcfun ("rmNodeSetDiffuseColor" NodeSetDiffuseColor) :int
+(defcfun ("rmNodeSetDiffuseColor" NodeSetDiffuseColor) rm::rm-enum
   (toModify :pointer)
   (newColor rm-color-4d))
 
-(defcfun ("rmNodeSetSpecularColor" NodeSetSpecularColor) :int
+(defcfun ("rmNodeSetSpecularColor" NodeSetSpecularColor) rm::rm-enum
   (toModify :pointer)
   (newColor rm-color-4d))
 
-(defcfun ("rmNodeSetAmbientColor" NodeSetAmbientColor) :int
+(defcfun ("rmNodeSetAmbientColor" NodeSetAmbientColor) rm::rm-enum
   (toModify :pointer)
   (newColor rm-color-4d))
+
+(defcfun ("rmNodeSetSpecularExponent" NodeSetSpecularExponent) rm::rm-enum
+  (toModify :pointer)
+  (newValue :float))
+
+
 
 (defcfun ("rmLightSetSpotDirection" LightSetSpotDirection) :int
   (toModify :pointer)
@@ -169,6 +182,7 @@
 (defcfun ("rmNodeGetTranslateVector" NodeGetTranslateVector) rm::rm-enum
   (toQuery :pointer)
   (returnVector :pointer))
+
 
 
 (defmethod translate-from-foreign (value (type (eql 'rm::rm-enum)))

@@ -203,7 +203,8 @@
     (set-primitive-vertices p v)
     (set-primitive-normals p n)
     (if color
-	(set-primitive-colors p c)))
+	(set-primitive-colors p c))
+    (rm::rmPrimitiveComputeBoundingBox p))
   p)
 
 (defun build-XY-Quad-mesh (p vmin vmax subdivisions ysign color)
@@ -235,7 +236,8 @@
     (set-primitive-vertices p v)
     (set-primitive-normals p n)
     (if color
-	(set-primitive-colors p c)))
+	(set-primitive-colors p c))
+    (rm::rmPrimitiveComputeBoundingBox p))
   p)
 
 (defun build-YZ-Quad-mesh (p vmin vmax subdivisions ysign color)
@@ -267,7 +269,8 @@
     (set-primitive-vertices p v)
     (set-primitive-normals p n)
     (if color 
-	(set-primitive-colors p c)))
+	(set-primitive-colors p c))
+        (rm::rmPrimitiveComputeBoundingBox p))
   p)
 
 
@@ -630,8 +633,8 @@
 		     (otherwise rm::RM_CONES_8))))
     (set-primitive-radius primitive radius)
     (rm::error-if-not-chill (rm::rmPrimitiveSetModelFlag primitive tesselate))
-    (set-primitive-colors primitive color)
     (set-primitive-vertices primitive vertices)
+    (set-primitive-colors primitive color)
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
 
@@ -647,6 +650,37 @@
       (otherwise (build-xz-quad-mesh primitive vmin vmax subdivisions sign color)))
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
+
+(defun new-triangles-primitive (vertices vert-num indices ind-num &key normals color)
+  (let ((primitive (rm::primitivenew :rm_indexed_triangles)))
+    (rm::rmPrimitiveSetVertex3D primitive
+				vert-num
+				vertices
+				(cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
+				(cffi:null-pointer))
+    (rm::rmPrimitiveSetIndices primitive
+			       ind-num
+			       indices
+			       (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
+			       (cffi:null-pointer))
+    (if normals 
+	(rm::rmPrimitiveSetNormal3D primitive
+				    vert-num
+				    normals
+				    (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
+				    (cffi:null-pointer)))
+        (if color
+	    (let ((colors (cffi:foreign-alloc :pointer :count (* (* (cffi:foreign-type-size :float) 4) vert-num))))
+	      (dotimes (i vert-num)
+		(setf (cffi:mem-ref colors :pointer (* (* (cffi:foreign-type-size :float) 4) i))
+		      (cffi:mem-aref color :pointer)))
+	      (rm::rmPrimitiveSetColor4D primitive vert-num colors
+					 (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
+					 (cffi:null-pointer))
+	      (cffi:foreign-free colors)))
+    (rm::rmPrimitiveComputeBoundingBox primitive)
+    primitive))
+
 
 ;; (defun foreign-array-from-vertex (&rest vertices)
 ;;   (let ((vertex-array (rm::rmVertex3DNew (length vertices))))
@@ -747,6 +781,14 @@
   (rm::error-if-not-chill (rm::rmNodeComputeCenterFromBoundingBox node))
   node)
 
+(defun add-primitive (node primitive &key (bounds t) (center t))
+  (rm::error-if-not-chill (rm::rmNodeAddPrimitive node primitive))
+  (if bounds
+      (rm::error-if-not-chill (rm::rmNodeComputeBoundingBox node)))
+  (if center
+      (rm::error-if-not-chill (rm::rmNodeComputeCenterFromBoundingBox node)))
+  node)
+
 (defun inverse-rotation (node matrix)
   (cffi:with-foreign-objects ((old 'rm::matrix))
     (rm::rmMatrixInverse matrix matrix)
@@ -811,4 +853,13 @@
       (rm::rmPointMatrixTransform dir m dir))
     (rm::vector-from-foreign-vertex dir)))
 
+(defun set-node-property (node &key ambient-color diffuse-color specular-color specular-exponent)
+  (if ambient-color
+      (rm::NodeSetAmbientColor node ambient-color))
+  (if diffuse-color
+      (rm::NodeSetDiffuseColor node diffuse-color))
+  (if specular-color
+      (rm::NodeSetSpecularColor node specular-color))
+  (if specular-exponent
+      (rm::NodeSetSpecularExponent node specular-exponent)))
 
