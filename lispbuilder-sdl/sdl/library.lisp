@@ -2,10 +2,10 @@
 
 (in-package #:lispbuilder-sdl)
 
-+win32(eval-when (:compile-toplevel :load-toplevel :execute)
-  (pushnew (merge-pathnames "../bin/" (directory-namestring (or *load-truename* *default-pathname-defaults*)))
-	   cffi:*foreign-library-directories*
-	   :test #'equal))
++#win32(eval-when (:compile-toplevel :load-toplevel :execute)
+		  (pushnew (merge-pathnames "../bin/" (directory-namestring (or *load-truename* *default-pathname-defaults*)))
+			   cffi:*foreign-library-directories*
+			   :test #'equal))
 
 (cffi:define-foreign-library sdl
   (:darwin (:framework "SDL"))
