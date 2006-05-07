@@ -3,10 +3,10 @@
 (in-package #:lispbuilder-openrm)
 
 
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (pushnew (merge-pathnames "../bin/" (directory-namestring (or *load-truename* *default-pathname-defaults*)))
-	   cffi:*foreign-library-directories*
-	   :test #'equal))
+#+win32(eval-when (:compile-toplevel :load-toplevel :execute)
+		  (pushnew (merge-pathnames "../bin/" (directory-namestring (or *load-truename* *default-pathname-defaults*)))
+			   cffi:*foreign-library-directories*
+			   :test #'equal))
 
 ;; (cffi:define-foreign-library GL
 ;;   (:darwin (:framework "OpenGL"))
@@ -32,22 +32,22 @@
 (cffi:define-foreign-library librm
   (:darwin (:framework "librm"))
   (:windows "librm.dll")
-  (:unix (:or "librm" "librm.so")))
+  (:unix (:or "librm" "librm.so" "librm.so.1.6")))
 
 (cffi:define-foreign-library librmaux
   (:darwin (:framework "librmaux"))
   (:windows "librmaux.dll")
-  (:unix (:or "librmaux" "librmaux.so")))
+  (:unix (:or "librmaux" "librmaux.so" "librmaux.so.1.6")))
 
-(cffi:define-foreign-library librmi
+#+win32(cffi:define-foreign-library librmi
   (:darwin (:framework "librmi"))
   (:windows "librmi.dll")
-  (:unix (:or "librmi" "librmi.so")))
+  (:unix (:or "librmi" "librmi.so" "librmi.so.1.6")))
 
 (cffi:define-foreign-library librmv
   (:darwin (:framework "librmv"))
   (:windows "librmv.dll")
-  (:unix (:or "librmv" "librmv.so")))
+  (:unix (:or "librmv" "librmv.so" "librmv.so.1.6")))
 
 
 #+win32(cffi:use-foreign-library msvcr70)
@@ -59,5 +59,5 @@
 
 (cffi:use-foreign-library librm)
 (cffi:use-foreign-library librmaux)
-(cffi:use-foreign-library librmi)
+#+win32(cffi:use-foreign-library librmi)
 (cffi:use-foreign-library librmv)
