@@ -7,7 +7,7 @@
 
 (in-package #:lispbuilder-sdl-gfx)
 
-(defconstant gfxPrimitivesFontdata (cffi:foreign-alloc :char :count 2048 :initial-element 0))
+(defparameter gfxPrimitivesFontdata (cffi:foreign-alloc :char :count 2048 :initial-element 0))
 
 (let ((font-data 
   '("0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x7e" "0x81" "0xa5" "0x81" "0xbd" "0x99" "0x81" "0x7e"
