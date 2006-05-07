@@ -7,7 +7,7 @@
 (defsystem lispbuilder-openrm-examples
   :description "Examples for the lispbuilder-openrm package."
   :version "0.1"
-  :depends-on (cffi lispbuilder-sdl lispbuilder-openrm lispbuilder-cal3d)
+  :depends-on (cffi lispbuilder-sdl lispbuilder-openrm)
   :components
   ((:module "examples"
 	    :components
