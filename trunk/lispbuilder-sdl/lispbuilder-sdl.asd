@@ -19,7 +19,7 @@
     ((:module "sdl"
 	      :components
 	      ((:file "package")
-	       (:file "library")
+	       (:file "library" :depends-on ("package"))
 	       (:file "sdl" :depends-on ("package" "library"))
 	       (:file "post-swig" :depends-on ("sdl"))
 	       (:file "util-sdl" :depends-on ("sdl" "post-swig"))))

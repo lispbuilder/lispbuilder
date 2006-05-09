@@ -928,11 +928,11 @@ stored in surface->format."
       ;; For Windows
       #+win32(cffi:foreign-slot-pointer wm-info 'sdl::SDL_SysWMinfo 'sdl::window)
       ;; For something other that Windows, i.e. X
-      #-win32(cffi:foreign-slot-value (cffi:foreign-slot-value (cffi:foreign-slot-value wm-info
-											'SDL_SysWMinfo
-											'sdl::info)
-							       'sdl::SDL_SysWMinfo_info
-							       'sdl::x11)
-				      'sdl::SDL_SysWMinfo_info_x11
-				      'sdl::window)))
+      #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
+											      'SDL_SysWMinfo
+											      'sdl::info)
+								   'sdl::SDL_SysWMinfo_info
+								   'sdl::x11)
+					'sdl::SDL_SysWMinfo_info_x11
+					'sdl::window)))
 
