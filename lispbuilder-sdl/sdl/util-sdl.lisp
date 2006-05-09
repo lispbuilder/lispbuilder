@@ -919,3 +919,20 @@ stored in surface->format."
       (sdl::sdl_version (cffi:foreign-slot-value wm-info 'sdl::SDL_SysWMinfo 'sdl::version))
       (sdl::SDL_GetWMInfo wm-info)
       (cffi:foreign-slot-pointer wm-info 'sdl::SDL_SysWMinfo 'sdl::window)))
+
+(defun get-native-window ()
+  (let ((wm-info (cffi:foreign-alloc 'sdl::SDL_SysWMinfo)))
+      ;; Set the wm-info structure to the current SDL version.
+      (sdl::sdl_version (cffi:foreign-slot-value wm-info 'sdl::SDL_SysWMinfo 'sdl::version))
+      (sdl::SDL_GetWMInfo wm-info)
+      ;; For Windows
+      #+win32(cffi:foreign-slot-pointer wm-info 'sdl::SDL_SysWMinfo 'sdl::window)
+      ;; For something other that Windows, i.e. X
+      #-win32(cffi:foreign-slot-value (cffi:foreign-slot-value (cffi:foreign-slot-value wm-info
+											'SDL_SysWMinfo
+											'sdl::info)
+							       'sdl::SDL_SysWMinfo_info
+							       'sdl::x11)
+				      'sdl::SDL_SysWMinfo_info_x11
+				      'sdl::window)))
+
