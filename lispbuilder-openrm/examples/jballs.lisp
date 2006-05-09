@@ -30,7 +30,7 @@
       (sdl::set-window width height :flags sdl::SDL_OPENGL)
       (sdl::set-framerate 60)
       (rm::with-init ()
-	(rm::with-rmpipe ((sdl::get-hwnd) width height) a-pipe
+	(rm::with-rmpipe ((sdl::get-native-window) width height) a-pipe
 	  (let ((root-node (rm::rmrootnode))
 		(my-root (rm::new-node :opacity :opaque))
 		(sloth (rm::new-node :opacity :opaque))
