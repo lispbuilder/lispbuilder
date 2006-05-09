@@ -80,29 +80,29 @@
 #-win32 (defcenum SDL_SYSWM_TYPE
 	:SDL_SYSWM_X11)
 
-#-win32 (defcstruct SDL_SysWMmsg
-	(version SDL_version)
-	(subsystem :pointer)
-	(event :pointer))
-
 #-win32 (defcunion SDL_SysWMmsg_event
 	(xevent :pointer))
 
-#-win32 (defcstruct SDL_SysWMinfo
+#-win32 (defcstruct SDL_SysWMmsg
 	(version SDL_version)
-	(subsystem :pointer)
-	(info :pointer))
-
-#-win32 (defcunion SDL_SysWMinfo_info
-	(x11 :pointer))
+	(subsystem SDL_SYSWM_TYPE)
+	(event SDL_SysWMmsg_event))
 
 #-win32 (defcstruct SDL_SysWMinfo_info_x11
 	(display :pointer)
-	(window :pointer)
+	(window :unsigned-long)
 	(lock_func :pointer)
 	(unlock_func :pointer)
-	(fswindow :pointer)
-	(wmwindow :pointer))
+	(fswindow :unsigned-long)
+	(wmwindow :unsigned-long))
+
+#-win32 (defcunion SDL_SysWMinfo_info
+	(x11 SDL_SysWMinfo_info_x11))
+
+#-win32 (defcstruct SDL_SysWMinfo
+	(version SDL_version)
+	(subsystem SDL_SYSWM_TYPE)
+	(info SDL_SysWMinfo_info))
 
 (defcfun ("SDL_GetWMInfo" SDL_GetWMInfo) :int
   (info :pointer))
