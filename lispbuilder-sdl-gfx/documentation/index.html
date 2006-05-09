@@ -359,11 +359,13 @@ begin using the lispbuilder-sdl-gfx package to create applications using one of 
 must be installed prior to the installation of lispbuilder-SDL. The installation procedures for these pacakges are 
 described in the <a href="../../lispbuilder-sdl/documentation/index.html">lispbuilder-sdl documentation</a></u>.</p>
 
+<h2 id="Win32: lispbuilder-sdl-gfx">Installation on Win32 Platforms</h2>
+
 <h3 id="Win32: lispbuilder-sdl-gfx">Installation of lispbuilder-sdl-gfx</h3>
 <p>This section describes the installation of the lispbuilder-sdl-gfx package.</p>
 <ul>
     <li> download the latest version of the 
-    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182507">lispbuilder-sdl-gfx</a> 
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">lispbuilder-sdl-gfx</a> 
 package from sourceforge and unpack it to the asdf directory, e.g.
     <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl-gfx\lispbuilder-sdl-gfx.asd</pre>
     </li>
@@ -374,7 +376,7 @@ package from sourceforge and unpack it to the asdf directory, e.g.
 <ul>
   <li> install the SDL_gfx dynamic library by doing <u>one</u> of the following: 
   <ul>
-    <li> download the SDL_gfx-2.0.13.zip package from the 
+    <li>Download the SDL_gfx-2.0.13.zip package from the 
          <a href="http://www.ferzkopp.net/Software/SDL_gfx-2.0/">official site</a> and 
          copy the SDL_gfx.dll to following system folder:
     <pre>c:\windows\system32</pre>
@@ -392,20 +394,25 @@ package from sourceforge and unpack it to the asdf directory, e.g.
 <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/README?rev=HEAD&content-type=text/plain">ASDF README</a> for installation instructions.</p>
 
 <h3 id="Linux: lispbuilder-sdl-gfx">Installation of lispbuilder-sdl-gfx</h3>
-<p>This section describes the installation of the lispbuilder-sdl-gfx package for Linux users.</p>
+<p>This section describes the installation of the lispbuilder-sdl-gfx package for Linux users. Download the latest version 
+of the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">lispbuilder-sdl-gfx</a> 
+package from sourceforge, and:</p>
 <ul>
-    <li> download the latest version of the 
-    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182507">lispbuilder-sdl-gfx</a> 
-package from sourceforge and unpack it to the correct asdf systems directory.
+    <li><u>ASDF-Install</u>: The package is ASDF-Install'able, so install the package using ASDF-install: <code>(asdf-install:install "lispbuilder-sdl_gfx_0.1.tgz")</code>, or</li>
+    <li><u>Manual installation</u>: Extract the package to the correct asdf systems directory.
     </li>
 </ul>
 
-<h3 id="Linux: The SDL binary">Installation of the SDL_gfx binary</h3>
-<p>This section describes the installation of the SDL binaries for Linux.</p>
+<h3 id="Linux: The SDL_gfx binary">Installation of the SDL_gfx binary</h3>
+<p>This section describes the installation of the SDL_gfx binaries for Linux.</p>
 <ul>
-  <li> download and install the SDL_gfx RPMs from the 
+  <li>For Fedora Linux:
+   <ul>
+    <li><u>Application Manager</u>: Download and install the latest SDL_gfx RPMs using the Fedora Application Manager, or</li>
+    <li><u>Manual Installation</u>: download and install the SDL_gfx RPMs from the 
        <a href="http://www.ferzkopp.net/Software/SDL_gfx-2.0/">official site.</a>
-  </li>
+    </li>
+   </ul>
 </ul>
 
 <h2>Configuration on Win32 Platforms</h2>
@@ -416,6 +423,8 @@ package from sourceforge and unpack it to the correct asdf systems directory.
   <pre>
 (pushnew "/programme/clisp-2.38/asdf/lispbuilder-sdl-gfx/" asdf:*central-registry*)
 </pre>
+  <p>Set "lispbuilder-sdl-gfx_0.1/" to the version number of the lispbuilder-sdl-gfx package, e.g. 
+  "lispbuilder-sdl-gfx__{version_number}/".
 </div>
 
 <h2 id="Fire it Up">Fire it Up</h2>

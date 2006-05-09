@@ -291,7 +291,7 @@ begin using the lispbuilder-openrm package to create applications using one of t
 <a href="../documentation/COPYING">COPYING</a>.</p>
 
 <h2 id="Implementations">Supported Implementations</h2>
-<p>The following table describes the status of the Lisp implementations that have been tested with lispbuilder-sdl-gfx:</p>
+<p>The following table describes the status of the Lisp implementations that have been tested with lispbuilder-openrm:</p>
 
 <table border="1" cellpadding="2" cellspacing="0" summary="Supported Implementations"> 
      <tr bgcolor="yellow">
@@ -307,8 +307,8 @@ begin using the lispbuilder-openrm package to create applications using one of t
        <td></td></td>
     </tr>
      <tr>
-       <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
-       <td bgcolor="#60c060">Working</td>
+      <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
+      <td bgcolor="#60c060">Working</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td></td>
@@ -329,29 +329,24 @@ begin using the lispbuilder-openrm package to create applications using one of t
     </tr>
     <tr>
       <td><a href="http://openmcl.clozure.com/">OpenMCL</a></td>
-      
-    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
-      
-    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+      <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+      <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
       <td bgcolor="#ff6060">Unknown</td>
       <td></td>
     </tr>
     <tr>
       <td><a href="http://www.sbcl.org/">SBCL</a></td>
-      
-    <td bgcolor=blue><font color="#FFFFFF">When, oh when?</font></td>
-      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor=blue><font color="#FFFFFF">When, oh when?</font></td>
+      <td bgcolor="#60c060">Working</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td>
       </td>
     </tr>
     <tr>
       <td><a href="http://www.cons.org/cmucl/">CMUCL</a></td>
-      
-    <td bgcolor=blue><font color="#FFFFFF">When already?</font></td>
+      <td bgcolor=blue><font color="#FFFFFF">When already?</font></td>
       <td bgcolor="#ff6060">Unknown</td>
-      
-    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+      <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
       <td>
       Justin WIP Debian (sarge)
       </td>
@@ -370,24 +365,26 @@ described in the <a href="../../lispbuilder-sdl/documentation/index.html">lispbu
 <u><a href="http://sourceware.org/pthreads-win32/">PThreads Win32</a></u> libraries, as well as the Windows specific 
 <u>msvcr70.dll</u> and <u>msvcrtd.dll</u> libraries. All these binaries are included in the 
 <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-openrm-binaries</a> 
-package on sourceforge. The installation instructions for this package are described <a href="#Win32: lispbuilder-openrm and the OpenRM binaries">below</a>.</p>
+package on sourceforge. The installation instructions for this package are described <a href="#Win32: lispbuilder-openrm and the OpenRM binaries">below</a>. The Linux installation does not require these additional binaries.</p>
+
+<h2 id="Win32: lispbuilder-openrm">Installation on Win32 Platforms</h2>
 
 <h3 id="Win32: lispbuilder-openrm">Installation of lispbuilder-openrm</h3>
 <p>This section describes the installation of the lispbuilder-openrm package.</p>
 <ul>
     <li> download the latest version of the 
-    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182507">lispbuilder-openrm</a> 
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">lispbuilder-openrm</a> 
 package from sourceforge and unpack it to the asdf directory, e.g.
-    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-openrm\lispbuilder-openrm.asd</pre>
+    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-openrm_0.1\lispbuilder-openrm.asd</pre>
     </li>
 </ul>
 
 <h3 id="Win32: lispbuilder-openrm and the OpenRM binaries">Installation of the OpenRM binaries</h3>
 <p>This section describes the installation of the OpenRM binaries for Windows.</p>
 <ul>
-  <li> install the OpenRM libraries by performing the following:
+  <li>Install the OpenRM libraries by performing the following:
   <ul>
-    <li> download the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-openrm-binaries</a> package from sourceforge and unpack it into the asdf directory, e.g.
+    <li>Download the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-openrm-binaries</a> package from sourceforge and unpack it into the asdf directory, e.g.
     <pre>c:\programme\clisp-2.38\asdf\lispbuilder-openrm\lispbuilder-openrm-binaries.asd</pre>
     <pre>c:\programme\clisp-2.38\asdf\lispbuilder-openrm\bin\librm.dll</pre>
     <pre>c:\programme\clisp-2.38\asdf\lispbuilder-openrm\bin\librmaux.dll</pre>
@@ -404,14 +401,38 @@ package from sourceforge and unpack it to the asdf directory, e.g.
   </ul>
 </ul>
 
+<h2 id="Installation">Installation on Linux Platforms</h2>
+
+<h3 id="Linux: lispbuilder-openrm">Installation of lispbuilder-openrm</h3>
+<p>This section describes the installation of the lispbuilder-openrm package for Linux users. Download the latest version 
+of the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">lispbuilder-openrm</a> 
+package from sourceforge, and:</p>
+<ul>
+    <li><u>ASDF-Install</u>: The package is ASDF-Install'able, so install the package using ASDF-install: <code>(asdf-install:install "lispbuilder-openrm_0.1.tgz")</code>, or</li>
+    <li><u>Manual installation</u>: Extract the package to the correct asdf systems directory.
+    </li>
+</ul>
+
+<h3 id="Linux: The OpenRM binary">Installation of the OpenRM binaries</h3>
+<p>This section describes the installation of the OpenRM binaries for Linux.</p>
+<ul>
+  <li>For Fedora Linux:
+   <ul>
+    <li><u>Manual Installation</u>: Download and install the OpenRM RPMs from the <a href="http://www.openrm.org/">official OpenRM site</a>
+    </li>
+   </ul>
+</ul>
+
+
 <h2>Configuration on Win32 Platforms</h2>
 
 <h3>ASDF Configuration</h3>
 <div class="code">
   <p>Add the following to the ASDF *central-registry*:</p>
   <pre>
-(pushnew "/programme/clisp-2.38/asdf/lispbuilder-openrm/" asdf:*central-registry*)
+(pushnew "/programme/clisp-2.38/asdf/lispbuilder-openrm_0.1/" asdf:*central-registry*)
 </pre>
+  <p>Set "lispbuilder-openrm_0.1/" to the version number of the lispbuilder-openrm package, e.g. "lispbuilder-openrm_{version_number}/".
 </div>
 
 <h2 id="Fire it Up">Fire it Up</h2>

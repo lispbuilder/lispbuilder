@@ -322,8 +322,8 @@ begin using the lispbuilder-SDL package to create applications using one of the
        <td></td></td>
     </tr>
      <tr>
-       <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
-        <td bgcolor="#60c060">Working</td>
+      <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
+      <td bgcolor="#60c060">Working</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td></td>
@@ -343,18 +343,15 @@ begin using the lispbuilder-SDL package to create applications using one of the
       <td></td>
     </tr>
     <tr>
-      <td><a href="http://openmcl.clozure.com/">OpenMCL</a></td>
-      
+    <td><a href="http://openmcl.clozure.com/">OpenMCL</a></td>
     <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
-      
     <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
-      <td bgcolor="#ff6060">Unknown</td>
-      <td></td>
+    <td bgcolor="#ff6060">Unknown</td>
+    <td></td>
     </tr>
     <tr>
       <td><a href="http://www.sbcl.org/">SBCL</a></td>
-      
-    <td bgcolor=blue><font color="#FFFFFF">When, oh when?</font></td>
+      <td bgcolor=blue><font color="#FFFFFF">When, oh when?</font></td>
       <td bgcolor="#60c060">Working</td>
       <td bgcolor="#ff6060">Unknown</td>
       <td>
@@ -404,7 +401,7 @@ begin using the lispbuilder-SDL package to create applications using one of the
     <li> download the latest version of the 
     <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
 package from sourceforge and unpack it to the asdf directory, e.g.
-    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\lispbuilder-sdl.asd</pre>
+    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl_0.7.1\lispbuilder-sdl.asd</pre>
     </li>
 </ul>
 
@@ -426,25 +423,37 @@ package from sourceforge and unpack it to the asdf directory, e.g.
 
 <h2 id="Installation">Installation on Linux Platforms</h2>
 <h3 id="Linux: ASDF and CFFI">ASDF and CFFI</h3>
-<p>For users of SBCL, OpenMCL, ECL or ACL, ASDF is already installed. Otherwise, Linux users please refer to the official
-<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/README?rev=HEAD&content-type=text/plain">ASDF README</a> for installation instructions.</p>
+<p>
+<ul>
+  <li><u>ASDF</u>: For users of SBCL, OpenMCL, ECL or ACL, ASDF is already installed. Otherwise, Linux users 
+  please refer to the official
+<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/README?rev=HEAD&content-type=text/plain">ASDF README</a> for installation instructions.</li>
+  <li><u>CFFI</u>: It's always best to use the latest development tarball for CFFI 
+<a href="http://common-lisp.net/project/cffi/tarballs/?M=D">available here</a>.</li>
+</ul>
+</p>
+
 
 <h3 id="Linux: lispbuilder-sdl">Installation of lispbuilder-sdl</h3>
-<p>This section describes the installation of the lispbuilder-sdl package for Linux users.</p>
+<p>This section describes the installation of the lispbuilder-sdl package for Linux users. Download the latest version 
+of the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
+package from sourceforge, and:</p>
 <ul>
-    <li> download the latest version of the 
-    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
-package from sourceforge and unpack it to the correct asdf systems directory.
+    <li><u>ASDF-Install</u>: The package is ASDF-Install'able, so install the package using ASDF-install: <code>(asdf-install:install "lispbuilder-sdl_0.7.1.tgz")</code>, or</li>
+    <li><u>Manual installation</u>: Extract the package to the correct asdf systems directory.
     </li>
 </ul>
 
 <h3 id="Linux: The SDL binary">Installation of the SDL binary</h3>
 <p>This section describes the installation of the SDL binaries for Linux.</p>
 <ul>
-  <li> download and install the SDL RPMs from the <a href="http://www.libsdl.org/download-1.2.php">official SDL site</a>
-  </li>
+  <li>For Fedora Linux:
+   <ul>
+    <li><u>Application Manager</u>: Download and install the latest SDL RPMs using the Fedora Application Manager, or</li>
+    <li><u>Manual Installation</u>: Download and install the SDL RPMs from the <a href="http://www.libsdl.org/download-1.2.php">official SDL site</a>
+    </li>
+   </ul>
 </ul>
-
 
 <h2 id="Win32: Configuration">Configuration on Win32 Platforms</h2>
 
@@ -455,8 +464,9 @@ package from sourceforge and unpack it to the correct asdf systems directory.
   <pre>
 (defvar *central-registry*
   '("c:/programme/clisp-2.38/asdf/cffi/"
-    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl/"))
+    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl_0.7.1/"))
 </pre>
+  <p>Set "lispbuilder-sdl_0.7.1/" to the version number of the lispbuilder-sdl package, e.g. "lispbuilder-sdl_{version_number}/".
 </div>
 
 <h2 id="Fire it Up">Fire it Up</h2>
