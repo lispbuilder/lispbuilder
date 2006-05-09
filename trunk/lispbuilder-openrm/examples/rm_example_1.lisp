@@ -14,7 +14,7 @@
     (sdl::with-init ()
       (sdl::set-window width height :flags sdl::SDL_OPENGL)
       (rm::with-init ()
-	(rm::with-rmpipe ((sdl::get-hwnd) width height) a-pipe
+	(rm::with-rmpipe ((sdl::get-native-window) width height) a-pipe
 	  (let ((root-node (rm::rmrootnode))
 		(a-node (rm::new-node :opacity :opaque)))
 	    (rm::node-add-primitive a-node 
@@ -72,7 +72,7 @@
     (sdl::with-init ()
       (sdl::set-window width height :flags sdl::SDL_OPENGL)
       (rm::with-init ()
-	(rm::with-rmpipe ((sdl::get-hwnd) width height) a-pipe
+	(rm::with-rmpipe ((sdl::get-native-window) width height) a-pipe
 	  (let ((root-node (rm::rmrootnode))
 		(a-node (rm::new-node :opacity :opaque)))
 	    (dotimes (i 5)
@@ -108,7 +108,7 @@
 
     (sdl::with-init ()
       (sdl::set-window width height :flags sdl::sdl_opengl)
-      (rm::with-engine ((sdl::get-hwnd) width height) root-node
+      (rm::with-engine ((sdl::get-native-window) width height) root-node
 
 	(let* ((rotate (new-actor :script (new-rotate :dx 0.0 :dy 1.0 :dz 0.0)))
 	       (action-delta 0)
@@ -148,7 +148,7 @@
 
     (sdl::with-init ()
       (sdl::set-window width height :flags sdl::sdl_opengl)
-      (rm::with-engine ((sdl::get-hwnd) width height) root-node
+      (rm::with-engine ((sdl::get-native-window) width height) root-node
 
 	(let ((cubes nil))
 	  (setf cubes (loop for i from 0 to 10
@@ -182,7 +182,7 @@
 
     (sdl::with-init ()
       (sdl::set-window width height :flags sdl::sdl_opengl)
-      (rm::with-engine ((sdl::get-hwnd) width height) root-node
+      (rm::with-engine ((sdl::get-native-window) width height) root-node
 
 	(add-actor root-node
 		   (new-actor :script (defscript ()
@@ -222,7 +222,7 @@
 
     (sdl::with-init ()
       (sdl::set-window width height :flags sdl::sdl_opengl)
-      (rm::with-engine ((sdl::get-hwnd) width height) root-node
+      (rm::with-engine ((sdl::get-native-window) width height) root-node
 
 	(add-actor root-node
 		   (new-actor :script (new-rotate :dx 1.0 :dy 1.0 :dz 1.0)
@@ -256,7 +256,7 @@
 
     (sdl::with-init ()
       (sdl::set-window width height :flags sdl::sdl_opengl)
-      (rm::with-engine ((sdl::get-hwnd) width height) root-node
+      (rm::with-engine ((sdl::get-native-window) width height) root-node
 
 	(add-actor root-node
 		   (actor 
