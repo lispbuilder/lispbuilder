@@ -21,7 +21,7 @@
     ((:module "sdl-gfx"
 	      :components
 	      ((:file "package")
-	       (:file "library")
+	       (:file "library" :depends-on ("package"))
 	       (:file "sdl_gfx" :depends-on ("package" "library"))
 	       (:file "util-sdl_gfx" :depends-on ("sdl_gfx"))))
      (:module "documentation"
