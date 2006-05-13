@@ -7,11 +7,11 @@
 
 (defun inbuilt-font ()
   (let ((width 640) (height 480))
-    (sdl::with-init ()
-      (let ((display (sdl::set-window width height)))
+    (sdl:with-init ()
+      (let ((display (sdl:set-window width height)))
 	(sdl-gfx:gfxPrimitivesSetFont sdl-gfx:gfxPrimitivesFontdata 8 8)
 	(sdl-gfx:stringRGBA display 10 70 "Hello World!!!!"  255 255 255 255)
-	(sdl::with-events
+	(sdl:with-events
 	  (:quit t)
 	  (:idle
-	   (sdl::update-surface display)))))))
+	   (sdl:update-surface display)))))))
