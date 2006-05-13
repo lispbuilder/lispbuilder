@@ -9,14 +9,61 @@
   (:export
 
    ;; These are exports from util-sdl.lisp
-   #:draw-rect #:draw-rect-end-points #:random+1 #:draw-random-rect #:copy-surf-to-rect #:blit-surface
-   #:make-sdl-rect #:get-surface-rect #:load-bmp #:convert-surface-to-display-format #:with-surface-lock
-   #:put-pixel #:get-pixel #:create-surface #:is-valid-ptr #:get-video-info #:is-key #:is-modifier
-   #:new-event #:push-quitevent #:set-timescale #:get-timescale #:set-worldtime #:get-worldtime
-   #:set-framerate #:get-framerate #:with-events #:set-flags #:init-sdl #:with-init #:to-radian #:to-degree
-   #:sdl-must-lock #:with-must-locksurface #:set-screen #:set-window #:pixelformat #:update-surface #:fill-surface
-   #:apply-surface #:apply-surface-free #:set-colorkey #:clear-colorkey #:moveto-rectangle #:moveby-rectangle
-   #:rect-x #:rect-y #:rect-w #:rect-h #:new-rect #:rectangle #:copy-rectangle #:surf-w #:surf-h #:get-native-window
+   #:apply-surface
+   #:apply-surface-free
+   #:blit-surface
+   #:clear-colorkey
+   #:convert-surface-to-display-format
+   #:copy-rectangle
+   #:copy-surf-to-rect
+   #:create-surface
+   #:draw-random-rect
+   #:draw-rect
+   #:draw-rect-end-points
+   #:fill-surface
+   #:get-framerate
+   #:get-native-window
+   #:get-pixel
+   #:get-surface-rect
+   #:get-timescale
+   #:get-video-info
+   #:get-worldtime
+   #:init-sdl
+   #:is-key
+   #:is-modifier
+   #:is-valid-ptr
+   #:load-bmp
+   #:make-sdl-rect
+   #:moveby-rectangle
+   #:moveto-rectangle
+   #:new-event
+   #:new-rect
+   #:pixelformat
+   #:push-quitevent
+   #:put-pixel
+   #:random+1
+   #:rect-h
+   #:rect-w
+   #:rect-x
+   #:rect-y
+   #:rectangle
+   #:sdl-must-lock
+   #:set-colorkey
+   #:set-flags
+   #:set-framerate
+   #:set-screen
+   #:set-timescale
+   #:set-window
+   #:set-worldtime
+   #:surf-h
+   #:surf-w
+   #:to-degree
+   #:to-radian
+   #:update-surface
+   #:with-events
+   #:with-init
+   #:with-must-locksurface
+   #:with-surface-lock
    
    ;; These are exports from sdlswig.i
    #:SDL_GetError #:SDL_ClearError #:SDL_errorcode #:SDL_Error #:SDL_RWops #:seek
