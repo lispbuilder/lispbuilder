@@ -28,13 +28,13 @@
 ;;;; Should this be in util?
 (defun load-image(filename &optional r g b)
   "load an image and sets transparency if r,g,b are non-null"
-  (let ((loaded-image (sdl::load-bmp filename)))
+  (let ((loaded-image (sdl:load-bmp filename)))
     (when loaded-image
-      (let ((optimized-image (sdl::SDL_DisplayFormat loaded-image)))
-        (sdl::SDL_FreeSurface loaded-image)
+      (let ((optimized-image (sdl:SDL_DisplayFormat loaded-image)))
+        (sdl:SDL_FreeSurface loaded-image)
 	(when optimized-image
 	  (if (and r g b)
-	      (sdl::set-colorkey optimized-image r g b))
+	      (sdl:set-colorkey optimized-image r g b))
 	  optimized-image)))))
 
 (defun initialise-font(bmp-file-name font-width font-height char-map-string key-red key-green key-blue)
@@ -53,32 +53,32 @@
 (defun close-font(font)
   "free up the font image surface"
   (if (font-bmp font)
-      (sdl::SDL_FreeSurface (font-bmp font))))
+      (sdl:SDL_FreeSurface (font-bmp font))))
 
 (defun draw-text-image(screen text-image x y)
   "draw a prerendered string of text"
-  (let ((w (sdl::surf-w text-image))
-	(h (sdl::surf-h text-image)))
-    (sdl::apply-surface-free text-image
+  (let ((w (sdl:surf-w text-image))
+	(h (sdl:surf-h text-image)))
+    (sdl:apply-surface-free text-image
 			     screen
-			     :source-rect (sdl::rectangle 0 0 w h)
+			     :source-rect (sdl:rectangle 0 0 w h)
 			     :destination-x x :destination-y y)))
 
 (defun make-text-image(font string)
   "given an initialised font and a string, draw the string to a surface and return the surface pointer"
   (let ((surface-width (* (font-w font) (length string)))
 	(surface-height (font-h font)))
-    (let ((surface (sdl::create-surface (sdl::sdl_getvideosurface)  
+    (let ((surface (sdl:create-surface (sdl:sdl_getvideosurface)  
 					surface-width surface-height
 					(font-key-r font) (font-key-g font) (font-key-b font))))
-      (sdl::fill-surface surface (font-key-r font) (font-key-g font) (font-key-b font))
+      (sdl:fill-surface surface (font-key-r font) (font-key-g font) (font-key-b font))
       (draw-string surface font 0 0 string)
       surface)))
 
 (defun free-text-image(image)
   "free the sdl surface a text image allocated"
   (if image
-      (sdl::SDL_FreeSurface image)))  
+      (sdl:SDL_FreeSurface image)))  
 
 (defun draw-character(screen font x y char)
   "draw a single character at the x y position"
@@ -87,9 +87,9 @@
 	  (h (font-h font))
 	  (char-offset (get-char-offset font char)))
       (if char-offset
-	  (sdl::apply-surface-free image
+	  (sdl:apply-surface-free image
 				   screen
-				   :source-rect (sdl::rectangle (* w char-offset) 0 w h) 
+				   :source-rect (sdl:rectangle (* w char-offset) 0 w h) 
 				   :destination-x x :destination-y y)
 	nil))))
 
