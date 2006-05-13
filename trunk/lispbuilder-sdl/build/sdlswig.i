@@ -135,6 +135,10 @@
 
 %}
 
+//Uncomment %feature to generate :exports
+//%feature("export");
+
+
 // function args of type void become pointer  (note this does not work yet)
 %typemap(cin) void* ":pointer";
 
@@ -182,7 +186,6 @@ typedef long LPARAM;
 %ignore CD_FPS;
 %ignore SDL_GL_SetAttribute;
 %ignore SDL_GL_GetAttribute;
-
 
 %include "begin_code.h"
 //%include "SDL_types.h"
