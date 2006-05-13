@@ -5,7 +5,7 @@
 
 ;;;; To run this sample
 ;;;; (load "sdl_bmp_sample.lisp")
-;;;; (sdl::bmp_sample) 
+;;;; (sdl:bmp_sample) 
 
 (in-package #:sdl-examples) 
 
@@ -31,26 +31,26 @@
 (defun load-bmps(lst)
   "loads in the list of filenames (must be bmp files), and creates a display surface friendly surface for each of them"
   (loop for filename in lst do
-	(let ((bmp-surface (sdl::load-bmp filename)))
-	  (let ((display-surface (sdl::convert-surface-to-display-format bmp-surface)))
+	(let ((bmp-surface (sdl:load-bmp filename)))
+	  (let ((display-surface (sdl:convert-surface-to-display-format bmp-surface)))
 	    (setf *loaded-bmps* (cons display-surface *loaded-bmps*))))))
 
 (defun close-bmps()
   "free up the surfaces we loaded the bmps into"
   (loop for surface in *loaded-bmps* do
-	(sdl::SDL_FreeSurface surface))
+	(sdl:SDL_FreeSurface surface))
   (setf *loaded-bmps* nil))
 
 
 (defun bmp_sample () "demonstrates how to manage and display images from .bmp files"
-  (sdl::with-init ()
-    (let ((display (sdl::set-window 640 480)))
+  (sdl:with-init ()
+    (let ((display (sdl:set-window 640 480)))
       (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
-      (sdl::with-events
+      (sdl:with-events
 	(:quit t)
 	(:idle
-	 (sdl::blit-surface (first *loaded-bmps*) display 10 10)
-	 (sdl::blit-surface (second *loaded-bmps*) display 300 10)
-	 (sdl::update-surface display)))
+	 (sdl:blit-surface (first *loaded-bmps*) display 10 10)
+	 (sdl:blit-surface (second *loaded-bmps*) display 300 10)
+	 (sdl:update-surface display)))
       (close-bmps))))
 
