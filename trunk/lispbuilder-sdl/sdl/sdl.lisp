@@ -110,30 +110,30 @@
 ;;;SWIG wrapper code ends here
 
 
-(defcstruct HWND__
+(cffi:defcstruct HWND__
 	(unused :int))
 
-(defcstruct HGLRC__
+(cffi:defcstruct HGLRC__
 	(unused :int))
 
-(defcstruct HDC__
+(cffi:defcstruct HDC__
 	(unused :int))
 
-(defcfun ("SDL_GetError" SDL_GetError) :string)
+(cffi:defcfun ("SDL_GetError" SDL_GetError) :string)
 
-(defcfun ("SDL_ClearError" SDL_ClearError) :void)
+(cffi:defcfun ("SDL_ClearError" SDL_ClearError) :void)
 
-(defcenum SDL_errorcode
+(cffi:defcenum SDL_errorcode
 	:SDL_ENOMEM
 	:SDL_EFREAD
 	:SDL_EFWRITE
 	:SDL_EFSEEK
 	:SDL_LASTERROR)
 
-(defcfun ("SDL_Error" SDL_Error) :void
-  (code :pointer))
+(cffi:defcfun ("SDL_Error" SDL_Error) :void
+  (code SDL_errorcode))
 
-(defcstruct SDL_RWops
+(cffi:defcstruct SDL_RWops
 	(seek :pointer)
 	(read :pointer)
 	(write :pointer)
@@ -141,66 +141,66 @@
 	(type :unsigned-int)
 	(hidden :pointer))
 
-(defcunion SDL_RWops_hidden
+(cffi:defcunion SDL_RWops_hidden
 	(unknown :pointer)
 	(mem :pointer)
 	(stdio :pointer))
 
-(defcstruct SDL_RWops_hidden_unknown
+(cffi:defcstruct SDL_RWops_hidden_unknown
 	(data1 :pointer))
 
-(defcstruct SDL_RWops_hidden_mem
+(cffi:defcstruct SDL_RWops_hidden_mem
 	(base :pointer)
 	(here :pointer)
 	(stop :pointer))
 
-(defcstruct SDL_RWops_hidden_stdio
+(cffi:defcstruct SDL_RWops_hidden_stdio
 	(autoclose :int)
 	(fp :pointer))
 
-(defcfun ("SDL_RWFromFile" SDL_RWFromFile) :pointer
+(cffi:defcfun ("SDL_RWFromFile" SDL_RWFromFile) :pointer
   (file :string)
   (mode :string))
 
-(defcfun ("SDL_RWFromFP" SDL_RWFromFP) :pointer
+(cffi:defcfun ("SDL_RWFromFP" SDL_RWFromFP) :pointer
   (fp :pointer)
   (autoclose :int))
 
-(defcfun ("SDL_RWFromMem" SDL_RWFromMem) :pointer
+(cffi:defcfun ("SDL_RWFromMem" SDL_RWFromMem) :pointer
   (mem :pointer)
   (size :int))
 
-(defcfun ("SDL_RWFromConstMem" SDL_RWFromConstMem) :pointer
+(cffi:defcfun ("SDL_RWFromConstMem" SDL_RWFromConstMem) :pointer
   (mem :pointer)
   (size :int))
 
-(defcfun ("SDL_AllocRW" SDL_AllocRW) :pointer)
+(cffi:defcfun ("SDL_AllocRW" SDL_AllocRW) :pointer)
 
-(defcfun ("SDL_FreeRW" SDL_FreeRW) :void
+(cffi:defcfun ("SDL_FreeRW" SDL_FreeRW) :void
   (area :pointer))
 
-(defconstant SDL_TIMESLICE 10)
+(cl:defconstant SDL_TIMESLICE 10)
 
-(defconstant TIMER_RESOLUTION 10)
+(cl:defconstant TIMER_RESOLUTION 10)
 
-(defcfun ("SDL_GetTicks" SDL_GetTicks) :unsigned-int)
+(cffi:defcfun ("SDL_GetTicks" SDL_GetTicks) :unsigned-int)
 
-(defcfun ("SDL_Delay" SDL_Delay) :void
+(cffi:defcfun ("SDL_Delay" SDL_Delay) :void
   (ms :unsigned-int))
 
-(defcfun ("SDL_SetTimer" SDL_SetTimer) :int
+(cffi:defcfun ("SDL_SetTimer" SDL_SetTimer) :int
   (interval :unsigned-int)
   (callback :pointer))
 
-(defcfun ("SDL_AddTimer" SDL_AddTimer) :pointer
+(cffi:defcfun ("SDL_AddTimer" SDL_AddTimer) :pointer
   (interval :unsigned-int)
   (callback :pointer)
   (param :pointer))
 
-(defcfun ("SDL_RemoveTimer" SDL_RemoveTimer) :pointer
+(cffi:defcfun ("SDL_RemoveTimer" SDL_RemoveTimer) :pointer
   (t_arg0 :pointer))
 
-(defcstruct SDL_AudioSpec
+(cffi:defcstruct SDL_AudioSpec
 	(freq :int)
 	(format :unsigned-short)
 	(channels :unsigned-char)
@@ -211,23 +211,23 @@
 	(callback :pointer)
 	(userdata :pointer))
 
-(defconstant AUDIO_U8 #x0008)
+(cl:defconstant AUDIO_U8 #x0008)
 
-(defconstant AUDIO_S8 #x8008)
+(cl:defconstant AUDIO_S8 #x8008)
 
-(defconstant AUDIO_U16LSB #x0010)
+(cl:defconstant AUDIO_U16LSB #x0010)
 
-(defconstant AUDIO_S16LSB #x8010)
+(cl:defconstant AUDIO_S16LSB #x8010)
 
-(defconstant AUDIO_U16MSB #x1010)
+(cl:defconstant AUDIO_U16MSB #x1010)
 
-(defconstant AUDIO_S16MSB #x9010)
+(cl:defconstant AUDIO_S16MSB #x9010)
 
-(defconstant AUDIO_U16 #x0010)
+(cl:defconstant AUDIO_U16 #x0010)
 
-(defconstant AUDIO_S16 #x8010)
+(cl:defconstant AUDIO_S16 #x8010)
 
-(defcstruct SDL_AudioCVT
+(cffi:defcstruct SDL_AudioCVT
 	(needed :int)
 	(src_format :unsigned-short)
 	(dst_format :unsigned-short)
@@ -240,40 +240,40 @@
 	(filters :pointer)
 	(filter_index :int))
 
-(defcfun ("SDL_AudioInit" SDL_AudioInit) :int
+(cffi:defcfun ("SDL_AudioInit" SDL_AudioInit) :int
   (driver_name :string))
 
-(defcfun ("SDL_AudioQuit" SDL_AudioQuit) :void)
+(cffi:defcfun ("SDL_AudioQuit" SDL_AudioQuit) :void)
 
-(defcfun ("SDL_AudioDriverName" SDL_AudioDriverName) :string
+(cffi:defcfun ("SDL_AudioDriverName" SDL_AudioDriverName) :string
   (namebuf :string)
   (maxlen :int))
 
-(defcfun ("SDL_OpenAudio" SDL_OpenAudio) :int
+(cffi:defcfun ("SDL_OpenAudio" SDL_OpenAudio) :int
   (desired :pointer)
   (obtained :pointer))
 
-(defcenum SDL_audiostatus
+(cffi:defcenum SDL_audiostatus
 	(:SDL_AUDIO_STOPPED 0)
 	:SDL_AUDIO_PLAYING
 	:SDL_AUDIO_PAUSED)
 
-(defcfun ("SDL_GetAudioStatus" SDL_GetAudioStatus) :pointer)
+(cffi:defcfun ("SDL_GetAudioStatus" SDL_GetAudioStatus) SDL_audiostatus)
 
-(defcfun ("SDL_PauseAudio" SDL_PauseAudio) :void
+(cffi:defcfun ("SDL_PauseAudio" SDL_PauseAudio) :void
   (pause_on :int))
 
-(defcfun ("SDL_LoadWAV_RW" SDL_LoadWAV_RW) :pointer
+(cffi:defcfun ("SDL_LoadWAV_RW" SDL_LoadWAV_RW) :pointer
   (src :pointer)
   (freesrc :int)
   (spec :pointer)
   (audio_buf :pointer)
   (audio_len :pointer))
 
-(defcfun ("SDL_FreeWAV" SDL_FreeWAV) :void
+(cffi:defcfun ("SDL_FreeWAV" SDL_FreeWAV) :void
   (audio_buf :pointer))
 
-(defcfun ("SDL_BuildAudioCVT" SDL_BuildAudioCVT) :int
+(cffi:defcfun ("SDL_BuildAudioCVT" SDL_BuildAudioCVT) :int
   (cvt :pointer)
   (src_format :unsigned-short)
   (src_channels :unsigned-char)
@@ -282,160 +282,160 @@
   (dst_channels :unsigned-char)
   (dst_rate :int))
 
-(defcfun ("SDL_ConvertAudio" SDL_ConvertAudio) :int
+(cffi:defcfun ("SDL_ConvertAudio" SDL_ConvertAudio) :int
   (cvt :pointer))
 
-(defconstant SDL_MIX_MAXVOLUME 128)
+(cl:defconstant SDL_MIX_MAXVOLUME 128)
 
-(defcfun ("SDL_MixAudio" SDL_MixAudio) :void
+(cffi:defcfun ("SDL_MixAudio" SDL_MixAudio) :void
   (dst :pointer)
   (src :pointer)
   (len :unsigned-int)
   (volume :int))
 
-(defcfun ("SDL_LockAudio" SDL_LockAudio) :void)
+(cffi:defcfun ("SDL_LockAudio" SDL_LockAudio) :void)
 
-(defcfun ("SDL_UnlockAudio" SDL_UnlockAudio) :void)
+(cffi:defcfun ("SDL_UnlockAudio" SDL_UnlockAudio) :void)
 
-(defcfun ("SDL_CloseAudio" SDL_CloseAudio) :void)
+(cffi:defcfun ("SDL_CloseAudio" SDL_CloseAudio) :void)
 
-(defconstant SDL_MAX_TRACKS 99)
+(cl:defconstant SDL_MAX_TRACKS 99)
 
-(defconstant SDL_AUDIO_TRACK #x00)
+(cl:defconstant SDL_AUDIO_TRACK #x00)
 
-(defconstant SDL_DATA_TRACK #x04)
+(cl:defconstant SDL_DATA_TRACK #x04)
 
-(defcenum CDstatus
+(cffi:defcenum CDstatus
 	:CD_TRAYEMPTY
 	:CD_STOPPED
 	:CD_PLAYING
 	:CD_PAUSED
 	(:CD_ERROR -1))
 
-(defcstruct SDL_CDtrack
+(cffi:defcstruct SDL_CDtrack
 	(id :unsigned-char)
 	(type :unsigned-char)
 	(unused :unsigned-short)
 	(length :unsigned-int)
 	(offset :unsigned-int))
 
-(defcstruct SDL_CD
+(cffi:defcstruct SDL_CD
 	(id :int)
-	(status :pointer)
+	(status CDstatus)
 	(numtracks :int)
 	(cur_track :int)
 	(cur_frame :int)
 	(track :pointer))
 
-(defcfun ("SDL_CDNumDrives" SDL_CDNumDrives) :int)
+(cffi:defcfun ("SDL_CDNumDrives" SDL_CDNumDrives) :int)
 
-(defcfun ("SDL_CDName" SDL_CDName) :string
+(cffi:defcfun ("SDL_CDName" SDL_CDName) :string
   (drive :int))
 
-(defcfun ("SDL_CDOpen" SDL_CDOpen) :pointer
+(cffi:defcfun ("SDL_CDOpen" SDL_CDOpen) :pointer
   (drive :int))
 
-(defcfun ("SDL_CDStatus" SDL_CDStatus) :pointer
+(cffi:defcfun ("SDL_CDStatus" SDL_CDStatus) CDstatus
   (cdrom :pointer))
 
-(defcfun ("SDL_CDPlayTracks" SDL_CDPlayTracks) :int
+(cffi:defcfun ("SDL_CDPlayTracks" SDL_CDPlayTracks) :int
   (cdrom :pointer)
   (start_track :int)
   (start_frame :int)
   (ntracks :int)
   (nframes :int))
 
-(defcfun ("SDL_CDPlay" SDL_CDPlay) :int
+(cffi:defcfun ("SDL_CDPlay" SDL_CDPlay) :int
   (cdrom :pointer)
   (start :int)
   (length :int))
 
-(defcfun ("SDL_CDPause" SDL_CDPause) :int
+(cffi:defcfun ("SDL_CDPause" SDL_CDPause) :int
   (cdrom :pointer))
 
-(defcfun ("SDL_CDResume" SDL_CDResume) :int
+(cffi:defcfun ("SDL_CDResume" SDL_CDResume) :int
   (cdrom :pointer))
 
-(defcfun ("SDL_CDStop" SDL_CDStop) :int
+(cffi:defcfun ("SDL_CDStop" SDL_CDStop) :int
   (cdrom :pointer))
 
-(defcfun ("SDL_CDEject" SDL_CDEject) :int
+(cffi:defcfun ("SDL_CDEject" SDL_CDEject) :int
   (cdrom :pointer))
 
-(defcfun ("SDL_CDClose" SDL_CDClose) :void
+(cffi:defcfun ("SDL_CDClose" SDL_CDClose) :void
   (cdrom :pointer))
 
-(defcfun ("SDL_NumJoysticks" SDL_NumJoysticks) :int)
+(cffi:defcfun ("SDL_NumJoysticks" SDL_NumJoysticks) :int)
 
-(defcfun ("SDL_JoystickName" SDL_JoystickName) :string
+(cffi:defcfun ("SDL_JoystickName" SDL_JoystickName) :string
   (device_index :int))
 
-(defcfun ("SDL_JoystickOpen" SDL_JoystickOpen) :pointer
+(cffi:defcfun ("SDL_JoystickOpen" SDL_JoystickOpen) :pointer
   (device_index :int))
 
-(defcfun ("SDL_JoystickOpened" SDL_JoystickOpened) :int
+(cffi:defcfun ("SDL_JoystickOpened" SDL_JoystickOpened) :int
   (device_index :int))
 
-(defcfun ("SDL_JoystickIndex" SDL_JoystickIndex) :int
+(cffi:defcfun ("SDL_JoystickIndex" SDL_JoystickIndex) :int
   (joystick :pointer))
 
-(defcfun ("SDL_JoystickNumAxes" SDL_JoystickNumAxes) :int
+(cffi:defcfun ("SDL_JoystickNumAxes" SDL_JoystickNumAxes) :int
   (joystick :pointer))
 
-(defcfun ("SDL_JoystickNumBalls" SDL_JoystickNumBalls) :int
+(cffi:defcfun ("SDL_JoystickNumBalls" SDL_JoystickNumBalls) :int
   (joystick :pointer))
 
-(defcfun ("SDL_JoystickNumHats" SDL_JoystickNumHats) :int
+(cffi:defcfun ("SDL_JoystickNumHats" SDL_JoystickNumHats) :int
   (joystick :pointer))
 
-(defcfun ("SDL_JoystickNumButtons" SDL_JoystickNumButtons) :int
+(cffi:defcfun ("SDL_JoystickNumButtons" SDL_JoystickNumButtons) :int
   (joystick :pointer))
 
-(defcfun ("SDL_JoystickUpdate" SDL_JoystickUpdate) :void)
+(cffi:defcfun ("SDL_JoystickUpdate" SDL_JoystickUpdate) :void)
 
-(defcfun ("SDL_JoystickEventState" SDL_JoystickEventState) :int
+(cffi:defcfun ("SDL_JoystickEventState" SDL_JoystickEventState) :int
   (state :int))
 
-(defcfun ("SDL_JoystickGetAxis" SDL_JoystickGetAxis) :short
+(cffi:defcfun ("SDL_JoystickGetAxis" SDL_JoystickGetAxis) :short
   (joystick :pointer)
   (axis :int))
 
-(defconstant SDL_HAT_CENTERED #x00)
+(cl:defconstant SDL_HAT_CENTERED #x00)
 
-(defconstant SDL_HAT_UP #x01)
+(cl:defconstant SDL_HAT_UP #x01)
 
-(defconstant SDL_HAT_RIGHT #x02)
+(cl:defconstant SDL_HAT_RIGHT #x02)
 
-(defconstant SDL_HAT_DOWN #x04)
+(cl:defconstant SDL_HAT_DOWN #x04)
 
-(defconstant SDL_HAT_LEFT #x08)
+(cl:defconstant SDL_HAT_LEFT #x08)
 
-(defcfun ("SDL_JoystickGetHat" SDL_JoystickGetHat) :unsigned-char
+(cffi:defcfun ("SDL_JoystickGetHat" SDL_JoystickGetHat) :unsigned-char
   (joystick :pointer)
   (hat :int))
 
-(defcfun ("SDL_JoystickGetBall" SDL_JoystickGetBall) :int
+(cffi:defcfun ("SDL_JoystickGetBall" SDL_JoystickGetBall) :int
   (joystick :pointer)
   (ball :int)
   (dx :pointer)
   (dy :pointer))
 
-(defcfun ("SDL_JoystickGetButton" SDL_JoystickGetButton) :unsigned-char
+(cffi:defcfun ("SDL_JoystickGetButton" SDL_JoystickGetButton) :unsigned-char
   (joystick :pointer)
   (button :int))
 
-(defcfun ("SDL_JoystickClose" SDL_JoystickClose) :void
+(cffi:defcfun ("SDL_JoystickClose" SDL_JoystickClose) :void
   (joystick :pointer))
 
-(defconstant SDL_APPMOUSEFOCUS #x01)
+(cl:defconstant SDL_APPMOUSEFOCUS #x01)
 
-(defconstant SDL_APPINPUTFOCUS #x02)
+(cl:defconstant SDL_APPINPUTFOCUS #x02)
 
-(defconstant SDL_APPACTIVE #x04)
+(cl:defconstant SDL_APPACTIVE #x04)
 
-(defcfun ("SDL_GetAppState" SDL_GetAppState) :unsigned-char)
+(cffi:defcfun ("SDL_GetAppState" SDL_GetAppState) :unsigned-char)
 
-(defcenum SDLKey
+(cffi:defcenum SDLKey
 	(:SDLK_UNKNOWN 0)
 	(:SDLK_FIRST 0)
 	(:SDLK_BACKSPACE 8)
@@ -671,7 +671,7 @@
 	(:SDLK_UNDO 322)
 	:SDLK_LAST)
 
-(defcenum SDLMod
+(cffi:defcenum SDLMod
 	(:KMOD_NONE #x0000)
 	(:KMOD_LSHIFT #x0001)
 	(:KMOD_RSHIFT #x0002)
@@ -686,31 +686,31 @@
 	(:KMOD_MODE #x4000)
 	(:KMOD_RESERVED #x8000))
 
-(defconstant SDL_ALL_HOTKEYS #xFFFFFFFF)
+(cl:defconstant SDL_ALL_HOTKEYS #xFFFFFFFF)
 
-(defcfun ("SDL_EnableUNICODE" SDL_EnableUNICODE) :int
+(cffi:defcfun ("SDL_EnableUNICODE" SDL_EnableUNICODE) :int
   (enable :int))
 
-(defconstant SDL_DEFAULT_REPEAT_DELAY 500)
+(cl:defconstant SDL_DEFAULT_REPEAT_DELAY 500)
 
-(defconstant SDL_DEFAULT_REPEAT_INTERVAL 30)
+(cl:defconstant SDL_DEFAULT_REPEAT_INTERVAL 30)
 
-(defcfun ("SDL_EnableKeyRepeat" SDL_EnableKeyRepeat) :int
+(cffi:defcfun ("SDL_EnableKeyRepeat" SDL_EnableKeyRepeat) :int
   (delay :int)
   (interval :int))
 
-(defcfun ("SDL_GetKeyState" SDL_GetKeyState) :pointer
+(cffi:defcfun ("SDL_GetKeyState" SDL_GetKeyState) :pointer
   (numkeys :pointer))
 
-(defcfun ("SDL_GetModState" SDL_GetModState) :pointer)
+(cffi:defcfun ("SDL_GetModState" SDL_GetModState) SDLMod)
 
-(defcfun ("SDL_SetModState" SDL_SetModState) :void
-  (modstate :pointer))
+(cffi:defcfun ("SDL_SetModState" SDL_SetModState) :void
+  (modstate SDLMod))
 
-(defcfun ("SDL_GetKeyName" SDL_GetKeyName) :string
-  (key :pointer))
+(cffi:defcfun ("SDL_GetKeyName" SDL_GetKeyName) :string
+  (key SDLKey))
 
-(defcstruct SDL_Cursor
+(cffi:defcstruct SDL_Cursor
 	(area :pointer)
 	(hot_x :short)
 	(hot_y :short)
@@ -719,19 +719,19 @@
 	(save :pointer)
 	(wm_cursor :pointer))
 
-(defcfun ("SDL_GetMouseState" SDL_GetMouseState) :unsigned-char
+(cffi:defcfun ("SDL_GetMouseState" SDL_GetMouseState) :unsigned-char
   (x :pointer)
   (y :pointer))
 
-(defcfun ("SDL_GetRelativeMouseState" SDL_GetRelativeMouseState) :unsigned-char
+(cffi:defcfun ("SDL_GetRelativeMouseState" SDL_GetRelativeMouseState) :unsigned-char
   (x :pointer)
   (y :pointer))
 
-(defcfun ("SDL_WarpMouse" SDL_WarpMouse) :void
+(cffi:defcfun ("SDL_WarpMouse" SDL_WarpMouse) :void
   (x :unsigned-short)
   (y :unsigned-short))
 
-(defcfun ("SDL_CreateCursor" SDL_CreateCursor) :pointer
+(cffi:defcfun ("SDL_CreateCursor" SDL_CreateCursor) :pointer
   (data :pointer)
   (mask :pointer)
   (w :int)
@@ -739,26 +739,26 @@
   (hot_x :int)
   (hot_y :int))
 
-(defcfun ("SDL_SetCursor" SDL_SetCursor) :void
+(cffi:defcfun ("SDL_SetCursor" SDL_SetCursor) :void
   (cursor :pointer))
 
-(defcfun ("SDL_GetCursor" SDL_GetCursor) :pointer)
+(cffi:defcfun ("SDL_GetCursor" SDL_GetCursor) :pointer)
 
-(defcfun ("SDL_FreeCursor" SDL_FreeCursor) :void
+(cffi:defcfun ("SDL_FreeCursor" SDL_FreeCursor) :void
   (cursor :pointer))
 
-(defcfun ("SDL_ShowCursor" SDL_ShowCursor) :int
+(cffi:defcfun ("SDL_ShowCursor" SDL_ShowCursor) :int
   (toggle :int))
 
-(defconstant SDL_BUTTON_LEFT 1)
+(cl:defconstant SDL_BUTTON_LEFT 1)
 
-(defconstant SDL_BUTTON_MIDDLE 2)
+(cl:defconstant SDL_BUTTON_MIDDLE 2)
 
-(defconstant SDL_BUTTON_RIGHT 3)
+(cl:defconstant SDL_BUTTON_RIGHT 3)
 
-(defconstant SDL_BUTTON_WHEELUP 4)
+(cl:defconstant SDL_BUTTON_WHEELUP 4)
 
-(defconstant SDL_BUTTON_WHEELDOWN 5)
+(cl:defconstant SDL_BUTTON_WHEELDOWN 5)
 
 (defanonenum 
 	(SDL_NOEVENT 0)
@@ -788,14 +788,14 @@
 	(SDL_USEREVENT 24)
 	(SDL_NUMEVENTS 32))
 
-(defconstant SDL_ALLEVENTS #xFFFFFFFF)
+(cl:defconstant SDL_ALLEVENTS #xFFFFFFFF)
 
-(defcstruct SDL_ActiveEvent
+(cffi:defcstruct SDL_ActiveEvent
 	(type :unsigned-char)
 	(gain :unsigned-char)
 	(state :unsigned-char))
 
-(defcstruct SDL_MouseMotionEvent
+(cffi:defcstruct SDL_MouseMotionEvent
 	(type :unsigned-char)
 	(which :unsigned-char)
 	(state :unsigned-char)
@@ -804,7 +804,7 @@
 	(xrel :short)
 	(yrel :short))
 
-(defcstruct SDL_MouseButtonEvent
+(cffi:defcstruct SDL_MouseButtonEvent
 	(type :unsigned-char)
 	(which :unsigned-char)
 	(button :unsigned-char)
@@ -812,167 +812,167 @@
 	(x :unsigned-short)
 	(y :unsigned-short))
 
-(defcstruct SDL_JoyAxisEvent
+(cffi:defcstruct SDL_JoyAxisEvent
 	(type :unsigned-char)
 	(which :unsigned-char)
 	(axis :unsigned-char)
 	(value :short))
 
-(defcstruct SDL_JoyBallEvent
+(cffi:defcstruct SDL_JoyBallEvent
 	(type :unsigned-char)
 	(which :unsigned-char)
 	(ball :unsigned-char)
 	(xrel :short)
 	(yrel :short))
 
-(defcstruct SDL_JoyHatEvent
+(cffi:defcstruct SDL_JoyHatEvent
 	(type :unsigned-char)
 	(which :unsigned-char)
 	(hat :unsigned-char)
 	(value :unsigned-char))
 
-(defcstruct SDL_JoyButtonEvent
+(cffi:defcstruct SDL_JoyButtonEvent
 	(type :unsigned-char)
 	(which :unsigned-char)
 	(button :unsigned-char)
 	(state :unsigned-char))
 
-(defcstruct SDL_ResizeEvent
+(cffi:defcstruct SDL_ResizeEvent
 	(type :unsigned-char)
 	(w :int)
 	(h :int))
 
-(defcstruct SDL_ExposeEvent
+(cffi:defcstruct SDL_ExposeEvent
 	(type :unsigned-char))
 
-(defcstruct SDL_QuitEvent
+(cffi:defcstruct SDL_QuitEvent
 	(type :unsigned-char))
 
-(defcstruct SDL_UserEvent
+(cffi:defcstruct SDL_UserEvent
 	(type :unsigned-char)
 	(code :int)
 	(data1 :pointer)
 	(data2 :pointer))
 
-(defcstruct SDL_SysWMEvent
+(cffi:defcstruct SDL_SysWMEvent
 	(type :unsigned-char)
 	(msg :pointer))
 
-(defcfun ("SDL_PumpEvents" SDL_PumpEvents) :void)
+(cffi:defcfun ("SDL_PumpEvents" SDL_PumpEvents) :void)
 
-(defcenum SDL_eventaction
+(cffi:defcenum SDL_eventaction
 	:SDL_ADDEVENT
 	:SDL_PEEKEVENT
 	:SDL_GETEVENT)
 
-(defcfun ("SDL_PeepEvents" SDL_PeepEvents) :int
+(cffi:defcfun ("SDL_PeepEvents" SDL_PeepEvents) :int
   (events :pointer)
   (numevents :int)
-  (action :pointer)
+  (action SDL_eventaction)
   (mask :unsigned-int))
 
-(defcfun ("SDL_PollEvent" SDL_PollEvent) :int
+(cffi:defcfun ("SDL_PollEvent" SDL_PollEvent) :int
   (event :pointer))
 
-(defcfun ("SDL_WaitEvent" SDL_WaitEvent) :int
+(cffi:defcfun ("SDL_WaitEvent" SDL_WaitEvent) :int
   (event :pointer))
 
-(defcfun ("SDL_PushEvent" SDL_PushEvent) :int
+(cffi:defcfun ("SDL_PushEvent" SDL_PushEvent) :int
   (event :pointer))
 
-(defcfun ("SDL_SetEventFilter" SDL_SetEventFilter) :void
+(cffi:defcfun ("SDL_SetEventFilter" SDL_SetEventFilter) :void
   (filter :pointer))
 
-(defcfun ("SDL_GetEventFilter" SDL_GetEventFilter) :pointer)
+(cffi:defcfun ("SDL_GetEventFilter" SDL_GetEventFilter) :pointer)
 
-(defconstant SDL_QUERY -1)
+(cl:defconstant SDL_QUERY -1)
 
-(defconstant SDL_IGNORE 0)
+(cl:defconstant SDL_IGNORE 0)
 
-(defconstant SDL_DISABLE 0)
+(cl:defconstant SDL_DISABLE 0)
 
-(defconstant SDL_ENABLE 1)
+(cl:defconstant SDL_ENABLE 1)
 
-(defcfun ("SDL_EventState" SDL_EventState) :unsigned-char
+(cffi:defcfun ("SDL_EventState" SDL_EventState) :unsigned-char
   (type :unsigned-char)
   (state :int))
 
-(defconstant SDL_MUTEX_TIMEDOUT 1)
+(cl:defconstant SDL_MUTEX_TIMEDOUT 1)
 
-(defcfun ("SDL_CreateMutex" SDL_CreateMutex) :pointer)
+(cffi:defcfun ("SDL_CreateMutex" SDL_CreateMutex) :pointer)
 
-(defcfun ("SDL_mutexP" SDL_mutexP) :int
+(cffi:defcfun ("SDL_mutexP" SDL_mutexP) :int
   (mutex :pointer))
 
-(defcfun ("SDL_mutexV" SDL_mutexV) :int
+(cffi:defcfun ("SDL_mutexV" SDL_mutexV) :int
   (mutex :pointer))
 
-(defcfun ("SDL_DestroyMutex" SDL_DestroyMutex) :void
+(cffi:defcfun ("SDL_DestroyMutex" SDL_DestroyMutex) :void
   (mutex :pointer))
 
-(defcfun ("SDL_CreateSemaphore" SDL_CreateSemaphore) :pointer
+(cffi:defcfun ("SDL_CreateSemaphore" SDL_CreateSemaphore) :pointer
   (initial_value :unsigned-int))
 
-(defcfun ("SDL_DestroySemaphore" SDL_DestroySemaphore) :void
+(cffi:defcfun ("SDL_DestroySemaphore" SDL_DestroySemaphore) :void
   (sem :pointer))
 
-(defcfun ("SDL_SemWait" SDL_SemWait) :int
+(cffi:defcfun ("SDL_SemWait" SDL_SemWait) :int
   (sem :pointer))
 
-(defcfun ("SDL_SemTryWait" SDL_SemTryWait) :int
+(cffi:defcfun ("SDL_SemTryWait" SDL_SemTryWait) :int
   (sem :pointer))
 
-(defcfun ("SDL_SemWaitTimeout" SDL_SemWaitTimeout) :int
+(cffi:defcfun ("SDL_SemWaitTimeout" SDL_SemWaitTimeout) :int
   (sem :pointer)
   (ms :unsigned-int))
 
-(defcfun ("SDL_SemPost" SDL_SemPost) :int
+(cffi:defcfun ("SDL_SemPost" SDL_SemPost) :int
   (sem :pointer))
 
-(defcfun ("SDL_SemValue" SDL_SemValue) :unsigned-int
+(cffi:defcfun ("SDL_SemValue" SDL_SemValue) :unsigned-int
   (sem :pointer))
 
-(defcfun ("SDL_CreateCond" SDL_CreateCond) :pointer)
+(cffi:defcfun ("SDL_CreateCond" SDL_CreateCond) :pointer)
 
-(defcfun ("SDL_DestroyCond" SDL_DestroyCond) :void
+(cffi:defcfun ("SDL_DestroyCond" SDL_DestroyCond) :void
   (cond :pointer))
 
-(defcfun ("SDL_CondSignal" SDL_CondSignal) :int
+(cffi:defcfun ("SDL_CondSignal" SDL_CondSignal) :int
   (cond :pointer))
 
-(defcfun ("SDL_CondBroadcast" SDL_CondBroadcast) :int
+(cffi:defcfun ("SDL_CondBroadcast" SDL_CondBroadcast) :int
   (cond :pointer))
 
-(defcfun ("SDL_CondWait" SDL_CondWait) :int
+(cffi:defcfun ("SDL_CondWait" SDL_CondWait) :int
   (cond :pointer)
   (mut :pointer))
 
-(defcfun ("SDL_CondWaitTimeout" SDL_CondWaitTimeout) :int
+(cffi:defcfun ("SDL_CondWaitTimeout" SDL_CondWaitTimeout) :int
   (cond :pointer)
   (mutex :pointer)
   (ms :unsigned-int))
 
-(defconstant SDL_ALPHA_OPAQUE 255)
+(cl:defconstant SDL_ALPHA_OPAQUE 255)
 
-(defconstant SDL_ALPHA_TRANSPARENT 0)
+(cl:defconstant SDL_ALPHA_TRANSPARENT 0)
 
-(defcstruct SDL_Rect
+(cffi:defcstruct SDL_Rect
 	(x :short)
 	(y :short)
 	(w :unsigned-short)
 	(h :unsigned-short))
 
-(defcstruct SDL_Color
+(cffi:defcstruct SDL_Color
 	(r :unsigned-char)
 	(g :unsigned-char)
 	(b :unsigned-char)
 	(unused :unsigned-char))
 
-(defcstruct SDL_Palette
+(cffi:defcstruct SDL_Palette
 	(ncolors :int)
 	(colors :pointer))
 
-(defcstruct SDL_PixelFormat
+(cffi:defcstruct SDL_PixelFormat
 	(palette :pointer)
 	(BitsPerPixel :unsigned-char)
 	(BytesPerPixel :unsigned-char)
@@ -991,7 +991,7 @@
 	(colorkey :unsigned-int)
 	(alpha :unsigned-char))
 
-(defcstruct SDL_Surface
+(cffi:defcstruct SDL_Surface
 	(flags :unsigned-int)
 	(format :pointer)
 	(w :int)
@@ -1000,58 +1000,58 @@
 	(pixels :pointer)
 	(offset :int)
 	(hwdata :pointer)
-	(clip_rect :pointer)
+	(clip_rect SDL_Rect)
 	(unused1 :unsigned-int)
 	(locked :unsigned-int)
 	(map :pointer)
 	(format_version :unsigned-int)
 	(refcount :int))
 
-(defconstant SDL_SWSURFACE #x00000000)
+(cl:defconstant SDL_SWSURFACE #x00000000)
 
-(defconstant SDL_HWSURFACE #x00000001)
+(cl:defconstant SDL_HWSURFACE #x00000001)
 
-(defconstant SDL_ASYNCBLIT #x00000004)
+(cl:defconstant SDL_ASYNCBLIT #x00000004)
 
-(defconstant SDL_ANYFORMAT #x10000000)
+(cl:defconstant SDL_ANYFORMAT #x10000000)
 
-(defconstant SDL_HWPALETTE #x20000000)
+(cl:defconstant SDL_HWPALETTE #x20000000)
 
-(defconstant SDL_DOUBLEBUF #x40000000)
+(cl:defconstant SDL_DOUBLEBUF #x40000000)
 
-(defconstant SDL_FULLSCREEN #x80000000)
+(cl:defconstant SDL_FULLSCREEN #x80000000)
 
-(defconstant SDL_OPENGL #x00000002)
+(cl:defconstant SDL_OPENGL #x00000002)
 
-(defconstant SDL_OPENGLBLIT #x0000000A)
+(cl:defconstant SDL_OPENGLBLIT #x0000000A)
 
-(defconstant SDL_RESIZABLE #x00000010)
+(cl:defconstant SDL_RESIZABLE #x00000010)
 
-(defconstant SDL_NOFRAME #x00000020)
+(cl:defconstant SDL_NOFRAME #x00000020)
 
-(defconstant SDL_HWACCEL #x00000100)
+(cl:defconstant SDL_HWACCEL #x00000100)
 
-(defconstant SDL_SRCCOLORKEY #x00001000)
+(cl:defconstant SDL_SRCCOLORKEY #x00001000)
 
-(defconstant SDL_RLEACCELOK #x00002000)
+(cl:defconstant SDL_RLEACCELOK #x00002000)
 
-(defconstant SDL_RLEACCEL #x00004000)
+(cl:defconstant SDL_RLEACCEL #x00004000)
 
-(defconstant SDL_SRCALPHA #x00010000)
+(cl:defconstant SDL_SRCALPHA #x00010000)
 
-(defconstant SDL_PREALLOC #x01000000)
+(cl:defconstant SDL_PREALLOC #x01000000)
 
-(defconstant SDL_YV12_OVERLAY #x32315659)
+(cl:defconstant SDL_YV12_OVERLAY #x32315659)
 
-(defconstant SDL_IYUV_OVERLAY #x56555949)
+(cl:defconstant SDL_IYUV_OVERLAY #x56555949)
 
-(defconstant SDL_YUY2_OVERLAY #x32595559)
+(cl:defconstant SDL_YUY2_OVERLAY #x32595559)
 
-(defconstant SDL_UYVY_OVERLAY #x59565955)
+(cl:defconstant SDL_UYVY_OVERLAY #x59565955)
 
-(defconstant SDL_YVYU_OVERLAY #x55595659)
+(cl:defconstant SDL_YVYU_OVERLAY #x55595659)
 
-(defcstruct SDL_Overlay
+(cffi:defcstruct SDL_Overlay
 	(format :unsigned-int)
 	(w :int)
 	(h :int)
@@ -1063,7 +1063,7 @@
 	(hw_overlay :unsigned-int)
 	(UnusedBits :unsigned-int))
 
-(defcenum SDL_GLattr
+(cffi:defcenum SDL_GLattr
 	:SDL_GL_RED_SIZE
 	:SDL_GL_GREEN_SIZE
 	:SDL_GL_BLUE_SIZE
@@ -1080,104 +1080,104 @@
 	:SDL_GL_MULTISAMPLEBUFFERS
 	:SDL_GL_MULTISAMPLESAMPLES)
 
-(defconstant SDL_LOGPAL #x01)
+(cl:defconstant SDL_LOGPAL #x01)
 
-(defconstant SDL_PHYSPAL #x02)
+(cl:defconstant SDL_PHYSPAL #x02)
 
-(defcfun ("SDL_VideoInit" SDL_VideoInit) :int
+(cffi:defcfun ("SDL_VideoInit" SDL_VideoInit) :int
   (driver_name :string)
   (flags :unsigned-int))
 
-(defcfun ("SDL_VideoQuit" SDL_VideoQuit) :void)
+(cffi:defcfun ("SDL_VideoQuit" SDL_VideoQuit) :void)
 
-(defcfun ("SDL_VideoDriverName" SDL_VideoDriverName) :string
+(cffi:defcfun ("SDL_VideoDriverName" SDL_VideoDriverName) :string
   (namebuf :string)
   (maxlen :int))
 
-(defcfun ("SDL_GetVideoSurface" SDL_GetVideoSurface) :pointer)
+(cffi:defcfun ("SDL_GetVideoSurface" SDL_GetVideoSurface) :pointer)
 
-(defcfun ("SDL_GetVideoInfo" SDL_GetVideoInfo) :pointer)
+(cffi:defcfun ("SDL_GetVideoInfo" SDL_GetVideoInfo) :pointer)
 
-(defcfun ("SDL_VideoModeOK" SDL_VideoModeOK) :int
+(cffi:defcfun ("SDL_VideoModeOK" SDL_VideoModeOK) :int
   (width :int)
   (height :int)
   (bpp :int)
   (flags :unsigned-int))
 
-(defcfun ("SDL_ListModes" SDL_ListModes) :pointer
+(cffi:defcfun ("SDL_ListModes" SDL_ListModes) :pointer
   (format :pointer)
   (flags :unsigned-int))
 
-(defcfun ("SDL_SetVideoMode" SDL_SetVideoMode) :pointer
+(cffi:defcfun ("SDL_SetVideoMode" SDL_SetVideoMode) :pointer
   (width :int)
   (height :int)
   (bpp :int)
   (flags :unsigned-int))
 
-(defcfun ("SDL_UpdateRects" SDL_UpdateRects) :void
+(cffi:defcfun ("SDL_UpdateRects" SDL_UpdateRects) :void
   (screen :pointer)
   (numrects :int)
   (rects :pointer))
 
-(defcfun ("SDL_UpdateRect" SDL_UpdateRect) :void
+(cffi:defcfun ("SDL_UpdateRect" SDL_UpdateRect) :void
   (screen :pointer)
   (x :int)
   (y :int)
   (w :unsigned-int)
   (h :unsigned-int))
 
-(defcfun ("SDL_Flip" SDL_Flip) :int
+(cffi:defcfun ("SDL_Flip" SDL_Flip) :int
   (screen :pointer))
 
-(defcfun ("SDL_SetGamma" SDL_SetGamma) :int
+(cffi:defcfun ("SDL_SetGamma" SDL_SetGamma) :int
   (red :float)
   (green :float)
   (blue :float))
 
-(defcfun ("SDL_SetGammaRamp" SDL_SetGammaRamp) :int
+(cffi:defcfun ("SDL_SetGammaRamp" SDL_SetGammaRamp) :int
   (red :pointer)
   (green :pointer)
   (blue :pointer))
 
-(defcfun ("SDL_GetGammaRamp" SDL_GetGammaRamp) :int
+(cffi:defcfun ("SDL_GetGammaRamp" SDL_GetGammaRamp) :int
   (red :pointer)
   (green :pointer)
   (blue :pointer))
 
-(defcfun ("SDL_SetColors" SDL_SetColors) :int
+(cffi:defcfun ("SDL_SetColors" SDL_SetColors) :int
   (surface :pointer)
   (colors :pointer)
   (firstcolor :int)
   (ncolors :int))
 
-(defcfun ("SDL_SetPalette" SDL_SetPalette) :int
+(cffi:defcfun ("SDL_SetPalette" SDL_SetPalette) :int
   (surface :pointer)
   (flags :int)
   (colors :pointer)
   (firstcolor :int)
   (ncolors :int))
 
-(defcfun ("SDL_MapRGB" SDL_MapRGB) :unsigned-int
+(cffi:defcfun ("SDL_MapRGB" SDL_MapRGB) :unsigned-int
   (format :pointer)
   (r :unsigned-char)
   (g :unsigned-char)
   (b :unsigned-char))
 
-(defcfun ("SDL_MapRGBA" SDL_MapRGBA) :unsigned-int
+(cffi:defcfun ("SDL_MapRGBA" SDL_MapRGBA) :unsigned-int
   (format :pointer)
   (r :unsigned-char)
   (g :unsigned-char)
   (b :unsigned-char)
   (a :unsigned-char))
 
-(defcfun ("SDL_GetRGB" SDL_GetRGB) :void
+(cffi:defcfun ("SDL_GetRGB" SDL_GetRGB) :void
   (pixel :unsigned-int)
   (fmt :pointer)
   (r :pointer)
   (g :pointer)
   (b :pointer))
 
-(defcfun ("SDL_GetRGBA" SDL_GetRGBA) :void
+(cffi:defcfun ("SDL_GetRGBA" SDL_GetRGBA) :void
   (pixel :unsigned-int)
   (fmt :pointer)
   (r :pointer)
@@ -1185,7 +1185,7 @@
   (b :pointer)
   (a :pointer))
 
-(defcfun ("SDL_CreateRGBSurface" SDL_CreateRGBSurface) :pointer
+(cffi:defcfun ("SDL_CreateRGBSurface" SDL_CreateRGBSurface) :pointer
   (flags :unsigned-int)
   (width :int)
   (height :int)
@@ -1195,7 +1195,7 @@
   (Bmask :unsigned-int)
   (Amask :unsigned-int))
 
-(defcfun ("SDL_CreateRGBSurfaceFrom" SDL_CreateRGBSurfaceFrom) :pointer
+(cffi:defcfun ("SDL_CreateRGBSurfaceFrom" SDL_CreateRGBSurfaceFrom) :pointer
   (pixels :pointer)
   (width :int)
   (height :int)
@@ -1206,178 +1206,178 @@
   (Bmask :unsigned-int)
   (Amask :unsigned-int))
 
-(defcfun ("SDL_FreeSurface" SDL_FreeSurface) :void
+(cffi:defcfun ("SDL_FreeSurface" SDL_FreeSurface) :void
   (surface :pointer))
 
-(defcfun ("SDL_LockSurface" SDL_LockSurface) :int
+(cffi:defcfun ("SDL_LockSurface" SDL_LockSurface) :int
   (surface :pointer))
 
-(defcfun ("SDL_UnlockSurface" SDL_UnlockSurface) :void
+(cffi:defcfun ("SDL_UnlockSurface" SDL_UnlockSurface) :void
   (surface :pointer))
 
-(defcfun ("SDL_LoadBMP_RW" SDL_LoadBMP_RW) :pointer
+(cffi:defcfun ("SDL_LoadBMP_RW" SDL_LoadBMP_RW) :pointer
   (src :pointer)
   (freesrc :int))
 
-(defcfun ("SDL_SaveBMP_RW" SDL_SaveBMP_RW) :int
+(cffi:defcfun ("SDL_SaveBMP_RW" SDL_SaveBMP_RW) :int
   (surface :pointer)
   (dst :pointer)
   (freedst :int))
 
-(defcfun ("SDL_SetColorKey" SDL_SetColorKey) :int
+(cffi:defcfun ("SDL_SetColorKey" SDL_SetColorKey) :int
   (surface :pointer)
   (flag :unsigned-int)
   (key :unsigned-int))
 
-(defcfun ("SDL_SetAlpha" SDL_SetAlpha) :int
+(cffi:defcfun ("SDL_SetAlpha" SDL_SetAlpha) :int
   (surface :pointer)
   (flag :unsigned-int)
   (alpha :unsigned-char))
 
-(defcfun ("SDL_SetClipRect" SDL_SetClipRect) :pointer
+(cffi:defcfun ("SDL_SetClipRect" SDL_SetClipRect) :pointer
   (surface :pointer)
   (rect :pointer))
 
-(defcfun ("SDL_GetClipRect" SDL_GetClipRect) :void
+(cffi:defcfun ("SDL_GetClipRect" SDL_GetClipRect) :void
   (surface :pointer)
   (rect :pointer))
 
-(defcfun ("SDL_ConvertSurface" SDL_ConvertSurface) :pointer
+(cffi:defcfun ("SDL_ConvertSurface" SDL_ConvertSurface) :pointer
   (src :pointer)
   (fmt :pointer)
   (flags :unsigned-int))
 
-(defcfun ("SDL_UpperBlit" SDL_UpperBlit) :int
+(cffi:defcfun ("SDL_UpperBlit" SDL_UpperBlit) :int
   (src :pointer)
   (srcrect :pointer)
   (dst :pointer)
   (dstrect :pointer))
 
-(defcfun ("SDL_LowerBlit" SDL_LowerBlit) :int
+(cffi:defcfun ("SDL_LowerBlit" SDL_LowerBlit) :int
   (src :pointer)
   (srcrect :pointer)
   (dst :pointer)
   (dstrect :pointer))
 
-(defcfun ("SDL_FillRect" SDL_FillRect) :int
+(cffi:defcfun ("SDL_FillRect" SDL_FillRect) :int
   (dst :pointer)
   (dstrect :pointer)
   (color :unsigned-int))
 
-(defcfun ("SDL_DisplayFormat" SDL_DisplayFormat) :pointer
+(cffi:defcfun ("SDL_DisplayFormat" SDL_DisplayFormat) :pointer
   (surface :pointer))
 
-(defcfun ("SDL_DisplayFormatAlpha" SDL_DisplayFormatAlpha) :pointer
+(cffi:defcfun ("SDL_DisplayFormatAlpha" SDL_DisplayFormatAlpha) :pointer
   (surface :pointer))
 
-(defcfun ("SDL_CreateYUVOverlay" SDL_CreateYUVOverlay) :pointer
+(cffi:defcfun ("SDL_CreateYUVOverlay" SDL_CreateYUVOverlay) :pointer
   (width :int)
   (height :int)
   (format :unsigned-int)
   (display :pointer))
 
-(defcfun ("SDL_LockYUVOverlay" SDL_LockYUVOverlay) :int
+(cffi:defcfun ("SDL_LockYUVOverlay" SDL_LockYUVOverlay) :int
   (overlay :pointer))
 
-(defcfun ("SDL_UnlockYUVOverlay" SDL_UnlockYUVOverlay) :void
+(cffi:defcfun ("SDL_UnlockYUVOverlay" SDL_UnlockYUVOverlay) :void
   (overlay :pointer))
 
-(defcfun ("SDL_DisplayYUVOverlay" SDL_DisplayYUVOverlay) :int
+(cffi:defcfun ("SDL_DisplayYUVOverlay" SDL_DisplayYUVOverlay) :int
   (overlay :pointer)
   (dstrect :pointer))
 
-(defcfun ("SDL_FreeYUVOverlay" SDL_FreeYUVOverlay) :void
+(cffi:defcfun ("SDL_FreeYUVOverlay" SDL_FreeYUVOverlay) :void
   (overlay :pointer))
 
-(defcfun ("SDL_GL_LoadLibrary" SDL_GL_LoadLibrary) :int
+(cffi:defcfun ("SDL_GL_LoadLibrary" SDL_GL_LoadLibrary) :int
   (path :string))
 
-(defcfun ("SDL_GL_GetProcAddress" SDL_GL_GetProcAddress) :pointer
+(cffi:defcfun ("SDL_GL_GetProcAddress" SDL_GL_GetProcAddress) :pointer
   (proc :string))
 
-(defcfun ("SDL_GL_SwapBuffers" SDL_GL_SwapBuffers) :void)
+(cffi:defcfun ("SDL_GL_SwapBuffers" SDL_GL_SwapBuffers) :void)
 
-(defcfun ("SDL_GL_UpdateRects" SDL_GL_UpdateRects) :void
+(cffi:defcfun ("SDL_GL_UpdateRects" SDL_GL_UpdateRects) :void
   (numrects :int)
   (rects :pointer))
 
-(defcfun ("SDL_GL_Lock" SDL_GL_Lock) :void)
+(cffi:defcfun ("SDL_GL_Lock" SDL_GL_Lock) :void)
 
-(defcfun ("SDL_GL_Unlock" SDL_GL_Unlock) :void)
+(cffi:defcfun ("SDL_GL_Unlock" SDL_GL_Unlock) :void)
 
-(defcfun ("SDL_WM_SetCaption" SDL_WM_SetCaption) :void
+(cffi:defcfun ("SDL_WM_SetCaption" SDL_WM_SetCaption) :void
   (title :string)
   (icon :string))
 
-(defcfun ("SDL_WM_GetCaption" SDL_WM_GetCaption) :void
+(cffi:defcfun ("SDL_WM_GetCaption" SDL_WM_GetCaption) :void
   (title :pointer)
   (icon :pointer))
 
-(defcfun ("SDL_WM_SetIcon" SDL_WM_SetIcon) :void
+(cffi:defcfun ("SDL_WM_SetIcon" SDL_WM_SetIcon) :void
   (icon :pointer)
   (mask :pointer))
 
-(defcfun ("SDL_WM_IconifyWindow" SDL_WM_IconifyWindow) :int)
+(cffi:defcfun ("SDL_WM_IconifyWindow" SDL_WM_IconifyWindow) :int)
 
-(defcfun ("SDL_WM_ToggleFullScreen" SDL_WM_ToggleFullScreen) :int
+(cffi:defcfun ("SDL_WM_ToggleFullScreen" SDL_WM_ToggleFullScreen) :int
   (surface :pointer))
 
-(defcenum SDL_GrabMode
+(cffi:defcenum SDL_GrabMode
 	(:SDL_GRAB_QUERY -1)
 	(:SDL_GRAB_OFF 0)
 	(:SDL_GRAB_ON 1)
 	:SDL_GRAB_FULLSCREEN)
 
-(defcfun ("SDL_WM_GrabInput" SDL_WM_GrabInput) :pointer
-  (mode :pointer))
+(cffi:defcfun ("SDL_WM_GrabInput" SDL_WM_GrabInput) SDL_GrabMode
+  (mode SDL_GrabMode))
 
-(defcfun ("SDL_SoftStretch" SDL_SoftStretch) :int
+(cffi:defcfun ("SDL_SoftStretch" SDL_SoftStretch) :int
   (src :pointer)
   (srcrect :pointer)
   (dst :pointer)
   (dstrect :pointer))
 
-(defconstant SDL_MAJOR_VERSION 1)
+(cl:defconstant SDL_MAJOR_VERSION 1)
 
-(defconstant SDL_MINOR_VERSION 2)
+(cl:defconstant SDL_MINOR_VERSION 2)
 
-(defconstant SDL_PATCHLEVEL 9)
+(cl:defconstant SDL_PATCHLEVEL 9)
 
-(defcstruct SDL_version
+(cffi:defcstruct SDL_version
 	(major :unsigned-char)
 	(minor :unsigned-char)
 	(patch :unsigned-char))
 
-(defcfun ("SDL_Linked_Version" SDL_Linked_Version) :pointer)
+(cffi:defcfun ("SDL_Linked_Version" SDL_Linked_Version) :pointer)
 
-(defconstant SDL_INIT_TIMER #x00000001)
+(cl:defconstant SDL_INIT_TIMER #x00000001)
 
-(defconstant SDL_INIT_AUDIO #x00000010)
+(cl:defconstant SDL_INIT_AUDIO #x00000010)
 
-(defconstant SDL_INIT_VIDEO #x00000020)
+(cl:defconstant SDL_INIT_VIDEO #x00000020)
 
-(defconstant SDL_INIT_CDROM #x00000100)
+(cl:defconstant SDL_INIT_CDROM #x00000100)
 
-(defconstant SDL_INIT_JOYSTICK #x00000200)
+(cl:defconstant SDL_INIT_JOYSTICK #x00000200)
 
-(defconstant SDL_INIT_NOPARACHUTE #x00100000)
+(cl:defconstant SDL_INIT_NOPARACHUTE #x00100000)
 
-(defconstant SDL_INIT_EVENTTHREAD #x01000000)
+(cl:defconstant SDL_INIT_EVENTTHREAD #x01000000)
 
-(defconstant SDL_INIT_EVERYTHING #x0000FFFF)
+(cl:defconstant SDL_INIT_EVERYTHING #x0000FFFF)
 
-(defcfun ("SDL_Init" SDL_Init) :int
+(cffi:defcfun ("SDL_Init" SDL_Init) :int
   (flags :unsigned-int))
 
-(defcfun ("SDL_InitSubSystem" SDL_InitSubSystem) :int
+(cffi:defcfun ("SDL_InitSubSystem" SDL_InitSubSystem) :int
   (flags :unsigned-int))
 
-(defcfun ("SDL_QuitSubSystem" SDL_QuitSubSystem) :void
+(cffi:defcfun ("SDL_QuitSubSystem" SDL_QuitSubSystem) :void
   (flags :unsigned-int))
 
-(defcfun ("SDL_WasInit" SDL_WasInit) :unsigned-int
+(cffi:defcfun ("SDL_WasInit" SDL_WasInit) :unsigned-int
   (flags :unsigned-int))
 
-(defcfun ("SDL_Quit" SDL_Quit) :void)
+(cffi:defcfun ("SDL_Quit" SDL_Quit) :void)
 
 
