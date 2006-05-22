@@ -12,11 +12,18 @@
    #:apply-surface
    #:apply-surface-free
    #:blit-surface
+   #:clamp				; from cl-sdl
    #:clear-colorkey
+   #:clear-screen			; from cl-sdl
+   #:color-from-r/g/b
+   #:color-from-r/g/b/a
    #:convert-surface-to-display-format
    #:copy-rectangle
    #:copy-surf-to-rect
    #:create-surface
+   #:delta-clamp			; from cl-sdl
+   #:draw-filled-rectangle		; from cl-sdl
+   #:draw-pixel				; from cl-sdl
    #:draw-random-rect
    #:draw-rect
    #:draw-rect-end-points
@@ -36,6 +43,7 @@
    #:make-sdl-rect
    #:moveby-rectangle
    #:moveto-rectangle
+   #:must-lock-p			; from cl-sdl
    #:new-event
    #:new-rect
    #:pixelformat
@@ -55,120 +63,529 @@
    #:set-timescale
    #:set-window
    #:set-worldtime
+   #:show-bmp				; from cl-sdl
    #:surf-h
    #:surf-w
    #:to-degree
    #:to-radian
+   #:update-screen			; from cl-sdl
    #:update-surface
    #:with-events
    #:with-init
+   #:with-locked-surface		; from cl-sdl
    #:with-must-locksurface
+   #:with-possible-lock-and-update	; from cl-sdl
    #:with-surface-lock
    
    ;; These are exports from sdlswig.i
-   #:SDL_GetError #:SDL_ClearError #:SDL_errorcode #:SDL_Error #:SDL_RWops #:seek
-   #:read #:write #:close #:type #:hidden #:SDL_RWops_hidden
-   #:unknown #:mem #:stdio #:SDL_RWops_hidden_unknown #:data1 #:SDL_RWops_hidden_mem
-   #:base #:here #:stop #:SDL_RWops_hidden_stdio #:autoclose #:fp
-   #:SDL_RWFromFile #:SDL_RWFromFP #:SDL_RWFromMem #:SDL_RWFromConstMem #:SDL_AllocRW #:SDL_FreeRW
-   #:SDL_TIMESLICE #:TIMER_RESOLUTION #:SDL_GetTicks #:SDL_Delay #:SDL_SetTimer #:SDL_AddTimer
-   #:SDL_RemoveTimer #:SDL_AudioSpec #:freq #:format #:channels #:silence
-   #:samples #:padding #:size #:callback #:userdata #:AUDIO_U8
-   #:AUDIO_S8 #:AUDIO_U16LSB #:AUDIO_S16LSB #:AUDIO_U16MSB #:AUDIO_S16MSB #:AUDIO_U16
-   #:AUDIO_S16 #:SDL_AudioCVT #:needed #:src_format #:dst_format #:rate_incr
-   #:buf #:len #:len_cvt #:len_mult #:len_ratio #:filters
-   #:filter_index #:SDL_AudioInit #:SDL_AudioQuit #:SDL_AudioDriverName #:SDL_OpenAudio #:SDL_audiostatus
-   #:SDL_GetAudioStatus #:SDL_PauseAudio #:SDL_LoadWAV_RW #:SDL_FreeWAV #:SDL_BuildAudioCVT #:SDL_ConvertAudio
-   #:SDL_MIX_MAXVOLUME #:SDL_MixAudio #:SDL_LockAudio #:SDL_UnlockAudio #:SDL_CloseAudio #:SDL_MAX_TRACKS
-   #:SDL_AUDIO_TRACK #:SDL_DATA_TRACK #:CDstatus #:SDL_CDtrack #:id #:type
-   #:unused #:length #:offset #:SDL_CD #:id #:status
-   #:numtracks #:cur_track #:cur_frame #:track #:SDL_CDNumDrives #:SDL_CDName
-   #:SDL_CDOpen #:SDL_CDStatus #:SDL_CDPlayTracks #:SDL_CDPlay #:SDL_CDPause #:SDL_CDResume
-   #:SDL_CDStop #:SDL_CDEject #:SDL_CDClose #:SDL_NumJoysticks #:SDL_JoystickName #:SDL_JoystickOpen
-   #:SDL_JoystickOpened #:SDL_JoystickIndex #:SDL_JoystickNumAxes #:SDL_JoystickNumBalls #:SDL_JoystickNumHats #:SDL_JoystickNumButtons
-   #:SDL_JoystickUpdate #:SDL_JoystickEventState #:SDL_JoystickGetAxis #:SDL_HAT_CENTERED #:SDL_HAT_UP #:SDL_HAT_RIGHT
-   #:SDL_HAT_DOWN #:SDL_HAT_LEFT #:SDL_JoystickGetHat #:SDL_JoystickGetBall #:SDL_JoystickGetButton #:SDL_JoystickClose
-   #:SDL_APPMOUSEFOCUS #:SDL_APPINPUTFOCUS #:SDL_APPACTIVE #:SDL_GetAppState #:SDLKey #:SDLMod
-   #:SDL_ALL_HOTKEYS #:SDL_EnableUNICODE #:SDL_DEFAULT_REPEAT_DELAY #:SDL_DEFAULT_REPEAT_INTERVAL #:SDL_EnableKeyRepeat #:SDL_GetKeyState
-   #:SDL_GetModState #:SDL_SetModState #:SDL_GetKeyName #:SDL_Cursor #:area #:hot_x
-   #:hot_y #:data #:mask #:save #:wm_cursor #:SDL_GetMouseState
-   #:SDL_GetRelativeMouseState #:SDL_WarpMouse #:SDL_CreateCursor #:SDL_SetCursor #:SDL_GetCursor #:SDL_FreeCursor
-   #:SDL_ShowCursor #:SDL_BUTTON_LEFT #:SDL_BUTTON_MIDDLE #:SDL_BUTTON_RIGHT #:SDL_BUTTON_WHEELUP #:SDL_BUTTON_WHEELDOWN
-   #:SDL_NOEVENT #:SDL_ACTIVEEVENT #:SDL_KEYDOWN #:SDL_KEYUP #:SDL_MOUSEMOTION #:SDL_MOUSEBUTTONDOWN
-   #:SDL_MOUSEBUTTONUP #:SDL_JOYAXISMOTION #:SDL_JOYBALLMOTION #:SDL_JOYHATMOTION #:SDL_JOYBUTTONDOWN #:SDL_JOYBUTTONUP
-   #:SDL_QUIT #:SDL_SYSWMEVENT #:SDL_EVENT_RESERVEDA #:SDL_EVENT_RESERVEDB #:SDL_VIDEORESIZE #:SDL_VIDEOEXPOSE
-   #:SDL_EVENT_RESERVED2 #:SDL_EVENT_RESERVED3 #:SDL_EVENT_RESERVED4 #:SDL_EVENT_RESERVED5 #:SDL_EVENT_RESERVED6 #:SDL_EVENT_RESERVED7
-   #:SDL_USEREVENT #:SDL_NUMEVENTS #:SDL_ALLEVENTS #:SDL_ActiveEvent #:type #:gain
-   #:state #:SDL_MouseMotionEvent #:type #:which #:state #:x
-   #:y #:xrel #:yrel #:SDL_MouseButtonEvent #:type #:which
-   #:button #:state #:x #:y #:SDL_JoyAxisEvent #:type
-   #:which #:axis #:value #:SDL_JoyBallEvent #:type #:which
-   #:ball #:xrel #:yrel #:SDL_JoyHatEvent #:type #:which
-   #:hat #:value #:SDL_JoyButtonEvent #:type #:which #:button
-   #:state #:SDL_ResizeEvent #:type #:w #:h #:SDL_ExposeEvent
-   #:type #:SDL_QuitEvent #:type #:SDL_UserEvent #:type #:code
-   #:data1 #:data2 #:SDL_SysWMEvent #:type #:msg #:SDL_PumpEvents
-   #:SDL_eventaction #:SDL_PeepEvents #:SDL_PollEvent #:SDL_WaitEvent #:SDL_PushEvent #:SDL_SetEventFilter
-   #:SDL_GetEventFilter #:SDL_QUERY #:SDL_IGNORE #:SDL_DISABLE #:SDL_ENABLE #:SDL_EventState
-   #:SDL_MUTEX_TIMEDOUT #:SDL_CreateMutex #:SDL_mutexP #:SDL_mutexV #:SDL_DestroyMutex #:SDL_CreateSemaphore
-   #:SDL_DestroySemaphore #:SDL_SemWait #:SDL_SemTryWait #:SDL_SemWaitTimeout #:SDL_SemPost #:SDL_SemValue
-   #:SDL_CreateCond #:SDL_DestroyCond #:SDL_CondSignal #:SDL_CondBroadcast #:SDL_CondWait #:SDL_CondWaitTimeout
-   #:SDL_ALPHA_OPAQUE #:SDL_ALPHA_TRANSPARENT #:SDL_Rect #:x #:y #:w
-   #:h #:SDL_Color #:r #:g #:b #:unused
-   #:SDL_Palette #:ncolors #:colors #:SDL_PixelFormat #:palette #:BitsPerPixel
-   #:BytesPerPixel #:Rloss #:Gloss #:Bloss #:Aloss #:Rshift
-   #:Gshift #:Bshift #:Ashift #:Rmask #:Gmask #:Bmask
-   #:Amask #:colorkey #:alpha #:SDL_Surface #:flags #:format
-   #:w #:h #:pitch #:pixels #:offset #:hwdata
-   #:clip_rect #:unused1 #:locked #:map #:format_version #:refcount
-   #:SDL_SWSURFACE #:SDL_HWSURFACE #:SDL_ASYNCBLIT #:SDL_ANYFORMAT #:SDL_HWPALETTE #:SDL_DOUBLEBUF
-   #:SDL_FULLSCREEN #:SDL_OPENGL #:SDL_OPENGLBLIT #:SDL_RESIZABLE #:SDL_NOFRAME #:SDL_HWACCEL
-   #:SDL_SRCCOLORKEY #:SDL_RLEACCELOK #:SDL_RLEACCEL #:SDL_SRCALPHA #:SDL_PREALLOC #:SDL_YV12_OVERLAY
-   #:SDL_IYUV_OVERLAY #:SDL_YUY2_OVERLAY #:SDL_UYVY_OVERLAY #:SDL_YVYU_OVERLAY #:SDL_Overlay #:format
-   #:w #:h #:planes #:pitches #:pixels #:hwfuncs
-   #:hwdata #:hw_overlay #:UnusedBits #:SDL_GLattr #:SDL_LOGPAL #:SDL_PHYSPAL
-   #:SDL_VideoInit #:SDL_VideoQuit #:SDL_VideoDriverName #:SDL_GetVideoSurface #:SDL_GetVideoInfo #:SDL_VideoModeOK
-   #:SDL_ListModes #:SDL_SetVideoMode #:SDL_UpdateRects #:SDL_UpdateRect #:SDL_Flip #:SDL_SetGamma
-   #:SDL_SetGammaRamp #:SDL_GetGammaRamp #:SDL_SetColors #:SDL_SetPalette #:SDL_MapRGB #:SDL_MapRGBA
-   #:SDL_GetRGB #:SDL_GetRGBA #:SDL_CreateRGBSurface #:SDL_CreateRGBSurfaceFrom #:SDL_FreeSurface #:SDL_LockSurface
-   #:SDL_UnlockSurface #:SDL_LoadBMP_RW #:SDL_SaveBMP_RW #:SDL_SetColorKey #:SDL_SetAlpha #:SDL_SetClipRect
-   #:SDL_GetClipRect #:SDL_ConvertSurface #:SDL_UpperBlit #:SDL_LowerBlit #:SDL_FillRect #:SDL_DisplayFormat
-   #:SDL_DisplayFormatAlpha #:SDL_CreateYUVOverlay #:SDL_LockYUVOverlay #:SDL_UnlockYUVOverlay #:SDL_DisplayYUVOverlay #:SDL_FreeYUVOverlay
-   #:SDL_GL_LoadLibrary #:SDL_GL_GetProcAddress #:SDL_GL_SwapBuffers #:SDL_GL_UpdateRects #:SDL_GL_Lock #:SDL_GL_Unlock
-   #:SDL_WM_SetCaption #:SDL_WM_GetCaption #:SDL_WM_SetIcon #:SDL_WM_IconifyWindow #:SDL_WM_ToggleFullScreen #:SDL_GrabMode
-   #:SDL_WM_GrabInput #:SDL_SoftStretch #:SDL_MAJOR_VERSION #:SDL_MINOR_VERSION #:SDL_PATCHLEVEL #:SDL_version
-   #:major #:minor #:patch #:SDL_Linked_Version #:SDL_INIT_TIMER #:SDL_INIT_AUDIO
-   #:SDL_INIT_VIDEO #:SDL_INIT_CDROM #:SDL_INIT_JOYSTICK #:SDL_INIT_NOPARACHUTE #:SDL_INIT_EVENTTHREAD #:SDL_INIT_EVERYTHING
-   #:SDL_Init #:SDL_InitSubSystem #:SDL_QuitSubSystem #:SDL_WasInit #:SDL_Quit
+   #:AUDIO_S16
+   #:AUDIO_S16LSB
+   #:AUDIO_S16MSB
+   #:AUDIO_S8
+   #:AUDIO_U16
+   #:AUDIO_U16LSB
+   #:AUDIO_U16MSB
+   #:AUDIO_U8
+   #:Aloss
+   #:Amask
+   #:Ashift
+   #:BitsPerPixel
+   #:Bloss
+   #:Bmask
+   #:Bshift
+   #:BytesPerPixel
+   #:CDstatus
+   #:Gloss
+   #:Gmask
+   #:Gshift
+   #:Rloss
+   #:Rmask
+   #:Rshift
+   #:SDLKey
+   #:SDLMod
+   #:SDL_ACTIVEEVENT
+   #:SDL_ALLEVENTS
+   #:SDL_ALL_HOTKEYS
+   #:SDL_ALPHA_OPAQUE
+   #:SDL_ALPHA_TRANSPARENT
+   #:SDL_ANYFORMAT
+   #:SDL_APPACTIVE
+   #:SDL_APPINPUTFOCUS
+   #:SDL_APPMOUSEFOCUS
+   #:SDL_ASYNCBLIT
+   #:SDL_AUDIO_TRACK
+   #:SDL_ActiveEvent
+   #:SDL_AddTimer
+   #:SDL_AllocRW
+   #:SDL_AudioCVT
+   #:SDL_AudioDriverName
+   #:SDL_AudioInit
+   #:SDL_AudioQuit
+   #:SDL_AudioSpec
+   #:SDL_BUTTON_LEFT
+   #:SDL_BUTTON_MIDDLE
+   #:SDL_BUTTON_RIGHT
+   #:SDL_BUTTON_WHEELDOWN
+   #:SDL_BUTTON_WHEELUP
+   #:SDL_BuildAudioCVT
+   #:SDL_CD
+   #:SDL_CDClose
+   #:SDL_CDEject
+   #:SDL_CDName
+   #:SDL_CDNumDrives
+   #:SDL_CDOpen
+   #:SDL_CDPause
+   #:SDL_CDPlay
+   #:SDL_CDPlayTracks
+   #:SDL_CDResume
+   #:SDL_CDStatus
+   #:SDL_CDStop
+   #:SDL_CDtrack
+   #:SDL_ClearError
+   #:SDL_CloseAudio
+   #:SDL_Color
+   #:SDL_CondBroadcast
+   #:SDL_CondSignal
+   #:SDL_CondWait
+   #:SDL_CondWaitTimeout
+   #:SDL_ConvertAudio
+   #:SDL_ConvertSurface
+   #:SDL_CreateCond
+   #:SDL_CreateCursor
+   #:SDL_CreateMutex
+   #:SDL_CreateRGBSurface
+   #:SDL_CreateRGBSurfaceFrom
+   #:SDL_CreateSemaphore
+   #:SDL_CreateYUVOverlay
+   #:SDL_Cursor
+   #:SDL_DATA_TRACK
+   #:SDL_DEFAULT_REPEAT_DELAY
+   #:SDL_DEFAULT_REPEAT_INTERVAL
+   #:SDL_DISABLE
+   #:SDL_DOUBLEBUF
+   #:SDL_Delay
+   #:SDL_DestroyCond
+   #:SDL_DestroyMutex
+   #:SDL_DestroySemaphore
+   #:SDL_DisplayFormat
+   #:SDL_DisplayFormatAlpha
+   #:SDL_DisplayYUVOverlay
+   #:SDL_ENABLE
+   #:SDL_EVENT_RESERVED2
+   #:SDL_EVENT_RESERVED3
+   #:SDL_EVENT_RESERVED4
+   #:SDL_EVENT_RESERVED5
+   #:SDL_EVENT_RESERVED6
+   #:SDL_EVENT_RESERVED7
+   #:SDL_EVENT_RESERVEDA
+   #:SDL_EVENT_RESERVEDB
+   #:SDL_EnableKeyRepeat
+   #:SDL_EnableUNICODE
+   #:SDL_Error
+   #:SDL_EventState
+   #:SDL_ExposeEvent
+   #:SDL_FULLSCREEN
+   #:SDL_FillRect
+   #:SDL_Flip
+   #:SDL_FreeCursor
+   #:SDL_FreeRW
+   #:SDL_FreeSurface
+   #:SDL_FreeWAV
+   #:SDL_FreeYUVOverlay
+   #:SDL_GL_GetProcAddress
+   #:SDL_GL_LoadLibrary
+   #:SDL_GL_Lock
+   #:SDL_GL_SwapBuffers
+   #:SDL_GL_Unlock
+   #:SDL_GL_UpdateRects
+   #:SDL_GLattr
+   #:SDL_GetAppState
+   #:SDL_GetAudioStatus
+   #:SDL_GetClipRect
+   #:SDL_GetCursor
+   #:SDL_GetError
+   #:SDL_GetEventFilter
+   #:SDL_GetGammaRamp
+   #:SDL_GetKeyName
+   #:SDL_GetKeyState
+   #:SDL_GetModState
+   #:SDL_GetMouseState
+   #:SDL_GetRGB
+   #:SDL_GetRGBA
+   #:SDL_GetRelativeMouseState
+   #:SDL_GetTicks
+   #:SDL_GetVideoInfo
+   #:SDL_GetVideoSurface
+   #:SDL_GrabMode
+   #:SDL_HAT_CENTERED
+   #:SDL_HAT_DOWN
+   #:SDL_HAT_LEFT
+   #:SDL_HAT_RIGHT
+   #:SDL_HAT_UP
+   #:SDL_HWACCEL
+   #:SDL_HWPALETTE
+   #:SDL_HWSURFACE
+   #:SDL_IGNORE
+   #:SDL_INIT_AUDIO
+   #:SDL_INIT_CDROM
+   #:SDL_INIT_EVENTTHREAD
+   #:SDL_INIT_EVERYTHING
+   #:SDL_INIT_JOYSTICK
+   #:SDL_INIT_NOPARACHUTE
+   #:SDL_INIT_TIMER
+   #:SDL_INIT_VIDEO
+   #:SDL_IYUV_OVERLAY
+   #:SDL_Init
+   #:SDL_InitSubSystem
+   #:SDL_JOYAXISMOTION
+   #:SDL_JOYBALLMOTION
+   #:SDL_JOYBUTTONDOWN
+   #:SDL_JOYBUTTONUP
+   #:SDL_JOYHATMOTION
+   #:SDL_JoyAxisEvent
+   #:SDL_JoyBallEvent
+   #:SDL_JoyButtonEvent
+   #:SDL_JoyHatEvent
+   #:SDL_JoystickClose
+   #:SDL_JoystickEventState
+   #:SDL_JoystickGetAxis
+   #:SDL_JoystickGetBall
+   #:SDL_JoystickGetButton
+   #:SDL_JoystickGetHat
+   #:SDL_JoystickIndex
+   #:SDL_JoystickName
+   #:SDL_JoystickNumAxes
+   #:SDL_JoystickNumBalls
+   #:SDL_JoystickNumButtons
+   #:SDL_JoystickNumHats
+   #:SDL_JoystickOpen
+   #:SDL_JoystickOpened
+   #:SDL_JoystickUpdate
+   #:SDL_KEYDOWN
+   #:SDL_KEYUP
+   #:SDL_LOGPAL
+   #:SDL_Linked_Version
+   #:SDL_ListModes
+   #:SDL_LoadBMP_RW
+   #:SDL_LoadWAV_RW
+   #:SDL_LockAudio
+   #:SDL_LockSurface
+   #:SDL_LockYUVOverlay
+   #:SDL_LowerBlit
+   #:SDL_MAJOR_VERSION
+   #:SDL_MAX_TRACKS
+   #:SDL_MINOR_VERSION
+   #:SDL_MIX_MAXVOLUME
+   #:SDL_MOUSEBUTTONDOWN
+   #:SDL_MOUSEBUTTONUP
+   #:SDL_MOUSEMOTION
+   #:SDL_MUTEX_TIMEDOUT
+   #:SDL_MapRGB
+   #:SDL_MapRGBA
+   #:SDL_MixAudio
+   #:SDL_MouseButtonEvent
+   #:SDL_MouseMotionEvent
+   #:SDL_NOEVENT
+   #:SDL_NOFRAME
+   #:SDL_NUMEVENTS
+   #:SDL_NumJoysticks
+   #:SDL_OPENGL
+   #:SDL_OPENGLBLIT
+   #:SDL_OpenAudio
+   #:SDL_Overlay
+   #:SDL_PATCHLEVEL
+   #:SDL_PHYSPAL
+   #:SDL_PREALLOC
+   #:SDL_Palette
+   #:SDL_PauseAudio
+   #:SDL_PeepEvents
+   #:SDL_PixelFormat
+   #:SDL_PollEvent
+   #:SDL_PumpEvents
+   #:SDL_PushEvent
+   #:SDL_QUERY
+   #:SDL_Quit
+   #:SDL_QuitEvent
+   #:SDL_QuitSubSystem
+   #:SDL_RESIZABLE
+   #:SDL_RLEACCEL
+   #:SDL_RLEACCELOK
+   #:SDL_RWFromConstMem
+   #:SDL_RWFromFP
+   #:SDL_RWFromFile
+   #:SDL_RWFromMem
+   #:SDL_RWops
+   #:SDL_RWops_hidden
+   #:SDL_RWops_hidden_mem
+   #:SDL_RWops_hidden_stdio
+   #:SDL_RWops_hidden_unknown
+   #:SDL_Rect
+   #:SDL_RemoveTimer
+   #:SDL_ResizeEvent
+   #:SDL_SRCALPHA
+   #:SDL_SRCCOLORKEY
+   #:SDL_SWSURFACE
+   #:SDL_SYSWMEVENT
+   #:SDL_SaveBMP_RW
+   #:SDL_SemPost
+   #:SDL_SemTryWait
+   #:SDL_SemValue
+   #:SDL_SemWait
+   #:SDL_SemWaitTimeout
+   #:SDL_SetAlpha
+   #:SDL_SetClipRect
+   #:SDL_SetColorKey
+   #:SDL_SetColors
+   #:SDL_SetCursor
+   #:SDL_SetEventFilter
+   #:SDL_SetGamma
+   #:SDL_SetGammaRamp
+   #:SDL_SetModState
+   #:SDL_SetPalette
+   #:SDL_SetTimer
+   #:SDL_SetVideoMode
+   #:SDL_ShowCursor
+   #:SDL_SoftStretch
+   #:SDL_Surface
+   #:SDL_SysWMEvent
+   #:SDL_TIMESLICE
+   #:SDL_USEREVENT
+   #:SDL_UYVY_OVERLAY
+   #:SDL_UnlockAudio
+   #:SDL_UnlockSurface
+   #:SDL_UnlockYUVOverlay
+   #:SDL_UpdateRect
+   #:SDL_UpdateRects
+   #:SDL_UpperBlit
+   #:SDL_UserEvent
+   #:SDL_VIDEOEXPOSE
+   #:SDL_VIDEORESIZE
+   #:SDL_VideoDriverName
+   #:SDL_VideoInit
+   #:SDL_VideoModeOK
+   #:SDL_VideoQuit
+   #:SDL_WM_GetCaption
+   #:SDL_WM_GrabInput
+   #:SDL_WM_IconifyWindow
+   #:SDL_WM_SetCaption
+   #:SDL_WM_SetIcon
+   #:SDL_WM_ToggleFullScreen
+   #:SDL_WaitEvent
+   #:SDL_WarpMouse
+   #:SDL_WasInit
+   #:SDL_YUY2_OVERLAY
+   #:SDL_YV12_OVERLAY
+   #:SDL_YVYU_OVERLAY
+   #:SDL_audiostatus
+   #:SDL_errorcode
+   #:SDL_eventaction
+   #:SDL_mutexP
+   #:SDL_mutexV
+   #:SDL_version
+   #:TIMER_RESOLUTION
+   #:UnusedBits
+   #:alpha
+   #:area
+   #:autoclose
+   #:axis
+   #:b
+   #:ball
+   #:base
+   #:buf
+   #:button
+   #:button
+   #:callback
+   #:channels
+   #:clip_rect
+   #:close
+   #:code
+   #:colorkey
+   #:colors
+   #:cur_frame
+   #:cur_track
+   #:data
+   #:data1
+   #:data2
+   #:dst_format
+   #:filter_index
+   #:filters
+   #:flags
+   #:format
+   #:format_version
+   #:fp
+   #:freq
+   #:g
+   #:gain
+   #:h
+   #:hat
+   #:here
+   #:hidden
+   #:hot_x
+   #:hot_y
+   #:hw_overlay
+   #:hwdata
+   #:hwdata
+   #:hwfuncs
+   #:id
+   #:len
+   #:len_cvt
+   #:len_mult
+   #:len_ratio
+   #:length
+   #:locked
+   #:major
+   #:map
+   #:mask
+   #:mem
+   #:minor
+   #:msg
+   #:ncolors
+   #:needed
+   #:numtracks
+   #:offset
+   #:padding
+   #:palette
+   #:patch
+   #:pitch
+   #:pitches
+   #:pixels
+   #:planes
+   #:r
+   #:rate_incr
+   #:read
+   #:refcount
+   #:samples
+   #:save
+   #:seek
+   #:silence
+   #:size
+   #:src_format
+   #:state
+   #:status
+   #:stdio
+   #:stop
+   #:track
+   #:type
+   #:unknown
+   #:unused
+   #:unused1
+   #:userdata
+   #:value
+   #:w
+   #:which
+   #:wm_cursor
+   #:write
+   #:x
+   #:xrel
+   #:y
+   #:yrel
 
    ;; These are exports from post-swig.lisp
-   #:hardware-flags #:SDL_VideoInfo #:video_mem #:vfmt #:SDL_keysym #:scancode #:sym #:mod #:unicode
-   #:SDL_bool #:SDL_PRESSED #:SDL_RELEASED #:SDL_GL_SetAttribute #:attr #:value
+   #:CD_FPS
+   #:CD_INDRIVE
+   #:FRAMES_TO_MSF
+   #:KMOD_ALT
+   #:KMOD_CTRL
+   #:KMOD_META
+   #:KMOD_SHIFT
+   #:MSF_TO_FRAMES
+   #:SDL_ACTIVEEVENTMASK
+   #:SDL_BUTTON
+   #:SDL_BUTTON_LMASK
+   #:SDL_BUTTON_MMASK
+   #:SDL_BUTTON_RMASK
+   #:SDL_BlitSurface
+   #:SDL_COMPILEDVERSION
+   #:SDL_EVENTMASK
+   #:SDL_Event
    #:SDL_GL_GetAttribute
-   #:SDL_KeyboardEvent #:type #:which #:state #:keysym
-   #:SDL_Event #:active-event #:keyboard-event #:mouse-motion-event #:mouse-button-event #:joy-axis-event
-   #:joy-ball-event #:joy-hat-event #:joy-button-event #:resize-event #:expose-event #:quit-event #:user-event
-   #:sys-wm-event
-   #:SDL_HAT_RIGHTUP #:SDL_HAT_RIGHTDOWN #:SDL_HAT_LEFTUP #:SDL_HAT_LEFTDOWN
-   #:KMOD_CTRL #:KMOD_SHIFT #:KMOD_ALT #:KMOD_META
-   #:SDL_SysWMmsg #:version #:hwnd #:msg #:wParam #:lParam
-   #:SDL_SysWMinfo #:version #:window #:hglrc
-
-   #:SDL_SYSWM_TYPE #:SDL_SysWMmsg_event #:xevent #:SDL_SysWMmsg #:version #:subsystem #:event
-   #:SDL_SysWMinfo_info_x11 #:display #:window #:lock_func #:unlock_func #:fswindow #:wmwindow
-   #:SDL_SysWMinfo_info #:x11
-   #:SDL_SysWMinfo #:version #:subsystem #:info
-   #:SDL_GetWMInfo #:info
-
-   #:SDL_VERSION #:SDL_VERSIONNUM #:SDL_COMPILEDVERSION #:SDL_VERSION_ATLEAST #:SDL_LockMutex #:SDL_UnlockMutex
+   #:SDL_GL_SetAttribute
+   #:SDL_GetWMInfo
+   #:SDL_HAT_LEFTDOWN
+   #:SDL_HAT_LEFTUP
+   #:SDL_HAT_RIGHTDOWN
+   #:SDL_HAT_RIGHTUP
+   #:SDL_JOYAXISMOTIONMASK
+   #:SDL_JOYBALLMOTIONMASK
+   #:SDL_JOYBUTTONDOWNMASK
+   #:SDL_JOYBUTTONUPMASK
+   #:SDL_JOYEVENTMASK
+   #:SDL_JOYHATMOTIONMASK
+   #:SDL_KEYDOWNMASK
+   #:SDL_KEYUPMASK
+   #:SDL_KeyboardEvent
+   #:SDL_LoadBMP
+   #:SDL_LoadWAV
+   #:SDL_LockMutex
+   #:SDL_MOUSEBUTTONDOWNMASK
+   #:SDL_MOUSEBUTTONUPMASK
+   #:SDL_MOUSEEVENTMASK
+   #:SDL_MOUSEMOTIONMASK
    #:SDL_MUSTLOCK
-   #:SDL_LoadBMP #:SDL_SaveBMP #:SDL_BlitSurface
-   #:CD_INDRIVE #:CD_FPS #:FRAMES_TO_MSF #:MSF_TO_FRAMES
-   #:SDL_LoadWAV #:SDL_OutOfMemory
-   #:SDL_BUTTON #:SDL_BUTTON_LMASK #:SDL_BUTTON_MMASK #:SDL_BUTTON_RMASK #:SDL_EVENTMASK #:SDL_ACTIVEEVENTMASK
-   #:SDL_KEYDOWNMASK #:SDL_KEYUPMASK #:SDL_MOUSEMOTIONMASK #:SDL_MOUSEBUTTONDOWNMASK #:SDL_MOUSEBUTTONUPMASK
-   #:SDL_MOUSEEVENTMASK #:SDL_JOYAXISMOTIONMASK #:SDL_JOYBALLMOTIONMASK #:SDL_JOYHATMOTIONMASK
-   #:SDL_JOYBUTTONDOWNMASK #:SDL_JOYBUTTONUPMASK #:SDL_JOYEVENTMASK #:SDL_VIDEORESIZEMASK #:SDL_VIDEOEXPOSEMASK
-   #:SDL_QUITMASK #:SDL_SYSWMEVENTMASK 
+   #:SDL_OutOfMemory
+   #:SDL_PRESSED
+   #:SDL_QUITMASK
+   #:SDL_RELEASED
+   #:SDL_SYSWMEVENTMASK 
+   #:SDL_SYSWM_TYPE
+   #:SDL_SaveBMP
+   #:SDL_SysWMinfo
+   #:SDL_SysWMinfo_info
+   #:SDL_SysWMinfo_info_x11
+   #:SDL_SysWMmsg
+   #:SDL_SysWMmsg_event
+   #:SDL_UnlockMutex
+   #:SDL_VERSION
+   #:SDL_VERSIONNUM
+   #:SDL_VERSION_ATLEAST
+   #:SDL_VIDEOEXPOSEMASK
+   #:SDL_VIDEORESIZEMASK
+   #:SDL_VideoInfo
+   #:SDL_bool
+   #:SDL_keysym
+   #:active-event
+   #:attr
+   #:display
+   #:event
+   #:expose-event
+   #:fswindow
+   #:hardware-flags
+   #:hglrc
+   #:hwnd
+   #:info
+   #:info
+   #:joy-axis-event
+   #:joy-ball-event
+   #:joy-button-event
+   #:joy-hat-event
+   #:keyboard-event
+   #:keysym
+   #:lParam
+   #:lock_func
+   #:mod
+   #:mouse-button-event
+   #:mouse-motion-event
+   #:msg
+   #:quit-event
+   #:resize-event
+   #:scancode
+   #:state
+   #:subsystem
+   #:sym
+   #:sys-wm-event
+   #:type
+   #:unicode
+   #:unlock_func
+   #:user-event
+   #:value
+   #:version
+   #:vfmt
+   #:video_mem
+   #:wParam
+   #:which
+   #:window
+   #:wmwindow
+   #:x11
+   #:xevent
 
    ))
