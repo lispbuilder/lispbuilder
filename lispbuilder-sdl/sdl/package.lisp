@@ -15,8 +15,8 @@
    #:clamp				; from cl-sdl
    #:clear-colorkey
    #:clear-screen			; from cl-sdl
-   #:color-from-r/g/b
-   #:color-from-r/g/b/a
+   #:color-from-r/g/b			; from cl-sdl
+   #:color-from-r/g/b/a			; from cl-sdl
    #:convert-surface-to-display-format
    #:copy-rectangle
    #:copy-surf-to-rect

@@ -30,7 +30,8 @@
 	       (:static-file "groovy1.png")
 	       (:doc-file "README")
 	       (:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")))
+	       (:doc-file "CONTRIBUTORS")
+             (:doc-file "cl-sdl_LICENSE")))
      (:module "build"
 	      :components
 	      ((:static-file "sdlswig.i")))))
