@@ -7,18 +7,262 @@
 
 (in-package #:lispbuilder-sdl) 
 
-; drawing to surfaces
+;;;; Macros
 
-;; (defun draw-rect(surface_ptr x y w h color)
-;;   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-;;   (with-foreign-object (rect_ptr 'SDL_Rect)
-;;     (setf (foreign-slot-value rect_ptr 'SDL_Rect 'x) x)
-;;     (setf (foreign-slot-value rect_ptr 'SDL_Rect 'y) y)
-;;     (setf (foreign-slot-value rect_ptr 'SDL_Rect 'w) w)
-;;     (setf (foreign-slot-value rect_ptr 'SDL_Rect 'h) h)
-;;     (if (< 0 (SDL_FillRect surface_ptr rect_ptr color))
-;; 	(error "SDL_FillRect failed"))))
+;;; w
 
+(defmacro with-init (init-flags &body body)
+  "Attempts to initialize the SDL subsystems using SDL_Init.
+   Automatically shuts down the SDL subsystems using SDL_Quit upon normal application termination or
+if any fatal error occurs within &body.
+   init-flags can be any combination of SDL_INIT_TIMER, SDL_INIT_AUDIO, SDL_INIT_VIDEO, SDL_INIT_CDROM,
+SDL_INIT_JOYSTICK, SDL_INIT_NOPARACHUTE, SDL_INIT_EVENTTHREAD or SDL_INIT_EVERYTHING."
+  `(block nil
+    (unwind-protect
+	 (when (init-sdl :flags (list ,@init-flags))
+	   ,@body)
+      (SDL_Quit))))
+
+;; cl-sdl "sdl-ext.lisp"
+(defmacro with-locked-surface ((var &optional surface) &body body)
+  `(let (,@(when surface `(,var ,surface)))
+     (unwind-protect 
+         (progn (when (must-lock-p ,var)
+                  (lock-surface ,var))
+                ,@body)
+       (when (must-lock-p ,var)
+         (unlock-surface ,var)))))
+
+(defmacro with-must-locksurface (surface &body body)
+  "WITH-MUST-LOCKSURFACE sets up a surface for directly accessing the pixels using SDL_LockSurface.
+   WITH-MUST-LOCKSURFACE uses SDL_MUSTLOCK to first check if the surface should be locked.
+   Within WITH-MUST-LOCKSURFACE you can write to and read from surface->pixels, using the pixel format 
+stored in surface->format."
+  (let ((surf (gensym)))
+    `(let ((,surf ,surface))
+      (block nil
+	(when (sdl-must-lock ,surf)
+	  (if (>= (SDL_LockSurface ,surf) 0)
+	      (progn
+		,@body)
+	      (error "Cannot lock surface")))
+	(when (sdl-must-lock ,surf)
+	  (SDL_UnlockSurface ,surf))))))
+
+;; cl-sdl "cl-sdl.lisp"
+(defmacro with-possible-lock-and-update ((surface check-lock-p update-p x y w h) &body body)
+  (let ((locked-p (gensym "LOCKED-P"))
+        (exit (gensym "EXIT")))
+    `(let ((,locked-p nil))
+      (block ,exit
+        (when ,check-lock-p
+          (when (must-lock-p ,surface)
+            (when (< (sdl:SDL_LockSurface ,surface)
+                     0)
+              (return-from ,exit (values)))
+            (setf ,locked-p t)))
+        (progn ,@body)
+        (when ,locked-p
+          (SDL_UnlockSurface ,surface))
+        (when ,update-p
+          (update-surface ,surface :x ,x :y ,y :w ,w :y ,h))
+	))))
+
+(defmacro with-surface-lock(surface &body body)
+  (let ((surf (gensym)))
+    `(let ((,surf ,surface))
+      (progn
+	(SDL_LockSurface ,surf)
+	,@body
+	(SDL_UnlockSurface ,surf)))))
+
+;; cl-sdl "cl-sdl.lisp"
+#+nil
+(defmacro with-vraster ((buffer surface) &body body)
+  `(let ((,buffer (sdl:make-vraster ,surface)))
+    (unwind-protect (progn ,@body)
+      (sdl:free-vraster ,buffer))))
+
+
+
+
+
+;;;; Functions
+
+
+
+;;; a
+
+(defun apply-surface (source destination &key 
+		      (source-rect (cffi:null-pointer))
+		      (destination-rect (cffi:null-pointer)))
+  "Blits the entire SOURCE SDL_Surface to the DESTINATION SDL_Surface using SDL_BlitSurface.
+   use :source-rect SDL_Rect to position the SOURCE on the DESTINATION surface.
+   Use :destination-rect SDL_Rect to blit only a portion of the SOURCE to the DESTINATION surface."
+  (sdl::SDL_UpperBlit source source-rect destination destination-rect))
+
+
+
+(defun apply-surface-free (source destination &key (source-rect (cffi:null-pointer))
+			   (destination-x 0) (destination-y 0))
+  "Like APPLY-SURFACE just that DESTINATION-X and DESTINATION-Y define where the SOURCE is blitted to. The height and
+   width of the destination rectangle is taken from SOURCE-RECT, if available. If no keys are used then the whole SOURCE
+   is blit to (0,0) on DESTINATION."
+  (let ((drect (if (is-valid-ptr source-rect)
+		   (sdl::rectangle destination-x destination-y (sdl::rect-w source-rect) (sdl::rect-h source-rect))
+		   (cffi:null-pointer))))
+    (apply-surface source destination :source-rect source-rect :destination-rect drect)
+    (when (is-valid-ptr drect)
+      (cffi:foreign-free drect))))
+
+
+;;; b
+
+(defun blit-surface(src dest x y)
+  "blit the whole of surface src to the dest at position x y.
+   Performs the same function as blit-surface, however internal temporary rectangles
+   may be allocated on the stack, if supported buy the Lisp environment."
+  (cffi:with-foreign-objects ((src-rect 'SDL_Rect) (dest-rect 'SDL_Rect))
+    (copy-surf-to-rect src src-rect)
+    (setf (rect-x dest-rect) x
+	  (rect-y dest-rect) y
+	  (rect-w dest-rect) (rect-w src-rect)
+	  (rect-h dest-rect) (rect-h src-rect))
+    (SDL_UpperBlit src src-rect dest dest-rect)))
+
+
+
+;;; c
+
+;; cl-sdl "util.lisp"
+(defun clamp (v l u)
+  (min (max v l) u))
+
+(defun clear-colorkey (surface &key (accel nil))
+  "Removes the key color from the given surface."
+  (when (is-valid-ptr surface)
+    (if accel
+	(setf accel SDL_RLEACCEL)
+	(setf accel 0))
+    (SDL_SetColorKey surface accel 0)))
+
+;; cl-sdl "cl-sdl.lisp"
+(defun clear-screen (surface &rest args)
+  (apply #'draw-filled-rectangle surface 0 0
+         (surf-w surface)
+         (surf-h surface)
+         0 0 0 args)
+  surface)
+
+(defun color-from-r/g/b (surface r g b)
+  (sdl:SDL_MapRGB (pixelformat surface)
+		  r g b))
+
+(defun color-from-r/g/b/a (surface r g b a)
+  (sdl:SDL_MapRGBA (pixelformat surface)
+		   r g b a))
+
+(defun convert-surface-to-display-format(src &key (alpha nil) (free-src t))
+  "converts a surface to display format and free's the source surface
+    :alpha t will convert the surface and add an alpha channel.
+    :free nil will not free src.
+   returns NIL if the surface cannot be converted."
+  ;; LJC: Added support for converting to an alpha surface.
+  ;; LJC: Freeing src is now optional.
+  (if (is-valid-ptr src)
+      (let ((display-surface (if alpha
+				 (SDL_DisplayFormatAlpha src)
+				 (SDL_DisplayFormat src))))
+	(if free-src
+	    (SDL_FreeSurface src))
+	(if (is-valid-ptr display-surface)
+	    display-surface
+	    nil))
+      nil))
+
+
+
+(defun copy-rectangle (src dest)
+  "Copy the x, y, w and h values from the src to the dest rectangle."
+  (setf (cffi:foreign-slot-value dest 'SDL_Rect 'x) (cffi:foreign-slot-value src 'SDL_Rect 'x)
+        (cffi:foreign-slot-value dest 'SDL_Rect 'y) (cffi:foreign-slot-value src 'SDL_Rect 'y)
+        (cffi:foreign-slot-value dest 'SDL_Rect 'w) (cffi:foreign-slot-value src 'SDL_Rect 'w)
+        (cffi:foreign-slot-value dest 'SDL_Rect 'h) (cffi:foreign-slot-value src 'SDL_Rect 'h)))
+
+(defun create-surface(display width height key-r key-g key-b)
+  "create a surface compatible with the supplied surface"
+  (let ((format (cffi:foreign-slot-value display 'SDL_Surface 'format))
+	(surface nil))
+    (with-foreign-slots ((BitsPerPixel Rmask Gmask Bmask Amask) format SDL_PixelFormat)
+			(setf surface (SDL_CreateRGBSurface (logior SDL_SWSURFACE SDL_SRCCOLORKEY)
+					      width height BitsPerPixel Rmask Gmask Bmask Amask))
+			(set-colorkey surface key-r key-g key-b))
+    surface))
+
+(defun copy-surf-to-rect (surface rect)
+  "Copy the width and height of the surface to the rectangle.
+   The x and y do not need to be copied as these values have no meaning for a surface." 
+  (cffi:with-foreign-slots ((w h) rect SDL_Rect)
+    (setf w (cffi:foreign-slot-value surface 'SDL_Surface 'w)
+	  h (cffi:foreign-slot-value surface 'SDL_Surface 'h))))
+
+
+;;; d
+
+;; cl-sdl "util.lisp"
+(defun delta-clamp (v d l u)
+  (let ((sum (+ v d)))
+    (cond ((< sum l)
+           (- d (- sum l)))
+          ((> sum u)
+           (- d (- sum u)))
+          (t d))))
+
+;; cl-sdl "cl-sdl.lisp"
+#+nil
+(defun draw-line (surface x1 y1 x2 y2 r g b &key (check-lock-p t) (update-p t) (clipping-p t))
+  (check-types x1 y1 x2 y2 (unsigned-byte 16))
+  (check-types r g b (unsigned-byte 8))
+  (let ((sw (sdl:surface-w surface))
+        (sh (sdl:surface-h surface)))
+    (when clipping-p
+      (setf x1 (sdl:clamp x1 0 (1- sw))
+            x2 (sdl:clamp x2 0 (1- sw))
+            y1 (sdl:clamp y1 0 (1- sh))
+            y2 (sdl:clamp y2 0 (1- sh))))
+    (with-possible-lock-and-update (surface check-lock-p update-p 0 0 sw sh)
+      (sdl:draw-line surface x1 y1 x2 y2 r g b)))
+  (values))
+
+;; cl-sdl "cl-sdl.lisp"
+(defun draw-pixel (surface x y r g b &key (check-lock-p t) (update-p t) (clipping-p t))
+;;   (check-types x y (unsigned-byte 16))
+;;   (check-types r g b (unsigned-byte 8))
+  (block clipped
+    (when clipping-p
+      (let ((sw (surf-w surface))
+            (sh (surf-h surface)))
+        (when (or (< x 0)
+                  (< y 0)
+                  (>= x sw)
+                  (>= y sh))
+          (return-from clipped nil))))
+    (with-possible-lock-and-update (surface check-lock-p update-p x y 1 1)
+      (sdl:put-pixel surface x y (color-from-r/g/b surface r g b))))
+  surface)
+
+(defun draw-random-rect (surface_ptr width height &optional rect_ptr)
+  "Given a surface pointer draw a random rectangle within specified width and height"
+  (let ((x (random+1 width))
+	(y (random+1 height))
+	(w (random+1 width))
+	(h (random+1 height))
+	;; (color (sdl_maprgb (pixelformat surface_ptr) (random 255) (random 255) (random 255)))
+	(color (random (expt 2 24))))
+    (if rect_ptr
+	(draw-rect surface_ptr nil nil nil nil color (rectangle x y w h rect_ptr))
+	(draw-rect surface_ptr x y w h color)))
+  rect_ptr)
 
 (defun draw-rect(surface_ptr x y w h color &optional rect_ptr)
   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
@@ -41,75 +285,149 @@
        (h (1+ (abs (- y1 y2)))))
     (draw-rect surface_ptr x1 y1 w h color)))
 
-;; (defun draw-random-rect (surface_ptr width height)
-;;   "Given a surface pointer draw a random rectangle within specified width and height"
-;;   (let*
-;;       ((x (random width))
-;;        (y (random height))
-;;        (w (random width))
-;;        (h (random height))
-;;        (color (random (expt 2 24))))
-;;     (draw-rect surface_ptr x y w h color)))
+;; cl-sdl "cl-sdl.lisp"
+#+nil
+(defun draw-rectangle (surface x y w h r g b &key (check-lock-p t) (update-p t) (clipping-p t))
+;;   (check-types x y (unsigned-byte 16))
+;;   (check-types w h (unsigned-byte 16))
+;;   (check-types r g b (unsigned-byte 8))
+  (when clipping-p
+    (let ((sw (surf-w surface))
+          (sh (surf-h surface))
+          (x2 (+ x w))
+          (y2 (+ y h)))
+      (setf x (clamp x 0 (1- sw))
+            y (clamp y 0 (1- sh))
+            x2 (clamp x2 0 (1- sw))
+            y2 (clamp y2 0 (1- sh))
+            w (- x2 x)
+            h (- y2 y))))
+  (with-possible-lock-and-update (surface check-lock-p update-p
+                                          x y (1+ w) (1+ h))
+    (sdl:draw-rectangle surface x y w h r g b))
+  surface)
 
-(defun random+1 (rnd)
-  (+ 1 (random rnd)))
+;; cl-sdl "cl-sdl.lisp"
+(defun draw-filled-rectangle (surface x y w h r g b &key (check-lock-p t) (update-p t) (clipping-p t))
+;;   (check-types x y (unsigned-byte 16))
+;;   (check-types w h (unsigned-byte 16))
+;;   (check-types r g b (unsigned-byte 8))
+  (when clipping-p
+    (let ((sw (surf-w surface))
+          (sh (surf-h surface))
+          (x2 (+ x w))
+          (y2 (+ y h)))
+      (setf x (clamp x 0 (1- sw))
+            y (clamp y 0 (1- sh))
+            x2 (clamp x2 0 (1- sw))
+            y2 (clamp y2 0 (1- sh))
+            w (- x2 x)
+            h (- y2 y))))
+  (with-possible-lock-and-update (surface check-lock-p update-p x y (1+ w) (1+ h))
+    (sdl:draw-rect surface x y w h (color-from-r/g/b surface r g b)))
+  surface)
 
-(defun draw-random-rect (surface_ptr width height &optional rect_ptr)
-  "Given a surface pointer draw a random rectangle within specified width and height"
-  (let ((x (random+1 width))
-	(y (random+1 height))
-	(w (random+1 width))
-	(h (random+1 height))
-	;; (color (sdl_maprgb (pixelformat surface_ptr) (random 255) (random 255) (random 255)))
-	(color (random (expt 2 24))))
-    (if rect_ptr
-	(draw-rect surface_ptr nil nil nil nil color (rectangle x y w h rect_ptr))
-	(draw-rect surface_ptr x y w h color)))
-  rect_ptr)
 
-;; (defun blit-surface(src dest x y)
-;;   "blit the whole of surface src to the dest at position x y"
-;;   (let ((src-rect (get-surface-rect src)))
-;;     (let ((dest-rect (make-sdl-rect x y 
-;; 				    (cffi:foreign-slot-value src-rect 'SDL_Rect 'w)
-;; 				    (cffi:foreign-slot-value src-rect 'SDL_Rect 'h))))
-;;       (SDL_UpperBlit src src-rect dest dest-rect)
-;;       (cffi:foreign-free src-rect)
-;;       (cffi:foreign-free dest-rect))))
+;;; e
+;;; f
 
-(defun copy-surf-to-rect (surface rect)
-  "Copy the width and height of the surface to the rectangle.
-   The x and y do not need to be copied as these values have no meaning for a surface." 
-  (cffi:with-foreign-slots ((w h) rect SDL_Rect)
-    (setf w (cffi:foreign-slot-value surface 'SDL_Surface 'w)
-	  h (cffi:foreign-slot-value surface 'SDL_Surface 'h))))
+;; cl-sdl "cl-sdl.lisp"
+#+nil
+(defun fill-vraster (surface buffer r g b)
+  (check-types r g b (unsigned-byte 8))
+  (sdl:fill-vraster surface buffer r g b)
+  (values))
 
-(defun blit-surface(src dest x y)
-  "blit the whole of surface src to the dest at position x y.
-   Performs the same function as blit-surface, however internal temporary rectangles
-   may be allocated on the stack, if supported buy the Lisp environment."
-  (cffi:with-foreign-objects ((src-rect 'SDL_Rect) (dest-rect 'SDL_Rect))
-    (copy-surf-to-rect src src-rect)
-    (setf (rect-x dest-rect) x
-	  (rect-y dest-rect) y
-	  (rect-w dest-rect) (rect-w src-rect)
-	  (rect-h dest-rect) (rect-h src-rect))
-    (SDL_UpperBlit src src-rect dest dest-rect)))
+(defun fill-surface (surface r g b &key (a nil) (template (cffi:null-pointer)) (update-p nil))
+  "fill the entire surface with the specified R G B and optional A color.
+   Use :template to specify the SDL_Rect to be used as the fill template.
+   Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
+    'dirty recs' screen update."
+  (when (is-valid-ptr surface)
+    (if a
+	(SDL_FillRect surface template (color-from-r/g/b/a surface r g b a))
+	(SDL_FillRect surface template (color-from-r/g/b surface r g b)))
+    (if update-p
+	(update-surface surface :template template)
+	))
+  template)
 
+;;; g
+
+(defun get-native-window ()
+  (let ((wm-info (cffi:foreign-alloc 'sdl::SDL_SysWMinfo)))
+      ;; Set the wm-info structure to the current SDL version.
+      (sdl::sdl_version (cffi:foreign-slot-value wm-info 'sdl::SDL_SysWMinfo 'sdl::version))
+      (sdl::SDL_GetWMInfo wm-info)
+      ;; For Windows
+      #+win32(cffi:foreign-slot-pointer wm-info 'sdl::SDL_SysWMinfo 'sdl::window)
+      ;; For X
+      #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
+											      'SDL_SysWMinfo
+											      'sdl::info)
+								   'sdl::SDL_SysWMinfo_info
+								   'sdl::x11)
+					'sdl::SDL_SysWMinfo_info_x11
+					'sdl::window)))
+
+(defun get-pixel(surface x y &key (check-lock-p t))
+  "Get the pixel at (x, y) as a Uint32 color value
+NOTE: The surface must be locked before calling this.
+Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
+  (with-possible-lock-and-update (surface check-lock-p nil x y 1 1)
+    (let* ((format (cffi:foreign-slot-value surface 'SDL_Surface 'format))
+	   (bpp (foreign-slot-value format 'SDL_PixelFormat 'BytesPerPixel))
+	   (offset (+ (* y (foreign-slot-value surface 'SDL_Surface 'Pitch)) (* x bpp)))
+	   (pixel-address (foreign-slot-value surface 'SDL_Surface 'Pixels)))
+      (cond
+	((= bpp 1) 
+	 (mem-aref pixel-address :unsigned-char offset))
+	((= bpp 2) 
+	 (mem-aref pixel-address :unsigned-short (/ offset 2)))
+	((= bpp 3) 
+					;	 (if (eq SDL_BYTEORDER SDL_BIG_ENDIAN) ; TODO
+	 (error "3 byte per pixel surfaces not supported yet"))
+	((= bpp 4) 
+	 (mem-aref pixel-address :unsigned-int (/ offset 4)))))))
+  
+  
+
+#|
+
+/*
+ * Return the pixel value at (x, y)
+ * NOTE: The surface must be locked before calling this!
+ */
+Uint32 getpixel(SDL_Surface *surface, int x, int y)
+{
+    int bpp = surface->format->BytesPerPixel;
+    /* Here p is the address to the pixel we want to retrieve */
+    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+
+    switch(bpp) {
+    case 1:
+        return *p;
+
+    case 2:
+        return *(Uint16 *)p;
+
+    case 3:
+        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
+            return p[0] << 16 | p[1] << 8 | p[2];
+        else
+            return p[0] | p[1] << 8 | p[2] << 16;
+
+    case 4:
+        return *(Uint32 *)p;
+
+    default:
+        return 0;       /* shouldn't happen, but avoids warnings */
+    }
+}
+
+|#
 
 ; NOTE this will leak memory if you don't free up the allocated rectangle yourself
-
-(defun make-sdl-rect(x y w h)
-  "allocate and return an SDL_Rect structure with the provided paramters"
-  (let ((pr (cffi:foreign-alloc 'SDL_Rect)))
-    (setf (cffi:foreign-slot-value pr 'SDL_Rect 'x) x)
-    (setf (cffi:foreign-slot-value pr 'SDL_Rect 'y) y)
-    (setf (cffi:foreign-slot-value pr 'SDL_Rect 'w) w)
-    (setf (cffi:foreign-slot-value pr 'SDL_Rect 'h) h)
-    pr))
-
-; NOTE this will leak memory if you don't free up the allocated rectangle yourself
-
 (defun get-surface-rect(surface)
   "allocates and returns a rectangle containing the bmp's width and height"
   (let ((pr (cffi:foreign-alloc 'SDL_Rect)))
@@ -120,7 +438,57 @@
     pr))
 
 
-; bmp utils
+(defun get-video-info (&key (video-info (SDL_GetVideoInfo)) (info :video-mem))
+  "Returns information about the video hardware.
+  GET-VIDEO-INFO :video-info <pointer to a SDL_VIDEOINFO structure>
+                 :info :hw_available | :wm_available |
+                       :blit_hw | :blit_hw_cc | :blit_hw_a |
+                       :blit_sw | :blit_sw_cc | :blit_sw_a |
+                       :blit_fill |
+                       :video_mem |
+                       :pixelformat
+  Usage: get-video-info should be called after sdl_init but before sdl_setvideomode.
+         e.g (get-video-info :info :video_mem), or
+             (get-video-info :video-info (sdl_getvideoinfo) :info :video_mem)
+         Will return the amount video memory available."
+  (if (is-valid-ptr video-info)
+      (case info
+	(:video-mem
+	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'video_mem))
+	(:pixelformat
+	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'vfmt))
+	(otherwise
+	 (member info (cffi:foreign-slot-value video-info 'sdl_videoinfo 'flags))))
+      nil))
+
+
+;;; h
+;;; i
+
+(defun init-sdl (&key (flags SDL_INIT_VIDEO))
+  (if (equal 0 (SDL_Init (set-flags flags)))
+      t
+      nil))
+
+(defun is-key (key1 key2)
+  "Returns t if the keypress 'key1' is equal to the specified 'key2'.
+   (cffi:foreign-enum-value 'SDLKey key2)."
+  (equal key1 (cffi:foreign-enum-value 'SDLKey key2)))
+
+(defun is-modifier (mod key)
+  "Returns t if the keypress modifier 'mod' is equal to the specified 'key'.
+   (cffi:foreign-enum-value 'SDLMod key)."
+  (equal mod (cffi:foreign-enum-value 'SDLMod key)))
+
+(defun is-valid-ptr (pointer)
+  "IS-VALID-PTR <CFFI pointer>
+  Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
+  (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
+
+
+;;; j
+;;; k
+;;; l
 
 (defun load-bmp(filename)
   "load in the supplied filename, must be a bmp file"
@@ -134,35 +502,68 @@
 	    psurface)))
       nil))
 
-(defun convert-surface-to-display-format(src &key (alpha nil) (free-src t))
-  "converts a surface to display format and free's the source surface
-    :alpha t will convert the surface and add an alpha channel.
-    :free nil will not free src.
-   returns NIL if the surface cannot be converted."
-  ;; LJC: Added support for converting to an alpha surface.
-  ;; LJC: Freeing src is now optional.
-  (if (is-valid-ptr src)
-      (let ((display-surface (if alpha
-				 (SDL_DisplayFormatAlpha src)
-				 (SDL_DisplayFormat src))))
-	(if free-src
-	    (SDL_FreeSurface src))
-	(if (is-valid-ptr display-surface)
-	    display-surface
-	    nil))
-      nil))
 
-; surface utilities
+;;; m
 
-(defmacro with-surface-lock(surface &body body)
-  (let ((surf (gensym)))
-    `(let ((,surf ,surface))
-      (progn
-	(SDL_LockSurface ,surf)
-	,@body
-	(SDL_UnlockSurface ,surf)))))
+; NOTE this will leak memory if you don't free up the allocated rectangle yourself
+(defun make-sdl-rect(x y w h)
+  "allocate and return an SDL_Rect structure with the provided paramters"
+  (let ((pr (cffi:foreign-alloc 'SDL_Rect)))
+    (setf (cffi:foreign-slot-value pr 'SDL_Rect 'x) x)
+    (setf (cffi:foreign-slot-value pr 'SDL_Rect 'y) y)
+    (setf (cffi:foreign-slot-value pr 'SDL_Rect 'w) w)
+    (setf (cffi:foreign-slot-value pr 'SDL_Rect 'h) h)
+    pr))
 
-; put and get pixel
+
+(defun moveby-rectangle (rectangle dx dy)
+  "add dx and dy to the x and y positions of the SDL_Rect." 
+  (cffi:with-foreign-slots ((x y) rectangle SDL_rect)
+    (setf x (+ x dx)
+          y (+ y dy))))
+
+(defun moveto-rectangle (rectangle dx dy)
+  "set the x and y position of the SDL_Rect."
+  (cffi:with-foreign-slots ((x y) rectangle SDL_rect)
+    (setf x dx
+          y dy)))
+
+;; cl-sdl "sdl-ext.lisp"
+(defun must-lock-p (surface)
+  (or (/= 0 (cffi:foreign-slot-value surface 'sdl_surface 'offset))
+      (/= 0 (logand (cffi:foreign-slot-value surface 'sdl_surface 'flags)
+		    (logior SDL_HWSURFACE
+			    SDL_ASYNCBLIT
+			    SDL_RLEACCEL)))))
+
+;;; n
+
+(defun new-event (&key (event-type 'SDL_Event))
+  "Creates a new SDL_Event and sets the type to :event-type.
+   If no type is specified, then an SDL_Event of type SDL_NOEVENT is returned.
+   For example, to create a quit event use :event-type 'SDL_QuitEvent."
+  (let ((event (cffi:foreign-alloc event-type)))
+    (setf (cffi:foreign-slot-value event 'SDL_event 'type)
+	  (case event-type
+	    ('sdl_quitevent SDL_QUIT)
+	    (otherwise SDL_NOEVENT)))
+    event))
+
+(defun new-rect ()
+  "Creates a new SDL_Rect using malloc."
+  (cffi:foreign-alloc 'SDL_Rect))
+
+
+;;; o
+;;; p
+
+(defun pixelformat (surface)
+  "Returns the pixelformat of a surface."
+  (cffi:foreign-slot-value surface 'sdl:SDL_Surface 'sdl:format))
+
+(defun push-quitevent ()
+  "Pushes a new SDL_Event of type SDL_QUIT onto the event queue."
+  (SDL_PushEvent (new-event :event-type 'sdl_quitevent)))
 
 (defun put-pixel(surface x y pixel)
   "Set the pixel at (x, y) to the given value
@@ -226,124 +627,197 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 }
 |#
 
-(defun get-pixel(surface x y)
-  "Get the pixel at (x, y) as a Uint32 color value
-NOTE: The surface must be locked before calling this.
-Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
-  (let* ((format (cffi:foreign-slot-value surface 'SDL_Surface 'format))
-	 (bpp (foreign-slot-value format 'SDL_PixelFormat 'BytesPerPixel))
-	 (offset (+ (* y (foreign-slot-value surface 'SDL_Surface 'Pitch)) (* x bpp)))
-	 (pixel-address (foreign-slot-value surface 'SDL_Surface 'Pixels)))
-    (cond
-      ((= bpp 1) 
-       (mem-aref pixel-address :unsigned-char offset))
-      ((= bpp 2) 
-       (mem-aref pixel-address :unsigned-short (/ offset 2)))
-      ((= bpp 3) 
-;	 (if (eq SDL_BYTEORDER SDL_BIG_ENDIAN) ; TODO
-	 (error "3 byte per pixel surfaces not supported yet"))
-      ((= bpp 4) 
-       (mem-aref pixel-address :unsigned-int (/ offset 4))))))
 
 
+;;; q
+;;; r
 
-#|
+(defun random+1 (rnd)
+  (+ 1 (random rnd)))
 
-/*
- * Return the pixel value at (x, y)
- * NOTE: The surface must be locked before calling this!
- */
-Uint32 getpixel(SDL_Surface *surface, int x, int y)
-{
-    int bpp = surface->format->BytesPerPixel;
-    /* Here p is the address to the pixel we want to retrieve */
-    Uint8 *p = (Uint8 *)surface->pixels + y * surface->pitch + x * bpp;
+(defun rect-x (rectangle)
+  "return the x position of the SDL_Rect."
+  (cffi:foreign-slot-value rectangle 'SDL_Rect 'x))
 
-    switch(bpp) {
-    case 1:
-        return *p;
+(defun (setf rect-x) (x-val rectangle)
+  "set the x position of the SDL_Rect."
+  (setf (cffi:foreign-slot-value rectangle 'SDL_Rect 'x) x-val))
 
-    case 2:
-        return *(Uint16 *)p;
+(defun rect-y (rectangle)
+  "return the y position of the SDL_Rect."
+  (cffi:foreign-slot-value rectangle 'SDL_Rect 'y))
 
-    case 3:
-        if(SDL_BYTEORDER == SDL_BIG_ENDIAN)
-            return p[0] << 16 | p[1] << 8 | p[2];
-        else
-            return p[0] | p[1] << 8 | p[2] << 16;
+(defun (setf rect-y) (y-val rectangle)
+  "set the y position of the SDL_Rect."
+  (setf (cffi:foreign-slot-value rectangle 'SDL_Rect 'y) y-val))
 
-    case 4:
-        return *(Uint32 *)p;
+(defun rect-w (rectangle)
+  "return the width of the SDL_Rect."
+  (cffi:foreign-slot-value rectangle 'SDL_Rect 'w))
 
-    default:
-        return 0;       /* shouldn't happen, but avoids warnings */
-    }
-}
+(defun (setf rect-w) (w-val rectangle)
+  "set the width  of the SDL_Rect."
+  (setf (cffi:foreign-slot-value rectangle 'SDL_Rect 'w) w-val))
 
-|#
+(defun rect-h (rectangle)
+  "return the height of the SDL_Rect."
+  (cffi:foreign-slot-value rectangle 'SDL_Rect 'h))
 
-(defun create-surface(display width height key-r key-g key-b)
-  "create a surface compatible with the supplied surface"
-  (let ((format (cffi:foreign-slot-value display 'SDL_Surface 'format))
-	(surface nil))
-    (with-foreign-slots ((BitsPerPixel Rmask Gmask Bmask Amask) format SDL_PixelFormat)
-			(setf surface (SDL_CreateRGBSurface (logior SDL_SWSURFACE SDL_SRCCOLORKEY)
-					      width height BitsPerPixel Rmask Gmask Bmask Amask))
-			(set-colorkey surface key-r key-g key-b))
-    surface))
+(defun (setf rect-h) (h-val rectangle)
+  "set the height of the SDL_Rect."
+  (setf (cffi:foreign-slot-value rectangle 'SDL_Rect 'h) h-val))
 
-(defun is-valid-ptr (pointer)
-  "IS-VALID-PTR <CFFI pointer>
-  Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
-  (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
 
-(defun get-video-info (&key (video-info (SDL_GetVideoInfo)) (info :video-mem))
-  "Returns information about the video hardware.
-  GET-VIDEO-INFO :video-info <pointer to a SDL_VIDEOINFO structure>
-                 :info :hw_available | :wm_available |
-                       :blit_hw | :blit_hw_cc | :blit_hw_a |
-                       :blit_sw | :blit_sw_cc | :blit_sw_a |
-                       :blit_fill |
-                       :video_mem |
-                       :pixelformat
-  Usage: get-video-info should be called after sdl_init but before sdl_setvideomode.
-         e.g (get-video-info :info :video_mem), or
-             (get-video-info :video-info (sdl_getvideoinfo) :info :video_mem)
-         Will return the amount video memory available."
-  (if (is-valid-ptr video-info)
-      (case info
-	(:video-mem
-	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'video_mem))
-	(:pixelformat
-	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'vfmt))
-	(otherwise
-	 (member info (cffi:foreign-slot-value video-info 'sdl_videoinfo 'flags))))
-      nil))
+(defun rectangle (x y w h &optional (rect (new-rect)))
+  "allocate and return an SDL_Rect structure initialized to the provided parameters.
+   If the &optional rec contains an SDL_Rect, then this structure is initialized and returned."
+  (labels ((set-rectangle (dx dy dw dh)
+	     (cffi:with-foreign-slots ((x y w h) rect SDL_rect)
+	       (setf x dx
+		     y dy
+		     w dw
+		     h dh))))
+    (if (is-valid-ptr rect)
+	(set-rectangle x y w h)))
+  rect)
 
-(defun is-key (key1 key2)
-  "Returns t if the keypress 'key1' is equal to the specified 'key2'.
-   (cffi:foreign-enum-value 'SDLKey key2)."
-  (equal key1 (cffi:foreign-enum-value 'SDLKey key2)))
 
-(defun is-modifier (mod key)
-  "Returns t if the keypress modifier 'mod' is equal to the specified 'key'.
-   (cffi:foreign-enum-value 'SDLMod key)."
-  (equal mod (cffi:foreign-enum-value 'SDLMod key)))
+;;; s
 
-(defun new-event (&key (event-type 'SDL_Event))
-  "Creates a new SDL_Event and sets the type to :event-type.
-   If no type is specified, then an SDL_Event of type SDL_NOEVENT is returned.
-   For example, to create a quit event use :event-type 'SDL_QuitEvent."
-  (let ((event (cffi:foreign-alloc event-type)))
-    (setf (cffi:foreign-slot-value event 'SDL_event 'type)
-	  (case event-type
-	    ('sdl_quitevent SDL_QUIT)
-	    (otherwise SDL_NOEVENT)))
-    event))
+(defun sdl-must-lock (surface)
+  "Checks if a surface can be locked.
+   Re-implementation of the SDL_MUSTLOCK macro.
+   Returns
+    T if the surface can be locked.
+    NIL if the surface cannot be locked."
+  (if (> 0 (cffi:foreign-slot-value surface 'SDL_Surface 'offset))
+      t
+      (if (not (eql 0 (logand 
+		       (cffi:foreign-slot-value surface 'SDL_Surface 'flags)
+		       (logior SDL_HWSURFACE SDL_ASYNCBLIT SDL_RLEACCEL))))
+	  t
+	  nil)))
 
-(defun push-quitevent ()
-  "Pushes a new SDL_Event of type SDL_QUIT onto the event queue."
-  (SDL_PushEvent (new-event :event-type 'sdl_quitevent)))
+
+(defun set-colorkey (surface r g b &key (accel nil))
+  "Sets the key color for the given surface. The key color is made transparent."
+  (when (is-valid-ptr surface)
+    (if accel
+	(setf accel SDL_RLEACCEL)
+	(setf accel 0))
+    (SDL_SetColorKey surface (logior SDL_SRCCOLORKEY accel)
+		     (color-from-r/g/b surface r g b))))
+
+(defun set-flags (&rest keyword-args)
+  (if (listp (first keyword-args))
+      (let ((keywords 
+	     (mapcar #'(lambda (x)
+			 (eval x))
+		     (first keyword-args))))
+	(apply #'logior keywords))
+      (apply #'logior keyword-args)))
+
+(defun set-screen (width height &key (bpp 0) (flags '(SDL_HWSURFACE SDL_FULLSCREEN SDL_HWACCEL)))
+  "Will attempt to create a full screen, hardware accelerated window using SDL_SetVideoMode.
+   Overriding :flags will allow any type of window to be created.
+   Returns
+    a new SDL_Surface if successful.
+    NIL if failed."
+  (let ((surface (SDL_SetVideoMode width height bpp (set-flags flags))))
+    (if (is-valid-ptr surface)
+	surface
+	nil)))
+
+(defun set-window (width height &key (bpp 0) (flags SDL_SWSURFACE))
+  "Will attempt to create a window using software surfaces using SDL_SetVideoMode.
+   Overriding :flags will allow any type of window to be created.
+   Returns
+    a new SDL_Surface if successful.
+    NIL if failed."
+  (set-screen width height :bpp bpp :flags flags))
+
+;; cl-sdl "sdl-ext.lisp"
+(defun show-bmp (file surface x y)
+  (let ((bmp nil))
+    (unwind-protect
+         (progn
+           (setf bmp (sdl:load-bmp file))
+           (when bmp
+             (blit-surface bmp surface x y)
+	     (update-surface surface :x x :y y :w (surf-w bmp) :h (surf-h bmp))
+	     ))
+      (when (is-valid-ptr bmp)
+	(cffi:foreign-free bmp)))))
+
+(defun surf-w (surface)
+  "return the width of the SDL_surface."
+  (cffi:foreign-slot-value surface 'SDL_Surface 'w))
+
+(defun surf-h (surface)
+  "return the height of the SDL_Surface." 
+  (cffi:foreign-slot-value surface 'SDL_Surface 'h))
+
+;;; t
+
+(defun to-radian (degree)
+  "converts degrees to radians."
+  (* degree (/ PI 180)))
+
+(defun to-degree (radian)
+  "converts radians to degrees."
+  (/ radian (/ PI 180)))
+
+
+;;; u
+
+;; cl-sdl "cl-sdl.lisp"
+(defun update-screen (surface)
+  (update-surface surface))
+
+(defun update-surface (surface &key (x 0) (y 0) (w 0) (h 0) (template nil))
+  "Updates the screen using the keyword co-orditates :X :Y :W :H, or :template of type SDL_Rect.
+   All co-ordinates default to 0, updating the entire screen."
+  (if (is-valid-ptr surface)
+      (if (is-valid-ptr template)
+	  (SDL_UpdateRect surface 
+			  (rect-x template)
+			  (rect-y template)
+			  (rect-w template)
+			  (rect-h template))
+	  (SDL_UpdateRect surface x y w h)))
+  surface)
+
+
+;;; v
+
+;; cl-sdl "cl-sdl.lisp"
+;; vraster -- used to fill arbitrary convex polygons.
+;; A structure with 2 arrays, holding the top and bottom
+;; pixel positions for each x position.  Filling draws
+;; a series of vertical lines for each x position from
+;; top to bottom.
+#+nil
+(defun vraster-line (buffer x1 y1 x2 y2 &key (clipping-p t))
+  (check-types x1 y1 x2 y2 (unsigned-byte 16))
+  (when clipping-p
+    (let ((sw-1 (1- (sdl:vraster-length buffer)))
+          (sh-1 (1- (sdl:vraster-surface-height buffer))))
+      ;; for now
+      (setf x1 (sdl:clamp x1 0 sw-1)
+            x2 (sdl:clamp x2 0 sw-1)
+            y1 (sdl:clamp y1 0 sh-1)
+            y2 (sdl:clamp y2 0 sh-1))))
+  (sdl:vraster-line buffer x1 y1 x2 y2)
+  (values))
+
+;;; w
+;;; x
+;;; y
+;;; z
+
+
+;;; Event Handling & Timing routine from here   -----------------------
+
 
 (let ((timescale nil))
     (defun set-timescale (tscale)
@@ -362,12 +836,6 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
         (setf worldtime wtime))
     (defun get-worldtime ()
         worldtime))
-
-(let ((delay nil))
-    (defun set-delay (dtime)
-        (setf delay dtime))
-    (defun get-delay ()
-        delay))
 
 (defstruct fpsmanager
   (framecount 0 :type fixnum)
@@ -686,246 +1154,4 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 	(progn
 	  (framerate-delay)))
       (cffi:foreign-free ,sdl-event))))
-
-(defun set-flags (&rest keyword-args)
-  (if (listp (first keyword-args))
-      (let ((keywords 
-	     (mapcar #'(lambda (x)
-			 (eval x))
-		     (first keyword-args))))
-	(apply #'logior keywords))
-      (apply #'logior keyword-args)))
-
-(defun init-sdl (&key (flags SDL_INIT_VIDEO))
-  (if (equal 0 (SDL_Init (set-flags flags)))
-      t
-      nil))
-
-(defmacro with-init (init-flags &body body)
-  "Attempts to initialize the SDL subsystems using SDL_Init.
-   Automatically shuts down the SDL subsystems using SDL_Quit upon normal application termination or
-if any fatal error occurs within &body.
-   init-flags can be any combination of SDL_INIT_TIMER, SDL_INIT_AUDIO, SDL_INIT_VIDEO, SDL_INIT_CDROM,
-SDL_INIT_JOYSTICK, SDL_INIT_NOPARACHUTE, SDL_INIT_EVENTTHREAD or SDL_INIT_EVERYTHING."
-  `(block nil
-    (unwind-protect
-	 (when (init-sdl :flags (list ,@init-flags))
-	   ,@body)
-      (SDL_Quit))))
-
-(defun to-radian (degree)
-  "converts degrees to radians."
-  (* degree (/ PI 180)))
-
-(defun to-degree (radian)
-  "converts radians to degrees."
-  (/ radian (/ PI 180)))
-
-(defun sdl-must-lock (surface)
-  "Checks if a surface can be locked.
-   Re-implementation of the SDL_MUSTLOCK macro.
-   Returns
-    T if the surface can be locked.
-    NIL if the surface cannot be locked."
-  (if (> 0 (cffi:foreign-slot-value surface 'SDL_Surface 'offset))
-      t
-      (if (not (eql 0 (logand 
-		       (cffi:foreign-slot-value surface 'SDL_Surface 'flags)
-		       (logior SDL_HWSURFACE SDL_ASYNCBLIT SDL_RLEACCEL))))
-	  t
-	  nil)))
-
-(defmacro with-must-locksurface (surface &body body)
-  "WITH-MUST-LOCKSURFACE sets up a surface for directly accessing the pixels using SDL_LockSurface.
-   WITH-MUST-LOCKSURFACE uses SDL_MUSTLOCK to first check if the surface should be locked.
-   Within WITH-MUST-LOCKSURFACE you can write to and read from surface->pixels, using the pixel format 
-stored in surface->format."
-  (let ((surf (gensym)))
-    `(let ((,surf ,surface))
-      (block nil
-	(when (sdl-must-lock ,surf)
-	  (if (>= (SDL_LockSurface ,surf) 0)
-	      (progn
-		,@body)
-	      (error "Cannot lock surface")))
-	(when (sdl-must-lock ,surf)
-	  (SDL_UnlockSurface ,surf))))))
-
-(defun set-screen (width height &key (bpp 0) (flags '(SDL_HWSURFACE SDL_FULLSCREEN SDL_HWACCEL)))
-  "Will attempt to create a full screen, hardware accelerated window using SDL_SetVideoMode.
-   Overriding :flags will allow any type of window to be created.
-   Returns
-    a new SDL_Surface if successful.
-    NIL if failed."
-  (let ((surface (SDL_SetVideoMode width height bpp (set-flags flags))))
-    (if (is-valid-ptr surface)
-	surface
-	nil)))
-
-(defun set-window (width height &key (bpp 0) (flags SDL_SWSURFACE))
-  "Will attempt to create a window using software surfaces using SDL_SetVideoMode.
-   Overriding :flags will allow any type of window to be created.
-   Returns
-    a new SDL_Surface if successful.
-    NIL if failed."
-  (set-screen width height :bpp bpp :flags flags))
-
-(defun pixelformat (surface)
-  "Returns the pixelformat of a surface."
-  (cffi:foreign-slot-value surface 'SDL_Surface 'format))
-
-(defun update-surface (surface &key (x 0) (y 0) (w 0) (h 0) (template nil))
-  "Updates the screen using the keyword co-orditates :X :Y :W :H, or :template of type SDL_Rect.
-   All co-ordinates default to 0, updating the entire screen."
-  (if (is-valid-ptr surface)
-      (if (is-valid-ptr template)
-	  (SDL_UpdateRect surface 
-			  (rect-x template)
-			  (rect-y template)
-			  (rect-w template)
-			  (rect-h template))
-	  (SDL_UpdateRect surface x y w h)))
-  template)
-
-(defun fill-surface (surface r g b &key (a nil) (template (cffi:null-pointer)) (update-surface nil))
-  "fill the entire surface with the specified R G B and optional A color.
-   Use :template to specify the SDL_Rect to be used as the fill template.
-   Use :update-surface to call SDL_UpdateRect, using :template if provided. This allows for a 
-    'dirty recs' screen update."
-  (when (is-valid-ptr surface)
-    (if a
-	(SDL_FillRect surface template (SDL_MapRGBA (pixelformat surface) r g b a))
-	(SDL_FillRect surface template (SDL_MapRGB (pixelformat surface) r g b)))
-    (if update-surface
-	(update-surface surface :template template)))
-  template)
-
-(defun apply-surface (source destination &key 
-		      (source-rect (cffi:null-pointer))
-		      (destination-rect (cffi:null-pointer)))
-  "Blits the entire SOURCE SDL_Surface to the DESTINATION SDL_Surface using SDL_BlitSurface.
-   use :source-rect SDL_Rect to position the SOURCE on the DESTINATION surface.
-   Use :destination-rect SDL_Rect to blit only a portion of the SOURCE to the DESTINATION surface."
-  (sdl::SDL_UpperBlit source source-rect destination destination-rect))
-
-(defun apply-surface-free (source destination &key (source-rect (cffi:null-pointer))
-			   (destination-x 0) (destination-y 0))
-  "Like APPLY-SURFACE just that DESTINATION-X and DESTINATION-Y define where the SOURCE is blitted to. The height and
-   width of the destination rectangle is taken from SOURCE-RECT, if available. If no keys are used then the whole SOURCE
-   is blit to (0,0) on DESTINATION."
-  (let ((drect (if (is-valid-ptr source-rect)
-		   (sdl::rectangle destination-x destination-y (sdl::rect-w source-rect) (sdl::rect-h source-rect))
-		   (cffi:null-pointer))))
-    (apply-surface source destination :source-rect source-rect :destination-rect drect)
-    (when (is-valid-ptr drect)
-      (cffi:foreign-free drect))))
-
-(defun set-colorkey (surface r g b &key (accel nil))
-  "Sets the key color for the given surface. The key color is made transparent."
-  (when (is-valid-ptr surface)
-    (if accel
-	(setf accel SDL_RLEACCEL)
-	(setf accel 0))
-    (SDL_SetColorKey surface (logior SDL_SRCCOLORKEY accel)
-		     (SDL_MapRGB (pixelformat surface) r g b))))
-
-(defun clear-colorkey (surface &key (accel nil))
-  "Removes the key color from the given surface."
-  (when (is-valid-ptr surface)
-    (if accel
-	(setf accel SDL_RLEACCEL)
-	(setf accel 0))
-    (SDL_SetColorKey surface accel 0)))
-
-(defun moveto-rectangle (rectangle dx dy)
-  "set the x and y position of the SDL_Rect."
-  (cffi:with-foreign-slots ((x y) rectangle SDL_rect)
-    (setf x dx
-          y dy)))
-
-(defun moveby-rectangle (rectangle dx dy)
-  "add dx and dy to the x and y positions of the SDL_Rect." 
-  (cffi:with-foreign-slots ((x y) rectangle SDL_rect)
-    (setf x (+ x dx)
-          y (+ y dy))))
-
-(defun rect-x (rectangle)
-  "return the x position of the SDL_Rect."
-  (cffi:foreign-slot-value rectangle 'SDL_Rect 'x))
-
-(defun (setf rect-x) (x-val rectangle)
-  "set the x position of the SDL_Rect."
-  (setf (cffi:foreign-slot-value rectangle 'SDL_Rect 'x) x-val))
-
-(defun rect-y (rectangle)
-  "return the y position of the SDL_Rect."
-  (cffi:foreign-slot-value rectangle 'SDL_Rect 'y))
-
-(defun (setf rect-y) (y-val rectangle)
-  "set the y position of the SDL_Rect."
-  (setf (cffi:foreign-slot-value rectangle 'SDL_Rect 'y) y-val))
-
-(defun rect-w (rectangle)
-  "return the width of the SDL_Rect."
-  (cffi:foreign-slot-value rectangle 'SDL_Rect 'w))
-
-(defun (setf rect-w) (w-val rectangle)
-  "set the width  of the SDL_Rect."
-  (setf (cffi:foreign-slot-value rectangle 'SDL_Rect 'w) w-val))
-
-(defun rect-h (rectangle)
-  "return the height of the SDL_Rect."
-  (cffi:foreign-slot-value rectangle 'SDL_Rect 'h))
-
-(defun (setf rect-h) (h-val rectangle)
-  "set the height of the SDL_Rect."
-  (setf (cffi:foreign-slot-value rectangle 'SDL_Rect 'h) h-val))
-
-(defun new-rect ()
-  "Creates a new SDL_Rect using malloc."
-  (cffi:foreign-alloc 'SDL_Rect))
-
-(defun rectangle (x y w h &optional (rect (new-rect)))
-  "allocate and return an SDL_Rect structure initialized to the provided parameters.
-   If the &optional rec contains an SDL_Rect, then this structure is initialized and returned."
-  (labels ((set-rectangle (dx dy dw dh)
-	     (cffi:with-foreign-slots ((x y w h) rect SDL_rect)
-	       (setf x dx
-		     y dy
-		     w dw
-		     h dh))))
-    (if (is-valid-ptr rect)
-	(set-rectangle x y w h)))
-  rect)
-
-(defun copy-rectangle (src dest)
-  "Copy the x, y, w and h values from the src to the dest rectangle."
-  (setf (cffi:foreign-slot-value dest 'SDL_Rect 'x) (cffi:foreign-slot-value src 'SDL_Rect 'x)
-        (cffi:foreign-slot-value dest 'SDL_Rect 'y) (cffi:foreign-slot-value src 'SDL_Rect 'y)
-        (cffi:foreign-slot-value dest 'SDL_Rect 'w) (cffi:foreign-slot-value src 'SDL_Rect 'w)
-        (cffi:foreign-slot-value dest 'SDL_Rect 'h) (cffi:foreign-slot-value src 'SDL_Rect 'h)))
-
-(defun surf-w (surface)
-  "return the width of the SDL_surface."
-  (cffi:foreign-slot-value surface 'SDL_Surface 'w))
-
-(defun surf-h (surface)
-  "return the height of the SDL_Surface." 
-  (cffi:foreign-slot-value surface 'SDL_Surface 'h))
-
-(defun get-native-window ()
-  (let ((wm-info (cffi:foreign-alloc 'sdl::SDL_SysWMinfo)))
-      ;; Set the wm-info structure to the current SDL version.
-      (sdl::sdl_version (cffi:foreign-slot-value wm-info 'sdl::SDL_SysWMinfo 'sdl::version))
-      (sdl::SDL_GetWMInfo wm-info)
-      ;; For Windows
-      #+win32(cffi:foreign-slot-pointer wm-info 'sdl::SDL_SysWMinfo 'sdl::window)
-      ;; For something other that Windows, i.e. X
-      #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
-											      'SDL_SysWMinfo
-											      'sdl::info)
-								   'sdl::SDL_SysWMinfo_info
-								   'sdl::x11)
-					'sdl::SDL_SysWMinfo_info_x11
-					'sdl::window)))
 

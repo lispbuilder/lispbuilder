@@ -54,7 +54,7 @@
 	   ;; using the rectangle as a template. This is faster than
 	   ;; redrawing the entire window/screen.
 	   (sdl:fill-surface display-surface (random 256) (random 256) (random 256) 
-			      :template rectangle :update-surface t)))))
+			      :template rectangle :update-p t)))))
     (cffi:foreign-free rectangle)))
 
 (defun random-rects3 ()
