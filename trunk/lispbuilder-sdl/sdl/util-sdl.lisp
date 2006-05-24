@@ -52,8 +52,10 @@ stored in surface->format."
 ;; cl-sdl "cl-sdl.lisp"
 (defmacro with-possible-lock-and-update ((surface check-lock-p update-p x y w h) &body body)
   (let ((locked-p (gensym "LOCKED-P"))
-        (exit (gensym "EXIT")))
-    `(let ((,locked-p nil))
+        (exit (gensym "EXIT"))
+	(result (gensym "RESULT")))
+    `(let ((,locked-p nil)
+	   (,result nil))
       (block ,exit
         (when ,check-lock-p
           (when (must-lock-p ,surface)
@@ -61,11 +63,12 @@ stored in surface->format."
                      0)
               (return-from ,exit (values)))
             (setf ,locked-p t)))
-        (progn ,@body)
+        (setf ,result (progn ,@body))
         (when ,locked-p
           (SDL_UnlockSurface ,surface))
         (when ,update-p
           (update-surface ,surface :x ,x :y ,y :w ,w :y ,h))
+	,result
 	))))
 
 (defmacro with-surface-lock(surface &body body)
