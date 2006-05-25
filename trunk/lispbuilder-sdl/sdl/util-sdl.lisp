@@ -157,6 +157,34 @@ stored in surface->format."
          0 0 0 args)
   surface)
 
+#+nil
+(defun color-r (color)
+  (elt color 0))
+#+nil
+(defun (setf color-r) (r-val color)
+  (setf (elt color 0) r-val))
+
+#+nil
+(defun color-g (color)
+  (elt color 1))
+#+nil
+(defun (setf color-g) (g-val color)
+  (setf (elt color 1) g-val))
+
+#+nil
+(defun color-b (color)
+  (elt color 2))
+#+nil
+(defun (setf color-b) (b-val color)
+  (setf (elt color 2) b-val))
+
+#+nil
+(defun color-a (color)
+  (elt color 3))
+#+nil
+(defun (setf color-a) (a-val color)
+  (setf (elt color 3) a-val))
+
 (defun color-from-r/g/b (surface r g b)
   (sdl:SDL_MapRGB (pixelformat surface)
 		  r g b))
@@ -429,6 +457,16 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 }
 
 |#
+
+
+; NOTE this will leak memory if you don't free up the allocated SDL_Color struct yourself
+(defun get-sdlcolor (r g b)
+  "allocates and returns a SDL_Color struct."
+  (let ((c (cffi:foreign-alloc 'SDL_Color)))
+    (setf (cffi:foreign-slot-value c 'SDL_Color 'r) r
+	  (cffi:foreign-slot-value c 'SDL_Color 'g) g
+	  (cffi:foreign-slot-value c 'SDL_Color 'b) b)
+    c))
 
 ; NOTE this will leak memory if you don't free up the allocated rectangle yourself
 (defun get-surface-rect(surface)

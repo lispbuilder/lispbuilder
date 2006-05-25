@@ -31,6 +31,7 @@
    #:get-framerate
    #:get-native-window
    #:get-pixel
+   #:get-sdlcolor
    #:get-surface-rect
    #:get-timescale
    #:get-video-info
