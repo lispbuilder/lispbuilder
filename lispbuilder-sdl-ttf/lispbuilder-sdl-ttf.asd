@@ -20,7 +20,8 @@
 	      ((:file "package")
 	       (:file "library" :depends-on ("package"))
 	       (:file "sdl_ttf" :depends-on ("package" "library"))
-	       (:file "util-sdl_ttf" :depends-on ("sdl_ttf"))))))
+	       (:file "translate" :depends-on ("sdl_ttf"))
+	       (:file "util-sdl_ttf" :depends-on ("sdl_ttf" "translate"))))))
 ;     (:module "documentation"
 ;	      :components
 ;	      ((:html-file "index")
