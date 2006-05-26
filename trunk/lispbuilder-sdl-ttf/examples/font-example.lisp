@@ -5,16 +5,16 @@
 
 (in-package #:sdl-ttf-examples)
 
-(defparameter *sdl-ttf-root* "/home/nesheim/rune/lispbuilder-sdl-ttf/")
+(defvar *sdl-ttf* (merge-pathnames "Vera.ttf" (or *load-truename* *default-pathname-defaults*)))
 
 (defun font-example ()
   (let ((width 320) (height 240))
     (sdl:with-init ()
       (let ((display (sdl:set-window width height)))
 	(sdl-ttf:with-init
-	  (let ((font (sdl-ttf:open-font (concatenate 'string *sdl-ttf-root* "/examples/" "Vera.ttf") 32)))
+	  (let ((font (sdl-ttf:open-font (namestring *sdl-ttf*) 32)))
 	    (unwind-protect
-	      (let ((text-surf (sdl-ttf:make-text-surface font "Hello TTF World!" 255 255 255)))
+	      (let ((text-surf (sdl-ttf:make-text-surface font "Hello TTF World!" #(255 255 255))))
 		(sdl:apply-surface text-surf display))
 	      (sdl-ttf:close-font font))))
 	(sdl:with-events

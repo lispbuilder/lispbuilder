@@ -35,9 +35,6 @@
 (defun close-font (font)
   (TTF_CloseFont font))
 
-(defun make-text-surface (font text r g b)
-  (let ((fg-color (sdl:get-sdlcolor r g b)))
-    (unwind-protect
-      (TTF_RenderText_Solid font text fg-color)
-    (cffi:foreign-free fg-color))))
+(defun make-text-surface (font text color)
+  (RenderText_Solid font text color))
 
