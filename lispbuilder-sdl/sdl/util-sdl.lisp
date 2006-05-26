@@ -72,12 +72,15 @@ stored in surface->format."
 	))))
 
 (defmacro with-surface-lock(surface &body body)
-  (let ((surf (gensym)))
-    `(let ((,surf ,surface))
-      (progn
-	(SDL_LockSurface ,surf)
-	,@body
-	(SDL_UnlockSurface ,surf)))))
+  (let ((surf (gensym "SURF"))
+	(result (gensym "RESULT")))
+    `(let ((,surf ,surface)
+	   (,result nil))
+       (progn
+	 (SDL_LockSurface ,surf)
+	 (setf ,result (progn ,@body))
+	 (SDL_UnlockSurface ,surf)
+	 ,result))))
 
 ;; cl-sdl "cl-sdl.lisp"
 #+nil
