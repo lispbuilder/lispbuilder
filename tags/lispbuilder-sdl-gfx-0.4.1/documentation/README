@@ -1,0 +1,39 @@
+CFFI SDL_gfx Wrapper and sample code
+(C)2006 Luke Crook
+
+See COPYING for license
+
+I have tested the bindings and examples using Lispworks Personal Edition 4.4.6. However these 
+bindings should work on any lisp with a working ASDF and CFFI.
+
+1) To use sdl-gfx: 
+1.1) Start asdf.
+1.2) Start cffi; 
+		(asdf:operate 'asdf:load-op :cffi)
+1.3) Start lispbuilder-sdl;
+		(asdf:operate 'asdf:load-op :lispbuilder-sdl)
+1.3) Start lispbuilder-sdl-gfx;
+		(asdf:operate 'asdf:load-op :lispbuilder-sdl-gfx)
+1.4) The location of the SDL_gfx.dll binary must be specified:
+1.4.1) If SDL_gfx.dll is compiled manually, then the location of the SDL_gfx DLL must be set using;
+        	(setf *sdl-gfx-binaries-user-path* #P<path_to_SDL_gfx.dll>)
+       where <path_to_SDL_gfx.dll> is of the format "C:/SDL_gfx-2.0.13/lib/SDL_gfx".
+       Please note the forward-slash directory separator, even for Windows.
+1.4.2) Precompiled binaries for SDL_gfx are available in ASDF-installable packages as part of 
+       this project (lispbuilder) on Sourceforge. For example, a win32 compatible DLL is located in
+       the 'lispbuilder-sdl-gfx-binaries_v2.0.13.zip' package. 
+       If the asdf-installable package lispbuilder-sdl-gfx-binaries is used, then the binary will be
+       installed and loaded automatically using:
+		(asdf:operate 'asdf:load-op :lispbuilder-sdl-gfx-binaries)
+	
+2) To execute any of the example applications;
+2.1) Start lispbuilder-sdl-gfx-examples; 
+		(asdf:operate 'asdf:load-op :lispbuilder-sdl-gfx-examples)
+2.2) Run the examples using:
+		(sdl-gfx-examples:inbuilt-font)
+		(sdl-gfx-examples:random-circles)
+
+
+3) To create the SDL_gfx CFFI wrappers using SWIG;
+3.1) Copy sdlswig.i (the swig interface file) to the SDL_gfx directory.
+3.2) Run 'swig -cffi sdlswig.i'
