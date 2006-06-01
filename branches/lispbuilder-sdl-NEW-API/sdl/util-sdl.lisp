@@ -105,7 +105,7 @@ stored in surface->format."
 
 ;;; a
 
-(defun blit-surface (src dst &key (src-rect nil) (dst-rect nil) (free-dst nil) (free-src nil) update-p)
+(defun blit-surface (src dst &key (src-rect nil) (dst-rect nil) (position nil) (free-src nil) update-p)
   "Blits the entire SRC SDL_Surface to the DST SDL_Surface using SDL_BlitSurface.
    use :src-rect SDL_Rect to blit only a portion of the SRC to the DST surface
    Use :dst-rect SDL_Rect to position the SRC on the DST surface."
@@ -117,9 +117,6 @@ stored in surface->format."
 	  (setf dst-rect (vector (rect-x dst-rect) (rect-y dst-rect) (surf-w src) (surf-h src)))))
   (with-possible-lock-and-update (dst :check-lock-p nil :update-p update-p :template dst-rect)
     (sdl::UpperBlit src src-rect dst dst-rect))
-  (if free-dst
-      (when (is-valid-ptr dst)
-	(cffi:foreign-free dst)))
   (if free-src
       (when (is-valid-ptr src)
 	(cffi:foreign-free src)))
@@ -143,6 +140,11 @@ stored in surface->format."
 (defun clear-screen (surface &rest args)
   (apply #'fill-surface surface (vector 0 0 0) args)
   surface)
+
+(defun color (r g b &optional a)
+  (if a
+      (vector r g b a)
+      (vector r g b)))
 
 (defun color-r (color)
   (elt color 0))
@@ -482,7 +484,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 	    (otherwise SDL_NOEVENT)))
     event))
 
-(defun new-rect (&key (x 0) (y 0) (w 0) (h 0))
+(defun rectangle (x y w h)
   "Creates a new rectangle."
   (vector x y w h))
 

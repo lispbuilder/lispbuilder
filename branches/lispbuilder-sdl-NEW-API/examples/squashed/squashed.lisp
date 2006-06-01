@@ -1,59 +1,45 @@
 ;;;; (C) 2006 Jonathan Heusser, minor changes by Frank Buss
 
-(defpackage :squashed
-  (:use #:cl #:lispbuilder-sdl)
-  (:export #:main))
+(in-package #:squashed)
 
-(in-package :squashed)
-
-;; change it
-(defparameter *imagepath* "/lispbuilder-sdl/examples/squashed")
+(defvar *image-path* (or *load-truename* *default-pathname-defaults*))
 
 (defun load-image (filename)
   "load an image and sets white to transparent"
-  (let ((loaded-image (sdl::load-bmp (concatenate 'string
-                                                  *imagepath*
-                                                  filename))))
+  (let ((loaded-image (sdl::load-bmp (namestring (merge-pathnames filename *image-path*)))))
     (when loaded-image
-      (let ((optimized-image (sdl::SDL_DisplayFormat loaded-image)))
-        (sdl::SDL_FreeSurface loaded-image)
-	(when optimized-image
-	  (sdl::set-colorkey optimized-image #xff #xff #xff)
-	  optimized-image)))))
+      (sdl::convert-surface-to-display-format loaded-image :key-color (sdl::color #xff #xff #xff)))))
 
 (defun draw-image (screen image point)
   (let ((w (sdl::surf-w image))
         (h (sdl::surf-h image)))
-    (sdl::apply-surface-free image
-                             screen
-                             :source-rect (sdl::rectangle 0 0 w h)
-                             :destination-x (point-x point)
-                             :destination-y (point-y point))))
-
-(defstruct point x y)
-
+    (sdl::blit-surface image
+		       screen
+		       :src-rect (sdl:rectangle 0 0 w h)
+		       :dst-rect (sdl::point (sdl::point-x point) (sdl::point-y point)))))
+			     
 (defun in-range (p1 p2 distance)
   "return true, if the distance between p1 and p2 is not more than 'distance'"
-  (<= (+ (expt (- (point-x p1) (point-x p2)) 2)
-         (expt (- (point-y p1) (point-y p2)) 2))
+  (<= (+ (expt (- (sdl::point-x p1) (sdl::point-x p2)) 2)
+         (expt (- (sdl::point-y p1) (sdl::point-y p2)) 2))
       (expt distance 2)))
 
 (defun make-random-point ()
-  (make-point :x (random 630) :y (random 470)))
+  (vector (random 630) (random 470)))
 
 (defun show-score (score)
-  (sdl::SDL_WM_SetCaption (format nil "Squashed - Score: ~a" score) "Squashed"))
+  (sdl::WM_SetCaption (format nil "Squashed - Score: ~a" score) "Squashed"))
 
 (defun main ()
   "main entry function"
   (sdl::with-init ()
     (let ((screen (sdl::set-window 640 480))
-          (bug (load-image "/bug.bmp"))
-          (racket (load-image "/racket.bmp"))
-          (blood (load-image "/blood.bmp"))
-          (squash (load-image "/squash.bmp"))
+          (bug (load-image "bug.bmp"))
+          (racket (load-image "racket.bmp"))
+          (blood (load-image "blood.bmp"))
+          (squash (load-image "squash.bmp"))
           (bug-point (make-random-point))
-          (racket-point (make-point :x 100 :y 100))
+          (racket-point (sdl::point 100 100))
           (squashed-point nil)
           (levelticks 1000)
           (last-squash-tick 0)
@@ -64,12 +50,12 @@
       (sdl::with-events
         (:quit t)
         (:mousemotion (state x y xrel yrel)
-         (setf (point-x racket-point) x
-               (point-y racket-point) y))
+         (setf (sdl::point-x racket-point) x
+               (sdl::point-y racket-point) y))
         (:mousebuttondown (button state x y)
          ;; check if squashed
          (when (in-range racket-point bug-point 17)
-           (setf squashed-point (make-point :x x :y y)
+           (setf squashed-point (sdl::point x y)
                  last-squash-tick (sdl::SDL_GetTicks))
            (show-score (incf score))
            :; increase the bug jumping speed
@@ -77,7 +63,7 @@
              (decf levelticks 100))))
         (:idle
          ;; fill the background white
-         (sdl::fill-surface screen #xFF #xFF #xFF)
+         (sdl::fill-surface screen #(255 255 255))
          ;; draw images
          (when squashed-point
            (draw-image screen blood squashed-point))
@@ -85,8 +71,8 @@
            (setf lasttick (sdl::SDL_GetTicks)
                  bug-point (make-random-point)))
          (if (< (- (sdl::SDL_GetTicks) last-squash-tick) 500)
-             (draw-image screen squash (make-point :x 0 :y 0))
+             (draw-image screen squash (sdl::point 0 0))
            (draw-image screen bug bug-point))
          (draw-image screen racket racket-point)
          ;; blit to screen
-         (sdl::update-surface screen))))))
+         (sdl::update-screen screen))))))

@@ -21,4 +21,12 @@
 	       (:file "sdl_random_rects" :depends-on ("package"))
 	       (:static-file "font.bmp")
 	       (:static-file "lisp.bmp")
-	       (:static-file "sdl.bmp")))))
+	       (:static-file "sdl.bmp")
+	       (:module "squashed"
+			:components
+			((:file "package")
+			 (:file "squashed" :depends-on ("package"))
+			 (:static-file "blood.bmp")
+			 (:static-file "bug.bmp")
+			 (:static-file "racket.bmp")
+			 (:static-file "squash.bmp")))))))
