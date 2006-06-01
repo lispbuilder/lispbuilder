@@ -9,15 +9,8 @@
 
 (in-package #:sdl-examples) 
 
-;; #-:lispworks (defvar *bmp1-path* (merge-pathnames "examples/sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
-;; #-:lispworks (defvar *bmp2-path* (merge-pathnames "examples/lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
-
-;; #+:lispworks (defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
-;; #+:lispworks (defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
-
 (defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
 (defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
-
 
 ; window or screen height
 (defparameter *SCREEN-WIDTH* 640)
@@ -46,11 +39,15 @@
   (sdl:with-init ()
     (let ((display (sdl:set-window 640 480)))
       (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
+      (sdl:set-framerate 30)
       (sdl:with-events
 	(:quit t)
+	(:keydown (state scancode key mod unicode)
+		  (if (sdl:is-key key :SDLK_ESCAPE)
+		      (sdl:push-quitevent)))
 	(:idle
-	 (sdl:blit-surface (first *loaded-bmps*) display 10 10)
-	 (sdl:blit-surface (second *loaded-bmps*) display 300 10)
-	 (sdl:update-surface display)))
+	 (sdl:blit-surface (first *loaded-bmps*) display :dst-rect #(10 10))
+	 (sdl:blit-surface (second *loaded-bmps*) display :dst-rect #(300 10))
+	 (sdl:update-screen display)))
       (close-bmps))))
 
