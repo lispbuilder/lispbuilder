@@ -24,8 +24,8 @@
   ;; simple clipping, should be improved with Cohen-Sutherland line clipping
   (let ((width (sdl::surf-w surface))
 	(height (sdl::surf-h surface)))
-    (check-bounds 0 width x0 x1)
-    (check-bounds 0 height y0 y1))
+    (sdl::check-bounds 0 width x0 x1)
+    (sdl::check-bounds 0 height y0 y1))
 
   ;; draw line with Bresenham algorithm
   (let (x y e dx dy)

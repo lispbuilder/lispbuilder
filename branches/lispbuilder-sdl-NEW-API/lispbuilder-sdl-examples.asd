@@ -24,8 +24,7 @@
 	       (:static-file "sdl.bmp")
 	       (:module "squashed"
 			:components
-			((:file "package")
-			 (:file "squashed" :depends-on ("package"))
+			((:file "squashed")
 			 (:static-file "blood.bmp")
 			 (:static-file "bug.bmp")
 			 (:static-file "racket.bmp")

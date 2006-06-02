@@ -34,8 +34,7 @@
 	(sdl:SDL_FreeSurface surface))
   (setf *loaded-bmps* nil))
 
-
-(defun bmp_sample () "demonstrates how to manage and display images from .bmp files"
+(defun bmp-sample () "demonstrates how to manage and display images from .bmp files"
   (sdl:with-init ()
     (let ((display (sdl:set-window 640 480)))
       (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
@@ -46,6 +45,9 @@
 		  (if (sdl:is-key key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
 	(:idle
+	 (setf (first *loaded-bmps*) (sdl::convert-surface-to-display-format (first *loaded-bmps*)
+									     :key-color #(253 59 251)
+									     :free-surface t))
 	 (sdl:blit-surface (first *loaded-bmps*) display :dst-rect #(10 10))
 	 (sdl:blit-surface (second *loaded-bmps*) display :dst-rect #(300 10))
 	 (sdl:update-screen display)))

@@ -1,6 +1,6 @@
 ;;;; (C) 2006 Jonathan Heusser, minor changes by Frank Buss
 
-(in-package #:squashed)
+(in-package #:lispbuilder-sdl-examples)
 
 (defvar *image-path* (or *load-truename* *default-pathname-defaults*))
 
@@ -25,13 +25,13 @@
       (expt distance 2)))
 
 (defun make-random-point ()
-  (vector (random 630) (random 470)))
+  (sdl::point (random 630) (random 470)))
 
 (defun show-score (score)
   (sdl::WM_SetCaption (format nil "Squashed - Score: ~a" score) "Squashed"))
 
-(defun main ()
-  "main entry function"
+(defun squashed ()
+  "Squashed: main entry function"
   (sdl::with-init ()
     (let ((screen (sdl::set-window 640 480))
           (bug (load-image "bug.bmp"))
