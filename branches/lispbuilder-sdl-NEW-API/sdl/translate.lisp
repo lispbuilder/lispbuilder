@@ -5,18 +5,6 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defun create-list-if-not (var)
-  (if (listp var)
-      var
-      (list var)))
-
-(defun map-color (surface color)
-  (if (equal 3 (length color))
-      (sdl:SDL_MapRGB (pixelformat surface)
-		      (color-r color) (color-g color) (color-b color))
-      (sdl:SDL_MapRGBA (pixelformat surface)
-		       (color-r color) (color-g color) (color-b color) (color-a color))))
-
 (defctype sdl-surface :pointer)
 (defctype sdl-rectangle :pointer)
 (defctype sdl-string :string)
@@ -42,6 +30,18 @@
 (cffi:defcfun ("SDL_RWFromFile" RWFromFile) :pointer
   (file sdl-string)
   (mode sdl-string))
+
+(cffi:defcfun ("SDL_VideoDriverName" VideoDriverName) :pointer
+  (namebuf :pointer)
+  (maxlen :int))
+
+(cffi:defcfun ("SDL_SetClipRect" SetClipRect) :void
+  (surface sdl-surface)
+  (rect sdl-rectangle))
+
+(cffi:defcfun ("SDL_GetClipRect" GetClipRect) :void
+  (surface sdl-surface)
+  (rect :pointer))
 
 (defmethod translate-to-foreign (value (type (eql 'sdl-surface)))
   (unless (is-valid-ptr value)

@@ -34,9 +34,11 @@
 	(sdl:SDL_FreeSurface surface))
   (setf *loaded-bmps* nil))
 
-(defun bmp-sample () "demonstrates how to manage and display images from .bmp files"
+(defun bmp-sample ()
+  "demonstrates how to manage and display images from .bmp files"
   (sdl:with-init ()
     (let ((display (sdl:set-window 640 480)))
+      (format t "Video driver name: ~A~%" (sdl::video-driver-name))
       (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
       (sdl:set-framerate 30)
       (sdl:with-events

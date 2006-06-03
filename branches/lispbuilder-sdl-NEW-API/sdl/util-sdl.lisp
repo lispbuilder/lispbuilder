@@ -248,6 +248,16 @@ stored in surface->format."
            (- d (- sum u)))
           (t d))))
 
+(defun display-cursor (toggle)
+  (case toggle
+    (nil (SDL_ShowCursor sdl_disable))
+    (t (SDL_ShowCursor sdl_enable))))
+
+(defun query-cursor ()
+  (case (SDL_ShowCursor sdl_query)
+    (sdl_disable nil)
+    (sdl_enable t)))
+
 (defun random-rect (bound-w bound-h)
   (let* ((x (random bound-w))
 	 (y (random bound-h))
@@ -300,6 +310,14 @@ stored in surface->format."
   template)
 
 ;;; g
+
+(defun get-clip-rect (surface rect)
+  (cffi:with-foreign-object (r 'sdl_rect)
+    (getcliprect surface r)
+    (vector (cffi:foreign-slot-value r sdl_rect x)
+	    (cffi:foreign-slot-value r sdl_rect y)
+	    (cffi:foreign-slot-value r sdl_rect w)
+	    (cffi:foreign-slot-value r sdl_rect h))))
 
 (defun get-native-window ()
   (let ((wm-info (cffi:foreign-alloc 'sdl::SDL_SysWMinfo)))
@@ -435,6 +453,26 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 ;;; j
 ;;; k
 ;;; l
+
+(defun list-modes (flags)
+  "Returns a LIST of rects  for each available screen dimension "
+  "for the given format and video flags, sorted largest to smallest. "
+  "Returns NIL if there are no dimensions available for a particular format, "
+  "or T if any dimension is okay for the given format."
+  (let ((modes nil)
+        (listmodes (sdl::SDL_ListModes (cffi:null-pointer) (set-flags flags))))
+    (cond
+      ((cffi:null-pointer-p listmodes)
+       nil)
+      ((equal (cffi:pointer-address listmodes) 4294967295)
+       t)
+      (t
+       (do ((i 0 (1+ i)))
+	   ((cffi:null-pointer-p (cffi:mem-ref (cffi:mem-aref listmodes 'sdl:sdl_rect i) :pointer)) (reverse modes))
+	 (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes 'sdl:sdl_rect i) :pointer)))
+	   (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl:sdl_rect 'sdl:w)
+				     (cffi:foreign-slot-value rect 'sdl:sdl_rect 'sdl:h))
+			     modes))))))))
 
 (defun load-bmp(filename)
   "load in the supplied filename, must be a bmp file"
@@ -678,6 +716,10 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 	  (SDL_SetColorKey surface (logior SDL_SRCCOLORKEY accel) (map-color surface color))))
     surface))
 
+(defun set-clip-rect (surface rect)
+  (setcliprect surface rect))
+
+
 (defun set-flags (&rest keyword-args)
   (if (listp (first keyword-args))
       (let ((keywords 
@@ -762,6 +804,15 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 
 ;;; v
 
+(defun video-driver-name ()
+  (let ((function-return-val nil)
+	(string-return-val nil))
+    (setf string-return-val (with-foreign-pointer-as-string (str 100 str-size)
+			      (setf function-return-val (videodrivername str str-size))))
+    (if (cffi:null-pointer-p function-return-val)
+	nil
+	string-return-val)))
+
 ;; cl-sdl "cl-sdl.lisp"
 ;; vraster -- used to fill arbitrary convex polygons.
 ;; A structure with 2 arrays, holding the top and bottom
@@ -783,6 +834,10 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
   (values))
 
 ;;; w
+
+(defun warp-mouse (point)
+  (sdl_warpmouse (point-x point) (point-y point)))
+
 ;;; x
 ;;; y
 ;;; z
