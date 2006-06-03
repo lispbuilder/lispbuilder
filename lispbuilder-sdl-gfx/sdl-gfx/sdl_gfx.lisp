@@ -1,15 +1,10 @@
-
-;;;; SDL_gfx v2.0.13 CFFI lisp wrapper
-;;;; Part of the CL-Gardeners project
-;;;; http://wiki.alu.org/Application_Builder
-;;;; (C)2006 Luke J Crook
-;;;; See COPYING for license
+;; SDL_gfx library using CFFI for foreign function interfacing...
+;; (C)2006 Luke Crook <luke@balooga.com>
+;; see COPYING for license
 
 (in-package #:lispbuilder-sdl-gfx)
 
-(defparameter gfxPrimitivesFontdata (cffi:foreign-alloc :char :count 2048 :initial-element 0))
-
-(let ((font-data 
+(defparameter font-data
   '("0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x7e" "0x81" "0xa5" "0x81" "0xbd" "0x99" "0x81" "0x7e"
     "0x7e" "0xff" "0xdb" "0xff" "0xc3" "0xe7" "0xff" "0x7e" "0x6c" "0xfe" "0xfe" "0xfe" "0x7c" "0x38" "0x10" "0x00"
     "0x10" "0x38" "0x7c" "0xfe" "0x7c" "0x38" "0x10" "0x00" "0x38" "0x7c" "0x38" "0xfe" "0xfe" "0xd6" "0x10" "0x38"
@@ -137,24 +132,7 @@
     "0x38" "0x6c" "0x6c" "0x38" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x18" "0x18" "0x00" "0x00" "0x00"
     "0x00" "0x00" "0x00" "0x18" "0x00" "0x00" "0x00" "0x00" "0x0f" "0x0c" "0x0c" "0x0c" "0xec" "0x6c" "0x3c" "0x1c"
     "0x6c" "0x36" "0x36" "0x36" "0x36" "0x00" "0x00" "0x00" "0x78" "0x0c" "0x18" "0x30" "0x7c" "0x00" "0x00" "0x00"
-    "0x00" "0x00" "0x3c" "0x3c" "0x3c" "0x3c" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00")))
-   (dotimes (i 2048)
-     (setf (cffi:mem-aref gfxPrimitivesFontdata :unsigned-char i) (parse-integer (first font-data) 
-										 :junk-allowed t :start 2 :radix 16))
-     (setf font-data (cdr font-data))))
-
-;;;SWIG wrapper code starts here
-
-(defmacro defanonenum (&body enums)
-   "Converts anonymous enums to defconstants."
-  `(progn ,@(loop for value in enums
-                  for index = 0 then (1+ index)
-                  when (listp value) do (setf index (second value)
-                                              value (first value))
-                  collect `(defconstant ,value ,index))))
-
-;;;SWIG wrapper code ends here
-
+    "0x00" "0x00" "0x3c" "0x3c" "0x3c" "0x3c" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00"))
 
 (defconstant FPS_UPPER_LIMIT 200)
 
@@ -196,14 +174,17 @@
 (defcstruct tColorY
 	(y :uint8))
 
+
+(defctype sdl-gfx-font-data :pointer)
+
 (defcfun ("rotozoomSurface" rotozoomSurface) :pointer
-  (src :pointer)
+  (src sdl::sdl-surface)
   (angle :double)
   (zoom :double)
   (smooth :int))
 
 (defcfun ("rotozoomSurfaceXY" rotozoomSurfaceXY) :pointer
-  (src :pointer)
+  (src sdl::sdl-surface)
   (angle :double)
   (zoomx :double)
   (zoomy :double)
@@ -227,7 +208,7 @@
   (dstheight :pointer))
 
 (defcfun ("zoomSurface" zoomSurface) :pointer
-  (src :pointer)
+  (src sdl::sdl-surface)
   (zoomx :double)
   (zoomy :double)
   (smooth :int))
@@ -239,6 +220,7 @@
   (zoomy :double)
   (dstwidth :pointer)
   (dstheight :pointer))
+
 
 (defcfun ("SDL_imageFilterMMXdetect" SDL_imageFilterMMXdetect) :int)
 
@@ -501,14 +483,15 @@
 
 (defconstant SDL_GFXPRIMITIVES_MICRO 13)
 
+
 (defcfun ("pixelColor" pixelColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (color :uint32))
 
 (defcfun ("pixelRGBA" pixelRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (r :uint8)
@@ -517,14 +500,14 @@
   (a :uint8))
 
 (defcfun ("hlineColor" hlineColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (x2 :int16)
   (y :int16)
   (color :uint32))
 
 (defcfun ("hlineRGBA" hlineRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (x2 :int16)
   (y :int16)
@@ -534,14 +517,14 @@
   (a :uint8))
 
 (defcfun ("vlineColor" vlineColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y1 :int16)
   (y2 :int16)
   (color :uint32))
 
 (defcfun ("vlineRGBA" vlineRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y1 :int16)
   (y2 :int16)
@@ -551,7 +534,7 @@
   (a :uint8))
 
 (defcfun ("rectangleColor" rectangleColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -559,7 +542,7 @@
   (color :uint32))
 
 (defcfun ("rectangleRGBA" rectangleRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -570,7 +553,7 @@
   (a :uint8))
 
 (defcfun ("boxColor" boxColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -578,7 +561,7 @@
   (color :uint32))
 
 (defcfun ("boxRGBA" boxRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -589,7 +572,7 @@
   (a :uint8))
 
 (defcfun ("lineColor" lineColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -597,7 +580,7 @@
   (color :uint32))
 
 (defcfun ("lineRGBA" lineRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -608,7 +591,7 @@
   (a :uint8))
 
 (defcfun ("aalineColor" aalineColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -616,7 +599,7 @@
   (color :uint32))
 
 (defcfun ("aalineRGBA" aalineRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -627,14 +610,14 @@
   (a :uint8))
 
 (defcfun ("circleColor" circleColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (r :int16)
   (color :uint32))
 
 (defcfun ("circleRGBA" circleRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -644,14 +627,14 @@
   (a :uint8))
 
 (defcfun ("aacircleColor" aacircleColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (r :int16)
   (color :uint32))
 
 (defcfun ("aacircleRGBA" aacircleRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -661,14 +644,14 @@
   (a :uint8))
 
 (defcfun ("filledCircleColor" filledCircleColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (r :int16)
   (color :uint32))
 
 (defcfun ("filledCircleRGBA" filledCircleRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -678,7 +661,7 @@
   (a :uint8))
 
 (defcfun ("ellipseColor" ellipseColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
@@ -686,7 +669,7 @@
   (color :uint32))
 
 (defcfun ("ellipseRGBA" ellipseRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
@@ -697,7 +680,7 @@
   (a :uint8))
 
 (defcfun ("aaellipseColor" aaellipseColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (xc :int16)
   (yc :int16)
   (rx :int16)
@@ -705,7 +688,7 @@
   (color :uint32))
 
 (defcfun ("aaellipseRGBA" aaellipseRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
@@ -716,7 +699,7 @@
   (a :uint8))
 
 (defcfun ("filledEllipseColor" filledEllipseColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
@@ -724,7 +707,7 @@
   (color :uint32))
 
 (defcfun ("filledEllipseRGBA" filledEllipseRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
@@ -735,7 +718,7 @@
   (a :uint8))
 
 (defcfun ("pieColor" pieColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -744,7 +727,7 @@
   (color :uint32))
 
 (defcfun ("pieRGBA" pieRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -756,7 +739,7 @@
   (a :uint8))
 
 (defcfun ("filledPieColor" filledPieColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -765,7 +748,7 @@
   (color :uint32))
 
 (defcfun ("filledPieRGBA" filledPieRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -777,7 +760,7 @@
   (a :uint8))
 
 (defcfun ("trigonColor" trigonColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -787,7 +770,7 @@
   (color :uint32))
 
 (defcfun ("trigonRGBA" trigonRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -800,7 +783,7 @@
   (a :uint8))
 
 (defcfun ("aatrigonColor" aatrigonColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -810,7 +793,7 @@
   (color :uint32))
 
 (defcfun ("aatrigonRGBA" aatrigonRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -823,7 +806,7 @@
   (a :uint8))
 
 (defcfun ("filledTrigonColor" filledTrigonColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -833,7 +816,7 @@
   (color :uint32))
 
 (defcfun ("filledTrigonRGBA" filledTrigonRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -846,14 +829,14 @@
   (a :uint8))
 
 (defcfun ("polygonColor" polygonColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
   (color :uint32))
 
 (defcfun ("polygonRGBA" polygonRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -863,14 +846,14 @@
   (a :uint8))
 
 (defcfun ("aapolygonColor" aapolygonColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
   (color :uint32))
 
 (defcfun ("aapolygonRGBA" aapolygonRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -880,14 +863,14 @@
   (a :uint8))
 
 (defcfun ("filledPolygonColor" filledPolygonColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
   (color :uint32))
 
 (defcfun ("filledPolygonRGBA" filledPolygonRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -897,7 +880,7 @@
   (a :uint8))
 
 (defcfun ("bezierColor" bezierColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -905,7 +888,7 @@
   (color :uint32))
 
 (defcfun ("bezierRGBA" bezierRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -916,14 +899,14 @@
   (a :uint8))
 
 (defcfun ("characterColor" characterColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (c :char)
   (color :uint32))
 
 (defcfun ("characterRGBA" characterRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (c :char)
@@ -933,14 +916,14 @@
   (a :uint8))
 
 (defcfun ("stringColor" stringColor) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (c :string)
   (color :uint32))
 
 (defcfun ("stringRGBA" stringRGBA) :int
-  (dst :pointer)
+  (dst sdl::sdl-surface)
   (x :int16)
   (y :int16)
   (c :string)
@@ -950,8 +933,19 @@
   (a :uint8))
 
 (defcfun ("gfxPrimitivesSetFont" gfxPrimitivesSetFont) :void
-  (fontdata :pointer)
+  (fontdata sdl-gfx-font-data)
   (cw :int)
   (ch :int))
 
 
+(defmethod translate-to-foreign (value (type (eql 'sdl-gfx-font-data)))
+  (let ((gfxPrimitivesFontdata (cffi:foreign-alloc :char :count (length value) :initial-element 0)))
+    (dotimes (i (length value))
+      (setf (cffi:mem-aref gfxPrimitivesFontdata :unsigned-char i) (parse-integer (first value)
+										  :junk-allowed t :start 2 :radix 16))
+      (setf value (cdr value)))
+    (values gfxPrimitivesFontdata t)))
+
+(defmethod free-translated-object (ptr (name (eql 'sdl-gfx-font-data)) free-p)
+  (if free-p
+      (cffi:foreign-free ptr)))

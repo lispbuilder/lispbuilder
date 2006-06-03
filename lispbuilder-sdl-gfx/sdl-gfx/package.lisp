@@ -65,64 +65,41 @@
    #:SDL_setFramerate
    #:SMOOTHING_OFF
    #:SMOOTHING_ON
-   #:aacircleColor
-   #:aacircleRGBA
-   #:aaellipseColor
-   #:aaellipseRGBA
-   #:aalineColor
-   #:aalineRGBA
-   #:aapolygonColor
-   #:aapolygonRGB
-   #:aatrigonColor
-   #:aatrigonRGBA
-   #:bezierColor
-   #:bezierRGBA
-   #:boxColor
-   #:boxRGBA
-   #:characterColor
-   #:characterRGBA
-   #:circleColor
-   #:circleRGBA
-   #:ellipseColor
-   #:ellipseRGBA
-   #:filledCircleColor
-   #:filledCircleRGBA
-   #:filledEllipseColor
-   #:filledEllipseRGBA
-   #:filledPieColor
-   #:filledPieRGBA
-   #:filledPolygonColor
-   #:filledPolygonRGBA
-   #:filledTrigonColor
-   #:filledTrigonRGBA
-   #:gfxPrimitivesFontdata
+   #:draw-aacircle
+   #:draw-aaellipse
+   #:draw-aaline
+   #:draw-aapolygon
+   #:draw-aatrigon
+   #:draw-bezier
+   #:draw-box
+   #:draw-character
+   #:draw-circle
+   #:draw-ellipse
+   #:draw-filledCircle
+   #:draw-filledEllipse
+   #:draw-filledPie
+   #:draw-filledPolygon
+   #:draw-filledTrigon
+   #:draw-hline
+   #:draw-pie
+   #:draw-pixel
+   #:draw-polygon
+   #:draw-rectangle
+   #:draw-rotozoom
+   #:draw-rotozoom-Size
+   #:draw-rotozoom-Size-XY
+   #:draw-rotozoom-XY
+   #:draw-string
+   #:draw-trigon
+   #:draw-vline
+   #:draw-vline
+   #:draw-zoom
+   #:draw-zoom-Size
+   #:font-data
    #:gfxPrimitivesSetFont
-   #:hlineColor
-   #:hlineRGBA
-   #:lineColor
-   #:lineRGBA
-   #:pieColor
-   #:pieRGBA
-   #:pixelColor
-   #:pixelRGBA
-   #:polygonColor
-   #:polygonRGBA
-   #:rectangleColor
-   #:rectangleRGBA
-   #:rotozoomSurface
-   #:rotozoomSurfaceSize
-   #:rotozoomSurfaceSizeXY
-   #:rotozoomSurfaceXY
-   #:stringColor
-   #:stringRGBA
+   #:map-color
    #:tColorRGBA
    #:tColorY
-   #:trigonColor
-   #:trigonRGBA
-   #:vlineColor
-   #:vlineRGBA
-   #:zoomSurface
-   #:zoomSurfaceSize
    ;; util-sdl_gfx
    ))
 
