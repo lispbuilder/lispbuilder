@@ -14,8 +14,8 @@
 	(sdl-ttf:with-init
 	  (let ((font (sdl-ttf:open-font (namestring *sdl-ttf*) 32)))
 	    (unwind-protect
-	      (let ((text-surf (sdl-ttf:make-text-surface font "Hello TTF World!" #(255 255 255))))
-		(sdl:apply-surface text-surf display))
+		 (let ((text-surf (sdl-ttf:make-text-surface font "Hello TTF World!" #(255 255 255))))
+		   (sdl:blit-surface text-surf display))
 	      (sdl-ttf:close-font font))))
 	(sdl:with-events
 	  (:quit t)
