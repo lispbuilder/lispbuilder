@@ -8,6 +8,7 @@
 (defctype sdl-surface :pointer)
 (defctype sdl-rectangle :pointer)
 (defctype sdl-string :string)
+(defctype SDL-RWops :pointer)
 
 (cffi:defcfun ("SDL_UpperBlit" UpperBlit) :int
   (src sdl-surface)
@@ -47,6 +48,17 @@
   (unless (is-valid-ptr value)
     (error "Error: sdl-surface must be a valid pointer"))
   value)
+
+(defmethod translate-from-foreign (value (type (eql 'sdl-surface)))
+  (if (is-valid-ptr value)
+      value
+      nil))
+
+(defmethod translate-to-foreign (value (type (eql 'SDL-RWops)))
+  (unless (is-valid-ptr value)
+    (error "Error: SDL-RWops must be a valid, non-NULL pointer"))
+  value)
+
 
 (defmethod translate-to-foreign (value (type (eql 'sdl-rectangle)))
   (if value
