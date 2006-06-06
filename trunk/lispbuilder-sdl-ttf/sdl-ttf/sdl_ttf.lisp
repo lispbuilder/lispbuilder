@@ -6,7 +6,6 @@
 (defctype ttf-font :pointer)
 (defctype ttf-return-val-0-1 :int)
 (defctype ttf-return-val-0+1 :int)
-(defctype SDL-RWops :pointer)
 (defctype ttf-font-style :int)
 (defctype sdl-color :pointer)
 (defctype ttf-swapped-unicode :int)
@@ -66,13 +65,13 @@
 
 ;; extern DECLSPEC TTF_Font * SDLCALL TTF_OpenFontRW(SDL_RWops *src, int freesrc, int ptsize);
 (defcfun ("TTF_OpenFontRW" Open-Font-RW) ttf-font
-  (src SDL-RWops)
+  (src sdl::SDL-RWops)
   (freesrc :int)
   (ptsize :int))
 
 ;; extern DECLSPEC TTF_Font * SDLCALL TTF_OpenFontIndexRW(SDL_RWops *src, int freesrc, int ptsize, long index);
 (defcfun ("TTF_OpenFontIndexRW" Open-Font-Index-RW) ttf-font
-  (src SDL-RWops)
+  (src sdl::SDL-RWops)
   (freesrc :int)
   (ptsize :int)
   (index :long))
