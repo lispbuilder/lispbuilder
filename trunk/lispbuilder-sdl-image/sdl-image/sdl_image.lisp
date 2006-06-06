@@ -1,4 +1,4 @@
-;;;; SDL_ttf2.0 CFFI lisp wrapper
+;;;; SDL_image v1.2.5 CFFI lisp wrapper
 
 (in-package #:lispbuilder-sdl-image)
 
