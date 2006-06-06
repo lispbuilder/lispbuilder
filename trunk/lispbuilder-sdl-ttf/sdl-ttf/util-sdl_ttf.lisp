@@ -31,6 +31,68 @@
 
 ;;; Functions
 
+;;; d
+
+(defun draw-text-solid (surface font text color position &key update-p)
+  (let ((text-surf (Render-Text-Solid font text color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+(defun draw-text-UTF8-solid (surface font text color position &key update-p)
+  (let ((text-surf (Render-UTF8-Solid font text color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+;; (defun draw-text-UNICODE-solid (surface font text color position &key update-p)
+;;   (let ((text-surf (RenderUNICODE-Solid font text color)))
+;;     (if text-surf
+;; 	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+(defun draw-text-GLYPH-solid (surface font ch color position &key update-p)
+  (let ((text-surf (Render-Glyph-Solid font ch color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+(defun draw-text-shaded (surface font text fg-color bg-color position &key update-p)
+  (let ((text-surf (Render-Text-shaded font text fg-color bg-color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+(defun draw-text-UTF8-shaded (surface font text fg-color bg-color position &key update-p)
+  (let ((text-surf (Render-UTF8-shaded font text fg-color bg-color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+;; (defun draw-text-UNICODE-solid (surface font text color position &key update-p)
+;;   (let ((text-surf (RenderUNICODE-Solid font text color)))
+;;     (if text-surf
+;; 	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+(defun draw-text-GLYPH-shaded (surface font ch fg-color bg-color position &key update-p)
+  (let ((text-surf (Render-Glyph-shaded font ch fg-color bg-color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+(defun draw-text-blended (surface font text color position &key update-p)
+  (let ((text-surf (Render-Text-blended font text color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+(defun draw-text-UTF8-blended (surface font text color position &key update-p)
+  (let ((text-surf (Render-UTF8-blended font text color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+;; (defun draw-text-UNICODE-solid (surface font text color position &key update-p)
+;;   (let ((text-surf (RenderUNICODE-Solid font text color)))
+;;     (if text-surf
+;; 	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
+(defun draw-text-GLYPH-blended (surface font ch color position &key update-p)
+  (let ((text-surf (Render-Glyph-blended font ch color)))
+    (if text-surf
+	(sdl:blit-surface text-surf surface :dst-rect position :free-src t :update-p update-p))))
+
 ;;; g
 
 (defun get-Glyph-Metric (font ch &key metric)

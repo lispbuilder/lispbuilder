@@ -11,12 +11,22 @@
    ;; util-sdl_ttf.lisp
 
    #:close-font
+   #:draw-text-blended
+   #:draw-text-glyph-blended
+   #:draw-text-glyph-shaded
+   #:draw-text-glyph-solid
+   #:draw-text-shaded
+   #:draw-text-solid
+   #:draw-text-utf8-blended
+   #:draw-text-utf8-shaded
+   #:draw-text-utf8-solid
    #:get-Glyph-Metric
    #:get-Size-Text
    #:get-Size-UTF8
    #:make-text-surface
    #:open-font
    #:with-init
+
    
    ;; sdl_ttf.lisp
 
