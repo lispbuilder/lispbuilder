@@ -7,7 +7,7 @@
 (defctype ttf-return-val-0-1 :int)
 (defctype ttf-return-val-0+1 :int)
 (defctype ttf-font-style :int)
-(defctype sdl-color :pointer)
+(defctype sdl-color sdl::sdl_color)
 (defctype ttf-swapped-unicode :int)
 
 ;; #define SDL_TTF_MAJOR_VERSION	2
