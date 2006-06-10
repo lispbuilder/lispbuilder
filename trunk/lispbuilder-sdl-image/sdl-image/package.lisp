@@ -9,6 +9,10 @@
   (:export
 
    ;; util-sdl_image.lisp
+
+   #:load-image
+   #:image-type
+   #:is-image
    
    ;; sdl_image.lisp
    #:Linked-Version
