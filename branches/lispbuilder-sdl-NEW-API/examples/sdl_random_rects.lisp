@@ -11,44 +11,43 @@
 (in-package #:sdl-examples) 
   
 (defun random-rects1 ()
-  (let ((width 640) (height 480))
-    (sdl:with-init ();Initialize Systems
-      (sdl:set-framerate 0) ; Unlock the framerate.
-      (let ((display (sdl:set-window width height
-				     :flags sdl:SDL_SWSURFACE
-				     :title-caption "Random-rects1"
-				     :icon-caption "Random-rects1")))
+  (let ((width 320) (height 240))
+    (sdl:with-init ()			;Initialize Systems
+      (sdl:set-framerate 0)		; Unlock the framerate.
+      (sdl::with-surface ((sdl:set-window width height
+					  :flags sdl:SDL_SWSURFACE
+					  :title-caption "Random-rects1"
+					  :icon-caption "Random-rects1")
+			  ;;:surface-name display
+			  )
 	(sdl:with-events
 	  (:quit t)
 	  (:keydown (state scancode key mod unicode)
 		    (if (sdl:is-key key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
 	  (:idle
-	   ;Update only the portion of the display that has been written to.
-	   (sdl:draw-rect display (sdl::random-rect width height) (sdl::random-color) :update-p t)))))))
+	   ;;Update only the portion of the display that has been written to.
+	   (sdl:draw-rect sdl::*surface-name ;; display
+			  (sdl::random-rect width height) (sdl::random-color) :update-p t)))))))
 
 (defun random-rects2 ()
-  (let ((width 640) (height 480))
-    (sdl:with-init ();Initialize Systems
-      (sdl:set-framerate 0) ; Unlock the framerate.
-      (let ((display (sdl:set-window width height
-				     :flags sdl:SDL_SWSURFACE
-				     :title-caption "Random-rects2"
-				     :icon-caption "Random-rects2")))
-	(sdl:with-events
-	  (:quit t)
-	  (:keydown (state scancode key mod unicode)
-		    (if (sdl:is-key key :SDLK_ESCAPE)
-			(sdl:push-quitevent)))
-	  (:idle
-	   (sdl:draw-rect display (sdl::random-rect width height) (sdl::random-color) :update-p nil)
-	   ;Update only entire display.
-	   (sdl:update-screen display)))))))
+  (sdl:with-init ()			;Initialize Systems
+    (sdl:set-framerate 0)		; Unlock the framerate.
+    (sdl::with-display (320 240 :display dsp)
+      (sdl:with-events
+	(:quit t)
+	(:keydown (state scancode key mod unicode)
+		  (if (sdl:is-key key :SDLK_ESCAPE)
+		      (sdl:push-quitevent)))
+	(:idle
+	 (sdl:draw-rect dsp (sdl::random-rect (sdl:surf-w dsp) (sdl:surf-h dsp)) (sdl::random-color) :update-p nil)
+	 ;;Update only entire display.
+	 (sdl:update-screen dsp))))))
 
 (defun random-rects3 ()
   (let ((width 640) (height 480))
-    (sdl:with-init ();Initialize Systems
-      (sdl:set-framerate 0) ; Unlock the framerate.
+    (sdl:with-init ()			;Initialize Systems
+      (sdl:set-framerate 0)		; Unlock the framerate.
       (let ((display (sdl:set-window width height
 				     :flags '(sdl:SDL_ANYFORMAT sdl:SDL_SWSURFACE)
 				     :title-caption "Random-rects3"

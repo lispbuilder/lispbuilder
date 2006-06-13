@@ -97,9 +97,30 @@ stored in surface->format."
     (unwind-protect (progn ,@body)
       (sdl:free-vraster ,buffer))))
 
+(defmacro with-display ((width height &key (flags SDL_SWSURFACE) (bpp 0)
+			       (title-caption nil) (icon-caption nil)
+			       (display '*display)) &body body)
+  (let ((body-value (gensym "body-value")))
+    `(let ((,body-value nil)
+	   (,display (set-window ,width ,height :bpp ,bpp :flags ,flags
+				 :title-caption ,title-caption :icon-caption ,icon-caption)))
+      (if (is-valid-ptr ,display)
+	  (setf ,body-value (progn
+			      ,@body)))
+      (if (is-valid-ptr ,display)
+	  (SDL_FreeSurface ,display))
+      ,body-value)))
 
-
-
+(defmacro with-surface ((surface-ptr &key (surface-name '*surface-name)) &body body)
+  (let ((body-value (gensym "body-value")))
+    `(let ((,body-value nil)
+	   (,surface-name ,surface-ptr))
+      (when (is-valid-ptr ,surface-name)
+	(setf ,body-value (progn
+			    ,@body))
+	(if (is-valid-ptr ,surface-name)
+	    (SDL_FreeSurface ,surface-name)))
+      ,body-value)))
 
 ;;;; Functions
 
@@ -119,7 +140,7 @@ stored in surface->format."
     (sdl::UpperBlit src src-rect dst dst-rect))
   (if free-src
       (when (is-valid-ptr src)
-	(cffi:foreign-free src)))
+	(SDL_FreeSurface src)))
   dst-rect)
 
 ;;; c
