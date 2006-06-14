@@ -99,25 +99,23 @@ stored in surface->format."
 
 (defmacro with-display ((width height &key (flags SDL_SWSURFACE) (bpp 0)
 			       (title-caption nil) (icon-caption nil)
-			       (display '*display)) &body body)
+			       (display-name '*display)) &body body)
   (let ((body-value (gensym "body-value")))
     `(let ((,body-value nil)
-	   (,display (set-window ,width ,height :bpp ,bpp :flags ,flags
+	   (,display-name (set-window ,width ,height :bpp ,bpp :flags ,flags
 				 :title-caption ,title-caption :icon-caption ,icon-caption)))
-      (if (is-valid-ptr ,display)
-	  (setf ,body-value (progn
-			      ,@body)))
-      (if (is-valid-ptr ,display)
-	  (SDL_FreeSurface ,display))
+      (if (is-valid-ptr ,display-name)
+	  (setf ,body-value (progn ,@body)))
+      (if (is-valid-ptr ,display-name)
+	  (SDL_FreeSurface ,display-name))
       ,body-value)))
 
-(defmacro with-surface ((surface-ptr &key (surface-name '*surface-name)) &body body)
+(defmacro with-surface ((surface-ptr &key (surface-name '*surface)) &body body)
   (let ((body-value (gensym "body-value")))
     `(let ((,body-value nil)
 	   (,surface-name ,surface-ptr))
       (when (is-valid-ptr ,surface-name)
-	(setf ,body-value (progn
-			    ,@body))
+	(setf ,body-value (progn ,@body))
 	(if (is-valid-ptr ,surface-name)
 	    (SDL_FreeSurface ,surface-name)))
       ,body-value)))

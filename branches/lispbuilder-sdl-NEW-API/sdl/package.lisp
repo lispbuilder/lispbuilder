@@ -71,12 +71,16 @@
    #:to-radian
    #:update-screen			; from cl-sdl
    #:update-surface
+   #:with-display
    #:with-events
    #:with-init
    #:with-locked-surface		; from cl-sdl
    #:with-must-locksurface
    #:with-possible-lock-and-update	; from cl-sdl
+   #:with-surface
    #:with-surface-lock
+   *display
+   *surface
    
    ;; These are exports from sdlswig.i
    #:AUDIO_S16
