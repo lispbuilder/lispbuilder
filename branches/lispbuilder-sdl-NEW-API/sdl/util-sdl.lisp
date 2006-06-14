@@ -99,15 +99,15 @@ stored in surface->format."
 
 (defmacro with-display ((width height &key (flags SDL_SWSURFACE) (bpp 0)
 			       (title-caption nil) (icon-caption nil)
-			       (display-name '*display)) &body body)
+			       (surface-name '*display)) &body body)
   (let ((body-value (gensym "body-value")))
     `(let ((,body-value nil)
-	   (,display-name (set-window ,width ,height :bpp ,bpp :flags ,flags
+	   (,surface-name (set-window ,width ,height :bpp ,bpp :flags ,flags
 				 :title-caption ,title-caption :icon-caption ,icon-caption)))
-      (if (is-valid-ptr ,display-name)
+      (if (is-valid-ptr ,surface-name)
 	  (setf ,body-value (progn ,@body)))
-      (if (is-valid-ptr ,display-name)
-	  (SDL_FreeSurface ,display-name))
+      (if (is-valid-ptr ,surface-name)
+	  (SDL_FreeSurface ,surface-name))
       ,body-value)))
 
 (defmacro with-surface ((surface-ptr &key (surface-name '*surface)) &body body)
