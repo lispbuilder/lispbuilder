@@ -7,6 +7,10 @@
 
 (in-package #:lispbuilder-sdl) 
 
+;;;; Globals
+
+(defvar *default-surface* nil)
+
 ;;;; Macros
 
 ;;; c
@@ -89,13 +93,6 @@ stored in surface->format."
 	 (setf ,result (progn ,@body))
 	 (SDL_UnlockSurface ,surf)
 	 ,result))))
-
-;; cl-sdl "cl-sdl.lisp"
-#+nil
-(defmacro with-vraster ((buffer surface) &body body)
-  `(let ((,buffer (sdl:make-vraster ,surface)))
-    (unwind-protect (progn ,@body)
-      (sdl:free-vraster ,buffer))))
 
 (defmacro with-display ((width height &key (flags SDL_SWSURFACE) (bpp 0)
 			       (title-caption nil) (icon-caption nil)
