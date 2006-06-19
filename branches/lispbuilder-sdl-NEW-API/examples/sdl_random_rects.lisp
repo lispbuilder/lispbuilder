@@ -14,11 +14,11 @@
   (let ((width 320) (height 240))
     (sdl:with-init ()			; Initialize Systems
       (sdl:set-framerate 0)		; Unlock the framerate.
-      (sdl::with-surface ((sdl:set-window width height
-					  :flags sdl:SDL_SWSURFACE
-					  :title-caption "Random-rects1"
-					  :icon-caption "Random-rects1")
-			  :surface-name display)
+      (sdl::with-display (width height
+				:flags sdl:SDL_SWSURFACE
+				:title-caption "Random-rects1"
+				:icon-caption "Random-rects1"
+				:surface-name display)
 	(sdl:with-events
 	  (:quit t)
 	  (:keydown (state scancode key mod unicode)

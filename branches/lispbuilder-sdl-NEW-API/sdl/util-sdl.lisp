@@ -103,18 +103,23 @@ stored in surface->format."
 				 :title-caption ,title-caption :icon-caption ,icon-caption)))
       (if (is-valid-ptr ,surface-name)
 	  (setf ,body-value (progn ,@body)))
-      (if (is-valid-ptr ,surface-name)
-	  (SDL_FreeSurface ,surface-name))
       ,body-value)))
 
 (defmacro with-surface ((surface-ptr &key (surface-name '*surface)) &body body)
+  "Don't use this for the display surface."
   (let ((body-value (gensym "body-value")))
     `(let ((,body-value nil)
 	   (,surface-name ,surface-ptr))
       (when (is-valid-ptr ,surface-name)
 	(setf ,body-value (progn ,@body))
+	;; Here we try attempt to verify that the surface-ptr is not the actual display surface.
+	;; However according to the SDL documentation, we cannot be 100% sure.
+	;; "(SDL_GetVideoSurface) ... returns a pointer to the current display surface. If SDL is doing format
+	;; conversion on the display surface, this function returns the publicly visible surface,
+	;; not the real video surface.
 	(if (is-valid-ptr ,surface-name)
-	    (SDL_FreeSurface ,surface-name)))
+	    (unless (cffi:pointer-eq ,surface-ptr (SDL_GetVideoSurface))
+	      (SDL_FreeSurface ,surface-name))))
       ,body-value)))
 
 ;;;; Functions
@@ -753,10 +758,11 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
     a new SDL_Surface if successful.
     NIL if failed."
   (let ((surface (SDL_SetVideoMode width height bpp (set-flags flags))))
-    (if (or title-caption icon-caption) 
-	(WM_SetCaption title-caption icon-caption))
     (if (is-valid-ptr surface)
-	surface
+	(progn
+	  (if (or title-caption icon-caption) 
+	      (WM_SetCaption title-caption icon-caption))
+	  surface)
 	nil)))
 
 (defun set-window (width height &key (bpp 0) (flags SDL_SWSURFACE) title-caption icon-caption)
