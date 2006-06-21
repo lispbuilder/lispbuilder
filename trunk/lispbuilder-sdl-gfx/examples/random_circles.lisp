@@ -6,16 +6,16 @@
 (in-package #:sdl-gfx-examples) 
 
 (defun random-circles ()
-  (let ((width 640) (height 480))
-    (sdl:with-init ()
-      (let ((display (sdl:set-window width height)))
+  (sdl:with-init ()
+    (sdl:with-display (640 480 :surface-name display)
+      (let ((width (sdl:surf-w display))
+	    (height (sdl:surf-h display)))
 	(sdl:set-framerate 0)
 	(sdl:with-events
 	  (:quit t)
 	  (:idle
 	   (sdl-gfx:draw-filledCircle display
-				      (sdl::point (random width) (random height))
+				      (sdl:point (random width) (random height))
 				      (random 100)
-				      (sdl::color (random 255) (random 255) (random 255) (random 255)))
+				      (sdl:color (random 255) (random 255) (random 255) (random 255)))
 	   (sdl:update-surface display)))))))
-
