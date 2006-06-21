@@ -31,19 +31,19 @@
 	   (sdl:fill-surface display (vector #x22 #x22 #x44))
 					; Do stuff
 	   (sdl-simple-font:draw-string-right-justify display small-font 
-						      (sdl::point (1- *WINDOW-WIDTH*) (screen-center-y))
+						      (sdl:point (1- *WINDOW-WIDTH*) (screen-center-y))
 						      "draw string right justified")
 	   (sdl-simple-font:draw-string display small-font 
-					(sdl::point (+ (- (screen-center-x) 100) (random 200))
-						    (+ (- (screen-center-y) 100) (random 200)))
+					(sdl:point (+ (- (screen-center-x) 100) (random 200))
+						   (+ (- (screen-center-y) 100) (random 200)))
 					"draw string")
 	   (sdl-simple-font:draw-text-image display text-image 
-					    (sdl::point (+ (- (screen-center-x) 100) (random 200))
-							(+ (- (screen-center-y) 100) (random 200))))
+					    (sdl:point (+ (- (screen-center-x) 100) (random 200))
+						       (+ (- (screen-center-y) 100) (random 200))))
 	   (sdl-simple-font:draw-string-centered display small-font 
-						 (sdl::point (screen-center-x) (screen-center-y))
+						 (sdl:point (screen-center-x) (screen-center-y))
 						 "draw string centered")
-					;Update the whole screen 
+	   ;; Update the whole screen 
 	   (sdl:update-surface display)))
 	(sdl-simple-font:free-text-image text-image)
 	(sdl-simple-font:close-font small-font)))))

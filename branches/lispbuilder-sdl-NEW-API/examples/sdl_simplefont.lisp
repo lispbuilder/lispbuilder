@@ -26,7 +26,7 @@
 
 (defun initialise-font(bmp-file-name font-width font-height char-map-string key-color)
   "initialise a simple font using a bmp with a strip of fixed width characters mapped by the char-map-string"
-  (let ((font-surface (sdl::convert-surface-to-display-format (sdl::load-bmp bmp-file-name) :key-color key-color)))
+  (let ((font-surface (sdl:convert-surface-to-display-format (sdl:load-bmp bmp-file-name) :key-color key-color)))
     (when font-surface
       (make-font :bmp font-surface 
 		 :w font-width 
@@ -78,23 +78,23 @@
   (loop for c across str do
 	(unless (eql c #\space)
 	  (draw-character screen font point c))
-	(incf (sdl::point-x point) (font-w font))))
+	(incf (sdl:point-x point) (font-w font))))
 
 (defun draw-string-right-justify(screen font point str)
   "draw a string ending at the x y position"
-  (let ((right-x (- (sdl::point-x point) (font-w font)))
+  (let ((right-x (- (sdl:point-x point) (font-w font)))
 	(rev-str (reverse str)))
     (loop for c across rev-str do
 	  (unless (eql c #\space)
-	    (draw-character screen font (sdl::point right-x (sdl::point-y point)) c))
+	    (draw-character screen font (sdl:point right-x (sdl:point-y point)) c))
 	  (decf right-x (font-w font)))))
 
 (defun draw-string-centered(screen font point str)
   "draw a string centered at x y"
   (let ((width (* (length str) (font-w font)))) 
-    (let ((left-x (- (sdl::point-x point) (/ width 2))))
+    (let ((left-x (- (sdl:point-x point) (/ width 2))))
       (loop for c across str do
 	    (unless (eql c #\space)
-	      (draw-character screen font (sdl::point left-x (sdl::point-y point)) c))
+	      (draw-character screen font (sdl:point left-x (sdl:point-y point)) c))
 	    (incf left-x (font-w font))))))
 

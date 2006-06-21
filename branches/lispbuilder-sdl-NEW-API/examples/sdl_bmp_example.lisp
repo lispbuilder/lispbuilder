@@ -38,8 +38,11 @@
   "demonstrates how to manage and display images from .bmp files"
   (sdl:with-init ()
     (sdl:with-display (640 480 :surface-name display)
-      (format t "Video driver name: ~A~%" (sdl::video-driver-name))
+      (format t "Video driver name: ~A~%" (sdl:video-driver-name))
       (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
+      (setf (first *loaded-bmps*) (sdl:convert-surface-to-display-format (first *loaded-bmps*)
+									 :key-color #(253 59 251)
+									 :free-surface t))
       (sdl:set-framerate 30)
       (sdl:with-events
 	(:quit t)
@@ -47,9 +50,6 @@
 		  (if (sdl:is-key key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
 	(:idle
-	 (setf (first *loaded-bmps*) (sdl::convert-surface-to-display-format (first *loaded-bmps*)
-									     :key-color #(253 59 251)
-									     :free-surface t))
 	 (sdl:blit-surface (first *loaded-bmps*) display :dst-rect #(10 10))
 	 (sdl:blit-surface (second *loaded-bmps*) display :dst-rect #(300 10))
 	 (sdl:update-screen display)))

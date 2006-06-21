@@ -10,16 +10,16 @@
   
 (defun pixels ()
   "demonstrates put-pixel and get-pixel as well as color and locking functions"
-  (sdl:with-display (640 480 :surface-name display-surface :flags '(sdl:SDL_ANYFORMAT sdl:SDL_SWSURFACE))
+  (sdl:with-display (640 480 :surface-name display :flags '(sdl:SDL_ANYFORMAT sdl:SDL_SWSURFACE))
     (let ((width (sdl:surf-w display))
 	  (height (sdl:surf-h display)))
-      (sdl:set-framerate 0) ; Unlock the framerate.
+      (sdl:set-framerate 0)		; Unlock the framerate.
       (sdl:with-init ()
 	(sdl:with-events
 	  (:quit t)
 	  (:idle
-	   (sdl:draw-pixel display-surface (sdl::point (random width) (random height))
-			   (sdl::random-color display-surface)
+	   (sdl:draw-pixel display (sdl:point (random width) (random height))
+			   (sdl:random-color display)
 			   :check-lock-p t :update-p t :clipping-p t)))
-	(format t "Pixel at (10, 10): ~a~%" (sdl:get-pixel display-surface #(10 10)))))))
+	(format t "Pixel at (10, 10): ~a~%" (sdl:get-pixel display #(10 10)))))))
 

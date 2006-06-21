@@ -10,6 +10,29 @@
 (defctype sdl-string :string)
 (defctype SDL-RWops :pointer)
 
+(defun to-int (num)
+  (if (floatp num)
+      (round num)
+      num))
+
+(defun vec-to-int (vec)
+  "vec-to-int will create a new VECTOR of the same length as VEC, but the contents are converted to integers."
+  "Returns VEC if the contents are not of type float."
+  (if (vectorp vec)
+      (let ((require-conversion nil))
+	(block convert
+	  (dotimes (i (length vec))
+	    (when (floatp (svref vec i))
+	      (setf require-conversion t)
+	      (return-from convert))))
+	(if require-conversion
+	    (let ((new-vec (make-array (length vec) :initial-element 0)))
+	      (dotimes (i (length vec))
+		(setf (svref new-vec i) (to-int (svref vec i))))
+	      new-vec)
+	    vec))
+      nil))
+
 (cffi:defcfun ("SDL_UpperBlit" UpperBlit) :int
   (src sdl-surface)
   (srcrect sdl-rectangle)
@@ -62,13 +85,13 @@
 
 (defmethod translate-to-foreign (value (type (eql 'sdl-rectangle)))
   (if value
-      (let ((rect (cffi:foreign-alloc 'SDL_Rect)))
+      (let ((rect (cffi:foreign-alloc 'SDL_Rect))
+	    (value (vec-to-int value)))
 	(cffi:with-foreign-slots ((x y w h) rect SDL_rect)
-	  (if value
-	      (setf x (rect-x value)
-		    y (rect-y value)
-		    w (rect-w value)
-		    h (rect-h value))))
+	  (setf x (rect-x value)
+		y (rect-y value)
+		w (rect-w value)
+		h (rect-h value)))
 	(values rect t))
       (values (cffi:null-pointer) nil)))
 

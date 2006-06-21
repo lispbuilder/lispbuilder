@@ -8,26 +8,48 @@
   (:documentation "The main package of `lispbuilder-sdl'.")
   (:export
 
+;; These are exports from translate.lisp
+   #:FillRect
+   #:FreeSurface
+   #:GetClipRect
+   #:RWFromFile
+   #:SetClipRect
+   #:UpperBlit
+   #:VideoDriverName
+   #:WM_SetCaption
+   #:to-int
+   #:vec-to-int
+   
    ;; These are exports from util-sdl.lisp
    #:apply-surface
    #:apply-surface-free
    #:blit-surface
+   #:check-bounds
    #:clamp				; from cl-sdl
    #:clear-colorkey
    #:clear-screen			; from cl-sdl
+   #:color
+   #:color-a
+   #:color-b
    #:color-from-r/g/b			; from cl-sdl
    #:color-from-r/g/b/a			; from cl-sdl
+   #:color-g
+   #:color-r
    #:convert-surface-to-display-format
    #:copy-rectangle
    #:copy-surf-to-rect
+   #:copy-surface
+   #:create-surface
    #:create-surface
    #:delta-clamp			; from cl-sdl
+   #:display-cursor
    #:draw-filled-rectangle		; from cl-sdl
    #:draw-pixel				; from cl-sdl
    #:draw-random-rect
    #:draw-rect
    #:draw-rect-end-points
    #:fill-surface
+   #:get-clip-rect
    #:get-framerate
    #:get-native-window
    #:get-pixel
@@ -40,23 +62,38 @@
    #:is-key
    #:is-modifier
    #:is-valid-ptr
+   #:list-modes
    #:load-bmp
    #:make-sdl-rect
+   #:map-color
    #:moveby-rectangle
    #:moveto-rectangle
    #:must-lock-p			; from cl-sdl
    #:new-event
-   #:new-rect
    #:pixelformat
+   #:point
+   #:point-x
+   #:point-y
+   #:pos-x
+   #:pos-y
    #:push-quitevent
    #:put-pixel
+   #:query-cursor
    #:random+1
+   #:random-color
+   #:random-rect
+   #:rect-from-endpoints
+   #:rect-from-point
    #:rect-h
    #:rect-w
    #:rect-x
+   #:rect-x2
    #:rect-y
+   #:rect-y2
    #:rectangle
    #:sdl-must-lock
+   #:set-alpha
+   #:set-clip-rect
    #:set-colorkey
    #:set-flags
    #:set-framerate
@@ -70,7 +107,9 @@
    #:to-degree
    #:to-radian
    #:update-screen			; from cl-sdl
-   #:update-surface
+   #:update-surface 
+   #:video-driver-name
+   #:warp-mouse
    #:with-display
    #:with-events
    #:with-init
@@ -78,7 +117,9 @@
    #:with-must-locksurface
    #:with-possible-lock-and-update	; from cl-sdl
    #:with-surface
+   #:with-surface
    #:with-surface-lock
+   *default-surface*
    *display
    *surface
    
@@ -591,6 +632,4 @@
    #:window
    #:wmwindow
    #:x11
-   #:xevent
-
-   ))
+   #:xevent))
