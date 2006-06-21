@@ -6,12 +6,11 @@
 (in-package #:sdl-gfx-examples) 
 
 (defun inbuilt-font ()
-  (let ((width 640) (height 480))
-    (sdl:with-init ()
-      (let ((display (sdl:set-window width height)))
-	(sdl-gfx:gfxPrimitivesSetFont sdl-gfx:font-data 8 8)
-	(sdl-gfx:draw-string display #(10 70) "Hello World!!!!" #(255 255 255))
-	(sdl:with-events
-	  (:quit t)
-	  (:idle
-	   (sdl:update-surface display)))))))
+  (sdl:with-init ()
+    (sdl:with-display (640 480 :surface-name display)
+      (sdl-gfx:gfxPrimitivesSetFont sdl-gfx:font-data 8 8)
+      (sdl-gfx:draw-string display #(10 70) "Hello World!!!!" #(255 255 255))
+      (sdl:with-events
+	(:quit t)
+	(:idle
+	 (sdl:update-surface display))))))
