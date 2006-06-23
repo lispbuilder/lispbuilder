@@ -8,7 +8,7 @@
   (:documentation "The main package of `lispbuilder-sdl'.")
   (:export
 
-;; These are exports from translate.lisp
+   ;; These are exports from translate.lisp
    #:FillRect
    #:FreeSurface
    #:GetClipRect
@@ -44,6 +44,8 @@
    #:delta-clamp			; from cl-sdl
    #:display-cursor
    #:draw-filled-rectangle		; from cl-sdl
+   #:draw-image
+   #:draw-line
    #:draw-pixel				; from cl-sdl
    #:draw-random-rect
    #:draw-rect
@@ -64,6 +66,7 @@
    #:is-valid-ptr
    #:list-modes
    #:load-bmp
+   #:load-image
    #:make-sdl-rect
    #:map-color
    #:moveby-rectangle
@@ -110,6 +113,7 @@
    #:update-surface 
    #:video-driver-name
    #:warp-mouse
+   #:with-default-color
    #:with-display
    #:with-events
    #:with-init
@@ -117,11 +121,11 @@
    #:with-must-locksurface
    #:with-possible-lock-and-update	; from cl-sdl
    #:with-surface
-   #:with-surface
+   #:with-surfaces
    #:with-surface-lock
+   *default-color*
+   *default-display*
    *default-surface*
-   *display
-   *surface
    
    ;; These are exports from sdlswig.i
    #:AUDIO_S16

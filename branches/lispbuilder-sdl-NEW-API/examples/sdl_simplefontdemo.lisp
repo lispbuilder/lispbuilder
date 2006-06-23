@@ -19,7 +19,7 @@
   (sdl:with-init ()			;Initialize Systems
     ;; init your game
     (sdl:set-framerate 10) ; Set target framerate (or 0 for unlimited)
-    (sdl:with-display (*WINDOW-WIDTH* *WINDOW-HEIGHT* :surface-name display :flags sdl:SDL_ANYFORMAT)
+    (sdl:with-display (*WINDOW-WIDTH* *WINDOW-HEIGHT* :flags sdl:SDL_ANYFORMAT)
       (let* ((small-font 
 	      (sdl-simple-font:initialise-font (namestring *font-path*) 4 5 
 					       "abcdefghijklmnopqrstuvwxyz:'!?_-,.()#~0123456789" #(99 0 0)))
@@ -28,22 +28,22 @@
 	  (:quit t)
 	  (:idle
 	   ;; fill the background
-	   (sdl:fill-surface display (vector #x22 #x22 #x44))
-					; Do stuff
-	   (sdl-simple-font:draw-string-right-justify display small-font 
+	   (sdl:clear-screen (vector #x22 #x22 #x44))
+	   ;; Do stuff
+	   (sdl-simple-font:draw-string-right-justify sdl:*default-display* small-font 
 						      (sdl:point (1- *WINDOW-WIDTH*) (screen-center-y))
 						      "draw string right justified")
-	   (sdl-simple-font:draw-string display small-font 
+	   (sdl-simple-font:draw-string sdl:*default-display* small-font 
 					(sdl:point (+ (- (screen-center-x) 100) (random 200))
 						   (+ (- (screen-center-y) 100) (random 200)))
 					"draw string")
-	   (sdl-simple-font:draw-text-image display text-image 
+	   (sdl-simple-font:draw-text-image sdl:*default-display* text-image 
 					    (sdl:point (+ (- (screen-center-x) 100) (random 200))
 						       (+ (- (screen-center-y) 100) (random 200))))
-	   (sdl-simple-font:draw-string-centered display small-font 
+	   (sdl-simple-font:draw-string-centered sdl:*default-display* small-font 
 						 (sdl:point (screen-center-x) (screen-center-y))
 						 "draw string centered")
 	   ;; Update the whole screen 
-	   (sdl:update-surface display)))
+	   (sdl:update-screen)))
 	(sdl-simple-font:free-text-image text-image)
 	(sdl-simple-font:close-font small-font)))))

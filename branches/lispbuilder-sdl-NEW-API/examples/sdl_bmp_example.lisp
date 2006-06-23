@@ -9,49 +9,25 @@
 
 (in-package #:sdl-examples) 
 
-(defvar *bmp1-path* (merge-pathnames "sdl.bmp" (or *load-truename* *default-pathname-defaults*)))
-(defvar *bmp2-path* (merge-pathnames "lisp.bmp" (or *load-truename* *default-pathname-defaults*)))
-
-; window or screen height
-(defparameter *SCREEN-WIDTH* 640)
-(defparameter *SCREEN-HEIGHT* 480)
-(defparameter *display-surface* nil)
-(defparameter *loaded-bmps* nil)
+(defvar *bmp-path* (or *load-truename* *default-pathname-defaults*))
 
 ; utilities used in this sample
-
-; TODO If you want to take advantage of hardware colorkey or alpha blit acceleration, you should set the colorkey and alpha value before calling this.
-(defun load-bmps(lst)
-  "loads in the list of filenames (must be bmp files), and creates a display surface friendly surface for each of them"
-  (loop for filename in lst do
-	(let ((bmp-surface (sdl:load-bmp filename)))
-	  (let ((display-surface (sdl:convert-surface-to-display-format bmp-surface)))
-	    (setf *loaded-bmps* (cons display-surface *loaded-bmps*))))))
-
-(defun close-bmps()
-  "free up the surfaces we loaded the bmps into"
-  (loop for surface in *loaded-bmps* do
-	(sdl:SDL_FreeSurface surface))
-  (setf *loaded-bmps* nil))
 
 (defun bmp-sample ()
   "demonstrates how to manage and display images from .bmp files"
   (sdl:with-init ()
-    (sdl:with-display (640 480 :surface-name display)
-      (format t "Video driver name: ~A~%" (sdl:video-driver-name))
-      (load-bmps (list (namestring *bmp1-path*) (namestring *bmp2-path*)))
-      (setf (first *loaded-bmps*) (sdl:convert-surface-to-display-format (first *loaded-bmps*)
-									 :key-color #(253 59 251)
-									 :free-surface t))
-      (sdl:set-framerate 30)
+    (sdl:with-display (640 480)
+      (sdl::with-surfaces ((sdl-image (sdl:load-image "sdl.bmp" *bmp-path*))
+			   (alien-image (sdl:load-image "lisp.bmp" *bmp-path* :key-color #(253 59 251))))
+
+	(sdl:blit-surface sdl-image sdl:*default-display* :dst-rect #(10 10))
+	(sdl:blit-surface alien-image sdl:*default-display* :dst-rect #(300 10))
+
       (sdl:with-events
 	(:quit t)
 	(:keydown (state scancode key mod unicode)
 		  (if (sdl:is-key key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
 	(:idle
-	 (sdl:blit-surface (first *loaded-bmps*) display :dst-rect #(10 10))
-	 (sdl:blit-surface (second *loaded-bmps*) display :dst-rect #(300 10))
-	 (sdl:update-screen display)))
-      (close-bmps))))
+	 (sdl:update-screen)))))))
 

@@ -26,7 +26,7 @@
 
 (defun initialise-font(bmp-file-name font-width font-height char-map-string key-color)
   "initialise a simple font using a bmp with a strip of fixed width characters mapped by the char-map-string"
-  (let ((font-surface (sdl:convert-surface-to-display-format (sdl:load-bmp bmp-file-name) :key-color key-color)))
+  (let ((font-surface (sdl:convert-surface-to-display-format :surface (sdl:load-bmp bmp-file-name) :key-color key-color)))
     (when font-surface
       (make-font :bmp font-surface 
 		 :w font-width 
@@ -51,7 +51,7 @@
 				       :surface (sdl:sdl_getvideosurface)  
 				       :key-color (font-key-color font)
 				       :accel t)))
-      (sdl:fill-surface surface (font-key-color font))
+      (sdl:fill-surface :surface surface :color (font-key-color font))
       (draw-string surface font #(0 0) string)
       surface)))
 
