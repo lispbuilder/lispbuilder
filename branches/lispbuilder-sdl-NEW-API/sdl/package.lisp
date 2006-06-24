@@ -114,6 +114,7 @@
    #:video-driver-name
    #:warp-mouse
    #:with-default-color
+   #:with-color
    #:with-display
    #:with-events
    #:with-init

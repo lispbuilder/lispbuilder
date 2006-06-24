@@ -102,6 +102,10 @@ stored in surface->format."
   `(let ((*default-color* ,color))
     ,@body))
 
+(defmacro with-color ((color) &body body)
+  `(let ((*default-color* ,color))
+    ,@body))
+
 (defmacro with-display ((width height &key (flags SDL_SWSURFACE) (bpp 0)
 			       (title-caption nil) (icon-caption nil)
 			       (surface-name '*default-display*)) &body body)
