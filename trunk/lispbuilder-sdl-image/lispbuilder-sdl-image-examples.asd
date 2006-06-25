@@ -15,4 +15,15 @@
     ((:module "examples"
 	      :components
 	      ((:file "package")
-	       (:file "image-example" :depends-on ("package"))))))
+	       (:file "image-example" :depends-on ("package"))
+	       (:static-file "lisp.bmp")
+	       (:static-file "lisp.gif")
+	       (:static-file "lisp.jpg")
+	       (:static-file "lisp.lbm")
+	       (:static-file "lisp.pcx")
+	       (:static-file "lisp.png")
+	       (:static-file "lisp.pbm")
+	       (:static-file "lisp.ppm")
+	       (:static-file "lisp.pgm")
+	       (:static-file "lisp.tga")
+	       (:static-file "lisp.tif")))))
