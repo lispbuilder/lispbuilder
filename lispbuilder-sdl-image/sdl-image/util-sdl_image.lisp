@@ -9,12 +9,6 @@
 
 ;;; c
 
-(defun create-RWops-from-file (filename path)
-  (let ((file-path (namestring (merge-pathnames filename path))))
-    (if (and (stringp file-path) (probe-file file-path))
-	(sdl:RWFromFile file-path "rb")
-	nil)))
-
 (defun create-image-from-RWops (source &key free-source image-type force)
   "create-image-from-RWops source &key free-source image-type force => SDL_Surface"
   "Attempts to load an image from an SDL_RWops structure or a filename, if a pathname is given. Returns a foreign pointer"
@@ -81,7 +75,7 @@
   (let ((i-type nil))
     (block image-loop
       (dolist (type '(:BMP :PNM :XPM :XCF :PCX :GIF :JPG :TIF :LBM :PNG :XV))
-	(let ((rwops (create-RWops-from-file filename path)))
+	(let ((rwops (sdl:create-RWops-from-file filename path)))
 	  (setf i-type (is-image-from-RWops rwops type))
 	  (if (sdl:is-valid-ptr rwops)
 	      (sdl:SDL_FreeRW rwops))
@@ -90,7 +84,7 @@
     i-type))
 
 (defun is-image (filename path image-type)
-  (let* ((rwops (create-RWops-from-file filename path))
+  (let* ((rwops (sdl:create-RWops-from-file filename path))
 	 (result (is-image-from-RWops rwops image-type)))
     (if (sdl:is-valid-ptr rwops)
 	(sdl:SDL_FreeRW rwops))
@@ -100,7 +94,7 @@
 ;;; l
 
 (defun load-image (filename path &key key-color alpha-value image-type force)
-  (sdl:with-surface ((create-image-from-RWops (create-RWops-from-file filename path)
+  (sdl:with-surface ((create-image-from-RWops (sdl:create-RWops-from-file filename path)
 					      :free-source t
 					      :image-type image-type
 					      :force force))
