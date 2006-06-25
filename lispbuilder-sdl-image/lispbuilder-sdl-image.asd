@@ -25,4 +25,5 @@
      (:module "documentation"
 	      :components
 	      ((:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")))))
+	       (:doc-file "CONTRIBUTORS")
+	       (:doc-file "README")))))

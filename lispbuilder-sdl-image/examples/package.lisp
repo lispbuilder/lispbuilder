@@ -2,7 +2,7 @@
 
 (in-package #:cl-user)
 
-(defpackage #:lispbuilder-sdl-ttf-examples
+(defpackage #:lispbuilder-sdl-image-examples
   (:use #:cl #:cffi)
-  (:nicknames #:sdl-ttf-examples)
-  (:export #:font-example))
+  (:nicknames #:sdl-image-examples)
+  (:export #:image-example))

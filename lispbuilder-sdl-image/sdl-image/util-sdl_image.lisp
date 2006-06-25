@@ -7,10 +7,16 @@
 
 ;;; Functions
 
-;;; l
+;;; c
 
-(defun load-image (source &key free-source image-type force)
-  "load-image source &key free-source image-type force => SDL_Surface"
+(defun create-RWops-from-file (filename path)
+  (let ((file-path (namestring (merge-pathnames filename path))))
+    (if (and (stringp file-path) (probe-file file-path))
+	(sdl:RWFromFile file-path "rb")
+	nil)))
+
+(defun create-image-from-RWops (source &key free-source image-type force)
+  "create-image-from-RWops source &key free-source image-type force => SDL_Surface"
   "Attempts to load an image from an SDL_RWops structure or a filename, if a pathname is given. Returns a foreign pointer"
   "to an SDL_Surface. Will attempt to automatically detect the type of image, unless :force is T."
   ":free-source - T   - Free the SDL_RWops structure in SOURCE."
@@ -27,53 +33,77 @@
   "(load-image \"test.bmp\")"
   "B) To specify that a PNM image should be loaded from a SDL_RWops structure, freeing the source:"
   "(load-image *SDL_RWops* :image-type :PNM :free-source t)"
-  (cond
-    ((sdl:is-valid-ptr source)
-     (if image-type
-	 (if force
-	     (case force
-	       (:TGA (Load-TGA-RW source))
-	       (:BMP (Load-BMP-RW source))
-	       (:PNM (Load-PNM-RW source))
-	       (:XPM (Load-XPM-RW source))
-	       (:XCF (Load-XCF-RW source))
-	       (:PCX (Load-PCX-RW source))
-	       (:GIF (Load-GIF-RW source))
-	       (:JPG (Load-JPG-RW source))
-	       (:TIF (Load-TIF-RW source))
-	       (:LBM (Load-LBM-RW source))
-	       (:PNG (Load-PNG-RW source))
-	       (:XV  (Load-XV-RW  source)))
-	     (load-typed-rw source free-source image-type))
-	 (Load-RW source free-source)))
-    ((and (stringp source) (probe-file source))
-     (load-img source))
-    (t
-     nil)))
+  (let ((image nil))
+    (if (sdl:is-valid-ptr source)
+	(progn
+	  (setf image (if image-type
+			  (if force
+			      (case image-type
+				(:BMP (Load-BMP-RW source))
+				(:GIF (Load-GIF-RW source))
+				(:JPG (Load-JPG-RW source))
+				(:LBM (Load-LBM-RW source))
+				(:PCX (Load-PCX-RW source))
+				(:PNG (Load-PNG-RW source))
+				(:PNM (Load-PNM-RW source))
+				(:TGA (Load-TGA-RW source))
+				(:TIF (Load-TIF-RW source))
+				(:XCF (Load-XCF-RW source))
+				(:XPM (Load-XPM-RW source))
+				(:XV  (Load-XV-RW  source)))
+			      (load-typed-rw source nil image-type))
+			  (Load-RW source nil)))
+	  (if free-source
+	      (sdl:SDL_FreeRW source)))
+	nil)
+    image))
 
 ;;; i
 
-(defun is-image (source image-type)
-  (case image-type
-    (:BMP (isBMP source))
-    (:PNM (isPNM source))
-    (:XPM (isXPM source))
-    (:XCF (isXCF source))
-    (:PCX (isPCX source))
-    (:GIF (isGIF source))
-    (:JPG (isJPG source))
-    (:TIF (isTIF source))
-    (:LBM (isLBM source))
-    (:PNG (isPNG source))
-    (:XV  (isXV  source))
-    (otherwise nil)))
+(defun is-image-from-RWops (source image-type)
+  (if (sdl:is-valid-ptr source)
+      (case image-type
+	(:BMP (isBMP source))
+	(:GIF (isGIF source))
+	(:JPG (isJPG source))
+	(:LBM (isLBM source))
+	(:PCX (isPCX source))
+	(:PNG (isPNG source))
+	(:PNM (isPNM source))
+	(:TIF (isTIF source))
+	(:XCF (isXCF source))
+	(:XPM (isXPM source))
+	(:XV  (isXV  source))
+	(otherwise nil))
+      nil))
 
-(defun image-type (source)
+(defun image-type (filename path)
   (let ((i-type nil))
     (block image-loop
       (dolist (type '(:BMP :PNM :XPM :XCF :PCX :GIF :JPG :TIF :LBM :PNG :XV))
-	(setf i-type (is-image source type))
-	(if i-type
-	    (return-from image-loop))))
+	(let ((rwops (create-RWops-from-file filename path)))
+	  (setf i-type (is-image-from-RWops rwops type))
+	  (if (sdl:is-valid-ptr rwops)
+	      (sdl:SDL_FreeRW rwops))
+	  (if i-type
+	      (return-from image-loop)))))
     i-type))
+
+(defun is-image (filename path image-type)
+  (let* ((rwops (create-RWops-from-file filename path))
+	 (result (is-image-from-RWops rwops image-type)))
+    (if (sdl:is-valid-ptr rwops)
+	(sdl:SDL_FreeRW rwops))
+    result))
+
+
+;;; l
+
+(defun load-image (filename path &key key-color alpha-value image-type force)
+  (sdl:with-surface ((create-image-from-RWops (create-RWops-from-file filename path)
+					      :free-source t
+					      :image-type image-type
+					      :force force))
+    (sdl:convert-surface-to-display-format :key-color key-color :alpha-value alpha-value :free-surface nil)))
+
 
