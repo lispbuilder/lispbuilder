@@ -39,6 +39,7 @@
    #:copy-rectangle
    #:copy-surf-to-rect
    #:copy-surface
+   #:create-RWops-from-file
    #:create-surface
    #:create-surface
    #:delta-clamp			; from cl-sdl

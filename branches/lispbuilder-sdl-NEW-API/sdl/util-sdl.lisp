@@ -277,6 +277,12 @@ stored in surface->format."
 		  :type type
 		  :accel accel))
 
+(defun create-RWops-from-file (filename path)
+  (let ((file-path (namestring (merge-pathnames filename path))))
+    (if (and (stringp file-path) (probe-file file-path))
+	(sdl:RWFromFile file-path "rb")
+	nil)))
+
 (defun create-surface(width height &key (bpp 32) surface pixels pitch key-color alpha-value (type :sw) (accel nil))
   "create a surface compatible with the supplied :surface, if provided."
   (let ((surf nil) (flags nil) (bpp 32))
