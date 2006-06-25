@@ -677,7 +677,6 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
       nil))
 
 (defun load-image (filename path &key key-color alpha-value)
-  "load an image and sets white to transparent"
   (sdl:with-surface ((sdl:load-bmp (namestring (merge-pathnames filename path))))
     (sdl:convert-surface-to-display-format :key-color key-color :alpha-value alpha-value :free-surface nil)))
 
