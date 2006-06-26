@@ -3,6 +3,8 @@
 ;;;; (C)2006 Frank Busse
 ;;;; see COPYING for license
 
+;;;; From "http://www.frank-buss.de/lisp/canvas.html"
+
 (in-package #:sdl-examples) 
 
 (defvar *x0* 0.2)
