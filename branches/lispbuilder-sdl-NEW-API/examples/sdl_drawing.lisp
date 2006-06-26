@@ -4,10 +4,9 @@
 
 ;; To run this sample you need asdf, cffi and lispbuild-sdl installed, 
 ;; (asdf:operate 'asdf:load-op :cffi)
-;; (asdf:operate 'asdf:load-op :lispbuilder-sdl)
+;; (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
 
-;; (load "sdl_drawing")
-;; (lispbuilder-sdl:mouse-painter)
+;; (sdl-examples:mouse-painter)
 
 (in-package #:sdl-examples)
 
