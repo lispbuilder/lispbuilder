@@ -749,6 +749,12 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 (defun point (x y)
   (vector (to-int x) (to-int y)))
 
+(defun points-in-range (p1 p2 distance)
+  "return true, if the distance between p1 and p2 is not more than 'distance'"
+  (<= (+ (expt (- (sdl:point-x p1) (sdl:point-x p2)) 2)
+         (expt (- (sdl:point-y p1) (sdl:point-y p2)) 2))
+      (expt distance 2)))
+
 (defun pos-x (position)
   (svref position 0))
 (defun (setf pos-x) (x-val position)
@@ -790,6 +796,9 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 							alpha
 							(random 255)))
       (color (random 255) (random 255) (random 255)))) ; Or not, and create an r/g/b color
+
+(defun random-point (max-x max-y)
+  (sdl:point (random max-x) (random max-y)))
 
 (defun rectangle (x y w h)
   "Creates a new rectangle."
@@ -1177,11 +1186,11 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 
 (defmacro with-events (&body events)
   "(with-sdl-events
-       (:activeevent (gain state)
+     (:activeevent (gain state)
 		     t)
-     (:keydown (state keysym)
+     (:keydown (state scancode key mod unicode)
 	       t)
-     (:keyup (state keysm)
+     (:keyup (state scancode key mod unicode)
 	     t)
      (:mousemotion (state x y xrel yrel)
 		   t)
