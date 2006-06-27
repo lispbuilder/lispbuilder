@@ -78,6 +78,7 @@
    #:point
    #:point-x
    #:point-y
+   #:points-in-range
    #:pos-x
    #:pos-y
    #:push-quitevent
@@ -85,6 +86,7 @@
    #:query-cursor
    #:random+1
    #:random-color
+   #:random-point
    #:random-rect
    #:rect-from-endpoints
    #:rect-from-point
