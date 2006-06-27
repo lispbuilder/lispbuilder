@@ -4,15 +4,6 @@
 
 (defvar *image-path* (or *load-truename* *default-pathname-defaults*))
 			     
-(defun in-range (p1 p2 distance)
-  "return true, if the distance between p1 and p2 is not more than 'distance'"
-  (<= (+ (expt (- (sdl:point-x p1) (sdl:point-x p2)) 2)
-         (expt (- (sdl:point-y p1) (sdl:point-y p2)) 2))
-      (expt distance 2)))
-
-(defun make-random-point ()
-  (sdl:point (random 630) (random 470)))
-
 (defun show-score (score)
   (sdl:WM_SetCaption (format nil "Squashed - Score: ~a" score) "Squashed"))
 
@@ -20,7 +11,7 @@
   "Squashed: main entry function"
   (sdl:with-init ()
     (sdl:with-display (640 480)
-      (let ((bug-point (make-random-point))
+      (let ((bug-point (random-point))
 	    (racket-point (sdl:point 100 100))
 	    (squashed-point nil)
 	    (levelticks 1000)
@@ -40,7 +31,7 @@
 				(sdl:point-y racket-point) y))
 	    (:mousebuttondown (button state x y)
 			      ;; check if squashed
-			      (when (in-range racket-point bug-point 17)
+			      (when (points-in-range racket-point bug-point 17)
 				(setf squashed-point (sdl:point x y)
 				      last-squash-tick (sdl:SDL_GetTicks))
 				(show-score (incf score))
@@ -55,7 +46,7 @@
 	       (sdl:draw-image squashed-point blood))
 	     (when (> (sdl:SDL_GetTicks) (+ lasttick levelticks))
 	       (setf lasttick (sdl:SDL_GetTicks)
-		     bug-point (make-random-point)))
+		     bug-point (random-point)))
 	     (if (< (- (sdl:SDL_GetTicks) last-squash-tick) 500)
 		 (sdl:draw-image (sdl:point 0 0) squash)
 		 (sdl:draw-image bug-point bug))
