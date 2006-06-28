@@ -11,7 +11,7 @@
   "Squashed: main entry function"
   (sdl:with-init ()
     (sdl:with-display (640 480)
-      (let ((bug-point (random-point))
+      (let ((bug-point (sdl:random-point 640 480))
 	    (racket-point (sdl:point 100 100))
 	    (squashed-point nil)
 	    (levelticks 1000)
@@ -31,7 +31,7 @@
 				(sdl:point-y racket-point) y))
 	    (:mousebuttondown (button state x y)
 			      ;; check if squashed
-			      (when (points-in-range racket-point bug-point 17)
+			      (when (sdl:points-in-range racket-point bug-point 17)
 				(setf squashed-point (sdl:point x y)
 				      last-squash-tick (sdl:SDL_GetTicks))
 				(show-score (incf score))
@@ -46,7 +46,7 @@
 	       (sdl:draw-image squashed-point blood))
 	     (when (> (sdl:SDL_GetTicks) (+ lasttick levelticks))
 	       (setf lasttick (sdl:SDL_GetTicks)
-		     bug-point (random-point)))
+		     bug-point (sdl:random-point 640 480)))
 	     (if (< (- (sdl:SDL_GetTicks) last-squash-tick) 500)
 		 (sdl:draw-image (sdl:point 0 0) squash)
 		 (sdl:draw-image bug-point bug))
