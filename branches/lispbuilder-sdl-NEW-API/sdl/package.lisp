@@ -31,8 +31,6 @@
    #:color
    #:color-a
    #:color-b
-   #:color-from-r/g/b			; from cl-sdl
-   #:color-from-r/g/b/a			; from cl-sdl
    #:color-g
    #:color-r
    #:convert-surface-to-display-format
@@ -44,7 +42,6 @@
    #:create-surface
    #:delta-clamp			; from cl-sdl
    #:display-cursor
-   #:draw-filled-rectangle		; from cl-sdl
    #:draw-image
    #:draw-line
    #:draw-pixel				; from cl-sdl
@@ -107,7 +104,6 @@
    #:set-timescale
    #:set-window
    #:set-worldtime
-   #:show-bmp				; from cl-sdl
    #:surf-h
    #:surf-w
    #:to-degree
@@ -129,6 +125,7 @@
    #:with-surface-lock
    *default-color*
    *default-display*
+   *default-point*
    *default-surface*
    
    ;; These are exports from sdlswig.i

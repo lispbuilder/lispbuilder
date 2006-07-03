@@ -5,13 +5,14 @@
 ;; This file contains some useful functions for using SDL from Common lisp
 ;; using sdl.lisp (the CFFI wrapper)
 
-(in-package #:lispbuilder-sdl) 
+(in-package #:lispbuilder-sdl)
 
 ;;;; Globals
 
 (defvar *default-surface* nil)
 (defvar *default-display* nil)
 (defvar *default-color* #(0 0 0))
+(defvar *default-point* #(0 0))
 
 ;;;; Macros
 
@@ -29,9 +30,9 @@
 (defmacro with-init (init-flags &body body)
   "Attempts to initialize the SDL subsystems using SDL_Init.
    Automatically shuts down the SDL subsystems using SDL_Quit upon normal application termination or
-if any fatal error occurs within &body.
+   if any fatal error occurs within &body.
    init-flags can be any combination of SDL_INIT_TIMER, SDL_INIT_AUDIO, SDL_INIT_VIDEO, SDL_INIT_CDROM,
-SDL_INIT_JOYSTICK, SDL_INIT_NOPARACHUTE, SDL_INIT_EVENTTHREAD or SDL_INIT_EVERYTHING."
+   SDL_INIT_JOYSTICK, SDL_INIT_NOPARACHUTE, SDL_INIT_EVENTTHREAD or SDL_INIT_EVERYTHING."
   `(block nil
     (unwind-protect
 	 (when (init-sdl :flags (list ,@init-flags))
@@ -52,7 +53,7 @@ SDL_INIT_JOYSTICK, SDL_INIT_NOPARACHUTE, SDL_INIT_EVENTTHREAD or SDL_INIT_EVERYT
   "WITH-MUST-LOCKSURFACE sets up a surface for directly accessing the pixels using SDL_LockSurface.
    WITH-MUST-LOCKSURFACE uses SDL_MUSTLOCK to first check if the surface should be locked.
    Within WITH-MUST-LOCKSURFACE you can write to and read from surface->pixels, using the pixel format 
-stored in surface->format."
+   stored in surface->format."
   (let ((surf (gensym)))
     `(let ((,surf ,surface))
       (block nil
@@ -245,10 +246,10 @@ stored in surface->format."
   (setf (svref color 3) (to-int a-val)))
 
 (defun convert-surface-to-display-format (&key key-color alpha-value (free-surface nil) (surface *default-surface*))
-  "converts a surface to display format and free's the source surface"
-  "  :alpha t will convert the surface and add an alpha channel."
-  "  :free nil will not free surface."
-  " returns NIL if the surface cannot be converted."
+  "converts a surface to display format and free's the source surface
+    :alpha t will convert the surface and add an alpha channel.
+    :free nil will not free surface.
+   returns NIL if the surface cannot be converted."
   ;; LJC: Added support for converting to an alpha surface.
   ;; LJC: Freeing surface is now optional.
   (when (is-valid-ptr surface)
@@ -420,9 +421,9 @@ stored in surface->format."
 
 (defun draw-pixel (point &key (check-lock-p t) (update-p nil) (clipping-p t)
 		   (surface *default-surface*) (color *default-color*))
-  "Set the pixel at (x, y) to the given value "
-  "NOTE: The surface must be locked before calling this."
-  "Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
+  "Set the pixel at (x, y) to the given value 
+   NOTE: The surface must be locked before calling this.
+   Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
   (let ((x (point-x point)) (y (point-y point)))
     (when clipping-p
       (check-bounds 0 (surf-w surface) x)
@@ -497,7 +498,7 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
   "fill the entire surface with the specified R G B A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
-    'dirty recs' screen update."
+   'dirty recs' screen update."
   (when clipping-p
     (let* ((x (rect-x template)) (y (rect-y template))
 	   (w (rect-w template)) (h (rect-h template))
@@ -539,8 +540,8 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 
 (defun get-pixel (point &key (check-lock-p t) (surface *default-surface*))
   "Get the pixel at (x, y) as a Uint32 color value
-NOTE: The surface must be locked before calling this.
-Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
+   NOTE: The surface must be locked before calling this.
+   Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
   (with-possible-lock-and-update (surface :check-lock-p check-lock-p :update-p nil :template (rect-from-point point 1 1))
     (let* ((bpp (foreign-slot-value (pixelformat surface) 'SDL_PixelFormat 'BytesPerPixel))
 	   (offset (+ (* (point-y point) (foreign-slot-value surface 'SDL_Surface 'Pitch))
@@ -657,10 +658,10 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 ;;; l
 
 (defun list-modes (flags)
-  "Returns a LIST of rects  for each available screen dimension "
-  "for the given format and video flags, sorted largest to smallest. "
-  "Returns NIL if there are no dimensions available for a particular format, "
-  "or T if any dimension is okay for the given format."
+  "Returns a LIST of rects  for each available screen dimension 
+   for the given format and video flags, sorted largest to smallest. 
+   Returns NIL if there are no dimensions available for a particular format, 
+   or T if any dimension is okay for the given format."
   (let ((modes nil)
         (listmodes (sdl::SDL_ListModes (cffi:null-pointer) (set-flags flags))))
     (cond
@@ -1326,4 +1327,6 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 	(progn
 	  (framerate-delay)))
       (cffi:foreign-free ,sdl-event))))
+
+
 

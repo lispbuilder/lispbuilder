@@ -16,8 +16,8 @@
       num))
 
 (defun vec-to-int (vec)
-  "vec-to-int will create a new VECTOR of the same length as VEC, but the contents are converted to integers."
-  "Returns VEC if the contents are not of type float."
+  "vec-to-int will create a new VECTOR of the same length as VEC, but the contents are converted to integers.
+   Returns VEC if the contents are not of type float."
   (if (vectorp vec)
       (let ((require-conversion nil))
 	(block convert
