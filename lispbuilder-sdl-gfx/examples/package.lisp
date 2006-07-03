@@ -5,4 +5,4 @@
 (defpackage #:lispbuilder-sdl-gfx-examples
   (:use #:cl #:cffi)
   (:nicknames #:sdl-gfx-examples)
-  (:export #:inbuilt-font :export #:random-circles))
+  (:export #:inbuilt-font #:random-circles))
