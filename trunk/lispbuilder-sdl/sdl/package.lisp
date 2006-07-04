@@ -8,26 +8,48 @@
   (:documentation "The main package of `lispbuilder-sdl'.")
   (:export
 
+   ;; These are exports from translate.lisp
+   #:FillRect
+   #:FreeSurface
+   #:GetClipRect
+   #:RWFromFile
+   #:SetClipRect
+   #:UpperBlit
+   #:VideoDriverName
+   #:WM_SetCaption
+   #:to-int
+   #:vec-to-int
+   
    ;; These are exports from util-sdl.lisp
    #:apply-surface
    #:apply-surface-free
    #:blit-surface
+   #:check-bounds
    #:clamp				; from cl-sdl
    #:clear-colorkey
    #:clear-screen			; from cl-sdl
-   #:color-from-r/g/b			; from cl-sdl
-   #:color-from-r/g/b/a			; from cl-sdl
+   #:color
+   #:color-a
+   #:color-b
+   #:color-g
+   #:color-r
    #:convert-surface-to-display-format
    #:copy-rectangle
    #:copy-surf-to-rect
+   #:copy-surface
+   #:create-RWops-from-file
+   #:create-surface
    #:create-surface
    #:delta-clamp			; from cl-sdl
-   #:draw-filled-rectangle		; from cl-sdl
+   #:display-cursor
+   #:draw-image
+   #:draw-line
    #:draw-pixel				; from cl-sdl
    #:draw-random-rect
    #:draw-rect
    #:draw-rect-end-points
    #:fill-surface
+   #:get-clip-rect
    #:get-framerate
    #:get-native-window
    #:get-pixel
@@ -40,23 +62,41 @@
    #:is-key
    #:is-modifier
    #:is-valid-ptr
+   #:list-modes
    #:load-bmp
+   #:load-image
    #:make-sdl-rect
+   #:map-color
    #:moveby-rectangle
    #:moveto-rectangle
    #:must-lock-p			; from cl-sdl
    #:new-event
-   #:new-rect
    #:pixelformat
+   #:point
+   #:point-x
+   #:point-y
+   #:points-in-range
+   #:pos-x
+   #:pos-y
    #:push-quitevent
    #:put-pixel
+   #:query-cursor
    #:random+1
+   #:random-color
+   #:random-point
+   #:random-rect
+   #:rect-from-endpoints
+   #:rect-from-point
    #:rect-h
    #:rect-w
    #:rect-x
+   #:rect-x2
    #:rect-y
+   #:rect-y2
    #:rectangle
    #:sdl-must-lock
+   #:set-alpha
+   #:set-clip-rect
    #:set-colorkey
    #:set-flags
    #:set-framerate
@@ -64,19 +104,29 @@
    #:set-timescale
    #:set-window
    #:set-worldtime
-   #:show-bmp				; from cl-sdl
    #:surf-h
    #:surf-w
    #:to-degree
    #:to-radian
    #:update-screen			; from cl-sdl
-   #:update-surface
+   #:update-surface 
+   #:video-driver-name
+   #:warp-mouse
+   #:with-default-color
+   #:with-color
+   #:with-display
    #:with-events
    #:with-init
    #:with-locked-surface		; from cl-sdl
    #:with-must-locksurface
    #:with-possible-lock-and-update	; from cl-sdl
+   #:with-surface
+   #:with-surfaces
    #:with-surface-lock
+   *default-color*
+   *default-display*
+   *default-point*
+   *default-surface*
    
    ;; These are exports from sdlswig.i
    #:AUDIO_S16
@@ -587,6 +637,4 @@
    #:window
    #:wmwindow
    #:x11
-   #:xevent
-
-   ))
+   #:xevent))
