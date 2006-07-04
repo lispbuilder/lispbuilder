@@ -1234,7 +1234,7 @@
   (flag :unsigned-int)
   (alpha :unsigned-char))
 
-(cffi:defcfun ("SDL_SetClipRect" SDL_SetClipRect) :pointer
+(cffi:defcfun ("SDL_SetClipRect" SDL_SetClipRect) :void
   (surface :pointer)
   (rect :pointer))
 
