@@ -12,7 +12,7 @@
 (defvar *default-surface* nil)
 (defvar *default-display* nil)
 (defvar *default-color* #(0 0 0))
-(defvar *default-point* #(0 0))
+(defvar *default-position* #(0 0))
 
 ;;;; Macros
 
@@ -139,6 +139,11 @@
 ;; 	      (SDL_FreeSurface ,surface-name))))
 ;;       (setf *default-surface* ,old-default-surface)
 ;;       ,body-value)))
+
+(defmacro with-position ((position) &body body)
+  `(let ((*default-position* ,position))
+    ,@body))
+
 
 (defmacro with-surface ((surface-ptr &optional (free-p t)) &body body)
   "Don't use this for managing the display surface."
@@ -337,14 +342,14 @@
   (case toggle
     (nil (SDL_ShowCursor sdl_disable))
     (t (SDL_ShowCursor sdl_enable))))
-
-(defun draw-image (point image-surface &key (screen sdl:*default-surface*))
+ 
+(defun draw-image (image-surface &key (position sdl:*default-position*) (screen sdl:*default-surface*))
   (let ((w (sdl:surf-w image-surface))
         (h (sdl:surf-h image-surface)))
     (sdl:blit-surface image-surface
 		      screen
 		       :src-rect (sdl:rectangle 0 0 w h)
-		       :dst-rect (sdl:point (sdl:point-x point) (sdl:point-y point)))))
+		       :dst-rect (sdl:point (sdl:point-x position) (sdl:point-y position)))))
 
 (defun draw-line (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*))
   ;; use only integers
@@ -372,14 +377,14 @@
     (if (>= dy 0)
 	(if (>= dx dy)
 	    (loop for x from x0 to x1 do
-		  (sdl:draw-pixel (sdl:point x y) :surface surface :color color )
+		  (sdl:draw-pixel :position (sdl:point x y) :surface surface :color color )
 		  (if (< (* 2 (+ e dy)) dx)
 		      (incf e dy)
 		      (progn
 			(incf y)
 			(incf e (- dy dx)))))
 	    (loop for y from y0 to y1 do
-		  (sdl:draw-pixel (sdl:point x y) :surface surface :color color)
+		  (sdl:draw-pixel :position (sdl:point x y) :surface surface :color color)
 		  (if (< (* 2 (+ e dx)) dy)
 		      (incf e dx)
 		      (progn
@@ -387,7 +392,7 @@
 			(incf e (- dx dy))))))
 	(if (>= dx (- dy))
 	    (loop for x from x0 to x1 do
-		  (sdl:draw-pixel (sdl:point x y) :surface surface :color color)
+		  (sdl:draw-pixel :position (sdl:point x y) :surface surface :color color)
 		  (if (> (* 2 (+ e dy)) (- dx))
 		      (incf e dy)
 		      (progn
@@ -400,7 +405,7 @@
 	      (setf dx (- x1 x0))
 	      (setf dy (- y1 y0))
 	      (loop for y from y0 to y1 do
-		    (sdl:draw-pixel (sdl:point x y) :surface surface :color color)
+		    (sdl:draw-pixel :position (sdl:point x y) :surface surface :color color)
 		    (if (> (* 2 (+ e dx)) (- dy))
 			(incf e dx)
 			(progn
@@ -419,12 +424,12 @@
 		:update-p update-p
 		:clipping-p clipping-p))
 
-(defun draw-pixel (point &key (check-lock-p t) (update-p nil) (clipping-p t)
+(defun draw-pixel (&key (position sdl:*default-position*) (check-lock-p t) (update-p nil) (clipping-p t)
 		   (surface *default-surface*) (color *default-color*))
   "Set the pixel at (x, y) to the given value 
    NOTE: The surface must be locked before calling this.
    Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
-  (let ((x (point-x point)) (y (point-y point)))
+  (let ((x (point-x position)) (y (point-y position)))
     (when clipping-p
       (check-bounds 0 (surf-w surface) x)
       (check-bounds 0 (surf-h surface) y))
@@ -538,14 +543,15 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 					'sdl::SDL_SysWMinfo_info_x11
 					'sdl::window)))
 
-(defun get-pixel (point &key (check-lock-p t) (surface *default-surface*))
+(defun get-pixel (&key (position sdl:*default-position*) (check-lock-p t) (surface *default-surface*))
   "Get the pixel at (x, y) as a Uint32 color value
    NOTE: The surface must be locked before calling this.
    Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
-  (with-possible-lock-and-update (surface :check-lock-p check-lock-p :update-p nil :template (rect-from-point point 1 1))
+  (with-possible-lock-and-update (surface :check-lock-p check-lock-p :update-p nil
+					  :template (rect-from-point position 1 1))
     (let* ((bpp (foreign-slot-value (pixelformat surface) 'SDL_PixelFormat 'BytesPerPixel))
-	   (offset (+ (* (point-y point) (foreign-slot-value surface 'SDL_Surface 'Pitch))
-		      (* (point-x point) bpp)))
+	   (offset (+ (* (point-y position) (foreign-slot-value surface 'SDL_Surface 'Pitch))
+		      (* (point-x position) bpp)))
 	   (pixel-address (foreign-slot-value surface 'SDL_Surface 'Pixels)))
       (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char) (a :unsigned-char))
 	(SDL_GetRGBA (cond
@@ -737,12 +743,12 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
   "Returns the pixelformat of a surface."
   (cffi:foreign-slot-value surface 'sdl:SDL_Surface 'sdl:format))
 
-(defun point-x (point)
+(defun point-x (&optional (point sdl:*default-position*))
   (svref point 0))
 (defun (setf point-x) (x-val point)
   (setf (svref point 0) (to-int x-val)))
 
-(defun point-y (point)
+(defun point-y (&optional (point sdl:*default-position*))
   (svref point 1))
 (defun (setf point-y) (y-val point)
   (setf (svref point 1) (to-int y-val)))
@@ -835,7 +841,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 (defun (setf rect-y2) (h-val rect)
   (setf (rect-h rect) (+ (rect-y rect) h-val)))
 
-(defun rect-from-point (point width height)
+(defun rect-from-point (width height &optional (point sdl:*default-position*))
   (rectangle (point-x point) (point-y point) width height))
 
 (defun rect-from-endpoints (x1 y1 x2 y2)
@@ -981,8 +987,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 
 ;;; w
 
-(defun warp-mouse (point)
-  (sdl_warpmouse (point-x point) (point-y point)))
+(defun warp-mouse (&optional (position sdl:*default-position*))
+  (sdl_warpmouse (point-x position) (point-y position)))
 
 ;;; x
 ;;; y

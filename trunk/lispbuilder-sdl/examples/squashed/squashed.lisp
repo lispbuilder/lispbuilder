@@ -43,13 +43,13 @@
 	     (sdl:clear-screen #(255 255 255))
 	     ;; draw images
 	     (when squashed-point
-	       (sdl:draw-image squashed-point blood))
+	       (sdl:draw-image blood :position squashed-point))
 	     (when (> (sdl:SDL_GetTicks) (+ lasttick levelticks))
 	       (setf lasttick (sdl:SDL_GetTicks)
 		     bug-point (sdl:random-point 640 480)))
 	     (if (< (- (sdl:SDL_GetTicks) last-squash-tick) 500)
-		 (sdl:draw-image (sdl:point 0 0) squash)
-		 (sdl:draw-image bug-point bug))
-	     (sdl:draw-image racket-point racket)
+		 (sdl:draw-image squash :position (sdl:point 0 0))
+		 (sdl:draw-image bug :position bug-point))
+	     (sdl:draw-image racket :position racket-point)
 	     ;; blit to screen
 	     (sdl:update-screen))))))))

@@ -125,7 +125,7 @@
    #:with-surface-lock
    *default-color*
    *default-display*
-   *default-point*
+   *default-position*
    *default-surface*
    
    ;; These are exports from sdlswig.i
