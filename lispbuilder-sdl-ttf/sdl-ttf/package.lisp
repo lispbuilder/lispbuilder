@@ -26,7 +26,8 @@
    #:make-text-surface
    #:open-font
    #:with-init
-
+   #:with-open-font
+   *default-font*
    
    ;; sdl_ttf.lisp
 
