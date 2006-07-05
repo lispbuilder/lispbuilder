@@ -24,7 +24,7 @@
 			for z = a then (+ (* z z) a)
 			while (< (abs z) 2)
 			for c from 60 above 0
-			finally (sdl:draw-pixel (sdl:point x y)
+			finally (sdl:draw-pixel :position (sdl:point x y)
 						:color (sdl:color (mod (* 13 c) 256)
 								  (mod (* 7 c) 256)
 								  (mod (* 2 c) 256))
