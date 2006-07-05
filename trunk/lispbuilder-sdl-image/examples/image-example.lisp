@@ -37,8 +37,8 @@
 	    (when (equal 0 (mod x 4))
 	      (incf y)
 	      (setf x 0))
-	    (sdl:draw-image (sdl:point (+ image-gap (* x image-width)) (+ image-gap (* y image-height)))
-			    image :screen sdl:*default-display*)
+	    (sdl:draw-image image :position (sdl:point (+ image-gap (* x image-width)) (+ image-gap (* y image-height)))
+			    :screen sdl:*default-display*)
 	    (incf x)))
 	(sdl:with-events
 	  (:quit t)
