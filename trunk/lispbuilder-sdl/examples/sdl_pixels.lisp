@@ -17,9 +17,9 @@
       (sdl:with-init ()
 	(sdl:with-events
 	  (:quit t)
-	  (:idle
+	  (:idle 
 	   (sdl:with-default-color ((sdl:random-color))
-	     (sdl:draw-pixel (sdl:point (random width) (random height))
+	     (sdl:draw-pixel :position (sdl:point (random width) (random height))
 			     :check-lock-p t :update-p t :clipping-p t))))
-	(format t "Pixel at (10, 10): ~a~%" (sdl:get-pixel #(10 10)))))))
+	(format t "Pixel at (10, 10): ~a~%" (sdl:get-pixel :position #(10 10)))))))
 
