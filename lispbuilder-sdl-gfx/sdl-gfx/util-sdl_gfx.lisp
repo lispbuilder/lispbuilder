@@ -9,11 +9,11 @@
   
 ;;; d
 
-(defun draw-pixel (point &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-pixel (&key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (pixelcolor surface (sdl::point-x point) (sdl::point-y point)
+      (pixelcolor surface (sdl::point-x position) (sdl::point-y position)
 		  (map-color color))
-      (pixelrgba surface (sdl::point-x point) (sdl::point-y point)
+      (pixelrgba surface (sdl::point-x position) (sdl::point-y position)
 		 (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
 (defun draw-hline (x1 x2 y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -58,60 +58,68 @@
       (aalineRGBA surface (sdl::point-x point1) (sdl::point-y point1) (sdl::point-x point2) (sdl::point-y point2)
 		  (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-circle (point r color &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-circle (r color
+		    &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (circlecolor surface (sdl::point-x point) (sdl::point-y point) r
+      (circlecolor surface (sdl::point-x position) (sdl::point-y position) r
 		   (map-color color))
-      (circleRGBA surface (sdl::point-x point) (sdl::point-y point) r
+      (circleRGBA surface (sdl::point-x position) (sdl::point-y position) r
 		  (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-aacircle (point r color &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-aacircle (r color
+		      &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (aacirclecolor surface (sdl::point-x point) (sdl::point-y point) r
+      (aacirclecolor surface (sdl::point-x position) (sdl::point-y position) r
 		     (map-color color))
-      (aacircleRGBA surface (sdl::point-x point) (sdl::point-y point) r
+      (aacircleRGBA surface (sdl::point-x position) (sdl::point-y position) r
 		    (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-filledcircle (point r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filledcircle (r
+			  &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (filledcirclecolor surface (sdl::point-x point) (sdl::point-y point) r
+      (filledcirclecolor surface (sdl::point-x position) (sdl::point-y position) r
 		     (map-color color))
-      (filledcircleRGBA surface (sdl::point-x point) (sdl::point-y point) r
+      (filledcircleRGBA surface (sdl::point-x position) (sdl::point-y position) r
 		    (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-ellipse (point rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-ellipse (rx ry
+		     &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (ellipsecolor surface (sdl::point-x point) (sdl::point-y point) rx ry
+      (ellipsecolor surface (sdl::point-x position) (sdl::point-y position) rx ry
 		    (map-color color))
-      (ellipseRGBA surface (sdl::point-x point) (sdl::point-y point) rx ry
+      (ellipseRGBA surface (sdl::point-x position) (sdl::point-y position) rx ry
 		   (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-aaellipse (point rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-aaellipse (rx ry
+		       &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (aaellipsecolor surface (sdl::point-x point) (sdl::point-y point) rx ry
+      (aaellipsecolor surface (sdl::point-x position) (sdl::point-y position) rx ry
 		      (map-color color))
-      (aaellipseRGBA surface (sdl::point-x point) (sdl::point-y point) rx ry
+      (aaellipseRGBA surface (sdl::point-x position) (sdl::point-y position) rx ry
 		     (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-filledellipse (point rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filledellipse (rx ry
+			   &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (filledellipsecolor surface (sdl::point-x point) (sdl::point-y point) rx ry
+      (filledellipsecolor surface (sdl::point-x position) (sdl::point-y position) rx ry
 			  (map-color color))
-      (filledellipseRGBA surface (sdl::point-x point) (sdl::point-y point) rx ry
+      (filledellipseRGBA surface (sdl::point-x position) (sdl::point-y position) rx ry
 			 (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-pie (point rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-pie (rad start end
+		 &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (piecolor surface (sdl::point-x point) (sdl::point-y point) rad start end
+      (piecolor surface (sdl::point-x position) (sdl::point-y position) rad start end
 		(map-color color))
-      (pieRGBA surface (sdl::point-x point) (sdl::point-y point) rad start end
+      (pieRGBA surface (sdl::point-x position) (sdl::point-y position) rad start end
 	       (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-filledpie (point rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filledpie (rad start end
+		       &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (filledpiecolor surface (sdl::point-x point) (sdl::point-y point) rad start end
+      (filledpiecolor surface (sdl::point-x position) (sdl::point-y position) rad start end
 		      (map-color color))
-      (filledpieRGBA surface (sdl::point-x point) (sdl::point-y point) rad start end
+      (filledpieRGBA surface (sdl::point-x position) (sdl::point-y position) rad start end
 		     (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
 (defun draw-trigon (point1 point2 point3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -147,46 +155,50 @@
 			(sdl::point-x point3) (sdl::point-y point3)
 			(sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-polygon (point n &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-polygon (n &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (polygoncolor surface (sdl::point-x point) (sdl::point-y point) n
+      (polygoncolor surface (sdl::point-x position) (sdl::point-y position) n
 		    (map-color color))
-      (polygonRGBA surface (sdl::point-x point) (sdl::point-y point) n
+      (polygonRGBA surface (sdl::point-x position) (sdl::point-y position) n
 		   (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-aapolygon (point n &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-aapolygon (n &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (aapolygoncolor surface (sdl::point-x point) (sdl::point-y point) n
+      (aapolygoncolor surface (sdl::point-x position) (sdl::point-y position) n
 		      (map-color color))
-      (aapolygonRGBA surface (sdl::point-x point) (sdl::point-y point) n
+      (aapolygonRGBA surface (sdl::point-x position) (sdl::point-y position) n
 		     (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-filledpolygon (point n &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filledpolygon (n
+			   &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (filledpolygoncolor surface (sdl::point-x point) (sdl::point-y point) n
+      (filledpolygoncolor surface (sdl::point-x position) (sdl::point-y position) n
 			  (map-color color))
-      (filledpolygonRGBA surface (sdl::point-x point) (sdl::point-y point) n
+      (filledpolygonRGBA surface (sdl::point-x position) (sdl::point-y position) n
 			 (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-bezier (point n s &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-bezier (n s
+		    &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (beziercolor surface (sdl::point-x point) (sdl::point-y point) n s
+      (beziercolor surface (sdl::point-x position) (sdl::point-y position) n s
 		   (map-color color))
-      (bezierRGBA surface (sdl::point-x point) (sdl::point-y point) n s
+      (bezierRGBA surface (sdl::point-x position) (sdl::point-y position) n s
 		  (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-character (point c &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-character (c
+		       &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (charactercolor surface (sdl::point-x point) (sdl::point-y point) c
+      (charactercolor surface (sdl::point-x position) (sdl::point-y position) c
 		      (map-color color))
-      (characterRGBA surface (sdl::point-x point) (sdl::point-y point) c
+      (characterRGBA surface (sdl::point-x position) (sdl::point-y position) c
 		     (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
-(defun draw-string (point c &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-string (c
+		    &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
-      (stringcolor surface (sdl::point-x point) (sdl::point-y point) c
+      (stringcolor surface (sdl::point-x position) (sdl::point-y position) c
 		   (map-color color))
-      (stringRGBA surface (sdl::point-x point) (sdl::point-y point) c
+      (stringRGBA surface (sdl::point-x position) (sdl::point-y position) c
 		  (sdl::color-r color) (sdl::color-g color) (sdl::color-b color) (sdl::color-a color))))
 
 ;;; m
