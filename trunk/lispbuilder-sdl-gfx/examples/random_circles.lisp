@@ -18,7 +18,7 @@
 									'float))))
       (setf fps-frame-count 0
 	    fps-ticks 0))
-    (sdl-gfx:draw-string #(10 70) fps-text :surface surface :color #(255 255 255))))
+    (sdl-gfx:draw-string fps-text :position #(10 70) :surface surface :color #(255 255 255))))
 
 (defun random-circles ()
   (sdl:with-init ()
@@ -34,8 +34,8 @@
 			(sdl:push-quitevent)))
 	  (:idle
 	   (dotimes (i *circles-per-frame*)
-	     (sdl-gfx:draw-filledCircle (sdl:point (random width) (random height))
-					(random 100)
+	     (sdl-gfx:draw-filledCircle (random 100)
+					:position (sdl:point (random width) (random height))
 					:color (sdl:color (random 255) (random 255) (random 255) (random 255))))
 	   (display-fps sdl:*default-surface*)
 	   (sdl:update-screen)))))))
