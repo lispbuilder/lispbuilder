@@ -9,40 +9,19 @@
 
 ;;;; Overrides to C header files follow:
 ;;;;
-;;;; "SDL_events.h"
-
-;;;; Have to manually define SDL_KeyboardEvent as SWIG does not differentiate between an aggregate structute
-;;;; and a pointer to a struct.
-(defcstruct SDL_KeyboardEvent
-	(type :unsigned-char)
-	(which :unsigned-char)
-	(state :unsigned-char)
-	(keysym sdl_keysym))
-
-;;;; the SDL_Event is a union which is not yet correctly converted by SWIG
-(cffi:defcunion SDL_Event
-  (type :unsigned-char)
-  (active-event SDL_ActiveEvent)
-  (keyboard-event SDL_KeyboardEvent)
-  (mouse-motion-event SDL_MouseMotionEvent)
-  (mouse-button-event SDL_MouseButtonEvent)
-  (joy-axis-event SDL_JoyAxisEvent)
-  (joy-ball-event SDL_JoyBallEvent)
-  (joy-hat-event SDL_JoyHatEvent)
-  (joy-button-event SDL_JoyButtonEvent)
-  (resize-event SDL_ResizeEvent)
-  (expose-event SDL_ExposeEvent)
-  (quit-event SDL_QuitEvent)
-  (user-event SDL_UserEvent)
-  (sys-wm-event SDL_SysWMEvent))
-;;;; "SDL_events.h"
-
 ;;;; "SDL_audio.h"
 ;;;; Must define the CPU byte order.
 #-(or little-endian PC386 X86 I386) (defconstant AUDIO_U16SYS AUDIO_U16MSB) ;; Big Endian
 #-(or little-endian PC386 X86 I386) (defconstant AUDIO_S16SYS AUDIO_S16MSB) ;; Big Endian
 #+(or little-endian PC386 X86 I386) (defconstant AUDIO_U16SYS AUDIO_U16LSB) ;; Little Endian
 #+(or little-endian PC386 X86 I386) (defconstant AUDIO_S16SYS AUDIO_S16LSB) ;; Little Endian
+
+(defun SDL_LoadWAV (file spec audio-buf audio-len)
+  (SDL_LoadWAV_RW (SDL_RWFROMFILE file "rb")
+		  1
+		  spec
+		  audio-buf
+		  audio-len))
 ;;;; end "SDL_audio.h"
 
 ;;;; "SDL_joystick.h"
@@ -65,7 +44,6 @@
 
 ;;;; "SDL_syswm.h"
 #+win32 (defcstruct SDL_SysWMmsg
-;; 	(version :pointer)
 	(version SDL_version)
 	(hwnd :pointer)
 	(msg :pointer)
@@ -108,7 +86,6 @@
   (info :pointer))
 ;;;; end "SDL_syswm.h"
 
-
 ;;;; Implementation of SDL macros follows
 ;;;; "SDL_version.h"
 (defun SDL_VERSION (x)
@@ -130,14 +107,6 @@
       1
       0))
 ;;;; end "SDL_version.h"
-
-;;;; "SDL_mutex.h"
-(defun SDL_LockMutex (m)
-  (SDL_mutexP m))
-
-(defun SDL_UnlockMutex (m)
-  (SDL_mutexV m))
-;;;; end "SDL_mutex.h"
 
 ;;;; "SDL_video.h"
 (defun SDL_MUSTLOCK (surface)
@@ -181,23 +150,10 @@
    F))
 ;;;; end "SDL_cdrom.h"
 
-;;;; "SDL_audio.h"
-(defun SDL_LoadWAV (file spec audio-buf audio-len)
-  (SDL_LoadWAV_RW (SDL_RWFROMFILE file "rb")
-		  1
-		  spec
-		  audio-buf
-		  audio-len))
-;;;; end "SDL_audio.h"
-
-;;;; "SDL_error.h"
-(defun SDL_OutOfMemory ()
-  (SDL_Error (cffi:foreign-enum-value 'SDL_errorcode :SDL_ENOMEM)))
-;;;; end "SDL_error.h"
-
 ;;;; "SDL_mouse.h"
 (defun SDL_BUTTON (X)
-  (ash SDL_PRESSED (- X 1)))
+  (ash 1
+       (- X 1)))
 
 (defun SDL_BUTTON_LMASK ()
   (SDL_BUTTON SDL_BUTTON_LEFT))
@@ -214,64 +170,66 @@
   (ash 1 X ))
 
 (defun SDL_ACTIVEEVENTMASK ()
-  (SDL_EVENTMASK SDL_ACTIVEEVENT))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_ACTIVEEVENT)))
 
 (defun SDL_KEYDOWNMASK ()
-  (SDL_EVENTMASK SDL_KEYDOWN))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYDOWN)))
 
 (defun SDL_KEYUPMASK ()
-  (SDL_EVENTMASK SDL_KEYUP))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYUP)))
+
+(defun SDL_KEYEVENTMASK ()
+  (or (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYUP))
+      (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYDOWN))))
 
 (defun SDL_MOUSEMOTIONMASK ()
-  (SDL_EVENTMASK SDL_MOUSEMOTION))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_MOUSEMOTION)))
 
 (defun SDL_MOUSEBUTTONDOWNMASK ()
-  (SDL_EVENTMASK SDL_MOUSEBUTTONDOWN))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttondown)))
 
 (defun SDL_MOUSEBUTTONUPMASK ()
-  (SDL_EVENTMASK SDL_MOUSEBUTTONUP))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttonup)))
 
 (defun SDL_MOUSEEVENTMASK ()
-  (logior (SDL_EVENTMASK SDL_MOUSEMOTION)
-          (SDL_EVENTMASK SDL_MOUSEBUTTONDOWN)
-          (SDL_EVENTMASK SDL_MOUSEBUTTONUP)))
+  (logior (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_MOUSEMOTION))
+          (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttondown))
+          (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttonup))))
 
 (defun SDL_JOYAXISMOTIONMASK ()
-  (SDL_EVENTMASK SDL_JOYAXISMOTION))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYAXISMOTION)))
 
 (defun SDL_JOYBALLMOTIONMASK ()
-  (SDL_EVENTMASK SDL_JOYBALLMOTION))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBALLMOTION)))
 
 (defun SDL_JOYHATMOTIONMASK ()
-  (SDL_EVENTMASK SDL_JOYHATMOTION))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYHATMOTION)))
 
 (defun SDL_JOYBUTTONDOWNMASK ()
-  (SDL_EVENTMASK SDL_JOYBUTTONDOWN))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONDOWN)))
 
 (defun SDL_JOYBUTTONUPMASK ()
-  (SDL_EVENTMASK SDL_JOYBUTTONUP))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONUP)))
 
 (defun SDL_JOYEVENTMASK ()
-  (logior (SDL_EVENTMASK SDL_JOYAXISMOTION)
-          (SDL_EVENTMASK SDL_JOYBALLMOTION)
-          (SDL_EVENTMASK SDL_JOYHATMOTION)
-          (SDL_EVENTMASK SDL_JOYBUTTONDOWN)
-          (SDL_EVENTMASK SDL_JOYBUTTONUP)))
+  (logior (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYAXISMOTION))
+          (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBALLMOTION))
+          (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYHATMOTION))
+          (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONDOWN))
+          (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONUP))))
 
 (defun SDL_VIDEORESIZEMASK () 
-  (SDL_EVENTMASK SDL_VIDEORESIZE))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_VIDEORESIZE)))
 
 (defun SDL_VIDEOEXPOSEMASK ()
-  (SDL_EVENTMASK SDL_VIDEOEXPOSE))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_VIDEOEXPOSE)))
 
 (defun SDL_QUITMASK ()
-  (SDL_EVENTMASK SDL_QUIT))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_QUIT)))
 
 (defun SDL_SYSWMEVENTMASK ()
-  (SDL_EVENTMASK SDL_SYSWMEVENT))
+  (SDL_EVENTMASK (cffi:foreign-enum-value 'SDL_EventType :SDL_SYSWMEVENT)))
 ;;;; end "SDL_events.h"
-
-;;;; end Lisp Macros
 
 ;;;;
 ;;;; end Overrides

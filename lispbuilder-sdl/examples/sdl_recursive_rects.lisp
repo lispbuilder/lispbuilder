@@ -44,18 +44,14 @@
 
 (defun recursive-rects()
   "recursively and randomly divides up the screen with rectangles"
-  (if (= 0 (sdl:sdl_init (logior sdl:SDL_INIT_AUDIO sdl:SDL_INIT_VIDEO)))
-      (let ((surface_ptr (sdl:SDL_SetVideoMode *SCREEN-WIDTH* *SCREEN-HEIGHT* 0 sdl:SDL_ANYFORMAT)))
-	(draw-recursive-rects surface_ptr 0 0 *SCREEN-WIDTH* *SCREEN-HEIGHT* 10)
-	(format t "video mode set. width ~a height ~a~%" 
-		(sdl:surf-w surface_ptr)
-		(sdl:surf-h surface_ptr))
-	(with-foreign-object (event_ptr 'sdl:SDL_Event)
-	  (do
-	   ((event-type 0))
-	   ((eql event-type sdl:SDL_QUIT))
-	    (if (sdl:SDL_PollEvent event_ptr)
-		(setf event-type (cffi:foreign-slot-value event_ptr 'sdl:SDL_Event 'sdl:type)))
-	    (sdl:update-screen surface_ptr)))
-	(sdl:SDL_Quit))
-      (error "Unable to start SDL~%")))
+  (sdl:with-init ()
+    (sdl:with-display (*SCREEN-WIDTH* *SCREEN-HEIGHT*)
+      (draw-recursive-rects sdl:*default-surface* 0 0 *SCREEN-WIDTH* *SCREEN-HEIGHT* 10)
+      (format t "video mode set. width ~a height ~a~%" (sdl:surf-w) (sdl:surf-h))
+      (sdl:with-events ()
+	  (:quit t)
+	  (:keydown (state scancode key mod unicode)
+		    (if (eq key :SDLK_ESCAPE)
+			(sdl:push-quitevent)))
+	  (:idle
+	   (sdl:update-display))))))

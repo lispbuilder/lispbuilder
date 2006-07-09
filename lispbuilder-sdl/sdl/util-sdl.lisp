@@ -221,7 +221,7 @@
     (SDL_SetColorKey surface rel-accel 0)))
 
 ;; cl-sdl "cl-sdl.lisp"
-(defun clear-screen (&optional (color *default-color*) (surface *default-display*))
+(defun clear-display (&optional (color *default-color*) (surface *default-display*))
   (fill-surface :surface surface :color color)
   surface)
 
@@ -646,7 +646,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 (defun is-key (key1 key2)
   "Returns t if the keypress 'key1' is equal to the specified 'key2'.
    (cffi:foreign-enum-value 'SDLKey key2)."
-  (equal key1 (cffi:foreign-enum-value 'SDLKey key2)))
+  (eq key1 key2))
 
 (defun is-modifier (mod key)
   "Returns t if the keypress modifier 'mod' is equal to the specified 'key'.
@@ -732,8 +732,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
   (let ((event (cffi:foreign-alloc event-type)))
     (setf (cffi:foreign-slot-value event 'SDL_event 'type)
 	  (case event-type
-	    ('sdl_quitevent SDL_QUIT)
-	    (otherwise SDL_NOEVENT)))
+	    ('sdl_quitevent (cffi:foreign-enum-value 'SDL_EventType :SDL_QUIT))
+	    (otherwise (cffi:foreign-enum-value 'SDL_EventType :SDL_NOEVENT))))
     event))
 
 ;;; o
@@ -956,8 +956,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 
 ;;; u
 
-;; cl-sdl "cl-sdl.lisp"
-(defun update-screen (&optional (surface *default-display*))
+(defun update-display (&optional (surface *default-display*))
   (sdl_flip surface))
 
 (defun update-surface (&key (template nil) (surface *default-surface*))
@@ -1052,14 +1051,16 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 	    (setf (fpsmanager-lastticks fpsmngr) (sdl_getticks)))))))
 
 (defun expand-activeevent (sdl-event params forms)
-  `((eql SDL_ACTIVEEVENT (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_ACTIVEEVENT)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_ActiveEvent 'gain)
      (cffi:foreign-slot-value ,sdl-event 'SDL_ActiveEvent 'state))))
 
 (defun expand-keydown (sdl-event params forms)
-  `((eql SDL_KEYDOWN (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYDOWN)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
 		   ,@forms)
              
@@ -1071,7 +1072,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'unicode))))
 
 (defun expand-keyup (sdl-event params forms)
-  `((eql SDL_KEYUP (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYUP)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
 
@@ -1083,7 +1085,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'unicode))))
 
 (defun expand-mousemotion (sdl-event params forms)
-  `((eql SDL_MOUSEMOTION (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_MOUSEMOTION)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'state)
@@ -1094,7 +1097,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'yrel))))
 
 (defun expand-mousebuttondown (sdl-event params forms)
-  `((eql sdl_mousebuttondown (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttondown)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
 
@@ -1104,7 +1108,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'y))))
 
 (defun expand-mousebuttonup (sdl-event params forms)
-  `((eql sdl_mousebuttonup (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttonup)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'button)
@@ -1113,7 +1118,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'y))))
 
 (defun expand-joyaxismotion (sdl-event params forms)
-  `((eql SDL_JOYAXISMOTION (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYAXISMOTION)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyAxisEvent 'which)
@@ -1121,7 +1127,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyAxisEvent 'value))))
 
 (defun expand-joybuttondown (sdl-event params forms)
-  `((eql SDL_JOYBUTTONDOWN (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONDOWN)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'which)
@@ -1129,7 +1136,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'value))))
 
 (defun expand-joybuttonup (sdl-event params forms)
-  `((eql SDL_JOYBUTTONUP (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONUP)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'which)
@@ -1137,7 +1145,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'value))))
 
 (defun expand-joyhatmotion (sdl-event params forms)
-  `((eql SDL_JOYHATMOTION (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYHATMOTION)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyHatEvent 'which)
@@ -1145,7 +1154,8 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyHatEvent 'value))))
 
 (defun expand-joyballmotion (sdl-event params forms)
-  `((eql SDL_JOYBALLMOTION (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBALLMOTION)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'which)
@@ -1154,32 +1164,36 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
      (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'yrel))))
 
 (defun expand-videoresize (sdl-event params forms)
-  `((eql SDL_VIDEORESIZE (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_VIDEORESIZE)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_ResizeEvent 'w)
      (cffi:foreign-slot-value ,sdl-event 'SDL_ResizeEvent 'h))))
 
 (defun expand-videoexpose (sdl-event forms)
-  `((eql SDL_VIDEOEXPOSE (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_VIDEOEXPOSE)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ()
                  ,@forms))))
 
 (defun expand-syswmevent (sdl-event forms)
-  `((eql SDL_SYSWMEVENT (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_SYSWMEVENT)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (funcall #'(lambda ()
                  ,@forms))))
 
 (defun expand-quit (sdl-event forms quit)
-  `((eql SDL_QUIT (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_QUIT)
+	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
     (setf ,quit (funcall #'(lambda ()
                              ,@forms)))))
 
 (defun expand-userevent (sdl-event params forms)
   `((and (>= (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type)
-	  SDL_MOUSEMOTION)
+	  (cffi:foreign-enum-value 'SDL_EventType :SDL_USEREVENT))
      (< (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type)
-      (- SDL_NUMEVENTS 1)))
+      (- (cffi:foreign-enum-value 'SDL_EventType :SDL_NUMEVENTS) 1)))
     (funcall #'(lambda ,params
                  ,@forms)
      (cffi:foreign-slot-value ,sdl-event 'SDL_UserEvent 'type)
@@ -1191,7 +1205,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
   `(progn
      ,@forms))
 
-(defmacro with-events (&body events)
+(defmacro with-events (args &rest events)
   "(with-sdl-events
      (:activeevent (gain state)
 		     t)

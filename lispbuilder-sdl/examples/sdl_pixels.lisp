@@ -15,7 +15,7 @@
 	  (height (sdl:surf-h sdl:*default-display*)))
       (sdl:set-framerate 0)		; Unlock the framerate.
       (sdl:with-init ()
-	(sdl:with-events
+	(sdl:with-events ()
 	  (:quit t)
 	  (:idle 
 	   (sdl:with-default-color ((sdl:random-color))
