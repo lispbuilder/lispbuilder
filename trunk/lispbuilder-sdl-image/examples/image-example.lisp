@@ -40,11 +40,11 @@
 	    (sdl:draw-image image :position (sdl:point (+ image-gap (* x image-width)) (+ image-gap (* y image-height)))
 			    :screen sdl:*default-display*)
 	    (incf x)))
-	(sdl:with-events
+	(sdl:with-events ()
 	  (:quit t)
 	  (:keydown (state scancode key mod unicode)
-		    (if (sdl:is-key key :SDLK_ESCAPE)
+		    (if (eq key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
 	  (:idle
-	   (sdl:update-screen)))))))
+	   (sdl:update-display)))))))
 
