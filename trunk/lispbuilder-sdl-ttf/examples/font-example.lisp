@@ -12,5 +12,5 @@
     (sdl:with-display (320 240)
       (sdl-ttf:with-open-font ("Vera.ttf" 32 *ttf-path*)
 	(sdl-ttf:draw-text-solid "Hello TTF World!" :update-p t))
-      (sdl:with-events
+      (sdl:with-events ()
 	  (:quit t)))))
