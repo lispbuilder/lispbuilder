@@ -27,7 +27,7 @@
    #:check-bounds
    #:clamp				; from cl-sdl
    #:clear-colorkey
-   #:clear-screen			; from cl-sdl
+   #:clear-display
    #:color
    #:color-a
    #:color-b
@@ -108,7 +108,7 @@
    #:surf-w
    #:to-degree
    #:to-radian
-   #:update-screen			; from cl-sdl
+   #:update-display
    #:update-surface 
    #:video-driver-name
    #:warp-mouse

@@ -18,10 +18,10 @@
 			       :flags sdl:SDL_SWSURFACE
 			       :title-caption "Random-rects1"
 			       :icon-caption "Random-rects1")
-	(sdl:with-events
+	(sdl:with-events ()
 	  (:quit t)
 	  (:keydown (state scancode key mod unicode)
-		    (if (sdl:is-key key :SDLK_ESCAPE)
+		    (if (eq key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
 	  (:idle
 	   ;;Update only the portion of the display that has been written to.
@@ -32,26 +32,26 @@
   (sdl:with-init ()			; Initialize Systems
     (sdl:set-framerate 0)		; Unlock the framerate.
     (sdl:with-display (320 240)
-      (sdl:with-events
+      (sdl:with-events ()
 	(:quit t)
 	(:keydown (state scancode key mod unicode)
-		  (if (sdl:is-key key :SDLK_ESCAPE)
+		  (if (eq key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
 	(:idle
 	 (sdl:draw-rect (sdl:random-rect (sdl:surf-w) (sdl:surf-h)) :color (sdl:random-color)
 			:update-p nil)
 	 ;; Update the entire display.
-	 (sdl:update-screen))))))
+	 (sdl:update-display))))))
 
 (defun random-rects3 ()
   (let ((width 320) (height 240))
     (sdl:with-init ()			; Initialize Systems
       (sdl:set-framerate 0)		; Unlock the framerate.
       (sdl:with-display (320 240 :surface-name display)
-	(sdl:with-events
+	(sdl:with-events ()
 	  (:quit t)
 	  (:keydown (state scancode key mod unicode)
-		    (if (sdl:is-key key :SDLK_ESCAPE)
+		    (if (eq key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
 	  (:idle
 	   (sdl:draw-rect-end-points (+ 1 (random width)) (+ 1 (random height))

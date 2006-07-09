@@ -29,6 +29,9 @@
 								  (mod (* 7 c) 256)
 								  (mod (* 2 c) 256))
 						:update-p t))))
-      (sdl:with-events
+      (sdl:with-events ()
 	(:quit t)
-	(:videoexpose (sdl:update-screen))))))
+	(:keydown (state scancode key mod unicode)
+		  (if (eq key :SDLK_ESCAPE)
+		      (sdl:push-quitevent)))
+	(:videoexpose (sdl:update-display))))))

@@ -2,15 +2,65 @@
 ;;;; SDL CFFI lisp wrapper
 ;;;; Part of the CL-Gardeners project
 ;;;; http://wiki.alu.org/Application_Builder
-;;;; (C)2006 Justin Heyes-Jones
+;;;; (C)2006 Justin Heyes-Jones, Luke J Crook
 ;;;; See COPYING for license
 ;;;;
-;;;; This .i file has been tested with SDL version 1.2.9
+;;;; This .i file has been tested with SDL version 1.2.11
+
+;; include/*.h changes from SDL-1.2.9 to SDL-1.2.11
+;;
+;;	SDL-1.2.9		SDL-1.2.11	 
+;;	==========		=========	 
+;;	SDL.h			SDL.h		 
+;;	SDL_active.h		SDL_active.h	 
+;;	SDL_audio.h		SDL_audio.h	     
+;;	SDL_byteorder.h		SDL_byteorder.h	 
+;;	SDL_cdrom.h		SDL_cdrom.h	     
+;;	SDL_copying.h		SDL_copying.h	 
+;;	SDL_cpuinfo.h		SDL_cpuinfo.h	 
+;;	SDL_endian.h		SDL_endian.h	 
+;;	SDL_error.h		SDL_error.h	 
+;;	SDL_events.h		SDL_events.h	 
+;;	SDL_getenv.h		SDL_getenv.h	 
+;;	SDL_joystick.h		SDL_joystick.h	 
+;;	SDL_keyboard.h		SDL_keyboard.h	 
+;;	SDL_keysym.h		SDL_keysym.h	 
+;;	SDL_loadso.h		SDL_loadso.h	 
+;;	SDL_main.h		SDL_main.h	    
+;;	SDL_mouse.h		SDL_mouse.h	    
+;;	SDL_mutex.h		SDL_mutex.h	    
+;;	SDL_name.h		SDL_name.h	    
+;;	SDL_opengl.h		SDL_opengl.h	 
+;;				SDL_platform.h	 
+;;	SDL_quit.h		SDL_quit.h	 
+;;	SDL_rwops.h		SDL_rwops.h	 
+;;				SDL_stdinc.h	 
+;;	SDL_syswm.h		SDL_syswm.h	 
+;;	SDL_thread.h		SDL_thread.h	 
+;;	SDL_timer.h		SDL_timer.h	 
+;;	SDL_types.h		SDL_types.h	 
+;;	SDL_version.h		SDL_version.h	 
+;;	SDL_video.h		SDL_video.h	 
+;;	begin_code.h		begin_code.h	 
+;;	close_code.h		close_code.h	 
+;;
+;; The following #includes are not processed by sdlswig.i
+;;  - "SDL_syswm.h" 	   // Too complicated. Partially defined in sdlswig.i	// Complete for 1.2.11
+;;  - "SDL_platform.h" 	   // Nothing to be done.	   	    		// Complete for 1.2.11
+;;  - "SDL_stdinc.h" 	   // Too complicated. Partially defined in sdlswig.i   // Complete for 1.2.11
+;;  - "SDL_getenv.h"	   // Depreciated. Now in "SDL_stdinc.h"    		// Complete for 1.2.11
+;;  - "SDL_types.h"  	   // Depreciated. Now in "SDL_stdinc.h"		// Complete for 1.2.11
+;;  - "SDL_byteorder.h"	   // Depreciated. Now in "SDL_endian.h"		// Complete for 1.2.11
+;;  - "SDL_endian.h"  	   // Too complicated. Partially defined in sdlswig.i	// Complete for 1.2.11
+;;  - "SDL_thread.h" 	   // Use native Lisp threads instead. 			// Complete for 1.2.11
+;;  - "SDL_mutex.h" 	   // Use native Lisp threads instead. 			// Complete for 1.2.11
+;;  - "SDL_timer.h" 	   // Necessary functions are defined in sdlswig.i	// Complete for 1.2.11
+;;  - "SDL_opengl.h" 	   // Use CL-OPENGL instead.  	      	 		// Complete for 1.2.11
 
 (in-package #:lispbuilder-sdl)
 
-;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature
-; this handles anonymous enum types differently
+;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature)
+;; this handles anonymous enum types differently
 
 (defmacro defenum (&body enums)	
  `(progn ,@(loop for value in enums
@@ -25,17 +75,18 @@
 
 ;;;; Overrides to C header files follow:
 ;;;;
-;;; First, set the byte-order: "SDL_byteorder.h"
+;;; "SDL_endian.h"
+;;; First, set the byte-order. This is probably not needed.
 (defconstant SDL_LIL_ENDIAN 1234)
 (defconstant SDL_BIG_ENDIAN 4321)
 
 ;;; Set the byte order for the current CPU
 #-(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_BIG_ENDIAN)
 #+(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_LIL_ENDIAN)
-;;; End "SDL_byteorder.h"
+;;; End "SDL_endian.h"
 
 ;;; "SDL_video.h"
-;;; SDL_VideoInfo uses nasty bitfields. CFFI does not yet support these.
+;;; Here we define SDL_VideoInfo as it uses nasty bitfields which SWIG does not yet generate automatic wrappers for.
 (defbitfield hardware-flags
   (:hw_available #x0000)
   (:wm_available #x0001)
@@ -50,50 +101,55 @@
 (defcstruct SDL_VideoInfo
   (flags hardware-flags)
   (video_mem :unsigned-int)
-  (vfmt :pointer))
+  (vfmt :pointer)
+  (current_w :int)	;; New for SDL-1.2.11
+  (current_h :int))	;; New for SDL-1.2.11
+
 ;;; end "SDL_video.h"
 
-;;; "SDL_keyboard.h"
-;;; SDL_keysym is redefined here as CFFI treats 'sym' and 'mod' as pointers and not enums.
-(defcstruct SDL_keysym
-  (scancode :unsigned-char)
-  (sym :int)
-  (mod :int)
-  (unicode :unsigned-short))
-;;; end "SDL_keyboard.h"
-
-;;;; "SDL_types.h"
+;;;; "SDL_stdinc.h"
+;;; Probably do not need this.
 (defcenum SDL_bool
 	(:SDL_FALSE 0)
 	(:SDL_TRUE 1))
 
+;;; Probably do not need this.
 (defcstruct Uint64
 	(hi :unsigned-int)
 	(lo :unsigned-int))
 
+;;; Probably do not need this.
 (defcenum SDL_DUMMY_ENUM
 	:DUMMY_ENUM_VALUE)
 
-(defconstant SDL_PRESSED  #x01)
-(defconstant SDL_RELEASED #x00)
-;;;; end "SDL_types.h"
+;;; Is this even cross platform between Windows, *nix, OSX?
+;; extern DECLSPEC char * SDLCALL SDL_getenv(const char *name);
+(defcfun ("SDL_getenv" SDL_getenv) :pointer
+  (name :string))
 
-;;;; "SDL_video.h"
-(defcfun ("SDL_GL_SetAttribute" SDL_GL_SetAttribute) :int
-  (attr :int)
-  (value :int))
+;;; Is this even cross platform between Windows, *nix, OSX?
+;; extern DECLSPEC int SDLCALL SDL_putenv(const char *variable);
+(defcfun ("SDL_putenv" SDL_putenv) :int
+  (variable :string))
+;;;; end "SDL_stdinc.h"
 
-(defcfun ("SDL_GL_GetAttribute" SDL_GL_GetAttribute) :int
-  (attr :int)
-  (value :pointer))
-;;;; end "SDL_video.h"
+;;; "SDL_timer.h"
+;;; These are really the only functions we require from "SDL_timer.h"
+;;/* Get the number of milliseconds since the SDL library initialization.
+;; * Note that this value wraps if the program runs for more than ~49 days.
+;; */ 
+;;extern DECLSPEC Uint32 SDLCALL SDL_GetTicks(void);
+(defcfun ("SDL_GetTicks" SDL_GetTicks) :int)
+
+;;/* Wait a specified number of milliseconds before returning */
+;;extern DECLSPEC void SDLCALL SDL_Delay(Uint32 ms);
+(defcfun ("SDL_Delay" SDL_Delay) :void
+  (ms :int))
+;;;; end "SDL_timer.h"
 
 
 ;;;;
 ;;;; end Overrides
-
-
-
 
 
 
@@ -128,6 +184,7 @@
 	:SDL_EFREAD
 	:SDL_EFWRITE
 	:SDL_EFSEEK
+	:SDL_UNSUPPORTED
 	:SDL_LASTERROR)
 
 (cffi:defcfun ("SDL_Error" SDL_Error) :void
@@ -143,8 +200,7 @@
 
 (cffi:defcunion SDL_RWops_hidden
 	(unknown :pointer)
-	(mem :pointer)
-	(stdio :pointer))
+	(mem :pointer))
 
 (cffi:defcstruct SDL_RWops_hidden_unknown
 	(data1 :pointer))
@@ -154,17 +210,9 @@
 	(here :pointer)
 	(stop :pointer))
 
-(cffi:defcstruct SDL_RWops_hidden_stdio
-	(autoclose :int)
-	(fp :pointer))
-
 (cffi:defcfun ("SDL_RWFromFile" SDL_RWFromFile) :pointer
   (file :string)
   (mode :string))
-
-(cffi:defcfun ("SDL_RWFromFP" SDL_RWFromFP) :pointer
-  (fp :pointer)
-  (autoclose :int))
 
 (cffi:defcfun ("SDL_RWFromMem" SDL_RWFromMem) :pointer
   (mem :pointer)
@@ -179,26 +227,53 @@
 (cffi:defcfun ("SDL_FreeRW" SDL_FreeRW) :void
   (area :pointer))
 
-(cl:defconstant SDL_TIMESLICE 10)
+(cl:defconstant RW_SEEK_SET 0)
 
-(cl:defconstant TIMER_RESOLUTION 10)
+(cl:defconstant RW_SEEK_CUR 1)
 
-(cffi:defcfun ("SDL_GetTicks" SDL_GetTicks) :unsigned-int)
+(cl:defconstant RW_SEEK_END 2)
 
-(cffi:defcfun ("SDL_Delay" SDL_Delay) :void
-  (ms :unsigned-int))
+(cffi:defcfun ("SDL_ReadLE16" SDL_ReadLE16) :unsigned-short
+  (src :pointer))
 
-(cffi:defcfun ("SDL_SetTimer" SDL_SetTimer) :int
-  (interval :unsigned-int)
-  (callback :pointer))
+(cffi:defcfun ("SDL_ReadBE16" SDL_ReadBE16) :unsigned-short
+  (src :pointer))
 
-(cffi:defcfun ("SDL_AddTimer" SDL_AddTimer) :pointer
-  (interval :unsigned-int)
-  (callback :pointer)
-  (param :pointer))
+(cffi:defcfun ("SDL_ReadLE32" SDL_ReadLE32) :unsigned-int
+  (src :pointer))
 
-(cffi:defcfun ("SDL_RemoveTimer" SDL_RemoveTimer) :pointer
-  (t_arg0 :pointer))
+(cffi:defcfun ("SDL_ReadBE32" SDL_ReadBE32) :unsigned-int
+  (src :pointer))
+
+(cffi:defcfun ("SDL_ReadLE64" SDL_ReadLE64) :pointer
+  (src :pointer))
+
+(cffi:defcfun ("SDL_ReadBE64" SDL_ReadBE64) :pointer
+  (src :pointer))
+
+(cffi:defcfun ("SDL_WriteLE16" SDL_WriteLE16) :int
+  (dst :pointer)
+  (value :unsigned-short))
+
+(cffi:defcfun ("SDL_WriteBE16" SDL_WriteBE16) :int
+  (dst :pointer)
+  (value :unsigned-short))
+
+(cffi:defcfun ("SDL_WriteLE32" SDL_WriteLE32) :int
+  (dst :pointer)
+  (value :unsigned-int))
+
+(cffi:defcfun ("SDL_WriteBE32" SDL_WriteBE32) :int
+  (dst :pointer)
+  (value :unsigned-int))
+
+(cffi:defcfun ("SDL_WriteLE64" SDL_WriteLE64) :int
+  (dst :pointer)
+  (value :pointer))
+
+(cffi:defcfun ("SDL_WriteBE64" SDL_WriteBE64) :int
+  (dst :pointer)
+  (value :pointer))
 
 (cffi:defcstruct SDL_AudioSpec
 	(freq :int)
@@ -686,6 +761,12 @@
 	(:KMOD_MODE #x4000)
 	(:KMOD_RESERVED #x8000))
 
+(cffi:defcstruct SDL_keysym
+	(scancode :unsigned-char)
+	(sym SDLKey)
+	(mod SDLMod)
+	(unicode :unsigned-short))
+
 (cl:defconstant SDL_ALL_HOTKEYS #xFFFFFFFF)
 
 (cffi:defcfun ("SDL_EnableUNICODE" SDL_EnableUNICODE) :int
@@ -698,6 +779,10 @@
 (cffi:defcfun ("SDL_EnableKeyRepeat" SDL_EnableKeyRepeat) :int
   (delay :int)
   (interval :int))
+
+(cffi:defcfun ("SDL_GetKeyRepeat" SDL_GetKeyRepeat) :void
+  (delay :pointer)
+  (interval :pointer))
 
 (cffi:defcfun ("SDL_GetKeyState" SDL_GetKeyState) :pointer
   (numkeys :pointer))
@@ -760,33 +845,37 @@
 
 (cl:defconstant SDL_BUTTON_WHEELDOWN 5)
 
-(defanonenum 
-	(SDL_NOEVENT 0)
-	SDL_ACTIVEEVENT
-	SDL_KEYDOWN
-	SDL_KEYUP
-	SDL_MOUSEMOTION
-	SDL_MOUSEBUTTONDOWN
-	SDL_MOUSEBUTTONUP
-	SDL_JOYAXISMOTION
-	SDL_JOYBALLMOTION
-	SDL_JOYHATMOTION
-	SDL_JOYBUTTONDOWN
-	SDL_JOYBUTTONUP
-	SDL_QUIT
-	SDL_SYSWMEVENT
-	SDL_EVENT_RESERVEDA
-	SDL_EVENT_RESERVEDB
-	SDL_VIDEORESIZE
-	SDL_VIDEOEXPOSE
-	SDL_EVENT_RESERVED2
-	SDL_EVENT_RESERVED3
-	SDL_EVENT_RESERVED4
-	SDL_EVENT_RESERVED5
-	SDL_EVENT_RESERVED6
-	SDL_EVENT_RESERVED7
-	(SDL_USEREVENT 24)
-	(SDL_NUMEVENTS 32))
+(cl:defconstant SDL_RELEASED 0)
+
+(cl:defconstant SDL_PRESSED 1)
+
+(cffi:defcenum SDL_EventType
+	(:SDL_NOEVENT 0)
+	:SDL_ACTIVEEVENT
+	:SDL_KEYDOWN
+	:SDL_KEYUP
+	:SDL_MOUSEMOTION
+	:SDL_MOUSEBUTTONDOWN
+	:SDL_MOUSEBUTTONUP
+	:SDL_JOYAXISMOTION
+	:SDL_JOYBALLMOTION
+	:SDL_JOYHATMOTION
+	:SDL_JOYBUTTONDOWN
+	:SDL_JOYBUTTONUP
+	:SDL_QUIT
+	:SDL_SYSWMEVENT
+	:SDL_EVENT_RESERVEDA
+	:SDL_EVENT_RESERVEDB
+	:SDL_VIDEORESIZE
+	:SDL_VIDEOEXPOSE
+	:SDL_EVENT_RESERVED2
+	:SDL_EVENT_RESERVED3
+	:SDL_EVENT_RESERVED4
+	:SDL_EVENT_RESERVED5
+	:SDL_EVENT_RESERVED6
+	:SDL_EVENT_RESERVED7
+	(:SDL_USEREVENT 24)
+	(:SDL_NUMEVENTS 32))
 
 (cl:defconstant SDL_ALLEVENTS #xFFFFFFFF)
 
@@ -794,6 +883,12 @@
 	(type :unsigned-char)
 	(gain :unsigned-char)
 	(state :unsigned-char))
+
+(cffi:defcstruct SDL_KeyboardEvent
+	(type :unsigned-char)
+	(which :unsigned-char)
+	(state :unsigned-char)
+	(keysym SDL_keysym))
 
 (cffi:defcstruct SDL_MouseMotionEvent
 	(type :unsigned-char)
@@ -858,6 +953,22 @@
 	(type :unsigned-char)
 	(msg :pointer))
 
+(cffi:defcunion SDL_Event
+	(type :unsigned-char)
+	(active SDL_ActiveEvent)
+	(key SDL_KeyboardEvent)
+	(motion SDL_MouseMotionEvent)
+	(button SDL_MouseButtonEvent)
+	(jaxis SDL_JoyAxisEvent)
+	(jball SDL_JoyBallEvent)
+	(jhat SDL_JoyHatEvent)
+	(jbutton SDL_JoyButtonEvent)
+	(resize SDL_ResizeEvent)
+	(expose SDL_ExposeEvent)
+	(quit SDL_QuitEvent)
+	(user SDL_UserEvent)
+	(syswm SDL_SysWMEvent))
+
 (cffi:defcfun ("SDL_PumpEvents" SDL_PumpEvents) :void)
 
 (cffi:defcenum SDL_eventaction
@@ -896,61 +1007,6 @@
 (cffi:defcfun ("SDL_EventState" SDL_EventState) :unsigned-char
   (type :unsigned-char)
   (state :int))
-
-(cl:defconstant SDL_MUTEX_TIMEDOUT 1)
-
-(cffi:defcfun ("SDL_CreateMutex" SDL_CreateMutex) :pointer)
-
-(cffi:defcfun ("SDL_mutexP" SDL_mutexP) :int
-  (mutex :pointer))
-
-(cffi:defcfun ("SDL_mutexV" SDL_mutexV) :int
-  (mutex :pointer))
-
-(cffi:defcfun ("SDL_DestroyMutex" SDL_DestroyMutex) :void
-  (mutex :pointer))
-
-(cffi:defcfun ("SDL_CreateSemaphore" SDL_CreateSemaphore) :pointer
-  (initial_value :unsigned-int))
-
-(cffi:defcfun ("SDL_DestroySemaphore" SDL_DestroySemaphore) :void
-  (sem :pointer))
-
-(cffi:defcfun ("SDL_SemWait" SDL_SemWait) :int
-  (sem :pointer))
-
-(cffi:defcfun ("SDL_SemTryWait" SDL_SemTryWait) :int
-  (sem :pointer))
-
-(cffi:defcfun ("SDL_SemWaitTimeout" SDL_SemWaitTimeout) :int
-  (sem :pointer)
-  (ms :unsigned-int))
-
-(cffi:defcfun ("SDL_SemPost" SDL_SemPost) :int
-  (sem :pointer))
-
-(cffi:defcfun ("SDL_SemValue" SDL_SemValue) :unsigned-int
-  (sem :pointer))
-
-(cffi:defcfun ("SDL_CreateCond" SDL_CreateCond) :pointer)
-
-(cffi:defcfun ("SDL_DestroyCond" SDL_DestroyCond) :void
-  (cond :pointer))
-
-(cffi:defcfun ("SDL_CondSignal" SDL_CondSignal) :int
-  (cond :pointer))
-
-(cffi:defcfun ("SDL_CondBroadcast" SDL_CondBroadcast) :int
-  (cond :pointer))
-
-(cffi:defcfun ("SDL_CondWait" SDL_CondWait) :int
-  (cond :pointer)
-  (mut :pointer))
-
-(cffi:defcfun ("SDL_CondWaitTimeout" SDL_CondWaitTimeout) :int
-  (cond :pointer)
-  (mutex :pointer)
-  (ms :unsigned-int))
 
 (cl:defconstant SDL_ALPHA_OPAQUE 255)
 
@@ -1078,7 +1134,9 @@
 	:SDL_GL_ACCUM_ALPHA_SIZE
 	:SDL_GL_STEREO
 	:SDL_GL_MULTISAMPLEBUFFERS
-	:SDL_GL_MULTISAMPLESAMPLES)
+	:SDL_GL_MULTISAMPLESAMPLES
+	:SDL_GL_ACCELERATED_VISUAL
+	:SDL_GL_SWAP_CONTROL)
 
 (cl:defconstant SDL_LOGPAL #x01)
 
@@ -1234,7 +1292,7 @@
   (flag :unsigned-int)
   (alpha :unsigned-char))
 
-(cffi:defcfun ("SDL_SetClipRect" SDL_SetClipRect) :void
+(cffi:defcfun ("SDL_SetClipRect" SDL_SetClipRect) :pointer
   (surface :pointer)
   (rect :pointer))
 
@@ -1295,6 +1353,14 @@
 (cffi:defcfun ("SDL_GL_GetProcAddress" SDL_GL_GetProcAddress) :pointer
   (proc :string))
 
+(cffi:defcfun ("SDL_GL_SetAttribute" SDL_GL_SetAttribute) :int
+  (attr SDL_GLattr)
+  (value :int))
+
+(cffi:defcfun ("SDL_GL_GetAttribute" SDL_GL_GetAttribute) :int
+  (attr SDL_GLattr)
+  (value :pointer))
+
 (cffi:defcfun ("SDL_GL_SwapBuffers" SDL_GL_SwapBuffers) :void)
 
 (cffi:defcfun ("SDL_GL_UpdateRects" SDL_GL_UpdateRects) :void
@@ -1341,7 +1407,7 @@
 
 (cl:defconstant SDL_MINOR_VERSION 2)
 
-(cl:defconstant SDL_PATCHLEVEL 9)
+(cl:defconstant SDL_PATCHLEVEL 11)
 
 (cffi:defcstruct SDL_version
 	(major :unsigned-char)

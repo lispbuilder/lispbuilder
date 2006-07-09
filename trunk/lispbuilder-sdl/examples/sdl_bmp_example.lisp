@@ -23,11 +23,11 @@
 	(sdl:blit-surface sdl-image sdl:*default-display* :dst-rect #(10 10))
 	(sdl:blit-surface alien-image sdl:*default-display* :dst-rect #(300 10))
 
-      (sdl:with-events
+      (sdl:with-events ()
 	(:quit t)
 	(:keydown (state scancode key mod unicode)
 		  (if (sdl:is-key key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
 	(:idle
-	 (sdl:update-screen)))))))
+	 (sdl:update-display)))))))
 

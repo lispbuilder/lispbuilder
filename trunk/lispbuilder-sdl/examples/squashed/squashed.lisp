@@ -24,7 +24,7 @@
 			    (squash (sdl:load-image "squash.bmp" *image-path* :key-color #(255 255 255))))
 	  (show-score score)
 	  (sdl:display-cursor nil)
-	  (sdl:with-events
+	  (sdl:with-events ()
 	    (:quit t)
 	    (:mousemotion (state x y xrel yrel)
 			  (setf (sdl:point-x racket-point) x
@@ -40,7 +40,7 @@
 				  (decf levelticks 100))))
 	    (:idle
 	     ;; fill the background white
-	     (sdl:clear-screen #(255 255 255))
+	     (sdl:clear-display #(255 255 255))
 	     ;; draw images
 	     (when squashed-point
 	       (sdl:draw-image blood :position squashed-point))
@@ -51,5 +51,5 @@
 		 (sdl:draw-image squash :position (sdl:point 0 0))
 		 (sdl:draw-image bug :position bug-point))
 	     (sdl:draw-image racket :position racket-point)
-	     ;; blit to screen
-	     (sdl:update-screen))))))))
+	     ;; blit to display
+	     (sdl:update-display))))))))
