@@ -410,7 +410,7 @@ package from sourceforge and unpack it to the asdf directory, e.g.
 <ul>
   <li> install the SDL dynamic library by doing <u>one</u> of the following: 
   <ul>
-    <li> download <a href="http://www.libsdl.org/release/SDL-1.2.9-win32.zip">SDL</a> and 
+    <li> download <a href="http://www.libsdl.org/release/SDL-1.2.11-win32.zip">SDL</a> and 
     copy the SDL.dll to following system folder:
     <pre>c:\windows\system32</pre>
     </li>
@@ -560,7 +560,7 @@ enum {
 <h3 id="Modifications sdlswig.i post-swig.lisp">Modifications to sdlswig.i and post-swig.lisp</h3>
 <p>As described above, SWIG uses rules specified in the interface file, <b>sdlswig.i</b>, to create the the CFFI bindings.
 This interface file contains several structures that by necessity are redefined in Lisp. When rebuilding the CFFI 
-bindings from scratch using a version of SDL <em>later than 1.2.9</em>, care must be taken to ensure that the structure of the 
+bindings from scratch using a version of SDL <em>later than 1.2.11</em>, care must be taken to ensure that the structure of the 
 manual overrides match the constructs in the C header files. All overrides are grouped in the interface file within 
 the following tags:</p>
 <pre>
@@ -574,7 +574,7 @@ the following tags:</p>
 <p>The <b>post-swig.lisp</b> file also contains C header file overrides. These are not included in 
 sdlswig.i as SWIG places all manual overrides prior to the generated bindings. The overrides in the post-swig.lisp 
 file must be located post- generated bindings. As with the sdlswig.i file, when rebuilding the CFFI bindings from 
-scratch using a version of SDL later than 1.2.9, care must be taken to ensure that the structure of the manual overrides 
+scratch using a version of SDL later than 1.2.11, care must be taken to ensure that the structure of the manual overrides 
 match the constructs in the C header files. All overrides are grouped in the interface file within the following tags:</p>
 <pre>
 ;;;; Overrides to C header files follow:
