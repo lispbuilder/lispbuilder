@@ -27,10 +27,10 @@
       (let ((width (sdl:surf-w sdl:*default-display*))
 	    (height (sdl:surf-h sdl:*default-display*)))
 	(sdl:set-framerate 0)
-	(sdl:with-events
+	(sdl:with-events ()
 	  (:quit t)
 	  (:keydown (state scancode key mod unicode)
-		    (if (sdl:is-key key :SDLK_ESCAPE)
+		    (if (eq key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
 	  (:idle
 	   (dotimes (i *circles-per-frame*)
@@ -38,4 +38,4 @@
 					:position (sdl:point (random width) (random height))
 					:color (sdl:color (random 255) (random 255) (random 255) (random 255))))
 	   (display-fps sdl:*default-surface*)
-	   (sdl:update-screen)))))))
+	   (sdl:update-display)))))))
