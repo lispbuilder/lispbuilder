@@ -35,7 +35,7 @@
 				(setf squashed-point (sdl:point x y)
 				      last-squash-tick (sdl:SDL_GetTicks))
 				(show-score (incf score))
-				:     ; increase the bug jumping speed
+				     ; increase the bug jumping speed
 				(when (> levelticks 200)
 				  (decf levelticks 100))))
 	    (:idle
