@@ -41,9 +41,6 @@
 #include "SDL_mixer.h"	   // Complete for 1.2.7
 %}
 
-//Uncomment %feature to generate :exports
-//%feature("export");
-
 // "SDL_stdinc.h"
 // Copied from SDL-1.2.11/include/SDL_stdinc.h"
 typedef unsigned char	Uint8;
@@ -66,6 +63,9 @@ typedef signed int	Sint32;
 %ignore Mix_SetError;
 %ignore Mix_GetError;
 // end "SDL_mixer.h"
+
+//Uncomment %feature to generate :exports
+//%feature("export");
 
 %include "begin_code.h" // This is copied from "SDL-1.2.11/incude/begin_code.h"
 %include "SDL_mixer.h"
