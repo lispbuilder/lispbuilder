@@ -105,4 +105,4 @@
    #:MIX_EFFECTSMAXSPEED
    #:Mix_PlayChannel
    #:Mix_FadeInChannel
-   #:Mix_GetError)
+   #:Mix_GetError))
