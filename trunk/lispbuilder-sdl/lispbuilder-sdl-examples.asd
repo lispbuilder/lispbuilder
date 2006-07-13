@@ -30,4 +30,6 @@
 			 (:static-file "blood.bmp")
 			 (:static-file "bug.bmp")
 			 (:static-file "racket.bmp")
-			 (:static-file "squash.bmp")))))))
+			 (:static-file "squash.bmp"))))
+	      :serial t ;; Make sure we load "examples" before "squashed"
+	      )))
