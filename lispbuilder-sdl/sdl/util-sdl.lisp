@@ -172,18 +172,29 @@
 		       collect `(,(first binding) ,(second binding))))
 	  (when (and ,@(loop for binding in bindings
 			     collect `(is-valid-ptr ,(first binding))))
-	    (setf ,body-value (progn ,@body))
-	    ;; Here we try attempt to verify that the surface-ptr is not the actual display surface.
-	    ;; However according to the SDL documentation, we cannot be 100% sure.
-	    ;; "(SDL_GetVideoSurface) ... returns a pointer to the current display surface. If SDL is doing format
-	    ;; conversion on the display surface, this function returns the publicly visible surface,
-	    ;; not the real video surface.
-	    ,@(loop for binding in bindings
-		    collect `(if (is-valid-ptr ,(first binding))
-			      (unless (or (cffi:pointer-eq ,(first binding) (SDL_GetVideoSurface))
-					  (cffi:pointer-eq ,(first binding) *default-display*))
-				(SDL_FreeSurface ,(first binding))))))
+	    (setf ,body-value (progn ,@body)))
 	  ,body-value))))
+
+(defmacro with-surfaces-free (bindings &rest body)
+  (if bindings
+      (let ((body-value (gensym "body-value")))
+	`(let ((,body-value nil)
+	       ,@(loop for binding in bindings
+		    collect `(,(first binding) ,(second binding))))
+	   (when (and ,@(loop for binding in bindings
+			   collect `(is-valid-ptr ,(first binding))))
+	     (setf ,body-value (progn ,@body))
+	     ;; Here we try attempt to verify that the surface-ptr is not the actual display surface.
+	     ;; However according to the SDL documentation, we cannot be 100% sure.
+	     ;; "(SDL_GetVideoSurface) ... returns a pointer to the current display surface. If SDL is doing format
+	     ;; conversion on the display surface, this function returns the publicly visible surface,
+	     ;; not the real video surface.
+	     ,@(loop for binding in bindings
+		  collect `(if (is-valid-ptr ,(first binding))
+			       (unless (or (cffi:pointer-eq ,(first binding) (SDL_GetVideoSurface))
+					   (cffi:pointer-eq ,(first binding) *default-display*))
+				 (SDL_FreeSurface ,(first binding))))))
+	   ,body-value))))
 
 ;;;; Functions
 
@@ -745,12 +756,12 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 
 (defun point-x (&optional (point sdl:*default-position*))
   (svref point 0))
-(defun (setf point-x) (x-val point)
+(defun (setf point-x) (x-val &optional (point sdl:*default-position*))
   (setf (svref point 0) (to-int x-val)))
 
 (defun point-y (&optional (point sdl:*default-position*))
   (svref point 1))
-(defun (setf point-y) (y-val point)
+(defun (setf point-y) (y-val &optional (point sdl:*default-position*))
   (setf (svref point 1) (to-int y-val)))
 
 (defun point (x y)
@@ -762,14 +773,14 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
          (expt (- (sdl:point-y p1) (sdl:point-y p2)) 2))
       (expt distance 2)))
 
-(defun pos-x (position)
+(defun pos-x (&optional (position *default-position*))
   (svref position 0))
-(defun (setf pos-x) (x-val position)
+(defun (setf pos-x) (x-val &optional (position sdl:*default-position*))
   (setf (svref position 0) (to-int x-val)))
 
-(defun pos-y (position)
+(defun pos-y (&optional (position *default-position*))
   (svref position 1))
-(defun (setf pos-y) (y-val position)
+(defun (setf pos-y) (y-val &optional (position sdl:*default-position*))
   (setf (svref position 1) (to-int y-val)))
 
 (defun push-quitevent ()
