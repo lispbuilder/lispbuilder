@@ -55,6 +55,7 @@
    #:get-pixel
    #:get-sdlcolor
    #:get-surface-rect
+   #:get-ticks
    #:get-timescale
    #:get-video-info
    #:get-worldtime
@@ -119,9 +120,11 @@
    #:with-init
    #:with-locked-surface		; from cl-sdl
    #:with-must-locksurface
+   #:with-position
    #:with-possible-lock-and-update	; from cl-sdl
    #:with-surface
    #:with-surfaces
+   #:with-surfaces-free
    #:with-surface-lock
    *default-color*
    *default-display*
