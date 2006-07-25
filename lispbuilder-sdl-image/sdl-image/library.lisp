@@ -8,8 +8,8 @@
 	   :test #'equal))
 
 (cffi:define-foreign-library sdl-image
-  (:darwin (:framework "libSDL_image-2.0"))
-  (:windows (:or "SDL_image.dll" "SDL_image2.0.dll"))
+  (:darwin (:framework "libSDL_image-1.2"))
+  (:windows (:or "SDL_image.dll" "SDL_image1.2.dll"))
   (:unix (:or "libSDL_image1.2" "libSDL_image-1.2.so.0")))
 
 (cffi:use-foreign-library sdl-image)
