@@ -10,6 +10,6 @@
 (cffi:define-foreign-library sdl-image
   (:darwin (:framework "libSDL_image-2.0"))
   (:windows (:or "SDL_image.dll" "SDL_image2.0.dll"))
-  (:unix (:or "libSDL_image2.0" "libSDL_image-2.0.so.0")))
+  (:unix (:or "libSDL_image1.2" "libSDL_image-1.2.so.0")))
 
 (cffi:use-foreign-library sdl-image)
