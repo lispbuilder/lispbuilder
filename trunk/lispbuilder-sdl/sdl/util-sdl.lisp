@@ -625,14 +625,14 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 (defun get-video-info (&key (video-info (SDL_GetVideoInfo)) (info :video-mem))
   "Returns information about the video hardware.
   GET-VIDEO-INFO :video-info <pointer to a SDL_VIDEOINFO structure>
-                 :info :hw_available | :wm_available |
+                 :info (one of :hw_available | :wm_available |
                        :blit_hw | :blit_hw_cc | :blit_hw_a |
                        :blit_sw | :blit_sw_cc | :blit_sw_a |
                        :blit_fill |
                        :video_mem |
-                       :pixelformat
+                       :pixelformat )
   Usage: get-video-info should be called after sdl_init but before sdl_setvideomode.
-         e.g (get-video-info :info :video_mem), or
+         e.g (get-video-info :info :video_mem ), or
              (get-video-info :video-info (sdl_getvideoinfo) :info :video_mem)
          Will return the amount video memory available."
   (if (is-valid-ptr video-info)
