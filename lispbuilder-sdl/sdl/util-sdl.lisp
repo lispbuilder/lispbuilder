@@ -700,10 +700,6 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
       (SDL_LoadBMP_RW (RWFromFile filename "rb") 1)
       nil))
 
-(defun load-directory ()
-  (let ((here #.(or *compile-file-truename* *load-truename*)))
-    (make-pathname :directory (pathname-directory here))))
-
 (defun load-image (filename path &key key-color alpha-value)
   (sdl:with-surface ((sdl:load-bmp (namestring (merge-pathnames filename path))))
     (sdl:convert-surface-to-display-format :key-color key-color :alpha-value alpha-value :free-surface nil)))
