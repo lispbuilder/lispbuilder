@@ -5,10 +5,7 @@
 
 (in-package #:sdl-image-examples) 
 
-;; (defvar *bmp-path* (or *load-truename* *default-pathname-defaults*))
-
-(defvar *bmp-path* (sdl:load-directory)
-
+(defvar *bmp-path* (make-pathname :directory (pathname-directory #.(or *compile-file-truename* *load-truename*))))
 
 (defun image-example ()
   (sdl:with-init ()
