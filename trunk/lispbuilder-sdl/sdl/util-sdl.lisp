@@ -350,10 +350,10 @@
           (t d))))
 
 (defun display-cursor (toggle)
-  (case toggle
-    (nil (SDL_ShowCursor sdl_disable))
-    (t (SDL_ShowCursor sdl_enable))))
- 
+  (if toggle
+      (SDL_ShowCursor sdl_enable)
+      (SDL_ShowCursor sdl_disable)))
+
 (defun draw-image (image-surface &key (position sdl:*default-position*) (screen sdl:*default-surface*))
   (let ((w (sdl:surf-w image-surface))
         (h (sdl:surf-h image-surface)))
@@ -699,6 +699,10 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
   (if (and (stringp filename) (probe-file filename)) ; LJC: Make sure filename is a string and the filename exists.
       (SDL_LoadBMP_RW (RWFromFile filename "rb") 1)
       nil))
+
+(defun load-directory ()
+  (let ((here #.(or *compile-file-truename* *load-truename*)))
+    (make-pathname :directory (pathname-directory here))))
 
 (defun load-image (filename path &key key-color alpha-value)
   (sdl:with-surface ((sdl:load-bmp (namestring (merge-pathnames filename path))))
@@ -1358,6 +1362,4 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 	(progn
 	  (framerate-delay)))
       (cffi:foreign-free ,sdl-event))))
-
-
 

@@ -65,6 +65,7 @@
    #:is-valid-ptr
    #:list-modes
    #:load-bmp
+   #:load-directory
    #:load-image
    #:make-sdl-rect
    #:map-color
