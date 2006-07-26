@@ -2,7 +2,9 @@
 
 (in-package #:lispbuilder-sdl-examples)
 
-(defvar *image-path* (or *load-truename* *default-pathname-defaults*))
+;; (defvar *image-path* (or *load-truename* *default-pathname-defaults*))
+
+(defvar *image-path* (make-pathname :directory (pathname-directory #.(or *compile-file-truename* *load-truename*))))
 			     
 (defun show-score (score)
   (sdl:WM_SetCaption (format nil "Squashed - Score: ~a" score) "Squashed"))
