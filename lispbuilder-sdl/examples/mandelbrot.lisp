@@ -1,8 +1,8 @@
 ;;;; Demonstration/Test of using SDL (Simple Media Layer) library
 ;;;; using CFFI for foreign function interfacing...
 ;;;; (C)2006 Frank Busse
+;;;; Modifications Justin Heyes-Jones (more realtime, allows zoom in)
 ;;;; see COPYING for license
-
 ;;;; From "http://www.frank-buss.de/lisp/canvas.html"
 
 (in-package #:sdl-examples) 
@@ -13,25 +13,68 @@
 (defvar *y1* 0.7)
 (defvar *width* 300)
 (defvar *height* 300)
+(defvar *zoom-ratio* 0.5)
 
-(defun mandelbrot (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
-  (sdl:with-init ()
-    (sdl:with-display (width height :title-caption "Mandelbrot" :icon-caption "Mandelbrot")
-      (loop for y from 0 below height do
-	    (loop for x from 0 below width do
-		  (loop with a = (complex (float (+ (* (/ (- x1 x0) width) x) x0))
-					  (float (+ (* (/ (- y1 y0) height) y) y0)))
-			for z = a then (+ (* z z) a)
-			while (< (abs z) 2)
-			for c from 60 above 0
-			finally (sdl:draw-pixel :position (sdl:point x y)
-						:color (sdl:color (mod (* 13 c) 256)
-								  (mod (* 7 c) 256)
-								  (mod (* 2 c) 256))
-						:update-p t))))
-      (sdl:with-events ()
-	(:quit t)
-	(:keydown (state scancode key mod unicode)
-		  (if (eq key :SDLK_ESCAPE)
-		      (sdl:push-quitevent)))
-	(:videoexpose (sdl:update-display))))))
+(defun clear-screen()
+  "clear the whole screen"
+  (sdl:clear-display #(0 0 0)))
+
+(defun update-mandelbrot-draw(width height sx sy sw sh x0 y0 x1 y1)
+  "draw mandelbrot from screen position sx,sy to the extent by sw,sh (width height)"
+  (loop for y from sy below (+ sy sh) do
+	(loop for x from sx below (+ sx sw) do
+	      (loop with a = (complex (float (+ (* (/ (- x1 x0) width) x) x0))
+				      (float (+ (* (/ (- y1 y0) height) y) y0)))
+		    for z = a then (+ (* z z) a)
+		    while (< (abs z) 2)
+		    for c from 60 above 0
+		    finally (sdl:draw-pixel :position (sdl:point x y)
+					    :color (sdl:color (mod (* 13 c) 256)
+							      (mod (* 7 c) 256)
+							      (mod (* 2 c) 256))
+					    :update-p nil)))))
+
+(defun mandelbrot 
+  (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
+  "main program to draw navigate mandelbrot set"
+  (let ((cx 0) (cy 0) (step 10))
+    (sdl:with-init ()
+		   (sdl:with-display (width height :title-caption "Mandelbrot" :icon-caption "Mandelbrot")
+				     (sdl:with-events ()
+						      (:idle
+						       (progn
+							 (incf cx step)
+							 (if (>= cx width)
+							     (and (setf cx 0) (incf cy step)))
+							 (if (< cy height)
+							     (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1)))
+						       (sdl:update-display))
+						      (:quit t)
+						      (:mousebuttondown (button state x y)
+					                                ; set the new center point
+									(let* ((old-width (- x1 x0))
+									       (old-height (- y1 y0))
+									       (x-ratio (/ (float x) width))
+									       (y-ratio (/ (float y) height))
+									       (new-width (* old-width *zoom-ratio*))
+									       (new-height (* old-height *zoom-ratio*))
+									       (new-mid-x (+ x0 (* x-ratio old-width)))
+									       (new-mid-y (+ y0 (* y-ratio old-height))))
+									  (setf x0 
+										(- new-mid-x (/ new-width 2.0)))
+									  (setf y0
+										(- new-mid-y (/ new-height 2.0)))
+									  (setf x1
+										(+ x0 new-width))
+									  (setf y1
+										(+ y0 new-height)))
+									(setf cx 0)
+									(setf cy 0)
+									(clear-screen))
+						      (:keydown (state scancode key mod unicode)
+								(if (eq key :SDLK_ESCAPE)
+								    (sdl:push-quitevent)))
+						      (:videoexpose (sdl:update-display)))))))
+    
+
+  
