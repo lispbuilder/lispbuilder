@@ -43,11 +43,11 @@
 				     (sdl:set-framerate 0)
 				     (sdl:with-events ()
 						      (:idle
-						       (incf cx step)
 						       (if (>= cx width)
 							   (and (setf cx 0) (incf cy step)))
 						       (if (< cy height)
 							   (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1))
+						       (incf cx step)
 						       (sdl:update-display))
 						      (:quit t)
 						      (:mousebuttondown (button state x y)
