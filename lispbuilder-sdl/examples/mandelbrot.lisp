@@ -17,7 +17,7 @@
 
 (defun clear-screen()
   "clear the whole screen"
-  (sdl:clear-display #(0 0 0)))
+  (sdl:clear-display :color #(0 0 0)))
 
 (defun update-mandelbrot-draw(width height sx sy sw sh x0 y0 x1 y1)
   "draw mandelbrot from screen position sx,sy to the extent by sw,sh (width height)"
@@ -35,46 +35,43 @@
 					    :update-p nil)))))
 
 (defun mandelbrot 
-  (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
+    (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
   "main program to draw navigate mandelbrot set"
   (let ((cx 0) (cy 0) (step 10))
     (sdl:with-init ()
-		   (sdl:with-display (width height :title-caption "Mandelbrot" :icon-caption "Mandelbrot")
-				     (sdl:set-framerate 0)
-				     (sdl:with-events ()
-						      (:idle
-						       (if (>= cx width)
-							   (and (setf cx 0) (incf cy step)))
-						       (if (< cy height)
-							   (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1))
-						       (incf cx step)
-						       (sdl:update-display))
-						      (:quit t)
-						      (:mousebuttondown (button state x y)
-					                                ; set the new center point
-									(let* ((old-width (- x1 x0))
-									       (old-height (- y1 y0))
-									       (x-ratio (/ (float x) width))
-									       (y-ratio (/ (float y) height))
-									       (new-width (* old-width *zoom-ratio*))
-									       (new-height (* old-height *zoom-ratio*))
-									       (new-mid-x (+ x0 (* x-ratio old-width)))
-									       (new-mid-y (+ y0 (* y-ratio old-height))))
-									  (setf x0 
-										(- new-mid-x (/ new-width 2.0)))
-									  (setf y0
-										(- new-mid-y (/ new-height 2.0)))
-									  (setf x1
-										(+ x0 new-width))
-									  (setf y1
-										(+ y0 new-height)))
-									(setf cx 0)
-									(setf cy 0)
-									(clear-screen))
-						      (:keydown (state scancode key mod unicode)
-								(if (eq key :SDLK_ESCAPE)
-								    (sdl:push-quitevent)))
-						      (:videoexpose (sdl:update-display)))))))
-    
-
-  
+      (sdl:with-display (width height :title-caption "Mandelbrot" :icon-caption "Mandelbrot")
+	(sdl:set-framerate 0)
+	(sdl:with-events ()
+	  (:idle ()
+		 (if (>= cx width)
+		     (and (setf cx 0) (incf cy step)))
+		 (if (< cy height)
+		     (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1))
+		 (incf cx step)
+		 (sdl:update-display))
+	  (:quit () t)
+	  (:mousebuttondown (button state x y)
+					; set the new center point
+			    (let* ((old-width (- x1 x0))
+				   (old-height (- y1 y0))
+				   (x-ratio (/ (float x) width))
+				   (y-ratio (/ (float y) height))
+				   (new-width (* old-width *zoom-ratio*))
+				   (new-height (* old-height *zoom-ratio*))
+				   (new-mid-x (+ x0 (* x-ratio old-width)))
+				   (new-mid-y (+ y0 (* y-ratio old-height))))
+			      (setf x0 
+				    (- new-mid-x (/ new-width 2.0)))
+			      (setf y0
+				    (- new-mid-y (/ new-height 2.0)))
+			      (setf x1
+				    (+ x0 new-width))
+			      (setf y1
+				    (+ y0 new-height)))
+			    (setf cx 0)
+			    (setf cy 0)
+			    (clear-screen))
+	  (:keydown (state scancode key mod unicode)
+		    (if (sdl:key= key :SDLK_ESCAPE)
+			(sdl:push-quitevent)))
+	  (:videoexpose () (sdl:update-display)))))))

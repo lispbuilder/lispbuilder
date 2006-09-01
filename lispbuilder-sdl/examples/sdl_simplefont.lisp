@@ -41,7 +41,7 @@
 
 (defun draw-text-image(screen text-image point &key free-text)
   "draw a prerendered string of text"
-  (sdl:blit-surface text-image screen :dst-rect point :free-src free-text))
+  (sdl:blit-surface :src text-image :dst screen :dst-rect point :free-p free-text))
 
 (defun make-text-image(font string)
   "given an initialised font and a string, draw the string to a surface and return the surface pointer"
@@ -67,8 +67,8 @@
 	(h (font-h font))
 	(char-offset (get-char-offset font char)))
     (if char-offset
-	(sdl:blit-surface image
-			  screen
+	(sdl:blit-surface :src image
+			  :dst screen
 			  :src-rect (vector (* w char-offset) 0 w h) 
 			  :dst-rect point)
 	nil)))

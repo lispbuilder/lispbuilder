@@ -60,8 +60,8 @@
    #:get-video-info
    #:get-worldtime
    #:init-sdl
-   #:is-key
-   #:is-modifier
+   #:key=
+   #:modifier=
    #:is-valid-ptr
    #:list-modes
    #:load-bmp
@@ -113,15 +113,15 @@
    #:update-surface 
    #:video-driver-name
    #:warp-mouse
-   #:with-default-color
    #:with-color
    #:with-display
    #:with-events
    #:with-init
    #:with-locked-surface		; from cl-sdl
-   #:with-must-locksurface
+   #:with-must-lock-surface
    #:with-position
    #:with-possible-lock-and-update	; from cl-sdl
+   #:with-rectangle
    #:with-surface
    #:with-surfaces
    #:with-surfaces-free
@@ -129,6 +129,7 @@
    *default-color*
    *default-display*
    *default-position*
+   *default-rectangle*
    *default-surface*
    
    ;; These are exports from sdlswig.i

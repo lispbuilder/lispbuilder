@@ -16,20 +16,18 @@
 ; utilities used in this sample
 
 (defun bmp-sample ()
-  "demonstrates how to manage and display images from .bmp files"
   (sdl:with-init ()
     (sdl:with-display (640 480)
-      (sdl::with-surfaces ((sdl-image (sdl:load-image "sdl.bmp" *bmp-path*))
-			   (alien-image (sdl:load-image "lisp.bmp" *bmp-path* :key-color #(253 59 251))))
 
-	(sdl:blit-surface sdl-image sdl:*default-display* :dst-rect #(10 10))
-	(sdl:blit-surface alien-image sdl:*default-display* :dst-rect #(300 10))
-
+      (sdl::with-surface ((sdl:load-image "sdl.bmp" *bmp-path*))
+	(sdl:blit-surface :dst-rect #(10 10) :update-p t))
+      (sdl:with-surface ((sdl:load-image "lisp.bmp" *bmp-path* :key-color #(253 59 251)))
+	(sdl:blit-surface :dst-rect #(300 10) :update-p t))
+      
+      (sdl:set-framerate 10)
       (sdl:with-events ()
-	(:quit t)
+	(:quit () t)
 	(:keydown (state scancode key mod unicode)
-		  (if (sdl:is-key key :SDLK_ESCAPE)
+		  (if (sdl:key= key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
-	(:idle
-	 (sdl:update-display)))))))
-
+	(:videoexpose () (sdl:update-display))))))
