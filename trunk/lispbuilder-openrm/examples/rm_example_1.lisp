@@ -57,12 +57,12 @@
 
 	    (rm::set-default-scene root-node width height)
 
-	    (sdl::with-events
-	      (:quit t)
+	    (sdl::with-events ()
+	      (:quit () t)
 	      (:keydown (state scancode key mod unicode)
-			(if (sdl::is-key key :SDLK_ESCAPE)
+			(if (sdl::key= key :SDLK_ESCAPE)
 			    (sdl::push-quitevent)))
-	      (:idle
+	      (:idle ()
  	       (rm::rotate-node a-node :direction #(0.0 1.0 0.0))
 	       (rm::RMFRAME a-pipe root-node)
 	       (sdl::SDL_GL_SwapBuffers)))))))))
@@ -90,12 +90,12 @@
 
 	    (rm::set-default-scene root-node width height)
 
-	    (sdl::with-events
-	      (:quit t)
+	    (sdl::with-events ()
+	      (:quit () t)
 	      (:keydown (state scancode key mod unicode)
-			(if (sdl::is-key key :SDLK_ESCAPE)
+			(if (sdl:key= key :SDLK_ESCAPE)
 			    (sdl::push-quitevent)))
-	      (:idle
+	      (:idle ()
  	       (rm::rotate-node a-node :direction #(0.0 1.0 0.0))
 	       (rm::RMFRAME a-pipe root-node)
 	       (sdl::SDL_GL_SwapBuffers)))))))))
@@ -125,10 +125,10 @@
 	
 	(rm::set-default-scene root-node width height)
 	
-	(sdl::with-events
+	(sdl::with-events ()
 	  (:quit t)
 	  (:keydown (state scancode key mod unicode)
-		    (if (sdl::is-key key :SDLK_ESCAPE)
+		    (if (sdl:key= key :SDLK_ESCAPE)
 			(sdl::push-quitevent)))
 ;; 	  (:mousemotion (state x y xrel yrel)
 ;; 			(rm::aux-handle-motion root-node button-state x y width height))
@@ -161,8 +161,8 @@
 	  (add-actor root-node cubes :union t :compute-center t))
 	(rm::set-default-scene root-node width height)
 
-	(sdl::with-events
-	  (:quit t)
+	(sdl::with-events ()
+	  (:quit () t)
 	  (:keydown (state scancode key mod unicode)
 		    (when (equal key 'sdl::SDLK-ESCAPE)
 		      (sdl::quitevent)))
@@ -172,7 +172,7 @@
 			    (setf button-state (rm::aux-handle-buttons root-node button x y width height)))
 	  (:mousebuttonup (button state x y)
 			  (setf button-state nil))
-	  (:idle
+	  (:idle ()
 	   (update-all)))))))
 
 (defun rm-spheres ()
@@ -201,8 +201,8 @@
 		  
 	(rm::set-default-scene root-node width height)
 
-	(sdl::with-events
-	  (:quit t)
+	(sdl::with-events ()
+	  (:quit () t)
 	  (:keydown (state scancode key mod unicode)
 		    (when (equal key 'sdl::SDLK-ESCAPE)
 		      (sdl::quitevent)))
@@ -212,7 +212,7 @@
 			    (setf button-state (rm::aux-handle-buttons root-node button x y width height)))
 	  (:mousebuttonup (button state x y)
 			  (setf button-state nil))
-	  (:idle
+	  (:idle ()
 	   (update-all)))))))
 
 (defun rm-cube ()
@@ -235,8 +235,8 @@
 		  
 	(rm::set-default-scene root-node width height)
 
-	(sdl::with-events
-	  (:quit t)
+	(sdl::with-events ()
+	  (:quit () t)
 	  (:keydown (state scancode key mod unicode)
 		    (when (equal key 'sdl::SDLK-ESCAPE)
 		      (sdl::quitevent)))
@@ -246,7 +246,7 @@
 			    (setf button-state (rm::aux-handle-buttons root-node button x y width height)))
 	  (:mousebuttonup (button state x y)
 			  (setf button-state nil))
-	  (:idle
+	  (:idle ()
 	   (update-all)))))))
 
 (defun rm-cube-2 ()
@@ -270,8 +270,8 @@
 		  
 	(rm::set-default-scene root-node width height)
 
-	(sdl::with-events
-	  (:quit t)
+	(sdl::with-events ()
+	  (:quit () t)
 	  (:keydown (state scancode key mod unicode)
 		    (when (equal key 'sdl::SDLK-ESCAPE)
 		      (sdl::quitevent)))
@@ -281,7 +281,7 @@
 			    (setf button-state (rm::aux-handle-buttons root-node button x y width height)))
 	  (:mousebuttonup (button state x y)
 			  (setf button-state nil))
-	  (:idle
+	  (:idle ()
 	   (update-all)))))))
 
 

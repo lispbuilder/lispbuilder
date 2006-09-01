@@ -1,11 +1,18 @@
 
 ;; OpenRM library using CFFI for foreign function interfacing...
+;; OpenRM 1.6.0-2
 ;; (C)2006 Luke Crook <luke@balooga.com>
 ;; Thanks to Frank Buss and Surendra Singh
 ;; see COPYING for license
 ;; This file contains some useful functions for using OpenRM from Common lisp
 
 (in-package #:lispbuilder-openrm)
+
+
+(defvar *default-light* nil)
+(defvar *default-camera* nil)
+(defvar *default-color* nil)
+
 
 ;;; The following functions should be placed into a general 'util' package.
 
@@ -23,7 +30,68 @@
   Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
   (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
 
+;;; w
+
+(defmacro with-rmcamera-3d ((camera-ptr &optional (free-p t)) &body body)
+  "Create a new light using (rm:rmcamera3dnew)"
+  (let ((body-value (gensym "body-value")))
+    `(let ((*default-camera* ,camera-ptr)
+	   (,body-value nil))
+      (when (is-valid-ptr *default-camera*)
+	(setf ,body-value (progn ,@body))
+	(if (and ,free-p (is-valid-ptr *default-camera*))
+	    (rmcamera3ddelete *default-camera*)))
+      ,body-value)))
+
+(defmacro with-rmcolor-3d ((color-ptr &optional (free-p t)) &body body)
+  "Create a new color using (rm:rmcolor-3d)"
+  (let ((body-value (gensym "body-value")))
+    `(let ((*default-color* ,color-ptr)
+	   (,body-value nil))
+      (when (is-valid-ptr *default-color*)
+	(setf ,body-value (progn ,@body))
+	(if (and ,free-p (is-valid-ptr *default-color*))
+	    (cffi:foreign-free *default-color*)))
+      ,body-value)))
+
+(defmacro with-rmcolor-4d ((color-ptr &optional (free-p t)) &body body)
+  "Create a new color using (rm:rmcolor-4d)"
+  (let ((body-value (gensym "body-value")))
+    `(let ((*default-color* ,color-ptr)
+	   (,body-value nil))
+      (when (is-valid-ptr *default-color*)
+	(setf ,body-value (progn ,@body))
+	(if (and ,free-p (is-valid-ptr *default-color*))
+	    (cffi:foreign-free *default-color*)))
+      ,body-value)))
+
+(defmacro with-light ((light-ptr &optional (free-p t)) &body body)
+  "Create a new light using (rm:rmLightNew)"
+  (let ((body-value (gensym "body-value")))
+    `(let ((*default-light* ,light-ptr)
+	   (,body-value nil))
+      (when (is-valid-ptr *default-light*)
+	(setf ,body-value (progn ,@body))
+	(if (and ,free-p (is-valid-ptr *default-light*))
+	    (rmLightDelete *default-light*)))
+      ,body-value)))
+
+(defmacro with-rmvertex-3d ((vertex-ptr &optional (free-p t)) &body body)
+  "Create a new color using (rm:rmvertex-3d)"
+  (let ((body-value (gensym "body-value")))
+    `(let ((*default-vertex* ,vertex-ptr)
+	   (,body-value nil))
+      (when (is-valid-ptr *default-vertex*)
+	(setf ,body-value (progn ,@body))
+	(if (and ,free-p (is-valid-ptr *default-vertex*))
+	    (cffi:foreign-free *default-vertex*)))
+      ,body-value)))
+
 ;;; End.
+
+(let ((id 0))
+  (defun get-id ()
+    (incf id)))
 
 (defun node-add-child (parent-node &rest nodes)
   (if (consp (first nodes))
@@ -79,47 +147,6 @@
 ;;       (error "rmvertex-3d+ :  x, y, z must be of type 'float"))
 ;;   vertex)
 
-(defmacro with-rmcamera-3d (camera &body body)
-  `(let ((,camera (rm::rmcamera3dnew)))
-    ,@body
-    (rm::rmcamera3ddelete ,camera)))
-
-(defmacro with-rmcolor-3d (color &body body)
-  (let ((r (gensym)) (g (gensym)) (b (gensym)))
-    `(cffi:with-foreign-object (,color 'rm::rmcolor3d)
-      (labels ((set-color (,r ,g ,b)
-		 (if (and (floatp ,r) (floatp ,g) (floatp ,b))
-		     (cffi:with-foreign-slots ((rm::r rm::g rm::b) ,color rm::rmcolor3d)
-		       (setf rm::r ,r
-			     rm::g ,g
-			     rm::b ,b))
-		     (error "with-rmcolor-3d.set-color (r g b) must be of types 'float."))))
-	,@body))))
-
-(defmacro with-rmcolor-4d (color &body body)
-  (let ((r (gensym)) (g (gensym)) (b (gensym)) (a (gensym)))
-    `(cffi:with-foreign-object (,color 'rm::rmcolor4d)
-      (labels ((set-color (,r ,g ,b &optional (,a 1.0))
-		 (if (and (floatp ,r) (floatp ,g) (floatp ,b) (floatp ,a))
-		     (cffi:with-foreign-slots ((rm::r rm::g rm::b rm::a) ,color rm::rmcolor4d)
-			 (setf rm::r ,r
-			       rm::g ,g
-			       rm::b ,b
-			       rm::a ,a))
-		       (error "with-rmcolor-4d.set-color (r g b a) must be of types 'float."))))
-	  ,@body))))
-
-(defmacro with-rmvertex-3d (vertex &body body)
-  (let ((x (gensym)) (y (gensym)) (z (gensym)))
-    `(cffi:with-foreign-object (,vertex 'rm::rmvertex3d)
-      (labels ((set-vertex (,x ,y ,z)
-		 (if (and (floatp ,x) (floatp ,y) (floatp ,z))
-		     (cffi:with-foreign-slots ((rm::x rm::y rm::z) ,vertex rm::rmvertex3d)
-			 (setf rm::x ,x
-			       rm::y ,y
-			       rm::z ,z))
-		       (error "with-rmvertex-3d.set-vertex (x y z) must be of types 'float."))))
-	  ,@body))))
 
 (defmacro with-rmvertex-3d+ ((&body vertices) &body body)
   (let ((x (gensym)) (y (gensym)) (z (gensym)))
@@ -138,41 +165,51 @@
 		  vertices)
 	  ,@body))))
 
-(defmacro with-light (light &body body)
-  `(let ((,light (rm::rmLightNew)))
-    (labels ((set-light-position (vert)
-	       (rm::LightSetXYZ ,light vert))
-	     (set-abient-color (color)
-	       (rm::LightSetColor ,light color nil nil))
-	     (set-diffuse-color (color)
-	       (rm::LightSetColor ,light nil color nil))
-	     (set-specular-color (color)
-	       (rm::LightSetColor ,light nil nil color))
-	     (set-type (type)
-	       (setf type (case type
-			    (:point (cffi:foreign-enum-value 'rm::rmenum :rm_light_point))
-			    (:directional (cffi:foreign-enum-value 'rm::rmenum :rm_light_directional))
-			    (:spot (cffi:foreign-enum-value 'rm::rmenum :rm_light_spot))))
-	       (rm::rmLightSetType ,light type))
-	     (set-scene (node type)
-	       (setf type (case type
-			    (:light0 (cffi:foreign-enum-value 'rm::rmenum :rm_light0))
-			    (:light1 (cffi:foreign-enum-value 'rm::rmenum :rm_light1))
-			    (:light2 (cffi:foreign-enum-value 'rm::rmenum :rm_light2))
-			    (:light3 (cffi:foreign-enum-value 'rm::rmenum :rm_light3))
-			    (:light4 (cffi:foreign-enum-value 'rm::rmenum :rm_light4))
-			    (:light5 (cffi:foreign-enum-value 'rm::rmenum :rm_light5))
-			    (:light6 (cffi:foreign-enum-value 'rm::rmenum :rm_light6))
-			    (:light7 (cffi:foreign-enum-value 'rm::rmenum :rm_light7))))
-	       (rm::rmNodeSetSceneLight node type ,light))
-	     (set-spot-direction (direction)
-	       (rm::LightSetSpotDirection ,light direction))
-	     (set-spot-cutoff (cut-off)
-	       (rm::LightSetSpotCutoff ,light cut-off))
-	     (set-spot-exponent (exponent)
-	       (rm::LightSetSpotExponent ,light exponent)))
-      ,@body
-      (rm::rmLightDelete ,light))))
+
+;;; Lighting
+
+(defun set-light-position (vert &key (light *default-light*))
+  (LightSetXYZ light vert))
+
+(defun set-light-abient-color (color &key (light *default-light*))
+  (LightSetColor light color nil nil))
+
+(defun set-light-diffuse-color (color &key (light *default-light*))
+  (LightSetColor light nil color nil))
+
+(defun set-light-specular-color (color &key (light *default-light*))
+  (LightSetColor light nil nil color))
+
+(defun set-light-type (type &key (light *default-light*))
+  (setf type (case type
+	       (:point (cffi:foreign-enum-value 'rm::rmenum :rm_light_point))
+	       (:directional (cffi:foreign-enum-value 'rm::rmenum :rm_light_directional))
+	       (:spot (cffi:foreign-enum-value 'rm::rmenum :rm_light_spot))))
+  (rmLightSetType light type))
+
+(defun set-scene-light (node type &key (light *default-light*))
+  (setf type (case type
+	       (:light0 (cffi:foreign-enum-value 'rm::rmenum :rm_light0))
+	       (:light1 (cffi:foreign-enum-value 'rm::rmenum :rm_light1))
+	       (:light2 (cffi:foreign-enum-value 'rm::rmenum :rm_light2))
+	       (:light3 (cffi:foreign-enum-value 'rm::rmenum :rm_light3))
+	       (:light4 (cffi:foreign-enum-value 'rm::rmenum :rm_light4))
+	       (:light5 (cffi:foreign-enum-value 'rm::rmenum :rm_light5))
+	       (:light6 (cffi:foreign-enum-value 'rm::rmenum :rm_light6))
+	       (:light7 (cffi:foreign-enum-value 'rm::rmenum :rm_light7))))
+  (rmNodeSetSceneLight node type light))
+
+(defun set-spot-direction (direction &key (light *default-light*))
+  (LightSetSpotDirection light direction))
+
+(defun set-spot-cutoff (cut-off &key (light *default-light*))
+  (LightSetSpotCutoff light cut-off))
+
+(defun set-spot-exponent (exponent &key (light *default-light*))
+  (LightSetSpotExponent light exponent))
+
+;;;
+;;; End Light
 
 (defun build-XZ-Quad-mesh (p vmin vmax subdivisions ysign color)
   "Build a quadmesh parallel to the X-Z plane."
@@ -325,10 +362,10 @@
 	  prev-buttony (* -1.0 (rm::pixel-to-viewport y screen-height)))))
 
 (defun move-node-by (node vert)
-  (with-rmvertex-3d m
-    (if (equal (rm::NodeGetTranslateVector node m) :RM_WHACKED)
-	(copy-to-foreign-vertex (vertex 0.0 0.0 0.0) m))
-    (rm::rmNodeSetTranslateVector node (add-to-foreign-vertex vert m)))
+  (with-rmvertex-3d ((rmvertex-3d))
+    (if (equal (rm::NodeGetTranslateVector node *default-vertex*) :RM_WHACKED)
+	(copy-to-foreign-vertex (vertex 0.0 0.0 0.0) *default-vertex*))
+    (rm::rmNodeSetTranslateVector node (add-to-foreign-vertex vert *default-vertex*)))
   node)
   
 (defun move-node-to (node vert)
@@ -441,6 +478,8 @@
 
 ;;; Wrapper functions here
 
+(defun vertex (&rest args)
+  (apply #'vector args))
 
 (defun vertex-x (vertex)
   (elt vertex 0))
@@ -456,6 +495,9 @@
   (elt vertex 2))
 (defun (setf vertex-z) (z-val vertex)
   (setf (elt vertex 2) z-val))
+
+(defun color (&rest args)
+  (apply #'vector args))
 
 (defun color-r (color)
   (elt color 0))
@@ -750,10 +792,10 @@
     
   (rm::NodeSetSceneBackgroundColor look-node #(0.2 0.1 0.2 0.0))
 
-  (with-rmcamera-3d camera
-    (rm::rmDefaultCamera3D camera)
-    (rm::rmCamera3DComputeViewFromGeometry camera look-node width height)
-    (rm::rmNodeSetSceneCamera3D look-node camera))
+  (with-rmcamera-3d ((rm::rmcamera3dnew))
+    (rm::rmDefaultCamera3D *default-camera*)
+    (rm::rmCamera3DComputeViewFromGeometry *default-camera* look-node width height)
+    (rm::rmNodeSetSceneCamera3D look-node *default-camera*))
     
   (rm::rmDefaultLighting look-node)
   look-node)

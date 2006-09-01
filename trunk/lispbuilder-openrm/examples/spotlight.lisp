@@ -6,15 +6,15 @@
 
 (defun set-spotlight (node &key (direction #(0.0 -1.0 0.0)) (position #(5.0 5.0 5.0)) (color #(0.5 0.5 0.5 1.0))
 		      (exponent 4.0) (cutoff 45) (light :light1))
-  (rm::with-light l0
-    (rm::set-type :spot)
-    (rm::set-diffuse-color color)
-    (rm::set-specular-color color)
+  (rm::with-light ((rm::rmLightNew))
+    (rm::set-light-type :spot)
+    (rm::set-light-diffuse-color color)
+    (rm::set-light-specular-color color)
     (rm::set-light-position position)
     (rm::set-spot-direction direction)
     (rm::set-spot-cutoff cutoff)
     (rm::set-spot-exponent exponent)
-    (rm::set-scene node light)))
+    (rm::set-scene-light node light)))
 
 (defun new-spotlight (&key (direction #(0.0 -1.0 0.0)) (position #(5.0 5.0 5.0)) (color #(0.5 0.5 0.5 1.0)) (cutoff 45))
   (let* ((node (rm::new-node :name "spotlight" :opacity :opaque))
@@ -41,9 +41,9 @@
 	(spot-color #(0.9 0.5 0.5 1.0))
 	(spot-exponent 4.0)
 	(spot-cutoff 45.0))
-    (sdl::with-init ()
-      (sdl::set-window width height :flags sdl::SDL_OPENGL)
-      (sdl::set-framerate 60)
+    (sdl:with-init ()
+      (sdl:with-display (width height :flags sdl:SDL_OPENGL))
+      (sdl:set-framerate 30)
       (rm::with-init ()
 	(rm::with-rmpipe ((sdl::get-native-window) width height) a-pipe
 	  (let ((root-node (rm::rmrootnode))
@@ -108,12 +108,11 @@
 	    
 	    (rm::set-default-scene obj-root width height)
 
-	    (sdl::with-events
-	      (:quit t)
+	    (sdl::with-events ()
+	      (:quit () t)
 	      (:keydown (state scancode key mod unicode)
-			(cond
-			  ((sdl::is-key key :SDLK_ESCAPE)
-			   (sdl::push-quitevent))))
+			(if (sdl:key= key :SDLK_ESCAPE)
+			    (sdl:push-quitevent)))
 	      (:mousemotion (state x y xrel yrel)
 			    (cond
 			      ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_LEFT) state) 1)
@@ -134,7 +133,7 @@
 				   (rm::reset-dolly width height y))
 				  ((equal button sdl::sdl_button_middle)
 				   (rm::reset-translate width height x y))))
-	      (:idle
+	      (:idle ()
 	       (rm::RMFRAME a-pipe root-node)
 	       (sdl::SDL_GL_SwapBuffers)))))))))
 
