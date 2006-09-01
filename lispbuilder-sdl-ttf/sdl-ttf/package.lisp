@@ -9,21 +9,11 @@
   (:export
 
    ;; util-sdl_ttf.lisp
-
-   #:close-font
-   #:draw-text-blended
-   #:draw-text-glyph-blended
-   #:draw-text-glyph-shaded
-   #:draw-text-glyph-solid
-   #:draw-text-shaded
-   #:draw-text-solid
-   #:draw-text-utf8-blended
-   #:draw-text-utf8-shaded
-   #:draw-text-utf8-solid
+   #:render-font-blended
+   #:render-font-shaded
+   #:render-font-solid
    #:get-Glyph-Metric
-   #:get-Size-Text
-   #:get-Size-UTF8
-   #:make-text-surface
+   #:get-Font-Size
    #:open-font
    #:with-init
    #:with-open-font
@@ -31,31 +21,22 @@
    
    ;; sdl_ttf.lisp
 
-   #:Byte-Swapped-UNICODE
+ ;  #:Byte-Swapped-UNICODE
    #:Close-Font
    #:Get-Font-Style
-   #:Init
+;   #:Init
    #:Linked-Version
    #:MAJOR-VERSION
    #:MINOR-VERSION
    #:Open-Font
    #:Open-Font-Index
-   #:Open-Font-Index-RW
-   #:Open-Font-RW
+;   #:Open-Font-Index-RW
+;   #:Open-Font-RW
    #:PATCHLEVEL
    #:Quit
-   #:Render-Glyph-Blended
-   #:Render-Glyph-Shaded
-   #:Render-Glyph-Solid
-   #:Render-Text-Blended
-   #:Render-Text-Shaded
-   #:Render-Text-Solid
-   #:Render-UTF8-Blended
-   #:Render-UTF8-Shaded
-   #:Render-UTF8-Solid
    #:Set-Font-Style
    #:VERSION
-   #:Was-Init
+   #:is-Init
    #:get-Font-Ascent
    #:get-Font-Descent
    #:get-Font-Face-Family-Name
