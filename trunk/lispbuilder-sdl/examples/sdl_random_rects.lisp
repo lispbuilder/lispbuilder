@@ -19,27 +19,27 @@
 			       :title-caption "Random-rects1"
 			       :icon-caption "Random-rects1")
 	(sdl:with-events ()
-	  (:quit t)
+	  (:quit () t)
 	  (:keydown (state scancode key mod unicode)
-		    (if (eq key :SDLK_ESCAPE)
+		    (if (sdl:key= key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
-	  (:idle
+	  (:idle ()
 	   ;;Update only the portion of the display that has been written to.
-	   (sdl:with-default-color ((sdl:random-color))
-	     (sdl:draw-rect (sdl:random-rect width height) :update-p t))))))))
+	   (sdl:with-rectangle ((sdl:random-rect width height))
+	     (sdl:with-color ((sdl:random-color))
+	       (sdl:draw-rect :update-p t)))))))))
 
 (defun random-rects2 ()
   (sdl:with-init ()			; Initialize Systems
     (sdl:set-framerate 0)		; Unlock the framerate.
     (sdl:with-display (320 240)
       (sdl:with-events ()
-	(:quit t)
+	(:quit () t)
 	(:keydown (state scancode key mod unicode)
-		  (if (eq key :SDLK_ESCAPE)
+		  (if (sdl:key= key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
-	(:idle
-	 (sdl:draw-rect (sdl:random-rect (sdl:surf-w) (sdl:surf-h)) :color (sdl:random-color)
-			:update-p nil)
+	(:idle ()
+	 (sdl:draw-rect :rectangle (sdl:random-rect 320 240) :color (sdl:random-color) :update-p nil)
 	 ;; Update the entire display.
 	 (sdl:update-display))))))
 
@@ -49,12 +49,12 @@
       (sdl:set-framerate 0)		; Unlock the framerate.
       (sdl:with-display (320 240 :surface-name display)
 	(sdl:with-events ()
-	  (:quit t)
+	  (:quit () t)
 	  (:keydown (state scancode key mod unicode)
-		    (if (eq key :SDLK_ESCAPE)
+		    (if (sdl:key= key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
-	  (:idle
-	   (sdl:draw-rect-end-points (+ 1 (random width)) (+ 1 (random height))
-				     (+ 1 (random width)) (+ 1 (random height))
-				     :color (sdl:random-color) :surface display :clipping-p t :update-p t)))))))
+	  (:idle ()
+		 (sdl:with-rectangle ((sdl:random-rect width height))
+		   (sdl:draw-rect-end-points sdl::x sdl::y sdl::w sdl::h
+					     :color (sdl:random-color) :surface display :clipping-p t :update-p t))))))))
 

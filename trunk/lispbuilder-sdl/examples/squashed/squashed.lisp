@@ -27,7 +27,7 @@
 	  (show-score score)
 	  (sdl:display-cursor nil)
 	  (sdl:with-events ()
-	    (:quit t)
+	    (:quit () t)
 	    (:mousemotion (state x y xrel yrel)
 			  (setf (sdl:point-x racket-point) x
 				(sdl:point-y racket-point) y))
@@ -40,18 +40,18 @@
 				     ; increase the bug jumping speed
 				(when (> levelticks 200)
 				  (decf levelticks 100))))
-	    (:idle
+	    (:idle ()
 	     ;; fill the background white
-	     (sdl:clear-display #(255 255 255))
+	     (sdl:clear-display :color #(255 255 255))
 	     ;; draw images
 	     (when squashed-point
-	       (sdl:draw-image blood :position squashed-point))
+	       (sdl:draw-image :surface blood :position squashed-point))
 	     (when (> (sdl:SDL_GetTicks) (+ lasttick levelticks))
 	       (setf lasttick (sdl:SDL_GetTicks)
 		     bug-point (sdl:random-point 640 480)))
 	     (if (< (- (sdl:SDL_GetTicks) last-squash-tick) 500)
-		 (sdl:draw-image squash :position (sdl:point 0 0))
-		 (sdl:draw-image bug :position bug-point))
-	     (sdl:draw-image racket :position racket-point)
+		 (sdl:draw-image :surface squash :position (sdl:point 0 0))
+		 (sdl:draw-image :surface bug :position bug-point))
+	     (sdl:draw-image :surface racket :position racket-point)
 	     ;; blit to display
 	     (sdl:update-display))))))))

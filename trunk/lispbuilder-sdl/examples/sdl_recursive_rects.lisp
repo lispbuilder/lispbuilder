@@ -49,9 +49,9 @@
       (draw-recursive-rects sdl:*default-surface* 0 0 *SCREEN-WIDTH* *SCREEN-HEIGHT* 10)
       (format t "video mode set. width ~a height ~a~%" (sdl:surf-w) (sdl:surf-h))
       (sdl:with-events ()
-	  (:quit t)
+	  (:quit () t)
 	  (:keydown (state scancode key mod unicode)
-		    (if (eq key :SDLK_ESCAPE)
+		    (if (sdl:key= key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
-	  (:idle
-	   (sdl:update-display))))))
+	  (:videoexpose ()
+			(sdl:update-display))))))
