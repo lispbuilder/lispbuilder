@@ -1,5 +1,6 @@
 
 ;;;; OpenRM CFFI lisp wrapper
+;;;; Version 1.6.0-2
 ;;;; Part of the CL-Gardeners project
 ;;;; http://wiki.alu.org/Application_Builder
 ;;;; (C)2006 Luke J Crook

@@ -59,12 +59,12 @@
 	    (rm::add-node stationary-group sloth)
 	    (rm::add-node moving-group zippy)
 
-	    (rm::with-light red-light
+	    (rm::with-light ((rm::rmLightNew))
 		(rm::set-light-position #(1.5 -1.0 0.0))
-		(rm::set-diffuse-color #(1.0 0.0 0.0 1.0))
-		(rm::set-specular-color #(1.0 0.0 0.0 1.0))
-		(rm::set-type :point)
-		(rm::set-scene moving-group :light3))
+		(rm::set-light-diffuse-color #(1.0 0.0 0.0 1.0))
+		(rm::set-light-specular-color #(1.0 0.0 0.0 1.0))
+		(rm::set-light-type :point)
+		(rm::set-scene-light moving-group :light3))
 
 	    (rm::add-node my-root moving-group)
 	    (rm::add-node moving-group stationary-group)
@@ -75,13 +75,13 @@
 	    
 	    (rm::set-default-scene my-root width height)
 
-	    (sdl::with-events
-	      (:quit t)
+	    (sdl::with-events ()
+	      (:quit () t)
 	      (:keydown (state scancode key mod unicode)
 			(cond
-			  ((sdl::is-key key :SDLK_ESCAPE)
+			  ((sdl::key= key :SDLK_ESCAPE)
 			   (sdl::push-quitevent))
-			  ((sdl::is-key key :SDLK_A)
+			  ((sdl::key= key :SDLK_A)
 			   (unless bounds-display
 			     ;;Add a bounding box for the nodes.
 			     (rm::node-add-primitive sloth (rm::create-bounds-from-node sloth))
@@ -94,7 +94,7 @@
 				(aux-handle-buttons-sdl my-root button x y width height))
 	      (:mousebuttonup (button state x y)
 			      (setf button-state nil))
-	      (:idle
+	      (:idle ()
  	       (rm::rotate-node moving-group :direction #(0.0 1.0 0.0) :only-this-node t)
 	       (rm::RMFRAME a-pipe root-node)
 	       (sdl::SDL_GL_SwapBuffers)))))))))
