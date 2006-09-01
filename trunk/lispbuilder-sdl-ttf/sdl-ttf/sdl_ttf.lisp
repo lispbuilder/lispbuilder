@@ -92,52 +92,52 @@
 (defconstant TTF_STYLE_UNDERLINE #x04)
 
 ;; extern DECLSPEC int SDLCALL TTF_GetFontStyle(TTF_Font *font);
-(defcfun ("TTF_GetFontStyle" Get-Font-Style) ttf-font-style
+(defcfun ("TTF_GetFontStyle" GetFontStyle) ttf-font-style
   (font ttf-font))
 
 ;; extern DECLSPEC void SDLCALL TTF_SetFontStyle(TTF_Font *font, int style) ;
-(defcfun ("TTF_SetFontStyle" Set-Font-Style) :void
+(defcfun ("TTF_SetFontStyle" SetFontStyle) :void
   (font ttf-font)
   (style ttf-font-style))
 
 ;; Get the total height of the font - usually equal to point size
 ;; extern DECLSPEC int SDLCALL TTF_FontHeight(TTF_Font *font);
-(defcfun ("TTF_FontHeight" get-Font-Height) :int
+(defcfun ("TTF_FontHeight" getFontHeight) :int
   (font ttf-font))
 
 ;; Get the offset from the baseline to the top of the font
 ;; This is a positive value, relative to the baseline.
 ;; extern DECLSPEC int SDLCALL TTF_FontAscent(TTF_Font *font);
-(defcfun ("TTF_FontAscent" get-Font-Ascent) :int
+(defcfun ("TTF_FontAscent" getFontAscent) :int
   (font ttf-font))
 
 ;; Get the offset from the baseline to the bottom of the font
 ;; This is a negative value, relative to the baseline.
 ;; extern DECLSPEC int SDLCALL TTF_FontDescent(TTF_Font *font);
-(defcfun ("TTF_FontDescent" get-Font-Descent) :int
+(defcfun ("TTF_FontDescent" getFontDescent) :int
   (font ttf-font))
 
 ;; Get the recommended spacing between lines of text for this font
 ;; extern DECLSPEC int SDLCALL TTF_FontLineSkip(TTF_Font *font);
-(defcfun ("TTF_FontLineSkip" get-Font-Line-Skip) :int
+(defcfun ("TTF_FontLineSkip" getFontLineSkip) :int
   (font ttf-font))
 
 ;; Get the number of faces of the font
 ;; extern DECLSPEC long SDLCALL TTF_FontFaces(TTF_Font *font);
-(defcfun ("TTF_FontFaces" get-Font-Faces) :long
+(defcfun ("TTF_FontFaces" getFontFaces) :long
   (font ttf-font))
 
 ;; Get the font face attributes, if any
 ;; extern DECLSPEC int SDLCALL TTF_FontFaceIsFixedWidth(TTF_Font *font);
-(defcfun ("TTF_FontFaceIsFixedWidth" get-Font-Face-Is-Fixed-Width) ttf-return-val-0+1
+(defcfun ("TTF_FontFaceIsFixedWidth" getFontFaceIsFixedWidth) ttf-return-val-0+1
   (font ttf-font))
 
 ;; extern DECLSPEC char * SDLCALL TTF_FontFaceFamilyName(TTF_Font *font);
-(defcfun ("TTF_FontFaceFamilyName" get-Font-Face-Family-Name) :string
+(defcfun ("TTF_FontFaceFamilyName" getFontFaceFamilyName) :string
   (font ttf-font))
 
 ;; extern DECLSPEC char * SDLCALL TTF_FontFaceStyleName(TTF_Font *font) ;
-(defcfun ("TTF_FontFaceStyleName" get-Font-Face-Style-Name) :string
+(defcfun ("TTF_FontFaceStyleName" getFontFaceStyleName) :string
   (font ttf-font))
 
 ;; Get the metrics (dimensions) of a glyph
@@ -305,7 +305,7 @@
 
 ;; Check if the TTF engine is initialized
 ;; extern DECLSPEC int SDLCALL TTF_WasInit(void);
-(defcfun ("TTF_WasInit" Was-Init) ttf-return-val-0+1)
+(defcfun ("TTF_WasInit" is-Init) ttf-return-val-0+1)
 
 ;; /* We'll use SDL for reporting errors */
 ;; #define TTF_SetError	SDL_SetError
