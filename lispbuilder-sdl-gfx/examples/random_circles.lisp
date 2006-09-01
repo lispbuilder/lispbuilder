@@ -10,7 +10,7 @@
 
 (let ((fps-ticks 0) (fps-frame-count 0) (fps-text ""))
   (defun display-fps (surface)
-    (sdl:draw-rect #(5 65 150 17) :color #(0 0 0) :surface surface)   
+    (sdl:draw-rect :rectangle #(5 65 150 17) :color #(0 0 0) :surface surface)   
     (incf fps-frame-count)
     (when (> (incf fps-ticks (sdl::get-ticks)) *fps-average-window*)
       (setf fps-text (format nil "Current FPS : ~d" (sdl:to-int (coerce (/ fps-frame-count
@@ -28,11 +28,11 @@
 	    (height (sdl:surf-h sdl:*default-display*)))
 	(sdl:set-framerate 0)
 	(sdl:with-events ()
-	  (:quit t)
+	  (:quit () t)
 	  (:keydown (state scancode key mod unicode)
 		    (if (eq key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
-	  (:idle
+	  (:idle ()
 	   (dotimes (i *circles-per-frame*)
 	     (sdl-gfx:draw-filledCircle (random 100)
 					:position (sdl:point (random width) (random height))

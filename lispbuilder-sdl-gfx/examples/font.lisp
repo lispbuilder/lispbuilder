@@ -11,6 +11,5 @@
       (sdl-gfx:gfxPrimitivesSetFont sdl-gfx:font-data 8 8)
       (sdl-gfx:draw-string "Hello World!!!!" :position #(10 70) :color #(255 255 255))
       (sdl:with-events ()
-	(:quit t)
-	(:idle
-	 (sdl:update-display))))))
+	(:quit () t)
+	(:idle () (sdl:update-display))))))
