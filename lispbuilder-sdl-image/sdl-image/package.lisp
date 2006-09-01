@@ -9,11 +9,8 @@
   (:export
 
    ;; util-sdl_image.lisp
+   #:create-image-from-RWops
    #:image-type
    #:is-image
-   #:load-image
-   
-   ;; sdl_image.lisp
-   #:Linked-Version
-   #:VERSION
-   ))
+   #:is-image-from-RWops
+   #:load-image))
