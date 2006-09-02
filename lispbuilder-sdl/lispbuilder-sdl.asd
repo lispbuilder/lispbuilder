@@ -10,10 +10,10 @@
     "lispbuilder-sdl uses CFFI to be highly compatible across lisp 
     implementations. It includes a selection of utilities to assist  
     game programming in Common Lisp."
-    :version "0.7.1"
+    :version "0.8.0"
     :author "Justin Heyes-Jones <justinhj@gmail.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
-    :licence "BSD"
+    :licence "MIT"
     :depends-on (cffi)
     :components
     ((:module "sdl"

@@ -6,12 +6,13 @@
 
 (defsystem lispbuilder-sdl-examples
     :description "Examples for the lispbuilder-sdl package."
-    :version "0.7.1"
+    :version "0.8.0"
     :depends-on (cffi lispbuilder-sdl)
     :components
     ((:module "examples"
 	      :components
 	      ((:file "package")
+	       (:file "globals" :depends-on ("package"))
 	       (:file "sdl_simplefont" :depends-on ("package"))
 	       (:file "sdl_simplefontdemo" :depends-on ("package"))
 	       (:file "sdl_bmp_example" :depends-on ("package"))

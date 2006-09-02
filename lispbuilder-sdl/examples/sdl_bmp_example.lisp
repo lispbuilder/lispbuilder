@@ -9,10 +9,6 @@
 
 (in-package #:sdl-examples) 
 
-;; (defvar *bmp-path* (or *load-truename* *default-pathname-defaults*))
-
-(defvar *bmp-path* (make-pathname :directory (pathname-directory #.(or *compile-file-truename* *load-truename*))))
-
 ; utilities used in this sample
 
 (defun bmp-sample ()

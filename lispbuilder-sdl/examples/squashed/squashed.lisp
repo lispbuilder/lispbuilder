@@ -1,11 +1,7 @@
 ;;;; (C) 2006 Jonathan Heusser, minor changes by Frank Buss
 
 (in-package #:lispbuilder-sdl-examples)
-
-;; (defvar *image-path* (or *load-truename* *default-pathname-defaults*))
-
-(defvar *image-path* (make-pathname :directory (pathname-directory #.(or *compile-file-truename* *load-truename*))))
-			     
+		     
 (defun show-score (score)
   (sdl:WM_SetCaption (format nil "Squashed - Score: ~a" score) "Squashed"))
 
@@ -20,10 +16,10 @@
 	    (last-squash-tick 0)
 	    (lasttick 0)
 	    (score 0))
-	(sdl:with-surfaces ((bug (sdl:load-image "bug.bmp" *image-path* :key-color #(255 255 255)))
-			    (racket (sdl:load-image "racket.bmp" *image-path* :key-color #(255 255 255)))
-			    (blood (sdl:load-image "blood.bmp" *image-path* :key-color #(255 255 255)))
-			    (squash (sdl:load-image "squash.bmp" *image-path* :key-color #(255 255 255))))
+	(sdl:with-surfaces ((bug (sdl:load-image "squashed/bug.bmp" *bmp-path* :key-color #(255 255 255)))
+			    (racket (sdl:load-image "squashed/racket.bmp" *bmp-path* :key-color #(255 255 255)))
+			    (blood (sdl:load-image "squashed/blood.bmp" *bmp-path* :key-color #(255 255 255)))
+			    (squash (sdl:load-image "squashed/squash.bmp" *bmp-path* :key-color #(255 255 255))))
 	  (show-score score)
 	  (sdl:display-cursor nil)
 	  (sdl:with-events ()
