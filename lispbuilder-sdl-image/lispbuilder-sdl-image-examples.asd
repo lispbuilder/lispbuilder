@@ -6,15 +6,16 @@
 
 (defsystem lispbuilder-sdl-image-examples
     :description "Examples describing the use of lispbuilder-sdl-image."
-    :version "0.1"
+    :version "0.2"
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
-    :licence "BSD"
+    :licence "MIT"
     :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-image)
     :components
     ((:module "examples"
 	      :components
 	      ((:file "package")
+	       (:file "globals" :depends-on ("package"))
 	       (:file "image-example" :depends-on ("package"))
 	       (:static-file "lisp.bmp")
 	       (:static-file "lisp.gif")
