@@ -12,10 +12,10 @@
     and provides Graphic Primitives, Rotozoomimg, Framerate control, and 
     MMX image filters. The wrapper is implemeted using CFFI to be highly 
     compatible across lisp implementations."
-    :version "0.4.1"
+    :version "0.5.0"
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
-    :licence "BSD"
+    :licence "MIT"
     :depends-on (cffi lispbuilder-sdl)
     :components
     ((:module "sdl-gfx"
