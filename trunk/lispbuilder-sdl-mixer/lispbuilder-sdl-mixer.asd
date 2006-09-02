@@ -1,3 +1,4 @@
+
 ;;; -*- lisp -*-
 
 (defpackage #:lispbuilder-sdl-mixer-system
@@ -13,7 +14,7 @@
     :version "0.1"
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
-    :licence "BSD"
+    :licence "MIT"
     :depends-on (cffi lispbuilder-sdl)
     :components
     ((:module "sdl-mixer"
