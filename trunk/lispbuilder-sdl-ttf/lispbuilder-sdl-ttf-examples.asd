@@ -9,7 +9,7 @@
     :version "0.1"
     :author "Rune Nesheim <rune.nesheim@gmail.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
-    :licence "BSD"
+    :licence "MIT"
     :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-ttf)
     :components
     ((:module "examples"
