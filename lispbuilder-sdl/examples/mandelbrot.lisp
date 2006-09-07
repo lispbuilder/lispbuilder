@@ -50,7 +50,7 @@
 		 (incf cx step)
 		 (sdl:update-display))
 	  (:quit () t)
-	  (:mousebuttondown (button state x y)
+	  (:mousebuttondown (:x x :y y)
 					; set the new center point
 			    (let* ((old-width (- x1 x0))
 				   (old-height (- y1 y0))
@@ -71,7 +71,7 @@
 			    (setf cx 0)
 			    (setf cy 0)
 			    (clear-screen))
-	  (:keydown (state scancode key mod unicode)
+	  (:keydown (:key key)
 		    (if (sdl:key= key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
 	  (:videoexpose () (sdl:update-display)))))))

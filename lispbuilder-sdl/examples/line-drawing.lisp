@@ -18,7 +18,7 @@
 	(sdl:draw-line 250 250 50 250))
       (sdl:with-events ()
 	(:quit () t)
-	(:keydown (state scancode key mod unicode)
+	(:keydown (:key key)
 		  (if (sdl:key= key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
 	(:videoexpose () (sdl:update-display))))))

@@ -527,6 +527,7 @@ void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel)
 
 ;;; f
 
+
 (defun fill-surface (&key (surface *default-surface*) (color *default-color*) (template nil) (update-p nil) (clipping-p))
   "fill the entire surface with the specified R G B A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
@@ -1075,125 +1076,410 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 	    (setf (fpsmanager-lastticks fpsmngr) (sdl_getticks)))))))
 
 (defun expand-activeevent (sdl-event params forms)
+    (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:gain
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_ActiveEvent 'gain)))
+				 (:state
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_ActiveEvent 'state)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
   `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_ACTIVEEVENT)
 	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_ActiveEvent 'gain)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_ActiveEvent 'state))))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-keydown (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYDOWN)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:state
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_KeyboardEvent 'state)))
+				 (:scancode
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+											 'sdl_keyboardevent
+											 'keysym)
+							      'SDL_keysym 'scancode)))
+				 (:key
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+											 'sdl_keyboardevent
+											 'keysym)
+							      'SDL_keysym 'sym)))
+				 (:mod `(,(intern (format nil "~A" (second key)) :keyword)
+					  (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+											      'sdl_keyboardevent
+											      'keysym)
+								   'SDL_keysym 'mod)))
+				 (:unicode
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+											 'sdl_keyboardevent
+											 'keysym)
+							      'SDL_keysym 'unicode)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+    
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYDOWN)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
 		   ,@forms)
-             
-     (cffi:foreign-slot-value ,sdl-event 'SDL_KeyboardEvent 'state)
-
-     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'scancode)
-     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'sym)
-     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'mod)
-     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'unicode))))
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-keyup (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYUP)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:state
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_KeyboardEvent 'state)))
+				 (:scancode
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+											 'sdl_keyboardevent
+											 'keysym)
+							      'SDL_keysym 'scancode)))
+				 (:key
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+											 'sdl_keyboardevent
+											 'keysym)
+							      'SDL_keysym 'sym)))
+				 (:mod
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+											 'sdl_keyboardevent
+											 'keysym)
+							      'SDL_keysym 'mod)))
+				 (:unicode
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+											 'sdl_keyboardevent
+											 'keysym)
+							      'SDL_keysym 'unicode)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+    
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_KEYUP)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
-     (cffi:foreign-slot-value ,sdl-event 'SDL_KeyboardEvent 'state)
-
-     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'scancode)
-     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'sym)
-     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'mod)
-     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event 'sdl_keyboardevent 'keysym) 'SDL_keysym 'unicode))))
 
 (defun expand-mousemotion (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_MOUSEMOTION)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'state)
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:state
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'state)))
+				 (:x
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'x))) 
+				 (:y
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'y)))
+				 (:x-rel
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'xrel)))
+				 (:y-rel
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'yrel)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
 
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'x)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'y)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'xrel)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseMotionEvent 'yrel))))
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_MOUSEMOTION)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-mousebuttondown (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttondown)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:button
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'button)))
+				 (:state
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'state)))
+				 (:x
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'x)))
+				 (:y
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'y)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
 
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'button)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'state)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'x)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'y))))
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttondown)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-mousebuttonup (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttonup)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'button)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'state)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'x)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'y))))
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:button
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'button)))
+				 (:state
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'state)))
+				 (:x
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'x)))
+				 (:y
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_MouseButtonEvent 'y)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :sdl_mousebuttonup)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-joyaxismotion (sdl-event params forms)
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:which
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyAxisEvent 'which)))
+				 (:axis
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyAxisEvent 'axis)))
+				 (:value
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyAxisEvent 'value)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
+
   `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYAXISMOTION)
 	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyAxisEvent 'which)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyAxisEvent 'axis)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyAxisEvent 'value))))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-joybuttondown (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONDOWN)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'which)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'axis)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'value))))
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:which
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'which)))
+				 (:axis
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'axis)))
+				 (:value
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'value)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONDOWN)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-joybuttonup (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONUP)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'which)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'axis)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'value))))
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:which
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'which)))
+				 (:axis
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'axis)))
+				 (:value
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyButtonEvent 'value)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBUTTONUP)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-joyhatmotion (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYHATMOTION)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyHatEvent 'which)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyHatEvent 'axis)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyHatEvent 'value))))
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:which
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyHatEvent 'which)))
+				 (:axis
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyHatEvent 'axis)))
+				 (:value
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyHatEvent 'value)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYHATMOTION)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-joyballmotion (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBALLMOTION)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'which)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'ball)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'xrel)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'yrel))))
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:which
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'which)))
+				 (:ball
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'ball)))
+				 (:x-rel
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'xrel)))
+				 (:y-rel
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_JoyBallEvent 'yrel)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_JOYBALLMOTION)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-videoresize (sdl-event params forms)
-  `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_VIDEORESIZE)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_ResizeEvent 'w)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_ResizeEvent 'h))))
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:w
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_ResizeEvent 'w)))
+				 (:h
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_ResizeEvent 'h)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
+    `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_VIDEORESIZE)
+	   (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-videoexpose (sdl-event forms)
   `((eql (cffi:foreign-enum-value 'SDL_EventType :SDL_VIDEOEXPOSE)
@@ -1214,16 +1500,39 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
                              ,@forms)))))
 
 (defun expand-userevent (sdl-event params forms)
-  `((and (>= (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type)
-	  (cffi:foreign-enum-value 'SDL_EventType :SDL_USEREVENT))
-     (< (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type)
-      (- (cffi:foreign-enum-value 'SDL_EventType :SDL_NUMEVENTS) 1)))
-    (funcall #'(lambda ,params
-                 ,@forms)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_UserEvent 'type)
-     (cffi:foreign-slot-value ,sdl-event 'SDL_UserEvent 'code)
-     (cffi:foreign-slot-pointer ,sdl-event 'SDL_UserEvent 'data1)
-     (cffi:foreign-slot-pointer ,sdl-event 'SDL_UserEvent 'data2))))
+  (let ((keyword-list nil)
+	(keywords nil))
+    (do ((keyword params (if (cdr keyword)
+			     (cddr keyword)
+			     nil)))
+	((null keyword))
+      (push (list (first keyword) (second keyword)) keyword-list))
+    (setf keywords (mapcar #'(lambda (key)
+			       (case (first key) 
+				 (:type
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_UserEvent 'type)))
+				 (:code
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-value ,sdl-event 'SDL_UserEvent 'code)))
+				 (:data1
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-pointer ,sdl-event 'SDL_UserEvent 'data1)))
+				 (:data2
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+				     (cffi:foreign-slot-pointer ,sdl-event 'SDL_UserEvent 'data2)))
+				 (:t (error "Unknown keyword ~A" (first key)))))
+			   keyword-list))
+
+    `((and (>= (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type)
+	       (cffi:foreign-enum-value 'SDL_EventType :SDL_USEREVENT))
+	   (< (cffi:foreign-slot-value ,sdl-event 'sdl_event 'type)
+	      (- (cffi:foreign-enum-value 'SDL_EventType :SDL_NUMEVENTS) 1)))
+      (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
+					     (second key))
+					 keyword-list))
+		   ,@forms)
+	       ,@(reduce #'append keywords)))))
 
 (defun expand-idle (forms)
   `(progn
@@ -1231,39 +1540,40 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 
 (defmacro with-events (args &rest events)
   "(with-sdl-events
-     (:activeevent (gain state)
+     (:activeevent (:gain gain :state state)
 		     t)
-     (:keydown (state scancode key mod unicode)
+     (:keydown (:state state :scancode scancode :key key :mod mod :unicode unicode)
 	       t)
-     (:keyup (state scancode key mod unicode)
+     (:keyup (:state state :scancode scancode :key key :mod mod :unicode unicode)
 	     t)
-     (:mousemotion (state x y xrel yrel)
+     (:mousemotion (:state state :x x :y y :xrel xrel :yrel yrel)
 		   t)
-     (:mousebuttondown (button state x y)
+     (:mousebuttondown (:button button :state state :x x :y y)
 		       t)
-     (:mousebuttonup (button state x y)
+     (:mousebuttonup (:button button :state state :x x :y y)
 		     t)
-     (:joyaxismotion (which axis value)
+     (:joyaxismotion (:which which :axis axis :value value)
 		     t)
-     (:joybuttondown (which button state)
+     (:joybuttondown (:which which :button button :state state)
 		     t)
-     (:joybuttonup (which button state)
+     (:joybuttonup (:which which :button button :state state)
 		   t)
-     (:joyhatmotion (which hat value)
+     (:joyhatmotion (:which which :hat hat :value value)
 		    t)
-     (:joyballmotion (which ball xrel yrel)
+     (:joyballmotion (:which which :ball ball :xrel xrel :yrel yrel)
 		     t)
-     (:videoresize (w h)
+     (:videoresize (:w w :h h)
 		   t)
-     (:videoexpose
+     (:videoexpose ()
       t)
-     (:syswmevent
+     (:syswmevent ()
       t)
-     (:quit 
+     (:quit ()
       t)
-     (:idle
+     (:idle ()
       &body))
    NOTE: (:quit t) is mandatory if you ever want to exit your application."
+  (declare (ignore args))
   (let ((quit (gensym "quit")) (sdl-event (gensym "sdl-event")) (poll-event (gensym "poll-event")) 
         (previous-ticks (gensym "previous-ticks")) (current-ticks (gensym "current-ticks")))
     `(let ((,sdl-event (new-event))
@@ -1282,63 +1592,51 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
                                     (:activeevent
                                      (expand-activeevent sdl-event 
                                                          (first (rest event)) 
-                                                         (cons `(declare (ignore ,@(first (rest event))))
-							       (rest (rest event)))))
+							 (rest (rest event))))
 				    (:keydown
 				     (expand-keydown sdl-event 
 						     (first (rest event)) 
-						     (cons `(declare (ignore ,@(first (rest event))))
-							   (rest (rest event)))))
+						     (rest (rest event))))
 				    (:keyup
 				     (expand-keyup sdl-event 
 						   (first (rest event)) 
-						   (cons `(declare (ignore ,@(first (rest event))))
-							 (rest (rest event)))))
+						   (rest (rest event))))
 				    (:mousemotion
 				     (expand-mousemotion sdl-event 
 							 (first (rest event)) 
-							 (cons `(declare (ignore ,@(first (rest event))))
-							       (rest (rest event)))))
+							 (rest (rest event))))
 				    (:mousebuttondown
 				     (expand-mousebuttondown sdl-event
 							     (first (rest event)) 
-							     (cons `(declare (ignore ,@(first (rest event))))
-								   (rest (rest event)))))
+							     (rest (rest event))))
 				    (:mousebuttonup
 				     (expand-mousebuttonup sdl-event 
 							   (first (rest event)) 
-							   (cons `(declare (ignore ,@(first (rest event))))
-								 (rest (rest event)))))
+							   (rest (rest event))))
 				    (:joyaxismotion
 				     (expand-joyaxismotion sdl-event 
 							   (first (rest event)) 
-							   (cons `(declare (ignore ,@(first (rest event))))
-								 (rest (rest event)))))
+							   (rest (rest event))))
 				    (:joybuttondown
 				     (expand-joybuttondown sdl-event 
 							   (first (rest event)) 
-							   (cons `(declare (ignore ,@(first (rest event))))
-								 (rest (rest event)))))
+							   (rest (rest event))))
 				    (:joybuttonup
 				     (expand-joybuttonup sdl-event 
 							 (first (rest event)) 
-							 (cons `(declare (ignore ,@(first (rest event))))
-							       (rest (rest event)))))
+							 (rest (rest event))))
 				    (:joyhatmotion
 				     (expand-joyhatmotion sdl-event 
 							  (first (rest event)) 
-							  (cons `(declare (ignore ,@(first (rest event))))
-								(rest (rest event)))))
+							  (rest (rest event))))
 				    (:joyballmotion
 				     (expand-joyballmotion sdl-event 
 							   (first (rest event)) 
-							   (cons `(declare (ignore ,@(first (rest event))))
-								 (rest (rest event)))))
+							   (rest (rest event))))
 				    (:videoresize
 				     (expand-videoresize sdl-event 
 							 (first (rest event)) 
-							 (cons `(declare (ignore ,@(first (rest event))))
-							       (rest (rest event)))))
+							 (rest (rest event))))
 				    (:videoexpose
 				     (expand-videoexpose sdl-event 
 							 (rest (rest event))))
@@ -1352,8 +1650,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 				    (:userevent
 				     (expand-userevent sdl-event 
 						       (first (rest event)) 
-						       (cons `(declare (ignore ,@(first (rest event))))
-							     (rest (rest event)))))))
+						       (rest (rest event))))))
                               events))))
 	(if (null ,previous-ticks)
 	    (setf ,previous-ticks (SDL_GetTicks))
