@@ -32,7 +32,7 @@
 	      (incf x)))
 	  (sdl:with-events ()
 	    (:quit () t)
-	    (:keydown (state scancode key mod unicode)
+	    (:keydown (:key key)
 		      (if (sdl:key= key :SDLK_ESCAPE)
 			  (sdl:push-quitevent)))
 	    (:idle () (sdl:update-display))))))))
