@@ -50,7 +50,7 @@
       (format t "video mode set. width ~a height ~a~%" (sdl:surf-w) (sdl:surf-h))
       (sdl:with-events ()
 	  (:quit () t)
-	  (:keydown (state scancode key mod unicode)
+	  (:keydown (:key key)
 		    (if (sdl:key= key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
 	  (:videoexpose ()
