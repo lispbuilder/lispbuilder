@@ -110,10 +110,10 @@
 
 	    (sdl::with-events ()
 	      (:quit () t)
-	      (:keydown (state scancode key mod unicode)
+	      (:keydown (:key key)
 			(if (sdl:key= key :SDLK_ESCAPE)
 			    (sdl:push-quitevent)))
-	      (:mousemotion (state x y xrel yrel)
+	      (:mousemotion (:state state state :x x :y y)
 			    (cond
 			      ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_LEFT) state) 1)
 			       (rm::arc dummy width height x y)
@@ -125,7 +125,7 @@
 			       (rm::dolly obj-root width height y))
 			      ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_MIDDLE) state) 2)
 			       (rm::translate obj-root width height x y))))
-	      (:mousebuttondown (button state x y)
+	      (:mousebuttondown (:button button :x x :y y)
 				(cond
 				  ((equal button sdl::sdl_button_left)
 				   (rm::reset-arc dummy width height x y))
