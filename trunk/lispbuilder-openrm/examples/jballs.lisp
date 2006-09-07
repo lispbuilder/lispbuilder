@@ -77,7 +77,7 @@
 
 	    (sdl::with-events ()
 	      (:quit () t)
-	      (:keydown (state scancode key mod unicode)
+	      (:keydown (:key key)
 			(cond
 			  ((sdl::key= key :SDLK_ESCAPE)
 			   (sdl::push-quitevent))
@@ -88,11 +88,11 @@
 			     (rm::node-add-primitive zippy (rm::create-bounds-from-node zippy))
 			     (rm::node-add-primitive floor (rm::create-bounds-from-node floor))
 			     (setf bounds-display t)))))
-	      (:mousemotion (state x y xrel yrel)
+	      (:mousemotion (:state state :x x :y y)
 			    (aux-handle-motion-sdl my-root state x y width height))
-	      (:mousebuttondown (button state x y)
+	      (:mousebuttondown (:button button :x x :y y)
 				(aux-handle-buttons-sdl my-root button x y width height))
-	      (:mousebuttonup (button state x y)
+	      (:mousebuttonup ()
 			      (setf button-state nil))
 	      (:idle ()
  	       (rm::rotate-node moving-group :direction #(0.0 1.0 0.0) :only-this-node t)
