@@ -29,7 +29,7 @@
 	(sdl:set-framerate 0)
 	(sdl:with-events ()
 	  (:quit () t)
-	  (:keydown (state scancode key mod unicode)
+	  (:keydown (:key key)
 		    (if (eq key :SDLK_ESCAPE)
 			(sdl:push-quitevent)))
 	  (:idle ()
