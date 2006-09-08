@@ -30,7 +30,7 @@
 		 (sdl:clear-display :color #(0 0 0))
 		 (sdl:with-color (#(255 255 255))
 		   (loop for i from 20 below width by 20
-		      do (loop for j from 20 below width by 20
+		      do (loop for j from 20 below height by 20
 			    do (let ((size (* (/ (distance mouse-x mouse-y i j) max-distance)
 					      66)))
 				 (sdl-gfx:draw-box (rect-at-midpoint i j size size))))))
