@@ -22,4 +22,8 @@
 	       (:file "recursion" :depends-on ("package"))
 	       (:file "functions" :depends-on ("package"))
 	       (:file "objects" :depends-on ("package"))
+	       (:file "points-and-lines" :depends-on ("package"))
+	       (:file "shape-primitives" :depends-on ("package"))
+	       (:file "bezier" :depends-on ("package"))
+	       (:file "distance-2D" :depends-on ("package"))
 	       ))))

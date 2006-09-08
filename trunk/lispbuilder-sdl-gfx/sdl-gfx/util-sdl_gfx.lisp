@@ -6,7 +6,20 @@
 ;; using sdl_gfx.lisp (the CFFI wrapper)
 
 (in-package #:lispbuilder-sdl-gfx)
-  
+
+;;; Helper Functions
+
+(defun return-list-for-array (points index-type)
+  (case index-type
+    (:x (mapcar #'(lambda (point)
+		    (elt point 0))
+		points))
+    (:y (mapcar #'(lambda (point)
+		    (elt point 1))
+		points))
+    (t nil)))
+
+
 ;;; d
 
 (defun draw-pixel (&key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -155,35 +168,67 @@
 			(sdl:point-x point3) (sdl:point-y point3)
 			(sdl:color-r color) (sdl:color-g color) (sdl:color-b color) (sdl:color-a color))))
 
-(defun draw-polygon (n &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (= 3 (length color))
-      (polygoncolor surface (sdl:point-x position) (sdl:point-y position) n
-		    (map-color color))
-      (polygonRGBA surface (sdl:point-x position) (sdl:point-y position) n
-		   (sdl:color-r color) (sdl:color-g color) (sdl:color-b color) (sdl:color-a color))))
+(defun draw-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (listp points)
+    (error "draw-polygon: ~A must be a list of (x y) points." points))
+  (let ((x-array (cffi:foreign-alloc :unsigned-short :initial-contents (return-list-for-array points :x)))
+	(y-array (cffi:foreign-alloc :unsigned-short :initial-contents (return-list-for-array points :y)))
+	(poly-surface nil))
+    (if (= 3 (length color))
+	(setf poly-surface (polygoncolor surface x-array y-array (length points)
+					 (map-color color)))
+	(setf poly-surface (polygonRGBA surface x-array y-array (length points)
+					(sdl:color-r color) (sdl:color-g color) (sdl:color-b color) (sdl:color-a color))))
+    (cffi:foreign-free x-array)
+    (cffi:foreign-free y-array)
+    poly-surface))
 
-(defun draw-aapolygon (n &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (= 3 (length color))
-      (aapolygoncolor surface (sdl:point-x position) (sdl:point-y position) n
-		      (map-color color))
-      (aapolygonRGBA surface (sdl:point-x position) (sdl:point-y position) n
-		     (sdl:color-r color) (sdl:color-g color) (sdl:color-b color) (sdl:color-a color))))
+(defun draw-aapolygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (listp points)
+    (error "draw-aapolygon: ~A must be a list of (x y) points." points))
+  (let ((x-array (cffi:foreign-alloc :unsigned-short :initial-contents (return-list-for-array points :x)))
+	(y-array (cffi:foreign-alloc :unsigned-short :initial-contents (return-list-for-array points :y)))
+	(poly-surface nil))
+    (if (= 3 (length color))
+	(setf poly-surface (aapolygoncolor surface x-array y-array (length points)
+					   (map-color color)))
+	(setf poly-surface (aapolygonRGBA surface x-array y-array (length points)
+					  (sdl:color-r color) (sdl:color-g color) (sdl:color-b color)
+					  (sdl:color-a color))))
+    (cffi:foreign-free x-array)
+    (cffi:foreign-free y-array)
+    poly-surface))
 
-(defun draw-filledpolygon (n
-			   &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (= 3 (length color))
-      (filledpolygoncolor surface (sdl:point-x position) (sdl:point-y position) n
-			  (map-color color))
-      (filledpolygonRGBA surface (sdl:point-x position) (sdl:point-y position) n
-			 (sdl:color-r color) (sdl:color-g color) (sdl:color-b color) (sdl:color-a color))))
+(defun draw-filledpolygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (listp points)
+    (error "draw-filledpolygon: ~A must be a list of (x y) points." points))
+  (let ((x-array (cffi:foreign-alloc :unsigned-short :initial-contents (return-list-for-array points :x)))
+	(y-array (cffi:foreign-alloc :unsigned-short :initial-contents (return-list-for-array points :y)))
+	(poly-surface nil))
+    (if (= 3 (length color))
+	(setf poly-surface (filledpolygoncolor surface x-array y-array (length points)
+					       (map-color color)))
+	(set poly-surface poly-surface (filledpolygonRGBA surface x-array y-array (length points)
+							  (sdl:color-r color) (sdl:color-g color) (sdl:color-b color)
+							  (sdl:color-a color))))
+    (cffi:foreign-free x-array)
+    (cffi:foreign-free y-array)
+    poly-surface))
 
-(defun draw-bezier (n s
-		    &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (= 3 (length color))
-      (beziercolor surface (sdl:point-x position) (sdl:point-y position) n s
-		   (map-color color))
-      (bezierRGBA surface (sdl:point-x position) (sdl:point-y position) n s
-		  (sdl:color-r color) (sdl:color-g color) (sdl:color-b color) (sdl:color-a color))))
+(defun draw-bezier (points s &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (listp points)
+    (error "draw-bezier: ~A must be a list of (x y) points." points))
+  (let ((x-array (cffi:foreign-alloc :unsigned-short :initial-contents (return-list-for-array points :x)))
+	(y-array (cffi:foreign-alloc :unsigned-short :initial-contents (return-list-for-array points :y)))
+	(bezier-surface nil))
+    (if (= 3 (length color))
+	(setf bezier-surface (beziercolor surface x-array y-array (length points) s (map-color color)))
+	(setf bezier-surface (bezierRGBA surface x-array y-array (length points) s
+					 (sdl:color-r color) (sdl:color-g color) (sdl:color-b color)
+					 (sdl:color-a color))))
+    (cffi:foreign-free x-array)
+    (cffi:foreign-free y-array)
+    bezier-surface))
 
 (defun draw-character (c
 		       &key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))

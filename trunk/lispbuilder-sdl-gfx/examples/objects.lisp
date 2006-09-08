@@ -23,7 +23,7 @@
 (defun objects ()
   (let ((mouse-x 0) (mouse-y 0))
     (sdl:with-init ()
-      (sdl:with-display (*width* *height* :title-caption "Recursion, from Processing.org")
+      (sdl:with-display (*width* *height* :title-caption "Objects, from Processing.org")
 	(sdl:set-framerate 60)
 	(sdl:clear-display :color #(0 0 0))
 	(sdl:with-events ()
