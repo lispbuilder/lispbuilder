@@ -11,9 +11,11 @@
 (defctype SDL-RWops :pointer)
 
 (defun to-int (num)
-  (if (floatp num)
-      (round num)
-      num))
+  (if (numberp num)
+      (if (integerp num)
+	  num
+	  (round num))
+      (error "to-int: ~d is not a number." num)))
 
 (defun vec-to-int (vec)
   "vec-to-int will create a new VECTOR of the same length as VEC, but the contents are converted to integers.
