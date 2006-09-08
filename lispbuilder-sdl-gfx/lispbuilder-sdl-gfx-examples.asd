@@ -16,4 +16,10 @@
 	      :components
 	      ((:file "package")
 	       (:file "font" :depends-on ("package"))
-	       (:file "random_circles" :depends-on ("package"))))))
+	       (:file "random_circles" :depends-on ("package"))
+	       (:file "setup-and-draw" :depends-on ("package"))
+	       (:file "width-height" :depends-on ("package"))
+	       (:file "recursion" :depends-on ("package"))
+	       (:file "functions" :depends-on ("package"))
+	       (:file "objects" :depends-on ("package"))
+	       ))))
