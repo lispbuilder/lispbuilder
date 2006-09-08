@@ -6,4 +6,5 @@
   (:use #:cl #:cffi)
   (:nicknames #:sdl-gfx-examples)
   (:export #:inbuilt-font #:random-circles
-           #:setup-and-draw #:width-height #:recursion #:functions #:objects))
+           #:setup-and-draw #:width-height #:recursion #:functions #:objects #:points-and-lines
+           #:shape-primitives #:bezier #:distance-2d))
