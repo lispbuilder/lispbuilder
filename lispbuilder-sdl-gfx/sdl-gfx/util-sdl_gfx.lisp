@@ -7,6 +7,25 @@
 
 (in-package #:lispbuilder-sdl-gfx)
 
+;; Coefficients for Matrix M
+(defvar *M11*	 0.0)	
+(defvar *M12*	 1.0)
+(defvar *M13*	 0.0)
+(defvar *M14*	 0.0)
+(defvar *M21*	-0.5)
+(defvar *M22*	 0.0)
+(defvar *M23*	 0.5)
+(defvar *M24*	 0.0)
+(defvar *M31*	 1.0)
+(defvar *M32*	-2.5)
+(defvar *M33*	 2.0)
+(defvar *M34*	-0.5)
+(defvar *M41*	-0.5)
+(defvar *M42*	 1.5)
+(defvar *M43*	-1.5)
+(defvar *M44*	 0.5)
+
+
 ;;; Helper Functions
 
 (defun return-list-for-array (points index-type)
@@ -20,7 +39,98 @@
     (t nil)))
 
 
+;;; Macros
+
+;;; w
+
+(defmacro with-bezier ((shape-type &optional (segments 10)) &body body)
+  (let ((point-list (gensym "point-list-")))
+    `(let ((,point-list nil))
+       (labels ((add-vertex (point)
+		  (setf ,point-list (append ,point-list (list point)))))
+	 ,@body)
+       (draw-bezier ,point-list ,segments))))
+
+(defmacro with-curve ((shape-type &optional (segments 10)) &body body)
+  (let ((point-list (gensym "point-list-")))
+    `(let ((,point-list nil))
+       (labels ((add-vertex (point)
+		  (setf ,point-list (append ,point-list (list point)))))
+	 ,@body)
+       (draw-curve ,point-list ,shape-type ,segments))))
+
+(defmacro with-shape ((shape-type) &body body)
+  (let ((point-list (gensym "point-list-")))
+    `(let ((,point-list nil))
+       (labels ((add-vertex (point)
+		  (setf ,point-list (append ,point-list (list point)))))
+	 ,@body)
+       (draw-shape ,point-list ,shape-type))))
+
+
+
+;;; Functions
+
+;;; c
+
+(defun calculate-curve (p1 p2 p3 p4 segments)
+  (let ((step-size 0)
+	(points nil))
+    (when (or (null segments) (= segments 0))
+      (setf segments (distance (sdl:point-x p2) (sdl:point-y p2)
+			       (sdl:point-x p3) (sdl:point-y p3))))
+    (setf step-size (coerce (/ 1 segments) 'float))
+    (setf points (loop for i from 0.0 below 1.0 by step-size
+	  collecting (sdl:point (catmull-rom-spline i (sdl:point-x p1) (sdl:point-x p2)
+						    (sdl:point-x p3) (sdl:point-x p4))
+				(catmull-rom-spline i (sdl:point-y p1) (sdl:point-y p2)
+						    (sdl:point-y p3) (sdl:point-y p4)))))
+    ; NOTE: There must be a more efficient way to add the first and last points to the point list.
+    (push p2 points)
+    (nconc points (list p3))))
+
+(defun catmull-rom-spline (val v0 v1 v2 v3)
+  (let ((c1 0) (c2 0) (c3 0) (c4 0))
+    (setf c1                 (* *M12* v1)
+	  c2 (+ (* *M21* v0)              (* *M23* v2))
+	  c3 (+ (* *M31* v0) (* *M32* v1) (* *M33* v2) (* *M34* v3))
+	  c4 (+ (* *M41* v0) (* *M42* v1) (* *M43* v2) (* *M44* v3)))
+    (+ c1 (* val (+ c2 (* val (+ c3 (* c4 val))))))))
+
+
 ;;; d
+
+(defun distance (x1 y1 x2 y2)
+  (sqrt (+ (expt (- x1 x2) 2) 
+	   (expt (- y1 y2) 2))))
+
+(defun draw-curve (points type segments)
+  (do* ((p1 points (cdr p1))
+	(p2 (cdr p1) (cdr p1))
+	(p3 (cdr p2) (cdr p2))
+	(p4 (cdr p3) (cdr p3)))
+       ((or (null p4) (null p3) (null p2) (null p1)))
+    (draw-shape (calculate-curve (first p1) (first p2) (first p3) (first p4) segments) type)))
+
+(defun draw-shape (points type)
+  (case type
+    (:line-strip
+     (do* ((p1 points (cdr p1))
+	   (p2 (cdr p1) (cdr p1)))
+	  ((or (null p2)
+	       (null p1)))
+       (sdl-gfx::draw-line (first p1) (first p2))))
+    (:lines
+     (do* ((p1 points (if (cdr p1)
+			  (cddr p1)
+			  nil))
+	   (p2 (cdr p1) (cdr p1)))
+	  ((or (null p2)
+	       (null p1)))
+       (sdl-gfx::draw-line (first p1) (first p2))))
+    (:points
+     (loop for point in points
+	do (sdl-gfx::draw-pixel :position point)))))
 
 (defun draw-pixel (&key (position sdl:*default-position*) (surface sdl:*default-surface*) (color sdl:*default-color*))
   (if (= 3 (length color))
@@ -285,4 +395,3 @@
   (cffi:with-foreign-objects ((dstwidth :int) (dstheight :int))
     (zoomSurfaceSize width height zoomx zoomy dstwidth dstheight)
     (vector (cffi:mem-ref dstwidth :int) (cffi:mem-ref dstheight :int))))
-

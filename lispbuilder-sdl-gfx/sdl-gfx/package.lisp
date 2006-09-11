@@ -65,6 +65,9 @@
    #:SDL_setFramerate
    #:SMOOTHING_OFF
    #:SMOOTHING_ON
+   #:add-vertex
+   #:calculate-curve
+   #:distance
    #:draw-aacircle
    #:draw-aaellipse
    #:draw-aaline
@@ -74,6 +77,7 @@
    #:draw-box
    #:draw-character
    #:draw-circle
+   #:draw-curve
    #:draw-ellipse
    #:draw-filledCircle
    #:draw-filledEllipse
@@ -81,6 +85,7 @@
    #:draw-filledPolygon
    #:draw-filledTrigon
    #:draw-hline
+   #:draw-line
    #:draw-pie
    #:draw-pixel
    #:draw-polygon
@@ -89,6 +94,7 @@
    #:draw-rotozoom-Size
    #:draw-rotozoom-Size-XY
    #:draw-rotozoom-XY
+   #:draw-shape
    #:draw-string
    #:draw-trigon
    #:draw-vline
@@ -100,6 +106,8 @@
    #:map-color
    #:tColorRGBA
    #:tColorY
-   ;; util-sdl_gfx
+   #:with-bezier
+   #:with-curve
+   #:with-shape
    ))
 

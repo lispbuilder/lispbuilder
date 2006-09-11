@@ -1,0 +1,43 @@
+;;;;; Converted from the "Vertices" Processing example at:
+;;;;; "http://www.processing.org/learning/examples/vertices.html"
+;;;;; (C)2006 Luke J Crook
+
+(in-package #:sdl-gfx-examples) 
+
+
+(defun vertices ()
+  (let ((width 200) (height 200))
+    (sdl:with-init ()
+      (sdl:with-display (width height :title-caption "Vertices, from Processing.org")
+	(sdl:clear-display :color #(0 0 0))
+	(sdl:with-color (#(102 102 102))
+	  (sdl-gfx:with-curve (:line-strip 10)
+	    (sdl-gfx:add-vertex (sdl:point 168 182))
+	    (sdl-gfx:add-vertex (sdl:point 168 182))
+	    (sdl-gfx:add-vertex (sdl:point 136 38))
+	    (sdl-gfx:add-vertex (sdl:point 42 34))
+	    (sdl-gfx:add-vertex (sdl:point 64 200))
+	    (sdl-gfx:add-vertex (sdl:point 64 200))))
+	(sdl:with-color (#(51 51 51))
+	  (sdl-gfx:with-shape (:lines)
+	    (sdl-gfx:add-vertex (sdl:point 60 40))
+	    (sdl-gfx:add-vertex (sdl:point 160 10))
+	    (sdl-gfx:add-vertex (sdl:point 170 150))
+	    (sdl-gfx:add-vertex (sdl:point 60 150))))
+	(sdl:with-color (#(255 255 255))
+	  (sdl-gfx:with-shape (:points)
+	    (sdl-gfx:add-vertex (sdl:point 60 40))
+	    (sdl-gfx:add-vertex (sdl:point 160 10))
+	    (sdl-gfx:add-vertex (sdl:point 170 150))
+	    (sdl-gfx:add-vertex (sdl:point 60 150))))
+	(sdl:with-color (#(126 126 126))
+	  (sdl-gfx:with-bezier (nil 10)
+	    (sdl-gfx:add-vertex (sdl:point 60 40))
+	    (sdl-gfx:add-vertex (sdl:point 160 10))
+	    (sdl-gfx:add-vertex (sdl:point 170 150))
+	    (sdl-gfx:add-vertex (sdl:point 60 150))))
+	(sdl:update-display)
+	(sdl:with-events ()
+	  (:quit () t)
+	  (:videoexpose () (sdl:update-display)))))))
+
