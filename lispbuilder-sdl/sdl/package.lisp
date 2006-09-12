@@ -26,6 +26,10 @@
    #:blit-surface
    #:check-bounds
    #:clamp				; from cl-sdl
+   #:clamp-to-sbyte
+   #:clamp-to-ubyte
+   #:clamp-to-sshort
+   #:clamp-to-ushort
    #:clear-colorkey
    #:clear-display
    #:color

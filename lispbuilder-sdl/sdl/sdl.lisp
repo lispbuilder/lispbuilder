@@ -88,15 +88,22 @@
 ;;; "SDL_video.h"
 ;;; Here we define SDL_VideoInfo as it uses nasty bitfields which SWIG does not yet generate automatic wrappers for.
 (defbitfield hardware-flags
-  (:hw_available #x0000)
-  (:wm_available #x0001)
-  (:blit_hw #x0200)
-  (:blit_hw_CC #x0400)
-  (:blit_hw_A #x0800)
-  (:blit_sw #x1000)
-  (:blit_sw_CC #x2000)
-  (:blit_sw_A #x4000)
-  (:blit_fill #x8000))
+  (:hw-available  #x0001)
+  (:wm-available  #x0002)
+  (:unused_bits_1 #x0004)
+  (:unused_bits_2 #x0008)
+  (:unused_bits_3 #x0010)  
+  (:unused_bits_4 #x0020)
+  (:unused_bits_5 #x0040)
+  (:unused_bits_6 #x0080)
+  (:unused_bits_7 #x0100)
+  (:blit-hw       #x0200)
+  (:blit-hw-CC    #x0400)
+  (:blit-hw-A     #x0800)
+  (:blit-sw       #x1000)
+  (:blit-sw-CC    #x2000)
+  (:blit-sw-A     #x4000)
+  (:blit-fill     #x8000))
 
 (defcstruct SDL_VideoInfo
   (flags hardware-flags)
