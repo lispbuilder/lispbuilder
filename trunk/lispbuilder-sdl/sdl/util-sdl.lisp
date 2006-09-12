@@ -260,6 +260,18 @@
 (defun clamp (v l u)
   (min (max v l) u))
 
+(defun clamp-to-sbyte (v)
+  (min (max v -127) 127))
+
+(defun clamp-to-ubyte (v)
+  (min (max v 0) 255))
+
+(defun clamp-to-sshort (v)
+  (min (max v -32767) 32767))
+
+(defun clamp-to-ushort (v)
+  (min (max v 0) 65535))
+
 (defun clear-colorkey (rel-accel &key (surface *default-surface*))
   "Removes the key color from the given surface."
   (when (is-valid-ptr surface)
@@ -668,11 +680,10 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 (defun get-video-info (&key (video-info (SDL_GetVideoInfo)) (info :video-mem))
   "Returns information about the video hardware.
   GET-VIDEO-INFO :video-info <pointer to a SDL_VIDEOINFO structure>
-                 :info (one of :hw_available | :wm_available |
-                       :blit_hw | :blit_hw_cc | :blit_hw_a |
-                       :blit_sw | :blit_sw_cc | :blit_sw_a |
-                       :blit_fill |
-                       :video_mem |
+                 :info (one of :hw-available | :wm-available |
+                       :blit-hw | :blit-hw-cc | :blit-hw-a |
+                       :blit-sw | :blit-sw-cc | :blit-sw-a |
+                       :blit-fill |
                        :pixelformat )
   Usage: get-video-info should be called after sdl_init but before sdl_setvideomode.
          e.g (get-video-info :info :video_mem ), or
@@ -680,9 +691,15 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
          Will return the amount video memory available."
   (if (is-valid-ptr video-info)
       (case info
+	(:current-w
+	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'current_w))
+	(:current-h
+	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'current_h))
+	(:blit-fill
+	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'video_mem))
 	(:video-mem
 	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'video_mem))
-	(:pixelformat
+	(:pixel-format
 	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'vfmt))
 	(otherwise
 	 (member info (cffi:foreign-slot-value video-info 'sdl_videoinfo 'flags))))
