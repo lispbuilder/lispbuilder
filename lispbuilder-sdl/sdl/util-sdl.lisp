@@ -684,7 +684,10 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
                        :blit-hw | :blit-hw-cc | :blit-hw-a |
                        :blit-sw | :blit-sw-cc | :blit-sw-a |
                        :blit-fill |
-                       :pixelformat )
+                       :video-mem |
+                       :pixel-format |
+                       :current-w | 
+                       :current-h)
   Usage: get-video-info should be called after sdl_init but before sdl_setvideomode.
          e.g (get-video-info :info :video_mem ), or
              (get-video-info :video-info (sdl_getvideoinfo) :info :video_mem)
@@ -695,8 +698,6 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'current_w))
 	(:current-h
 	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'current_h))
-	(:blit-fill
-	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'video_mem))
 	(:video-mem
 	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'video_mem))
 	(:pixel-format
