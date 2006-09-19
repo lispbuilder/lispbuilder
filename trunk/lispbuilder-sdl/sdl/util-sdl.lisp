@@ -673,6 +673,7 @@ Uint32 getpixel(SDL_Surface *surface, int x, int y)
 
 |#
 
+
 (defun get-surface-rect (&optional (surface *default-surface*))
   "Returns a rectangle containing the surfaces width and height. X and Y are both set to 0."
   (rectangle 0 0 (surf-w surface) (surf-h surface)))
