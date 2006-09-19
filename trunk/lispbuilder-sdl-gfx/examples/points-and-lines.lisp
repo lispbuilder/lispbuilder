@@ -8,7 +8,7 @@
 (defun points-and-lines ()
   (let ((width 200) (height 200))
     (sdl:with-init ()
-      (sdl:with-display (*width* *height* :title-caption "Points and Lines, from Processing.org")
+      (sdl:with-display (width height :title-caption "Points and Lines, from Processing.org")
 	(sdl:set-framerate 10)
 	(sdl:clear-display :color #(0 0 0))
 	(let* ((d 40) (p1 d) (p2 (+ p1 d)) (p3 (+ p2 d)) (p4 (+ p3 d)))

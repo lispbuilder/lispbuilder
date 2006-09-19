@@ -8,7 +8,7 @@
 (defun bezier ()
   (let ((width 200) (height 200))
     (sdl:with-init ()
-      (sdl:with-display (*width* *height* :title-caption "Bezier, from Processing.org")
+      (sdl:with-display (width height :title-caption "Bezier, from Processing.org")
 	(sdl:set-framerate 5)
 	(sdl:clear-display :color #(0 0 0))
 	(sdl:with-color (#(255 255 255))
