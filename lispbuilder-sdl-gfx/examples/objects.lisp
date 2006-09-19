@@ -2,7 +2,7 @@
 ;;;;; "http://www.processing.org/learning/examples/objects.html"
 ;;;;; (C)2006 Luke J Crook
 
-(in-package #:sdl-gfx-examples) 
+(in-package #:sdl-gfx-examples)
 
 (defvar *width* 200)
 (defvar *height* 200)
@@ -64,11 +64,11 @@
 (defmethod display ((rect m-rect) &key (surface sdl:*default-display*))
   (sdl:with-color (#(255 255 255))
     (dotimes (i (tt rect))
-      (sdl-gfx:draw-box (sdl:rectangle (+ (xpos rect)
-					  (* i (+ (d rect)
-						  (w rect))))
-				       (ypos rect)
-				       (w rect)
-				       (* (h rect)
-					  (sdl:surf-h surface)))
+      (sdl-gfx:draw-box (sdl:rectangle (sdl:clamp-to-sshort (+ (xpos rect)
+							       (* i (+ (d rect)
+								       (w rect)))))
+				       (sdl:clamp-to-sshort (ypos rect))
+				       (sdl:clamp-to-sshort (w rect))
+				       (sdl:clamp-to-sshort (* (h rect)
+							       (sdl:surf-h surface))))
 			:surface surface))))

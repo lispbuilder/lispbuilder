@@ -1,0 +1,394 @@
+;;;;; Converted from the "Liquid Balls" Processing example at:
+;;;;; "http://processing.v3ga.net/show.php?id=10&type=0"
+;;;;; Lisp version (C)2006 Luke J Crook
+
+;; Press: 'h' to display a grid
+;; Press: 'c' to display the center of each meta-ball
+(in-package #:sdl-gfx-examples)
+
+
+(defvar *draw-gridp* nil)
+(defvar *draw-meta-centerp* nil)
+
+(let* ((frame-values 10)
+       (frame-times (make-array frame-values :initial-element 0 :element-type 'fixnum))
+       (frame-time-last 0)
+       (frame-count 0))
+  (declare (type fixnum frame-values frame-time-last frame-count))
+
+  (defun fps-init ()
+    (dotimes (i frame-values)
+      (setf (aref frame-times i) 0))
+    (setf frame-count 0
+	  frame-time-last (sdl:SDL_getticks)))
+
+  (defun display-fps (surface)
+    (declare (optimize (safety 0) (speed 3) (space 1)))
+    (let ((get-ticks (sdl:SDL_getticks))
+          (frames-per-second 0.0))
+      (declare (type fixnum get-ticks)
+	       (type float frames-per-second))
+
+      (setf (aref frame-times frame-count) (- get-ticks frame-time-last))
+      (setf frame-time-last get-ticks)
+      (incf frame-count)
+      (when (>= frame-count frame-values)
+	(setf frame-count 0)
+	(dotimes (i frame-values)
+	  (incf frames-per-second (aref frame-times i)))
+	(setf frames-per-second (the float (/ 1000 (/ frames-per-second frame-values))))
+	(sdl:fill-surface :color #(0 0 0) :surface surface :update-p t)
+	(sdl-gfx:draw-string (format nil "FPS : ~d" (coerce frames-per-second 'float))
+			     :position #(0 0) :surface surface :color #(255 255 255)))
+      surface)))
+
+(defstruct mmanager
+  (screen-width 0 :type fixnum)
+  (screen-height 0 :type fixnum)
+  (iso-value 0.0 :type float)
+  (viscosity 0.0 :type float)
+  (min-viscosity 0.0 :type float)
+  (max-viscosity 0.0 :type float)
+  (d-viscosity 0.0 :type float)
+  (x-squares 0 :type fixnum)
+  (y-squares 0 :type fixnum)
+  (res 0 :type fixnum)
+  (grid-size-x 0 :type fixnum)
+  (grid-size-y 0 :type fixnum)
+  meta-grid
+  square-edge
+  offset
+  line
+  square-flag)
+
+(defun new-mmanager (&key width height iso-value viscosity min-viscosity max-viscosity x-squares y-squares)
+  (let ((manager (make-mmanager :screen-width width :screen-height height :iso-value iso-value
+				:viscosity viscosity :min-viscosity min-viscosity :max-viscosity max-viscosity
+				:x-squares x-squares :y-squares y-squares)))
+    (setf (mmanager-d-viscosity manager) (/ (- max-viscosity min-viscosity) 250.0)
+	  (mmanager-res manager) (/ width x-squares)
+	  (mmanager-grid-size-x manager) (+ 1 x-squares)
+	  (mmanager-grid-size-y manager) (+ 1 y-squares)
+	  (mmanager-meta-grid manager) (make-array (list (+ 1 x-squares) (+ 1 y-squares))
+						   :initial-element 0.0 :element-type 'float)
+	  (mmanager-square-edge manager) (make-array '(4 2)
+						     :initial-contents '((0 1) (1 2) (2 3) (3 0))
+						     :element-type 'fixnum)
+	  (mmanager-offset manager) (make-array '(4 2)
+						:initial-contents '((0 0) (1 0) (1 1) (0 1))
+						:element-type 'fixnum)
+	  (mmanager-line manager) (make-array '(16 5)
+					      :initial-contents '((-1 -1 -1 -1 -1)
+								  (0   3 -1 -1 -1)
+								  (0   1 -1 -1 -1) 
+								  (3   1 -1 -1 -1)
+								  (1   2 -1 -1 -1)
+								  (1   2  0  3 -1)
+								  (0   2 -1 -1 -1)
+								  (3   2 -1 -1 -1)
+								  (3   2 -1 -1 -1)
+								  (0   2 -1 -1 -1)
+								  (3   2  0  2 -1)
+								  (1   2 -1 -1 -1)
+								  (3   1 -1 -1 -1)
+								  (0   1 -1 -1 -1)
+								  (0   3 -1 -1 -1)
+								  (-1 -1 -1 -1 -1))
+					      :element-type 'fixnum)
+	  (mmanager-square-flag manager) (make-array (list (+ 1 x-squares) (+ 1 y-squares))
+						     :element-type 'fixnum))
+    manager))
+
+(defstruct metaball
+  (center-x 0 :type fixnum) (center-y 0 :type fixnum)
+  (center-i 0.0 :type float) (center-j 0.0 :type float)
+  (strength 0 :type fixnum)
+  (iso-value 0.0 :type float)
+  (r 0.0 :type float)
+  (sqr 0.0 :type float))
+
+(defun set-radius (mball strength ival)
+    (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum strength)
+	   (type float ival))
+  (setf (metaball-r mball) (the float (sqrt (/ strength ival))))
+  ;; Note: (/ 256 64) probably needs to change to screen-width and squares.
+  (setf (metaball-sqr mball) (the float (/ (metaball-r mball) (/ 256 64)))))
+
+(defun set-strength (mball s)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum s))
+  (setf (metaball-strength mball) s)
+  (set-radius mball (metaball-strength mball) (metaball-iso-value mball)))
+
+(defun set-center-to (mball x y)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum x y))
+  (setf (metaball-center-x mball) x
+	(metaball-center-y mball) y))
+
+(defun get-field-at (mball x y)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum x y))
+  (let ((dx (- (metaball-center-x mball) x))
+	(dy (- (metaball-center-y mball) y)))
+    (declare (type fixnum dx dy))
+  (the float (/ (metaball-strength mball) (+ (* dx dx) (* dy dy)
+					     0.01)))))
+
+(defun square-coords (mball x y)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum x y))
+  (setf (metaball-center-i mball) (the float (coerce (/ (metaball-center-x mball)
+							x) 'float)))
+  (setf (metaball-center-j mball) (the float (coerce (/ (metaball-center-y mball)
+							y) 'float))))
+
+(defun get-square-coords-i (mball x y)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum x y))
+  (setf (metaball-center-i mball) (the float (coerce (/ (metaball-center-x mball)
+							x) 'float))))
+
+(defun get-square-coords-j (mball x y)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum x y))
+  (setf (metaball-center-j mball) (the float (coerce (/ (metaball-center-y mball)
+							y) 'float))))
+
+(defun new-metaball (iso-v &key (cx 0) (cy 0) strength)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type float iso-v)
+	   (type fixnum cx cy strength))
+  (let ((mball (make-metaball :strength 30000 :iso-value iso-v :center-x cx :center-y cy)))
+    (set-radius mball 30000 iso-v)
+    (set-strength mball strength)
+    mball))
+
+(defun init-meta-grid (grid col row)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum row col))
+  (dotimes (j row)
+    (dotimes (i col)
+      (setf (aref grid i j) 0))))
+
+(defun draw-grid (col row resolution color surface)
+  (declare (optimize (safety 0) (speed 3) (space 1))
+	   (type fixnum col row resolution)
+	   (type vector color))
+  (let ((xs 0))
+    (declare (type fixnum xs))
+    (loop for x from 0 to col
+       do (progn
+	    (setf xs (sdl:clamp (* x resolution) 0 255))
+	    (sdl-gfx:draw-line (sdl:point xs 0) (sdl:point xs 255) :surface surface :color color))))
+  (let ((ys 0))
+    (declare (type fixnum ys))
+    (loop for y from 0 to row
+	 do (progn
+	      (setf ys (sdl:clamp (* y resolution) 0 255))
+	      (sdl-gfx:draw-line (sdl:point 0 ys) (sdl:point 255 ys) :surface surface :color color)))))
+
+(defun draw-meta-center (manager meta-balls color surface)
+  (declare (optimize (safety 0) (speed 3) (space 1)))
+  (let ((center-color (sdl-gfx::map-color color))
+	(i 0.0) (j 0.0)
+	(resolution (mmanager-res manager)))
+    (declare (type float i j)
+	     (type fixnum resolution))
+    (dolist (metaball meta-balls)
+      (when (and (>= (metaball-center-x metaball) 0)
+		 (< (metaball-center-x metaball) (mmanager-screen-width manager))
+		 (>= (metaball-center-y metaball) 0)
+		 (< (metaball-center-y metaball) (mmanager-screen-height manager)))
+	(setf i (get-square-coords-i metaball resolution resolution))
+	(setf j (get-square-coords-j metaball resolution resolution))
+
+	(sdl-gfx::linecolor surface
+			    (sdl:to-int (sdl:clamp (* i resolution) 0 255))
+			    (sdl:to-int (sdl:clamp (* j resolution) 0 255))
+			    (sdl:to-int (sdl:clamp (* (+ i 1) resolution) 0 255))
+			    (sdl:to-int (sdl:clamp (* (+ j 1) resolution) 0 255))
+			    center-color)
+	(sdl-gfx::linecolor surface
+			    (sdl:to-int (sdl:clamp (* (+ i 1) resolution) 0 255))
+			    (sdl:to-int (sdl:clamp (* j resolution) 0 255))
+			    (sdl:to-int (sdl:clamp (* i resolution) 0 255))
+			    (sdl:to-int (sdl:clamp (* (+ j 1) resolution) 0 255))
+			    center-color)))))
+
+(defun handle-keypress (key)
+  (case key
+    (:SDLK_ESCAPE (sdl:push-quitevent))
+    (:SDLK_G (setf *draw-gridp* (not *draw-gridp*)))
+;;     (:SDLK_PLUS (setf *viscosity* (sdl:clamp (incf *viscosity*) *min-viscosity* *max-viscosity*)))
+;;     (:SDLK_MINUS (setf *viscosity* (sdl:clamp (decf *viscosity*) *min-viscosity* *max-viscosity*)))
+    (:SDLK_C (setf *draw-meta-centerp* (not *draw-meta-centerp*)))
+    (t nil)))
+
+(defun handle-mouse-moved (mouse-x mouse-y meta-ball)
+  (declare (type fixnum mouse-x mouse-y))
+  (set-center-to meta-ball mouse-x mouse-y))
+
+(defun render-loop (manager meta-balls color surface)
+  (declare (optimize (safety 0) (speed 3) (space 1)))
+  (setf (mmanager-viscosity manager) (the float (+ ( * 0.5 (mmanager-d-viscosity manager))
+						   (mmanager-min-viscosity manager))))
+  (let ((line-color (sdl-gfx::map-color color))
+	(grid-size-y (mmanager-grid-size-y manager))
+	(grid-size-x (mmanager-grid-size-x manager))
+	(resolution (mmanager-res manager))
+	(iso-value (mmanager-iso-value manager))
+	(viscosity (mmanager-viscosity manager))
+	(square-flag (mmanager-square-flag manager))
+	(meta-grid (mmanager-meta-grid manager))
+	(offset (mmanager-offset manager))
+	(line (mmanager-line manager))
+	(square-edge (mmanager-square-edge manager)))
+    (declare (type fixnum grid-size-y grid-size-x resolution)
+	     (type float iso-value viscosity)
+	     (type (array fixnum *) square-flag offset line square-edge)
+	     (type (array float *) meta-grid))
+
+    (loop for y from 0 below grid-size-y
+       do (loop for x from 0 below grid-size-x
+	     do (let ((meta-grid-target 0.0))
+		  (declare (type float meta-grid-target))
+		  (setf (aref square-flag x y) 0)
+		  (dolist (meta-ball meta-balls)
+		    (incf meta-grid-target (get-field-at meta-ball (* resolution x) (* resolution y))))
+		  (incf (aref meta-grid x y) (the float (/ (- meta-grid-target
+							      (aref meta-grid x y))
+							   viscosity))))))
+
+    (let ((scan-imin 0) (scan-imax (mmanager-x-squares manager))
+	  (scan-jmin 0) (scan-jmax (mmanager-y-squares manager)))
+      (declare (type fixnum scan-imin scan-imax scan-jmin scan-jmax))
+      (loop for j from scan-jmin below scan-jmax
+	 do (loop for i from scan-imin below scan-imax
+	       do (let ((square-idx 0)
+			(val1 0.0) (val2 0.0) (temp 0.0)
+			(iso-p1-x 0) (iso-p1-y 0) (iso-p2-x 0) (iso-p2-y 0)
+			(p1-idx 0) (p2-idx 0))
+		    (declare (type fixnum iso-p1-x iso-p1-y iso-p2-x iso-p2-y p1-idx p2-idx)
+			     (type float temp val1 val1))
+		    (unless (= (aref square-flag i j) 1)
+		      (when (< (aref meta-grid i j) iso-value)
+			(setf square-idx (logior square-idx 1)))
+		      (when (< (aref meta-grid (+ i 1) j) iso-value)
+			(setf square-idx (logior square-idx 2)))
+		      (when (< (aref meta-grid (+ i 1) ( + j 1)) iso-value)
+			(setf square-idx (logior square-idx 4)))
+		      (when (< (aref meta-grid i (+ j 1)) iso-value)
+			(setf square-idx (logior square-idx 8)))
+		      (unless (or (= square-idx 0)
+				  (= square-idx 15))
+			(let ((n 0)
+			      (edge-1-idx 0) (edge-2-idx 0))
+			  (declare (type fixnum n edge-1-idx edge-2-idx))
+			  (do ()
+			      ((= -1 (aref line square-idx n)))
+			    (setf edge-1-idx (aref line square-idx n))
+			    (incf n)
+			    (setf edge-2-idx (aref line square-idx n))
+			    (incf n)
+			      
+			    ;; Edge 1
+			    (setf p1-idx (aref square-edge edge-1-idx 0)
+				  p2-idx (aref square-edge edge-1-idx 1))
+				  
+			    (setf val1 (aref meta-grid
+					     (+ i (aref offset p1-idx 0))
+					     (+ j (aref offset p1-idx 1)))
+				  val2 (aref meta-grid
+					     (+ i (aref offset p2-idx 0))
+					     (+ j (aref offset p2-idx 1))))
+			    (if (not (= (- val2 val1) 0))
+				(setf temp (the float (/ (- iso-value val1)
+							 (- val2 val1))))
+				(setf temp 0.5))
+			    (setf iso-p1-x (the fixnum (* resolution
+							  (+ (* temp (- (+ i (aref offset p2-idx 0))
+									(+ i (aref offset p1-idx 0))))
+							     (+ i (aref offset p1-idx 0))))))
+			    (setf iso-p1-x (sdl:clamp iso-p1-x 0 255))
+			    (setf iso-p1-y (the fixnum (* resolution
+							  (+ (* temp (- (+ j (aref offset p2-idx 1))
+									(+ j (aref offset p1-idx 1))))
+							     (+ j (aref offset p1-idx 1))))))
+			    (setf iso-p1-y (sdl:clamp iso-p1-y 0 255))
+				  
+			    ;; Edge 2
+			    (setf p1-idx (aref square-edge edge-2-idx 0)
+				  p2-idx (aref square-edge edge-2-idx 1))
+				  
+			    (setf val1 (aref meta-grid
+					     (+ i (aref offset p1-idx 0))
+					     (+ j (aref offset p1-idx 1)))
+				  val2 (aref meta-grid
+					     (+ i (aref offset p2-idx 0))
+					     (+ j (aref offset p2-idx 1))))
+			    (if (not (= (- val2 val1) 0))
+				(setf temp (the float (/ (- iso-value val1)
+							 (- val2 val1))))
+				(setf temp 0.5))
+			    (setf iso-p2-x (the fixnum (* resolution
+							  (+ (* temp (- (+ i (aref offset p2-idx 0))
+									(+ i (aref offset p1-idx 0))))
+							     (+ i (aref offset p1-idx 0))))))
+			    (setf iso-p2-x (sdl:clamp iso-p2-x 0 255))
+			    (setf iso-p2-y (the fixnum (* resolution
+							  (+ (* temp (- (+ j (aref offset p2-idx 1))
+									(+ j (aref offset p1-idx 1))))
+							     (+ j (aref offset p1-idx 1))))))
+			    (setf iso-p2-y (sdl:clamp iso-p2-y 0 255))
+
+			    ;; Draw Line
+			    (sdl-gfx::linecolor surface
+						(sdl:to-int iso-p1-x) (sdl:to-int iso-p1-y)
+						(sdl:to-int iso-p2-x) (sdl:to-int iso-p2-y) line-color)
+			    (setf (aref square-flag i j) 1)))))))))))
+
+(defun setup ()
+  (let ((iso-value 16.0))
+    (list (new-metaball iso-value :cx 125 :cy 130 :strength 10000)
+	  (new-metaball iso-value :cx 200 :cy 200 :strength 10000)
+	  (new-metaball iso-value :cx 65 :cy 68 :strength 40000)
+	  (new-metaball iso-value :cx 50 :cy 200 :strength 5000))))
+
+(defun metaballs ()
+  (let* ((width 256) (height 288)
+	 (meta-color #(175 175 175)) (meta-center-color #(200 0 0)) (grid-color #(75 75 75))
+	 (mb-pressed? nil)
+	 (meta-balls (setup))
+	 (manager (new-mmanager :width width :height height :iso-value 16.0 
+				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
+				:x-squares 64 :y-squares 64)))
+    (sdl:with-init ()
+      (sdl:with-display (width height :title-caption "Metaballs")
+	(sdl:set-framerate 0)
+	(sdl:clear-display :color #(0 0 0))
+	(fps-init)
+	(setup)
+	(sdl:with-surfaces-free ((grid (sdl:create-surface width height :surface sdl:*default-display* :accel t))
+				 (fps (sdl:create-surface 150 20 :surface sdl:*default-display* :accel t)))
+	  (draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager) (mmanager-res manager) grid-color grid)
+	  (sdl:with-events ()
+	    (:quit () t)
+	    (:keydown (:key key) (handle-keypress key))
+	    (:mousebuttondown ()
+			      (setf mb-pressed? t))
+	    (:mousebuttonup ()
+			    (setf mb-pressed? nil))
+	    (:mousemotion (:x x :y y)
+			  (when mb-pressed?
+			    (handle-mouse-moved x y (first meta-balls))))
+	    (:idle ()
+		   (if *draw-gridp*
+		       (sdl:blit-surface :src grid :dst sdl:*default-display* :free-p nil)
+		       (sdl:clear-display :color #(0 0 0)))
+		   (when *draw-meta-centerp* ()
+		     (draw-meta-center manager meta-balls meta-center-color sdl:*default-display*))
+		   (render-loop manager meta-balls meta-color sdl:*default-display*)
+		   (sdl:blit-surface :src (display-fps fps) :dst sdl:*default-display* :dst-rect #(10 260) :free-p nil ) 
+		   (sdl:update-display))))))))

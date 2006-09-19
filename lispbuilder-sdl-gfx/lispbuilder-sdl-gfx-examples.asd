@@ -27,4 +27,5 @@
 	       (:file "bezier" :depends-on ("package"))
 	       (:file "distance-2D" :depends-on ("package"))
 	       (:file "vertices" :depends-on ("package"))
+	       (:file "metaballs" :depends-on ("package"))
 	       ))))
