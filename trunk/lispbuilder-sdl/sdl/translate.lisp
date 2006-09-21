@@ -10,26 +10,24 @@
 (defctype sdl-string :string)
 (defctype SDL-RWops :pointer)
 
+(declaim (inline to-int))
 (defun to-int (num)
-  (if (numberp num)
-      (if (integerp num)
-	  num
-	  (round num))
-      (error "to-int: ~d is not a number." num)))
+  (truncate (+ 0.5 num)))
 
 (defun vec-to-int (vec)
   "vec-to-int will create a new VECTOR of the same length as VEC, but the contents are converted to integers.
    Returns VEC if the contents are not of type float."
   (if (vectorp vec)
-      (let ((require-conversion nil))
+      (let ((require-conversion nil)
+	    (length (length vec)))
 	(block convert
-	  (dotimes (i (length vec))
+	  (dotimes (i length)
 	    (when (floatp (svref vec i))
 	      (setf require-conversion t)
 	      (return-from convert))))
 	(if require-conversion
 	    (let ((new-vec (make-array (length vec) :initial-element 0)))
-	      (dotimes (i (length vec))
+	      (dotimes (i length)
 		(setf (svref new-vec i) (to-int (svref vec i))))
 	      new-vec)
 	    vec))

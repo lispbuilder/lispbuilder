@@ -14,6 +14,7 @@
 (defvar *default-color* #(0 0 0))
 (defvar *default-position* #(0 0))
 (defvar *default-rectangle* #(0 0 0 0))
+(defvar *default-font* nil)
 
 (defun default-surface ()
   *default-surface*)
@@ -44,11 +45,18 @@
 
 ;;; c
 
+;; (defmacro check-bounds (min below &rest vars)
+;;   (let (result)
+;;     (loop for var in vars do
+;; 	  (push `(when (< ,var ,min) (setf ,var ,min)) result)
+;; 	  (push `(when (>= ,var ,below) (setf ,var (1- ,below))) result))
+;;     (push 'progn result)
+;;     result))
+
 (defmacro check-bounds (min below &rest vars)
   (let (result)
     (loop for var in vars do
-	  (push `(when (< ,var ,min) (setf ,var ,min)) result)
-	  (push `(when (>= ,var ,below) (setf ,var (1- ,below))) result))
+	 (push `(setf ,var (clamp ,var ,min ,below)) result))
     (push 'progn result)
     result))
 
@@ -257,6 +265,7 @@
 ;;; c
 
 ;; cl-sdl "util.lisp"
+(declaim (inline clamp))
 (defun clamp (v l u)
   (min (max v l) u))
 
@@ -416,65 +425,67 @@
 		      :dst-rect (sdl:point (sdl:point-x position) (sdl:point-y position)))))
 
 (defun draw-line (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*))
-  ;; use only integers
-  (setf x0 (truncate (+ 0.5 x0)))
-  (setf y0 (truncate (+ 0.5 y0)))
-  (setf x1 (truncate (+ 0.5 x1)))
-  (setf y1 (truncate (+ 0.5 y1)))
+  (let ((x0 (to-int x0))
+	(y0 (to-int y0))
+	(x1 (to-int x1))
+	(y1 (to-int y1)))
+    (declare (type fixnum x0 y0 x1 y1))
 
-  ;; simple clipping, should be improved with Cohen-Sutherland line clipping
-  (let ((width (sdl:surf-w surface))
-	(height (sdl:surf-h surface)))
-    (sdl:check-bounds 0 width x0 x1)
-    (sdl:check-bounds 0 height y0 y1))
+    ;; simple clipping, should be improved with Cohen-Sutherland line clipping
+    (sdl:check-bounds 0 (- (sdl:surf-w surface) 1) x0 x1)
+    (sdl:check-bounds 0 (- (sdl:surf-h surface) 1) y0 y1)
 
-  ;; draw line with Bresenham algorithm
-  (let (x y e dx dy)
-    (when (> x0 x1)
-      (rotatef x0 x1)
-      (rotatef y0 y1))
-    (setf e 0)
-    (setf x x0)
-    (setf y y0)
-    (setf dx (- x1 x0))
-    (setf dy (- y1 y0))
-    (if (>= dy 0)
-	(if (>= dx dy)
-	    (loop for x from x0 to x1 do
-		  (sdl:draw-pixel :position (sdl:point x y) :surface surface :color color )
-		  (if (< (* 2 (+ e dy)) dx)
-		      (incf e dy)
-		      (progn
-			(incf y)
-			(incf e (- dy dx)))))
-	    (loop for y from y0 to y1 do
-		  (sdl:draw-pixel :position (sdl:point x y) :surface surface :color color)
-		  (if (< (* 2 (+ e dx)) dy)
-		      (incf e dx)
-		      (progn
-			(incf x)
-			(incf e (- dx dy))))))
-	(if (>= dx (- dy))
-	    (loop for x from x0 to x1 do
-		  (sdl:draw-pixel :position (sdl:point x y) :surface surface :color color)
-		  (if (> (* 2 (+ e dy)) (- dx))
-		      (incf e dy)
-		      (progn
-			(decf y)
-			(incf e (+ dy dx)))))
-	    (progn
-	      (rotatef x0 x1)
-	      (rotatef y0 y1)
-	      (setf x x0)
-	      (setf dx (- x1 x0))
-	      (setf dy (- y1 y0))
-	      (loop for y from y0 to y1 do
-		    (sdl:draw-pixel :position (sdl:point x y) :surface surface :color color)
-		    (if (> (* 2 (+ e dx)) (- dy))
-			(incf e dx)
-			(progn
-			  (decf x)
-			  (incf e (+ dx dy))))))))))
+    ;; draw line with Bresenham algorithm
+    (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
+	  (color (map-color :color color :surface surface)))
+      (declare (type fixnum x y w dx dy color))
+      (when (> x0 x1)
+	(rotatef x0 x1)
+	(rotatef y0 y1))
+      (setf e 0)
+      (setf x x0)
+      (setf y y0)
+      (setf dx (- x1 x0))
+      (setf dy (- y1 y0))
+
+      (with-possible-lock-and-update (:surface surface :check-lock-p t :update-p nil)
+	(if (>= dy 0)
+	    (if (>= dx dy)
+		(loop for x from x0 to x1 do
+		     (sdl:draw-pixel x y :surface surface :color color)
+		     (if (< (* 2 (+ e dy)) dx)
+			 (incf e dy)
+			 (progn
+			   (incf y)
+			   (incf e (- dy dx)))))
+		(loop for y from y0 to y1 do
+		     (sdl:draw-pixel x y :surface surface :color color)
+		     (if (< (* 2 (+ e dx)) dy)
+			 (incf e dx)
+			 (progn
+			   (incf x)
+			   (incf e (- dx dy))))))
+	    (if (>= dx (- dy))
+		(loop for x from x0 to x1 do
+		     (sdl:draw-pixel x y :surface surface :color color)
+		     (if (> (* 2 (+ e dy)) (- dx))
+			 (incf e dy)
+			 (progn
+			   (decf y)
+			   (incf e (+ dy dx)))))
+		(progn
+		  (rotatef x0 x1)
+		  (rotatef y0 y1)
+		  (setf x x0)
+		  (setf dx (- x1 x0))
+		  (setf dy (- y1 y0))
+		  (loop for y from y0 to y1 do
+		       (sdl:draw-pixel x y :surface surface :color color)
+		       (if (> (* 2 (+ e dx)) (- dy))
+			   (incf e dx)
+			   (progn
+			     (decf x)
+			     (incf e (+ dx dy))))))))))))
 
 (defun draw-rect (&key update-p clipping-p
 		  (rectangle *default-rectangle*) (surface *default-surface*) (color *default-color*))
@@ -489,40 +500,42 @@
 		:update-p update-p
 		:clipping-p clipping-p))
 
-(defun draw-pixel (&key (position sdl:*default-position*) (check-lock-p t) (update-p nil) (clipping-p t)
+(defun draw-point (&key (position sdl:*default-position*) (check-lock-p t) (update-p nil) (clipping-p t)
 		   (surface *default-surface*) (color *default-color*))
-  "Set the pixel at (x, y) to the given value 
-   NOTE: The surface must be locked before calling this.
-   Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
-  (let ((x (point-x position)) (y (point-y position)))
+  (let ((x (pos-x position)) (y (pos-y position)))
     (when clipping-p
       (check-bounds 0 (surf-w surface) x)
       (check-bounds 0 (surf-h surface) y))
     (with-possible-lock-and-update (:surface surface :check-lock-p check-lock-p :update-p update-p
-					    :template (vector x y 1 1))
-      (let* ((format (foreign-slot-value surface 'SDL_Surface 'format))
-	     (bpp (foreign-slot-value format 'SDL_PixelFormat 'BytesPerPixel))
-	     (offset (+ (* y (foreign-slot-value surface 'SDL_Surface 'Pitch))
-			(* x bpp)))
-	     (pixel-address (foreign-slot-value surface 'SDL_Surface 'Pixels))
-	     (pixel (map-color :color color :surface surface)))
-	(cond
-	  ((= bpp 1) 
-	   (setf (mem-aref pixel-address :unsigned-char offset) pixel))
-	  ((= bpp 2) 
-	   (setf (mem-aref pixel-address :unsigned-short (/ offset 2)) pixel))
-	  ((= bpp 3) 
-	   (if (eq SDL_BYTEORDER SDL_BIG_ENDIAN)
-	       (progn
-		 (setf (mem-aref pixel-address :char offset) (logand (ash pixel -16) #xff))
-		 (setf (mem-aref pixel-address :char (1+ offset)) (logand (ash pixel -8) #xff))
-		 (setf (mem-aref pixel-address :char (+ 2 offset)) (logand pixel #xff)))
-	       (progn
-		 (setf (mem-aref pixel-address :char offset) (logand pixel #xff))
-		 (setf (mem-aref pixel-address :char (1+ offset)) (logand (ash pixel -8) #xff))
-		 (setf (mem-aref pixel-address :char (+ 2 offset)) (logand (ash pixel -16) #xff)))))
-	  ((= bpp 4) 
-	   (setf (mem-aref pixel-address :unsigned-int (/ offset 4)) pixel)))))))
+					     :template (vector x y 1 1))
+      (sdl:draw-pixel x y :surface surface :color (map-color :color color :surface surface)))))
+
+(defun draw-pixel (x y &key (surface *default-surface*) (color *default-color*))
+  "Set the pixel at (x, y) to the given value 
+   NOTE: The surface must be locked before calling this.
+   Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
+  (let* ((format (foreign-slot-value surface 'SDL_Surface 'format))
+	 (bpp (foreign-slot-value format 'SDL_PixelFormat 'BytesPerPixel))
+	 (offset (+ (* y (foreign-slot-value surface 'SDL_Surface 'Pitch))
+		    (* x bpp)))
+	 (pixel-address (foreign-slot-value surface 'SDL_Surface 'Pixels)))
+    (cond
+      ((= bpp 1) 
+       (setf (mem-aref pixel-address :unsigned-char offset) color))
+      ((= bpp 2) 
+       (setf (mem-aref pixel-address :unsigned-short (/ offset 2)) color))
+      ((= bpp 3) 
+       (if (eq SDL_BYTEORDER SDL_BIG_ENDIAN)
+	   (progn
+	     (setf (mem-aref pixel-address :char offset) (logand (ash color -16) #xff))
+	     (setf (mem-aref pixel-address :char (1+ offset)) (logand (ash color -8) #xff))
+	     (setf (mem-aref pixel-address :char (+ 2 offset)) (logand color #xff)))
+	   (progn
+	     (setf (mem-aref pixel-address :char offset) (logand color #xff))
+	     (setf (mem-aref pixel-address :char (1+ offset)) (logand (ash color -8) #xff))
+	     (setf (mem-aref pixel-address :char (+ 2 offset)) (logand (ash color -16) #xff)))))
+      ((= bpp 4) 
+       (setf (mem-aref pixel-address :unsigned-int (/ offset 4)) color)))))
 
 
 

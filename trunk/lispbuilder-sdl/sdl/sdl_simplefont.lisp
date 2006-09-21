@@ -5,7 +5,8 @@
   (:export 
    #:initialise-font #:close-font #:make-text-image #:draw-text-image
    #:free-text-image #:draw-character #:draw-string 
-   #:draw-string-right-justify #:draw-string-centered))
+   #:draw-string-right-justify #:draw-string-centered
+   #:with-open-font))
 
 (in-package :sdl-simple-font)
 
@@ -52,7 +53,7 @@
 				       :key-color (font-key-color font)
 				       :accel t)))
       (sdl:fill-surface :surface surface :color (font-key-color font))
-      (draw-string surface font #(0 0) string)
+      (draw-string string :surface surface :font font :position #(0 0))
       surface)))
 
 (defun free-text-image(image)
@@ -73,28 +74,41 @@
 			  :dst-rect point)
 	nil)))
 
-(defun draw-string(screen font point str)
+(defun draw-string(str &key (position sdl:*default-position*) (surface sdl:*default-surface*) (font sdl:*default-font*))
   "draw a string at the x y position"
-  (loop for c across str do
-	(unless (eql c #\space)
-	  (draw-character screen font point c))
-	(incf (sdl:point-x point) (font-w font))))
+  (let ((x (sdl:pos-x position)))
+    (loop for c across str do
+	 (unless (eql c #\space)
+	   (draw-character surface font (sdl:point x (sdl:pos-y position)) c))
+	 (incf x (font-w font)))))
 
-(defun draw-string-right-justify(screen font point str)
+(defun draw-string-right-justify(str &key (position sdl:*default-position*) (surface sdl:*default-surface*)
+				 (font sdl:*default-font*))
   "draw a string ending at the x y position"
-  (let ((right-x (- (sdl:point-x point) (font-w font)))
+  (let ((right-x (- (sdl:pos-x position) (font-w font)))
 	(rev-str (reverse str)))
     (loop for c across rev-str do
 	  (unless (eql c #\space)
-	    (draw-character screen font (sdl:point right-x (sdl:point-y point)) c))
+	    (draw-character surface font (sdl:point right-x (sdl:point-y position)) c))
 	  (decf right-x (font-w font)))))
 
-(defun draw-string-centered(screen font point str)
+(defun draw-string-centered(str &key (position sdl:*default-position*) (surface sdl:*default-surface*)
+			    (font sdl:*default-font*))
   "draw a string centered at x y"
-  (let ((width (* (length str) (font-w font)))) 
-    (let ((left-x (- (sdl:point-x point) (/ width 2))))
-      (loop for c across str do
-	    (unless (eql c #\space)
-	      (draw-character screen font (sdl:point left-x (sdl:point-y point)) c))
-	    (incf left-x (font-w font))))))
+  (let* ((width (* (length str) (font-w font)))
+	 (left-x (- (sdl:pos-x position) (/ width 2))))
+    (loop for c across str do
+	 (unless (eql c #\space)
+	   (draw-character surface font (sdl:point left-x (sdl:pos-y position)) c))
+	 (incf left-x (font-w font)))))
 
+(defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional font-path)
+			  &body body)
+  `(let ((sdl:*default-font* (initialise-font (namestring (if ,font-path
+							      (merge-pathnames ,font-image-name ,font-path)
+							      ,font-image-name))
+					      ,font-width ,font-height ,char-map-string ,key-color)))
+     (if sdl:*default-font*
+	 (progn
+	   ,@body
+	   (close-font *default-font*)))))

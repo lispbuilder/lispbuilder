@@ -13,7 +13,6 @@
 	      :components
 	      ((:file "package")
 	       (:file "globals" :depends-on ("package"))
-	       (:file "sdl_simplefont" :depends-on ("package"))
 	       (:file "sdl_simplefontdemo" :depends-on ("package"))
 	       (:file "sdl_bmp_example" :depends-on ("package"))
 	       (:file "sdl_pixels" :depends-on ("package"))
@@ -22,6 +21,7 @@
 	       (:file "sdl_random_rects" :depends-on ("package"))
 	       (:file "mandelbrot" :depends-on ("package"))
 	       (:file "line-drawing" :depends-on ("package"))
+	       (:file "metaballs" :depends-on ("package"))
 	       (:static-file "font.bmp")
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")

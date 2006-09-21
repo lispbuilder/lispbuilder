@@ -7,5 +7,6 @@
   (:nicknames #:sdl-examples)
   (:documentation "Examples for `lispbuilder-sdl'.")
   (:export #:bmp-sample #:pixels #:recursive-rects #:mouse-painter #:random-rects1
-	   #:random-rects2 #:random-rects3 #:simple-font-demo #:squashed #:mandelbrot #:line-drawing))
+	   #:random-rects2 #:random-rects3 #:simple-font-demo #:squashed #:mandelbrot #:line-drawing
+	   #:metaballs))
 
