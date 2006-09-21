@@ -23,7 +23,8 @@
 	       (:file "sdl" :depends-on ("package" "library"))
 	       (:file "post-swig" :depends-on ("sdl"))
 	       (:file "translate" :depends-on ("sdl" "post-swig"))
-	       (:file "util-sdl" :depends-on ("sdl" "post-swig" "translate"))))
+	       (:file "util-sdl" :depends-on ("sdl" "post-swig" "translate"))
+	       (:file "sdl_simplefont" :depends-on ("util-sdl"))))
      (:module "documentation"
 	      :components
 	      ((:html-file "index")

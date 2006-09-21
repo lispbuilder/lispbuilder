@@ -49,6 +49,7 @@
    #:draw-image
    #:draw-line
    #:draw-pixel				; from cl-sdl
+   #:draw-point
    #:draw-random-rect
    #:draw-rect
    #:draw-rect-end-points
@@ -135,6 +136,7 @@
    *default-position*
    *default-rectangle*
    *default-surface*
+   *default-font*
    
    ;; These are exports from sdlswig.i
    #:AUDIO_S16
