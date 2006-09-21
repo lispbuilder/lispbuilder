@@ -10,7 +10,7 @@
 (defvar *draw-gridp* nil)
 (defvar *draw-meta-centerp* nil)
 
-(let* ((frame-values 10)
+(let* ((frame-values 30)
        (frame-times (make-array frame-values :initial-element 0 :element-type 'fixnum))
        (frame-time-last 0)
        (frame-count 0))
@@ -176,18 +176,24 @@
   (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum col row resolution)
 	   (type vector color))
-  (let ((xs 0))
-    (declare (type fixnum xs))
-    (loop for x from 0 to col
-       do (progn
-	    (setf xs (sdl:clamp (* x resolution) 0 255))
-	    (sdl-gfx:draw-line (sdl:point xs 0) (sdl:point xs 255) :surface surface :color color))))
-  (let ((ys 0))
-    (declare (type fixnum ys))
-    (loop for y from 0 to row
-	 do (progn
-	      (setf ys (sdl:clamp (* y resolution) 0 255))
-	      (sdl-gfx:draw-line (sdl:point 0 ys) (sdl:point 255 ys) :surface surface :color color)))))
+  (loop
+     for x from 0 to col
+     for x-pos = (* x resolution)
+     do (
+	 sdl:draw-line x-pos 0 x-pos (* resolution row) :surface surface :color color
+;; 	 sdl-gfx:draw-line (sdl:point (sdl:to-int x-pos) 0)
+;; 			   (sdl:point (sdl:to-int x-pos) (sdl:to-int (* resolution row)))
+;; 			   :surface surface :color color
+			   ))
+  (loop
+     for y from 0 to row
+     for y-pos = (* y resolution)
+     do (
+	 sdl:draw-line 0 y-pos (* resolution col) y-pos :surface surface :color color
+;; 	 sdl-gfx:draw-line (sdl:point 0 (sdl:to-int y-pos))
+;; 			   (sdl:point (sdl:to-int (* resolution col)) (sdl:to-int y-pos))
+;; 			   :surface surface :color color
+			   )))
 
 (defun draw-meta-center (manager meta-balls color surface)
   (declare (optimize (safety 0) (speed 3) (space 1)))
@@ -204,18 +210,28 @@
 	(setf i (get-square-coords-i metaball resolution resolution))
 	(setf j (get-square-coords-j metaball resolution resolution))
 
-	(sdl-gfx::linecolor surface
-			    (sdl:to-int (sdl:clamp (* i resolution) 0 255))
-			    (sdl:to-int (sdl:clamp (* j resolution) 0 255))
-			    (sdl:to-int (sdl:clamp (* (+ i 1) resolution) 0 255))
-			    (sdl:to-int (sdl:clamp (* (+ j 1) resolution) 0 255))
-			    center-color)
-	(sdl-gfx::linecolor surface
-			    (sdl:to-int (sdl:clamp (* (+ i 1) resolution) 0 255))
-			    (sdl:to-int (sdl:clamp (* j resolution) 0 255))
-			    (sdl:to-int (sdl:clamp (* i resolution) 0 255))
-			    (sdl:to-int (sdl:clamp (* (+ j 1) resolution) 0 255))
-			    center-color)))))
+	(sdl:draw-line (sdl:to-int (* i resolution))
+		       (sdl:to-int (* j resolution))
+		       (sdl:to-int (* (+ i 1) resolution))
+		       (sdl:to-int (* (+ j 1) resolution))
+		       :surface surface :color color)
+	(sdl:draw-line (sdl:to-int (* (+ i 1) resolution))
+		       (sdl:to-int (* j resolution))
+		       (sdl:to-int (* i resolution))
+		       (sdl:to-int (* (+ j 1) resolution))
+		       :surface surface :color color)
+	
+;; 	(sdl-gfx:draw-line (sdl:point (sdl:to-int (* i resolution))
+;; 				      (sdl:to-int (* j resolution)))
+;; 			   (sdl:point (sdl:to-int (* (+ i 1) resolution))
+;; 				      (sdl:to-int (* (+ j 1) resolution)))
+;; 			   :surface surface :color color)
+;; 	(sdl-gfx:draw-line (sdl:point (sdl:to-int (* (+ i 1) resolution))
+;; 				      (sdl:to-int (* j resolution)))
+;; 			   (sdl:point (sdl:to-int (* i resolution))
+;; 				      (sdl:to-int (* (+ j 1) resolution)))
+;; 			   :surface surface :color color)
+	))))
 
 (defun handle-keypress (key)
   (case key
@@ -311,12 +327,10 @@
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
 									(+ i (aref offset p1-idx 0))))
 							     (+ i (aref offset p1-idx 0))))))
-			    (setf iso-p1-x (sdl:clamp iso-p1-x 0 255))
 			    (setf iso-p1-y (the fixnum (* resolution
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
-			    (setf iso-p1-y (sdl:clamp iso-p1-y 0 255))
 				  
 			    ;; Edge 2
 			    (setf p1-idx (aref square-edge edge-2-idx 0)
@@ -336,18 +350,21 @@
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
 									(+ i (aref offset p1-idx 0))))
 							     (+ i (aref offset p1-idx 0))))))
-			    (setf iso-p2-x (sdl:clamp iso-p2-x 0 255))
 			    (setf iso-p2-y (the fixnum (* resolution
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
-			    (setf iso-p2-y (sdl:clamp iso-p2-y 0 255))
 
 			    ;; Draw Line
-			    (sdl-gfx::linecolor surface
-						(sdl:to-int iso-p1-x) (sdl:to-int iso-p1-y)
-						(sdl:to-int iso-p2-x) (sdl:to-int iso-p2-y) line-color)
+			    (sdl:draw-line iso-p1-x iso-p1-y
+					   iso-p2-x iso-p2-y
+					   :color color :surface surface)
+;; 			    (sdl-gfx::linecolor surface
+;; 						(sdl:to-int iso-p1-x) (sdl:to-int iso-p1-y)
+;; 						(sdl:to-int iso-p2-x) (sdl:to-int iso-p2-y)
+;; 						line-color)
 			    (setf (aref square-flag i j) 1)))))))))))
+
 
 (defun setup ()
   (let ((iso-value 16.0))
@@ -357,16 +374,16 @@
 	  (new-metaball iso-value :cx 50 :cy 200 :strength 5000))))
 
 (defun metaballs ()
-  (let* ((width 256) (height 288)
+  (let* ((width 320) (height 288)
 	 (meta-color #(175 175 175)) (meta-center-color #(200 0 0)) (grid-color #(75 75 75))
 	 (mb-pressed? nil)
 	 (meta-balls (setup))
 	 (manager (new-mmanager :width width :height height :iso-value 16.0 
 				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
-				:x-squares 64 :y-squares 64)))
+				:x-squares 32 :y-squares 32)))
     (sdl:with-init ()
       (sdl:with-display (width height :title-caption "Metaballs")
-	(sdl:set-framerate 0)
+	(sdl:set-framerate 30)
 	(sdl:clear-display :color #(0 0 0))
 	(fps-init)
 	(setup)
