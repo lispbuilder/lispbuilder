@@ -379,13 +379,13 @@
 	  (new-metaball iso-value :cx 50 :cy 200 :strength 5000))))
 
 (defun metaballs ()
-  (let* ((width 320) (height 288)
+  (let* ((width 255) (height 288)
 	 (meta-color #(175 175 175)) (meta-center-color #(200 0 0)) (grid-color #(75 75 75))
 	 (mb-pressed? nil)
 	 (meta-balls (setup))
-	 (manager (new-mmanager :width width :height height :iso-value 16.0 
+	 (manager (new-mmanager :width width :height 250 :iso-value 16.0 
 				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
-				:x-squares 32 :y-squares 32)))
+				:x-squares 64 :y-squares 64)))
     (sdl:with-init ()
       (sdl:with-display (width height :title-caption "Metaballs")
 	(let ((font (init-font)))
