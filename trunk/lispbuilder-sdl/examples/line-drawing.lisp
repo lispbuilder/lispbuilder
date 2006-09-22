@@ -11,7 +11,7 @@
   (sdl:with-init ()
     (sdl:with-display (300 300)
       (sdl:clear-display :color #(255 255 255))
-      (sdl:draw-rect-end-points 50 50 250 250 :color #(0 255 255))
+      (sdl:draw-rectangle-end-points 50 50 250 250 :color #(0 255 255))
       (sdl:with-color (#(0 0 0))
 	(loop for i from 50 to 250 by 5 do (sdl:draw-line (- 300 i) 50 50 i))
 	(sdl:draw-line 250 250 250 50)
