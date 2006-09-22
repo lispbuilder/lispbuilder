@@ -21,9 +21,16 @@
    #:vec-to-int
    
    ;; These are exports from util-sdl.lisp
+   #:add-vertex
    #:apply-surface
    #:apply-surface-free
    #:blit-surface
+   #:calculate-curve
+   #:catmull-rom-spline
+   #:distance
+   #:draw-bezier
+   #:draw-curve
+   #:draw-shape
    #:check-bounds
    #:clamp				; from cl-sdl
    #:clamp-to-sbyte
@@ -46,13 +53,16 @@
    #:create-surface
    #:delta-clamp			; from cl-sdl
    #:display-cursor
+   #:draw-box
+   #:draw-box-end-points
    #:draw-image
    #:draw-line
+   #:draw-line-from-points
    #:draw-pixel				; from cl-sdl
    #:draw-point
    #:draw-random-rect
-   #:draw-rect
-   #:draw-rect-end-points
+   #:draw-rectangle
+   #:draw-rectangle-end-points
    #:fill-surface
    #:get-clip-rect
    #:get-framerate
@@ -118,8 +128,11 @@
    #:update-surface 
    #:video-driver-name
    #:warp-mouse
-   #:with-color
    #:with-display
+   #:with-color
+   #:with-bezier
+   #:with-curve   
+   #:with-shape   
    #:with-events
    #:with-init
    #:with-locked-surface		; from cl-sdl

@@ -21,7 +21,16 @@
 	       (:file "sdl_random_rects" :depends-on ("package"))
 	       (:file "mandelbrot" :depends-on ("package"))
 	       (:file "line-drawing" :depends-on ("package"))
+	       (:file "vertices" :depends-on ("package"))
+	       (:file "bezier" :depends-on ("package"))
+
+	       (:file "setup-and-draw" :depends-on ("package"))
+	       (:file "width-height" :depends-on ("package"))
+	       (:file "objects" :depends-on ("package"))
+	       (:file "points-and-lines" :depends-on ("package"))
+	       (:file "distance-2D" :depends-on ("package"))
 	       (:file "metaballs" :depends-on ("package"))
+
 	       (:static-file "font.bmp")
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
