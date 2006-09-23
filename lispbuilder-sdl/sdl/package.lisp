@@ -28,6 +28,7 @@
    #:calculate-curve
    #:catmull-rom-spline
    #:distance
+   #:draw-image
    #:draw-bezier
    #:draw-curve
    #:draw-shape
@@ -54,17 +55,19 @@
    #:delta-clamp			; from cl-sdl
    #:display-cursor
    #:draw-box
-   #:draw-box-end-points
-   #:draw-image
+   #:draw-box-xy
+   #:draw-box-pp
+   #:draw-rectangle
+   #:draw-rectangle-xy
    #:draw-line
+   #:draw-line-xy
    #:draw-hline
+   #:draw-hline-xy
    #:draw-vline
-   #:draw-line-from-points
+   #:draw-vline-xy
    #:draw-pixel				; from cl-sdl
    #:draw-point
    #:draw-random-rect
-   #:draw-rectangle
-   #:draw-rectangle-end-points
    #:fill-surface
    #:get-clip-rect
    #:get-framerate
@@ -105,8 +108,10 @@
    #:random-color
    #:random-point
    #:random-rect
-   #:rect-from-endpoints
-   #:rect-from-point
+   #:rect-from-midpoint
+   #:rect-from-wh
+   #:rect-from-pp
+   #:rect-from-xy
    #:rect-h
    #:rect-w
    #:rect-x

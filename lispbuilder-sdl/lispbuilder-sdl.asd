@@ -25,7 +25,11 @@
 	       (:file "translate" :depends-on ("sdl" "post-swig"))
 	       (:file "util" :depends-on ("sdl" "post-swig"))
 	       (:file "events" :depends-on ("sdl" "post-swig"))
-	       (:file "util-sdl" :depends-on ("util"))
+	       (:file "globals" :depends-on ("sdl" "post-swig"))
+	       (:file "primitives" :depends-on ("globals"))
+	       (:file "surfaces" :depends-on ("globals" "primitives"))
+	       (:file "drawing-primitives" :depends-on ("globals" "primitives" "surfaces"))
+	       (:file "util-sdl" :depends-on ("globals" "primitives"))
 	       (:file "sdl_simplefont" :depends-on ("util-sdl"))))
      (:module "documentation"
 	      :components

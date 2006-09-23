@@ -17,5 +17,5 @@
 		 (decf y 1)
 		 (when (< y 0)
 		   (setf y height))
-		 (sdl::draw-hline 0 width y :clipping-p nil :color #(255 255 255))
+		 (sdl::draw-hline-xy 0 width y :clipping-p nil :color #(255 255 255))
 		 (sdl:update-display)))))))
