@@ -15,6 +15,7 @@
 (defun mouse-painter ()
   (sdl:with-init ()
     (sdl:with-display (640 480 :title-caption "Mouse Painter" :icon-caption "Mouse Painter")
+      (sdl:set-framerate 30)
       (sdl:clear-display :color #(255 255 255))
       (sdl:with-events ()
 	(:quit () t)

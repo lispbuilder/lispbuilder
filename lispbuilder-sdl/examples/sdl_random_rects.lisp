@@ -39,7 +39,7 @@
 		  (if (sdl:key= key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
 	(:idle ()
-	       (sdl:draw-rectangle :rectangle (sdl:random-rect 320 240) :color (sdl:random-color) :update-p nil)
+	       (sdl:draw-box :rectangle (sdl:random-rect 320 240) :color (sdl:random-color) :update-p nil)
 	 ;; Update the entire display.
 	 (sdl:update-display))))))
 
@@ -55,6 +55,6 @@
 			(sdl:push-quitevent)))
 	  (:idle ()
 		 (sdl:with-rectangle ((sdl:random-rect width height))
-		   (sdl:draw-rectangle-end-points sdl::x sdl::y sdl::w sdl::h
-						  :color (sdl:random-color) :surface display :clipping-p t :update-p t))))))))
+		   (sdl:draw-box-end-points sdl::x sdl::y sdl::w sdl::h
+					    :color (sdl:random-color) :surface display :clipping-p t :update-p t))))))))
 
