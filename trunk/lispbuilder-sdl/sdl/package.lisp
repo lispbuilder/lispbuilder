@@ -57,6 +57,8 @@
    #:draw-box-end-points
    #:draw-image
    #:draw-line
+   #:draw-hline
+   #:draw-vline
    #:draw-line-from-points
    #:draw-pixel				; from cl-sdl
    #:draw-point
@@ -82,6 +84,8 @@
    #:load-bmp
    #:load-image
    #:make-sdl-rect
+   #:map1-n
+   #:mapa-b
    #:map-color
    #:moveby-rectangle
    #:moveto-rectangle
