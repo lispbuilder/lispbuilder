@@ -55,6 +55,5 @@
 			(sdl:push-quitevent)))
 	  (:idle ()
 		 (sdl:with-rectangle ((sdl:random-rect width height))
-		   (sdl:draw-box-end-points sdl::x sdl::y sdl::w sdl::h
-					    :color (sdl:random-color) :surface display :clipping-p t :update-p t))))))))
+		   (sdl:draw-box :color (sdl:random-color) :surface display :clipping-p t :update-p t))))))))
 

@@ -26,5 +26,5 @@
 		    (sdl:update-display)))
 	(:mousemotion (:state state :x x :y y :x-rel xrel :y-rel yrel)
 		      (when (= 1 state)
-			(sdl:draw-line x y (- x xrel) (- y yrel) :color #(0 0 0))
+			(sdl:draw-line-xy x y (- x xrel) (- y yrel) :color #(0 0 0))
 			(sdl:update-display)))))))

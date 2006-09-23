@@ -32,7 +32,7 @@
 					 :color (sdl:color (mod (* 13 c) 256)
 							   (mod (* 7 c) 256)
 							   (mod (* 2 c) 256))
-					 :update-p nil)))))
+					 :update-p nil :clipping-p nil)))))
 
 (defun mandelbrot 
     (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
