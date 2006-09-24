@@ -334,12 +334,13 @@
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update."
-  (when clipping-p
+  (when template
     (let* ((x (rect-x template)) (y (rect-y template))
 	   (w (rect-w template)) (h (rect-h template))
 	   (x2 (+ x w)) (y2 (+ y h)))
-      (check-bounds 0 (surf-w surface) x x2)
-      (check-bounds 0 (surf-h surface) y y2)
+      (when clipping-p
+	(check-bounds 0 (surf-w surface) x x2)
+	(check-bounds 0 (surf-h surface) y y2))
       (setf w (- x2 x)
             h (- y2 y))
       (setf template (vector x y w h))))

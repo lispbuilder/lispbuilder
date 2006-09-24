@@ -29,15 +29,12 @@
           (frames-per-second 0.0))
       (declare (type fixnum get-ticks)
 	       (type float frames-per-second))
-
-
       (setf (aref frame-times frame-count) (- get-ticks frame-time-last))
       (setf frame-time-last get-ticks)
       (incf frame-count)
       (when (>= frame-count frame-values)
 	(setf frame-count 0)
 	(dotimes (i frame-values)
-	  (format t "frame-times: ~A~%" frame-times)
 	  (incf frames-per-second (aref frame-times i)))
 	(setf frames-per-second (the float (/ 1000 (/ frames-per-second frame-values))))
 	(sdl:fill-surface :color #(0 0 0) :surface surface)
@@ -391,7 +388,6 @@
     (sdl:with-init ()
       (sdl:with-display (width height :title-caption "Metaballs")
 	(let ((font (init-font)))
-	  (format t "font := ~A~%" font)
 	  (sdl:set-framerate 30)
 	  (sdl:clear-display :color #(0 0 0))
 	  (fps-init font)
@@ -399,7 +395,6 @@
 	  (sdl:with-surfaces-free ((grid (sdl:create-surface width height :surface sdl:*default-display* :accel t))
 				   (fps (sdl:create-surface 150 20 :surface sdl:*default-display* :accel t
 							    :key-color #(0 0 0))))
-	    (format t "fps := ~A~%" fps)
 	    (draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager) (mmanager-res manager) grid-color grid)
 	    (sdl:with-events ()
 	      (:quit () t)
