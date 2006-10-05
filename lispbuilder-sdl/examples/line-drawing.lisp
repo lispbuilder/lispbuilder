@@ -13,7 +13,7 @@
       (sdl:clear-display :color #(255 255 255))
       (sdl:draw-box-xy 50 50 250 250 :color #(0 255 255))
       (sdl:with-color (#(0 0 0))
-	(loop for i from 50 to 250 by 5 do (sdl:draw-line (- 300 i) 50 50 i))
+	(loop for i from 50 to 250 by 5 do (sdl:draw-line-xy (- 300 i) 50 50 i))
 	(sdl:draw-line-xy 250 250 250 50)
 	(sdl:draw-line-xy 250 250 50 250))
       (sdl:with-events ()

@@ -18,7 +18,7 @@
 	(sdl:with-events ()
 	  (:quit () t)
 	  (:idle ()
-		 (sdl:with-color ((sdl:random-color))
+		 (sdl:with-color ((sdl:random-color 255 255 255))
 		   (sdl:draw-point :position (sdl:point (random width) (random height))
 				   :update-p t :clipping-p t))))))))
 

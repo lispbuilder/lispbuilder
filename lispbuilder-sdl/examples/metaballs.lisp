@@ -15,7 +15,7 @@
 
 ;; From _3b in #lisp
 (defmacro cast-to-int (value)
-  `(the fixnum (truncate ,value)))
+  `(the fixnum (floor (+ ,value 0.5))))
 
 (let* ((frame-values 10)
        (frame-times (make-array frame-values :initial-element 0 :element-type 'fixnum))
@@ -193,7 +193,7 @@
      for x from 0 to col
      for x-pos = (* x x-resolution)
      do (
-	 sdl:draw-line-xy x-pos 0 x-pos (* x-resolution row) :surface surface :color color
+	 sdl:draw-line-xy x-pos 0 x-pos (* y-resolution row) :surface surface :color color
 ;; 	 sdl-gfx:draw-line (sdl:point (sdl:to-int x-pos) 0)
 ;; 			   (sdl:point (sdl:to-int x-pos) (sdl:to-int (* resolution row)))
 ;; 			   :surface surface :color color
@@ -202,7 +202,7 @@
      for y from 0 to row
      for y-pos = (* y y-resolution)
      do (
-	 sdl:draw-line-xy 0 y-pos (* y-resolution col) y-pos :surface surface :color color
+	 sdl:draw-line-xy 0 y-pos (* x-resolution col) y-pos :surface surface :color color
 ;; 	 sdl-gfx:draw-line (sdl:point 0 (sdl:to-int y-pos))
 ;; 			   (sdl:point (sdl:to-int (* resolution col)) (sdl:to-int y-pos))
 ;; 			   :surface surface :color color
@@ -410,7 +410,7 @@
 				   (fps (sdl:create-surface 150 20 :surface sdl:*default-display* :accel t
 							    :key-color #(0 0 0))))
 	    (draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
-		       (mmanager-y-res manager) (mmanager-x-res manager)
+		       (mmanager-x-res manager) (mmanager-y-res manager)
 		       grid-color grid)
 	    (sdl:with-events ()
 	      (:quit () t)
