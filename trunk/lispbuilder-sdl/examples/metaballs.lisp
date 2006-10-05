@@ -64,7 +64,8 @@
   (d-viscosity 0.0 :type float)
   (x-squares 0 :type fixnum)
   (y-squares 0 :type fixnum)
-  (res 0 :type fixnum)
+  (x-res 0 :type fixnum)
+  (y-res 0 :type fixnum)
   (grid-size-x 0 :type fixnum)
   (grid-size-y 0 :type fixnum)
   meta-grid
@@ -73,12 +74,12 @@
   line
   square-flag)
 
-(defun new-mmanager (&key width height iso-value viscosity min-viscosity max-viscosity x-squares y-squares)
-  (let ((manager (make-mmanager :screen-width width :screen-height height :iso-value iso-value
+(defun new-mmanager (&key x-res y-res iso-value viscosity min-viscosity max-viscosity x-squares y-squares)
+  (let ((manager (make-mmanager :screen-width (* x-res x-squares) :screen-height (* y-res y-squares) :iso-value iso-value
 				:viscosity viscosity :min-viscosity min-viscosity :max-viscosity max-viscosity
-				:x-squares x-squares :y-squares y-squares)))
+				:x-squares x-squares :y-squares y-squares
+				:x-res x-res :y-res y-res)))
     (setf (mmanager-d-viscosity manager) (/ (- max-viscosity min-viscosity) 250.0)
-	  (mmanager-res manager) (/ width x-squares)
 	  (mmanager-grid-size-x manager) (+ 1 x-squares)
 	  (mmanager-grid-size-y manager) (+ 1 y-squares)
 	  (mmanager-meta-grid manager) (make-array (list (+ 1 x-squares) (+ 1 y-squares))
@@ -184,24 +185,24 @@
     (dotimes (i col)
       (setf (aref grid i j) 0))))
 
-(defun draw-grid (col row resolution color surface)
+(defun draw-grid (col row x-resolution y-resolution color surface)
   (declare (optimize (safety 0) (speed 3) (space 1))
-	   (type fixnum col row resolution)
+	   (type fixnum col row x-resolution y-resolution)
 	   (type vector color))
   (loop
      for x from 0 to col
-     for x-pos = (* x resolution)
+     for x-pos = (* x x-resolution)
      do (
-	 sdl:draw-line-xy x-pos 0 x-pos (* resolution row) :surface surface :color color
+	 sdl:draw-line-xy x-pos 0 x-pos (* x-resolution row) :surface surface :color color
 ;; 	 sdl-gfx:draw-line (sdl:point (sdl:to-int x-pos) 0)
 ;; 			   (sdl:point (sdl:to-int x-pos) (sdl:to-int (* resolution row)))
 ;; 			   :surface surface :color color
 			   ))
   (loop
      for y from 0 to row
-     for y-pos = (* y resolution)
+     for y-pos = (* y y-resolution)
      do (
-	 sdl:draw-line-xy 0 y-pos (* resolution col) y-pos :surface surface :color color
+	 sdl:draw-line-xy 0 y-pos (* y-resolution col) y-pos :surface surface :color color
 ;; 	 sdl-gfx:draw-line (sdl:point 0 (sdl:to-int y-pos))
 ;; 			   (sdl:point (sdl:to-int (* resolution col)) (sdl:to-int y-pos))
 ;; 			   :surface surface :color color
@@ -211,26 +212,27 @@
   (declare (optimize (safety 0) (speed 3) (space 1)))
   (let ((center-color (sdl:map-color :color color :surface surface))
 	(i 0.0) (j 0.0)
-	(resolution (mmanager-res manager)))
+	(x-resolution (mmanager-x-res manager))
+	(y-resolution (mmanager-y-res manager)))
     (declare (type float i j)
-	     (type fixnum resolution))
+	     (type fixnum x-resolution y-resolution))
     (dolist (metaball meta-balls)
       (when (and (>= (metaball-center-x metaball) 0)
 		 (< (metaball-center-x metaball) (mmanager-screen-width manager))
 		 (>= (metaball-center-y metaball) 0)
 		 (< (metaball-center-y metaball) (mmanager-screen-height manager)))
-	(setf i (get-square-coords-i metaball resolution resolution))
-	(setf j (get-square-coords-j metaball resolution resolution))
+	(setf i (get-square-coords-i metaball x-resolution y-resolution))
+	(setf j (get-square-coords-j metaball x-resolution y-resolution))
 
-	(sdl:draw-line-xy (sdl:to-int (* i resolution))
-			  (sdl:to-int (* j resolution))
-			  (sdl:to-int (* (+ i 1) resolution))
-			  (sdl:to-int (* (+ j 1) resolution))
+	(sdl:draw-line-xy (sdl:to-int (* i x-resolution))
+			  (sdl:to-int (* j y-resolution))
+			  (sdl:to-int (* (+ i 1) x-resolution))
+			  (sdl:to-int (* (+ j 1) y-resolution))
 			  :surface surface :color color)
-	(sdl:draw-line-xy (sdl:to-int (* (+ i 1) resolution))
-			  (sdl:to-int (* j resolution))
-			  (sdl:to-int (* i resolution))
-			  (sdl:to-int (* (+ j 1) resolution))
+	(sdl:draw-line-xy (sdl:to-int (* (+ i 1) x-resolution))
+			  (sdl:to-int (* j y-resolution))
+			  (sdl:to-int (* i x-resolution))
+			  (sdl:to-int (* (+ j 1) y-resolution))
 			  :surface surface :color color)
 	
 ;; 	(sdl-gfx:draw-line (sdl:point (sdl:to-int (* i resolution))
@@ -265,7 +267,8 @@
   (let ((line-color (sdl:map-color :color color :surface surface))
 	(grid-size-y (mmanager-grid-size-y manager))
 	(grid-size-x (mmanager-grid-size-x manager))
-	(resolution (mmanager-res manager))
+	(x-resolution (mmanager-x-res manager))
+	(y-resolution (mmanager-y-res manager))
 	(iso-value (mmanager-iso-value manager))
 	(viscosity (mmanager-viscosity manager))
 	(square-flag (mmanager-square-flag manager))
@@ -273,7 +276,7 @@
 	(offset (mmanager-offset manager))
 	(line (mmanager-line manager))
 	(square-edge (mmanager-square-edge manager)))
-    (declare (type fixnum grid-size-y grid-size-x resolution)
+    (declare (type fixnum grid-size-y grid-size-x x-resolution y-resolution)
 	     (type float iso-value viscosity)
 	     (type (array fixnum *) square-flag offset line square-edge)
 	     (type (array float *) meta-grid))
@@ -284,7 +287,7 @@
 		  (declare (type float meta-grid-target))
 		  (setf (aref square-flag x y) 0)
 		  (dolist (meta-ball meta-balls)
-		    (incf meta-grid-target (get-field-at meta-ball (* resolution x) (* resolution y))))
+		    (incf meta-grid-target (get-field-at meta-ball (* x-resolution x) (* y-resolution y))))
 		  (incf (aref meta-grid x y) (cast float (/ (- meta-grid-target
 							      (aref meta-grid x y))
 							   viscosity))))))
@@ -335,11 +338,11 @@
 				(setf temp (cast float (/ (- iso-value val1)
 							 (- val2 val1))))
 				(setf temp 0.5))
-			    (setf iso-p1-x (cast-to-int (* resolution
+			    (setf iso-p1-x (cast-to-int (* x-resolution
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
 									(+ i (aref offset p1-idx 0))))
 							     (+ i (aref offset p1-idx 0))))))
-			    (setf iso-p1-y (cast-to-int (* resolution
+			    (setf iso-p1-y (cast-to-int (* y-resolution
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
@@ -358,11 +361,11 @@
 				(setf temp (cast float (/ (- iso-value val1)
 							 (- val2 val1))))
 				(setf temp 0.5))
-			    (setf iso-p2-x (cast-to-int (* resolution
+			    (setf iso-p2-x (cast-to-int (* x-resolution
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
 									(+ i (aref offset p1-idx 0))))
 							     (+ i (aref offset p1-idx 0))))))
-			    (setf iso-p2-y (cast-to-int (* resolution
+			    (setf iso-p2-y (cast-to-int (* y-resolution
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
@@ -386,24 +389,29 @@
 	  (new-metaball iso-value :cx 50 :cy 200 :strength 5000))))
 
 (defun metaballs ()
-  (let* ((width 255) (height 288)
+  (let* ((res-width 10) (res-height 10)
+	 (horizontal-res 25) (vertical-res 30)
 	 (meta-color #(175 175 175)) (meta-center-color #(200 0 0)) (grid-color #(75 75 75))
 	 (mb-pressed? nil)
 	 (meta-balls (setup))
-	 (manager (new-mmanager :width width :height 250 :iso-value 16.0 
+	 (manager (new-mmanager :y-res res-width :x-res res-height :iso-value 16.0 
 				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
-				:x-squares 64 :y-squares 64)))
+				:x-squares horizontal-res :y-squares vertical-res)))
     (sdl:with-init ()
-      (sdl:with-display (width height :title-caption "Metaballs")
+      (sdl:with-display ((mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
 	(let ((font (init-font)))
 	  (sdl:set-framerate 30)
 	  (sdl:clear-display :color #(0 0 0))
 	  (fps-init font)
 	  (setup)
-	  (sdl:with-surfaces-free ((grid (sdl:create-surface width height :surface sdl:*default-display* :accel t))
+	  (sdl:with-surfaces-free ((grid (sdl:create-surface (sdl:surf-w sdl:*default-display*)
+							     (sdl:surf-h sdl:*default-display*)
+							     :surface sdl:*default-display* :accel t))
 				   (fps (sdl:create-surface 150 20 :surface sdl:*default-display* :accel t
 							    :key-color #(0 0 0))))
-	    (draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager) (mmanager-res manager) grid-color grid)
+	    (draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
+		       (mmanager-y-res manager) (mmanager-x-res manager)
+		       grid-color grid)
 	    (sdl:with-events ()
 	      (:quit () t)
 	      (:keydown (:key key) (handle-keypress key))
