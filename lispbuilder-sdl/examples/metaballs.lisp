@@ -388,9 +388,9 @@
 	  (new-metaball iso-value :cx 65 :cy 68 :strength 40000)
 	  (new-metaball iso-value :cx 50 :cy 200 :strength 5000))))
 
-(defun metaballs ()
-  (let* ((res-width 10) (res-height 10)
-	 (horizontal-res 25) (vertical-res 30)
+(defun metaballs (&key (h-res 10) (v-res 10) (h-squares 25) (v-squares 30))
+  (let* ((res-width h-res) (res-height v-res)
+	 (horizontal-res h-squares) (vertical-res v-squares)
 	 (meta-color #(175 175 175)) (meta-center-color #(200 0 0)) (grid-color #(75 75 75))
 	 (mb-pressed? nil)
 	 (meta-balls (setup))
