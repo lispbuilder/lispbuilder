@@ -26,7 +26,7 @@
 	  (:idle ()
 		 ;;Update only the portion of the display that has been written to.
 		 (sdl:with-rectangle ((sdl:random-rect width height))
-		   (sdl:with-color ((sdl:random-color))
+		   (sdl:with-color ((sdl:random-color 255 255 255))
 		     (sdl:draw-rectangle :update-p t)))))))))
 
 (defun random-rects2 ()
@@ -39,7 +39,7 @@
 		  (if (sdl:key= key :SDLK_ESCAPE)
 		      (sdl:push-quitevent)))
 	(:idle ()
-	       (sdl:draw-box :rectangle (sdl:random-rect 320 240) :color (sdl:random-color) :update-p nil)
+	       (sdl:draw-box :rectangle (sdl:random-rect 320 240) :color (sdl:random-color 255 255 255) :update-p nil)
 	 ;; Update the entire display.
 	 (sdl:update-display))))))
 
@@ -55,5 +55,5 @@
 			(sdl:push-quitevent)))
 	  (:idle ()
 		 (sdl:with-rectangle ((sdl:random-rect width height))
-		   (sdl:draw-box :color (sdl:random-color) :surface display :clipping-p t :update-p t))))))))
+		   (sdl:draw-box :color (sdl:random-color 255 255 255) :surface display :clipping-p t :update-p t))))))))
 
