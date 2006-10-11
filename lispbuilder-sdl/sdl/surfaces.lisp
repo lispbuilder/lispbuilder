@@ -230,7 +230,7 @@
 
 (defun map-color (&key (color *default-color*) (surface *default-surface*))
   (let ((int-color (vec-to-int color)))
-    (if (equal 3 (length int-color))
+    (if (equal 3 (array-dimension int-color 0))
 	(sdl:SDL_MapRGB (pixelformat surface)
 			(color-r int-color) (color-g int-color) (color-b int-color))
 	(sdl:SDL_MapRGBA (pixelformat surface)

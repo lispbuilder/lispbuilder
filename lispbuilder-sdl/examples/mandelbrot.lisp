@@ -28,11 +28,10 @@
 		    for z = a then (+ (* z z) a)
 		    while (< (abs z) 2)
 		    for c from 60 above 0
-		 finally (sdl:draw-point :position (sdl:point x y)
-					 :color (sdl:color (mod (* 13 c) 256)
-							   (mod (* 7 c) 256)
-							   (mod (* 2 c) 256))
-					 :update-p nil :clipping-p nil)))))
+		 finally (sdl:draw-pixel x y :color (sdl:sdl_maprgb (sdl:pixelformat sdl:*default-surface*)
+								    (mod (* 13 c) 256)
+								    (mod (* 7 c) 256)
+								    (mod (* 2 c) 256)))))))
 
 (defun mandelbrot 
     (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
