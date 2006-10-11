@@ -175,12 +175,12 @@
 	 (h (random+1 (- bound-h y))))
     (rectangle x y w h)))
 
-(defun random-color (&optional alpha)
+(defun random-color (r g b &optional alpha)
   (if alpha ;; alpha is either t, or a number then create r/g/b/a
-      (color (random 255) (random 255) (random 255) (if (numberp alpha)
-							alpha
-							(random 255)))
-      (color (random 255) (random 255) (random 255)))) ; Or not, and create an r/g/b color
+      (color (random r) (random g) (random b) (if (numberp alpha)
+						  alpha
+						  (random 255)))
+      (color (random r) (random g) (random b)))) ; Or not, and create an r/g/b color
 
 (defun random-point (max-x max-y)
   (sdl:point (random max-x) (random max-y)))
