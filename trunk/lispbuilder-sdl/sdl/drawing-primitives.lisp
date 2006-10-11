@@ -354,7 +354,7 @@
 					     :template (vector x y 1 1))
       (sdl:draw-pixel x y :surface surface :color (map-color :color color :surface surface)))))
 
-(defun draw-pixel (x y &key (surface *default-surface*) (color *default-color*))
+(defun draw-pixel (x y &key (surface *default-surface*) color)
   "Set the pixel at (x, y) to the given value 
    NOTE: The surface must be locked before calling this.
    Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
