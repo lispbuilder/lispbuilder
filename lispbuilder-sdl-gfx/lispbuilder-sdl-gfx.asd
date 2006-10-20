@@ -23,7 +23,8 @@
 	      ((:file "package")
 	       (:file "library" :depends-on ("package"))
 	       (:file "sdl_gfx" :depends-on ("package" "library"))
-	       (:file "util-sdl_gfx" :depends-on ("sdl_gfx"))))
+	       (:file "util-sdl_gfx" :depends-on ("sdl_gfx")))
+	      :serial t)
      (:module "documentation"
 	      :components
 	      ((:html-file "index")
