@@ -30,7 +30,8 @@
 	       (:file "surfaces" :depends-on ("globals" "primitives"))
 	       (:file "drawing-primitives" :depends-on ("globals" "primitives" "surfaces"))
 	       (:file "util-sdl" :depends-on ("globals" "primitives"))
-	       (:file "sdl_simplefont" :depends-on ("util-sdl"))))
+	       (:file "sdl_simplefont" :depends-on ("util-sdl")))
+	      :serial t)
      (:module "documentation"
 	      :components
 	      ((:html-file "index")
