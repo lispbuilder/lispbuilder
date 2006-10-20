@@ -13,9 +13,8 @@
        (frame-count 0))
   (declare (type fixnum frame-values frame-time-last frame-count))
 
-  (defun fps-init (number-of-frames)
-    (setf frame-values number-of-frames
-	  frame-count 0
+  (defun fps-init ()
+    (setf frame-count 0
 	  frame-time-last (sdl:SDL_getticks))
     (dotimes (i frame-values)
       (setf (aref frame-times i) 0)))
@@ -48,7 +47,7 @@
 	    (height (sdl:surf-h sdl:*default-display*)))
 	(sdl:set-framerate 0)
 	(fps-init)
-	(sdl:with-surfaces-free ((fps (sdl:create-surface 150 8 :surface sdl:*default-display* :accel t)))
+	(sdl:with-surfaces-free ((fps (sdl:create-surface 150 16 :surface sdl:*default-display* :accel t)))
 	(sdl:with-events ()
 	  (:quit () t)
 	  (:keydown (:key key)
