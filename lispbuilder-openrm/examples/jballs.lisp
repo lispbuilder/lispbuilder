@@ -28,7 +28,7 @@
 	(bounds-display nil))
     (sdl::with-init ()
       (sdl::set-window width height :flags sdl::SDL_OPENGL)
-      (sdl::set-framerate 60)
+      (sdl::set-framerate 30)
       (rm::with-init ()
 	(rm::with-rmpipe ((sdl::get-native-window) width height) a-pipe
 	  (let ((root-node (rm::rmrootnode))
