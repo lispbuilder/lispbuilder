@@ -620,22 +620,21 @@
 ;;     (rm::error-if-not-chill (rm::rmNodeSetTranslateVector node position)))
 ;;   node)
 
-(defun new-cube-primitive (&key (vertices nil)
+(defun new-cube-primitive (&key (primitive (rm::PrimitiveNew :rm_box3d)) (vertices nil)
 			   (dimensions #(0.0 0.0 0.0))
 			   (color #(0.0 0.0 0.0))
 			   (position #(0.0 0.0 0.0)))
-  (let ((primitive (rm::PrimitiveNew :rm_box3d)))
-    (if vertices
-	(set-primitive-vertices primitive vertices)
-	(if dimensions
-	    (set-primitive-vertices primitive (list position
-						    (vector (+ (elt dimensions 0) (elt position 0))
-							    (+ (elt dimensions 1) (elt position 1))
-							    (+ (elt dimensions 2) (elt position 2)))))))
-    (if color
+  (if vertices
+      (set-primitive-vertices primitive vertices)
+      (if dimensions
+	  (set-primitive-vertices primitive (list position
+						  (vector (+ (elt dimensions 0) (elt position 0))
+							  (+ (elt dimensions 1) (elt position 1))
+							  (+ (elt dimensions 2) (elt position 2)))))))
+  (if color
       (set-primitive-colors primitive color))
-    (rm::rmPrimitiveComputeBoundingBox primitive)
-    primitive))
+  (rm::rmPrimitiveComputeBoundingBox primitive)
+  primitive)
 
 (defun set-primitive-radius (primitive radius)
   (let ((radius (create-list-if-not radius)))
@@ -646,26 +645,29 @@
 						   (cffi:null-pointer))))
   primitive)
 
-(defun new-sphere-primitive (&key (radius 1.0) (tesselate 32) (color #(0.0 0.0 0.0 0.0))
-			     (position #(0.0 0.0 0.0)))
-  (let ((primitive (rm::PrimitiveNew :rm_spheres))
-	(tesselate (case tesselate
+(defun new-sphere-primitive (&key (primitive (rm::PrimitiveNew :rm_spheres))
+			     (radius 1.0) (tesselate 32) (color #(0.0 0.0 0.0 0.0)) (position #(0.0 0.0 0.0)))
+  (let ((tesselate (case tesselate
 		     (8 rm::RM_SPHERES_8)
 		     (32 rm::RM_SPHERES_32)
 		     (128 rm::RM_SPHERES_128)
 		     (512 rm::RM_SPHERES_512)
 		     (otherwise rm::RM_SPHERES_32))))
-    (set-primitive-radius primitive radius)
-    (rm::error-if-not-chill (rm::rmPrimitiveSetModelFlag primitive tesselate))
-    (set-primitive-colors primitive color)
-    (set-primitive-position primitive position)
+    (when radius
+      (set-primitive-radius primitive radius))
+    (when tesselate
+      (rm::error-if-not-chill (rm::rmPrimitiveSetModelFlag primitive tesselate)))
+    (when color
+      (set-primitive-colors primitive color))
+    (when position
+      (set-primitive-position primitive position))
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
 
-(defun new-cone-primitive (&key (radius 1.0) (tesselate 8) (color #(0.0 0.0 0.0 0.0))
+(defun new-cone-primitive (&key (primitive (rm::PrimitiveNew :rm_cones))
+			   (radius 1.0) (tesselate 8) (color #(0.0 0.0 0.0 0.0))
 			   (vertices (list #(0.0 0.0 0.0) #(0.0 1.0 0.0))))
-  (let ((primitive (rm::PrimitiveNew :rm_cones))
-	(tesselate (case tesselate
+  (let ((tesselate (case tesselate
 		     (4 rm::RM_CONES_4)
 		     (8 rm::RM_CONES_8)
 		     (12 rm::RM_CONES_12)
@@ -681,9 +683,9 @@
     primitive))
 
 
-(defun new-plane-primitive (&key vertices (color #(1.0 1.0 1.0)) (orientation :xz) (subdivisions 20) (sign 1))
-  (let ((primitive (rm::primitivenew :rm_quadmesh))
-	(vmin (first vertices))
+(defun new-plane-primitive (&key (primitive (rm::primitivenew :rm_quadmesh))
+			    vertices (color #(1.0 1.0 1.0)) (orientation :xz) (subdivisions 20) (sign 1))
+  (let ((vmin (first vertices))
 	(vmax (second vertices)))
     (case orientation
       (:xz (build-xz-quad-mesh primitive vmin vmax subdivisions sign color))
@@ -693,35 +695,35 @@
     (rm::rmPrimitiveComputeBoundingBox primitive)
     primitive))
 
-(defun new-triangles-primitive (vertices vert-num indices ind-num &key normals color)
-  (let ((primitive (rm::primitivenew :rm_indexed_triangles)))
-    (rm::rmPrimitiveSetVertex3D primitive
-				vert-num
-				vertices
-				(cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-				(cffi:null-pointer))
-    (rm::rmPrimitiveSetIndices primitive
-			       ind-num
-			       indices
-			       (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-			       (cffi:null-pointer))
-    (if normals 
-	(rm::rmPrimitiveSetNormal3D primitive
-				    vert-num
-				    normals
-				    (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-				    (cffi:null-pointer)))
-        (if color
-	    (let ((colors (cffi:foreign-alloc :pointer :count (* (* (cffi:foreign-type-size :float) 4) vert-num))))
-	      (dotimes (i vert-num)
-		(setf (cffi:mem-ref colors :pointer (* (* (cffi:foreign-type-size :float) 4) i))
-		      (cffi:mem-aref color :pointer)))
-	      (rm::rmPrimitiveSetColor4D primitive vert-num colors
-					 (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
-					 (cffi:null-pointer))
-	      (cffi:foreign-free colors)))
-    (rm::rmPrimitiveComputeBoundingBox primitive)
-    primitive))
+(defun new-triangles-primitive (vertices vert-num indices ind-num
+				&key (primitive (rm::primitivenew :rm_indexed_triangles)) normals color)
+  (rm::rmPrimitiveSetVertex3D primitive
+			      vert-num
+			      vertices
+			      (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
+			      (cffi:null-pointer))
+  (rm::rmPrimitiveSetIndices primitive
+			     ind-num
+			     indices
+			     (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
+			     (cffi:null-pointer))
+  (if normals 
+      (rm::rmPrimitiveSetNormal3D primitive
+				  vert-num
+				  normals
+				  (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
+				  (cffi:null-pointer)))
+  (if color
+      (let ((colors (cffi:foreign-alloc :pointer :count (* (* (cffi:foreign-type-size :float) 4) vert-num))))
+	(dotimes (i vert-num)
+	  (setf (cffi:mem-ref colors :pointer (* (* (cffi:foreign-type-size :float) 4) i))
+		(cffi:mem-aref color :pointer)))
+	(rm::rmPrimitiveSetColor4D primitive vert-num colors
+				   (cffi:foreign-enum-value 'rm::rmenum :RM_COPY_DATA)
+				   (cffi:null-pointer))
+	(cffi:foreign-free colors)))
+  (rm::rmPrimitiveComputeBoundingBox primitive)
+  primitive)
 
 
 ;; (defun foreign-array-from-vertex (&rest vertices)
