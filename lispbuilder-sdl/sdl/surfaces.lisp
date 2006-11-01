@@ -103,7 +103,8 @@
 	   ;; not the real video surface.
 	   (if (and ,free-p (is-valid-ptr *default-surface*))
 	       (unless (or (cffi:pointer-eq *default-surface* (SDL_GetVideoSurface))
-			   (cffi:pointer-eq *default-surface* *default-display*))
+			   (if (is-valid-ptr *default-display*)
+			       (cffi:pointer-eq *default-surface* *default-display*)))
 		 (SDL_FreeSurface *default-surface*))))
 	 ,body-value))))
 
@@ -136,7 +137,8 @@
 	     ,@(loop for binding in bindings
 		  collect `(if (is-valid-ptr ,(first binding))
 			       (unless (or (cffi:pointer-eq ,(first binding) (SDL_GetVideoSurface))
-					   (cffi:pointer-eq ,(first binding) *default-display*))
+					   (if (is-valid-ptr *default-display*)
+					       (cffi:pointer-eq ,(first binding) *default-display*)))
 				 (SDL_FreeSurface ,(first binding))))))
 	   ,body-value))))
 
@@ -238,11 +240,12 @@
 
 ;; cl-sdl "sdl-ext.lisp"
 (defun must-lock-p (&optional (surface *default-surface*))
-  (or (/= 0 (cffi:foreign-slot-value surface 'sdl_surface 'offset))
-      (/= 0 (logand (cffi:foreign-slot-value surface 'sdl_surface 'flags)
-		    (logior SDL_HWSURFACE
-			    SDL_ASYNCBLIT
-			    SDL_RLEACCEL)))))
+  (when (is-valid-ptr surface)
+    (or (/= 0 (cffi:foreign-slot-value surface 'sdl_surface 'offset))
+	(/= 0 (logand (cffi:foreign-slot-value surface 'sdl_surface 'flags)
+		      (logior SDL_HWSURFACE
+			      SDL_ASYNCBLIT
+			      SDL_RLEACCEL))))))
 
 (defun pixelformat (&optional (surface *default-surface*))
   "Returns the pixelformat of a surface."

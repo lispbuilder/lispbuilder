@@ -25,6 +25,8 @@
    #:apply-surface
    #:apply-surface-free
    #:blit-surface
+   #:bounds-from-wh
+   #:bounds-collision?
    #:calculate-curve
    #:catmull-rom-spline
    #:distance

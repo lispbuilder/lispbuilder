@@ -25,6 +25,22 @@
 (defvar *M43*	-1.5)
 (defvar *M44*	 0.5)
 
+(defun bounds-from-wh (width height &key (point sdl:*default-position*))
+  (rectangle (point-x point) (point-y point) (+ (point-x point) width) (+ (point-y point) height)))
+
+(defun bounds-collision? (bounds1 bounds2)
+  (let ((collision? nil))
+    (destructuring-bind (s1-x1 s1-y1 s1-x2 s1-y2)
+	(coerce bounds1 'list)
+      (destructuring-bind (s2-x1 s2-y1 s2-x2 s2-y2)
+	  (coerce bounds2 'list)
+	(if (and (> s1-x2 s2-x1)
+		 (> s1-y2 s2-y1)
+		 (< s1-y1 s2-y2)
+		 (< s1-x1 s2-x2))
+	    (setf collision? t))))
+    collision?))
+
 (defun rect-from-wh (width height &key (point sdl:*default-position*))
   (rectangle (point-x point) (point-y point) width height))
 
@@ -34,7 +50,7 @@
 (defun rect-from-xy (x1 y1 x2 y2)
   (rectangle x1 y1 (1+ (abs (- x1 x2))) (1+ (abs (- y1 y2)))))
 
-(defun rect-from-midpoint (x y w h)
+(Defun rect-from-midpoint (x y w h)
   (sdl:rectangle (- x (/ w 2))
 		 (- y (/ h 2))
 		 w h))
@@ -229,7 +245,7 @@
     ;; draw line with Bresenham algorithm
     (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
 	  (color (map-color :color color :surface surface)))
-      (declare (type fixnum x y w dx dy color))
+      (declare (type fixnum x y dx dy color))
       (when (> x0 x1)
 	(rotatef x0 x1)
 	(rotatef y0 y1))
