@@ -25,6 +25,7 @@
    #:apply-surface
    #:apply-surface-free
    #:blit-surface
+   #:bounds-from-surface
    #:bounds-from-wh
    #:bounds-collision?
    #:calculate-curve
