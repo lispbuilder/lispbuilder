@@ -28,6 +28,9 @@
 (defun bounds-from-wh (width height &key (point sdl:*default-position*))
   (rectangle (point-x point) (point-y point) (+ (point-x point) width) (+ (point-y point) height)))
 
+(defun bounds-from-surface (&key (surface *default-surface*) (point *default-position*))
+  (bounds-from-wh (surf-w surface) (surf-h surface) :point point))
+
 (defun bounds-collision? (bounds1 bounds2)
   (let ((collision? nil))
     (destructuring-bind (s1-x1 s1-y1 s1-x2 s1-y2)
