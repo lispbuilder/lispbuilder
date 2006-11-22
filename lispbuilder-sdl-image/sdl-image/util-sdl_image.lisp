@@ -132,4 +132,4 @@ Use :FORCE T to override the 'magic number' when attempting to load an image as 
 					      :free t
 					      :image-type image-type
 					      :force force))
-    (sdl:convert-surface-to-display-format :key-color key-color :alpha-value alpha-value :free nil)))
+    (sdl:convert-surface-to-display-format :key-color key-color :alpha-value alpha-value :free-p nil)))
