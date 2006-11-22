@@ -7,6 +7,23 @@
 
 (in-package #:lispbuilder-sdl)
 
+;; (defclass surface ()
+;;   ((pointer-to-surface :accessors surface :initform nil :initarg :surface)))
+
+;; (defclass rectangle ()
+;;   ((pointer-to-rectangle :accessors rectangle :intiform nil :initarg :rectangle)))
+
+;; (defclass color ()
+;;   ((pointer-to-color :accessors color :initiform nil :initarg :color)))
+
+;; (defclass color-a ()
+;;   ((pointer-to-color-a :accessors color :initiform nil :initarg :color)))
+
+;; (defclass color-a ()
+;;   ((pointer-to-color-a :accessors color :initiform nil :initarg :color)))
+
+
+
 (defmacro with-position ((position) &body body)
   `(symbol-macrolet ((x (pos-x ,position))
 		     (y (pos-y ,position)))

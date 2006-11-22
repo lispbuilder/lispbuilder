@@ -7,7 +7,6 @@
 
 (in-package #:lispbuilder-sdl)
 
-
 ;; cl-sdl "sdl-ext.lisp"
 (defmacro with-locked-surface ((var &optional surface) &body body)
   `(let (,@(when surface `(,var ,surface)))
