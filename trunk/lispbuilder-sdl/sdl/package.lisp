@@ -149,6 +149,9 @@
    #:with-init
    #:with-locked-surface		; from cl-sdl
    #:with-must-lock-surface
+   #:with-pixels
+   #:write-pixel
+   #:write-point
    #:with-position
    #:with-possible-lock-and-update	; from cl-sdl
    #:with-rectangle

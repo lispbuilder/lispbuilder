@@ -12,10 +12,11 @@
   `(let (,@(when surface `(,var ,surface)))
      (unwind-protect 
          (progn (when (must-lock-p ,var)
-                  (lock-surface ,var))
+                  (SDL_LockSurface ,var))
                 ,@body)
        (when (must-lock-p ,var)
-         (unlock-surface ,var)))))
+         (SDL_UnlockSurface ,var)))))
+
 
 (defmacro with-must-lock-surface (surface &body body)
   "WITH-MUST-LOCKSURFACE sets up a surface for directly accessing the pixels using SDL_LockSurface.
