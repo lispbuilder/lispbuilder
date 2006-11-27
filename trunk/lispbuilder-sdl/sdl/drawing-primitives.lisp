@@ -8,6 +8,7 @@
 (in-package #:lispbuilder-sdl)
 
 ;; Coefficients for Matrix M
+;; For catmull-rom-spline
 (defvar *M11*	 0.0)	
 (defvar *M12*	 1.0)
 (defvar *M13*	 0.0)
