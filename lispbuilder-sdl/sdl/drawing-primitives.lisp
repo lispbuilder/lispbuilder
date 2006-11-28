@@ -193,9 +193,9 @@
 		 (4 #'(lambda (x y)
 			(mem-aref pixel-address :unsigned-int (/ (offset x y) 4)))))))
       (let ((fn-read-pixel (generate-read-pixel-fn bpp)))
-	#'(lambda (x y)
-	    (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char)
-					(a :unsigned-char))
+	(cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char)
+				    (a :unsigned-char))
+	  #'(lambda (x y)
 	      (SDL_GetRGBA (funcall fn-read-pixel x y) format r g b a)
 	      (sdl:SDL_MapRGBA format 
 			       (mem-aref r :unsigned-char)
