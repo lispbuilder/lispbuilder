@@ -151,7 +151,9 @@
    #:with-must-lock-surface
    #:with-pixels
    #:write-pixel
+   #:read-pixel
    #:write-point
+   #:read-point
    #:with-position
    #:with-possible-lock-and-update	; from cl-sdl
    #:with-rectangle
@@ -159,6 +161,9 @@
    #:with-surfaces
    #:with-surfaces-free
    #:with-surface-lock
+   #:generate-write-pixel
+   #:generate-read-pixel
+   
    *default-color*
    *default-display*
    *default-position*
