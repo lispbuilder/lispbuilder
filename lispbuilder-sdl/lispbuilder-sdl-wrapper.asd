@@ -5,9 +5,9 @@
 (in-package #:lispbuilder-sdl-wrapper-system)
 
 (defsystem lispbuilder-sdl-wrapper
-    :description "lispbuilder-sdl-wrapper: The basic SDL library wrapper"
+    :description "lispbuilder-sdl-wrapper: Basic Lisp wrapper for the SDL library."
     :long-description
-    "lispbuilder-sdl-wrapper uses CFFI to provide a very simple and low-level wrapper to libSDL."
+    "The lispbuilder-sdl-wrapper package uses CFFI to provide a very low-level set of Lisp bindings to the SDL library."
     :version "0.8.0"
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
