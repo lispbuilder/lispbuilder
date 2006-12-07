@@ -8,50 +8,6 @@
 (in-package #:lispbuilder-sdl)
 
 
-;;; Color
-
-(defmacro with-color ((color) &body body)
-  `(symbol-macrolet ((r (color-r ,color))
-		     (g (color-g ,color))
-		     (b (color-b ,color))
-		     (a (color-a ,color)))
-     ,@body))
-
-(defun color-r (color)
-  (svref color 0))
-(defun (setf color-r) (r-val color)
-  (setf (svref color 0) (to-int r-val)))
-
-(defun color-g (color)
-  (svref color 1))
-(defun (setf color-g) (g-val color)
-  (setf (svref color 1) (to-int g-val)))
-
-(defun color-b (color)
-  (svref color 2))
-(defun (setf color-b) (b-val color)
-  (setf (svref color 2) (to-int b-val)))
-
-(defun color-a (color)
-  (if (> (length color) 3)
-	 (svref color 3)
-	 (error "Color is RGB not RGBA.")))
-(defun (setf color-a) (a-val color)
-  (setf (svref color 3) (to-int a-val)))
-
-(defun color-rgb (r g b)
-  "Returns a new color from the red R, green G, and blue B INTEGER values."
-  (vector (to-int r) (to-int g) (to-int b)))
-
-(defun color-rgba (r g b a)
-  "Returns a new color from the red R, green G,  blue B and alpha A INTEGER values. "
-  (vector (to-int r) (to-int g) (to-int b) (to-int a)))
-
-(defun color (r g b &optional a)
-  (if a
-      (color-rgba r g b a)
-      (color-rgb r g b)))
-
 ;;; Rectangle
 
 (defmacro with-rectangle ((rectangle) &body body)
@@ -106,8 +62,7 @@
   "Initializes and returns a new rectangle with the contents of the rectangle SRC. SRC and DST are both of type SDL_Rect."
   (if (is-valid-ptr src)
       (copy-rectangle src (cffi:foreign-alloc 'SDL_Rect))
-      (error "SRC and DST must be of type SDL_Rect."))
-  dst)
+      (error "SRC and DST must be of type SDL_Rect.")))
 
 (defun rectangle (&key (x 0) (y 0) (w 0) (h 0) src)
   "Creates a new rectangle initialized with values x, y, width W and height H, or the rectangle SRC if specified."

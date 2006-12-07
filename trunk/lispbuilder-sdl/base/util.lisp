@@ -8,6 +8,31 @@
 (in-package #:lispbuilder-sdl)
 
 
+(defmacro check-bounds (min below &rest vars)
+  (let (result)
+    (loop for var in vars do
+	 (push `(setf ,var (clamp ,var ,min ,below)) result))
+    (push 'progn result)
+    result))
+
+;;; w
+(defmacro with-init (init-flags &body body)
+  "Attempts to initialize the SDL subsystems using SDL_Init.
+   Automatically shuts down the SDL subsystems using SDL_Quit upon normal application termination or
+   if any fatal error occurs within &body.
+   init-flags can be any combination of SDL_INIT_TIMER, SDL_INIT_AUDIO, SDL_INIT_VIDEO, SDL_INIT_CDROM,
+   SDL_INIT_JOYSTICK, SDL_INIT_NOPARACHUTE, SDL_INIT_EVENTTHREAD or SDL_INIT_EVERYTHING."
+  `(block nil
+    (unwind-protect
+	 (when (init-sdl :flags (list ,@init-flags))
+	   ,@body)
+      (SDL_Quit))))
+
+(defun init-sdl (&key (flags SDL_INIT_VIDEO))
+  (if (equal 0 (SDL_Init (set-flags flags)))
+      t
+      nil))
+
 (defun key= (key1 key2)
   (eq key1 key2))
 
@@ -15,7 +40,6 @@
   "Returns t if the keypress modifier 'mod' is equal to the specified 'key'.
    (cffi:foreign-enum-value 'SDLMod key)."
   (equal mod (cffi:foreign-enum-value 'SDLMod key)))
-
 
 ;; cl-sdl "util.lisp"
 (declaim (inline clamp))

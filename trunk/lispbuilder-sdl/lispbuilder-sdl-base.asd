@@ -5,22 +5,25 @@
 (in-package #:lispbuilder-sdl-base-system)
 
 (defsystem lispbuilder-sdl-base
-    :description "lispbuilder-sdl-base: The base lispified SDL library code"
+    :description "lispbuilder-sdl-base: SDL library wrapper providing a base set of functionality."
     :long-description
-    "lispbuilder-sdl-base provides a lispified layer above lispbuilder-sdl-wrapper (however foreign pointers are still used)."
+    "The lispbuilder-sdl-base prackage provides a base set of functionality on top of the CFFI bndings of lispbuilder-sdl-wrapper."
     :version "0.8.0"
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi)
+    :depends-on (cffi lispbuilder-sdl-wrapper)
     :components
     ((:module "base"
 	      :components
 	      ((:file "package")
 	       (:file "util")
 	       (:file "events")
-	       (:file "primitives")
-	       (:file "surfaces"))
+	       (:file "color")
+	       (:file "rectangle")
+	       (:file "surfaces")
+	       (:file "video")
+	       (:file "rwops"))
 	      :serial t)
      (:module "documentation"
 	      :components
