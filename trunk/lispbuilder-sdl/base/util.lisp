@@ -5,7 +5,7 @@
 ;; This file contains some useful functions for using SDL from Common lisp
 ;; using sdl.lisp (the CFFI wrapper)
 
-(in-package #:lispbuilder-sdl)
+(in-package #:lispbuilder-sdl-base)
 
 
 (defmacro check-bounds (min below &rest vars)
