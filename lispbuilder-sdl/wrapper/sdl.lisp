@@ -819,10 +819,6 @@
   (x :pointer)
   (y :pointer))
 
-(cffi:defcfun ("SDL_WarpMouse" SDL_WarpMouse) :void
-  (x :unsigned-short)
-  (y :unsigned-short))
-
 (cffi:defcfun ("SDL_CreateCursor" SDL_CreateCursor) :pointer
   (data :pointer)
   (mask :pointer)

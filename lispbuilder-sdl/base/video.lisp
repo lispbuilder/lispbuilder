@@ -9,10 +9,11 @@
 
 
 
-(defmacro with-display ((width height &key (flags SDL_SWSURFACE) (bpp 0)
-			       (title-caption nil) (icon-caption nil)) &body body)
-  (let ((body-value (gensym "body-value-"))
-	(surface-name (gensym "surface-name-")))
+(defmacro with-display ((surface-name width height
+				      &key (flags SDL_SWSURFACE) (bpp 0)
+				      (title-caption nil) (icon-caption nil))
+			&body body)
+  (let ((body-value (gensym "body-value-")))
     `(let ((,body-value nil)
 	   (,surface-name (set-window ,width ,height :bpp ,bpp :flags ,flags
 				      :title-caption ,title-caption :icon-caption ,icon-caption)))

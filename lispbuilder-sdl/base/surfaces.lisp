@@ -161,13 +161,6 @@
 	(set-alpha surf alpha-value :accel accel))
     surf))
 
-(defun map-color (surface color)
-  (let ((int-color (vec-to-int color)))
-    (if (equal 3 (array-dimension int-color 0))
-	(sdl:SDL_MapRGB (pixel-format surface)
-			(color-r int-color) (color-g int-color) (color-b int-color))
-	(sdl:SDL_MapRGBA (pixel-format surface)
-			 (color-r int-color) (color-g int-color) (color-b int-color) (color-a int-color)))))
 
 ;; cl-sdl "sdl-ext.lisp"
 (defun must-lock? (surface)
@@ -207,7 +200,7 @@
 	  (if accel
 	      (setf accel SDL_RLEACCEL)
 	      (setf accel 0))
-	  (SDL_SetColorKey surface (logior SDL_SRCCOLORKEY accel) (map-color surface color))))
+	  (SDL_SetColorKey surface (logior SDL_SRCCOLORKEY accel) color)))
     surface))
 
 (defun surf-w (surface)
@@ -253,7 +246,7 @@
 	       (x2 (+ x w)) (y2 (+ y h)))
 	  (setf (rect-w template) (check-bounds 0 (surf-w surface) x x2)
 		(rect-h template) (check-bounds 0 (surf-h surface) y y2)))))
-  (Fill-Rect surface template (map-color surface color))
+  (Fill-Rect surface template color)
   (when update-p
     (update-surface surface template))
   template)

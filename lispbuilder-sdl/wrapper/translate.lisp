@@ -55,7 +55,7 @@
   (file sdl-string)
   (mode sdl-string))
 
-(cffi:defcfun ("SDL_VideoDriverName" Video-Driver-Name) :pointer
+(cffi:defcfun ("SDL_VideoDriverName" VideoDriverName) :pointer
   (namebuf :pointer)
   (maxlen :int))
 

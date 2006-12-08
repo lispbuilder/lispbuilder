@@ -19,7 +19,6 @@
 	      ((:file "package")
 	       (:file "util")
 	       (:file "events")
-	       (:file "color")
 	       (:file "rectangle")
 	       (:file "surfaces")
 	       (:file "video")

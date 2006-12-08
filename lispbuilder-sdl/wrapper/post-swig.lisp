@@ -109,14 +109,6 @@
 ;;;; end "SDL_version.h"
 
 ;;;; "SDL_video.h"
-(defun SDL_MUSTLOCK (surface)
-  (if (> 0 (cffi:foreign-slot-value surface 'SDL_Surface 'offset))
-      (values 1)
-    (if (not (eql 0 (logand (cffi:foreign-slot-value surface 'SDL_Surface 'flags)
-                            (logior SDL_HWSURFACE SDL_ASYNCBLIT SDL_RLEACCEL))))
-        (values 1)
-      (values 0))))
-
 (defun SDL_LoadBMP (file)
   (SDL_LoadBMP_RW (SDL_RWFROMFILE file "rb") 1))
 
@@ -151,6 +143,10 @@
 ;;;; end "SDL_cdrom.h"
 
 ;;;; "SDL_mouse.h"
+(cffi:defcfun ("SDL_WarpMouse" Warp-Mouse) :void
+  (x :unsigned-short)
+  (y :unsigned-short))
+
 (defun SDL_BUTTON (X)
   (ash 1
        (- X 1)))
