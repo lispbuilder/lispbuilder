@@ -57,7 +57,7 @@
 ;;  - "SDL_timer.h" 	   // Necessary functions are defined in sdlswig.i	// Complete for 1.2.11
 ;;  - "SDL_opengl.h" 	   // Use CL-OPENGL instead.  	      	 		// Complete for 1.2.11
 
-(in-package #:lispbuilder-sdl)
+(in-package #:lispbuilder-sdl-base)
 
 ;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature)
 ;; this handles anonymous enum types differently

@@ -2,9 +2,9 @@
 
 (in-package #:cl-user)
 
-(defpackage #:lispbuilder-sdl
+(defpackage #:lispbuilder-sdl-base
   (:use #:cl #:cffi)
-  (:nicknames #:sdl)
+  (:nicknames #:sbl)
   (:documentation "The basic wrapper package of `lispbuilder-sdl'.")
   (:export
 

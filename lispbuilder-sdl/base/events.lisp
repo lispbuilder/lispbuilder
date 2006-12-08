@@ -5,7 +5,7 @@
 ;; This file contains some useful functions for using SDL from Common lisp
 ;; using sdl.lisp (the CFFI wrapper)
 
-(in-package #:lispbuilder-sdl)
+(in-package #:lispbuilder-sdl-base)
 
 
 (defun new-event (&key (event-type 'SDL_Event))
@@ -543,7 +543,7 @@
      ,@forms))
 
 (defmacro with-events (args &rest events)
-  "(with-sdl-events
+  "(with-events
      (:activeevent (:gain gain :state state)
 		     t)
      (:keydown (:state state :scancode scancode :key key :mod mod :unicode unicode)
