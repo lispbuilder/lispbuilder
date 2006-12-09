@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-base)
+(in-package #:lispbuilder-sdl-wrapper)
 
 
 ;;; Probably do not need this.

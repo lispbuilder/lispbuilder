@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-base) 
+(in-package #:lispbuilder-sdl-wrapper) 
 
 ;;;; Implementation of SDL macros follows
 
@@ -30,6 +30,7 @@
             patch))
 
 (defun SDL-COMPILED-VERSION ()
+  "Returns the version number of the SDL dynamic library."
         (SDL-VERSION-NUM SDL-MAJOR-VERSION SDL-MINOR-VERSION SDL-PATCH-LEVEL))
 
 (defun SDL-VERSION-AT-LEAST (x y z)

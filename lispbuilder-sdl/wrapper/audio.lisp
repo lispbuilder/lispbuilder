@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-base)
+(in-package #:lispbuilder-sdl-wrapper)
 
 
 (cffi:defcstruct sdl-Audio-Spec

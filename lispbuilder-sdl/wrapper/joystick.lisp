@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-base)
+(in-package #:lispbuilder-sdl-wrapper)
 
 (cffi:defcfun ("SDL_NumJoysticks" SDL-Num-Joysticks) :int)
 
