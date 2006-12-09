@@ -1,4 +1,4 @@
-(in-package #:lispbuilder-sdl-base) 
+(in-package #:lispbuilder-sdl-wrapper) 
 
 (cl:defconstant SDL-MAX-TRACKS 99)
 

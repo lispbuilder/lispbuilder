@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-base)
+(in-package #:lispbuilder-sdl-wrapper)
 
 ;;; First, set the byte-order. This is probably not needed.
 (defconstant SDL-LIL-ENDIAN 1234)

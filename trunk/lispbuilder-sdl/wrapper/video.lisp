@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-base) 
+(in-package #:lispbuilder-sdl-wrapper) 
 
 (defbitfield hardware-flags
   (:hw-available  #x0001)
