@@ -14,7 +14,7 @@
     :licence "MIT"
     :depends-on (cffi)
     :components
-    ((:module "wrapper"
+    ((:module "cffi"
 	      :components
 	      ((:file "package")
 	       (:file "library")
