@@ -12,7 +12,7 @@
       (sdl::set-window width height :flags sdl::SDL_OPENGL)
       (sdl::set-framerate 60)
       (rm::with-init ()
-	(rm::with-rmpipe ((sdl::get-hwnd) width height) a-pipe
+	(rm::with-rmpipe ((sdl::get-native-window) width height) a-pipe
 	  (let ((root-node (rm::rmrootnode))
 		(obj-root (rm::new-node :opacity :opaque))
 		(obj-mesh (rm::new-node :opacity :opaque))
@@ -256,12 +256,12 @@
 	    (rm::set-default-scene root-node width height)
 
 	    (sdl::with-events
-	      (:quit t)
-	      (:keydown (state scancode key mod unicode)
+	      (:quit () t)
+	      (:keydown (:key key)
 			(cond
-			  ((sdl::is-key key :SDLK_ESCAPE)
+			  ((sdl:key= key :SDLK_ESCAPE)
 			   (sdl::push-quitevent))))
-	      (:mousemotion (state x y xrel yrel)
+	      (:mousemotion (:state state :x x :y y)
 			    (cond
 			      ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_LEFT) state) 1)
 			       (rm::arc root-node width height x y))
@@ -269,7 +269,7 @@
 			       (rm::dolly root-node width height y))
 			      ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_MIDDLE) state) 2)
 			       (rm::translate root-node width height x y))))
-	      (:mousebuttondown (button state x y)
+	      (:mousebuttondown (:button button :state state :x x :y y)
 				(cond
 				  ((equal button sdl::sdl_button_left)
 				   (rm::reset-arc root-node width height x y))
