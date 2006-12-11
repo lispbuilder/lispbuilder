@@ -48,7 +48,7 @@
 		     (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1))
 		 (incf cx step)
 		 (sdl:update-display))
-	  (:quit t)
+	  (:quit () t)
 	  (:mousebuttondown (:x x :y y)
 					; set the new center point
 			    (let* ((old-width (- x1 x0))
