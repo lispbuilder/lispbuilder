@@ -1,6 +1,7 @@
 ;;;; Demonstration/Test of using the OpenGl gl library
 ;;;; using CFFI for foreign function interfacing...
 ;;;; (C)2006 Luke Crook
+;;;; Updates by Justin Heyes-Jones
 ;;;; see COPYING for license
 
 ;;; The famous OpenGL gears example, by Brian Paul.
@@ -350,28 +351,22 @@
     
 (defun opengl-gears ()
   (sdl::with-init ()
-;;     (sdl::SDL_GL_SetAttribute (cffi:foreign-enum-value 'sdl::SDL_GLattr :SDL_GL_RED_SIZE) 5)
-;;     (sdl::SDL_GL_SetAttribute (cffi:foreign-enum-value 'sdl::SDL_GLattr :SDL_GL_GREEN_SIZE) 5)
-;;     (sdl::SDL_GL_SetAttribute (cffi:foreign-enum-value 'sdl::SDL_GLattr :SDL_GL_BLUE_SIZE) 5)
-;;     (sdl::SDL_GL_SetAttribute (cffi:foreign-enum-value 'sdl::SDL_GLattr :SDL_GL_DEPTH_SIZE) 16)
-;;     (sdl::SDL_GL_SetAttribute (cffi:foreign-enum-value 'sdl::SDL_GLattr :SDL_GL_DOUBLEBUFFER) 1)
     (let ((display (sdl::set-window *screen-width* *screen-height* :flags sdl::SDL_OPENGL)))
       (setup-opengl *screen-width* *screen-height*)    
       (create-display-lists)
       (sdl::with-events
-	(:quit t)
-	(:keydown (state scancode key mod unicode)
-		  (if (sdl::is-key key :SDLK_ESCAPE)
-		      (sdl::push-quitevent)))
-	(:mousemotion (state x y xrel yrel)
+	(:quit () t)
+	(:keydown (:state state :key key)
+		  (if (sdl:key= key :SDLK_ESCAPE)
+		      (sdl:push-quitevent)))
+	(:mousemotion (:state state :x-rel xrel :y-rel yrel)
 		      (cond
 			((eql state 1)
 			 (setf *view_rotx* (+ *view_rotx* xrel))
 			 (setf *view_roty* (+ *view_roty* yrel )))))
-	(:idle             
+	(:idle ()         
 	 (move-objects)
 	 (draw-screen))))))
-
 
 ;;; Some parameters to set while opengl-grears is running...
 ;;; (setf *timescale* 0.3)
