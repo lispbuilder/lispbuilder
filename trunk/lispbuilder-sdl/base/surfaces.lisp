@@ -12,33 +12,27 @@
   `(let (,@(when surface `(,var ,surface)))
      (unwind-protect 
 	  (progn (when (must-lock? ,var)
-		   (if (= (SDL_LockSurface ,surface) 0)
-		       ,@body
-		       (error "Cannot lock surface"))))
+		   (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
+		     (error "Cannot lock surface")))
+		 ,@body)
        (when (must-lock? ,var)
-         (SDL_UnlockSurface ,var)))))
+         (Sdl-Cffi::Sdl-Unlock-Surface ,var)))))
 
 ;; cl-sdl "cl-sdl.lisp"
-(defmacro with-possible-lock-and-update ((surface &key (check-lock-p t) (update-p nil) (template nil))
+(defmacro with-possible-lock-and-update ((surface &key (update-p nil) (template nil))
 					 &body body)
-  (let ((locked-p (gensym "LOCKED-P"))
-        (exit (gensym "EXIT"))
+  (let ((exit (gensym "EXIT"))
 	(result (gensym "RESULT")))
-    `(let ((,locked-p nil)
-	   (,result nil))
-      (block ,exit
-        (when ,check-lock-p
-          (when (must-lock? ,surface)
-            (when (< (sdl:SDL_LockSurface ,surface)
-                     0)
-              (return-from ,exit (values)))
-            (setf ,locked-p t)))
-        (setf ,result (progn ,@body))
-        (when ,locked-p
-          (SDL_UnlockSurface ,surface))
-        (when ,update-p
-          (update-surface ,surface ,template))
-	,result))))
+    `(let ((,result nil))
+       (when (must-lock? ,surface)
+	 (when (/= (sdl-cffi::sdl-Lock-Surface ,surface) 0)
+	   (error "Cannot lock surface")))
+       (setf ,result (progn ,@body))
+       (when (must-lock? ,surface)
+	 (Sdl-Cffi::Sdl-Unlock-Surface ,surface))
+       (when ,update-p
+	 (update-surface ,surface :template ,template))
+       ,result)))
 
 (defmacro with-surface ((surface-ptr &optional (free-p t)) &body body)
   "Don't use this for managing the display surface."
@@ -49,7 +43,7 @@
 	 (when (is-valid-ptr ,surface-ptr)
 	   (setf ,body-value (progn ,@body))
 	   (when ,free-p
-	     (Free-Surface ,surface-ptr)))
+	     (sdl-cffi::sdl-Free-Surface ,surface-ptr)))
 	 ,body-value))))
 
 ;; Taken from CFFI, with-foreign-objects in types.lisp
@@ -76,16 +70,16 @@
 	     (setf ,body-value (progn ,@body))
 	     ,@(loop for binding in bindings
 		  collect `(if (is-valid-ptr ,(first binding))
-			       (Free-Surface ,(first binding)))))
+			       (sdl-cffi::sdl-Free-Surface ,(first binding)))))
 	   ,body-value))))
 
 (defun clear-colorkey (surface rel-accel)
   "Removes the key color from the given surface."
   (when (is-valid-ptr surface)
     (if rel-accel
-	(setf rel-accel SDL_RLEACCEL)
+	(setf rel-accel sdl-cffi::SDL-RLE-ACCEL)
 	(setf rel-accel 0))
-    (SDL_SetColorKey surface rel-accel 0)))
+    (sdl-cffi::SDL-Set-Color-Key surface rel-accel 0)))
 
 (defun get-surface-rect (surface rectangle)
   (setf (rect-x rectangle) 0
@@ -102,14 +96,14 @@
   ;; LJC: Freeing surface is now optional.
   (when (is-valid-ptr surface)
     (if key-color
-	(set-colorkey surface key-color))
+	(set-color-key surface key-color))
     (if alpha-value
 	(set-alpha surface alpha-value))
     (let ((display-surface (if alpha-value
-			       (SDL_DisplayFormatAlpha surface)
-			       (SDL_DisplayFormat surface))))
+			       (sdl-cffi::SDL-Display-Format-Alpha surface)
+			       (sdl-cffi::SDL-Display-Format surface))))
       (if free-p
-	  (Free-Surface surface))
+	  (sdl-cffi::sdl-Free-Surface surface))
       (if (is-valid-ptr display-surface)
 	  display-surface
 	  nil))))
@@ -127,18 +121,18 @@
   "create a surface compatible with the supplied :surface, if provided."
   (let ((surf nil) (flags nil))
     (if key-color
-	(push SDL_SRCCOLORKEY flags))
+	(push sdl-cffi::SDL-SRC-COLOR-KEY flags))
     (if alpha-value
-	(push SDL_SRCALPHA flags))
+	(push sdl-cffi::SDL-SRC-ALPHA flags))
     (if accel
-	(push SDL_RLEACCEL flags))
+	(push sdl-cffi::SDL-RLE-ACCEL flags))
     (case type
-      (:sw (push SDL_SWSURFACE flags))
-      (:hw (push SDL_HWSURFACE flags)))
+      (:sw (push sdl-cffi::SDL-SW-SURFACE flags))
+      (:hw (push sdl-cffi::SDL-HW-SURFACE flags)))
     (if (is-valid-ptr surface)
-	(with-foreign-slots ((BitsPerPixel Rmask Gmask Bmask Amask) (pixel-format surface) SDL_PixelFormat)
-	    (setf surf (SDL_CreateRGBSurface (set-flags flags)
-					     width height BitsPerPixel Rmask Gmask Bmask Amask)))
+	(with-foreign-slots ((sdl-cffi::BitsPerPixel sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask) (pixel-format surface) sdl-cffi::SDL-Pixel-Format)
+	    (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
+					     width height sdl-cffi::BitsPerPixel sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
 	(let ((Rmask 0) (Gmask 0) (Bmask 0) (Amask 0))
 	  ;; Set masks according to endianess of machine
 	  ;; Little-endian (X86)
@@ -154,9 +148,9 @@
 	  (if (and pixels pitch)
 	      ;; Pixels not yet supported.
 	      nil
-	      (setf surf (SDL_CreateRGBSurface (set-flags flags) width height bpp Rmask Gmask Bmask Amask)))))
+	      (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags) width height bpp Rmask Gmask Bmask Amask)))))
     (if key-color
-	(set-colorkey surf key-color :accel accel))
+	(set-color-key surf key-color :accel accel))
     (if alpha-value
 	(set-alpha surf alpha-value :accel accel))
     surf))
@@ -169,69 +163,70 @@
    Returns
     T if the surface can be locked.
     NIL if the surface cannot be locked."
-  (when (is-valid-ptr surface)
-    (or (/= 0 (cffi:foreign-slot-value surface 'sdl_surface 'offset))
-	(/= 0 (logand (cffi:foreign-slot-value surface 'sdl_surface 'flags)
-		      (logior SDL_HWSURFACE
-			      SDL_ASYNCBLIT
-			      SDL_RLEACCEL))))))
+  (or (/= 0 (cffi:foreign-slot-value surface 'sdl-cffi::sdl-surface 'sdl-cffi::offset))
+      (/= 0 (logand (cffi:foreign-slot-value surface 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+		    (logior sdl-cffi::SDL-HW-SURFACE
+			    sdl-cffi::SDL-ASYNC-BLIT
+			    sdl-cffi::SDL-RLE-ACCEL)))))
 
 (defun pixel-format (surface)
   "Returns the pixel format of a surface."
-  (cffi:foreign-slot-value surface 'sdl:SDL_Surface 'sdl:format))
+  (cffi:foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::format))
 
 (defun set-alpha (surface alpha-value &key (accel nil))
   "Sets the alpha value for the given surface."
   (when (is-valid-ptr surface)
     (if accel
-	(setf accel SDL_RLEACCEL)
+	(setf accel sdl-cffi::SDL-RLE-ACCEL)
 	(setf accel 0))
     (if (null alpha-value)
-	(SDL_SetAlpha surface accel 0)
-	(SDL_SetAlpha surface (logior SDL_SRCALPHA accel) (clamp (to-int alpha-value) 0 255)))
+	(sdl-cffi::SDL-Set-Alpha surface accel 0)
+	(sdl-cffi::SDL-Set-Alpha surface (logior sdl-cffi::SDL-SRC-ALPHA accel) (clamp (to-int alpha-value) 0 255)))
     surface))
 
-(defun set-colorkey (surface color &key (accel nil))
+(defun set-color-key (surface color &key (accel nil))
   "Sets the key color for the given surface. The key color is made transparent."
   (when (is-valid-ptr surface)
     (if (null color)
-	(SDL_SetColorKey surface 0 0)
+	(sdl-cffi::SDL-Set-Color-Key surface 0 0)
 	(progn
 	  (if accel
-	      (setf accel SDL_RLEACCEL)
+	      (setf accel sdl-cffi::SDL-RLE-ACCEL)
 	      (setf accel 0))
-	  (SDL_SetColorKey surface (logior SDL_SRCCOLORKEY accel) color)))
+	  (sdl-cffi::SDL-Set-Color-Key surface (logior sdl-cffi::SDL-SRC-COLOR-KEY accel) color)))
     surface))
 
 (defun surf-w (surface)
   "return the width of the SDL_surface."
-  (cffi:foreign-slot-value surface 'SDL_Surface 'w))
+  (cffi:foreign-slot-value surface 'sdl-cffi::Sdl-Surface 'sdl-cffi::w))
 
 (defun surf-h (surface)
-  "return the height of the SDL_Surface." 
-  (cffi:foreign-slot-value surface 'SDL_Surface 'h))
+  "return the height of the Sdl-Surface." 
+  (cffi:foreign-slot-value surface 'sdl-cffi::Sdl-Surface 'sdl-cffi::h))
 
-(defun update-surface (surface &optional template number)
+(defun update-surface (surface &key template number x y w h)
   "Updates the screen using the keyword co-ordinates in the Vector, :template.
    All co-ordinates default to 0, updating the entire screen."
-  (if (is-valid-ptr template)
-      (if number
-	  (sdl_UpdateRects surface number template)
-	  (SDL_UpdateRect surface 
-			  (rect-x template)
-			  (rect-y template)
-			  (rect-w template)
-			  (rect-h template)))
-      (SDL_UpdateRect surface 0 0 0 0))
+  (if x
+      (sdl-cffi::SDL-Update-Rect surface x y w h)
+      (if (is-valid-ptr template)
+	  (if number
+	      (sdl-cffi::sdl-Update-Rects surface number template)
+	      (sdl-cffi::SDL-Update-Rect surface 
+					 (rect-x template)
+					 (rect-y template)
+					 (rect-w template)
+					 (rect-h template)))
+	  (sdl-cffi::SDL-Update-Rect surface 0 0 0 0)))
   surface)
 
 (defun blit-surface (src dst src-rect dst-rect &key (update-p nil))
-  "Blits the entire SRC SDL_Surface to the DST SDL_Surface using SDL_BlitSurface.
+  "Blits the entire SRC Sdl-Surface to the DST Sdl-Surface using SDL_BlitSurface.
    use :src-rect SDL_Rect to blit only a portion of the SRC to the DST surface
    Use :dst-rect SDL_Rect to position the SRC on the DST surface."
-  (sdl::Upper-Blit src src-rect dst dst-rect)
+  (sdl-cffi::sdl-Upper-Blit src src-rect dst dst-rect)
   (when update-p
-    (update-surface dst dst-rect))
+    (update-surface dst :template dst-rect))
   dst-rect)
 
 (defun fill-surface (surface color &key template (update-p nil) (clipping-p t))
@@ -246,8 +241,8 @@
 	       (x2 (+ x w)) (y2 (+ y h)))
 	  (setf (rect-w template) (check-bounds 0 (surf-w surface) x x2)
 		(rect-h template) (check-bounds 0 (surf-h surface) y y2)))))
-  (Fill-Rect surface template color)
+  (sdl-cffi::sdl-Fill-Rect surface template color)
   (when update-p
-    (update-surface surface template))
+    (update-surface surface :template template))
   template)
 

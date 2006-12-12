@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-wrapper) 
+(in-package #:lispbuilder-sdl-cffi) 
 
 (cffi:defcenum SDL-Key
 	(:SDL-KEY-UNKNOWN 0)

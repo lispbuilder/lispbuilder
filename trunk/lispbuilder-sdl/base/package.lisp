@@ -4,7 +4,7 @@
 
 (defpackage #:lispbuilder-sdl-base
   (:use #:cl #:cffi)
-  (:nicknames #:sbl)
+  (:nicknames #:sdl-base #:sbl)
   (:documentation "The basic wrapper package of `lispbuilder-sdl'.")
   (:export
 

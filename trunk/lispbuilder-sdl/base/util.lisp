@@ -17,19 +17,25 @@
 
 ;;; w
 (defmacro with-init (init-flags &body body)
-  "Attempts to initialize the SDL subsystems using SDL_Init.
-   Automatically shuts down the SDL subsystems using SDL_Quit upon normal application termination or
+  "Attempts to initialize the SDL subsystems using SDL-Init.
+   Automatically shuts down the SDL subsystems using SDL-Quit upon normal application termination or
    if any fatal error occurs within &body.
-   init-flags can be any combination of SDL_INIT_TIMER, SDL_INIT_AUDIO, SDL_INIT_VIDEO, SDL_INIT_CDROM,
-   SDL_INIT_JOYSTICK, SDL_INIT_NOPARACHUTE, SDL_INIT_EVENTTHREAD or SDL_INIT_EVERYTHING."
+   init-flags can be any combination of SDL-INIT-TIMER, SDL-INIT-AUDIO, SDL-INIT-VIDEO, SDL-INIT-CDROM,
+   SDL-INIT-JOYSTICK, SDL-INIT-NOPARACHUTE, SDL-INIT-EVENTTHREAD or SDL-INIT-EVERYTHING."
   `(block nil
     (unwind-protect
 	 (when (init-sdl :flags (list ,@init-flags))
 	   ,@body)
-      (SDL_Quit))))
+      (sdl-cffi::SDL-Quit))))
 
-(defun init-sdl (&key (flags SDL_INIT_VIDEO))
-  (if (equal 0 (SDL_Init (set-flags flags)))
+(defun init-sdl (&key (flags sdl-cffi::SDL-INIT-VIDEO))
+  (if (equal 0 (sdl-cffi::SDL-Init (set-flags flags)))
+      t
+      nil))
+
+(defun was-init? (&key (flags sdl-cffi::SDL-INIT-VIDEO))
+  (if (equal (set-flags flags)
+	     (sdl-cffi::sdl-was-init (set-flags flags)))
       t
       nil))
 
@@ -39,7 +45,7 @@
 (defun modifier= (mod key)
   "Returns t if the keypress modifier 'mod' is equal to the specified 'key'.
    (cffi:foreign-enum-value 'SDLMod key)."
-  (equal mod (cffi:foreign-enum-value 'SDLMod key)))
+  (equal mod (cffi:foreign-enum-value 'sdl-cffi::SDL-Mod key)))
 
 ;; cl-sdl "util.lisp"
 (declaim (inline clamp))
@@ -80,3 +86,26 @@
 		     (first keyword-args))))
 	(apply #'logior keywords))
       (apply #'logior keyword-args)))
+
+(declaim (inline to-int))
+(defun to-int (num)
+  (truncate (+ 0.5 num)))
+
+(defun vec-to-int (vec)
+  "vec-to-int will create a new VECTOR of the same length as VEC, but the contents are converted to integers.
+   Returns VEC if the contents are not of type float."
+  (if (vectorp vec)
+      (let ((require-conversion nil)
+	    (length (length vec)))
+	(block convert
+	  (dotimes (i length)
+	    (when (floatp (svref vec i))
+	      (setf require-conversion t)
+	      (return-from convert))))
+	(if require-conversion
+	    (let ((new-vec (make-array (length vec) :initial-element 0)))
+	      (dotimes (i length)
+		(setf (svref new-vec i) (to-int (svref vec i))))
+	      new-vec)
+	    vec))
+      nil))

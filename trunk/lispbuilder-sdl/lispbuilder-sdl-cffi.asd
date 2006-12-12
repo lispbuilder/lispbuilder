@@ -1,13 +1,13 @@
 ;;; -*- lisp -*-
 
-(defpackage #:lispbuilder-sdl-wrapper-system
+(defpackage #:lispbuilder-sdl-cffi-system
   (:use #:cl #:asdf))
-(in-package #:lispbuilder-sdl-wrapper-system)
+(in-package #:lispbuilder-sdl-cffi-system)
 
-(defsystem lispbuilder-sdl-wrapper
-    :description "lispbuilder-sdl-wrapper: Basic Lisp wrapper for the SDL library."
+(defsystem lispbuilder-sdl-cffi
+    :description "lispbuilder-sdl-cffi: Basic Lisp wrapper for the SDL library."
     :long-description
-    "The lispbuilder-sdl-wrapper package uses CFFI to provide a very low-level set of Lisp bindings to the SDL library."
+    "The lispbuilder-sdl-cffi package uses CFFI to provide a very low-level set of Lisp bindings to the SDL library."
     :version "0.8.0"
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"

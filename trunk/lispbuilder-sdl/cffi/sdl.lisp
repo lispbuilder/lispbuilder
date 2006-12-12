@@ -57,7 +57,7 @@
 ;;  - "SDL_timer.h" 	   // Necessary functions are defined in sdlswig.i	// Complete for 1.2.11
 ;;  - "SDL_opengl.h" 	   // Use CL-OPENGL instead.  	      	 		// Complete for 1.2.11
 
-(in-package #:lispbuilder-sdl-wrapper)
+(in-package #:lispbuilder-sdl-cffi)
 
 (cl:defconstant SDL-INIT-TIMER #x00000001)
 (cl:defconstant SDL-INIT-AUDIO #x00000010)

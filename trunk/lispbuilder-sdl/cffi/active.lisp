@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-wrapper)
+(in-package #:lispbuilder-sdl-cffi)
 
 (cl:defconstant SDL-APP-MOUSE-FOCUS #x01)
 

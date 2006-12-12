@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-wrapper) 
+(in-package #:lispbuilder-sdl-cffi) 
 
 (cffi:defcstruct SDL-Cursor
 	(area :pointer)
@@ -58,8 +58,7 @@
   (y :unsigned-short))
 
 (defun SDL-BUTTON (X)
-  (ash 1
-       (- X 1)))
+  (1<< (- X 1)))
 
 (defun SDL-BUTTON-LMASK ()
   (SDL-BUTTON SDL-BUTTON-LEFT))

@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-wrapper)
+(in-package #:lispbuilder-sdl-cffi)
 
 ;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature)
 ;; this handles anonymous enum types differently
