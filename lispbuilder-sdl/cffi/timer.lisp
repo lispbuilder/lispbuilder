@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-wrapper)
+(in-package #:lispbuilder-sdl-cffi)
 
 ;;; These are really the only functions we require from "SDL_timer.h"
 ;;/* Get the number of milliseconds since the SDL library initialization.

@@ -3,7 +3,7 @@
 ;; (C)2006 Luke Crook <luke@balooga.com>
 ;; see COPYING for license
 
-(in-package #:lispbuilder-sdl-wrapper)
+(in-package #:lispbuilder-sdl-cffi)
 
 (defctype sdl-surface :pointer)
 (defctype sdl-rectangle :pointer)

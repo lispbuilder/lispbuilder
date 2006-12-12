@@ -10,7 +10,7 @@
 
 
 (defmacro with-display ((surface-name width height
-				      &key (flags SDL_SWSURFACE) (bpp 0)
+				      &key (flags sdl-cffi::SDL-SW-SURFACE) (bpp 0)
 				      (title-caption nil) (icon-caption nil))
 			&body body)
   (let ((body-value (gensym "body-value-")))
@@ -24,26 +24,26 @@
 
 (defun display-cursor (toggle)
   (if toggle
-      (SDL_ShowCursor sdl_enable)
-      (SDL_ShowCursor sdl_disable)))
+      (sdl-cffi::SDL-Show-Cursor sdl-cffi::sdl-enable)
+      (sdl-cffi::SDL-Show-Cursor sdl-cffi::sdl-disable)))
 
 (defun get-native-window ()
-  (let ((wm-info (cffi:foreign-alloc 'sdl::SDL_SysWMinfo)))
+  (let ((wm-info (cffi:foreign-alloc 'sdl-cffi::SDL-Sys-WM-info)))
       ;; Set the wm-info structure to the current SDL version.
-      (sdl::sdl_version (cffi:foreign-slot-value wm-info 'sdl::SDL_SysWMinfo 'sdl::version))
-      (sdl::SDL_GetWMInfo wm-info)
+      (sdl-cffi::sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
+      (sdl-cffi::SDL-Get-WM-Info wm-info)
       ;; For Windows
-      #+win32(cffi:foreign-slot-pointer wm-info 'sdl::SDL_SysWMinfo 'sdl::window)
+      #+win32(cffi:foreign-slot-pointer wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
       ;; For X
       #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
-											      'SDL_SysWMinfo
-											      'sdl::info)
-								   'sdl::SDL_SysWMinfo_info
-								   'sdl::x11)
-					'sdl::SDL_SysWMinfo_info_x11
-					'sdl::window)))
+											      'sdl-cffi::SDL-Sys-WM-info
+											      'sdl-cffi::info)
+								   'sdl-cffi::SDL-Sys-WM-info-info
+								   'sdl-cffi::x11)
+					'sdl-cffi::SDL-Sys-WM-info-info-x11
+					'sdl-cffi::window)))
 
-(defun get-video-info (&key (video-info (SDL_GetVideoInfo)) (info :video-mem))
+(defun get-video-info (&key (video-info (sdl-cffi::SDL-Get-Video-Info)) (info :video-mem))
   "Returns information about the video hardware.
   GET-VIDEO-INFO :video-info <pointer to a SDL_VIDEOINFO structure>
                  :info (one of :hw-available | :wm-available |
@@ -61,15 +61,15 @@
   (if (is-valid-ptr video-info)
       (case info
 	(:current-w
-	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'current_w))
+	 (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::current-w))
 	(:current-h
-	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'current_h))
+	 (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::current-h))
 	(:video-mem
-	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'video_mem))
+	 (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::video-mem))
 	(:pixel-format
-	 (cffi:foreign-slot-value video-info 'sdl_videoinfo 'vfmt))
+	 (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::vfmt))
 	(otherwise
-	 (member info (cffi:foreign-slot-value video-info 'sdl_videoinfo 'flags))))
+	 (member info (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::flags))))
       nil))
 
 
@@ -79,7 +79,7 @@
    Returns NIL if there are no dimensions available for a particular format, 
    or T if any dimension is okay for the given format."
   (let ((modes nil)
-        (listmodes (sdl::SDL_ListModes (cffi:null-pointer) (set-flags flags))))
+        (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (set-flags flags))))
     (cond
       ((cffi:null-pointer-p listmodes)
        nil)
@@ -87,35 +87,35 @@
        t)
       (t
        (do ((i 0 (1+ i)))
-	   ((cffi:null-pointer-p (cffi:mem-ref (cffi:mem-aref listmodes 'sdl:sdl_rect i) :pointer)) (reverse modes))
-	 (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes 'sdl:sdl_rect i) :pointer)))
-	   (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl:sdl_rect 'sdl:w)
-				     (cffi:foreign-slot-value rect 'sdl:sdl_rect 'sdl:h))
+	   ((cffi:null-pointer-p (cffi:mem-ref (cffi:mem-aref listmodes 'sdl-cffi::sdl-rect i) :pointer)) (reverse modes))
+	 (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes 'sdl-cffi::sdl-rect i) :pointer)))
+	   (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w)
+				     (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
 			     modes))))))))
 
 
 (defun query-cursor ()
-  (case (SDL_ShowCursor sdl_query)
-    (sdl_disable nil)
-    (sdl_enable t)))
+  (case (sdl-cffi::SDL-Show-Cursor sdl-cffi::sdl-query)
+    (sdl-cffi::sdl-disable nil)
+    (sdl-cffi::sdl-enable t)))
 
 
 (defun set-screen (width height
-		   &key (bpp 0) (flags '(SDL_HWSURFACE SDL_FULLSCREEN SDL_HWACCEL)) title-caption icon-caption)
+		   &key (bpp 0) (flags '(sdl-cffi::SDL-HW-SURFACE sdl-cffi::SDL-FULL-SCREEN sdl-cffi::SDL-HW-ACCEL)) title-caption icon-caption)
   "Will attempt to create a full screen, hardware accelerated window using SDL_SetVideoMode.
    Overriding :flags will allow any type of window to be created.
    Returns
     a new SDL_Surface if successful.
     NIL if failed."
-  (let ((surface (SDL_SetVideoMode width height bpp (set-flags flags))))
+  (let ((surface (sdl-cffi::SDL-Set-Video-Mode width height bpp (set-flags flags))))
     (if (is-valid-ptr surface)
 	(progn
 	  (if (or title-caption icon-caption) 
-	      (WM-Set-Caption title-caption icon-caption))
+	      (sdl-cffi::sdl-WM-Set-Caption title-caption icon-caption))
 	  surface)
 	nil)))
 
-(defun set-window (width height &key (bpp 0) (flags SDL_SWSURFACE) title-caption icon-caption)
+(defun set-window (width height &key (bpp 0) (flags sdl-cffi::SDL-SW-SURFACE) title-caption icon-caption)
   "Will attempt to create a window using software surfaces using SDL_SetVideoMode.
    Overriding :flags will allow any type of window to be created.
    Returns
@@ -124,7 +124,7 @@
   (set-screen width height :bpp bpp :flags flags :title-caption title-caption :icon-caption icon-caption))
 
 (defun update-display (surface)
-  (sdl_flip surface))
+  (sdl-cffi::sdl-flip surface))
 
 ;; cl-sdl "cl-sdl.lisp"
 (defun clear-display (surface color)
@@ -135,7 +135,7 @@
   (let ((function-return-val nil)
 	(string-return-val nil))
     (setf string-return-val (with-foreign-pointer-as-string (str 100 str-size)
-			      (setf function-return-val (videodrivername str str-size))))
+			      (setf function-return-val (sdl-cffi::sdl-video-driver-name str str-size))))
     (if (cffi:null-pointer-p function-return-val)
 	nil
 	string-return-val)))

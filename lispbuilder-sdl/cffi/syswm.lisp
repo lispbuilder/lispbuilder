@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-wrapper) 
+(in-package #:lispbuilder-sdl-cffi) 
 
 (cffi:defcstruct HWND__
 	(unused :int))
@@ -49,6 +49,6 @@
 	(subsystem SDL-SYS-WM-TYPE)
 	(info SDL-Sys-WM-info-info))
 
-(defcfun ("SDL-GetWMInfo" SDL-Get-WM-Info) :int
+(defcfun ("SDL_GetWMInfo" SDL-Get-WM-Info) :int
   (info :pointer))
 

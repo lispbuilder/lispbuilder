@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-wrapper) 
+(in-package #:lispbuilder-sdl-cffi) 
 
 (defbitfield hardware-flags
   (:hw-available  #x0001)
@@ -39,7 +39,7 @@
 	(ncolors :int)
 	(colors :pointer))
 
-(cffi:defcstruct SDL-PixelFormat
+(cffi:defcstruct SDL-Pixel-Format
 	(palette :pointer)
 	(BitsPerPixel :unsigned-char)
 	(BytesPerPixel :unsigned-char)
@@ -284,11 +284,11 @@
 (cffi:defcfun ("SDL_UnlockSurface" SDL-Unlock-Surface) :void
   (surface :pointer))
 
-(cffi:defcfun ("SDL_LoadBMP-RW" SDL-Load-BMP-RW) :pointer
+(cffi:defcfun ("SDL_LoadBMP_RW" SDL-Load-BMP-RW) :pointer
   (src :pointer)
   (freesrc :int))
 
-(cffi:defcfun ("SDL_SaveBMP-RW" SDL-Save-BMP-RW) :int
+(cffi:defcfun ("SDL_SaveBMP_RW" SDL-Save-BMP-RW) :int
   (surface :pointer)
   (dst :pointer)
   (freedst :int))

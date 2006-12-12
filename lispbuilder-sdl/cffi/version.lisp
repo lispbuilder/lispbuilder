@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-wrapper) 
+(in-package #:lispbuilder-sdl-cffi) 
 
 ;;;; Implementation of SDL macros follows
 

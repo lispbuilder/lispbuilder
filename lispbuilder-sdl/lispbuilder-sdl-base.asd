@@ -12,13 +12,14 @@
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl-wrapper)
+    :depends-on (cffi lispbuilder-sdl-cffi)
     :components
     ((:module "base"
 	      :components
 	      ((:file "package")
 	       (:file "util")
 	       (:file "events")
+	       (:file "pixel")
 	       (:file "rectangle")
 	       (:file "surfaces")
 	       (:file "video")

@@ -1,4 +1,4 @@
-(in-package #:lispbuilder-sdl-wrapper) 
+(in-package #:lispbuilder-sdl-cffi) 
 
 (cffi:defcenum Sdl-Event-Type
 	(:SDL-NO-EVENT 0)
@@ -160,7 +160,7 @@
   (state :int))
 
 (defun SDL-EVENT-MASK (X)
-  (ash 1 X ))
+  (1<< X))
 
 (defun SDL-ACTIVE-EVENT-MASK ()
   (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-ACTIVE-EVENT)))
