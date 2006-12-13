@@ -21,6 +21,19 @@
 	     (Sdl-Cffi::Sdl-Unlock-Surface ,var))))
       (error "VAR must be a symbol or variable, not a function.")))
 
+(defun return-with-surfaces (bindings body)
+  (if bindings
+      `(with-locked-surface (,@(car bindings))
+	 ,(return-with-surfaces (cdr bindings) body))
+      `(progn ,@body)))
+
+;; Taken from CFFI, with-foreign-objects in types.lisp
+(defmacro with-locked-surfaces (bindings &rest body)
+  (if bindings
+      (return-with-surfaces bindings body)))
+
+
+
 ;; cl-sdl "cl-sdl.lisp"
 (defmacro with-possible-lock-and-update ((var &key surface template)
 					 &body body)
