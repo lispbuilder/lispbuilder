@@ -2,16 +2,23 @@
 (in-package #:lispbuilder-sdl-base)
 
 (defmacro with-pixels ((var &optional surface) &body body)
-  (let ((fn-write-pixel (gensym "fn-write-pixel-")) (fn-read-pixel (gensym "fn-read-pixel-")))
-    `(let (,@(unless var `(,var ,surface)))
-       (let ((,fn-write-pixel (generate-write-pixel ,var))
-	     (,fn-read-pixel (generate-read-pixel ,var)))
-	 (labels ((write-pixel (x y color)
-		    (funcall ,fn-write-pixel x y color))
-		  (read-pixel (x y)
-		    (funcall ,fn-read-pixel x y)))
-	   (with-locked-surface (,var)
-	     ,@body))))))
+  (let ((fn-write-pixel (gensym "fn-write-pixel-"))
+	(fn-read-pixel (gensym "fn-read-pixel-")))
+    (if (or surface (atom var))
+	`(let (,@(unless var `(,var ,surface)))
+	   (let ((,fn-write-pixel (generate-write-pixel ,var))
+		 (,fn-read-pixel (generate-read-pixel ,var)))
+	     (labels ((,(intern (string-upcase (format nil "~A.write-pixel" var))) (x y color)
+			(funcall ,fn-write-pixel x y color))
+		      (,(intern (string-upcase (format nil "~A.read-pixel" var))) (x y)
+			(funcall ,fn-read-pixel x y))
+		      (write-pixel (x y color)
+			(funcall ,fn-write-pixel x y color))
+		      (read-pixel (x y)
+			(funcall ,fn-read-pixel x y)))
+	       (with-locked-surface (,var)
+		 ,@body))))
+	(error "Var must be a symbol or variable, not a function."))))
 
 (defun write-pixel (x y color)
   (declare (ignore x y color))
@@ -108,6 +115,35 @@
       ((= bpp 4) 
        (setf (mem-aref pixel-address :unsigned-int (/ offset 4)) color))))
   (values x y))
+
+(defun get-pixel (surface x y)
+  "Get the pixel at (x, y) as a Uint32 color value
+   NOTE: The surface must be locked before calling this.
+   Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
+  (let* ((format (pixel-format surface))
+	 (bpp (foreign-slot-value format 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel))
+	 (offset (+ (* y (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch))
+		    (* x bpp)))
+	 (pixel-address (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels)))
+    (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char) (a :unsigned-char))
+      (sdl-cffi::SDL-Get-RGBA (cond
+				((= bpp 1) 
+				 (mem-aref pixel-address :unsigned-char offset))
+				((= bpp 2) 
+				 (mem-aref pixel-address :unsigned-short (/ offset 2)))
+				((= bpp 3) 
+					;	 (if (eq SDL_BYTEORDER SDL_BIG_ENDIAN) ; TODO
+				 (error "3 byte per pixel surfaces not supported yet"))
+				((= bpp 4) 
+				 (mem-aref pixel-address :unsigned-int (/ offset 4))))
+			      format
+			      r g b a)
+      (sdl-cffi::SDL-Map-RGBA format 
+			      (mem-aref r :unsigned-char)
+			      (mem-aref g :unsigned-char)
+			      (mem-aref b :unsigned-char)
+			      (mem-aref a :unsigned-char)))))
+
 
 (defun map-color (surface r g b &optional a)
   (if a

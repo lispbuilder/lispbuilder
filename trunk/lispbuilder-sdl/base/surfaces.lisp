@@ -8,70 +8,69 @@
 (in-package #:lispbuilder-sdl-base)
 
 ;; cl-sdl "sdl-ext.lisp"
-(defmacro with-locked-surface ((var &optional surface) &body body)
-  `(let (,@(when surface `(,var ,surface)))
-     (unwind-protect 
-	  (progn (when (must-lock? ,var)
-		   (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
-		     (error "Cannot lock surface")))
-		 ,@body)
-       (when (must-lock? ,var)
-         (Sdl-Cffi::Sdl-Unlock-Surface ,var)))))
+(defmacro with-locked-surface ((var &optional surface)
+			       &body body)
+  (if (or surface (atom var))
+      `(let (,@(when surface `(,var ,surface)))
+	 (unwind-protect 
+	      (progn (when (must-lock? ,var)
+		       (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
+			 (error "Cannot lock surface")))
+		     ,@body)
+	   (when (must-lock? ,var)
+	     (Sdl-Cffi::Sdl-Unlock-Surface ,var))))
+      (error "VAR must be a symbol or variable, not a function.")))
 
 ;; cl-sdl "cl-sdl.lisp"
-(defmacro with-possible-lock-and-update ((surface &key (update-p nil) (template nil))
+(defmacro with-possible-lock-and-update ((var &key surface template)
 					 &body body)
-  (let ((exit (gensym "EXIT"))
-	(result (gensym "RESULT")))
-    `(let ((,result nil))
-       (when (must-lock? ,surface)
-	 (when (/= (sdl-cffi::sdl-Lock-Surface ,surface) 0)
-	   (error "Cannot lock surface")))
-       (setf ,result (progn ,@body))
-       (when (must-lock? ,surface)
-	 (Sdl-Cffi::Sdl-Unlock-Surface ,surface))
-       (when ,update-p
-	 (update-surface ,surface :template ,template))
-       ,result)))
+  (let ((result (gensym "result-")))
+    (if (or surface (atom var))
+	`(let ((,result nil)
+	       (,@(when surface `(,var ,surface))))
+	   (when (must-lock? ,var)
+	     (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
+	       (error "Cannot lock surface")))
+	   (setf ,result (progn ,@body))
+	   (when (must-lock? ,var)
+	     (Sdl-Cffi::Sdl-Unlock-Surface ,var))
+	   (when ,template
+	     (update-surface ,var :template ,template))
+	   ,result)
+	(error "VAR must be a symbol or variable, not a function."))))
 
-(defmacro with-surface ((surface-ptr &optional (free-p t)) &body body)
+(defmacro with-surface ((var &optional surface (free-p t))
+			&body body)
   "Don't use this for managing the display surface."
-  (let ((body-value (gensym "body-value")))
-    `(symbol-macrolet ((w (surf-w ,surface-ptr))
-		       (h (surf-h ,surface-ptr)))
-       (let ((,body-value nil))
-	 (when (is-valid-ptr ,surface-ptr)
-	   (setf ,body-value (progn ,@body))
+  (let ((body-value (gensym "body-value-")))
+    (if (or surface (atom var))
+	`(let ((,body-value nil)
+	       (,@(when surface `(,var ,surface))))
+	   (symbol-macrolet ((,(intern (string-upcase (format nil "~A.w" var))) (surf-w ,var))
+			     (,(intern (string-upcase (format nil "~A.h" var))) (surf-h ,var)))
+	     (setf ,body-value (progn ,@body)))
 	   (when ,free-p
-	     (sdl-cffi::sdl-Free-Surface ,surface-ptr)))
-	 ,body-value))))
+	     (sdl-cffi::sdl-Free-Surface ,var))
+	   ,body-value)
+	(error "VAR must be a symbol or variable, not a function."))))
+
+(defmacro with-surface-slots ((var &optional surface)
+			      &body body)
+  "Don't use this for managing the display surface."
+  `(with-surface (,var ,surface nil)
+     ,@body))
+
+(defun return-with-surface (bindings body)
+  (if bindings
+      `(with-surface (,@(car bindings))
+	 ,(return-with-surface (cdr bindings) body))
+      `(progn ,@body)))
 
 ;; Taken from CFFI, with-foreign-objects in types.lisp
 (defmacro with-surfaces (bindings &rest body)
   (if bindings
-      (let ((body-value (gensym "body-value")))
-	`(let ((,body-value nil)
-	       ,@(loop for binding in bindings
-		       collect `(,(first binding) ,(second binding))))
-	  (when (and ,@(loop for binding in bindings
-			     collect `(is-valid-ptr ,(first binding))))
-	    (setf ,body-value (progn ,@body)))
-	  ,body-value))))
+      (return-with-surface bindings body)))
 
-;;;This does not work!!!!
-(defmacro with-surfaces-free (bindings &rest body)
-  (if bindings
-      (let ((body-value (gensym "body-value")))
-	`(let ((,body-value nil)
-	       ,@(loop for binding in bindings
-		    collect `(,(first binding) ,(second binding))))
-	   (when (and ,@(loop for binding in bindings
-			   collect `(is-valid-ptr ,(first binding))))
-	     (setf ,body-value (progn ,@body))
-	     ,@(loop for binding in bindings
-		  collect `(if (is-valid-ptr ,(first binding))
-			       (sdl-cffi::sdl-Free-Surface ,(first binding)))))
-	   ,body-value))))
 
 (defun clear-colorkey (surface rel-accel)
   "Removes the key color from the given surface."

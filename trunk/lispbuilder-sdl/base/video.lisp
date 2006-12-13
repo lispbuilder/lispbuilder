@@ -13,14 +13,12 @@
 				      &key (flags sdl-cffi::SDL-SW-SURFACE) (bpp 0)
 				      (title-caption nil) (icon-caption nil))
 			&body body)
-  (let ((body-value (gensym "body-value-")))
-    `(let ((,body-value nil)
-	   (,surface-name (set-window ,width ,height :bpp ,bpp :flags ,flags
-				      :title-caption ,title-caption :icon-caption ,icon-caption)))
-       (if (is-valid-ptr ,surface-name)
-	   (setf ,body-value (progn ,@body)))
-       ,body-value)))
-
+  `(with-surface (,surface-name (set-window ,width ,height
+					    :bpp ,bpp :flags ,flags
+					    :title-caption ,title-caption :icon-caption ,icon-caption)
+				nil)
+     (if (is-valid-ptr ,surface-name)
+	 (progn ,@body))))
 
 (defun display-cursor (toggle)
   (if toggle
