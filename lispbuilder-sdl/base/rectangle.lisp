@@ -11,23 +11,22 @@
 ;;; Rectangle
 
 (defmacro with-rectangle ((var &optional rectangle) &body body)
-  `(let (,@(if rectangle
-	       `(,var ,rectangle)
-	       `(,var (cffi:))))
-     (symbol-macrolet ((x (rect-x ,var))
-		       (y (rect-y ,var))
-		       (w (rect-w ,var))
-		       (h (rect-h ,var)))
-       (cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
-	 ,@body)))
-
-(defmacro with-rectangle ((var &optional rectangle) &body body)
-  `(symbol-macrolet ((x (rect-x ,var))
-		       (y (rect-y ,var))
-		       (w (rect-w ,var))
-		       (h (rect-h ,var)))
-     (cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
-       ,@body)))
+  (if (or rectangle (atom var))
+      `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (rect-x ,var))
+			 (,(intern (string-upcase (format nil "~A.y" var))) (rect-y ,var))
+			 (,(intern (string-upcase (format nil "~A.w" var))) (rect-w ,var))
+			 (,(intern (string-upcase (format nil "~A.h" var))) (rect-h ,var))
+			 (x (rect-x ,var))
+			 (y (rect-y ,var))
+			 (w (rect-w ,var))
+			 (h (rect-h ,var)))
+	 ,(if rectangle
+	      `(let ((,var ,rectangle))
+		 ,@body
+		 (cffi:foreign-free ,var))
+	      `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
+		 ,@body)))
+      (error "VAR must be a symbol or variable, not a function.")))
   
 (defun rect-x (rect)
   (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::x))
