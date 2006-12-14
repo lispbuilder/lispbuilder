@@ -32,26 +32,14 @@
   (if bindings
       (return-with-surfaces bindings body)))
 
-
-
-;; cl-sdl "cl-sdl.lisp"
 (defmacro with-possible-lock-and-update ((var &key surface template)
 					 &body body)
-  (let ((result (gensym "result-")))
-    (if (or surface (atom var))
-	`(let ((,result nil)
-	       (,@(when surface `(,var ,surface))))
-	   (when (must-lock? ,var)
-	     (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
-	       (error "Cannot lock surface")))
-	   (setf ,result (progn ,@body))
-	   (when (must-lock? ,var)
-	     (Sdl-Cffi::Sdl-Unlock-Surface ,var))
-	   (when ,template
-	     (update-surface ,var :template ,template))
-	   ,result)
-	(error "VAR must be a symbol or variable, not a function."))))
-
+  `(progn
+     (with-locked-surface (,var ,surface)
+       ,@body)
+     (when ,template
+       (update-surface ,var :template ,template))))
+  
 (defmacro with-surface ((var &optional surface (free-p t))
 			&body body)
   "Don't use this for managing the display surface."
@@ -84,20 +72,46 @@
   (if bindings
       (return-with-surface bindings body)))
 
-
-(defun clear-colorkey (surface rel-accel)
-  "Removes the key color from the given surface."
+(defun set-color-key (surface &optional (color nil) (rle-accel nil))
+  "Sets the key color for the given surface. The key color is made transparent."
   (when (is-valid-ptr surface)
-    (if rel-accel
-	(setf rel-accel sdl-cffi::SDL-RLE-ACCEL)
-	(setf rel-accel 0))
-    (sdl-cffi::SDL-Set-Color-Key surface rel-accel 0)))
+    (let ((SRC-COLOR-KEY nil))
+      (if rle-accel
+	  (setf rle-accel sdl-cffi::SDL-RLE-ACCEL)
+	  (setf rle-accel 0))
+      (if color
+	  (setf SRC-COLOR-KEY sdl-cffi::SDL-SRC-COLOR-KEY)
+	  (setf color 0
+		SRC-COLOR-KEY 0))
+      (sdl-cffi::SDL-Set-Color-Key surface (logior SRC-COLOR-KEY rle-accel) color))
+    surface))
+
+(defun clear-color-key (surface rle-accel)
+  "Removes the key color from the given surface."
+  (set-color-key surface nil rle-accel))
+
+(defun set-alpha (surface alpha-value &key (accel nil))
+  "Sets the alpha value for the given surface."
+  (when (is-valid-ptr surface)
+    (if accel
+	(setf accel sdl-cffi::SDL-RLE-ACCEL)
+	(setf accel 0))
+    (if (null alpha-value)
+	(sdl-cffi::SDL-Set-Alpha surface accel 0)
+	(sdl-cffi::SDL-Set-Alpha surface (logior sdl-cffi::SDL-SRC-ALPHA accel) (clamp (to-int alpha-value) 0 255)))
+    surface))
+
 
 (defun get-surface-rect (surface rectangle)
   (setf (rect-x rectangle) 0
 	(rect-y rectangle) 0
 	(rect-w rectangle) (surf-w surface)
-	(rect-h rectangle) (surf-h surface)))
+	(rect-h rectangle) (surf-h surface))
+  rectangle)
+
+(defun get-clip-rect (surface rectangle)
+  (sdl-cffi::sdl-get-clip-rect surface rectangle)
+  rectangle)
 
 (defun convert-surface-to-display-format (surface &key key-color alpha-value (free-p nil))
   "converts a surface to display format and free's the source surface
@@ -184,29 +198,6 @@
 (defun pixel-format (surface)
   "Returns the pixel format of a surface."
   (cffi:foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::format))
-
-(defun set-alpha (surface alpha-value &key (accel nil))
-  "Sets the alpha value for the given surface."
-  (when (is-valid-ptr surface)
-    (if accel
-	(setf accel sdl-cffi::SDL-RLE-ACCEL)
-	(setf accel 0))
-    (if (null alpha-value)
-	(sdl-cffi::SDL-Set-Alpha surface accel 0)
-	(sdl-cffi::SDL-Set-Alpha surface (logior sdl-cffi::SDL-SRC-ALPHA accel) (clamp (to-int alpha-value) 0 255)))
-    surface))
-
-(defun set-color-key (surface color &key (accel nil))
-  "Sets the key color for the given surface. The key color is made transparent."
-  (when (is-valid-ptr surface)
-    (if (null color)
-	(sdl-cffi::SDL-Set-Color-Key surface 0 0)
-	(progn
-	  (if accel
-	      (setf accel sdl-cffi::SDL-RLE-ACCEL)
-	      (setf accel 0))
-	  (sdl-cffi::SDL-Set-Color-Key surface (logior sdl-cffi::SDL-SRC-COLOR-KEY accel) color)))
-    surface))
 
 (defun surf-w (surface)
   "return the width of the SDL_surface."
