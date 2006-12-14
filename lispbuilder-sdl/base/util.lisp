@@ -15,37 +15,6 @@
     (push 'progn result)
     result))
 
-;;; w
-(defmacro with-init (init-flags &body body)
-  "Attempts to initialize the SDL subsystems using SDL-Init.
-   Automatically shuts down the SDL subsystems using SDL-Quit upon normal application termination or
-   if any fatal error occurs within &body.
-   init-flags can be any combination of SDL-INIT-TIMER, SDL-INIT-AUDIO, SDL-INIT-VIDEO, SDL-INIT-CDROM,
-   SDL-INIT-JOYSTICK, SDL-INIT-NOPARACHUTE, SDL-INIT-EVENTTHREAD or SDL-INIT-EVERYTHING."
-  `(block nil
-    (unwind-protect
-	 (when (init-sdl :flags (list ,@init-flags))
-	   ,@body)
-      (sdl-cffi::SDL-Quit))))
-
-(defun init-sdl (&key (flags sdl-cffi::SDL-INIT-VIDEO))
-  (if (equal 0 (sdl-cffi::SDL-Init (set-flags flags)))
-      t
-      nil))
-
-(defun was-init? (&key (flags sdl-cffi::SDL-INIT-VIDEO))
-  (if (equal (set-flags flags)
-	     (sdl-cffi::sdl-was-init (set-flags flags)))
-      t
-      nil))
-
-(defun key= (key1 key2)
-  (eq key1 key2))
-
-(defun modifier= (mod key)
-  "Returns t if the keypress modifier 'mod' is equal to the specified 'key'.
-   (cffi:foreign-enum-value 'SDLMod key)."
-  (equal mod (cffi:foreign-enum-value 'sdl-cffi::SDL-Mod key)))
 
 ;; cl-sdl "util.lisp"
 (declaim (inline clamp))
@@ -78,14 +47,6 @@
   Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
   (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
 
-(defun set-flags (&rest keyword-args)
-  (if (listp (first keyword-args))
-      (let ((keywords 
-	     (mapcar #'(lambda (x)
-			 (eval x))
-		     (first keyword-args))))
-	(apply #'logior keywords))
-      (apply #'logior keyword-args)))
 
 (declaim (inline to-int))
 (defun to-int (num)
@@ -109,3 +70,4 @@
 	      new-vec)
 	    vec))
       nil))
+
