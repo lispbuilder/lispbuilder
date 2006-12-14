@@ -23,7 +23,8 @@
 	       (:file "rectangle")
 	       (:file "surfaces")
 	       (:file "video")
-	       (:file "rwops"))
+	       (:file "rwops")
+	       (:file "sdl-util"))
 	      :serial t)
      (:module "documentation"
 	      :components
