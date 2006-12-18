@@ -144,9 +144,3 @@
 			      (mem-aref b :unsigned-char)
 			      (mem-aref a :unsigned-char)))))
 
-
-(defun map-color (surface r g b &optional a)
-  (if a
-      (sdl-cffi::SDL-Map-RGBA (pixel-format surface) r g b a)
-      (sdl-cffi::SDL-Map-RGB (pixel-format surface) r g b)))
-

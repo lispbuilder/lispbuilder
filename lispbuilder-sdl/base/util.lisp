@@ -9,16 +9,17 @@
 
 
 (defmacro check-bounds (min below &rest vars)
+  "Clamps the values in VARS to MIN <= VARS <= BELOW. Returns as a list the values in VARS."
   (let (result)
     (loop for var in vars do
 	 (push `(setf ,var (clamp ,var ,min ,below)) result))
     (push 'progn result)
     result))
 
-
 ;; cl-sdl "util.lisp"
 (declaim (inline clamp))
 (defun clamp (v l u)
+  "Returns V clamped to L <= V <= U."
   (min (max v l) u))
 
 (defun clamp-to-sbyte (v)
@@ -43,13 +44,12 @@
           (t d))))
 
 (defun is-valid-ptr (pointer)
-  "IS-VALID-PTR <CFFI pointer>
-  Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
+  "Returns T if pointer is not NULL and is a valid CFFI pointer to a foreign object."
   (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
-
 
 (declaim (inline to-int))
 (defun to-int (num)
+  "Returns num as an INTEGER."
   (truncate (+ 0.5 num)))
 
 (defun vec-to-int (vec)

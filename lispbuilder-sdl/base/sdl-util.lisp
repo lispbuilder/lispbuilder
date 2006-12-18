@@ -59,3 +59,8 @@
 (defun load-image (filename path &key key-color alpha-value)
   (with-surface (surf (load-bmp (namestring (merge-pathnames filename path))) t)
     (convert-surface-to-display-format surf :key-color key-color :alpha-value alpha-value :free-p nil)))
+
+(defun map-color (surface r g b &optional a)
+  (if a
+      (sdl-cffi::SDL-Map-RGBA (pixel-format surface) r g b a)
+      (sdl-cffi::SDL-Map-RGB (pixel-format surface) r g b)))

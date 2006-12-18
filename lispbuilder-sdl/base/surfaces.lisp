@@ -90,7 +90,7 @@
   "Removes the key color from the given surface."
   (set-color-key surface nil rle-accel))
 
-(defun set-alpha (surface alpha-value &key (accel nil))
+(defun set-alpha (surface alpha-value &optional (accel nil))
   "Sets the alpha value for the given surface."
   (when (is-valid-ptr surface)
     (if accel
@@ -100,7 +100,6 @@
 	(sdl-cffi::SDL-Set-Alpha surface accel 0)
 	(sdl-cffi::SDL-Set-Alpha surface (logior sdl-cffi::SDL-SRC-ALPHA accel) (clamp (to-int alpha-value) 0 255)))
     surface))
-
 
 (defun get-surface-rect (surface rectangle)
   (setf (rect-x rectangle) 0
@@ -176,9 +175,9 @@
 	      nil
 	      (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags) width height bpp Rmask Gmask Bmask Amask)))))
     (if key-color
-	(set-color-key surf key-color :accel accel))
+	(set-color-key surf key-color accel))
     (if alpha-value
-	(set-alpha surf alpha-value :accel accel))
+	(set-alpha surf alpha-value accel))
     surf))
 
 
