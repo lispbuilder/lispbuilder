@@ -8,6 +8,13 @@
   (:documentation "The basic wrapper package of `lispbuilder-sdl'.")
   (:export
 
+   ;; util.lisp
+   #:check-bounds
+   #:clamp
+   #:is-valid-ptr
+   #:to-int
+
+   
    ;; events.lisp
    #:new-event
    #:push-quitevent
@@ -53,20 +60,6 @@
    #:blit-surface
    #:fill-surface
 
-   ;; util.lisp
-   #:check-bounds
-   #:with-init
-   #:init-sdl
-   #:key=
-   #:modifier=
-   #:clamp				; from cl-sdl
-   #:clamp-to-sbyte
-   #:clamp-to-ubyte
-   #:clamp-to-sshort
-   #:clamp-to-ushort
-   #:delta-clamp
-   #:is-valid-ptr
-   #:set-flags
 
    ;; video.lisp
    #:with-display
