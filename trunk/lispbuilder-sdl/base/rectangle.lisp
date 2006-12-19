@@ -10,7 +10,7 @@
 
 ;;; Rectangle
 
-(defmacro with-rectangle ((var &optional rectangle) &body body)
+(defmacro with-rectangle ((var &optional rectangle (free-p t)) &body body)
   (if (or rectangle (atom var))
       `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (rect-x ,var))
 			 (,(intern (string-upcase (format nil "~A.y" var))) (rect-y ,var))
@@ -23,7 +23,8 @@
 	 ,(if rectangle
 	      `(let ((,var ,rectangle))
 		 ,@body
-		 (cffi:foreign-free ,var))
+		 (when ,free-p
+		   (cffi:foreign-free ,var)))
 	      `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
 		 ,@body)))
       (error "VAR must be a symbol or variable, not a function.")))
