@@ -7,39 +7,6 @@
 
 (in-package #:lispbuilder-sdl-base)
 
-;; cl-sdl "sdl-ext.lisp"
-(defmacro with-locked-surface ((var &optional surface)
-			       &body body)
-  (if (or surface (atom var))
-      `(let (,@(when surface `(,var ,surface)))
-	 (unwind-protect 
-	      (progn (when (must-lock? ,var)
-		       (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
-			 (error "Cannot lock surface")))
-		     ,@body)
-	   (when (must-lock? ,var)
-	     (Sdl-Cffi::Sdl-Unlock-Surface ,var))))
-      (error "VAR must be a symbol or variable, not a function.")))
-
-(defun return-with-surfaces (bindings body)
-  (if bindings
-      `(with-locked-surface (,@(car bindings))
-	 ,(return-with-surfaces (cdr bindings) body))
-      `(progn ,@body)))
-
-;; Taken from CFFI, with-foreign-objects in types.lisp
-(defmacro with-locked-surfaces (bindings &rest body)
-  (if bindings
-      (return-with-surfaces bindings body)))
-
-(defmacro with-possible-lock-and-update ((var &key surface template)
-					 &body body)
-  `(progn
-     (with-locked-surface (,var ,surface)
-       ,@body)
-     (when ,template
-       (update-surface ,var :template ,template))))
-  
 (defmacro with-surface ((var &optional surface (free-p t))
 			&body body)
   "Don't use this for managing the display surface."
@@ -61,16 +28,46 @@
   `(with-surface (,var ,surface nil)
      ,@body))
 
+;; Taken from CFFI, with-foreign-objects in types.lisp
+(defmacro with-surfaces (bindings &rest body)
+  (if bindings
+      (return-with-surface bindings body)))
+
 (defun return-with-surface (bindings body)
   (if bindings
       `(with-surface (,@(car bindings))
 	 ,(return-with-surface (cdr bindings) body))
       `(progn ,@body)))
 
-;; Taken from CFFI, with-foreign-objects in types.lisp
-(defmacro with-surfaces (bindings &rest body)
+(defmacro with-locked-surface ((var &optional surface)
+				&body body)
+  `(with-surface (,var ,surface ,nil)
+     (unwind-protect 
+	  (progn (when (must-lock? ,var)
+		   (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
+		     (error "Cannot lock surface")))
+		 ,@body)
+       (when (must-lock? ,var)
+	 (Sdl-Cffi::Sdl-Unlock-Surface ,var)))))
+
+(defmacro with-locked-surfaces (bindings &rest body)
   (if bindings
-      (return-with-surface bindings body)))
+      (return-with-locked-surface bindings body)))
+
+(defun return-with-locked-surface (bindings body)
+  (if bindings
+      `(with-locked-surface (,@(car bindings))
+	 ,(return-with-surfaces (cdr bindings) body))
+      `(progn ,@body)))
+
+(defmacro with-possible-lock-and-update ((var &key surface template)
+					 &body body)
+  `(progn
+     (with-locked-surface (,var ,surface)
+       ,@body)
+     (when ,template
+       (update-surface ,var :template ,template))))
+  
 
 (defun set-color-key (surface &optional (color nil) (rle-accel nil))
   "Sets the key color for the given surface. The key color is made transparent."
