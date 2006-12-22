@@ -14,23 +14,26 @@
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi)
+    :depends-on (cffi lispbuilder-sdl-cffi lispbuilder-sdl-base)
     :components
     ((:module "sdl"
 	      :components
 	      ((:file "package")
-	       (:file "library" :depends-on ("package"))
-	       (:file "sdl" :depends-on ("package" "library"))
-	       (:file "post-swig" :depends-on ("sdl"))
-	       (:file "translate" :depends-on ("sdl" "post-swig"))
-	       (:file "util" :depends-on ("sdl" "post-swig"))
-	       (:file "events" :depends-on ("sdl" "post-swig"))
-	       (:file "globals" :depends-on ("sdl" "post-swig"))
-	       (:file "primitives" :depends-on ("globals"))
-	       (:file "surfaces" :depends-on ("globals" "primitives"))
-	       (:file "drawing-primitives" :depends-on ("globals" "primitives" "surfaces"))
-	       (:file "util-sdl" :depends-on ("globals" "primitives"))
-	       (:file "sdl_simplefont" :depends-on ("util-sdl")))
+	       (:file "globals")
+	       (:file "generics")
+	       (:file "classes")
+	       (:file "util")
+;	       (:file "events")
+	       (:file "primitives")
+	       (:file "surfaces")
+	       (:file "rectangle")
+	       (:file "color")
+	       (:file "pixel")
+;	       (:file "drawing-primitives")
+	       (:file "video")
+	       (:file "sdl-util")
+;	       (:file "sdl_simplefont")
+	       (:file "cffi-finalizers"))
 	      :serial t)
      (:module "documentation"
 	      :components
