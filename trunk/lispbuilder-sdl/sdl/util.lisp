@@ -7,51 +7,13 @@
 
 (in-package #:lispbuilder-sdl)
 
-;; (defmacro check-bounds (min below &rest vars)
-;;   (let (result)
-;;     (loop for var in vars do
-;; 	  (push `(when (< ,var ,min) (setf ,var ,min)) result)
-;; 	  (push `(when (>= ,var ,below) (setf ,var (1- ,below))) result))
-;;     (push 'progn result)
-;;     result))
 
-(defmacro check-bounds (min below &rest vars)
-  (let (result)
-    (loop for var in vars do
-	 (push `(setf ,var (clamp ,var ,min ,below)) result))
-    (push 'progn result)
-    result))
+(defun load-image (filename path &key key-color alpha-value)
+  (let ((new-surf (sdl-base::load-image filename path :key-color key-color :alpha-value alpha-value)))
+    (if (sdl-base::is-valid-ptr new-surf)
+	(surface new-surf)
+	(error "Error loading ~A/~A." path filename))))
 
-;; cl-sdl "util.lisp"
-(declaim (inline clamp))
-(defun clamp (v l u)
-  (min (max v l) u))
-
-(defun clamp-to-sbyte (v)
-  (min (max v -127) 127))
-
-(defun clamp-to-ubyte (v)
-  (min (max v 0) 255))
-
-(defun clamp-to-sshort (v)
-  (min (max v -32767) 32767))
-
-(defun clamp-to-ushort (v)
-  (min (max v 0) 65535))
-
-;; cl-sdl "util.lisp"
-(defun delta-clamp (v d l u)
-  (let ((sum (+ v d)))
-    (cond ((< sum l)
-           (- d (- sum l)))
-          ((> sum u)
-           (- d (- sum u)))
-          (t d))))
-
-(defun is-valid-ptr (pointer)
-  "IS-VALID-PTR <CFFI pointer>
-  Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
-  (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
 
 (defun random+1 (rnd)
   (+ 1 (random rnd)))
@@ -64,11 +26,29 @@
   "converts radians to degrees."
   (/ radian (/ PI 180)))
 
-(defun set-flags (&rest keyword-args)
-  (if (listp (first keyword-args))
-      (let ((keywords 
-	     (mapcar #'(lambda (x)
-			 (eval x))
-		     (first keyword-args))))
-	(apply #'logior keywords))
-      (apply #'logior keyword-args)))
+(defun distance (x1 y1 x2 y2)
+  (sqrt (+ (expt (- x1 x2) 2) 
+	   (expt (- y1 y2) 2))))
+
+;; (defun points-in-range (p1 p2 distance)
+;;   "return true, if the distance between p1 and p2 is not more than 'distance'"
+;;   (<= (+ (expt (- (sdl:point-x p1) (sdl:point-x p2)) 2)
+;;          (expt (- (sdl:point-y p1) (sdl:point-y p2)) 2))
+;;       (expt distance 2)))
+
+;; (defun random-rect (bound-w bound-h)
+;;   (let* ((x (random bound-w))
+;; 	 (y (random bound-h))
+;; 	 (w (random+1 (- bound-w x)))
+;; 	 (h (random+1 (- bound-h y))))
+;;     (rectangle x y w h)))
+
+;; (defun random-color (r g b &optional alpha)
+;;   (if alpha ;; alpha is either t, or a number then create r/g/b/a
+;;       (color (random r) (random g) (random b) (if (numberp alpha)
+;; 						  alpha
+;; 						  (random 255)))
+;;       (color (random r) (random g) (random b)))) ; Or not, and create an r/g/b color
+
+;; (defun random-point (max-x max-y)
+;;   (sdl:point (random max-x) (random max-y)))

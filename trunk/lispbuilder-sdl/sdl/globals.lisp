@@ -11,9 +11,9 @@
 
 (defvar *default-surface* nil)
 (defvar *default-display* nil)
-(defvar *default-color* #(0 0 0))
-(defvar *default-position* #(0 0))
-(defvar *default-rectangle* #(0 0 0 0))
+(defvar *default-color* nil)
+(defvar *default-position* nil)
+(defvar *default-rectangle* nil)
 (defvar *default-font* nil)
 
 (defun default-surface ()
