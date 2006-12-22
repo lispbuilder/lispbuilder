@@ -8,18 +8,12 @@
 (in-package #:lispbuilder-sdl-base)
 
 
-;;; Rectangle
-
 (defmacro with-rectangle ((var &optional rectangle (free-p t)) &body body)
   (if (or rectangle (atom var))
       `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (rect-x ,var))
 			 (,(intern (string-upcase (format nil "~A.y" var))) (rect-y ,var))
 			 (,(intern (string-upcase (format nil "~A.w" var))) (rect-w ,var))
-			 (,(intern (string-upcase (format nil "~A.h" var))) (rect-h ,var))
-			 (x (rect-x ,var))
-			 (y (rect-y ,var))
-			 (w (rect-w ,var))
-			 (h (rect-h ,var)))
+			 (,(intern (string-upcase (format nil "~A.h" var))) (rect-h ,var)))
 	 ,(if rectangle
 	      `(let ((,var ,rectangle))
 		 ,@body
@@ -28,7 +22,18 @@
 	      `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
 		 ,@body)))
       (error "VAR must be a symbol or variable, not a function.")))
-  
+
+(defun rectangle (&key (x 0) (y 0) (w 0) (h 0) src)
+  "Creates a new rectangle initialized with values x, y, width W and height H, or the rectangle SRC if specified."
+  (if src
+      (clone-rectangle src)
+      (let ((new-rect (cffi:foreign-alloc 'sdl-cffi::sdl-rect)))
+	(setf (rect-x new-rect) x
+	      (rect-y new-rect) y
+	      (rect-w new-rect) w
+	      (rect-h new-rect) h)
+	new-rect)))
+
 (defun rect-x (rect)
   (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::x))
 (defun (setf rect-x) (x-val rect)
@@ -75,13 +80,3 @@
       (copy-rectangle src (cffi:foreign-alloc 'sdl-cffi::sdl-rect))
       (error "SRC and DST must be of type SDL_Rect.")))
 
-(defun rectangle (&key (x 0) (y 0) (w 0) (h 0) src)
-  "Creates a new rectangle initialized with values x, y, width W and height H, or the rectangle SRC if specified."
-  (if src
-      (clone-rectangle src)
-      (let ((new-rect (cffi:foreign-alloc 'sdl-cffi::sdl-rect)))
-	(setf (rect-x new-rect) x
-	      (rect-y new-rect) y
-	      (rect-w new-rect) w
-	      (rect-h new-rect) h)
-	new-rect)))
