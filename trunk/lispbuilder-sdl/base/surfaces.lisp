@@ -57,7 +57,7 @@
 (defun return-with-locked-surface (bindings body)
   (if bindings
       `(with-locked-surface (,@(car bindings))
-	 ,(return-with-surfaces (cdr bindings) body))
+	 ,(return-with-locked-surface (cdr bindings) body))
       `(progn ,@body)))
 
 (defmacro with-possible-lock-and-update ((var &key surface template)
@@ -107,6 +107,10 @@
 
 (defun get-clip-rect (surface rectangle)
   (sdl-cffi::sdl-get-clip-rect surface rectangle)
+  rectangle)
+
+(defun set-clip-rect (surface rectangle)
+  (sdl-cffi::sdl-set-clip-rect surface rectangle)
   rectangle)
 
 (defun convert-surface-to-display-format (surface &key key-color alpha-value (free-p nil))
