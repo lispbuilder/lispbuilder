@@ -49,8 +49,6 @@
   (:documentation "Free's foreign surface in SURFACE."))
 
 
-(defgeneric map-color (color &key surface))
-
 (defgeneric free-color (color))
 
 (defgeneric pixel-reader (surface))

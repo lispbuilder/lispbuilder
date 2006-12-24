@@ -138,15 +138,3 @@
 	nil
 	string-return-val)))
 
-;; cl-sdl "sdl-ext.lisp"
-;; (defun show-bmp (file surface x y)
-;;   (let ((bmp nil))
-;;     (unwind-protect
-;;          (progn
-;;            (setf bmp (sdl:load-bmp file))
-;;            (when bmp
-;;              (blit-surface bmp surface :dst-rect (vector x y))
-;; 	     (update-surface surface :template (vector x y (surf-w bmp) (surf-h bmp)))
-;; 	     ))
-;;       (when (is-valid-ptr bmp)
-;; 	(cffi:foreign-free bmp)))))

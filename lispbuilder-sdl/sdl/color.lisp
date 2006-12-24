@@ -68,11 +68,11 @@
 (defmethod (setf a) (a-val (color color-a))
   (setf (svref (fp color) 3) a-val))
 
-(defmethod map-color ((color color) &key (surface *default-surface*))
+(defmethod map-color ((color color) &optional (surface *default-surface*))
   (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format (fp surface))
 			 (r color) (g color) (b color)))
 
-(defmethod map-color ((color color-a) &key (surface *default-surface*))
+(defmethod map-color ((color color-a) &optional (surface *default-surface*))
   (sdl-cffi::sdl-map-rgba (sdl-base::pixel-format (fp surface))
 			  (r color) (g color) (b color) (a color)))
 
