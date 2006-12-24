@@ -70,5 +70,5 @@
   (setf (sdl-base::rect-h (fp rectangle)) h-val))
 
 (defmethod free-rectangle ((rectangle rectangle))
+  (cffi:foreign-free (fp rectangle))
   (cffi:cancel-finalization rectangle))
-

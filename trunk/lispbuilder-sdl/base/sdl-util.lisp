@@ -54,7 +54,7 @@
   "load in the supplied filename, must be a bmp file"
   (if (and (stringp filename) (probe-file filename)) ; LJC: Make sure filename is a string and the filename exists.
       (sdl-cffi::SDL-Load-BMP-RW (sdl-cffi::sdl-RW-From-File filename "rb") 1)
-      nil))
+      (error "File ~A does not exist." filename)))
 
 (defun load-image (filename path &key key-color alpha-value)
   (with-surface (surf (load-bmp (namestring (merge-pathnames filename path))) t)

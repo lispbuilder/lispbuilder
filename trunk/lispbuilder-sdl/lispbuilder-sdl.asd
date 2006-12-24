@@ -33,7 +33,8 @@
 	       (:file "video")
 	       (:file "sdl-util")
 ;	       (:file "sdl_simplefont")
-	       (:file "cffi-finalizers"))
+	       #-clisp(:file "cffi-finalizers")
+	       )
 	      :serial t)
      (:module "documentation"
 	      :components

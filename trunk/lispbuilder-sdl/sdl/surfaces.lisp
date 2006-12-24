@@ -25,7 +25,6 @@
   ((foreign-pointer-to-rectangle :reader fp :initform nil :initarg :rectangle)
    (length :reader len :initform nil :initarg :length)))
 
-
 (defun surface (surface-fp &optional (display nil))
   (if (sdl-base::is-valid-ptr surface-fp)
       (let ((surf (make-instance (if display
@@ -89,8 +88,16 @@
 
 (defmethod free-surface ((surface sdl-surface)) nil)
 
-(defmethod free-surface ((surface surface))
-  (cffi:cancel-finalization surface))
+(defmethod free-surface ((self surface))
+  (let ((foreign-pointer (fp self)))
+    (setf (slot-value self 'foreign-pointer-to-surface) nil
+	  (slot-value self 'pixel-reader) nil
+	  (slot-value self 'pixel-writer) nil
+	  (slot-value self 'width) 0
+	  (slot-value self 'height) 0)
+    (sdl-cffi::sdl-free-surface foreign-pointer)
+    (cffi:foreign-free foreign-pointer))
+  (cffi:cancel-finalization self))
 
 (defmethod width ((surface sdl-surface))
   (sdl-base::surf-w (fp surface)))
@@ -109,7 +116,7 @@
   (sdl-base::clear-color-key (fp surface) rle-accel))
 
 (defun set-color-key (color &key (surface *default-surface*) (rle-accel t))
-  (sdl-base::set-color-key (fp surface) (fp color) rle-accel))
+  (sdl-base::set-color-key (fp surface) (map-color color surface ) rle-accel))
   
 (defun set-alpha (alpha &key (surface *default-surface*) (rle-accel nil))
   (sdl-base::set-alpha (fp surface) alpha rle-accel))
@@ -151,16 +158,19 @@
   (sdl-base::blit-surface (fp src) (fp dst) (cffi:null-pointer) (fp-position src))
   src)
 
+(defun draw-surface (src &optional (dst *default-display*))
+  (blit-surface src dst))
+
 (defun fill-surface (color &key (dst *default-surface*) (template nil) (update-p nil) (clipping-p t))
   "fill the entire surface with the specified R G B A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update."
   (sdl-base::fill-surface (fp dst)
-			  (map-color color :surface dst)
+			  (map-color color dst)
 			  :template (if template
 					(fp template)
 					(cffi::null-pointer))
-			  :clipping-p nil
-			  :update-p nil))
+			  :clipping-p clipping-p
+			  :update-p update-p))
 
