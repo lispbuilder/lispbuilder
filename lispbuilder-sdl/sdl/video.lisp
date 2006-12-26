@@ -16,7 +16,11 @@
    Returns
     a new SDL_Surface if successful.
     NIL if failed."
-  (let ((surf (sdl-base::set-screen width height :bpp bpp :flags flags :title-caption title-caption :icon-caption icon-caption)))
+  (let ((surf (sdl-base::set-screen width height
+				    :bpp bpp
+				    :flags flags
+				    :title-caption title-caption
+				    :icon-caption icon-caption)))
     (setf *default-display* (surface surf t))))
 
 (defun update-display (&optional (surface *default-display*))
@@ -24,4 +28,4 @@
 
 (defun clear-display (color &optional *default-display*)
   (sdl-base::fill-surface (fp *default-display*)
-			  (map-color color *default-display)))c
+			  (map-color color *default-display*)))
