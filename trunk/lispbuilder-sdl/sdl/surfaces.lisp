@@ -33,10 +33,12 @@
 				 :surface surface-fp
 				 :reader (sdl-base::generate-read-pixel surface-fp)
 				 :writer (sdl-base::generate-write-pixel surface-fp))))
+ 	(setf (x surf) 0
+	      (y surf) 0
+	      (width surf) (sdl-base::rect-w (fp surf))
+ 	      (height surf) (sdl-base::rect-h (fp surf)))
 	surf)
       (error "SURFACE: SURFACE-FP must be a foreign pointer.")))
-
-
 
 (defmacro with-surface ((var &optional surface (free-p t))
 			&body body)
@@ -101,15 +103,23 @@
 
 (defmethod width ((surface sdl-surface))
   (sdl-base::surf-w (fp surface)))
+(defmethod (setf width) (w-val (surface sdl-surface))
+  (setf (sdl-base::rect-w (fp-position surface)) w-val))
 
 (defmethod height ((surface sdl-surface))
   (sdl-base::surf-h (fp surface)))
+(defmethod (setf height) (h-val (surface sdl-surface))
+  (setf (sdl-base::rect-h (fp-position surface)) h-val))
 
-(defmethod x ((surface surface))
+(defmethod x ((surface sdl-surface))
   (sdl-base::rect-x (fp-position surface)))
+(defmethod (setf x) (x-val (surface sdl-surface))
+  (setf (sdl-base::rect-x (fp-position surface)) x-val))
 
-(defmethod y ((surface surface))
+(defmethod y ((surface sdl-surface))
   (sdl-base::rect-y (fp-position surface)))
+(defmethod (setf y) (y-val (surface sdl-surface))
+  (setf (sdl-base::rect-y (fp-position surface)) y-val))
 
 
 (defun clear-color-key (&key (surface *default-surface*) (rle-accel t))

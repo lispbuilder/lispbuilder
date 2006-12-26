@@ -49,7 +49,7 @@
   (:documentation "Free's foreign surface in SURFACE."))
 
 
-(defgeneric free-color (color))
+
 
 (defgeneric pixel-reader (surface))
 (defgeneric pixel-writer (surface))

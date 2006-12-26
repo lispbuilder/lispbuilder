@@ -8,13 +8,6 @@
 (in-package #:lispbuilder-sdl)
 
 
-(defun load-image (filename path &key key-color alpha-value)
-  (let ((new-surf (sdl-base::load-image filename path :key-color key-color :alpha-value alpha-value)))
-    (if (sdl-base::is-valid-ptr new-surf)
-	(surface new-surf)
-	(error "Error loading ~A/~A." path filename))))
-
-
 (defun random+1 (rnd)
   (+ 1 (random rnd)))
 

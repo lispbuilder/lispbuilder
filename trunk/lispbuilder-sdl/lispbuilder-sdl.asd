@@ -31,6 +31,7 @@
 	       (:file "pixel")
 ;	       (:file "drawing-primitives")
 	       (:file "video")
+	       (:file "image")
 	       (:file "sdl-util")
 ;	       (:file "sdl_simplefont")
 	       #-clisp(:file "cffi-finalizers")
