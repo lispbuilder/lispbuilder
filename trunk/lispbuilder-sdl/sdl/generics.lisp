@@ -49,8 +49,6 @@
   (:documentation "Free's foreign surface in SURFACE."))
 
 
-
-
 (defgeneric pixel-reader (surface))
 (defgeneric pixel-writer (surface))
 

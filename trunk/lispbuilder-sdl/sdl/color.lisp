@@ -38,15 +38,11 @@
 		     (,(intern (string-upcase (format nil "~A.g" var))) (g ,var))
 		     (,(intern (string-upcase (format nil "~A.b" var))) (b ,var))
 		     (,(intern (string-upcase (format nil "~A.a" var))) (a ,var)))
-     (let* ((,@(if color
-		   `(,var ,color)
-		   `(,var (color))))
+     (let* ((,@(when color `(,var ,color)))
 	    (*default-color* ,var))
        ,@body
        (if ,free-p
 	   (free-color ,var)))))
-
-
 
 (defmethod r ((color color))
   (svref (fp color) 0))
