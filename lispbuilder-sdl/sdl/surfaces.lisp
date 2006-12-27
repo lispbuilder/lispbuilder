@@ -47,7 +47,7 @@
 		       (,(intern (string-upcase (format nil "~A.height" var))) (height ,var))
 		       (,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
 		       (,(intern (string-upcase (format nil "~A.y" var))) (y ,var)))
-       (let* (,@(when surface `(,var ,surface))
+       (let* ((,@(when surface `(,var ,surface)))
 	      (*default-surface* ,var))
 	 (sdl-base::with-surface (,surface-ptr (fp ,var) nil)
 	   ,@body
@@ -94,12 +94,10 @@
   (let ((foreign-pointer (fp self)))
     (setf (slot-value self 'foreign-pointer-to-surface) nil
 	  (slot-value self 'pixel-reader) nil
-	  (slot-value self 'pixel-writer) nil
-	  (slot-value self 'width) 0
-	  (slot-value self 'height) 0)
-    (sdl-cffi::sdl-free-surface foreign-pointer)
-    (cffi:foreign-free foreign-pointer))
-  (cffi:cancel-finalization self))
+	  (slot-value self 'pixel-writer) nil)
+    (sdl-cffi::sdl-free-surface foreign-pointer))
+  #-clisp(cffi:cancel-finalization self)
+  )
 
 (defmethod width ((surface sdl-surface))
   (sdl-base::surf-w (fp surface)))
