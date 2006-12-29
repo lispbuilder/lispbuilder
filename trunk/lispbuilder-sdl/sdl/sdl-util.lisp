@@ -29,11 +29,11 @@
      ,@body))
 
 
-;; (defun points-in-range (p1 p2 distance)
-;;   "return true, if the distance between p1 and p2 is not more than 'distance'"
-;;   (<= (+ (expt (- (sdl:point-x p1) (sdl:point-x p2)) 2)
-;;          (expt (- (sdl:point-y p1) (sdl:point-y p2)) 2))
-;;       (expt distance 2)))
+(defun points-in-range (p1 p2 distance)
+  "return true, if the distance between p1 and p2 is not more than 'distance'"
+  (<= (+ (expt (- (x p1) (x p2)) 2)
+         (expt (- (y p1) (y p2)) 2))
+      (expt distance 2)))
 
 ;; (defun random-point (max-x max-y)
 ;;   (sdl:point (random max-x) (random max-y)))

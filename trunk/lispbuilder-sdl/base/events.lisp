@@ -215,19 +215,19 @@
 			       (case (first key) 
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseMotionEvent 'sdl-cffi::state)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::state)))
 				 (:x
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseMotionEvent 'sdl-cffi::x))) 
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::x))) 
 				 (:y
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseMotionEvent 'sdl-cffi::y)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::y)))
 				 (:x-rel
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseMotionEvent 'sdl-cffi::xrel)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::xrel)))
 				 (:y-rel
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseMotionEvent 'sdl-cffi::yrel)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::yrel)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -251,16 +251,16 @@
 			       (case (first key) 
 				 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseButtonEvent 'sdl-cffi::button)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button)))
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseButtonEvent 'sdl-cffi::state)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::state)))
 				 (:x
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseButtonEvent 'sdl-cffi::x)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::x)))
 				 (:y
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseButtonEvent 'sdl-cffi::y)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::y)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -284,16 +284,16 @@
 			       (case (first key) 
 				 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseButtonEvent 'sdl-cffi::button)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button)))
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseButtonEvent 'sdl-cffi::state)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::state)))
 				 (:x
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseButtonEvent 'sdl-cffi::x)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::x)))
 				 (:y
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_MouseButtonEvent 'sdl-cffi::y)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::y)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -317,13 +317,13 @@
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyAxisEvent 'sdl-cffi::which)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::which)))
 				 (:axis
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyAxisEvent 'sdl-cffi::axis)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::axis)))
 				 (:value
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyAxisEvent 'sdl-cffi::value)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::value)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -348,13 +348,13 @@
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyButtonEvent 'sdl-cffi::which)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which)))
 				 (:axis
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyButtonEvent 'sdl-cffi::axis)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::axis)))
 				 (:value
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyButtonEvent 'sdl-cffi::value)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::value)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -378,13 +378,13 @@
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyButtonEvent 'sdl-cffi::which)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which)))
 				 (:axis
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyButtonEvent 'sdl-cffi::axis)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::axis)))
 				 (:value
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyButtonEvent 'sdl-cffi::value)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::value)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -408,13 +408,13 @@
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyHatEvent 'sdl-cffi::which)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::which)))
 				 (:axis
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyHatEvent 'sdl-cffi::axis)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::axis)))
 				 (:value
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyHatEvent 'sdl-cffi::value)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::value)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -438,16 +438,16 @@
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyBallEvent 'sdl-cffi::which)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::which)))
 				 (:ball
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyBallEvent 'sdl-cffi::ball)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::ball)))
 				 (:x-rel
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyBallEvent 'sdl-cffi::xrel)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::xrel)))
 				 (:y-rel
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_JoyBallEvent 'sdl-cffi::yrel)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::yrel)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -471,10 +471,10 @@
 			       (case (first key) 
 				 (:w
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_ResizeEvent 'sdl-cffi::w)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::w)))
 				 (:h
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_ResizeEvent 'sdl-cffi::h)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::h)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -516,16 +516,16 @@
 			       (case (first key) 
 				 (:type
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_UserEvent 'sdl-cffi::type)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::type)))
 				 (:code
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL_UserEvent 'sdl-cffi::code)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::code)))
 				 (:data1
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-pointer ,sdl-event 'sdl-cffi::SDL_UserEvent 'sdl-cffi::data1)))
+				     (cffi:foreign-slot-pointer ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data1)))
 				 (:data2
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-pointer ,sdl-event 'sdl-cffi::SDL_UserEvent 'sdl-cffi::data2)))
+				     (cffi:foreign-slot-pointer ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data2)))
 				 (:t (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 

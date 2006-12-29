@@ -15,10 +15,10 @@
   "example of simple font"
   (sdl:with-init ()			;Initialize Systems
     ;; init your game
-    (sdl:set-framerate 2) ; Set target framerate (or 0 for unlimited)
-    (sdl:with-display (*WINDOW-WIDTH* *WINDOW-HEIGHT* :flags sdl:SDL_ANYFORMAT)
-      (let* ((small-font 
-	      (sdl-simple-font:initialise-font (namestring (merge-pathnames "font.bmp" *font-path*)) 4 5
+    (sdl::window *WINDOW-WIDTH* *WINDOW-HEIGHT* :flags sdl-cffi::SDL-ANY-FORMAT)
+    (setf (sdl-base::frame-rate) 2) ; Set target framerate (or 0 for unlimited)
+    (let* ((small-font 
+	    (sdl-simple-font:initialise-font (namestring (merge-pathnames "font.bmp" *font-path*)) 4 5
 					       "abcdefghijklmnopqrstuvwxyz:'!?_-,.()#~0123456789" #(99 0 0)))
 	     (text-image (sdl-simple-font:make-text-image small-font "draw text image")))
 	(sdl:with-events  ()

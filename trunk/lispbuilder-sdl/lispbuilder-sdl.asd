@@ -34,7 +34,7 @@
 	       (:file "image")
 	       (:file "drawing-primitives")
 	       (:file "sdl-util")
-;	       (:file "sdl_simplefont")
+;	       (:file "sdl-simple-font")
 	       #-clisp(:file "cffi-finalizers")
 	       )
 	      :serial t)
