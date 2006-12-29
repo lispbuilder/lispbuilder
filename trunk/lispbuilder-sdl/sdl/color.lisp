@@ -38,7 +38,9 @@
 		     (,(intern (string-upcase (format nil "~A.g" var))) (g ,var))
 		     (,(intern (string-upcase (format nil "~A.b" var))) (b ,var))
 		     (,(intern (string-upcase (format nil "~A.a" var))) (a ,var)))
-     (let* ((,@(when color `(,var ,color)))
+     (let* ((,@(if color
+		   `(,var ,color)
+		   `(,var ,var)))
 	    (*default-color* ,var))
        ,@body
        (if ,free-p
@@ -75,4 +77,5 @@
 (defmethod free-color ((color sdl-color)) nil)
 
 (defmethod free-color ((color color-struct))
+  (cffi:foreign-free (fp color))
   (cffi:cancel-finalization color))

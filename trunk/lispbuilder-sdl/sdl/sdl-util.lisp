@@ -10,6 +10,35 @@
 ;;;; Functions
 
 
+;; (defmacro with-init (renderer &body body)
+;;   (let ((rend (gensym "rend-")))
+;;     `(let ((,rend ,(if renderer
+;; 		       `(make-instance ,@renderer)
+;; 		       `(make-instance 'sdl))))
+;;        (when (hook-initialize-engine ,rend)
+;; 	 (unwind-protect
+;; 	      (progn
+;; ;		(init-timestep)
+;; 		,@body)
+;; 	   (hook-finalize-engine ,rend))))))
+
+(defmacro with-init (flags &body body)
+  `(sdl-base::with-init ,(if flags
+			     `(,@flags)
+			     `())
+     ,@body))
+
+
+;; (defun points-in-range (p1 p2 distance)
+;;   "return true, if the distance between p1 and p2 is not more than 'distance'"
+;;   (<= (+ (expt (- (sdl:point-x p1) (sdl:point-x p2)) 2)
+;;          (expt (- (sdl:point-y p1) (sdl:point-y p2)) 2))
+;;       (expt distance 2)))
+
+;; (defun random-point (max-x max-y)
+;;   (sdl:point (random max-x) (random max-y)))
+
+
 ;; (defun moveby-rectangle (&key (rectangle *default-rectangle*) (position *default-position*))
 ;;   (setf (rect-x rectangle) (+ (rect-x rectangle) (pos-x position))
 ;; 	(rect-y rectangle) (+ (rect-y rectangle) (pos-y position)))

@@ -238,13 +238,19 @@
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update."
   (if (is-valid-ptr template)
-      (when clipping-p
-	(let* ((x (rect-x template)) (y (rect-y template))
-	       (w (rect-w template)) (h (rect-h template))
-	       (x2 (+ x w)) (y2 (+ y h)))
-	  (setf (rect-w template) (check-bounds 0 (surf-w surface) x x2)
-		(rect-h template) (check-bounds 0 (surf-h surface) y y2)))))
-  (sdl-cffi::sdl-Fill-Rect surface template color)
+      (progn
+	(when clipping-p
+	  (let* ((x (rect-x template)) (y (rect-y template))
+		 (w (rect-w template)) (h (rect-h template))
+		 (x2 (+ x w)) (y2 (+ y h)))
+	    (setf (rect-x template) (clamp x 0 (surf-w surface))
+		  (rect-y template) (clamp y 0 (surf-h surface))
+		  (rect-w template) (- (clamp x2 0 (surf-w surface))
+				       (rect-x template))
+		  (rect-h template) (- (clamp y2 0 (surf-h surface))
+				       (rect-y template)))))
+	(sdl-cffi::sdl-Fill-Rect surface template color))
+      (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))	
   (when update-p
     (update-surface surface :template template))
   template)

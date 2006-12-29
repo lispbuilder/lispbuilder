@@ -26,75 +26,57 @@
 (defvar *M43*	-1.5)
 (defvar *M44*	 0.5)
 
-(defun bounds-from-wh (width height &key (point sdl:*default-position*))
-  (rectangle (point-x point) (point-y point) (+ (point-x point) width) (+ (point-y point) height)))
 
-(defun bounds-from-surface (&key (surface *default-surface*) (point *default-position*))
-  (bounds-from-wh (surf-w surface) (surf-h surface) :point point))
-
-(defun bounds-collision? (bounds1 bounds2)
-  (let ((collision? nil))
-    (destructuring-bind (s1-x1 s1-y1 s1-x2 s1-y2)
-	(coerce bounds1 'list)
-      (destructuring-bind (s2-x1 s2-y1 s2-x2 s2-y2)
-	  (coerce bounds2 'list)
-	(if (and (> s1-x2 s2-x1)
-		 (> s1-y2 s2-y1)
-		 (< s1-y1 s2-y2)
-		 (< s1-x1 s2-x2))
-	    (setf collision? t))))
-    collision?))
-
-(defun rect-from-wh (width height &key (point sdl:*default-position*))
-  (rectangle (point-x point) (point-y point) width height))
-
-(defun rect-from-pp (p1 p2)
-  (rect-from-xy (pos-x p1) (pos-y p1) (pos-x p2) (pos-y p2)))
-
-(defun rect-from-xy (x1 y1 x2 y2)
-  (rectangle x1 y1 (1+ (abs (- x1 x2))) (1+ (abs (- y1 y2)))))
-
-(Defun rect-from-midpoint (x y w h)
-  (sdl:rectangle (- x (/ w 2))
-		 (- y (/ h 2))
-		 w h))
+;; (defun bounds-collision? (bounds1 bounds2)
+;;   (let ((collision? nil))
+;;     (destructuring-bind (s1-x1 s1-y1 s1-x2 s1-y2)
+;; 	(coerce bounds1 'list)
+;;       (destructuring-bind (s2-x1 s2-y1 s2-x2 s2-y2)
+;; 	  (coerce bounds2 'list)
+;; 	(if (and (> s1-x2 s2-x1)
+;; 		 (> s1-y2 s2-y1)
+;; 		 (< s1-y1 s2-y2)
+;; 		 (< s1-x1 s2-x2))
+;; 	    (setf collision? t))))
+;;     collision?))
 
 
-;; (defmacro genbez (x0 y0 x1 y1 x2 y2 x3 y3)
-;;   (let ((gx0 (gensym "gx0-")) (gx1 (gensym "gx1-")) (gy0 (gensym "gy0-"))
-;; 	(gy1 (gensym "gy1")) (gx3 (gensym "gx3")) (gy3 (gensym "gy3-"))
-;; 	(point-list (gensym "point-list-")))
-;;     `(let ((,gx0 ,x0) (,gy0 ,y0)
-;; 	   (,gx1 ,x1) (,gy1 ,y1)
-;; 	   (,gx3 ,x3) (,gy3 ,y3)
-;; 	   (,point-list nil))
-;;        (let ((cx (* (- ,gx1 ,gx0) 3))
-;; 	     (cy (* (- ,gy1 ,gy0) 3))
-;; 	     (px (* (- ,x2 ,gx1) 3))
-;; 	     (py (* (- ,y2 ,gy1) 3)))
-;; 	 (let ((bx (- px cx))
-;; 	       (by (- py cy))
-;; 	       (ax (- ,gx3 px ,gx0))
-;; 	       (ay (- ,gy3 py ,gy0)))
-;; 	   (push (point ,gx0 ,gy0) ,point-list)
-;; 	   ,@(map1-n #'(lambda (n)
-;; 			 (let* ((u (* n *du*))
-;; 				(u^2 (* u u))
-;; 				(u^3 (expt u 3)))
-;; 			   `(push (point (+ (* ax ,u^3)
-;; 					    (* bx ,u^2)
-;; 					    (* cx ,u)
-;; 					    ,gx0)
-;; 					 (+ (* ay ,u^3)
-;; 					    (* by ,u^2)
-;; 					    (* cy ,u)
-;; 					    ,gy0))
-;; 				  ,point-list)))
-;; 		     (1- *segs*))
-;; 	   (push (point ,gx3
-;; 			,gy3)
-;; 		 ,point-list)))
-;;        (reverse ,point-list))))
+
+(defun random-rectangle (bound-w bound-h rectangle)
+  (let* ((x (random bound-w))
+	 (y (random bound-h))
+	 (w (random+1 (- bound-w x)))
+	 (h (random+1 (- bound-h y))))
+    (with-rectangle (rect rectangle nil)
+      (setf rect.x x
+	    rect.y y
+	    rect.width w
+	    rect.height h))
+    rectangle))
+
+(defun rectangle-from-wh (width height &key (position sdl:*default-position*))
+  (rectangle :x (x position)
+	     :y (y position)
+	     :w (+ (x position) width)
+	     :h (+ (y position) height)))
+
+(defun rectangle-from-xy (x1 y1 x2 y2)
+  (rectangle :x x1
+	     :y y1
+	     :w (1+ (abs (- x2 x1)))
+	     :h (1+ (abs (- y2 y1)))))
+
+(defun rectangle-from-points (p1 p2)
+  (rectangle-from-xy (x p1) (y p1) (x p2) (y p2)))
+
+(Defun rectangle-from-midpoint (x y w h)
+  (rectangle :x (- x (/ w 2))
+	     :y (- y (/ h 2))
+	     :w w
+	     :h h))
+
+(defun rectangle-from-surface (&key (surface *default-surface*) (position *default-position*))
+  (rectangle-from-wh (width surface) (height surface) :position position))
 
 (defun genbez (x0 y0 x1 y1 x2 y2 x3 y3 &key (segments 20))
   (let ((gx0 x0) (gy0 y0)
@@ -110,22 +92,22 @@
 	    (by (- py cy))
 	    (ax (- gx3 px gx0))
 	    (ay (- gy3 py gy0)))
-	(push (point gx0 gy0) point-list)
+	(push (point :x gx0 :y gy0) point-list)
 	(loop for n from 0 below (1- segments)
 	   do (let* ((u (* n du))
 		     (u^2 (* u u))
 		     (u^3 (expt u 3)))
-		(push (point (+ (* ax u^3)
+		(push (point :x (+ (* ax u^3)
 				(* bx u^2)
 				(* cx u)
 				gx0)
-			     (+ (* ay u^3)
+			     :y (+ (* ay u^3)
 				(* by u^2)
 				(* cy u)
 				gy0))
 		      point-list)))
-	(push (point gx3
-		     gy3)
+	(push (point :x gx3
+		     :y gy3)
 	      point-list)))))
 
 (defmacro with-bezier ((shape-type &optional (segments 20)) &body body)
@@ -144,8 +126,6 @@
 	 ,@body)
        (draw-curve ,point-list ,shape-type :segments ,segments))))
 
-
-
 (defmacro with-shape ((shape-type) &body body)
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
@@ -158,15 +138,15 @@
   (let ((step-size 0)
 	(points nil))
     (when (or (null segments) (= segments 0))
-      (setf segments (distance (sdl:point-x p2) (sdl:point-y p2)
-			       (sdl:point-x p3) (sdl:point-y p3))))
+      (setf segments (distance (x p2) (y p2)
+			       (x p3) (y p3))))
     (setf step-size (coerce (/ 1 segments) 'float))
     (setf points (loop for i from 0.0 below 1.0 by step-size
-	  collecting (sdl:point (catmull-rom-spline i (sdl:point-x p1) (sdl:point-x p2)
-						    (sdl:point-x p3) (sdl:point-x p4))
-				(catmull-rom-spline i (sdl:point-y p1) (sdl:point-y p2)
-						    (sdl:point-y p3) (sdl:point-y p4)))))
-    ; NOTE: There must be a more efficient way to add the first and last points to the point list.
+		    collecting (point :x (catmull-rom-spline i (x p1) (x p2)
+							     (x p3) (x p4))
+				      :y (catmull-rom-spline i (y p1) (y p2)
+							     (y p3) (y p4)))))
+    ;; NOTE: There must be a more efficient way to add the first and last points to the point list.
     (push p2 points)
     (nconc points (list p3))))
 
@@ -179,20 +159,20 @@
     (+ c1 (* val (+ c2 (* val (+ c3 (* c4 val))))))))
 
 (defun draw-bezier (points type
-		    &key update-p (clipping-p t) (surface *default-surface*) (color *default-color*) (segments 20))
+		    &key (clipping-p t) (surface *default-surface*) (color *default-color*) (segments 20))
   (do* ((p1 points (cdr p1))
 	(p2 (cdr p1) (cdr p1))
 	(p3 (cdr p2) (cdr p2))
 	(p4 (cdr p3) (cdr p3)))
        ((or (null p4) (null p3) (null p2) (null p1)))
-    (draw-shape (genbez (pos-x (first p1)) (pos-y (first p1))
-			(pos-x (first p2)) (pos-y (first p2))
-			(pos-x (first p3)) (pos-y (first p3))
-			(pos-x (first p4)) (pos-y (first p4))
+    (draw-shape (genbez (x (first p1)) (y (first p1))
+			(x (first p2)) (y (first p2))
+			(x (first p3)) (y (first p3))
+			(x (first p4)) (y (first p4))
 			:segments segments)
-		type :update-p update-p :clipping-p clipping-p :surface surface :color color)))
+		type :clipping-p clipping-p :surface surface :color color)))
   
-(defun draw-curve (points type &key update-p (clipping-p t) (surface *default-surface*) (color *default-color*)
+(defun draw-curve (points type &key (clipping-p t) (surface *default-surface*) (color *default-color*)
 		   (segments 10))
   (do* ((p1 points (cdr p1))
 	(p2 (cdr p1) (cdr p1))
@@ -200,16 +180,16 @@
 	(p4 (cdr p3) (cdr p3)))
        ((or (null p4) (null p3) (null p2) (null p1)))
     (draw-shape (calculate-curve (first p1) (first p2) (first p3) (first p4) segments) type
-		:update-p update-p :clipping-p clipping-p :surface surface :color color)))
+		:clipping-p clipping-p :surface surface :color color)))
 
-(defun draw-shape (points type &key update-p (clipping-p t) (surface *default-surface*) (color *default-color*))
+(defun draw-shape (points type &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   (case type
     (:line-strip
      (do* ((p1 points (cdr p1))
 	   (p2 (cdr p1) (cdr p1)))
 	  ((or (null p2)
 	       (null p1)))
-       (sdl:draw-line (first p1) (first p2) :update-p update-p :clipping-p clipping-p
+       (sdl:draw-line (first p1) (first p2) :clipping-p clipping-p
 				  :surface surface :color color)))
     (:lines
      (do* ((p1 points (if (cdr p1)
@@ -218,39 +198,33 @@
 	   (p2 (cdr p1) (cdr p1)))
 	  ((or (null p2)
 	       (null p1)))
-       (sdl:draw-line (first p1) (first p2) :update-p update-p :clipping-p clipping-p
+       (sdl:draw-line (first p1) (first p2) :clipping-p clipping-p
 				  :surface surface :color color)))
     (:points
      (loop for point in points
-	do (sdl:draw-point :position point :update-p update-p :clipping-p clipping-p
-				  :surface surface :color color)))))
+	do (draw-point point
+		       :clipping-p clipping-p
+		       :surface surface
+		       :color color)))))
 
-(defun draw-image (&key
-		   (surface sdl:*default-surface*)
-		   (position sdl:*default-position*)
-		   (screen sdl:*default-display*))
-  (let ((w (sdl:surf-w surface))
-        (h (sdl:surf-h surface)))
-    (sdl:blit-surface :src surface
-		      :dst screen
-		      :src-rect (sdl:rectangle 0 0 w h)
-		      :dst-rect (sdl:point (sdl:point-x position) (sdl:point-y position)))))
+(defun draw-image (image &key (screen sdl:*default-display*))
+  (blit-surface image screen))
 
-(defun draw-line-xy (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) update-p (clipping-p t))
-  (let ((x0 (to-int x0))
-	(y0 (to-int y0))
-	(x1 (to-int x1))
-	(y1 (to-int y1)))
+(defun draw-line-xy (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (let ((x0 (sdl-base::to-int x0))
+	(y0 (sdl-base::to-int y0))
+	(x1 (sdl-base::to-int x1))
+	(y1 (sdl-base::to-int y1)))
     (declare (type fixnum x0 y0 x1 y1))
 
     (when clipping-p
       ;; simple clipping, should be improved with Cohen-Sutherland line clipping
-      (sdl:check-bounds 0 (- (sdl:surf-w surface) 1) x0 x1)
-      (sdl:check-bounds 0 (- (sdl:surf-h surface) 1) y0 y1))
+      (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
+      (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
 
     ;; draw line with Bresenham algorithm
     (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
-	  (color (map-color :color color :surface surface)))
+	  (color (map-color color surface)))
       (declare (type fixnum x y dx dy color))
       (when (> x0 x1)
 	(rotatef x0 x1)
@@ -261,18 +235,19 @@
       (setf dx (- x1 x0))
       (setf dy (- y1 y0))
 
-      (with-pixels (surface)
+      (with-surface (surface)
+	(with-locked-surface (surface)
 	(if (>= dy 0)
 	    (if (>= dx dy)
 		(loop for x from x0 to x1 do
-		     (write-pixel x y color)
+		     (write-pixel x y nil :raw-color color)
 		     (if (< (* 2 (+ e dy)) dx)
 			 (incf e dy)
 			 (progn
 			   (incf y)
 			   (incf e (- dy dx)))))
 		(loop for y from y0 to y1 do
-		     (write-pixel x y color)
+		     (write-pixel x y nil :raw-color color)
 		     (if (< (* 2 (+ e dx)) dy)
 			 (incf e dx)
 			 (progn
@@ -280,7 +255,7 @@
 			   (incf e (- dx dy))))))
 	    (if (>= dx (- dy))
 		(loop for x from x0 to x1 do
-		     (write-pixel x y color)
+		     (write-pixel x y nil :raw-color color)
 		     (if (> (* 2 (+ e dy)) (- dx))
 			 (incf e dy)
 			 (progn
@@ -293,87 +268,84 @@
 		  (setf dx (- x1 x0))
 		  (setf dy (- y1 y0))
 		  (loop for y from y0 to y1 do
-		       (write-pixel x y color)
+		       (write-pixel x y nil :raw-color color)
 		       (if (> (* 2 (+ e dx)) (- dy))
 			   (incf e dx)
 			   (progn
 			     (decf x)
-			     (incf e (+ dx dy))))))))))))
+			     (incf e (+ dx dy)))))))))))))
 
-(defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) update-p (clipping-p t))
-  (draw-line-xy (pos-x p1) (pos-y p1)
-		(pos-x p2) (pos-y p2)
-		:update-p update-p :clipping-p clipping-p :color color :surface surface))
+(defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (draw-line-xy (x p1) (y p1)
+		(x p2) (y p2)
+		:clipping-p clipping-p :color color :surface surface))
 
-(defun draw-vline (p1 p2 &key (surface *default-surface*) (color *default-color*) update-p (clipping-p t))
-  (draw-box-xy (pos-x p1) (pos-y p1) (pos-x p1) (pos-y p2)
-	       :update-p update-p :clipping-p clipping-p :surface surface :color color))
+(defun draw-vline-points (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (draw-box-xy (x p1) (y p1) (x p1) (y p2)
+	       :clipping-p clipping-p :surface surface :color color))
 
-(defun draw-hline (p1 p2 &key (surface *default-surface*) (color *default-color*) update-p (clipping-p t))
-  (draw-box-xy (pos-x p1) (pos-y p1) (pos-x p2) (pos-y p1)
-	       :update-p update-p :clipping-p clipping-p :surface surface :color color))
+(defun draw-hline-points (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (draw-box-xy (x p1) (y p1) (x p2) (y p1)
+	       :clipping-p clipping-p :surface surface :color color))
 
-(defun draw-vline-xy (x y0 y1 &key (surface *default-surface*) (color *default-color*) update-p (clipping-p t))
-  (draw-box-xy x y0 x y1 :update-p update-p :clipping-p clipping-p :surface surface :color color))
+(defun draw-vline-xy (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (draw-box-xy x y0 x y1 :clipping-p clipping-p :surface surface :color color))
 
-(defun draw-hline-xy (x0 x1 y &key (surface *default-surface*) (color *default-color*) update-p (clipping-p t))
-  (draw-box-xy x0 y x1 y :update-p update-p :clipping-p clipping-p :surface surface :color color))
+(defun draw-hline-xy (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (draw-box-xy x0 y x1 y :clipping-p clipping-p :surface surface :color color))
 
-(defun draw-box (&key update-p (clipping-p t)
-		 (rectangle *default-rectangle*) (surface *default-surface*) (color *default-color*))
+(defun draw-box (rectangle &key (clipping-p t)
+		 (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-  (fill-surface :surface surface :color color :template rectangle :update-p update-p :clipping-p clipping-p)
+  (fill-surface color :dst surface :template rectangle :clipping-p clipping-p)
   rectangle)
 
-(defun draw-box-pp (p1 p2 &key update-p (clipping-p t) (surface *default-surface*) (color *default-color*))
+(defun draw-box-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified corner co-ordinates and color"
-  (fill-surface :surface surface :color color
-		:template (rect-from-pp p1 p2)
-		:update-p update-p
+  (fill-surface color
+		:dst surface
+		:template (rectangle-from-points p1 p2)
 		:clipping-p clipping-p))
 
-(defun draw-box-xy (x1 y1 x2 y2 &key update-p (clipping-p t) (surface *default-surface*) (color *default-color*))
+(defun draw-box-xy (x1 y1 x2 y2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified corner co-ordinates and color"
-  (fill-surface :surface surface :color color
-		:template (rect-from-xy x1 y1 x2 y2)
-		:update-p update-p
+  (fill-surface color
+		:dst surface
+		:template (rectangle-from-xy x1 y1 x2 y2)
 		:clipping-p clipping-p))
 
-(defun draw-rectangle (&key update-p (clipping-p t)
-		       (rectangle *default-rectangle*) (surface *default-surface*) (color *default-color*))
+(defun draw-rectangle (rectangle &key (clipping-p t)
+		       (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-  (with-rectangle (rectangle)
-    (let ((x+width (+ x w))
-	  (y+height (+ y h)))
-      (sdl:draw-line-xy x y x+width y :surface surface :color color :update-p update-p :clipping-p clipping-p)
-      (sdl:draw-line-xy x+width y x+width y+height :surface surface :color color :update-p update-p :clipping-p clipping-p)
-      (sdl:draw-line-xy x+width y+height x y+height :surface surface :color color :update-p update-p :clipping-p clipping-p)
-      (sdl:draw-line-xy x y+height x y :surface surface :color color :update-p update-p :clipping-p clipping-p)))
+  (with-rectangle (rectangle nil nil)
+    (let ((x+width (+ rectangle.x rectangle.width))
+	  (y+height (+ rectangle.y rectangle.height)))
+      (draw-line-xy rectangle.x rectangle.y x+width rectangle.y :surface surface :color color :clipping-p clipping-p)
+      (draw-line-xy x+width rectangle.y x+width y+height :surface surface :color color :clipping-p clipping-p)
+      (draw-line-xy x+width y+height rectangle.x y+height :surface surface :color color :clipping-p clipping-p)
+      (draw-line-xy rectangle.x y+height rectangle.x rectangle.y :surface surface :color color :clipping-p clipping-p)))
   surface)
 
-(defun draw-rectangle-pp (p1 p2 &key update-p (clipping-p t) (surface *default-surface*) (color *default-color*))
-  "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-  (draw-rectangle-xy (pos-x p1) (pos-y p1) (pos-x p2) (pos-y p2)
-		     :update-p update-p :clipping-p clipping-p :surface surface :color color))
+;; (defun draw-rectangle-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+;;   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
+;;   (draw-rectangle-xy (x p1) (y p1) (x p2) (y p2)
+;; 		     :clipping-p clipping-p :surface surface :color color))
 
 
-(defun draw-rectangle-xy (x1 y1 x2 y2
-				  &key update-p (clipping-p t) (surface *default-surface*) (color *default-color*))
-  "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-  (sdl:draw-line-xy x1 y1 x2 y1 :surface surface :color color :update-p update-p :clipping-p clipping-p)
-  (sdl:draw-line-xy x2 y1 x2 y2 :surface surface :color color :update-p update-p :clipping-p clipping-p)
-  (sdl:draw-line-xy x2 y2 x1 y2 :surface surface :color color :update-p update-p :clipping-p clipping-p)
-  (sdl:draw-line-xy x1 y2 x1 y1 :surface surface :color color :update-p update-p :clipping-p clipping-p)
-  surface)
+;; (defun draw-rectangle-xy (x1 y1 x2 y2
+;; 				  &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+;;   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
+;;   (draw-line-xy x1 y1 x2 y1 :surface surface :color color :clipping-p clipping-p)
+;;   (draw-line-xy x2 y1 x2 y2 :surface surface :color color :clipping-p clipping-p)
+;;   (draw-line-xy x2 y2 x1 y2 :surface surface :color color :clipping-p clipping-p)
+;;   (draw-line-xy x1 y2 x1 y1 :surface surface :color color :clipping-p clipping-p)
+;;   surface)
 
-(defun draw-point (&key (position sdl:*default-position*) (check-lock-p t) (update-p nil) (clipping-p t)
-		   (surface *default-surface*) (color *default-color*))
-  (let ((x (pos-x position)) (y (pos-y position)))
+(defun draw-point (point &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+  (let ((x (x point)) (y (y point)))
     (when clipping-p
-      (check-bounds 0 (surf-w surface) x)
-      (check-bounds 0 (surf-h surface) y))
-    (with-possible-lock-and-update (:surface surface :check-lock-p check-lock-p :update-p update-p
-					     :template (vector x y 1 1))
-      (sdl:draw-pixel x y :surface surface :color (map-color :color color :surface surface)))))
-
-
+      (sdl-base::check-bounds 0 (width surface) x)
+      (sdl-base::check-bounds 0 (height surface) y))
+    (with-surface (surface)
+      (with-locked-surface (surface)
+      (write-pixel x y color :surface surface)))))
