@@ -54,7 +54,7 @@
 ;  (declare (type fixnum fps-upper-limit fps-lower-limit current-ticks target-ticks))
   (defun init-framerate-manager()
     (setf fpsmngr (make-fpsmanager)))
-  (defun set-framerate (rate)
+  (defun set-frame-rate (rate)
     (if (> rate 0)
         (if (and (>= rate fps-lower-limit) (<= rate fps-upper-limit))
             (progn
@@ -64,9 +64,11 @@
               t)
 	    nil)
 	(setf (fpsmanager-rate fpsmngr) rate)))
-  (defun get-framerate ()
+  (defun frame-rate ()
     (fpsmanager-rate fpsmngr))
-  (defun framerate-delay ()
+  (defsetf frame-rate set-frame-rate)
+  
+  (defun frame-rate-delay ()
     (when (> (fpsmanager-rate fpsmngr) 0)
       (setf current-ticks (sdl-cffi::sdl-get-ticks))
       (incf (fpsmanager-framecount fpsmngr))
@@ -543,35 +545,35 @@
 
 (defmacro with-events (args &rest events)
   "(with-events
-     (:activeevent (:gain gain :state state)
+     (:active-event (:gain gain :state state)
 		     t)
-     (:keydown (:state state :scancode scancode :key key :mod mod :unicode unicode)
+     (:key-down-event (:state state :scancode scancode :key key :mod mod :unicode unicode)
 	       t)
-     (:keyup (:state state :scancode scancode :key key :mod mod :unicode unicode)
+     (:key-up-event (:state state :scancode scancode :key key :mod mod :unicode unicode)
 	     t)
-     (:mousemotion (:state state :x x :y y :xrel xrel :yrel yrel)
+     (:mouse-motion-event (:state state :x x :y y :xrel xrel :yrel yrel)
 		   t)
-     (:mousebuttondown (:button button :state state :x x :y y)
+     (:mouse-button-down-event (:button button :state state :x x :y y)
 		       t)
-     (:mousebuttonup (:button button :state state :x x :y y)
+     (:mouse-button-up-event (:button button :state state :x x :y y)
 		     t)
-     (:joyaxismotion (:which which :axis axis :value value)
+     (:joy-axis-motion-event (:which which :axis axis :value value)
 		     t)
-     (:joybuttondown (:which which :button button :state state)
+     (:joy-button-down-event (:which which :button button :state state)
 		     t)
-     (:joybuttonup (:which which :button button :state state)
+     (:joy-button-up-event (:which which :button button :state state)
 		   t)
-     (:joyhatmotion (:which which :hat hat :value value)
+     (:joy-hat-motion-event (:which which :hat hat :value value)
 		    t)
-     (:joyballmotion (:which which :ball ball :xrel xrel :yrel yrel)
+     (:joy-ball-motion-event (:which which :ball ball :xrel xrel :yrel yrel)
 		     t)
-     (:videoresize (:w w :h h)
+     (:video-resize-event (:w w :h h)
 		   t)
-     (:videoexpose ()
+     (:video-expose-event ()
       t)
-     (:syswmevent ()
+     (:sys-wm-event ()
       t)
-     (:quit ()
+     (:quit-event ()
       t)
      (:idle ()
       &body))
@@ -592,65 +594,65 @@
             ,@(remove nil 
                       (mapcar #'(lambda (event)
                                   (case (first event)
-                                    (:activeevent
+                                    (:active-event
                                      (expand-activeevent sdl-event 
                                                          (first (rest event)) 
 							 (rest (rest event))))
-				    (:keydown
+				    (:key-down-event
 				     (expand-keydown sdl-event 
 						     (first (rest event)) 
 						     (rest (rest event))))
-				    (:keyup
+				    (:key-up-event
 				     (expand-keyup sdl-event 
 						   (first (rest event)) 
 						   (rest (rest event))))
-				    (:mousemotion
+				    (:mouse-motion-event
 				     (expand-mousemotion sdl-event 
 							 (first (rest event)) 
 							 (rest (rest event))))
-				    (:mousebuttondown
+				    (:mouse-button-down-event
 				     (expand-mousebuttondown sdl-event
 							     (first (rest event)) 
 							     (rest (rest event))))
-				    (:mousebuttonup
+				    (:mouse-button-up-event
 				     (expand-mousebuttonup sdl-event 
 							   (first (rest event)) 
 							   (rest (rest event))))
-				    (:joyaxismotion
+				    (:joy-axis-motion-event
 				     (expand-joyaxismotion sdl-event 
 							   (first (rest event)) 
 							   (rest (rest event))))
-				    (:joybuttondown
+				    (:joy-button-down-event
 				     (expand-joybuttondown sdl-event 
 							   (first (rest event)) 
 							   (rest (rest event))))
-				    (:joybuttonup
+				    (:joy-button-up-event
 				     (expand-joybuttonup sdl-event 
 							 (first (rest event)) 
 							 (rest (rest event))))
-				    (:joyhatmotion
+				    (:joy-hat-motion-event
 				     (expand-joyhatmotion sdl-event 
 							  (first (rest event)) 
 							  (rest (rest event))))
-				    (:joyballmotion
+				    (:joy-ball-motion-event
 				     (expand-joyballmotion sdl-event 
 							   (first (rest event)) 
 							   (rest (rest event))))
-				    (:videoresize
+				    (:video-resize-event
 				     (expand-videoresize sdl-event 
 							 (first (rest event)) 
 							 (rest (rest event))))
-				    (:videoexpose
+				    (:video-expose-event
 				     (expand-videoexpose sdl-event 
 							 (rest (rest event))))
-				    (:syswmevent
+				    (:sys-wm-event
 				     (expand-syswmevent sdl-event 
 							(rest (rest event))))
-				    (:quit
+				    (:quit-event
 				     (expand-quit sdl-event 
 						  (rest (rest event)) 
 						  quit))
-				    (:userevent
+				    (:user-event
 				     (expand-userevent sdl-event 
 						       (first (rest event)) 
 						       (rest (rest event))))))
@@ -669,5 +671,5 @@
 				 (expand-idle (rest event)))))
 			  events))
 	(progn
-	  (framerate-delay)))
+	  (frame-rate-delay)))
       (cffi:foreign-free ,sdl-event))))

@@ -10,7 +10,7 @@
 ;;;; Functions
 
 
-(defun set-window (width height &key (bpp 0) (flags sdl-cffi::SDL-SW-SURFACE) title-caption icon-caption)
+(defun window (width height &key (bpp 0) (flags sdl-cffi::SDL-SW-SURFACE) title-caption icon-caption)
   "Will attempt to create a window using software surfaces using SDL_SetVideoMode.
    Overriding :flags will allow any type of window to be created.
    Returns
@@ -26,6 +26,6 @@
 (defun update-display (&optional (surface *default-display*))
   (sdl-cffi::sdl-flip (fp surface)))
 
-(defun clear-display (color &optional *default-display*)
-  (sdl-base::fill-surface (fp *default-display*)
-			  (map-color color *default-display*)))
+(defun clear-display (color &optional (surface *default-display*))
+  (sdl-base::fill-surface (fp surface)
+			  (map-color color surface)))

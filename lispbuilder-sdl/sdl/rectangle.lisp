@@ -27,7 +27,9 @@
 		     (,(intern (string-upcase (format nil "~A.y" var))) (y ,var))
 		     (,(intern (string-upcase (format nil "~A.width" var))) (width ,var))
 		     (,(intern (string-upcase (format nil "~A.height" var))) (height ,var)))
-     (let* ((,@(when `(,var ,rectangle)))
+     (let* ((,@(if rectangle
+		   `(,var ,rectangle)
+		   `(,var ,var)))
 	    (*default-rectangle* ,var))
        ,@body
        (if ,free-p

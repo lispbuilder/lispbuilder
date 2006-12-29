@@ -47,7 +47,9 @@
 		       (,(intern (string-upcase (format nil "~A.height" var))) (height ,var))
 		       (,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
 		       (,(intern (string-upcase (format nil "~A.y" var))) (y ,var)))
-       (let* ((,@(when surface `(,var ,surface)))
+       (let* ((,@(if surface
+		     `(,var ,surface)
+		     `(,var ,var)))
 	      (*default-surface* ,var))
 	 (sdl-base::with-surface (,surface-ptr (fp ,var) nil)
 	   ,@body
@@ -72,7 +74,9 @@
 (defmacro with-locked-surface ((var &optional surface)
 			       &body body)
   (let ((surface-ptr (gensym "surface-prt-")))
-    `(let* (,@(when surface `(,var ,surface))
+    `(let* ((,@(if surface
+		   `(,var ,surface)
+		   `(,var ,var)))
 	    (*default-surface* ,var))
        (sdl-base::with-locked-surface (,surface-ptr (fp ,var))
 	 ,@body))))

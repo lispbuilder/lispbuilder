@@ -15,6 +15,8 @@
 (defvar *default-position* nil)
 (defvar *default-rectangle* nil)
 (defvar *default-font* nil)
+(defvar *renderer* nil)
+(defvar *quit* nil)
 
 (defun default-surface ()
   *default-surface*)
@@ -40,3 +42,11 @@
   *default-rectangle*)
 (defun (setf default-rectangle) (rectangle)
   (setf *default-rectangle* rectangle))
+
+
+(declaim (INLINE renderer))
+(defun renderer ()
+  *renderer*)
+(defsetf renderer set-renderer)
+(defun set-renderer (renderer)
+  (setf *renderer* renderer))

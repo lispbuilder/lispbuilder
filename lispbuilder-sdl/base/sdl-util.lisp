@@ -18,7 +18,8 @@
    SDL-INIT-JOYSTICK, SDL-INIT-NOPARACHUTE, SDL-INIT-EVENTTHREAD or SDL-INIT-EVERYTHING."
   `(block nil
     (unwind-protect
-	 (when (init-sdl :flags (list ,@init-flags))
+	 (when (init-sdl ,@(when init-flags
+				 `(:flags (list ,@init-flags))))
 	   ,@body)
       (sdl-cffi::SDL-Quit))))
 
