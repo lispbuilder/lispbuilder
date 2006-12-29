@@ -207,8 +207,8 @@
 		       :surface surface
 		       :color color)))))
 
-(defun draw-image (image &key (screen sdl:*default-display*))
-  (blit-surface image screen))
+(defun draw-image (image &key (surface sdl:*default-surface*) position)
+  (draw-surface image :dst surface :position position))
 
 (defun draw-line-xy (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   (let ((x0 (sdl-base::to-int x0))
@@ -326,20 +326,20 @@
       (draw-line-xy rectangle.x y+height rectangle.x rectangle.y :surface surface :color color :clipping-p clipping-p)))
   surface)
 
-;; (defun draw-rectangle-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
-;;   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-;;   (draw-rectangle-xy (x p1) (y p1) (x p2) (y p2)
-;; 		     :clipping-p clipping-p :surface surface :color color))
+(defun draw-rectangle-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+  "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
+  (draw-rectangle-xy (x p1) (y p1) (x p2) (y p2)
+		     :clipping-p clipping-p :surface surface :color color))
 
 
-;; (defun draw-rectangle-xy (x1 y1 x2 y2
-;; 				  &key (clipping-p t) (surface *default-surface*) (color *default-color*))
-;;   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-;;   (draw-line-xy x1 y1 x2 y1 :surface surface :color color :clipping-p clipping-p)
-;;   (draw-line-xy x2 y1 x2 y2 :surface surface :color color :clipping-p clipping-p)
-;;   (draw-line-xy x2 y2 x1 y2 :surface surface :color color :clipping-p clipping-p)
-;;   (draw-line-xy x1 y2 x1 y1 :surface surface :color color :clipping-p clipping-p)
-;;   surface)
+(defun draw-rectangle-xy (x1 y1 x2 y2
+				  &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+  "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
+  (draw-line-xy x1 y1 x2 y1 :surface surface :color color :clipping-p clipping-p)
+  (draw-line-xy x2 y1 x2 y2 :surface surface :color color :clipping-p clipping-p)
+  (draw-line-xy x2 y2 x1 y2 :surface surface :color color :clipping-p clipping-p)
+  (draw-line-xy x1 y2 x1 y1 :surface surface :color color :clipping-p clipping-p)
+  surface)
 
 (defun draw-point (point &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   (let ((x (x point)) (y (y point)))

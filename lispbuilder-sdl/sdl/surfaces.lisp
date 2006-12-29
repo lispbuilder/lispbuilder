@@ -123,7 +123,6 @@
 (defmethod (setf y) (y-val (surface sdl-surface))
   (setf (sdl-base::rect-y (fp-position surface)) y-val))
 
-
 (defun clear-color-key (&key (surface *default-surface*) (rle-accel t))
   (sdl-base::clear-color-key (fp surface) rle-accel))
 
@@ -170,7 +169,10 @@
   (sdl-base::blit-surface (fp src) (fp dst) (cffi:null-pointer) (fp-position src))
   src)
 
-(defun draw-surface (src &optional (dst *default-display*))
+(defun draw-surface (src &key (dst *default-display*) (position nil))
+  (when position
+    (setf (x src) (x position)
+	  (y src) (y position)))
   (blit-surface src dst))
 
 (defun fill-surface (color &key (dst *default-surface*) (template nil) (update-p nil) (clipping-p t))

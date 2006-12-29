@@ -28,12 +28,12 @@
     (dotimes (i frame-values)
       (setf (aref frame-times i) 0))
     (setf frame-count 0
-	  frame-time-last (sdl:SDL_getticks)
+	  frame-time-last (sdl-cffi::SDL-get-ticks)
 	  font a-font))
 
   (defun display-fps (surface)
     (declare (optimize (safety 0) (speed 3) (space 1)))
-    (let ((get-ticks (sdl:SDL_getticks))
+    (let ((get-ticks (sdl-cffi::SDL-get-ticks))
           (frames-per-second 0.0))
       (declare (type fixnum get-ticks)
 	       (type float frames-per-second))
@@ -45,7 +45,7 @@
 	(dotimes (i frame-values)
 	  (incf frames-per-second (aref frame-times i)))
 	(setf frames-per-second (cast float (/ 1000 (/ frames-per-second frame-values))))
-	(sdl:fill-surface :color #(0 0 0) :surface surface)
+	(sdl::fill-surface (sdl::color) :surface surface)
 	(sdl-simple-font:draw-string (format nil "fps : ~d" (coerce frames-per-second 'float))
 				     :font font :position #(20 0) :surface surface))
       surface)))

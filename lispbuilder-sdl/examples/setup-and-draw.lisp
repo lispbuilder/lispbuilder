@@ -13,12 +13,12 @@
       (sdl:with-events ()
 	(:quit-event () t)
 	(:idle ()
-	       (sdl::clear-display #(0 0 0))
+	       (sdl::clear-display (sdl::color))
 	       (decf y 1)
 	       (when (< y 0)
 		 (setf y height))
 	       (sdl::draw-hline-xy 0 width y
 				   :clipping-p nil
-				   :color #(255 255 255)
-				   :surface sdl::*default-surface*)
+				   :color (sdl::color :r 255 :g 255 :b 255)
+				   :surface sdl::*default-display*)
 		 (sdl:update-display))))))

@@ -13,7 +13,7 @@
 	      :components
 	      ((:file "package")
 	       (:file "globals" :depends-on ("package"))
-	       (:file "sdl_simplefontdemo" :depends-on ("package"))
+;	       (:file "sdl_simplefontdemo" :depends-on ("package"))
 	       (:file "sdl_bmp_example" :depends-on ("package"))
 	       (:file "sdl_pixels" :depends-on ("package"))
 	       (:file "sdl_recursive_rects" :depends-on ("package"))
@@ -29,7 +29,7 @@
 	       (:file "objects" :depends-on ("package"))
 	       (:file "points-and-lines" :depends-on ("package"))
 	       (:file "distance-2D" :depends-on ("package"))
-	       (:file "metaballs" :depends-on ("package"))
+;	       (:file "metaballs" :depends-on ("package"))
 
 	       (:static-file "font.bmp")
 	       (:static-file "lisp.bmp")
