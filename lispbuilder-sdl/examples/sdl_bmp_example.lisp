@@ -11,18 +11,18 @@
 
 (defun bmp-sample ()
   (sdl:with-init ()
-    (sdl::window 640 480 :title-caption "simple bmp example" :icon-caption "simple bmp example")
+    (sdl::window 320 240 :title-caption "simple bmp example" :icon-caption "simple bmp example")
     (setf (sdl-base::frame-rate) 10)
     
     (sdl::with-surfaces ((img-1 (sdl::load-image "sdl.bmp" *bmp-path*))
 			 (img-2 (sdl::load-image "lisp.bmp" *bmp-path* :key-color (sdl::color :r 253 :g 59 :b 251))))
       (setf img-1.x 10
 	    img-1.y 10)
-      (sdl::draw-image img-1)
+      (sdl::draw-image img-1 :surface sdl::*default-display*)
 
-      (setf img-2.x 300
-	    img-2.y 10)
-      (sdl::draw-image img-2))
+      (sdl::draw-image img-2
+		       :surface sdl::*default-display*
+		       :position (sdl::point :x 190 :y 10)))
     
     (sdl:with-events ()
       (:quit-event () t)
