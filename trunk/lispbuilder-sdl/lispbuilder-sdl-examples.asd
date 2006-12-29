@@ -34,12 +34,13 @@
 	       (:static-file "font.bmp")
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
-	       (:module "squashed"
-			:components
-			((:file "squashed")
-			 (:static-file "blood.bmp")
-			 (:static-file "bug.bmp")
-			 (:static-file "racket.bmp")
-			 (:static-file "squash.bmp"))))
+;; 	       (:module "squashed"
+;; 			:components
+;; 			((:file "squashed")
+;; 			 (:static-file "blood.bmp")
+;; 			 (:static-file "bug.bmp")
+;; 			 (:static-file "racket.bmp")
+;; 			 (:static-file "squash.bmp")))
+	       )
 	      :serial t ;; Make sure we load "examples" before "squashed"
 	      )))
