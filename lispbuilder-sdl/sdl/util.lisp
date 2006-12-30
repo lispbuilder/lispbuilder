@@ -23,3 +23,7 @@
   (sqrt (+ (expt (- x1 x2) 2) 
 	   (expt (- y1 y2) 2))))
 
+(defun create-list-if-not (var)
+  (if (listp var)
+      var
+      (list var)))

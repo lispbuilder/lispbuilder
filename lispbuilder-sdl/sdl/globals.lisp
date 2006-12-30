@@ -15,8 +15,13 @@
 (defvar *default-position* nil)
 (defvar *default-rectangle* nil)
 (defvar *default-font* nil)
+
 (defvar *renderer* nil)
 (defvar *quit* nil)
+
+(defvar *sdl-quit-on-exit* nil)
+(defvar *initialize-on-startup* (logior sdl-cffi::SDL-INIT-VIDEO))
+(defvar *quit-on-exit* (logior sdl-cffi::SDL-INIT-VIDEO))
 
 (defun default-surface ()
   *default-surface*)
