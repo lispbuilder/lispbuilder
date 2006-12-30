@@ -7,28 +7,6 @@
 
 (in-package #:lispbuilder-sdl)
 
-;;;; Functions
-
-
-;; (defmacro with-init (renderer &body body)
-;;   (let ((rend (gensym "rend-")))
-;;     `(let ((,rend ,(if renderer
-;; 		       `(make-instance ,@renderer)
-;; 		       `(make-instance 'sdl))))
-;;        (when (hook-initialize-engine ,rend)
-;; 	 (unwind-protect
-;; 	      (progn
-;; ;		(init-timestep)
-;; 		,@body)
-;; 	   (hook-finalize-engine ,rend))))))
-
-(defmacro with-init (flags &body body)
-  `(sdl-base::with-init ,(if flags
-			     `(,@flags)
-			     `())
-     ,@body))
-
-
 (defun points-in-range (p1 p2 distance)
   "return true, if the distance between p1 and p2 is not more than 'distance'"
   (<= (+ (expt (- (x p1) (x p2)) 2)

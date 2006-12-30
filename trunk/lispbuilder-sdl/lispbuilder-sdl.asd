@@ -23,6 +23,7 @@
 	       (:file "generics")
 	       (:file "classes")
 	       (:file "util")
+	       (:file "init")
 	       (:file "events")
 	       (:file "primitives")
 	       (:file "surfaces")
