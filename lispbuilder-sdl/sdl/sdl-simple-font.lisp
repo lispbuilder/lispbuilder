@@ -1,14 +1,6 @@
 ;;;; simple fixed height and width font
 
-(defpackage :sdl-simple-font
-  (:use #:cl #:lispbuilder-sdl)
-  (:export 
-   #:initialise-font #:free-font #:make-text-image 
-   #:free-text-image #:draw-character #:draw-string 
-   #:draw-string-right-justify #:draw-string-centered
-   #:with-open-font))
-
-(in-package :sdl-simple-font)
+(in-package :lispbuilder-sdl)
 
 (defstruct font
   surface width height char-map key-color)
@@ -56,57 +48,69 @@
 		   :position (sdl::point :x 0 :y 0))
       surface)))
 
-(defun draw-character (screen font point char)
+(defun draw-character (font x y char &key
+		       (surface sdl::*default-surface*))
   "draw a single character at the x y position"
   (let ((image (font-surface font))
 	(w (font-width font))
 	(h (font-height font))
 	(char-offset (get-char-offset font char)))
     (if char-offset
-	(sdl-base::blit-surface :src (sdl::fp image)
-				:dst (sdl::fp screen)
-				:src-rect (sdl::rectangle :x (* w char-offset)
-							  :y 0
-							  :w w :h h)
-				:dst-rect (sdl::rectangle :x (sdl::x point)
-							  :y (sdl::y point)))
+	(sdl-base::with-rectangles ((src-rect) (dst-rect))
+	  (setf src-rect.x (* w char-offset)
+		src-rect.y 0
+		src-rect.width w
+		src-rect.height h)
+	  (setf dst-rect.x x
+		dst-rect.y y)
+	  (sdl-base::blit-surface :src (sdl::fp image)
+				  :dst (sdl::fp screen)
+				  :src-rect src-rect
+				  :dst-rect dst-rect))
 	nil)))
 
-(defun draw-string (str
-		   &key (position sdl::*default-position*) (surface sdl::*default-surface*) (font sdl::*default-font*))
+(defun draw-string (str x y &key
+		    (justify :left)
+		    (surface sdl::*default-surface*)
+		    (font sdl::*default-font*))
   "draw a string at the x y position"
-  (let ((x (sdl::x position)))
-    (loop for c across str do
-	 (unless (eql c #\space)
-	   (draw-character surface font (sdl::point :x x
-						    :y (sdl::y position))
-			   c))
-	 (incf x (font-width font)))))
+  (case justify
+    (:left (draw-string-left-justify str x y :key surface surface :font font))
+    (:right (draw-string-right-justify str x y :key surface surface :font font))
+    (:center (draw-string-centered str x y :key surface surface :font font))
+    (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER"))))
 
-(defun draw-string-right-justify (str
-				 &key (position sdl::*default-position*) (surface sdl::*default-surface*)
-				 (font sdl::*default-font*))
+(defun draw-string-left-justify (str x y &key
+				  (surface sdl::*default-surface*)
+				  (font sdl::*default-font*))
+  (loop for c across str do
+       (unless (eql c #\space)
+	 (draw-character font x y c
+			 :surface surface))
+       (incf x (font-width font))))
+
+(defun draw-string-right-justify (str x y &key
+				  (surface sdl::*default-surface*)
+				  (font sdl::*default-font*))
   "draw a string ending at the x y position"
-  (let ((right-x (- (sdl::x position) (font-width font)))
+  (let ((right-x (- x (font-width font)))
 	(rev-str (reverse str)))
     (loop for c across rev-str do
-	  (unless (eql c #\space)
-	    (draw-character surface font (sdl::point :x right-x
-						     :y (sdl::y position))
-			    c))
+	 (unless (eql c #\space)
+	   (draw-character font right-x y c
+			   :surface surface))
 	 (decf right-x (font-width font)))))
 
-(defun draw-string-centered (str &key
-			    (position sdl::*default-position*) (surface sdl::*default-surface*)
-			    (font sdl::*default-font*))
+(defun draw-string-centered (str x y &key
+			     (surface sdl::*default-surface*)
+			     (font sdl::*default-font*))
   "draw a string centered at x y"
   (let* ((width (* (length str) (font-width font)))
-	 (left-x (- (sdl::x position) (/ width 2))))
+	 (left-x (- x (/ width 2))))
     (loop for c across str do
 	 (unless (eql c #\space)
-	   (draw-character surface font (sdl::point :x left-x
-						    :y (sdl::y position))
-			   c))
+	   (draw-character font left-x y c
+			   :surface surface))
 	 (incf left-x (font-width font)))))
 
 (defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional (font-path ""))
