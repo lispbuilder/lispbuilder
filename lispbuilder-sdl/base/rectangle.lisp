@@ -34,6 +34,32 @@
 	      (rect-h new-rect) h)
 	new-rect)))
 
+
+(defmacro with-rectangle ((var &optional rectangle (free-p t)) &body body)
+  (if (or rectangle (atom var))
+      `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (rect-x ,var))
+			 (,(intern (string-upcase (format nil "~A.y" var))) (rect-y ,var))
+			 (,(intern (string-upcase (format nil "~A.width" var))) (rect-w ,var))
+			 (,(intern (string-upcase (format nil "~A.height" var))) (rect-h ,var)))
+	 ,(if rectangle
+	      `(let ((,var ,rectangle))
+		 ,@body
+		 (when ,free-p
+		   (cffi:foreign-free ,var)))
+	      `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
+		 ,@body)))
+      (error "VAR must be a symbol or variable, not a function.")))
+
+(defmacro with-rectangles (bindings &body body)
+  (if bindings
+      (return-with-rectangle bindings body)))
+
+(defun return-with-rectangle (bindings body)
+  (if bindings
+      `(with-rectangle (,@(car bindings))
+	 ,(return-with-rectangle (cdr bindings) body))
+      `(progn ,@body)))
+
 (defun rect-x (rect)
   (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::x))
 (defun (setf rect-x) (x-val rect)

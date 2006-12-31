@@ -3,7 +3,7 @@
 (in-package :lispbuilder-sdl)
 
 (defstruct font
-  surface width height char-map key-color)
+  surface width height char-map key-color cached)
 
 (defun make-char-map (str)
   "given a string of characters make a hash table which returns an index from 0 to n where 0 is the first char, and n is the last"
@@ -32,21 +32,23 @@
   (if (font-surface font)
       (sdl::free-surface (font-surface font))))
 
-(defun make-text-image (font string)
+(defun make-text-image (string &key
+			(cache nil) (font *default-font*))
   "given an initialised font and a string, draw the string to a surface and return the surface pointer"
   (let ((surface-width (* (font-width font) (length string)))
 	(surface-height (font-height font)))
-    (let ((surface (sdl::surface (sdl-base::create-surface surface-width surface-height
+    (with-surface (surface (sdl::surface (sdl-base::create-surface surface-width surface-height
 							   :surface (sdl::fp sdl::*default-display*)
-							   :accel t))))
-      (sdl::set-color-key (font-key-color font) :surface surface)
-      (sdl::fill-surface (font-key-color font)
-			 :dst surface)
-      (draw-string string
-		   :surface surface
-		   :font font
-		   :position (sdl::point :x 0 :y 0))
+							   :accel t)
+					 nil))
+      (sdl::set-color-key (font-key-color font))
+      (sdl::fill-surface (font-key-color font))
+      (draw-string string 0 0
+		   :font font)
+      (when cache
+	(setf (font-cached font) surface))
       surface)))
+
 
 (defun draw-character (font x y char &key
 		       (surface sdl::*default-surface*))
@@ -63,10 +65,11 @@
 		src-rect.height h)
 	  (setf dst-rect.x x
 		dst-rect.y y)
-	  (sdl-base::blit-surface :src (sdl::fp image)
-				  :dst (sdl::fp screen)
-				  :src-rect src-rect
-				  :dst-rect dst-rect))
+	  (sdl-base::blit-surface (sdl::fp image)
+				  (sdl::fp surface)
+				  src-rect
+				  dst-rect
+				  :update-p nil))
 	nil)))
 
 (defun draw-string (str x y &key
@@ -75,9 +78,9 @@
 		    (font sdl::*default-font*))
   "draw a string at the x y position"
   (case justify
-    (:left (draw-string-left-justify str x y :key surface surface :font font))
-    (:right (draw-string-right-justify str x y :key surface surface :font font))
-    (:center (draw-string-centered str x y :key surface surface :font font))
+    (:left (draw-string-left-justify str x y :surface surface :font font))
+    (:right (draw-string-right-justify str x y :surface surface :font font))
+    (:center (draw-string-centered str x y :surface surface :font font))
     (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER"))))
 
 (defun draw-string-left-justify (str x y &key
@@ -121,3 +124,13 @@
 	 (progn
 	   ,@body
 	   (free-font sdl::*default-font*)))))
+
+(defun initialise-default-font ()
+  (let ((font-name "font.bmp")
+	(font-path *default-font-path*)
+	(width 4)
+	(height 5)
+	(char-map-string "abcdefghijklmnopqrstuvwxyz:'!?_-,.()#~0123456789")
+	(key-color (color :r 99 :g 0 :b 0)))
+    (unless (font-p *default-font*)
+      (setf *default-font* (initialise-font font-name font-path width height char-map-string key-color)))))

@@ -169,7 +169,7 @@
   (sdl-base::blit-surface (fp src) (fp dst) (cffi:null-pointer) (fp-position src))
   src)
 
-(defun draw-surface (src &key (dst *default-display*) (position nil))
+(defun draw-surface (src &key (dst *default-surface*) (position nil))
   (when position
     (setf (x src) (x position)
 	  (y src) (y position)))
