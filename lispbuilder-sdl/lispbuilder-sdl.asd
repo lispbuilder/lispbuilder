@@ -37,6 +37,8 @@
 	       (:file "simple-font")
 	       (:file "sdl-util")
 	       #-clisp(:file "cffi-finalizers")
+
+	       (:static-file "font.bmp")
 	       )
 	      :serial t)
      (:module "documentation"
