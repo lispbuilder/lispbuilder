@@ -6,7 +6,6 @@
 ; window or screen height
 (defparameter *WINDOW-WIDTH* 640)
 (defparameter *WINDOW-HEIGHT* 480)
-(defparameter *display-surface* nil)
 
 (defun screen-center-x() (ash *window-width* -1))
 (defun screen-center-y() (ash *window-height* -1))
@@ -15,34 +14,29 @@
   "example of simple font"
   (sdl:with-init ()			;Initialize Systems
     ;; init your game
-    (sdl::window *WINDOW-WIDTH* *WINDOW-HEIGHT* :flags sdl-cffi::SDL-ANY-FORMAT)
+    (sdl::window *WINDOW-WIDTH* *WINDOW-HEIGHT*)
     (setf (sdl-base::frame-rate) 2) ; Set target framerate (or 0 for unlimited)
-    (let* ((small-font 
-	    (sdl-simple-font:initialise-font (namestring (merge-pathnames "font.bmp" *font-path*)) 4 5
-					       "abcdefghijklmnopqrstuvwxyz:'!?_-,.()#~0123456789" #(99 0 0)))
-	     (text-image (sdl-simple-font:make-text-image small-font "draw text image")))
-	(sdl:with-events  ()
-	  (:quit () t)
-	  (:idle ()
-		 ;; fill the background
-		 (sdl:clear-display :color (vector #x22 #x22 #x44))
-		 ;; Do stuff
-		 (sdl-simple-font:draw-string-right-justify "draw string right justified"
-							    :surface sdl:*default-display*
-							    :font small-font 
-							    :position (sdl:point (1- *WINDOW-WIDTH*) (screen-center-y)))
-		 (sdl-simple-font:draw-string "draw string"
-					      :font small-font 
-					      :position (sdl:point (+ (- (screen-center-x) 100) (random 200))
-								   (+ (- (screen-center-y) 100) (random 200)))) 
-		 (sdl-simple-font:draw-text-image sdl:*default-display* text-image 
-						  (sdl:point (+ (- (screen-center-x) 100) (random 200))
-							     (+ (- (screen-center-y) 100) (random 200))))
-		 (sdl-simple-font:draw-string-centered "draw string centered"
-						       :surface sdl:*default-display*
-						       :font small-font 
-						       :position (sdl:point (screen-center-x) (screen-center-y)))
-		 ;; Update the whole screen 
-		 (sdl:update-display)))
-	(sdl-simple-font:free-text-image text-image)
-	(sdl-simple-font:close-font small-font)))))
+
+    (sdl::initialise-default-font)
+    (sdl::make-text-image "draw text image" :cache t)
+
+    (sdl::with-events  ()
+      (:quit-event () t)
+      (:idle ()
+	     ;; fill the background
+	     (sdl::clear-display (sdl::color :r #x22 :g #x22 :b #x44))
+	     ;; Do stuff
+	     (sdl::with-surface (disp sdl::*default-display*)
+	       (sdl::draw-string "draw string right justified"
+				 (1- *WINDOW-WIDTH*)
+				 (screen-center-y)
+				 :justify :right)
+	       (sdl::draw-string "draw string"
+				 (+ (- (screen-center-x) 100) (random 200))
+				 (+ (- (screen-center-y) 100) (random 200)))
+	       (sdl::draw-image (sdl::font-cached sdl::*default-font*)
+				:position (sdl::point :x (+ (- (screen-center-x) 100) (random 200))
+						      :y (+ (- (screen-center-y) 100) (random 200))))
+	       (sdl::draw-string "draw string centered" (screen-center-x) (screen-center-y)))
+	     ;; Update the whole screen 
+	     (sdl:update-display)))))
