@@ -13,7 +13,7 @@
 	      :components
 	      ((:file "package")
 	       (:file "globals" :depends-on ("package"))
-;	       (:file "sdl_simplefontdemo" :depends-on ("package"))
+	       (:file "sdl-simple-font-demo" :depends-on ("package"))
 	       (:file "sdl_bmp_example" :depends-on ("package"))
 	       (:file "sdl_pixels" :depends-on ("package"))
 	       (:file "sdl_recursive_rects" :depends-on ("package"))

@@ -35,6 +35,16 @@
        (if ,free-p
 	   (free-rectangle ,var)))))
 
+(defmacro with-rectangles (bindings &body body)
+  (if bindings
+      (return-with-rectangle bindings body)))
+
+(defun return-with-rectangle (bindings body)
+  (if bindings
+      `(with-rectangle (,@(car bindings))
+	 ,(return-with-rectangle (cdr bindings) body))
+      `(progn ,@body)))
+
 (defmethod x ((rectangle rectangle))
   (sdl-base::rect-x (fp rectangle)))
 (defmethod (setf x) (x-val (rectangle rectangle))
