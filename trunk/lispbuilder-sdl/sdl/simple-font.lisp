@@ -37,11 +37,10 @@
   "given an initialised font and a string, draw the string to a surface and return the surface pointer"
   (let ((surface-width (* (font-width font) (length string)))
 	(surface-height (font-height font)))
-    (with-surface (surface (sdl::surface (sdl-base::create-surface surface-width surface-height
-							   :surface (sdl::fp sdl::*default-display*)
-							   :accel t)
-					 nil))
-      (sdl::set-color-key (font-key-color font))
+    (with-surface (surface (convert-surface :surface (create-surface surface-width surface-height
+								     :surface *default-display*
+								     :key-color (font-key-color font)
+								     :rle-accel t)))
       (sdl::fill-surface (font-key-color font))
       (draw-string string 0 0
 		   :font font)

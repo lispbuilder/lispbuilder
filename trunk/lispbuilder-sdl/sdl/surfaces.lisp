@@ -144,18 +144,28 @@
   (sdl-base::get-surface-rect (fp surface) (fp rectangle))
   rectangle)
 
-(defun clone-surface (&key (surface *default-surface*) key-color alpha-value)
+(defun convert-surface (&key (surface *default-surface*) key-color alpha-value)
   (sdl-base::convert-surface-to-display-format (fp surface)
-					       :key-color (fp key-color)
-					       :alpha-value alpha-value
+					       :key-color (when key-color (map-color key-color surface))
+					       :alpha-value (when alpha-value alpha-value)
 					       :free-p nil))
 
 (defun copy-surface (&key (surface *default-surface*) key-color alpha-value (type :sw) rle-accel)
   (sdl-base::copy-surface (fp surface)
-			  :key-color (fp key-color)
-			  :alpha-value alpha-value
+			  :key-color (when key-color (map-color key-color surface))
+			  :alpha-value (when alpha-value alpha-value)
 			  :type type
 			  :accel rle-accel))
+
+(defun create-surface (width height &key
+		       (bpp 32) (surface *default-surface*) key-color alpha-value (type :sw) (rle-accel t))
+  (sdl-base::create-surface width height
+			    :bpp bpp
+			    :surface surface
+			    :key-color (when key-color (map-color key-color surface))
+			    :alpha-value (when alpha-value alpha-value)
+			    :type type
+			    :accel rle-accel))
 
 (defun update-surface (surface &key template x y w h)
   (if template

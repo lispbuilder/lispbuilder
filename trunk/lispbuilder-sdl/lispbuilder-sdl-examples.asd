@@ -31,7 +31,6 @@
 	       (:file "distance-2D" :depends-on ("package"))
 ;	       (:file "metaballs" :depends-on ("package"))
 
-	       (:static-file "font.bmp")
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
 ;; 	       (:module "squashed"
