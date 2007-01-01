@@ -13,7 +13,7 @@
 ;;;; "SDL_mixer.h"
 ;;;; Must define the CPU byte order.
 (defun SDL_MIXER_VERSION (x)
-  (cffi:with-foreign-slots ((sdl:major sdl:minor sdl:patch) x sdl:SDL_version)
+  (cffi:with-foreign-slots ((sdl:major sdl:minor sdl:patch) x sdl-cffi:sdl-version)
     (setf sdl:major SDL_MIXER_MAJOR_VERSION
           sdl:minor SDL_MIXER_MINOR_VERSION
           sdl:patch SDL_MIXER_PATCHLEVEL)))
@@ -21,8 +21,8 @@
 (defun MIX_VERSION (x)
   (SDL_MIXER_VERSION x))
 
-#-(or little-endian PC386 X86 I386) (defconstant MIX_DEFAULT_FORMAT sdl:AUDIO_S16MSB) ;; Big Endian
-#+(or little-endian PC386 X86 I386) (defconstant MIX_DEFAULT_FORMAT sdl:AUDIO_S16LSB) ;; Little Endian
+#-(or little-endian PC386 X86 I386) (defconstant MIX_DEFAULT_FORMAT sdl-cffi::AUDIO-S16MSB) ;; Big Endian
+#+(or little-endian PC386 X86 I386) (defconstant MIX_DEFAULT_FORMAT sdl-cffi::AUDIO-S16LSB) ;; Little Endian
 
 (defun Mix_LoadWAV (file)
   (Mix_LoadWAV_RW (sdl:SDL_RWFROMFILE file "rb") 1))
