@@ -159,14 +159,14 @@
 			    :update-p nil))
   font)
 
-(defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional (font-path ""))
-			  &body body)
-  `(let ((sdl::*default-font* (initialise-font ,font-image-name ,font-path
-					       ,font-width ,font-height ,char-map-string ,key-color)))
-     (if sdl::*default-font*
-	 (progn
-	   ,@body
-	   (free-font sdl::*default-font*)))))
+;; (defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional (font-path ""))
+;; 			  &body body)
+;;   `(let ((sdl::*default-font* (initialise-font ,font-image-name ,font-path
+;; 					       ,font-width ,font-height ,char-map-string ,key-color)))
+;;      (if sdl::*default-font*
+;; 	 (progn
+;; 	   ,@body
+;; 	   (free-font sdl::*default-font*)))))
 
 (defun initialise-default-font ()
   (let ((font-name "font.bmp")
