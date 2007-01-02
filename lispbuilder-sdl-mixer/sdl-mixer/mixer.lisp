@@ -88,7 +88,7 @@
 (cffi:defcfun ("Mix_FreeMusic" Mix-Free-Music) :void
   (music :pointer))
 
-(cffi:defcfun ("Mix_GetMusicType" Mix-Get-Music-Type) Mix-MusicType
+(cffi:defcfun ("Mix_GetMusicType" Mix-Get-Music-Type) Mix-Music-Type
   (music :pointer))
 
 (cffi:defcfun ("Mix_SetPostMix" Mix-Set-Post-Mix) :void
@@ -271,10 +271,10 @@
 
 
 (defun SDL-MIXER-VERSION (x)
-  (cffi:with-foreign-slots ((sdl:major sdl:minor sdl:patch) x sdl-cffi:sdl-version)
-    (setf sdl:major SDL-MIXER-MAJOR-VERSION
-          sdl:minor SDL-MIXER-MINOR-VERSION
-          sdl:patch SDL-MIXER-PATCH-LEVEL)))
+  (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::sdl-version)
+    (setf sdl-cffi::major SDL-MIXER-MAJOR-VERSION
+          sdl-cffi::minor SDL-MIXER-MINOR-VERSION
+          sdl-cffi::patch SDL-MIXER-PATCH-LEVEL)))
 
 (defun MIX-VERSION (x)
   (SDL-MIXER-VERSION x))
