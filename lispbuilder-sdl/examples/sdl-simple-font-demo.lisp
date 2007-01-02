@@ -18,6 +18,8 @@
     (setf (sdl-base::frame-rate) 2) ; Set target framerate (or 0 for unlimited)
 
     (sdl::initialise-default-font)
+    ;; Create an image from the string.
+    ;; Then cache this image in the font to be used later.
     (sdl::make-text-image "draw text image" :cache t)
 
     (sdl::with-events  ()
@@ -27,16 +29,18 @@
 	     (sdl::clear-display (sdl::color :r #x22 :g #x22 :b #x44))
 	     ;; Do stuff
 	     (sdl::with-surface (disp sdl::*default-display*)
-	       (sdl::draw-string "draw string right justified"
-				 (1- *WINDOW-WIDTH*)
-				 (screen-center-y)
-				 :justify :right)
-	       (sdl::draw-string "draw string"
-				 (+ (- (screen-center-x) 100) (random 200))
-				 (+ (- (screen-center-y) 100) (random 200)))
+
+	       ;; Draw the font using the previously
+	       ;; created cached image.
 	       (sdl::draw-font (+ (- (screen-center-x) 100) (random 200))
 			       (+ (- (screen-center-y) 100) (random 200))
 			       :surface sdl::*default-display*)
-	       (sdl::draw-string "draw string centered" (screen-center-x) (screen-center-y)))
+
+	       (sdl::draw-string "draw string centered" (screen-center-x) (- (screen-center-y) 10)
+				 :justify :center)
+	       (sdl::draw-string "draw string left justified" (screen-center-x) (screen-center-y)
+				 :justify :left)
+	       (sdl::draw-string "draw string right justified" (screen-center-x) (+ (screen-center-y) 10)
+				 :justify :right))
 	     ;; Update the whole screen 
 	     (sdl:update-display)))))
