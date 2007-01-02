@@ -157,26 +157,36 @@
 
 (defun copy-surface (&key (surface *default-surface*) key-color alpha-value (type :sw) rle-accel)
   (let ((surf (sdl-base::copy-surface (fp surface)
-				      :key-color (when key-color (map-color key-color surface))
-				      :alpha-value (when alpha-value alpha-value)
+				      :color-key key-color
+				      :alpha alpha-value
 				      :type type
-				      :accel rle-accel)))
+				      :rle-accel rle-accel)))
     (unless (sdl-base::is-valid-ptr surf)
       (error "ERROR, copy-surface: Cannot copy the surface."))
-    (surface surf)))
+    (setf surf (surface surf))
+    (when key-color
+      (set-color-key key-color :surface surf :rle-accel rle-accel))
+    (when alpha-value
+      (set-alpha alpha-value :surface surf :rle-accel rle-accel))
+    surf))
 
 (defun create-surface (width height &key
 		       (bpp 32) (surface *default-surface*) key-color alpha-value (type :sw) (rle-accel t))
   (let ((surf (sdl-base::create-surface width height
 					:bpp bpp
 					:surface surface
-					:key-color (when key-color (map-color key-color surface))
-					:alpha-value (when alpha-value alpha-value)
+					:color-key key-color
+					:alpha alpha-value
 					:type type
-					:accel rle-accel)))
+					:rle-accel rle-accel)))
     (unless (sdl-base::is-valid-ptr surf)
       (error "ERROR, CREATE-SURFACE: Cannot create a new surface."))
-    (surface surf)))
+    (setf surf (surface surf))
+    (when key-color
+      (set-color-key key-color :surface surf :rle-accel rle-accel))
+    (when alpha-value
+      (set-alpha alpha-value :surface surf :rle-accel rle-accel))
+    surf))
 
 (defun update-surface (surface &key template x y w h)
   (if template

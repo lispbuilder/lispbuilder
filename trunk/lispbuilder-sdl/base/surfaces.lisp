@@ -135,23 +135,23 @@
       (sdl-cffi::sdl-Free-Surface surface))
     display-surface))
 
-(defun copy-surface (surface &key key-color alpha-value (type :sw) accel)
+(defun copy-surface (surface &key (type :sw) rle-accel color-key alpha)
   "create a surface compatible with the supplied surface"
   (create-surface (surf-w surface) (surf-h surface)
 		  :surface surface
-		  :key-color key-color
-		  :alpha-value alpha-value
+		  :color-key color-key
+		  :alpha alpha
 		  :type type
-		  :accel accel))
+		  :rle-accel rle-accel))
 
-(defun create-surface (width height &key (bpp 32) surface pixels pitch key-color alpha-value (type :sw) (accel nil))
+(defun create-surface (width height &key (bpp 32) surface color-key alpha pixels pitch (type :sw) (rle-accel nil))
   "create a surface compatible with the supplied :surface, if provided."
   (let ((surf nil) (flags nil))
-    (if key-color
+    (if color-key
 	(push sdl-cffi::SDL-SRC-COLOR-KEY flags))
-    (if alpha-value
+    (if alpha
 	(push sdl-cffi::SDL-SRC-ALPHA flags))
-    (if accel
+    (if rle-accel
 	(push sdl-cffi::SDL-RLE-ACCEL flags))
     (case type
       (:sw (push sdl-cffi::SDL-SW-SURFACE flags))
@@ -159,7 +159,9 @@
     (if (is-valid-ptr surface)
 	(with-foreign-slots ((sdl-cffi::BitsPerPixel sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask) (pixel-format surface) sdl-cffi::SDL-Pixel-Format)
 	    (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
-					     width height sdl-cffi::BitsPerPixel sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
+							 width height
+							 sdl-cffi::BitsPerPixel
+							 sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
 	(let ((Rmask 0) (Gmask 0) (Bmask 0) (Amask 0))
 	  ;; Set masks according to endianess of machine
 	  ;; Little-endian (X86)
@@ -175,13 +177,10 @@
 	  (if (and pixels pitch)
 	      ;; Pixels not yet supported.
 	      nil
-	      (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags) width height bpp Rmask Gmask Bmask Amask)))))
-    (if key-color
-	(set-color-key surf key-color accel))
-    (if alpha-value
-	(set-alpha surf alpha-value accel))
+	      (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
+							   width height
+							   bpp Rmask Gmask Bmask Amask)))))
     surf))
-
 
 ;; cl-sdl "sdl-ext.lisp"
 (defun must-lock? (surface)
@@ -256,3 +255,7 @@
     (update-surface surface :template template))
   template)
 
+(defun map-color (surface r g b &optional a)
+  (if a
+      (sdl-cffi::SDL-Map-RGBA (pixel-format surface) r g b a)
+      (sdl-cffi::SDL-Map-RGB (pixel-format surface) r g b)))

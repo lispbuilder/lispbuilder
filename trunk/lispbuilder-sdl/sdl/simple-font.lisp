@@ -79,7 +79,6 @@
 								     :rle-accel t))
 			   nil)
       (sdl::fill-surface (key-color font))
-      (sdl::set-color-key (key-color font))
       (draw-string string 0 0
 		   :font font)
       (when cache
@@ -151,6 +150,14 @@
 	   (draw-character font left-x y c
 			   :surface surface))
 	 (incf left-x (font-width font)))))
+
+(defun draw-font (x y &key (font sdl::*default-font*) (surface sdl:*default-surface*))
+  (when (and x y)
+    (setf (x (cached-surface font)) x
+	  (y (cached-surface font)) y)
+    (sdl-base::blit-surface (fp font) (fp surface) (cffi::null-pointer) (fp-position (cached-surface font))
+			    :update-p nil))
+  font)
 
 (defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional (font-path ""))
 			  &body body)
