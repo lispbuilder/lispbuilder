@@ -14,8 +14,8 @@
     (sdl::window 320 240 :title-caption "simple bmp example" :icon-caption "simple bmp example")
     (setf (sdl-base::frame-rate) 10)
     
-    (sdl::with-surfaces ((img-1 (sdl::load-image "sdl.bmp" *bmp-path*))
-			 (img-2 (sdl::load-image "lisp.bmp" *bmp-path* :key-color (sdl::color :r 253 :g 59 :b 251))))
+    (sdl::with-surfaces ((img-1 (sdl::convert-surface :surface (sdl::load-image "sdl.bmp" *bmp-path*) :free-p t))
+			 (img-2 (sdl::convert-surface :surface (sdl::load-image "lisp.bmp" *bmp-path* :key-color (sdl::color :r 253 :g 59 :b 251)) :free-p t)))
       (setf img-1.x 10
 	    img-1.y 10)
       (sdl::draw-image img-1 :surface sdl::*default-display*)

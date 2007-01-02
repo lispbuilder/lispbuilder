@@ -144,28 +144,39 @@
   (sdl-base::get-surface-rect (fp surface) (fp rectangle))
   rectangle)
 
-(defun convert-surface (&key (surface *default-surface*) key-color alpha-value)
-  (sdl-base::convert-surface-to-display-format (fp surface)
-					       :key-color (when key-color (map-color key-color surface))
-					       :alpha-value (when alpha-value alpha-value)
-					       :free-p nil))
+(defun convert-surface (&key (surface *default-surface*) key-color alpha-value (free-p nil))
+  (let ((surf (sdl-base::convert-surface-to-display-format (fp surface)
+							   :key-color (when key-color (map-color key-color surface))
+							   :alpha-value (when alpha-value alpha-value)
+							   :free-p nil)))
+    (unless (sdl-base::is-valid-ptr surf)
+      (error "ERROR, CONVERT-SURFACE: Cannot convert the surface."))
+    (when free-p
+      (free-surface surface))
+    (surface surf)))
 
 (defun copy-surface (&key (surface *default-surface*) key-color alpha-value (type :sw) rle-accel)
-  (sdl-base::copy-surface (fp surface)
-			  :key-color (when key-color (map-color key-color surface))
-			  :alpha-value (when alpha-value alpha-value)
-			  :type type
-			  :accel rle-accel))
+  (let ((surf (sdl-base::copy-surface (fp surface)
+				      :key-color (when key-color (map-color key-color surface))
+				      :alpha-value (when alpha-value alpha-value)
+				      :type type
+				      :accel rle-accel)))
+    (unless (sdl-base::is-valid-ptr surf)
+      (error "ERROR, copy-surface: Cannot copy the surface."))
+    (surface surf)))
 
 (defun create-surface (width height &key
 		       (bpp 32) (surface *default-surface*) key-color alpha-value (type :sw) (rle-accel t))
-  (sdl-base::create-surface width height
-			    :bpp bpp
-			    :surface surface
-			    :key-color (when key-color (map-color key-color surface))
-			    :alpha-value (when alpha-value alpha-value)
-			    :type type
-			    :accel rle-accel))
+  (let ((surf (sdl-base::create-surface width height
+					:bpp bpp
+					:surface surface
+					:key-color (when key-color (map-color key-color surface))
+					:alpha-value (when alpha-value alpha-value)
+					:type type
+					:accel rle-accel)))
+    (unless (sdl-base::is-valid-ptr surf)
+      (error "ERROR, CREATE-SURFACE: Cannot create a new surface."))
+    (surface surf)))
 
 (defun update-surface (surface &key template x y w h)
   (if template
@@ -183,7 +194,8 @@
   (when position
     (setf (x src) (x position)
 	  (y src) (y position)))
-  (blit-surface src dst))
+  (sdl-base::blit-surface (fp src) (fp dst) (cffi:null-pointer) (fp-position src))
+  src)
 
 (defun fill-surface (color &key (dst *default-surface*) (template nil) (update-p nil) (clipping-p t))
   "fill the entire surface with the specified R G B A color.
