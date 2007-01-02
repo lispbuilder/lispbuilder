@@ -5,306 +5,293 @@
 ;;;; (C)2006 Luke J Crook
 ;;;; See COPYING for license
 ;;;;
-;;;; This .i file has been tested with SDL_mixer version 1.2.7
-
-;;; To generate the SDL_mixer bindings using SWIG:
-;;;  - Copy the "begin_code.h" header file from SDL-1.2.11 into the SDL_mixer include directory.
-;;;    "begin_code.h" includes "#define SDLCALL __cdecl"
 
 (in-package #:lispbuilder-sdl-mixer)
 
-;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature)
-;; this handles anonymous enum types differently
 
-(defmacro defenum (&body enums)	
- `(progn ,@(loop for value in enums
-                 for index = 0 then (1+ index)
-                 when (listp value) do (setf index (second value)
-                                             value (first value))
-                 collect `(defconstant ,value ,index))))
+(cl:defconstant SDL-MIXER-MAJOR-VERSION 1)
 
-;;; This is to handle a C macro where 1 is shifted left n times
-(defun 1<<(x) (ash 1 x))
+(cl:defconstant SDL-MIXER-MINOR-VERSION 2)
 
-;;;; Overrides to C header files follow:
-;;;;
+(cl:defconstant SDL-MIXER-PATCH-LEVEL 7)
 
-;;;;
-;;;; end Overrides
+(cl:defconstant MIX-MAJOR-VERSION 1)
 
+(cl:defconstant MIX-MINOR-VERSION 2)
 
+(cl:defconstant MIX-PATCH-LEVEL 7)
 
-;;;SWIG wrapper code starts here
+(cffi:defcfun ("Mix_Linked_Version" Mix-Linked-Version) :pointer)
 
-(defmacro defanonenum (&body enums)
-   "Converts anonymous enums to defconstants."
-  `(progn ,@(loop for value in enums
-                  for index = 0 then (1+ index)
-                  when (listp value) do (setf index (second value)
-                                              value (first value))
-                  collect `(defconstant ,value ,index))))
+(cl:defconstant MIX-CHANNELS 8)
 
-;;;SWIG wrapper code ends here
+(cl:defconstant MIX-DEFAULT-FREQUENCY 22050)
 
+(cl:defconstant MIX-DEFAULT-CHANNELS 2)
 
-(cl:defconstant SDL_MIXER_MAJOR_VERSION 1)
+(cl:defconstant MIX-MAX-VOLUME 128)
 
-(cl:defconstant SDL_MIXER_MINOR_VERSION 2)
-
-(cl:defconstant SDL_MIXER_PATCHLEVEL 7)
-
-(cl:defconstant MIX_MAJOR_VERSION 1)
-
-(cl:defconstant MIX_MINOR_VERSION 2)
-
-(cl:defconstant MIX_PATCHLEVEL 7)
-
-(cffi:defcfun ("Mix_Linked_Version" Mix_Linked_Version) :pointer)
-
-(cl:defconstant MIX_CHANNELS 8)
-
-(cl:defconstant MIX_DEFAULT_FREQUENCY 22050)
-
-(cl:defconstant MIX_DEFAULT_CHANNELS 2)
-
-(cl:defconstant MIX_MAX_VOLUME 128)
-
-(cffi:defcstruct Mix_Chunk
+(cffi:defcstruct Mix-Chunk
 	(allocated :int)
 	(abuf :pointer)
 	(alen :unsigned-int)
 	(volume :unsigned-char))
 
-(cffi:defcenum Mix_Fading
-	:MIX_NO_FADING
-	:MIX_FADING_OUT
-	:MIX_FADING_IN)
+(cffi:defcenum Mix-Fading
+	:MIX-NO-FADING
+	:MIX-FADING-OUT
+	:MIX-FADING-IN)
 
-(cffi:defcenum Mix_MusicType
-	:MUS_NONE
-	:MUS_CMD
-	:MUS_WAV
-	:MUS_MOD
-	:MUS_MID
-	:MUS_OGG
-	:MUS_MP3)
+(cffi:defcenum Mix-Music-Type
+	:MUS-NONE
+	:MUS-CMD
+	:MUS-WAV
+	:MUS-MOD
+	:MUS-MID
+	:MUS-OGG
+	:MUS-MP3)
 
-(cffi:defcfun ("Mix_OpenAudio" Mix_OpenAudio) :int
+(cffi:defcfun ("Mix_OpenAudio" Mix-Open-Audio) :int
   (frequency :int)
   (format :unsigned-short)
   (channels :int)
   (chunksize :int))
 
-(cffi:defcfun ("Mix_AllocateChannels" Mix_AllocateChannels) :int
+(cffi:defcfun ("Mix_AllocateChannels" Mix-Allocate-Channels) :int
   (numchans :int))
 
-(cffi:defcfun ("Mix_QuerySpec" Mix_QuerySpec) :int
+(cffi:defcfun ("Mix_QuerySpec" Mix-Query-Spec) :int
   (frequency :pointer)
   (format :pointer)
   (channels :pointer))
 
-(cffi:defcfun ("Mix_LoadWAV_RW" Mix_LoadWAV_RW) :pointer
+(cffi:defcfun ("Mix_LoadWAV_RW" Mix-Load-WAV-RW) :pointer
   (src :pointer)
   (freesrc :int))
 
-(cffi:defcfun ("Mix_LoadMUS" Mix_LoadMUS) :pointer
+(cffi:defcfun ("Mix_LoadMUS" Mix-Load-MUS) :pointer
   (file :string))
 
-(cffi:defcfun ("Mix_LoadMUS_RW" Mix_LoadMUS_RW) :pointer
+(cffi:defcfun ("Mix_LoadMUS_RW" Mix-Load-MUS-RW) :pointer
   (rw :pointer))
 
-(cffi:defcfun ("Mix_QuickLoad_WAV" Mix_QuickLoad_WAV) :pointer
+(cffi:defcfun ("Mix_QuickLoad_WAV" Mix-Quick-Load-WAV) :pointer
   (mem :pointer))
 
-(cffi:defcfun ("Mix_QuickLoad_RAW" Mix_QuickLoad_RAW) :pointer
+(cffi:defcfun ("Mix_QuickLoad_RAW" Mix-Quick-Load-RAW) :pointer
   (mem :pointer)
   (len :unsigned-int))
 
-(cffi:defcfun ("Mix_FreeChunk" Mix_FreeChunk) :void
+(cffi:defcfun ("Mix_FreeChunk" Mix-Free-Chunk) :void
   (chunk :pointer))
 
-(cffi:defcfun ("Mix_FreeMusic" Mix_FreeMusic) :void
+(cffi:defcfun ("Mix_FreeMusic" Mix-Free-Music) :void
   (music :pointer))
 
-(cffi:defcfun ("Mix_GetMusicType" Mix_GetMusicType) Mix_MusicType
+(cffi:defcfun ("Mix_GetMusicType" Mix-Get-Music-Type) Mix-MusicType
   (music :pointer))
 
-(cffi:defcfun ("Mix_SetPostMix" Mix_SetPostMix) :void
-  (mix_func :pointer)
+(cffi:defcfun ("Mix_SetPostMix" Mix-Set-Post-Mix) :void
+  (mix-func :pointer)
   (arg :pointer))
 
-(cffi:defcfun ("Mix_HookMusic" Mix_HookMusic) :void
-  (mix_func :pointer)
+(cffi:defcfun ("Mix_HookMusic" Mix-Hook-Music) :void
+  (mix-func :pointer)
   (arg :pointer))
 
-(cffi:defcfun ("Mix_HookMusicFinished" Mix_HookMusicFinished) :void
-  (music_finished :pointer))
+(cffi:defcfun ("Mix_HookMusicFinished" Mix-Hook-Music-Finished) :void
+  (music-finished :pointer))
 
-(cffi:defcfun ("Mix_GetMusicHookData" Mix_GetMusicHookData) :pointer)
+(cffi:defcfun ("Mix_GetMusicHookData" Mix-Get-Music-Hook-Data) :pointer)
 
-(cffi:defcfun ("Mix_ChannelFinished" Mix_ChannelFinished) :void
-  (channel_finished :pointer))
+(cffi:defcfun ("Mix_ChannelFinished" Mix-Channel-Finished) :void
+  (channel-finished :pointer))
 
-(cl:defconstant MIX_CHANNEL_POST -2)
+(cl:defconstant MIX-CHANNEL-POST -2)
 
-(cffi:defcfun ("Mix_RegisterEffect" Mix_RegisterEffect) :int
+(cffi:defcfun ("Mix_RegisterEffect" Mix-Register-Effect) :int
   (chan :int)
   (f :pointer)
   (d :pointer)
   (arg :pointer))
 
-(cffi:defcfun ("Mix_UnregisterEffect" Mix_UnregisterEffect) :int
+(cffi:defcfun ("Mix_UnregisterEffect" Mix-Unregister-Effect) :int
   (channel :int)
   (f :pointer))
 
-(cffi:defcfun ("Mix_UnregisterAllEffects" Mix_UnregisterAllEffects) :int
+(cffi:defcfun ("Mix_UnregisterAllEffects" Mix-Unregister-All-Effects) :int
   (channel :int))
 
-(cffi:defcfun ("Mix_SetPanning" Mix_SetPanning) :int
+(cffi:defcfun ("Mix_SetPanning" Mix-Set-Panning) :int
   (channel :int)
   (left :unsigned-char)
   (right :unsigned-char))
 
-(cffi:defcfun ("Mix_SetPosition" Mix_SetPosition) :int
+(cffi:defcfun ("Mix_SetPosition" Mix-Set-Position) :int
   (channel :int)
   (angle :short)
   (distance :unsigned-char))
 
-(cffi:defcfun ("Mix_SetDistance" Mix_SetDistance) :int
+(cffi:defcfun ("Mix_SetDistance" Mix-Set-Distance) :int
   (channel :int)
   (distance :unsigned-char))
 
-(cffi:defcfun ("Mix_SetReverseStereo" Mix_SetReverseStereo) :int
+(cffi:defcfun ("Mix_SetReverseStereo" Mix-Set-Reverse-Stereo) :int
   (channel :int)
   (flip :int))
 
-(cffi:defcfun ("Mix_ReserveChannels" Mix_ReserveChannels) :int
+(cffi:defcfun ("Mix_ReserveChannels" Mix-Reserve-Channels) :int
   (num :int))
 
-(cffi:defcfun ("Mix_GroupChannel" Mix_GroupChannel) :int
+(cffi:defcfun ("Mix_GroupChannel" Mix-Group-Channel) :int
   (which :int)
   (tag :int))
 
-(cffi:defcfun ("Mix_GroupChannels" Mix_GroupChannels) :int
+(cffi:defcfun ("Mix_GroupChannels" Mix-Group-Channels) :int
   (from :int)
   (to :int)
   (tag :int))
 
-(cffi:defcfun ("Mix_GroupAvailable" Mix_GroupAvailable) :int
+(cffi:defcfun ("Mix_GroupAvailable" Mix-Group-Available) :int
   (tag :int))
 
-(cffi:defcfun ("Mix_GroupCount" Mix_GroupCount) :int
+(cffi:defcfun ("Mix_GroupCount" Mix-Group-Count) :int
   (tag :int))
 
-(cffi:defcfun ("Mix_GroupOldest" Mix_GroupOldest) :int
+(cffi:defcfun ("Mix_GroupOldest" Mix-Group-Oldest) :int
   (tag :int))
 
-(cffi:defcfun ("Mix_GroupNewer" Mix_GroupNewer) :int
+(cffi:defcfun ("Mix_GroupNewer" Mix-Group-Newer) :int
   (tag :int))
 
-(cffi:defcfun ("Mix_PlayChannelTimed" Mix_PlayChannelTimed) :int
+(cffi:defcfun ("Mix_PlayChannelTimed" Mix-Play-Channel-Timed) :int
   (channel :int)
   (chunk :pointer)
   (loops :int)
   (ticks :int))
 
-(cffi:defcfun ("Mix_PlayMusic" Mix_PlayMusic) :int
+(cffi:defcfun ("Mix_PlayMusic" Mix-Play-Music) :int
   (music :pointer)
   (loops :int))
 
-(cffi:defcfun ("Mix_FadeInMusic" Mix_FadeInMusic) :int
+(cffi:defcfun ("Mix_FadeInMusic" Mix-Fade-In-Music) :int
   (music :pointer)
   (loops :int)
   (ms :int))
 
-(cffi:defcfun ("Mix_FadeInMusicPos" Mix_FadeInMusicPos) :int
+(cffi:defcfun ("Mix_FadeInMusicPos" Mix-Fade-In-Music-Pos) :int
   (music :pointer)
   (loops :int)
   (ms :int)
   (position :double))
 
-(cffi:defcfun ("Mix_FadeInChannelTimed" Mix_FadeInChannelTimed) :int
+(cffi:defcfun ("Mix_FadeInChannelTimed" Mix-Fade-In-Channel-Timed) :int
   (channel :int)
   (chunk :pointer)
   (loops :int)
   (ms :int)
   (ticks :int))
 
-(cffi:defcfun ("Mix_Volume" Mix_Volume) :int
+(cffi:defcfun ("Mix_Volume" Mix-Volume) :int
   (channel :int)
   (volume :int))
 
-(cffi:defcfun ("Mix_VolumeChunk" Mix_VolumeChunk) :int
+(cffi:defcfun ("Mix_VolumeChunk" Mix-Volume-Chunk) :int
   (chunk :pointer)
   (volume :int))
 
-(cffi:defcfun ("Mix_VolumeMusic" Mix_VolumeMusic) :int
+(cffi:defcfun ("Mix_VolumeMusic" Mix-Volume-Music) :int
   (volume :int))
 
-(cffi:defcfun ("Mix_HaltChannel" Mix_HaltChannel) :int
+(cffi:defcfun ("Mix_HaltChannel" Mix-Halt-Channel) :int
   (channel :int))
 
-(cffi:defcfun ("Mix_HaltGroup" Mix_HaltGroup) :int
+(cffi:defcfun ("Mix_HaltGroup" Mix-Halt-Group) :int
   (tag :int))
 
-(cffi:defcfun ("Mix_HaltMusic" Mix_HaltMusic) :int)
+(cffi:defcfun ("Mix_HaltMusic" Mix-Halt-Music) :int)
 
-(cffi:defcfun ("Mix_ExpireChannel" Mix_ExpireChannel) :int
+(cffi:defcfun ("Mix_ExpireChannel" Mix-Expire-Channel) :int
   (channel :int)
   (ticks :int))
 
-(cffi:defcfun ("Mix_FadeOutChannel" Mix_FadeOutChannel) :int
+(cffi:defcfun ("Mix_FadeOutChannel" Mix-Fade-Out-Channel) :int
   (which :int)
   (ms :int))
 
-(cffi:defcfun ("Mix_FadeOutGroup" Mix_FadeOutGroup) :int
+(cffi:defcfun ("Mix_FadeOutGroup" Mix-Fade-Out-Group) :int
   (tag :int)
   (ms :int))
 
-(cffi:defcfun ("Mix_FadeOutMusic" Mix_FadeOutMusic) :int
+(cffi:defcfun ("Mix_FadeOutMusic" Mix-Fade-Out-Music) :int
   (ms :int))
 
-(cffi:defcfun ("Mix_FadingMusic" Mix_FadingMusic) Mix_Fading)
+(cffi:defcfun ("Mix_FadingMusic" Mix-Fading-Music) Mix-Fading)
 
-(cffi:defcfun ("Mix_FadingChannel" Mix_FadingChannel) Mix_Fading
+(cffi:defcfun ("Mix_FadingChannel" Mix-Fading-Channel) Mix-Fading
   (which :int))
 
-(cffi:defcfun ("Mix_Pause" Mix_Pause) :void
+(cffi:defcfun ("Mix_Pause" Mix-Pause) :void
   (channel :int))
 
-(cffi:defcfun ("Mix_Resume" Mix_Resume) :void
+(cffi:defcfun ("Mix_Resume" Mix-Resume) :void
   (channel :int))
 
-(cffi:defcfun ("Mix_Paused" Mix_Paused) :int
+(cffi:defcfun ("Mix_Paused" Mix-Paused) :int
   (channel :int))
 
-(cffi:defcfun ("Mix_PauseMusic" Mix_PauseMusic) :void)
+(cffi:defcfun ("Mix_PauseMusic" Mix-Pause-Music) :void)
 
-(cffi:defcfun ("Mix_ResumeMusic" Mix_ResumeMusic) :void)
+(cffi:defcfun ("Mix_ResumeMusic" Mix-Resume-Music) :void)
 
-(cffi:defcfun ("Mix_RewindMusic" Mix_RewindMusic) :void)
+(cffi:defcfun ("Mix_RewindMusic" Mix-Rewind-Music) :void)
 
-(cffi:defcfun ("Mix_PausedMusic" Mix_PausedMusic) :int)
+(cffi:defcfun ("Mix_PausedMusic" Mix-Paused-Music) :int)
 
-(cffi:defcfun ("Mix_SetMusicPosition" Mix_SetMusicPosition) :int
+(cffi:defcfun ("Mix_SetMusicPosition" Mix-Set-Music-Position) :int
   (position :double))
 
-(cffi:defcfun ("Mix_Playing" Mix_Playing) :int
+(cffi:defcfun ("Mix_Playing" Mix-Playing) :int
   (channel :int))
 
-(cffi:defcfun ("Mix_PlayingMusic" Mix_PlayingMusic) :int)
+(cffi:defcfun ("Mix_PlayingMusic" Mix-Playing-Music) :int)
 
-(cffi:defcfun ("Mix_SetMusicCMD" Mix_SetMusicCMD) :int
+(cffi:defcfun ("Mix_SetMusicCMD" Mix-Set-Music-CMD) :int
   (command :string))
 
-(cffi:defcfun ("Mix_SetSynchroValue" Mix_SetSynchroValue) :int
+(cffi:defcfun ("Mix_SetSynchroValue" Mix-Set-Synchro-Value) :int
   (value :int))
 
-(cffi:defcfun ("Mix_GetSynchroValue" Mix_GetSynchroValue) :int)
+(cffi:defcfun ("Mix_GetSynchroValue" Mix-Get-Synchro-Value) :int)
 
-(cffi:defcfun ("Mix_GetChunk" Mix_GetChunk) :pointer
+(cffi:defcfun ("Mix_GetChunk" Mix-Get-Chunk) :pointer
   (channel :int))
 
-(cffi:defcfun ("Mix_CloseAudio" Mix_CloseAudio) :void)
+(cffi:defcfun ("Mix_CloseAudio" Mix-Close-Audio) :void)
 
 
+(defun SDL-MIXER-VERSION (x)
+  (cffi:with-foreign-slots ((sdl:major sdl:minor sdl:patch) x sdl-cffi:sdl-version)
+    (setf sdl:major SDL-MIXER-MAJOR-VERSION
+          sdl:minor SDL-MIXER-MINOR-VERSION
+          sdl:patch SDL-MIXER-PATCH-LEVEL)))
+
+(defun MIX-VERSION (x)
+  (SDL-MIXER-VERSION x))
+
+#-(or little-endian PC386 X86 I386) (defconstant MIX-DEFAULT-FORMAT sdl-cffi::AUDIO-S16MSB) ;; Big Endian
+#+(or little-endian PC386 X86 I386) (defconstant MIX-DEFAULT-FORMAT sdl-cffi::AUDIO-S16LSB) ;; Little Endian
+
+(defun Mix-Load-WAV (file)
+  (Mix-Load-WAV-RW (sdl-cffi::SDL-RW-FROM-FILE file "rb") 1))
+
+(defconstant MIX-EFFECTS-MAX-SPEED "MIX_EFFECTSMAXSPEED")
+
+(defun Mix-Play-Channel (channel chunk loops)
+  (Mix-Play-Channel-Timed channel chunk loops -1))
+
+(defun Mix-Fade-In-Channel (channel chunk loops ms)
+  (Mix-Fade-In-Channel-Timed channel chunk loops ms -1))
+
+(defun Mix-Get-Error ()
+  (sdl-cffi::SDL-Get-Error))
