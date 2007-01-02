@@ -33,8 +33,7 @@
 	       ;; Draw the font using the previously
 	       ;; created cached image.
 	       (sdl::draw-font (+ (- (screen-center-x) 100) (random 200))
-			       (+ (- (screen-center-y) 100) (random 200))
-			       :surface sdl::*default-display*)
+			       (+ (- (screen-center-y) 100) (random 200)))
 
 	       (sdl::draw-string "draw string centered" (screen-center-x) (- (screen-center-y) 10)
 				 :justify :center)
