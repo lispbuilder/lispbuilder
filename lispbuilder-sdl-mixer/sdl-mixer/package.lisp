@@ -8,101 +8,95 @@
   (:documentation "The main package of `lispbuilder-sdl-mixer'.")
   (:export
 
-   ;; There are exports from sdl_mixer.lisp
-   #:SDL_MIXER_MAJOR_VERSION
-   #:SDL_MIXER_MINOR_VERSION
-   #:SDL_MIXER_PATCHLEVEL
-   #:MIX_MAJOR_VERSION
-   #:MIX_MINOR_VERSION
-   #:MIX_PATCHLEVEL
-   #:Mix_Linked_Version
-   #:MIX_CHANNELS
-   #:MIX_DEFAULT_FREQUENCY
-   #:MIX_DEFAULT_CHANNELS
-   #:MIX_MAX_VOLUME
-   #:Mix_Chunk
+   ;; There are exports from mixer.lisp
+   #:SDL-MIXER-MAJOR-VERSION
+   #:SDL-MIXER-MINOR-VERSION
+   #:SDL-MIXER-PATCH-LEVEL
+   #:MIX-MAJOR-VERSION
+   #:MIX-MINOR-VERSION
+   #:MIX-PATCH-LEVEL
+   #:Mix-Linked-Version
+   #:MIX-CHANNELS
+   #:MIX-DEFAULT-FREQUENCY
+   #:MIX-DEFAULT-CHANNELS
+   #:MIX-MAX-VOLUME
+   #:Mix-Chunk
    #:allocated
    #:abuf
    #:alen
    #:volume
-   #:Mix_Fading
-   #:Mix_MusicType
-   #:Mix_OpenAudio
-   #:Mix_AllocateChannels
-   #:Mix_QuerySpec
-   #:Mix_LoadWAV_RW
-   #:Mix_LoadMUS
-   #:Mix_LoadMUS_RW
-   #:Mix_QuickLoad_WAV
-   #:Mix_QuickLoad_RAW
-   #:Mix_FreeChunk
-   #:Mix_FreeMusic
-   #:Mix_GetMusicType
-   #:Mix_SetPostMix
-   #:Mix_HookMusic
-   #:Mix_HookMusicFinished
-   #:Mix_GetMusicHookData
-   #:Mix_ChannelFinished
-   #:MIX_CHANNEL_POST
-   #:Mix_RegisterEffect
-   #:Mix_UnregisterEffect
-   #:Mix_UnregisterAllEffects
-   #:Mix_SetPanning
-   #:Mix_SetPosition
-   #:Mix_SetDistance
-   #:Mix_SetReverseStereo
-   #:Mix_ReserveChannels
-   #:Mix_GroupChannel
-   #:Mix_GroupChannels
-   #:Mix_GroupAvailable
-   #:Mix_GroupCount
-   #:Mix_GroupOldest
-   #:Mix_GroupNewer
-   #:Mix_PlayChannelTimed
-   #:Mix_PlayMusic
-   #:Mix_FadeInMusic
-   #:Mix_FadeInMusicPos
-   #:Mix_FadeInChannelTimed
-   #:Mix_Volume
-   #:Mix_VolumeChunk
-   #:Mix_VolumeMusic
-   #:Mix_HaltChannel
-   #:Mix_HaltGroup
-   #:Mix_HaltMusic
-   #:Mix_ExpireChannel
-   #:Mix_FadeOutChannel
-   #:Mix_FadeOutGroup
-   #:Mix_FadeOutMusic
-   #:Mix_FadingMusic
-   #:Mix_FadingChannel
-   #:Mix_Pause
-   #:Mix_Resume
-   #:Mix_Paused
-   #:Mix_PauseMusic
-   #:Mix_ResumeMusic
-   #:Mix_RewindMusic
-   #:Mix_PausedMusic
-   #:Mix_SetMusicPosition
-   #:Mix_Playing
-   #:Mix_PlayingMusic
-   #:Mix_SetMusicCMD
-   #:Mix_SetSynchroValue
-   #:Mix_GetSynchroValue
-   #:Mix_GetChunk
-   #:Mix_CloseAudio
+   #:Mix-Fading
+   #:Mix-Music-Type
+   #:Mix-Open-Audio
+   #:Mix-Allocate-Channels
+   #:Mix-Query-Spec
+   #:Mix-Load-WAV-RW
+   #:Mix-Load-MUS
+   #:Mix-Load-MUS-RW
+   #:Mix-Quick-Load-WAV
+   #:Mix-Quick-Load-RAW
+   #:Mix-Free-Chunk
+   #:Mix-Free-Music
+   #:Mix-Get-Music-Type
+   #:Mix-Set-Post-Mix
+   #:Mix-Hook-Music
+   #:Mix-Hook-Music-Finished
+   #:Mix-Get-Music-Hook-Data
+   #:Mix-Channel-Finished
+   #:MIX-CHANNEL-POST
+   #:Mix-Register-Effect
+   #:Mix-Unregister-Effect
+   #:Mix-Unregister-All-Effects
+   #:Mix-Set-Panning
+   #:Mix-Set-Position
+   #:Mix-Set-Distance
+   #:Mix-Set-Reverse-Stereo
+   #:Mix-Reserve-Channels
+   #:Mix-Group-Channel
+   #:Mix-Group-Channels
+   #:Mix-Group-Available
+   #:Mix-Group-Count
+   #:Mix-Group-Oldest
+   #:Mix-Group-Newer
+   #:Mix-Play-Channel-Timed
+   #:Mix-Play-Music
+   #:Mix-Fade-In-Music
+   #:Mix-Fade-In-Music-Pos
+   #:Mix-Fade-In-Channel-Timed
+   #:Mix-Volume
+   #:Mix-Volume-Chunk
+   #:Mix-Volume-Music
+   #:Mix-Halt-Channel
+   #:Mix-Halt-Group
+   #:Mix-Halt-Music
+   #:Mix-Expire-Channel
+   #:Mix-Fade-Out-Channel
+   #:Mix-Fade-Out-Group
+   #:Mix-Fade-Out-Music
+   #:Mix-Fading-Music
+   #:Mix-Fading-Channel
+   #:Mix-Pause
+   #:Mix-Resume
+   #:Mix-Paused
+   #:Mix-Pause-Music
+   #:Mix-Resume-Music
+   #:Mix-Rewind-Music
+   #:Mix-Paused-Music
+   #:Mix-Set-Music-Position
+   #:Mix-Playing
+   #:Mix-Playing-Music
+   #:Mix-Set-Music-CMD
+   #:Mix-Set-Synchro-Value
+   #:Mix-Get-Synchro-Value
+   #:Mix-Get-Chunk
+   #:Mix-Close-Audio
    
-   ;; These are exports from translate.lisp
-   
-   ;; These are exports from util-sdl_mixer.lisp
 
-   ;; These are exports from sdlmixerswig.i
-
-   ;; These are exports from post-swig.lisp
-   #:SDL_MIXER_VERSION
-   #:MIX_VERSION
-   #:MIX_DEFAULT_FORMAT
-   #:Mix_LoadWAV
-   #:MIX_EFFECTSMAXSPEED
-   #:Mix_PlayChannel
-   #:Mix_FadeInChannel
-   #:Mix_GetError))
+   #:SDL-MIXER-VERSION
+   #:MIX-VERSION
+   #:MIX-DEFAULT-FORMAT
+   #:Mix-Load-WAV
+   #:MIX-EFFECTS-MAX-SPEED
+   #:Mix-Play-Channel
+   #:Mix-Fade-In-Channel
+   #:Mix-Get-Error))
