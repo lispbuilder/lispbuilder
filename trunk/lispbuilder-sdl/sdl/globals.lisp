@@ -24,6 +24,8 @@
 (defvar *renderer* nil)
 (defvar *quit* nil)
 
+(defvar *sdl-initialized* nil)
+(defvar *sdl-init-on-startup* nil)
 (defvar *sdl-quit-on-exit* nil)
 (defvar *initialize-on-startup* (logior sdl-cffi::SDL-INIT-VIDEO))
 (defvar *quit-on-exit* (logior sdl-cffi::SDL-INIT-VIDEO))

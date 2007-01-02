@@ -25,12 +25,11 @@ quiting SDL \(using SDL_Quit\) when SDL-QUIT-ON-EXIT returns true T."
   (declare (ignore flags))
   `(block nil
      (unwind-protect
-	  (when (sdl-base::init-sdl :flags nil)
-	    (init-sub-systems *initialize-on-startup*)
+	  (when (init-sdl)
+	    (init-sub-systems)
 	    ,@body)
-       (quit-sub-systems *quit-on-exit*)
-       (when *sdl-quit-on-exit*
-	 (sdl-cffi::SDL-Quit)))))
+       (quit-sub-systems)
+       (quit-sdl))))
 
 (defun initialize-on-startup (&rest flags)
   "Sets the SDL sub-systems in FLAGS that will be initialized in 
@@ -119,9 +118,31 @@ only if these subsystems are initialized."
 Returns NIL if SDL_Quit is not called when WITH-INIT exits."
   *sdl-quit-on-exit*)
 (defun set-sdl-quit-on-exit (val)
-  (setf *sdl-quit-on-exit* val))
+  (setf *sdl-init-on-startup* val
+	*sdl-quit-on-exit* val))
 (defsetf sdl-quit-on-exit set-sdl-quit-on-exit)
 
 (defun initialized-sub-systems-p ()
   "Returns a new list of initialized SDL subsystems."
   (list-sub-systems (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
+
+(defun init-sdl (&optional (init *sdl-init-on-startup*))
+  (if (or init
+	  (not *sdl-initialized*))
+      (if (sdl-base::init-sdl :flags nil)
+	  (setf *sdl-initialized* t)
+	  nil)
+      t))
+
+(defun quit-sdl (&optional (quit *sdl-quit-on-exit*))
+  (when quit
+    (setf *sdl-initialized* nil)
+    (sdl-cffi::SDL-Quit)))
+
+(defun sdl-init-on-startup ()
+  "Returns T if SDL_Init will be called when WITH-INIT starts.
+Returns NIL if SDL_Init is not called when WITH-INIT starts."
+  *sdl-init-on-startup*)
+(defun set-sdl-init-on-startup (val)
+  (setf *sdl-init-on-startup* val))
+(defsetf sdl-init-on-startup set-sdl-init-on-startup)
