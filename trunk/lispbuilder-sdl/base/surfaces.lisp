@@ -120,19 +120,20 @@
    returns NIL if the surface cannot be converted."
   ;; LJC: Added support for converting to an alpha surface.
   ;; LJC: Freeing surface is now optional.
-  (when (is-valid-ptr surface)
-    (if key-color
-	(set-color-key surface key-color))
-    (if alpha-value
-	(set-alpha surface alpha-value))
-    (let ((display-surface (if alpha-value
-			       (sdl-cffi::SDL-Display-Format-Alpha surface)
-			       (sdl-cffi::SDL-Display-Format surface))))
-      (if free-p
-	  (sdl-cffi::sdl-Free-Surface surface))
-      (if (is-valid-ptr display-surface)
-	  display-surface
-	  nil))))
+  (unless (is-valid-ptr surface)
+    (error "ERROR, CONVERT-SURFACE-TO-DISPLAY-FORMAT: SURFACE must be a pointer to an SDL_Surface."))
+  (if key-color
+      (set-color-key surface key-color))
+  (if alpha-value
+      (set-alpha surface alpha-value))
+  (let ((display-surface (if alpha-value
+			     (sdl-cffi::SDL-Display-Format-Alpha surface)
+			     (sdl-cffi::SDL-Display-Format surface))))
+    (unless (is-valid-ptr display-surface)
+      (error "ERROR, CONVERT-SURFACE-TO-DISPLAY-FORMAT: Cannot convert surface to display format."))
+    (when free-p
+      (sdl-cffi::sdl-Free-Surface surface))
+    display-surface))
 
 (defun copy-surface (surface &key key-color alpha-value (type :sw) accel)
   "create a surface compatible with the supplied surface"

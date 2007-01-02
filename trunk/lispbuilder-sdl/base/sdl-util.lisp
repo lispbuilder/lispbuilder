@@ -51,15 +51,12 @@
 	(apply #'logior keywords))
       (apply #'logior keyword-args)))
 
-(defun load-bmp (filename)
+(defun load-image (filename path)
   "load in the supplied filename, must be a bmp file"
-  (if (and (stringp filename) (probe-file filename)) ; LJC: Make sure filename is a string and the filename exists.
-      (sdl-cffi::SDL-Load-BMP-RW (sdl-cffi::sdl-RW-From-File filename "rb") 1)
-      (error "File ~A does not exist." filename)))
-
-(defun load-image (filename path &key key-color alpha-value)
-  (with-surface (surf (load-bmp (namestring (merge-pathnames filename path))) t)
-    (convert-surface-to-display-format surf :key-color key-color :alpha-value alpha-value :free-p nil)))
+  (let ((file (namestring (merge-pathnames filename path))))
+    (if (and (stringp file) (probe-file file)) ; LJC: Make sure filename is a string and the filename exists.
+	(sdl-cffi::SDL-Load-BMP-RW (sdl-cffi::sdl-RW-From-File file "rb") 1)
+	(error "File ~A does not exist." file))))
 
 (defun map-color (surface r g b &optional a)
   (if a

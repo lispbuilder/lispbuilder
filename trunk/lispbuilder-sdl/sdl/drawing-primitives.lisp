@@ -207,8 +207,18 @@
 		       :surface surface
 		       :color color)))))
 
-(defun draw-image (image &key (surface sdl:*default-surface*) position)
+(defun draw-image (image &key
+		   (surface sdl:*default-surface*) position)
   (draw-surface image :dst surface :position position))
+
+(defun draw-font (font &key
+		  (surface sdl:*default-surface*) position)
+  (when position
+    (setf (x (cached-surface font)) (x position)
+	  (y (cached-surface font)) (y position))
+    (sdl-base::blit-surface (fp font) (fp surface) (cffi::null-pointer) (fp-position (cached-surface font))
+			    :update-p nil))
+  font)
 
 (defun draw-line-xy (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   (let ((x0 (sdl-base::to-int x0))

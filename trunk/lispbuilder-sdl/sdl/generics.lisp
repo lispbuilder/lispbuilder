@@ -44,7 +44,6 @@
 (defgeneric (setf y2) (value obj))
 
 
-
 (defgeneric free-surface (surface)
   (:documentation "Free's foreign surface in SURFACE."))
 

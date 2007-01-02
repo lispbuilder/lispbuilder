@@ -34,9 +34,13 @@
 	       (sdl::draw-string "draw string"
 				 (+ (- (screen-center-x) 100) (random 200))
 				 (+ (- (screen-center-y) 100) (random 200)))
-	       (sdl::draw-image (sdl::font-cached sdl::*default-font*)
-				:position (sdl::point :x (+ (- (screen-center-x) 100) (random 200))
-						      :y (+ (- (screen-center-y) 100) (random 200))))
+	       (sdl::draw-font sdl::*default-font*
+			       :surface sdl::*default-display*
+			       :position (sdl::point :x (+ (- (screen-center-x) 100) (random 200))
+						     :y (+ (- (screen-center-y) 100) (random 200))))
+;; 	       (sdl::draw-image sdl::*default-font*
+;; 				:position (sdl::point :x (+ (- (screen-center-x) 100) (random 200))
+;; 						      :y (+ (- (screen-center-y) 100) (random 200))))
 	       (sdl::draw-string "draw string centered" (screen-center-x) (screen-center-y)))
 	     ;; Update the whole screen 
 	     (sdl:update-display)))))
