@@ -21,8 +21,7 @@
 	      :components
 	      ((:file "package")
 	       (:file "library" :depends-on ("package"))
-	       (:file "sdl_mixer" :depends-on ("package" "library"))
-	       (:file "post-swig" :depends-on ("sdl_mixer"))))
+	       (:file "mixer" :depends-on ("package" "library"))))
      (:module "documentation"
 	      :components
 	      ((:doc-file "README")
