@@ -347,6 +347,5 @@
     (when clipping-p
       (sdl-base::check-bounds 0 (width surface) x)
       (sdl-base::check-bounds 0 (height surface) y))
-    (with-surface (surface)
-      (with-locked-surface (surface)
-      (write-pixel x y color :surface surface)))))
+    (sdl-base::with-pixel (surf (fp surface))
+      (surf.write-pixel x y (map-color color surface)))))

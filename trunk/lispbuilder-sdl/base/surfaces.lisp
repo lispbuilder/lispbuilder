@@ -13,7 +13,9 @@
   (let ((body-value (gensym "body-value-")))
     (if (or surface (atom var))
 	`(let ((,body-value nil)
-	       (,@(when surface `(,var ,surface))))
+	       (,@(if surface
+		      `(,var ,surface)
+		      `(,var ,var))))
 	   (symbol-macrolet ((,(intern (string-upcase (format nil "~A.w" var))) (surf-w ,var))
 			     (,(intern (string-upcase (format nil "~A.h" var))) (surf-h ,var)))
 	     (setf ,body-value (progn ,@body)))
@@ -41,14 +43,17 @@
 
 (defmacro with-locked-surface ((var &optional surface)
 				&body body)
-  `(with-surface (,var ,surface ,nil)
-     (unwind-protect 
-	  (progn (when (must-lock? ,var)
-		   (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
-		     (error "Cannot lock surface")))
-		 ,@body)
-       (when (must-lock? ,var)
-	 (Sdl-Cffi::Sdl-Unlock-Surface ,var)))))
+  (let ((body-value (gensym "body-value-")))
+    `(let ((,body-value nil))
+       (with-surface (,var ,surface ,nil)
+	 (unwind-protect 
+	      (progn (when (must-lock? ,var)
+		       (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
+			 (error "Cannot lock surface")))
+		     (setf ,body-value (progn ,@body))
+		     (when (must-lock? ,var)
+		       (Sdl-Cffi::Sdl-Unlock-Surface ,var))))
+	 ,body-value))))
 
 (defmacro with-locked-surfaces (bindings &rest body)
   (if bindings
@@ -62,13 +67,14 @@
 
 (defmacro with-possible-lock-and-update ((var &key surface template)
 					 &body body)
-  `(progn
-     (with-locked-surface (,var ,surface)
-       ,@body)
-     (when ,template
-       (update-surface ,var :template ,template))))
+  (let ((body-value (gensym "body-value-")))
+    `(let ((,body-value nil))
+       (with-locked-surface (,var ,surface)
+	 (setf ,body-value (progn ,@body)))
+       (when ,template
+	 (update-surface ,var :template ,template))
+       ,body-value)))
   
-
 (defun set-color-key (surface &optional (color nil) (rle-accel nil))
   "Sets the key color for the given surface. The key color is made transparent."
   (when (is-valid-ptr surface)
