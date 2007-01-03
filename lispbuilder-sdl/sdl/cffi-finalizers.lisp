@@ -7,8 +7,6 @@
 (defmethod initialize-instance :after ((self surface) &key)
   (let ((foreign-pointer (fp self)))
     (setf (slot-value self 'foreign-pointer-to-surface) nil
-	  (slot-value self 'pixel-reader) nil
-	  (slot-value self 'pixel-writer) nil
 	  (slot-value self 'width) 0
 	  (slot-value self 'height) 0)
     (cffi:finalize self (lambda ()

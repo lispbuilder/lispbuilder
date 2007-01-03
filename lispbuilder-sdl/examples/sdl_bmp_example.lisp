@@ -15,16 +15,19 @@
     (setf (sdl-base::frame-rate) 10)
     
     (sdl::with-surfaces ((img-1 (sdl::convert-surface :surface (sdl::load-image "sdl.bmp" *bmp-path*) :free-p t))
-			 (img-2 (sdl::convert-surface :surface (sdl::load-image "lisp.bmp" *bmp-path* :key-color (sdl::color :r 253 :g 59 :b 251)) :free-p t)))
+			 (img-2 (sdl::convert-surface :surface (sdl::load-image "lisp.bmp" *bmp-path* :key-color (sdl::color :r 253 :g 59 :b 251)) :free-p t))
+			 (img-3 (sdl::convert-surface :surface (sdl::rotate-surface 90 :surface img-2) :key-color (sdl::color :r 253 :g 59 :b 251) :free-p t)))
       (setf img-1.x 10
 	    img-1.y 10)
       (sdl::draw-image img-1 :surface sdl::*default-display*)
 
       (sdl::draw-image img-2
 		       :surface sdl::*default-display*
-		       :position (sdl::point :x 190 :y 10)))
-    
+		       :position (sdl::point :x 190 :y 10))
+
+      (sdl::draw-image img-3 :surface sdl::*default-display*
+		       :position (sdl::point :x 80 :y 100)))
+
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl::update-display)))))
-

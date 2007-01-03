@@ -9,8 +9,6 @@
 
 (defclass sdl-surface ()
   ((foreign-pointer-to-surface :reader fp :initform nil :initarg :surface)
-   (pixel-reader :reader pixel-reader :initform nil :initarg :reader)
-   (pixel-writer :reader pixel-writer :initform nil :initarg :writer)
    (foreign-pointer-to-position-rect :accessor fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)))
 
 ;;; An object of type display should never be finalized by CFFI
@@ -30,9 +28,7 @@
       (let ((surf (make-instance (if display
 				     'display-surface
 				     'surface)
-				 :surface surface-fp
-				 :reader (sdl-base::generate-read-pixel surface-fp)
-				 :writer (sdl-base::generate-write-pixel surface-fp))))
+				 :surface surface-fp)))
  	(setf (x surf) 0
 	      (y surf) 0
 	      (width surf) (sdl-base::rect-w (fp surf))
@@ -42,7 +38,8 @@
 
 (defmacro with-surface ((var &optional surface (free-p t))
 			&body body)
-  (let ((surface-ptr (gensym "surface-prt-")))
+  (let ((surface-ptr (gensym "surface-prt-"))
+	(body-value (gensym "body-value-")))
     `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.width" var))) (width ,var))
 		       (,(intern (string-upcase (format nil "~A.height" var))) (height ,var))
 		       (,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
@@ -50,11 +47,13 @@
        (let* ((,@(if surface
 		     `(,var ,surface)
 		     `(,var ,var)))
-	      (*default-surface* ,var))
+	      (*default-surface* ,var)
+	      (,body-value nil))
 	 (sdl-base::with-surface (,surface-ptr (fp ,var) nil)
-	   ,@body
+	   (setf ,body-value (progn ,@body))
 	   (if ,free-p
-	       (free-surface ,var)))))))
+	       (free-surface ,var)))
+	 ,body-value))))
 
 (defmacro with-surface-slots ((var &optional surface)
 			      &body body)
@@ -73,13 +72,16 @@
 
 (defmacro with-locked-surface ((var &optional surface)
 			       &body body)
-  (let ((surface-ptr (gensym "surface-prt-")))
+  (let ((surface-ptr (gensym "surface-prt-"))
+	(body-value (gensym "body-value-")))
     `(let* ((,@(if surface
 		   `(,var ,surface)
 		   `(,var ,var)))
-	    (*default-surface* ,var))
+	    (*default-surface* ,var)
+	    (,body-value nil))
        (sdl-base::with-locked-surface (,surface-ptr (fp ,var))
-	 ,@body))))
+	 (setf ,body-value (progn ,@body)))
+       ,body-value)))
 
 (defmacro with-locked-surfaces (bindings &rest body)
   (if bindings
@@ -96,9 +98,7 @@
 
 (defmethod free-surface ((self surface))
   (let ((foreign-pointer (fp self)))
-    (setf (slot-value self 'foreign-pointer-to-surface) nil
-	  (slot-value self 'pixel-reader) nil
-	  (slot-value self 'pixel-writer) nil)
+    (setf (slot-value self 'foreign-pointer-to-surface) nil)
     (sdl-cffi::sdl-free-surface foreign-pointer))
   #-clisp(cffi:cancel-finalization self)
   )
@@ -174,7 +174,7 @@
 		       (bpp 32) (surface *default-surface*) key-color alpha-value (type :sw) (rle-accel t))
   (let ((surf (sdl-base::create-surface width height
 					:bpp bpp
-					:surface surface
+					:surface (fp surface)
 					:color-key key-color
 					:alpha alpha-value
 					:type type
@@ -218,5 +218,6 @@
 					(fp template)
 					(cffi::null-pointer))
 			  :clipping-p clipping-p
-			  :update-p update-p))
+			  :update-p update-p)
+  dst)
 
