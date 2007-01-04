@@ -34,10 +34,10 @@
 
 (defmacro with-color ((var &optional color (free-p t))
 		      &body body)
-  `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.r" var))) (r ,var))
-		     (,(intern (string-upcase (format nil "~A.g" var))) (g ,var))
-		     (,(intern (string-upcase (format nil "~A.b" var))) (b ,var))
-		     (,(intern (string-upcase (format nil "~A.a" var))) (a ,var)))
+  `(symbol-macrolet ((r (r ,var))
+		     (g (g ,var))
+		     (b (b ,var))
+		     (a (a ,var)))
      (let* ((,@(if color
 		   `(,var ,color)
 		   `(,var ,var)))
@@ -65,6 +65,13 @@
   (svref (fp color) 3))
 (defmethod (setf a) (a-val (color color-a))
   (setf (svref (fp color) 3) a-val))
+
+(defun set-color (color &key r g b a)
+  (when r (setf (r color) r))
+  (when g (setf (g color) g))
+  (when b (setf (b color) b))
+  (when (typep color 'color-a)
+    (when a (setf (a color) a))))
 
 (defmethod map-color ((color color) &optional (surface *default-surface*))
   (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format (fp surface))

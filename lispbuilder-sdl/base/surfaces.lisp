@@ -16,8 +16,8 @@
 	       (,@(if surface
 		      `(,var ,surface)
 		      `(,var ,var))))
-	   (symbol-macrolet ((,(intern (string-upcase (format nil "~A.w" var))) (surf-w ,var))
-			     (,(intern (string-upcase (format nil "~A.h" var))) (surf-h ,var)))
+	   (symbol-macrolet ((w (surf-w ,var))
+			     (h (surf-h ,var)))
 	     (setf ,body-value (progn ,@body)))
 	   (when ,free-p
 	     (sdl-cffi::sdl-Free-Surface ,var))

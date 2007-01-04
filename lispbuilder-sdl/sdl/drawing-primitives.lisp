@@ -47,12 +47,8 @@
 	 (y (random bound-h))
 	 (w (random+1 (- bound-w x)))
 	 (h (random+1 (- bound-h y))))
-    (with-rectangle (rect rectangle nil)
-      (setf rect.x x
-	    rect.y y
-	    rect.width w
-	    rect.height h))
-    rectangle))
+    (set-rectangle rectangle :x x :y y :w w :h h))
+  rectangle)
 
 (defun rectangle-from-wh (width height &key (position sdl:*default-position*))
   (rectangle :x (x position)
@@ -240,14 +236,14 @@
 	(if (>= dy 0)
 	    (if (>= dx dy)
 		(loop for x from x0 to x1 do
-		     (pix.write-pixel x y color)
+		     (sdl-base::write-pixel pix x y color)
 		     (if (< (* 2 (+ e dy)) dx)
 			 (incf e dy)
 			 (progn
 			   (incf y)
 			   (incf e (- dy dx)))))
 		(loop for y from y0 to y1 do
-		     (pix.write-pixel x y color)
+		     (sdl-base::write-pixel pix x y color)
 		     (if (< (* 2 (+ e dx)) dy)
 			 (incf e dx)
 			 (progn
@@ -255,7 +251,7 @@
 			   (incf e (- dx dy))))))
 	    (if (>= dx (- dy))
 		(loop for x from x0 to x1 do
-		     (pix.write-pixel x y color)
+		     (sdl-base::write-pixel pix x y color)
 		     (if (> (* 2 (+ e dy)) (- dx))
 			 (incf e dy)
 			 (progn
@@ -268,7 +264,7 @@
 		  (setf dx (- x1 x0))
 		  (setf dy (- y1 y0))
 		  (loop for y from y0 to y1 do
-		       (pix.write-pixel x y color)
+		       (sdl-base::write-pixel pix x y color)
 		       (if (> (* 2 (+ e dx)) (- dy))
 			   (incf e dx)
 			   (progn
@@ -318,12 +314,12 @@
 		       (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
   (with-rectangle (rectangle nil nil)
-    (let ((x+width (+ rectangle.x rectangle.width))
-	  (y+height (+ rectangle.y rectangle.height)))
-      (draw-line-xy rectangle.x rectangle.y x+width rectangle.y :surface surface :color color :clipping-p clipping-p)
-      (draw-line-xy x+width rectangle.y x+width y+height :surface surface :color color :clipping-p clipping-p)
-      (draw-line-xy x+width y+height rectangle.x y+height :surface surface :color color :clipping-p clipping-p)
-      (draw-line-xy rectangle.x y+height rectangle.x rectangle.y :surface surface :color color :clipping-p clipping-p)))
+    (let ((x+width (+ x w))
+	  (y+height (+ y h)))
+      (draw-line-xy x y x+width y :surface surface :color color :clipping-p clipping-p)
+      (draw-line-xy x+width y x+width y+height :surface surface :color color :clipping-p clipping-p)
+      (draw-line-xy x+width y+height x y+height :surface surface :color color :clipping-p clipping-p)
+      (draw-line-xy x y+height x y :surface surface :color color :clipping-p clipping-p)))
   surface)
 
 (defun draw-rectangle-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
@@ -347,4 +343,12 @@
       (sdl-base::check-bounds 0 (width surface) x)
       (sdl-base::check-bounds 0 (height surface) y))
     (sdl-base::with-pixel (surf (fp surface))
-      (surf.write-pixel x y (map-color color surface)))))
+      (sdl-base::write-pixel surf x y (map-color color surface)))))
+
+(defun read-point (point &key (clipping-p t) (surface *default-surface*))
+  (let ((x (x point)) (y (y point)))
+    (when clipping-p
+      (sdl-base::check-bounds 0 (width surface) x)
+      (sdl-base::check-bounds 0 (height surface) y))
+    (sdl-base::with-pixel (surf (fp surface))
+      (sdl-base::read-pixel surf x y))))

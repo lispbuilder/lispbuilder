@@ -94,12 +94,12 @@
 	(char-offset (get-char-offset font char)))
     (if char-offset
 	(sdl-base::with-rectangles ((src-rect) (dst-rect))
-	  (setf src-rect.x (* w char-offset)
-		src-rect.y 0
-		src-rect.width w
-		src-rect.height h)
-	  (setf dst-rect.x x
-		dst-rect.y y)
+	  (setf (sdl-base::rect-x src-rect) (* w char-offset)
+		(sdl-base::rect-y src-rect) 0
+		(sdl-base::rect-w src-rect) w
+		(sdl-base::rect-h src-rect) h)
+	  (setf (sdl-base::rect-x dst-rect) x
+		(sdl-base::rect-y dst-rect) y)
 	  (sdl-base::blit-surface (sdl::fp image)
 				  (sdl::fp surface)
 				  src-rect
