@@ -31,17 +31,24 @@
 (defgeneric y (obj)
   (:documentation "Returns the y component of the rectangle."))
 
+(defgeneric point-from (obj))
+
+(defgeneric x2 (obj))
+(defgeneric y2 (obj))
+
+(defgeneric xy (obj))
+(defgeneric set-xy (obj x y))
+
 (defgeneric (setf width) (value obj))
 (defgeneric (setf height) (value obj))
+
 (defgeneric (setf x) (value obj))
 (defgeneric (setf y) (value obj))
 
-(defgeneric x2 (obj))
-
-(defgeneric y2 (obj))
-
 (defgeneric (setf x2) (value obj))
 (defgeneric (setf y2) (value obj))
+
+(defgeneric (setf pos) (value obj))
 
 
 (defgeneric free-surface (surface)

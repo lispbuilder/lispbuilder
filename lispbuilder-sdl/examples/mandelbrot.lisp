@@ -21,7 +21,7 @@
 
 (defun update-mandelbrot-draw (width height sx sy sw sh x0 y0 x1 y1)
   "draw mandelbrot from screen position sx,sy to the extent by sw,sh (width height)"
-  (sdl::with-surface (surf sdl::*default-display*)
+  (sdl-base::with-pixel (pix (sdl::fp sdl::*default-display*))
     (sdl::with-color (col (sdl::color))
       (loop for y from sy below (+ sy sh) do
 	   (loop for x from sx below (+ sx sw) do
@@ -34,7 +34,7 @@
 			     (setf col.r (mod (* 13 c) 256)
 				   col.g (mod (* 7 c) 256)
 				   col.b (mod (* 2 c) 256))
-			     (sdl:write-pixel x y col))))))))
+			     (pix.write-pixel x y (sdl::map-color col sdl::*default-display*)))))))))
 
 (defun mandelbrot 
     (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
