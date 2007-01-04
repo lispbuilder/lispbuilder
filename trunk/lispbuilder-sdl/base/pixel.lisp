@@ -1,22 +1,35 @@
 
 (in-package #:lispbuilder-sdl-base)
 
-(defmacro with-pixel ((var &optional surface) &body body)
-  (let ((fn-write-pixel (gensym "fn-write-pixel-"))
-	(fn-read-pixel (gensym "fn-read-pixel-")))
-    (if (or surface (atom var))
-	`(let ((,@(if surface
-		     `(,var ,surface)
-		     `(,var ,var))))
-	   (with-locked-surface (,var)
-	     (let ((,fn-write-pixel (generate-write-pixel ,var))
-		   (,fn-read-pixel (generate-read-pixel ,var)))
-	       (labels ((,(intern (string-upcase (format nil "~A.write-pixel" var))) (x y color)
-			  (funcall ,fn-write-pixel x y color))
-			(,(intern (string-upcase (format nil "~A.read-pixel" var))) (x y)
-			  (funcall ,fn-read-pixel x y)))
-		 ,@body))))
-	(error "Var must be a symbol or variable, not a function."))))
+;; (defmacro with-pixel ((var &optional surface) &body body)
+;;   (let ((fn-write-pixel (gensym "fn-write-pixel-"))
+;; 	(fn-read-pixel (gensym "fn-read-pixel-")))
+;;     (if (or surface (atom var))
+;; 	`(let ((,@(if surface
+;; 		     `(,var ,surface)
+;; 		     `(,var ,var))))
+;; 	   (with-locked-surface (,var)
+;; 	     (let ((,fn-write-pixel (generate-write-pixel ,var))
+;; 		   (,fn-read-pixel (generate-read-pixel ,var)))
+;; 	       (labels ((,(intern (string-upcase (format nil "~A.write-pixel" var))) (x y color)
+;; 			  (funcall ,fn-write-pixel x y color))
+;; 			(,(intern (string-upcase (format nil "~A.read-pixel" var))) (x y)
+;; 			  (funcall ,fn-read-pixel x y)))
+;; 		 ,@body))))
+;; 	(error "Var must be a symbol or variable, not a function."))))
+
+(defmacro with-pixel ((var surface) &body body)
+  (let ((surface-fp (gensym "surface-fp")))
+    `(let ((,surface-fp ,surface))
+       (with-locked-surface (,surface-fp)
+	 (let ((,var (make-pixels)))
+	   (setf (pixels-fp-writer ,var) (generate-write-pixel ,surface-fp)
+		 (pixels-fp-reader ,var) (generate-read-pixel ,surface-fp))
+	   (labels ((write-pixel (pixels x y color)
+		      (funcall (pixels-fp-writer pixels) x y color))
+		    (read-pixel (pixels x y)
+		      (funcall (pixels-fp-reader pixels) x y)))
+	     ,@body))))))
 
 (defmacro with-pixels (bindings &rest body)
   (if bindings
@@ -27,6 +40,17 @@
       `(with-pixel (,@(car bindings))
 	 ,(return-with-pixels (cdr bindings) body))
       `(progn ,@body)))
+
+(defstruct pixels
+  fp-reader fp-writer)
+
+(defun read-pixel (pixels x y)
+  (declare (ignore pixels x y))
+  (error "READ-PIXEL only valid within WITH-PIXEL/S."))
+
+(defun write-pixel (pixels x y color)
+  (declare (ignore pixels x y color))
+  (error "WRITE-PIXEL only valid within WITH-PIXEL/S."))
 
 (defun generate-write-pixel (surface)
   (let* ((format (pixel-format surface))
@@ -55,8 +79,9 @@
 		 (4 #'(lambda (x y color)
 			(setf (mem-aref pixel-address :unsigned-int (/ (offset x y) 4)) color)))
 		 (otherwise (error "generate-write-pixel, bpp not 1, 2, 3 or 4")))))
-      #'(lambda (x y color)
-	  (funcall (generate-write-pixel-fn bpp) x y color)))))
+      (let ((write-pixel-fn (generate-write-pixel-fn bpp)))      
+	#'(lambda (x y color)
+	    (funcall write-pixel-fn x y color))))))
 
 (defun generate-read-pixel (surface)
   (let* ((format (pixel-format surface))
@@ -87,8 +112,7 @@
 				      (mem-aref r :unsigned-char)
 				      (mem-aref g :unsigned-char)
 				      (mem-aref b :unsigned-char)
-				      (mem-aref a :unsigned-char))
-	      ))))))
+				      (mem-aref a :unsigned-char))))))))
 
 (defun draw-pixel (surface x y color)
   "Set the pixel at (x, y) to the given value 

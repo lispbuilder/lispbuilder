@@ -23,10 +23,10 @@
 
 (defmacro with-rectangle ((var &optional rectangle (free-p t))
 			  &body body)
-  `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
-		     (,(intern (string-upcase (format nil "~A.y" var))) (y ,var))
-		     (,(intern (string-upcase (format nil "~A.width" var))) (width ,var))
-		     (,(intern (string-upcase (format nil "~A.height" var))) (height ,var)))
+  `(symbol-macrolet ((x (x ,var))
+		     (y (y ,var))
+		     (w (width ,var))
+		     (h (height ,var)))
      (let* ((,@(if rectangle
 		   `(,var ,rectangle)
 		   `(,var ,var)))
@@ -83,3 +83,10 @@
   (cffi:foreign-free (fp rectangle))
   #-clisp(cffi:cancel-finalization rectangle)
   )
+
+(defun set-rectangle (rect &key x y w h)
+  (when x (setf (x rect) x))
+  (when y (setf (y rect) y))
+  (when w (setf (width rect) w))
+  (when h (setf (height rect) h))
+  rect)

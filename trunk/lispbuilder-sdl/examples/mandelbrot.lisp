@@ -31,10 +31,8 @@
 		   while (< (abs z) 2)
 		   for c from 60 above 0
 		   finally (progn
-			     (setf col.r (mod (* 13 c) 256)
-				   col.g (mod (* 7 c) 256)
-				   col.b (mod (* 2 c) 256))
-			     (pix.write-pixel x y (sdl::map-color col sdl::*default-display*)))))))))
+			     (sdl::set-color col :r (mod (* 13 c) 256) :g (mod (* 7 c) 256) :b (mod (* 2 c) 256))
+			     (sdl-base::write-pixel pix x y (sdl::map-color col sdl::*default-display*)))))))))
 
 (defun mandelbrot 
     (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))

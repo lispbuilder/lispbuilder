@@ -9,8 +9,8 @@
 
 (defmacro with-point ((var &optional point)
 		      &body body)
-  `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
-		     (,(intern (string-upcase (format nil "~A.y" var))) (y ,var)))
+  `(symbol-macrolet ((x (x ,var))
+		     (y (y ,var)))
      (let* ((,@(if point
 		   `(,var ,point)
 		   `(,var ,var)))

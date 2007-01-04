@@ -35,9 +35,7 @@
 		 (sdl::with-rectangle (rect)
 		 (sdl::random-rectangle width height rect)
 		 (sdl::with-color (col (sdl::color))
-		   (setf col.r (random 255)
-			 col.g (random 255)
-			 col.b (random 255))
+		   (sdl::set-color col :r (random 255) :g (random 255) :b (random 255))
 		   (sdl::fill-surface col
 				      :template rect
 				      :dst sdl::*default-display*
