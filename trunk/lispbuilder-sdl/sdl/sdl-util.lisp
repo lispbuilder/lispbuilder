@@ -9,7 +9,7 @@
 
 (defun points-in-range (p1 p2 distance)
   "Returns true T, if the distance between the points p1 POINT and p2 POINT is <= DISTANCE"
-  (<= distance (distance-to-point p1 p2)))
+  (>= distance (distance-to-point p1 p2)))
 
 (defun distance-to-point (p1 p2)
   "Returns the distance between the points p1 POINT and p2 POINT."

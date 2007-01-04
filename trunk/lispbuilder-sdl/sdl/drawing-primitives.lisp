@@ -236,19 +236,18 @@
       (setf dx (- x1 x0))
       (setf dy (- y1 y0))
 
-      (with-surface (surface)
-	(with-locked-surface (surface)
+      (sdl-base::with-pixel (pix (fp surface))
 	(if (>= dy 0)
 	    (if (>= dx dy)
 		(loop for x from x0 to x1 do
-		     (write-pixel x y nil :raw-color color)
+		     (pix.write-pixel x y color)
 		     (if (< (* 2 (+ e dy)) dx)
 			 (incf e dy)
 			 (progn
 			   (incf y)
 			   (incf e (- dy dx)))))
 		(loop for y from y0 to y1 do
-		     (write-pixel x y nil :raw-color color)
+		     (pix.write-pixel x y color)
 		     (if (< (* 2 (+ e dx)) dy)
 			 (incf e dx)
 			 (progn
@@ -256,7 +255,7 @@
 			   (incf e (- dx dy))))))
 	    (if (>= dx (- dy))
 		(loop for x from x0 to x1 do
-		     (write-pixel x y nil :raw-color color)
+		     (pix.write-pixel x y color)
 		     (if (> (* 2 (+ e dy)) (- dx))
 			 (incf e dy)
 			 (progn
@@ -269,12 +268,12 @@
 		  (setf dx (- x1 x0))
 		  (setf dy (- y1 y0))
 		  (loop for y from y0 to y1 do
-		       (write-pixel x y nil :raw-color color)
+		       (pix.write-pixel x y color)
 		       (if (> (* 2 (+ e dx)) (- dy))
 			   (incf e dx)
 			   (progn
 			     (decf x)
-			     (incf e (+ dx dy)))))))))))))
+			     (incf e (+ dx dy))))))))))))
 
 (defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   (draw-line-xy (x p1) (y p1)

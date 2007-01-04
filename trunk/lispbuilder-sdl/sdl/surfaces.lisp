@@ -123,6 +123,12 @@
 (defmethod (setf y) (y-val (surface sdl-surface))
   (setf (sdl-base::rect-y (fp-position surface)) y-val))
 
+(defmethod xy ((surface sdl-surface))
+  (vector (x surface) (y surface)))
+(defmethod set-xy ((surface sdl-surface) x y)
+  (setf (x surface) x
+	(y surface) y))
+
 (defun clear-color-key (&key (surface *default-surface*) (rle-accel t))
   (sdl-base::clear-color-key (fp surface) rle-accel))
 

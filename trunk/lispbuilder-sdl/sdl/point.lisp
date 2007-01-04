@@ -34,3 +34,8 @@
 (defmethod (setf y) (y-val (point vector))
   (setf (elt point 1) y-val))
 
+(defmethod point-from ((surface surface))
+  (point :x (x surface) :y (y surface)))
+(defmethod (setf pos) (pos-val (surface sdl-surface))
+  (setf (x surface) (x pos-val)
+	(y surface) (y pos-val)))
