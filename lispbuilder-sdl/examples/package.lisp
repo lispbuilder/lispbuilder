@@ -6,9 +6,59 @@
   (:use #:cl #:cffi)
   (:nicknames #:sdl-examples)
   (:documentation "Examples for `lispbuilder-sdl'.")
-  (:export #:bmp-sample #:pixels #:recursive-rects #:mouse-painter #:random-rects1
-	   #:random-rects2 #:random-rects3 #:simple-font-demo #:squashed #:mandelbrot #:line-drawing
+  (:export
+   ;; bezier.lisp
+   #:bezier
 
-	   #:distance-2d #:width-height #:setup-and-draw #:objects #:points-and-lines #:bezier #:vertices
-	   #:metaballs))
+   ;; bmp-sample.lisp
+   #:bmp-sample
 
+   ;; distance-2D.lisp
+   #:distance-2d
+
+   ;; line-drawing.lisp
+   #:line-drawing
+
+   ;; mandelbrot.lisp
+   #:mandelbrot
+
+   ;; metaballs.lisp
+   #:metaballs
+
+   ;; mouse-painter.lisp
+   #:mouse-painter
+
+   ;; objects.lisp
+   #:objects
+
+   ;; pixels.lisp
+   #:pixels-1
+   #:pixels-2
+   #:pixels-3
+   #:pixels-4
+
+   ;; points-and-lines.lisp
+   #:points-and-lines
+
+   ;; random-rects.lisp
+   #:random-rects-1
+   #:random-rects-2
+   #:random-rects-3
+
+   ;; recursive-rects.lisp
+   #:recursive-rects
+
+   ;; setup-and-draw
+   #:setup-and-draw
+
+   ;; simple-font-demo
+   #:simple-font-demo
+
+   ;; vertices.lisp
+   #:vertices
+
+   ;; width-height.lisp
+   #:width-height
+
+   ;; squashed.lisp
+   #:squashed))

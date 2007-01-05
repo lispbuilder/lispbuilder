@@ -386,6 +386,7 @@
 	 (manager (new-mmanager :y-res res-width :x-res res-height :iso-value 16.0 
 				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
 				:x-squares horizontal-res :y-squares vertical-res)))
+    (sdl::initialise-default-font)
     (sdl:with-init ()
       (sdl::window (mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
       (setf (sdl-base::frame-rate) 0)

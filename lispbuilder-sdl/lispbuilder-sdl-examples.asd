@@ -6,7 +6,7 @@
 
 (defsystem lispbuilder-sdl-examples
     :description "Examples for the lispbuilder-sdl package."
-    :version "0.8.0"
+    :version "0.8.1"
     :depends-on (cffi lispbuilder-sdl)
     :components
     ((:module "examples"
@@ -15,7 +15,7 @@
 	       (:file "globals" :depends-on ("package"))
 	       (:file "simple-font-demo" :depends-on ("package"))
 	       (:file "bmp-sample" :depends-on ("package"))
-	       (:file "sdl-pixels" :depends-on ("package"))
+	       (:file "pixels" :depends-on ("package"))
 	       (:file "recursive-rects" :depends-on ("package"))
 	       (:file "mouse-painter" :depends-on ("package"))
 	       (:file "random-rects" :depends-on ("package"))
