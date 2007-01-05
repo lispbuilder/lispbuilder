@@ -9,6 +9,7 @@
   "Squashed: main entry function"
   (sdl:with-init ()
     (sdl::window 640 480)
+    (setf (sdl-base::frame-rate) 30)
     (let ((bug (sdl::convert-surface :surface (sdl::load-image "squashed/bug.bmp" *bmp-path* :key-color (sdl::color :r 255 :g 255 :b 255))
 				     :free-p t))
 	  (racket (sdl::convert-surface :surface (sdl::load-image "squashed/racket.bmp" *bmp-path* :key-color (sdl::color :r 255 :g 255 :b 255))
