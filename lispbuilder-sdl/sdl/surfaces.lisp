@@ -100,6 +100,7 @@
   (let ((foreign-pointer (fp self)))
     (setf (slot-value self 'foreign-pointer-to-surface) nil)
     (sdl-cffi::sdl-free-surface foreign-pointer))
+  (cffi:foreign-free (fp-position self))
   #-clisp(cffi:cancel-finalization self)
   )
 
