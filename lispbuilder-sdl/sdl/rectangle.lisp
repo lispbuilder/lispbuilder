@@ -1,26 +1,21 @@
-;; SDL (Simple Media Layer) library using CFFI for foreign function interfacing...
-;; (C)2006 Justin Heyes-Jones <justinhj@gmail.com> and Luke Crook <luke@balooga.com>
-;; Thanks to Frank Buss and Surendra Singh
-;; see COPYING for license
-;; This file contains some useful functions for using SDL from Common lisp
-;; using sdl.lisp (the CFFI wrapper)
+;; lispbuilder-sdl
+;; (C)2006 Luke Crook <luke@balooga.com>
 
 (in-package #:lispbuilder-sdl)
 
-
 (defclass rectangle ()
-  ((foreign-pointer-to-rectangle :reader fp :initform nil :initarg :rectangle)
+  ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
    (rectangle-color :accessor rectangle-color :initform (color :r 255 :g 255 :b 255) :initarg :color)))
+
+(defclass null-rectangle (rectangle) ())
 
 (defun rectangle (&key (x 0) (y 0) (w 0) (h 0)
 		  (fp nil) (null nil))
-  (cond
-    (null
-     (make-instance 'rectangle :rectangle (cffi:null-pointer)))
-    ((sdl-base::is-valid-ptr fp)
-     (make-instance 'rectangle :rectangle fp))
-    (t
-     (make-instance 'rectangle :rectangle (sdl-base::rectangle :x x :y y :w w :h h)))))
+  (if null
+      (make-instance 'null-rectangle :rectangle (cffi:null-pointer))
+      (make-instance 'rectangle :rectangle (if (sdl-base::is-valid-ptr fp)
+					       (sdl-base::rectangle :src fp)
+					       (sdl-base::rectangle :x x :y y :w w :h h)))))
 
 (defmacro with-rectangle ((var &optional rectangle (free-p t))
 			  &body body)
@@ -79,6 +74,8 @@
   (sdl-base::rect-h (fp rectangle)))
 (defmethod (setf height) (h-val (rectangle rectangle))
   (setf (sdl-base::rect-h (fp rectangle)) h-val))
+
+(defmethod free-rectangle ((rectangle null-rectangle)) nil)
 
 (defmethod free-rectangle ((rectangle rectangle))
   (cffi:foreign-free (fp rectangle))

@@ -1,4 +1,4 @@
-;; lispbuilder-sdl-oo
+;; lispbuilder-sdl
 ;; (C)2006 Luke Crook <luke@balooga.com>
 
 (in-package #:lispbuilder-sdl)
@@ -6,12 +6,11 @@
 ;;; Finalize the Surface, freeing SDL_Surface.
 (defmethod initialize-instance :after ((self surface) &key)
   (let ((foreign-pointer (fp self)))
-    (setf (slot-value self 'foreign-pointer-to-surface) nil)
     (cffi:finalize self (lambda ()
 			  (sdl-cffi::sdl-free-surface foreign-pointer)))))
 
 ;;; Finalize the color-struct, freeing SDL_Color
-(defmethod initialize-instance :after ((self color-struct) &key)
+(defmethod initialize-instance :after ((self foreign-color) &key)
   (let ((foreign-pointer (fp self)))
     (cffi:finalize self (lambda ()
 			  (cffi:foreign-free foreign-pointer)))))
@@ -21,3 +20,6 @@
   (let ((foreign-pointer (fp self)))
     (cffi:finalize self (lambda ()
 			  (cffi:foreign-free foreign-pointer)))))
+
+(defmethod initialize-instance :after ((self null-rectangle) &key)
+  nil)
