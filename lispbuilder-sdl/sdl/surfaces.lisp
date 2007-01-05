@@ -177,10 +177,10 @@
     surf))
 
 (defun create-surface (width height &key
-		       (bpp 32) (surface *default-surface*) key-color alpha-value (type :sw) (rle-accel t))
+		       (bpp 32) surface key-color alpha-value (type :sw) (rle-accel t))
   (let ((surf (sdl-base::create-surface width height
 					:bpp bpp
-					:surface (fp surface)
+					:surface (when surface (fp surface))
 					:color-key key-color
 					:alpha alpha-value
 					:type type

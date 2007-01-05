@@ -8,7 +8,8 @@
    (font-height :reader font-height :initform nil :initarg :height)
    (char-map :reader char-map :initform nil :initarg :char-map)
    (key-color :reader key-color :initform nil :initarg :key-color)
-   (cached-surface :accessor cached-surface :initform nil :initarg :cached-surface)))
+   (cached-surface :accessor cached-surface :initform nil :initarg :cached-surface)
+   (font-text)))
 
 (defmethod fp ((font font))
   (fp (cached-surface font)))
@@ -35,6 +36,12 @@
 
 (defmethod fp-position ((font font))
   (fp-position (cached-surface font)))
+
+(defmethod font-text ((font font))
+  (slot-value font 'font-text) nil)
+(defmethod (setf font-text) (text-val (font font))
+  (setf (slot-value font 'font-text) text-val)
+  )
 
 (defun make-char-map (str)
   "given a string of characters make a hash table which returns an index from 0 to n where 0 is the first char, and n is the last"
@@ -68,22 +75,21 @@
       (sdl::free-surface (cached-surface font))))
 
 (defun make-text-image (string &key
-			(cache nil) (font *default-font*))
+			(cache nil) (font *default-font*) surface)
   "given an initialised font and a string, draw the string to a surface and return the surface pointer"
-  (let ((surface-width (* (font-width font)
-			  (length string)))
-	(surface-height (font-height font)))
-    (with-surface (surface (convert-surface :surface (create-surface surface-width surface-height
-								     :surface *default-display*
-								     :key-color (key-color font)
-								     :rle-accel t))
-			   nil)
-      (sdl::fill-surface (key-color font))
-      (draw-string string 0 0
-		   :font font)
-      (when cache
-	(setf (cached-surface font) surface))
-      surface)))
+  (unless surface
+    (setf surface (convert-surface :surface (create-surface (* (font-width font)
+							       (length string))
+							    (font-height font)
+							    :key-color (key-color font)))))
+  (sdl::fill-surface (key-color font)
+		     :dst surface)
+  (draw-string string 0 0
+	       :surface surface
+	       :font font)
+  (when cache
+    (setf (cached-surface font) surface))
+  surface)
 
 (defun draw-character (font x y char &key
 		       (surface sdl::*default-surface*))
