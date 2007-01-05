@@ -3,12 +3,12 @@
 (in-package :lispbuilder-sdl)
 
 (defclass font ()
-  ((font-surface :reader font-surface :initform nil :initarg :surface)
-   (font-width :reader font-width :initform nil :initarg :width)
-   (font-height :reader font-height :initform nil :initarg :height)
-   (char-map :reader char-map :initform nil :initarg :char-map)
-   (key-color :reader key-color :initform nil :initarg :key-color)
-   (cached-surface :accessor cached-surface :initform nil :initarg :cached-surface)
+  ((font-surface :reader font-surface :initform nil)
+   (font-width :reader font-width :initform nil)
+   (font-height :reader font-height :initform nil)
+   (char-map :reader char-map :initform nil)
+   (key-color :reader key-color :initform nil)
+   (cached-surface :accessor cached-surface :initform nil)
    (font-text)))
 
 (defmethod fp ((font font))
@@ -57,15 +57,16 @@
 
 (defun initialise-font (bmp-file-name bmp-path-name font-width font-height char-map-string key-color)
   "initialise a simple font using a bmp with a strip of fixed width characters mapped by the char-map-string"
-  (let ((font-surface (sdl::load-image bmp-file-name bmp-path-name :key-color key-color)))
+  (let ((font-surface (sdl::load-image bmp-file-name bmp-path-name :key-color key-color))
+	(font (make-instance 'font)))
     (if font-surface
-	(make-instance 'font
-		       :surface font-surface 
-		       :width font-width 
-		       :height font-height 
-		       :char-map (make-char-map char-map-string)
-		       :key-color key-color)
-	(error "INITIALIZE-FONT: Font cannot be initialized."))))
+	(setf (slot-value font 'font-surface) font-surface
+	      (slot-value font 'font-width) font-width
+	      (slot-value font 'font-height) font-height
+	      (slot-value font 'char-map) (make-char-map char-map-string)
+	      (slot-value font 'key-color) key-color)
+	(error "INITIALIZE-FONT: Font cannot be initialized."))
+    font))
 
 (defun free-font (font)
   "free up the font image surface"

@@ -1,36 +1,24 @@
-;; SDL (Simple Media Layer) library using CFFI for foreign function interfacing...
-;; (C)2006 Justin Heyes-Jones <justinhj@gmail.com> and Luke Crook <luke@balooga.com>
-;; Thanks to Frank Buss and Surendra Singh
-;; see COPYING for license
-;; This file contains some useful functions for using SDL from Common lisp
-;; using sdl.lisp (the CFFI wrapper)
+;; lispbuilder-sdl
+;; (C)2006 Luke Crook <luke@balooga.com>
 
 (in-package #:lispbuilder-sdl)
-
 
 (defclass sdl-color () ())
 
 (defclass color (sdl-color)
-  ((color-vector :reader fp :initform (vector 0 0 0) :initarg :color)))
+  ((color-vector :accessor fp :initform (vector 0 0 0) :initarg :color)))
 
 (defclass color-a (color)
-  ((color-vector :reader fp :initform (vector 0 0 0 0) :initarg :color)))
+  ((color-vector :accessor fp :initform (vector 0 0 0 0) :initarg :color)))
 
-(defclass color-struct (sdl-color)
-  ((foreign-pointer-to-color :reader fp :initform nil :initarg :color)))
+(defclass foreign-color (sdl-color)
+  ((foreign-pointer-to-color :accessor fp :initform nil :initarg :color)))
 
 (defun color (&key (r 0) (g 0) (b 0) (a nil))
   "Returns a new color from the red R, green G, and blue B INTEGER values."
-  (unless r
-    (setf r 0))
-  (unless g
-    (setf g 0))
-  (unless b
-    (setf b 0))
   (if a
       (make-instance 'color-a :color (vector r g b a))
       (make-instance 'color :color (vector r g b))))
-
 
 (defmacro with-color ((var &optional color (free-p t))
 		      &body body)
@@ -86,7 +74,7 @@
 
 (defmethod free-color ((color sdl-color)) nil)
 
-(defmethod free-color ((color color-struct))
+(defmethod free-color ((color foreign-color))
   (cffi:foreign-free (fp color))
   #-clisp(cffi:cancel-finalization color)
   )

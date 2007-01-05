@@ -8,7 +8,7 @@
 (in-package #:lispbuilder-sdl)
 
 (defclass sdl-surface ()
-  ((foreign-pointer-to-surface :reader fp :initform nil :initarg :surface)
+  ((foreign-pointer-to-surface :accessor fp :initform nil :initarg :surface)
    (foreign-pointer-to-position-rect :accessor fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)))
 
 ;;; An object of type display should never be finalized by CFFI
@@ -20,20 +20,19 @@
 (defclass surface (sdl-surface) ())
 
 (defclass rectangle-array ()
-  ((foreign-pointer-to-rectangle :reader fp :initform nil :initarg :rectangle)
+  ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
    (length :reader len :initform nil :initarg :length)))
 
 (defun surface (surface-fp &optional (display nil))
   (if (sdl-base::is-valid-ptr surface-fp)
-      (let ((surf (make-instance (if display
-				     'display-surface
-				     'surface)
-				 :surface surface-fp)))
- 	(setf (x surf) 0
-	      (y surf) 0
-	      (width surf) (sdl-base::rect-w (fp surf))
- 	      (height surf) (sdl-base::rect-h (fp surf)))
-	surf)
+      (let ((surface (if display
+			 (make-instance 'display-surface :surface surface-fp)
+			 (make-instance 'surface :surface surface-fp ))))
+ 	(setf (x surface) 0
+	      (y surface) 0
+	      (width surface) (sdl-base::surf-w (fp surface))
+ 	      (height surface) (sdl-base::surf-h (fp surface)))
+	surface)
       (error "SURFACE: SURFACE-FP must be a foreign pointer.")))
 
 (defmacro with-surface ((var &optional surface (free-p t))
