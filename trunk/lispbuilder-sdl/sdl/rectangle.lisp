@@ -9,7 +9,8 @@
 
 
 (defclass rectangle ()
-  ((foreign-pointer-to-rectangle :reader fp :initform nil :initarg :rectangle)))
+  ((foreign-pointer-to-rectangle :reader fp :initform nil :initarg :rectangle)
+   (rectangle-color :accessor rectangle-color :initform (color :r 255 :g 255 :b 255) :initarg :color)))
 
 (defun rectangle (&key (x 0) (y 0) (w 0) (h 0)
 		  (fp nil) (null nil))
@@ -90,3 +91,10 @@
   (when w (setf (width rect) w))
   (when h (setf (height rect) h))
   rect)
+
+(defmethod set-color ((rectangle rectangle) &key r g b a)
+  (when r (setf (r (rectangle-color rectangle)) r))
+  (when g (setf (g (rectangle-color rectangle)) g))
+  (when b (setf (b (rectangle-color rectangle)) b))
+  (when a (setf (a (rectangle-color rectangle)) a))
+  rectangle)

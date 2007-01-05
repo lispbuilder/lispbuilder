@@ -18,14 +18,13 @@
 			 (img-2 (sdl::convert-surface :surface (sdl::load-image "lisp.bmp" *bmp-path* :key-color (sdl::color :r 253 :g 59 :b 251)) :free-p t))
 			 (img-3 (sdl::convert-surface :surface (sdl::rotate-surface 90 :surface img-2) :key-color (sdl::color :r 253 :g 59 :b 251) :free-p t)))
       (sdl::set-xy img-1 10 10)
-      (sdl::draw-image img-1 :surface sdl::*default-display*)
-
-      (sdl::draw-image img-2
-		       :surface sdl::*default-display*
-		       :position (sdl::point :x 190 :y 10))
-
-      (sdl::draw-image img-3 :surface sdl::*default-display*
-		       :position (sdl::point :x 80 :y 100)))
+      (sdl::draw-surface img-1 :surface sdl::*default-display*)
+      
+      (sdl::draw-surface-at img-2 190 10
+			    :surface sdl::*default-display*)
+      
+      (sdl::draw-surface-at img-3 80 100
+			    :surface sdl::*default-display*))
 
     (sdl:with-events ()
       (:quit-event () t)

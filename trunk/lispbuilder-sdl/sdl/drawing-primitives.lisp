@@ -42,7 +42,7 @@
 
 
 
-(defun random-rectangle (bound-w bound-h rectangle)
+(defun random-rectangle (bound-w bound-h &optional (rectangle (sdl::rectangle)))
   (let* ((x (random bound-w))
 	 (y (random bound-h))
 	 (w (random+1 (- bound-w x)))
@@ -50,11 +50,11 @@
     (set-rectangle rectangle :x x :y y :w w :h h))
   rectangle)
 
-(defun rectangle-from-wh (width height &key (position sdl:*default-position*))
-  (rectangle :x (x position)
-	     :y (y position)
-	     :w (+ (x position) width)
-	     :h (+ (y position) height)))
+;; (defun rectangle-from-wh (width height &key (position sdl:*default-position*))
+;;   (rectangle :x (x position)
+;; 	     :y (y position)
+;; 	     :w (+ (x position) width)
+;; 	     :h (+ (y position) height)))
 
 (defun rectangle-from-xy (x1 y1 x2 y2)
   (rectangle :x x1
@@ -71,8 +71,8 @@
 	     :w w
 	     :h h))
 
-(defun rectangle-from-surface (&key (surface *default-surface*) (position *default-position*))
-  (rectangle-from-wh (width surface) (height surface) :position position))
+(defun rectangle-from-surface (&key (surface *default-surface*))
+  (rectangle :x (x surface) :y (y surface) :w (width surface) :h (height surface)))
 
 (defun genbez (x0 y0 x1 y1 x2 y2 x3 y3 &key (segments 20))
   (let ((gx0 x0) (gy0 y0)
@@ -203,10 +203,6 @@
 		       :surface surface
 		       :color color)))))
 
-(defun draw-image (image &key
-		   (surface sdl:*default-surface*) position)
-  (draw-surface image :dst surface :position position))
-
 (defun draw-line-xy (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   (let ((x0 (sdl-base::to-int x0))
 	(y0 (sdl-base::to-int y0))
@@ -293,20 +289,20 @@
 (defun draw-box (rectangle &key (clipping-p t)
 		 (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-  (fill-surface color :dst surface :template rectangle :clipping-p clipping-p)
+  (fill-surface color :surface surface :template rectangle :clipping-p clipping-p)
   rectangle)
 
 (defun draw-box-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified corner co-ordinates and color"
   (fill-surface color
-		:dst surface
+		:surface surface
 		:template (rectangle-from-points p1 p2)
 		:clipping-p clipping-p))
 
 (defun draw-box-xy (x1 y1 x2 y2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified corner co-ordinates and color"
   (fill-surface color
-		:dst surface
+		:surface surface
 		:template (rectangle-from-xy x1 y1 x2 y2)
 		:clipping-p clipping-p))
 
