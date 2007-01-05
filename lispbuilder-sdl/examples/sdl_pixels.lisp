@@ -52,7 +52,7 @@
 						  :b (random 255))
 				      :template template
 				      :update-p t
-				      :dst sdl::*default-display*)))))))
+				      :surface sdl::*default-display*)))))))
 
 (defun pixels-4 ()
   (let ((width 640) (height 480))
@@ -68,5 +68,5 @@
 				  :template (sdl::rectangle :x (random width) :y (random height)
 							    :w 1 :h 1)
 				  :update-p t
-				  :dst sdl::*default-display*))))))
+				  :surface sdl::*default-display*))))))
 

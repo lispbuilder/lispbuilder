@@ -61,17 +61,20 @@
 (defmethod (setf b) (b-val (color color))
   (setf (svref (fp color) 2) b-val))
 
+(defmethod a ((color color))
+  nil)
+
 (defmethod a ((color color-a))
   (svref (fp color) 3))
 (defmethod (setf a) (a-val (color color-a))
   (setf (svref (fp color) 3) a-val))
 
-(defun set-color (color &key r g b a)
+(defmethod set-color ((color sdl-color) &key r g b a)
   (when r (setf (r color) r))
   (when g (setf (g color) g))
   (when b (setf (b color) b))
-  (when (typep color 'color-a)
-    (when a (setf (a color) a))))
+  (when a (setf (a color) a))
+  color)
 
 (defmethod map-color ((color color) &optional (surface *default-surface*))
   (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format (fp surface))

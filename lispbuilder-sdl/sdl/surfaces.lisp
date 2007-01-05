@@ -202,28 +202,30 @@
       (sdl-base::update-surface (fp surface) :x x :y y :w w :h h))
   surface)
 
-(defun blit-surface (src &optional (dst *default-surface*))
-  (sdl-base::blit-surface (fp src) (fp dst) (cffi:null-pointer) (fp-position src))
+(defun blit-surface (src &optional (surface *default-surface*))
+  (sdl-base::blit-surface (fp src) (fp surface) (cffi:null-pointer) (fp-position src))
   src)
 
-(defun draw-surface (src &key (dst *default-surface*) (position nil))
-  (when position
-    (setf (x src) (x position)
-	  (y src) (y position)))
-  (sdl-base::blit-surface (fp src) (fp dst) (cffi:null-pointer) (fp-position src))
+(defun draw-surface (src &key (surface *default-surface*))
+  (sdl-base::blit-surface (fp src) (fp surface) (cffi:null-pointer) (fp-position src))
   src)
 
-(defun fill-surface (color &key (dst *default-surface*) (template nil) (update-p nil) (clipping-p t))
+(defun draw-surface-at (src x y &key (surface *default-surface*))
+  (when x (setf (x src) x))
+  (when y (setf (y src) y))
+  (draw-surface src :surface surface))
+
+(defun fill-surface (color &key (surface *default-surface*) (template nil) (update-p nil) (clipping-p t))
   "fill the entire surface with the specified R G B A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update."
-  (sdl-base::fill-surface (fp dst)
-			  (map-color color dst)
+  (sdl-base::fill-surface (fp surface)
+			  (map-color color surface)
 			  :template (if template
 					(fp template)
 					(cffi::null-pointer))
 			  :clipping-p clipping-p
 			  :update-p update-p)
-  dst)
+  surface)
 

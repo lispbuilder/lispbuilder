@@ -83,7 +83,7 @@
 							    (font-height font)
 							    :key-color (key-color font)))))
   (sdl::fill-surface (key-color font)
-		     :dst surface)
+		     :surface surface)
   (draw-string string 0 0
 	       :surface surface
 	       :font font)

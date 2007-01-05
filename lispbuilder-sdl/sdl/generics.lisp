@@ -50,6 +50,7 @@
 
 (defgeneric (setf pos) (value obj))
 
+(defgeneric set-color (obj &key r g b a))
 
 (defgeneric free-surface (surface)
   (:documentation "Free's foreign surface in SURFACE."))

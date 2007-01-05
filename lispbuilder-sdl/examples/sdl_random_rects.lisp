@@ -20,7 +20,7 @@
 					      :g (random 255)
 					      :b (random 255))
 				  :template (sdl::random-rectangle width height (sdl::rectangle))
-				  :dst sdl::*default-display*
+				  :surface sdl::*default-display*
 				  :update-p t))))))
 
 (defun random-rects-2 ()
@@ -38,7 +38,7 @@
 		   (sdl::set-color col :r (random 255) :g (random 255) :b (random 255))
 		   (sdl::fill-surface col
 				      :template rect
-				      :dst sdl::*default-display*
+				      :surface sdl::*default-display*
 				      :update-p t)))))))))
 
 (defun random-rects-3 ()
