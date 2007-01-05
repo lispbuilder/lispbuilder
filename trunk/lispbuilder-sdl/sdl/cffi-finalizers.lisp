@@ -6,18 +6,15 @@
 ;;; Finalize the Surface, freeing SDL_Surface.
 (defmethod initialize-instance :after ((self surface) &key)
   (let ((foreign-pointer (fp self)))
-    (setf (slot-value self 'foreign-pointer-to-surface) nil
-	  (slot-value self 'width) 0
-	  (slot-value self 'height) 0)
+    (setf (slot-value self 'foreign-pointer-to-surface) nil)
     (cffi:finalize self (lambda ()
-		     (sdl-cffi::sdl-free-surface foreign-pointer)
-		     (cffi:foreign-free foreign-pointer)))))
+			  (sdl-cffi::sdl-free-surface foreign-pointer)))))
 
 ;;; Finalize the color-struct, freeing SDL_Color
 (defmethod initialize-instance :after ((self color-struct) &key)
   (let ((foreign-pointer (fp self)))
     (cffi:finalize self (lambda ()
-		     (cffi:foreign-free foreign-pointer)))))
+			  (cffi:foreign-free foreign-pointer)))))
 
 ;;; Finalize the Rectangle, freeing SDL_Rect
 (defmethod initialize-instance :after ((self rectangle) &key)

@@ -88,4 +88,5 @@
 
 (defmethod free-color ((color color-struct))
   (cffi:foreign-free (fp color))
-  (cffi:cancel-finalization color))
+  #-clisp(cffi:cancel-finalization color)
+  )
