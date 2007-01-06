@@ -43,8 +43,8 @@
 	(dotimes (i frame-values)
 	  (incf frames-per-second (aref frame-times i)))
 	(setf frames-per-second (cast float (/ 1000 (/ frames-per-second frame-values))))
-	(sdl::fill-surface (sdl::color) :surface surface)
-	(sdl::draw-string (format nil "fps : ~d" (coerce frames-per-second 'float))
+	(sdl:fill-surface (sdl:color) :surface surface)
+	(sdl:draw-string (format nil "fps : ~d" (coerce frames-per-second 'float))
 			  20 0
 			  :surface surface))
       surface)))
@@ -189,7 +189,7 @@
   (loop
      for x from 0 to col
      for x-pos = (* x x-resolution)
-     do (sdl::draw-line-xy x-pos 0 x-pos (* y-resolution row) :surface surface :color color
+     do (sdl:draw-line-xy x-pos 0 x-pos (* y-resolution row) :surface surface :color color
 ;; 	 sdl-gfx:draw-line (sdl:point (sdl-base::to-int x-pos) 0)
 ;; 			   (sdl:point (sdl:to-int x-pos) (sdl:to-int (* resolution row)))
 ;; 			   :surface surface :color color
@@ -197,7 +197,7 @@
   (loop
      for y from 0 to row
      for y-pos = (* y y-resolution)
-     do (sdl::draw-line-xy 0 y-pos (* x-resolution col) y-pos :surface surface :color color
+     do (sdl:draw-line-xy 0 y-pos (* x-resolution col) y-pos :surface surface :color color
 ;; 	 sdl-gfx:draw-line (sdl:point 0 (sdl:to-int y-pos))
 ;; 			   (sdl:point (sdl:to-int (* resolution col)) (sdl:to-int y-pos))
 ;; 			   :surface surface :color color
@@ -218,12 +218,12 @@
 	(setf i (get-square-coords-i metaball x-resolution y-resolution))
 	(setf j (get-square-coords-j metaball x-resolution y-resolution))
 
-	(sdl::draw-line-xy (cast-to-int (* i x-resolution))
+	(sdl:draw-line-xy (cast-to-int (* i x-resolution))
 			   (cast-to-int (* j y-resolution))
 			   (cast-to-int (* (+ i 1) x-resolution))
 			   (cast-to-int (* (+ j 1) y-resolution))
 			   :surface surface :color color)
-	(sdl::draw-line-xy (cast-to-int (* (+ i 1) x-resolution))
+	(sdl:draw-line-xy (cast-to-int (* (+ i 1) x-resolution))
 			   (cast-to-int (* j y-resolution))
 			   (cast-to-int (* i x-resolution))
 			   (cast-to-int (* (+ j 1) y-resolution))
@@ -364,7 +364,7 @@
 							     (+ j (aref offset p1-idx 1))))))
 
 			    ;; Draw Line
-			    (sdl::draw-line-xy iso-p1-x iso-p1-y
+			    (sdl:draw-line-xy iso-p1-x iso-p1-y
 					       iso-p2-x iso-p2-y
 					       :color color :surface surface)
 			    (setf (aref square-flag i j) 1)))))))))))
@@ -380,28 +380,28 @@
 (defun metaballs (&key (h-res 10) (v-res 10) (h-squares 25) (v-squares 30))
   (let* ((res-width h-res) (res-height v-res)
 	 (horizontal-res h-squares) (vertical-res v-squares)
-	 (meta-color (sdl::color :r 175 :g 175 :b 175)) (meta-center-color (sdl::color :r 200 :g 0 :b 0)) (grid-color (sdl::color :r 75 :g 75 :b 75))
+	 (meta-color (sdl:color :r 175 :g 175 :b 175)) (meta-center-color (sdl:color :r 200 :g 0 :b 0)) (grid-color (sdl:color :r 75 :g 75 :b 75))
 	 (mb-pressed? nil)
 	 (meta-balls (setup))
 	 (manager (new-mmanager :y-res res-width :x-res res-height :iso-value 16.0 
 				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
 				:x-squares horizontal-res :y-squares vertical-res)))
-    (sdl::initialise-default-font)
+    (sdl:initialise-default-font)
     (sdl:with-init ()
-      (sdl::window (mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
+      (sdl:window (mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
       (setf (sdl-base::frame-rate) 0)
-      (sdl::clear-display (sdl::color :r 0 :g 0 :b 0))
+      (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
       (fps-init)
-      (sdl::with-surfaces ((grid (sdl:create-surface (sdl::width sdl:*default-display*)
-						     (sdl::height sdl:*default-display*)
+      (sdl:with-surfaces ((grid (sdl:create-surface (sdl:width sdl:*default-display*)
+						     (sdl:height sdl:*default-display*)
 						     :surface sdl:*default-display*))
 			   (fps (sdl:create-surface 150 20 :surface sdl:*default-display*
-						    :key-color (sdl::color :r 0 :g 0 :b 0))))
-	(sdl::set-xy fps 10 260)
+						    :key-color (sdl:color :r 0 :g 0 :b 0))))
+	(sdl:set-xy fps 10 260)
 	(draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)
-	(sdl::with-events ()
+	(sdl:with-events ()
 	  (:quit-event () t)
 	  (:key-down-event (:key key) (handle-keypress key))
 	  (:mouse-button-down-event ()
@@ -413,10 +413,10 @@
 				 (handle-mouse-moved x y (first meta-balls))))
 	  (:idle ()
 		 (if *draw-gridp*
-		     (sdl::blit-surface grid sdl:*default-display*)
-		     (sdl::clear-display (sdl::color :r 0 :g 0 :b 0)))
+		     (sdl:blit-surface grid sdl:*default-display*)
+		     (sdl:clear-display (sdl:color :r 0 :g 0 :b 0)))
 		 (when *draw-meta-centerp* ()
 		       (draw-meta-center manager meta-balls meta-center-color sdl:*default-display*))
 		 (render-loop manager meta-balls meta-color sdl:*default-display*)
-		 (sdl::draw-surface (display-fps fps) :surface sdl:*default-display*)
-		 (sdl::update-display)))))))
+		 (sdl:draw-surface (display-fps fps) :surface sdl:*default-display*)
+		 (sdl:update-display)))))))

@@ -32,9 +32,9 @@
       (if (or
 	   (>= min-size w)
 	   (>= min-size h))
-	  (sdl::draw-box-xy x1 y1 x2 y2
+	  (sdl:draw-box-xy x1 y1 x2 y2
 			    :surface surface_ptr
-			    :color (sdl::color :r (random 255)
+			    :color (sdl:color :r (random 255)
 					       :g (random 255)
 					       :b (random 255)
 					       :a (random 255))
@@ -51,14 +51,14 @@
 (defun recursive-rects()
   "recursively and randomly divides up the screen with rectangles"
   (sdl:with-init ()
-    (sdl::window *SCREEN-WIDTH* *SCREEN-HEIGHT*)
+    (sdl:window *SCREEN-WIDTH* *SCREEN-HEIGHT*)
     (setf (sdl-base::frame-rate) 5)
       (draw-recursive-rects sdl:*default-display* 0 0 *SCREEN-WIDTH* *SCREEN-HEIGHT* 10)
-      (format t "video mode set. width ~a height ~a~%" (sdl::width sdl:*default-display*) (sdl::height sdl:*default-display*))
+      (format t "video mode set. width ~a height ~a~%" (sdl:width sdl:*default-display*) (sdl:height sdl:*default-display*))
       (sdl:with-events ()
 	(:quit-event () t)
 	(:key-down-event (:key key)
 			 (if (sdl-base::key= key :SDL-KEY-ESCAPE)
 			     (sdl-base::push-quit-event)))
 	(:video-expose-event ()
-			     (sdl::update-display)))))
+			     (sdl:update-display)))))

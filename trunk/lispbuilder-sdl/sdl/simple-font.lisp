@@ -8,8 +8,7 @@
    (font-height :reader font-height :initform nil)
    (char-map :reader char-map :initform nil)
    (key-color :reader key-color :initform nil)
-   (cached-surface :accessor cached-surface :initform nil)
-   (font-text)))
+   (cached-surface :accessor cached-surface :initform nil)))
 
 (defmethod fp ((font font))
   (fp (cached-surface font)))
@@ -37,12 +36,6 @@
 (defmethod fp-position ((font font))
   (fp-position (cached-surface font)))
 
-(defmethod font-text ((font font))
-  (slot-value font 'font-text) nil)
-(defmethod (setf font-text) (text-val (font font))
-  (setf (slot-value font 'font-text) text-val)
-  )
-
 (defun make-char-map (str)
   "given a string of characters make a hash table which returns an index from 0 to n where 0 is the first char, and n is the last"
   (let ((char-map (make-hash-table :test 'equal :size (length str))))
@@ -57,7 +50,7 @@
 
 (defun initialise-font (bmp-file-name bmp-path-name font-width font-height char-map-string key-color)
   "initialise a simple font using a bmp with a strip of fixed width characters mapped by the char-map-string"
-  (let ((font-surface (sdl::load-image bmp-file-name bmp-path-name :key-color key-color))
+  (let ((font-surface (load-image bmp-file-name bmp-path-name :key-color key-color))
 	(font (make-instance 'font)))
     (if font-surface
 	(setf (slot-value font 'font-surface) font-surface
@@ -71,9 +64,9 @@
 (defun free-font (font)
   "free up the font image surface"
   (if (font-surface font)
-      (sdl::free-surface (font-surface font)))
+      (free-surface (font-surface font)))
   (if (cached-surface font)
-      (sdl::free-surface (cached-surface font))))
+      (free-surface (cached-surface font))))
 
 (defun make-text-image (string &key
 			(cache nil) (font *default-font*) surface)
@@ -83,7 +76,7 @@
 							       (length string))
 							    (font-height font)
 							    :key-color (key-color font)))))
-  (sdl::fill-surface (key-color font)
+  (fill-surface (key-color font)
 		     :surface surface)
   (draw-string string 0 0
 	       :surface surface
@@ -93,7 +86,7 @@
   surface)
 
 (defun draw-character (font x y char &key
-		       (surface sdl::*default-surface*))
+		       (surface *default-surface*))
   "draw a single character at the x y position"
   (let ((image (font-surface font))
 	(w (font-width font))
@@ -107,8 +100,8 @@
 		(sdl-base::rect-h src-rect) h)
 	  (setf (sdl-base::rect-x dst-rect) x
 		(sdl-base::rect-y dst-rect) y)
-	  (sdl-base::blit-surface (sdl::fp image)
-				  (sdl::fp surface)
+	  (sdl-base::blit-surface (fp image)
+				  (fp surface)
 				  src-rect
 				  dst-rect
 				  :update-p nil))
@@ -116,8 +109,8 @@
 
 (defun draw-string (str x y &key
 		    (justify :left)
-		    (surface sdl::*default-surface*)
-		    (font sdl::*default-font*))
+		    (surface *default-surface*)
+		    (font *default-font*))
   "draw a string at the x y position"
   (case justify
     (:left (draw-string-left-justify str x y :surface surface :font font))
@@ -126,8 +119,8 @@
     (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER"))))
 
 (defun draw-string-left-justify (str x y &key
-				 (surface sdl::*default-surface*)
-				 (font sdl::*default-font*))
+				 (surface *default-surface*)
+				 (font *default-font*))
   (loop for c across str do
        (unless (eql c #\space)
 	 (draw-character font x y c
@@ -135,8 +128,8 @@
        (incf x (font-width font))))
 
 (defun draw-string-right-justify (str x y &key
-				  (surface sdl::*default-surface*)
-				  (font sdl::*default-font*))
+				  (surface *default-surface*)
+				  (font *default-font*))
   "draw a string ending at the x y position"
   (let ((right-x (- x (font-width font)))
 	(rev-str (reverse str)))
@@ -147,8 +140,8 @@
 	 (decf right-x (font-width font)))))
 
 (defun draw-string-centered (str x y &key
-			     (surface sdl::*default-surface*)
-			     (font sdl::*default-font*))
+			     (surface *default-surface*)
+			     (font *default-font*))
   "draw a string centered at x y"
   (let* ((width (* (length str) (font-width font)))
 	 (left-x (- x (/ width 2))))
@@ -158,7 +151,7 @@
 			   :surface surface))
 	 (incf left-x (font-width font)))))
 
-(defun draw-font (x y &key (font sdl::*default-font*) (surface sdl:*default-surface*))
+(defun draw-font (x y &key (font *default-font*) (surface *default-surface*))
   (when (and x y)
     (setf (x (cached-surface font)) x
 	  (y (cached-surface font)) y)
@@ -168,12 +161,12 @@
 
 ;; (defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional (font-path ""))
 ;; 			  &body body)
-;;   `(let ((sdl::*default-font* (initialise-font ,font-image-name ,font-path
+;;   `(let ((*default-font* (initialise-font ,font-image-name ,font-path
 ;; 					       ,font-width ,font-height ,char-map-string ,key-color)))
-;;      (if sdl::*default-font*
+;;      (if *default-font*
 ;; 	 (progn
 ;; 	   ,@body
-;; 	   (free-font sdl::*default-font*)))))
+;; 	   (free-font *default-font*)))))
 
 (defun initialise-default-font ()
   (let ((font-name "font.bmp")

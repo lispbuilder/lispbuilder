@@ -9,16 +9,16 @@
 	(y 100))
     (sdl:with-init ()
       (setf (sdl-base::frame-rate) 30)
-      (sdl::window width height :title-caption "Setup and Draw, from Processing.org")
+      (sdl:window width height :title-caption "Setup and Draw, from Processing.org")
       (sdl:with-events ()
 	(:quit-event () t)
 	(:idle ()
-	       (sdl::clear-display (sdl::color))
+	       (sdl:clear-display (sdl:color))
 	       (decf y 1)
 	       (when (< y 0)
 		 (setf y height))
-	       (sdl::draw-hline-xy 0 width y
+	       (sdl:draw-hline-xy 0 width y
 				   :clipping-p nil
-				   :color (sdl::color :r 255 :g 255 :b 255)
-				   :surface sdl::*default-display*)
+				   :color (sdl:color :r 255 :g 255 :b 255)
+				   :surface sdl:*default-display*)
 		 (sdl:update-display))))))

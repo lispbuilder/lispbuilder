@@ -1,5 +1,5 @@
-;; lispbuilder-sdl
-;; (C)2006 Luke Crook <luke@balooga.com>
+;;;; lispbuilder-sdl
+;;;; (C)2006 Luke Crook <luke@balooga.com>
 
 (in-package #:lispbuilder-sdl)
 
