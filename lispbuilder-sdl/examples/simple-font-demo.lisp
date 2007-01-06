@@ -14,32 +14,32 @@
   "example of simple font"
   (sdl:with-init ()			;Initialize Systems
     ;; init your game
-    (sdl::window *WINDOW-WIDTH* *WINDOW-HEIGHT*)
+    (sdl:window *WINDOW-WIDTH* *WINDOW-HEIGHT*)
     (setf (sdl-base::frame-rate) 2) ; Set target framerate (or 0 for unlimited)
 
-    (sdl::initialise-default-font)
+    (sdl:initialise-default-font)
     ;; Create an image from the string.
     ;; Then cache this image in the font to be used later.
-    (sdl::make-text-image "draw text image" :cache t)
+    (sdl:make-text-image "draw text image" :cache t)
 
-    (sdl::with-events  ()
+    (sdl:with-events  ()
       (:quit-event () t)
       (:idle ()
 	     ;; fill the background
-	     (sdl::clear-display (sdl::color :r #x22 :g #x22 :b #x44))
+	     (sdl:clear-display (sdl:color :r #x22 :g #x22 :b #x44))
 	     ;; Do stuff
-	     (sdl::with-surface (disp sdl::*default-display*)
+	     (sdl:with-surface (disp sdl:*default-display*)
 
 	       ;; Draw the font using the previously
 	       ;; created cached image.
-	       (sdl::draw-font (+ (- (screen-center-x) 100) (random 200))
+	       (sdl:draw-font (+ (- (screen-center-x) 100) (random 200))
 			       (+ (- (screen-center-y) 100) (random 200)))
 
-	       (sdl::draw-string "draw string centered" (screen-center-x) (- (screen-center-y) 10)
+	       (sdl:draw-string "draw string centered" (screen-center-x) (- (screen-center-y) 10)
 				 :justify :center)
-	       (sdl::draw-string "draw string left justified" (screen-center-x) (screen-center-y)
+	       (sdl:draw-string "draw string left justified" (screen-center-x) (screen-center-y)
 				 :justify :left)
-	       (sdl::draw-string "draw string right justified" (screen-center-x) (+ (screen-center-y) 10)
+	       (sdl:draw-string "draw string right justified" (screen-center-x) (+ (screen-center-y) 10)
 				 :justify :right))
 	     ;; Update the whole screen 
 	     (sdl:update-display)))))

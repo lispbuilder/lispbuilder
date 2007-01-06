@@ -11,18 +11,18 @@
 (defvar *y0* 0.5)
 (defvar *x1* 0.4)
 (defvar *y1* 0.7)
-(defvar *width* 300)
-(defvar *height* 300)
+(defvar *mandelbrot-width* 300)
+(defvar *mandelbrot-height* 300)
 (defvar *zoom-ratio* 0.5)
 
 (defun clear-screen()
   "clear the whole screen"
-  (sdl::clear-display (sdl::color)))
+  (sdl:clear-display (sdl:color)))
 
 (defun update-mandelbrot-draw (width height sx sy sw sh x0 y0 x1 y1)
   "draw mandelbrot from screen position sx,sy to the extent by sw,sh (width height)"
-  (sdl-base::with-pixel (pix (sdl::fp sdl::*default-display*))
-    (sdl::with-color (col (sdl::color))
+  (sdl-base::with-pixel (pix (sdl:fp sdl:*default-display*))
+    (sdl:with-color (col (sdl:color))
       (loop for y from sy below (+ sy sh) do
 	   (loop for x from sx below (+ sx sw) do
 		(loop with a = (complex (float (+ (* (/ (- x1 x0) width) x) x0))
@@ -31,24 +31,24 @@
 		   while (< (abs z) 2)
 		   for c from 60 above 0
 		   finally (progn
-			     (sdl::set-color col :r (mod (* 13 c) 256) :g (mod (* 7 c) 256) :b (mod (* 2 c) 256))
-			     (sdl-base::write-pixel pix x y (sdl::map-color col sdl::*default-display*)))))))))
+			     (sdl:set-color col :r (mod (* 13 c) 256) :g (mod (* 7 c) 256) :b (mod (* 2 c) 256))
+			     (sdl-base::write-pixel pix x y (sdl:map-color col sdl:*default-display*)))))))))
 
 (defun mandelbrot 
-    (&optional (width *width*) (height *height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
+    (&optional (width *mandelbrot-width*) (height *mandelbrot-height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
   "main program to draw navigate mandelbrot set"
   (let ((cx 0) (cy 0) (step 10))
-    (sdl::with-init ()
-      (sdl::window width height :title-caption "Mandelbrot" :icon-caption "Mandelbrot")
+    (sdl:with-init ()
+      (sdl:window width height :title-caption "Mandelbrot" :icon-caption "Mandelbrot")
       (setf (sdl-base::frame-rate) 0)
-      (sdl::with-events ()
+      (sdl:with-events ()
 	(:idle ()
 	       (if (>= cx width)
 		   (and (setf cx 0) (incf cy step)))
 	       (if (< cy height)
 		   (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1))
 	       (incf cx step)
-	       (sdl::update-display))
+	       (sdl:update-display))
 	(:quit-event () t)
 	(:mouse-button-down-event (:x x :y y)
 					; set the new center point
@@ -74,4 +74,4 @@
 	(:key-down-event (:key key)
 			 (if (sdl-base::key= key :SDL-KEY-ESCAPE)
 			     (sdl-base::push-quit-event)))
-	(:video-expose-event () (sdl::update-display))))))
+	(:video-expose-event () (sdl:update-display))))))

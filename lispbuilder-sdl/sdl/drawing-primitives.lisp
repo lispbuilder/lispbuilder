@@ -42,7 +42,7 @@
 
 
 
-(defun random-rectangle (bound-w bound-h &optional (rectangle (sdl::rectangle)))
+(defun random-rectangle (bound-w bound-h &optional (rectangle (rectangle)))
   (let* ((x (random bound-w))
 	 (y (random bound-h))
 	 (w (random+1 (- bound-w x)))
@@ -50,7 +50,7 @@
     (set-rectangle rectangle :x x :y y :w w :h h))
   rectangle)
 
-;; (defun rectangle-from-wh (width height &key (position sdl:*default-position*))
+;; (defun rectangle-from-wh (width height &key (position *default-position*))
 ;;   (rectangle :x (x position)
 ;; 	     :y (y position)
 ;; 	     :w (+ (x position) width)
@@ -185,7 +185,7 @@
 	   (p2 (cdr p1) (cdr p1)))
 	  ((or (null p2)
 	       (null p1)))
-       (sdl:draw-line (first p1) (first p2) :clipping-p clipping-p
+       (draw-line (first p1) (first p2) :clipping-p clipping-p
 				  :surface surface :color color)))
     (:lines
      (do* ((p1 points (if (cdr p1)
@@ -194,7 +194,7 @@
 	   (p2 (cdr p1) (cdr p1)))
 	  ((or (null p2)
 	       (null p1)))
-       (sdl:draw-line (first p1) (first p2) :clipping-p clipping-p
+       (draw-line (first p1) (first p2) :clipping-p clipping-p
 				  :surface surface :color color)))
     (:points
      (loop for point in points
