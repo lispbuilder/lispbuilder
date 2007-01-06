@@ -22,8 +22,8 @@
 	(window :pointer)
 	(hglrc :pointer))
 
-#-win32 (defcenum SDL-SYSWM-TYPE
-	:SDL-SYSWM-X11)
+#-win32 (defcenum SDL-SYS-WM-TYPE
+	:SDL-SYS-WM-X11)
 
 #-win32 (defcunion SDL-Sys-WM-msg-event
 	(xevent :pointer))
