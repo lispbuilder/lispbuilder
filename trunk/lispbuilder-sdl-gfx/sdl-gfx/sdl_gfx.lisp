@@ -5,7 +5,7 @@
 
 (in-package #:lispbuilder-sdl-gfx)
 
-(defparameter font-data
+(defparameter *font-data*
   '("0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x7e" "0x81" "0xa5" "0x81" "0xbd" "0x99" "0x81" "0x7e"
     "0x7e" "0xff" "0xdb" "0xff" "0xc3" "0xe7" "0xff" "0x7e" "0x6c" "0xfe" "0xfe" "0xfe" "0x7c" "0x38" "0x10" "0x00"
     "0x10" "0x38" "0x7c" "0xfe" "0x7c" "0x38" "0x10" "0x00" "0x38" "0x7c" "0x38" "0xfe" "0xfe" "0xd6" "0x10" "0x38"
@@ -135,63 +135,63 @@
     "0x6c" "0x36" "0x36" "0x36" "0x36" "0x00" "0x00" "0x00" "0x78" "0x0c" "0x18" "0x30" "0x7c" "0x00" "0x00" "0x00"
     "0x00" "0x00" "0x3c" "0x3c" "0x3c" "0x3c" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00" "0x00"))
 
-(defconstant FPS_UPPER_LIMIT 200)
+(defconstant FPS-UPPER-LIMIT 200)
 
-(defconstant FPS_LOWER_LIMIT 1)
+(defconstant FPS-LOWER-LIMIT 1)
 
-(defconstant FPS_DEFAULT 30)
+(defconstant FPS-DEFAULT 30)
 
-(defcstruct FPSmanager
+(defcstruct FPS-manager
 	(framecount :uint32)
 	(rateticks :float)
 	(lastticks :uint32)
 	(rate :uint32))
 
-(defcfun ("SDL_initFramerate" SDL_initFramerate) :void
+(defcfun ("SDL-initFramerate" SDL-init-Frame-rate) :void
   (manager :pointer))
 
-(defcfun ("SDL_setFramerate" SDL_setFramerate) :int
+(defcfun ("SDL-setFramerate" SDL-set-Frame-rate) :int
   (manager :pointer)
   (rate :int))
 
-(defcfun ("SDL_getFramerate" SDL_getFramerate) :int
+(defcfun ("SDL-getFramerate" SDL-get-Frame-rate) :int
   (manager :pointer))
 
-(defcfun ("SDL_framerateDelay" SDL_framerateDelay) :void
+(defcfun ("SDL-framerateDelay" SDL-frame-rate-Delay) :void
   (manager :pointer))
 
-(defconstant M_PI 3.141592654)
+(defconstant M-PI 3.141592654)
 
-(defconstant SMOOTHING_OFF 0)
+(defconstant SMOOTHING-OFF 0)
 
-(defconstant SMOOTHING_ON 1)
+(defconstant SMOOTHING-ON 1)
 
-(defcstruct tColorRGBA
+(defcstruct t-Color-RGBA
 	(r :uint8)
 	(g :uint8)
 	(b :uint8)
 	(a :uint8))
 
-(defcstruct tColorY
+(defcstruct t-Color-Y
 	(y :uint8))
 
 
 (defctype sdl-gfx-font-data :pointer)
 
-(defcfun ("rotozoomSurface" rotozoomSurface) :pointer
-  (src sdl::sdl-surface)
+(defcfun ("rotozoomSurface" rotozoom-Surface) :pointer
+  (src sdl-cffi::sdl-surface)
   (angle :double)
   (zoom :double)
   (smooth :int))
 
-(defcfun ("rotozoomSurfaceXY" rotozoomSurfaceXY) :pointer
-  (src sdl::sdl-surface)
+(defcfun ("rotozoomSurfaceXY" rotozoom-Surface-XY) :pointer
+  (src sdl-cffi::sdl-surface)
   (angle :double)
   (zoomx :double)
   (zoomy :double)
   (smooth :int))
 
-(defcfun ("rotozoomSurfaceSize" rotozoomSurfaceSize) :void
+(defcfun ("rotozoomSurfaceSize" rotozoom-Surface-Size) :void
   (width :int)
   (height :int)
   (angle :double)
@@ -199,7 +199,7 @@
   (dstwidth :pointer)
   (dstheight :pointer))
 
-(defcfun ("rotozoomSurfaceSizeXY" rotozoomSurfaceSizeXY) :void
+(defcfun ("rotozoomSurfaceSizeXY" rotozoom-Surface-Size-XY) :void
   (width :int)
   (height :int)
   (angle :double)
@@ -208,13 +208,13 @@
   (dstwidth :pointer)
   (dstheight :pointer))
 
-(defcfun ("zoomSurface" zoomSurface) :pointer
-  (src sdl::sdl-surface)
+(defcfun ("zoomSurface" zoom-Surface) :pointer
+  (src sdl-cffi::sdl-surface)
   (zoomx :double)
   (zoomy :double)
   (smooth :int))
 
-(defcfun ("zoomSurfaceSize" zoomSurfaceSize) :void
+(defcfun ("zoomSurfaceSize" zoom-Surface-Size) :void
   (width :int)
   (height :int)
   (zoomx :double)
@@ -223,170 +223,170 @@
   (dstheight :pointer))
 
 
-(defcfun ("SDL_imageFilterMMXdetect" SDL_imageFilterMMXdetect) :int)
+(defcfun ("SDL-imageFilterMMXdetect" SDL-image-Filter-MMX-detect) :int)
 
-(defcfun ("SDL_imageFilterMMXoff" SDL_imageFilterMMXoff) :void)
+(defcfun ("SDL-imageFilterMMXoff" SDL-image-Filter-MMX-off) :void)
 
-(defcfun ("SDL_imageFilterMMXon" SDL_imageFilterMMXon) :void)
+(defcfun ("SDL-imageFilterMMXon" SDL-image-Filter-MMX-on) :void)
 
-(defcfun ("SDL_imageFilterAdd" SDL_imageFilterAdd) :int
+(defcfun ("SDL-imageFilterAdd" SDL-image-Filter-Add) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterMean" SDL_imageFilterMean) :int
+(defcfun ("SDL-imageFilterMean" SDL-image-Filter-Mean) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterSub" SDL_imageFilterSub) :int
+(defcfun ("SDL-imageFilterSub" SDL-image-Filter-Sub) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterAbsDiff" SDL_imageFilterAbsDiff) :int
+(defcfun ("SDL-imageFilterAbsDiff" SDL-image-Filter-Abs-Diff) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterMult" SDL_imageFilterMult) :int
+(defcfun ("SDL-imageFilterMult" SDL-image-Filter-Mult) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterMultNor" SDL_imageFilterMultNor) :int
+(defcfun ("SDL-imageFilterMultNor" SDL-image-Filter-Mult-Nor) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterMultDivby2" SDL_imageFilterMultDivby2) :int
+(defcfun ("SDL-imageFilterMultDivby2" SDL-image-Filter-Mult-Div-by-2) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterMultDivby4" SDL_imageFilterMultDivby4) :int
+(defcfun ("SDL-imageFilterMultDivby4" SDL-image-Filter-Mult-Div-by-4) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterBitAnd" SDL_imageFilterBitAnd) :int
+(defcfun ("SDL-imageFilterBitAnd" SDL-image-Filter-Bit-And) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterBitOr" SDL_imageFilterBitOr) :int
+(defcfun ("SDL-imageFilterBitOr" SDL-image-Filter-Bit-Or) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterDiv" SDL_imageFilterDiv) :int
+(defcfun ("SDL-imageFilterDiv" SDL-image-Filter-Div) :int
   (Src1 :pointer)
   (Src2 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterBitNegation" SDL_imageFilterBitNegation) :int
+(defcfun ("SDL-imageFilterBitNegation" SDL-image-Filter-Bit-Negation) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int))
 
-(defcfun ("SDL_imageFilterAddByte" SDL_imageFilterAddByte) :int
+(defcfun ("SDL-imageFilterAddByte" SDL-image-Filter-Add-Byte) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (C :unsigned-char))
 
-(defcfun ("SDL_imageFilterAddUint" SDL_imageFilterAddUint) :int
+(defcfun ("SDL-imageFilterAddUint" SDL-image-Filter-Add-Uint) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (C :unsigned-int))
 
-(defcfun ("SDL_imageFilterAddByteToHalf" SDL_imageFilterAddByteToHalf) :int
+(defcfun ("SDL-imageFilterAddByteToHalf" SDL-image-Filter-Add-Byte-To-Half) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (C :unsigned-char))
 
-(defcfun ("SDL_imageFilterSubByte" SDL_imageFilterSubByte) :int
+(defcfun ("SDL-imageFilterSubByte" SDL-image-Filter-Sub-Byte) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (C :unsigned-char))
 
-(defcfun ("SDL_imageFilterSubUint" SDL_imageFilterSubUint) :int
+(defcfun ("SDL-imageFilterSubUint" SDL-image-Filter-Sub-Uint) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (C :unsigned-int))
 
-(defcfun ("SDL_imageFilterShiftRight" SDL_imageFilterShiftRight) :int
+(defcfun ("SDL-imageFilterShiftRight" SDL-image-Filter-Shift-Right) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (N :unsigned-char))
 
-(defcfun ("SDL_imageFilterShiftRightUint" SDL_imageFilterShiftRightUint) :int
+(defcfun ("SDL-imageFilterShiftRightUint" SDL-image-Filter-Shift-Right-Uint) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (N :unsigned-char))
 
-(defcfun ("SDL_imageFilterMultByByte" SDL_imageFilterMultByByte) :int
+(defcfun ("SDL-imageFilterMultByByte" SDL-image-Filter-Mult-By-Byte) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (C :unsigned-char))
 
-(defcfun ("SDL_imageFilterShiftRightAndMultByByte" SDL_imageFilterShiftRightAndMultByByte) :int
+(defcfun ("SDL-imageFilterShiftRightAndMultByByte" SDL-image-Filter-Shift-Right-And-Mult-By-Byte) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (N :unsigned-char)
   (C :unsigned-char))
 
-(defcfun ("SDL_imageFilterShiftLeftByte" SDL_imageFilterShiftLeftByte) :int
+(defcfun ("SDL-imageFilterShiftLeftByte" SDL-image-Filter-Shift-Left-Byte) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (N :unsigned-char))
 
-(defcfun ("SDL_imageFilterShiftLeftUint" SDL_imageFilterShiftLeftUint) :int
+(defcfun ("SDL-imageFilterShiftLeftUint" SDL-image-Filter-Shift-Left-Uint) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (N :unsigned-char))
 
-(defcfun ("SDL_imageFilterShiftLeft" SDL_imageFilterShiftLeft) :int
+(defcfun ("SDL-imageFilterShiftLeft" SDL-image-Filter-Shift-Left) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (N :unsigned-char))
 
-(defcfun ("SDL_imageFilterBinarizeUsingThreshold" SDL_imageFilterBinarizeUsingThreshold) :int
+(defcfun ("SDL-imageFilterBinarizeUsingThreshold" SDL-image-Filter-Binarize-Using-Threshold) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
-  (t_arg3 :unsigned-char))
+  (t-arg3 :unsigned-char))
 
-(defcfun ("SDL_imageFilterClipToRange" SDL_imageFilterClipToRange) :int
+(defcfun ("SDL-imageFilterClipToRange" SDL-image-Filter-Clip-To-Range) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
   (Tmin :unsigned-char)
   (Tmax :unsigned-char))
 
-(defcfun ("SDL_imageFilterNormalizeLinear" SDL_imageFilterNormalizeLinear) :int
+(defcfun ("SDL-imageFilterNormalizeLinear" SDL-image-Filter-Normalize-Linear) :int
   (Src1 :pointer)
   (Dest :pointer)
   (length :int)
@@ -395,7 +395,7 @@
   (Nmin :int)
   (Nmax :int))
 
-(defcfun ("SDL_imageFilterConvolveKernel3x3Divide" SDL_imageFilterConvolveKernel3x3Divide) :int
+(defcfun ("SDL-imageFilterConvolveKernel3x3Divide" SDL-image-Filter-Convolve-Kernel-3x3-Divide) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
@@ -403,7 +403,7 @@
   (Kernel :pointer)
   (Divisor :unsigned-char))
 
-(defcfun ("SDL_imageFilterConvolveKernel5x5Divide" SDL_imageFilterConvolveKernel5x5Divide) :int
+(defcfun ("SDL-imageFilterConvolveKernel5x5Divide" SDL-image-Filter-Convolve-Kerne-l5x5-Divide) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
@@ -411,7 +411,7 @@
   (Kernel :pointer)
   (Divisor :unsigned-char))
 
-(defcfun ("SDL_imageFilterConvolveKernel7x7Divide" SDL_imageFilterConvolveKernel7x7Divide) :int
+(defcfun ("SDL-imageFilterConvolveKernel7x7Divide" SDL-image-Filter-Convolve-Kernel-7x7-Divide) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
@@ -419,7 +419,7 @@
   (Kernel :pointer)
   (Divisor :unsigned-char))
 
-(defcfun ("SDL_imageFilterConvolveKernel9x9Divide" SDL_imageFilterConvolveKernel9x9Divide) :int
+(defcfun ("SDL-imageFilterConvolveKernel9x9Divide" SDL-image-Filter-Convolve-Kernel-9x9-Divide) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
@@ -427,7 +427,7 @@
   (Kernel :pointer)
   (Divisor :unsigned-char))
 
-(defcfun ("SDL_imageFilterConvolveKernel3x3ShiftRight" SDL_imageFilterConvolveKernel3x3ShiftRight) :int
+(defcfun ("SDL-imageFilterConvolveKernel3x3ShiftRight" SDL-image-Filter-Convolve-Kernel-3x3-Shift-Right) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
@@ -435,7 +435,7 @@
   (Kernel :pointer)
   (NRightShift :unsigned-char))
 
-(defcfun ("SDL_imageFilterConvolveKernel5x5ShiftRight" SDL_imageFilterConvolveKernel5x5ShiftRight) :int
+(defcfun ("SDL-imageFilterConvolveKernel5x5ShiftRight" SDL-image-Filter-Convolve-Kernel-5x5-Shift-Right) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
@@ -443,7 +443,7 @@
   (Kernel :pointer)
   (NRightShift :unsigned-char))
 
-(defcfun ("SDL_imageFilterConvolveKernel7x7ShiftRight" SDL_imageFilterConvolveKernel7x7ShiftRight) :int
+(defcfun ("SDL-imageFilterConvolveKernel7x7ShiftRight" SDL-image-Filter-Convolve-Kernel-7x7-Shift-Right) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
@@ -451,7 +451,7 @@
   (Kernel :pointer)
   (NRightShift :unsigned-char))
 
-(defcfun ("SDL_imageFilterConvolveKernel9x9ShiftRight" SDL_imageFilterConvolveKernel9x9ShiftRight) :int
+(defcfun ("SDL-imageFilterConvolveKernel9x9ShiftRight" SDL-image-Filter-Convolve-Kernel-9x9-Shift-Right) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
@@ -459,40 +459,40 @@
   (Kernel :pointer)
   (NRightShift :unsigned-char))
 
-(defcfun ("SDL_imageFilterSobelX" SDL_imageFilterSobelX) :int
+(defcfun ("SDL-imageFilterSobelX" SDL-image-Filter-Sobel-X) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
   (columns :int))
 
-(defcfun ("SDL_imageFilterSobelXShiftRight" SDL_imageFilterSobelXShiftRight) :int
+(defcfun ("SDL-imageFilterSobelXShiftRight" SDL-image-Filter-Sobel-X-Shift-Right) :int
   (Src :pointer)
   (Dest :pointer)
   (rows :int)
   (columns :int)
   (NRightShift :unsigned-char))
 
-(defcfun ("SDL_imageFilterAlignStack" SDL_imageFilterAlignStack) :void)
+(defcfun ("SDL-imageFilterAlignStack" SDL-image-Filter-Align-Stack) :void)
 
-(defcfun ("SDL_imageFilterRestoreStack" SDL_imageFilterRestoreStack) :void)
+(defcfun ("SDL-imageFilterRestoreStack" SDL-image-Filter-Restore-Stack) :void)
 
-(defconstant GFX_FONTDATAMAX 2048)
+(defconstant GFX-FONT-DATA-MAX 2048)
 
-(defconstant SDL_GFXPRIMITIVES_MAJOR 2)
+(defconstant SDL-GFX-PRIMITIVES-MAJOR 2)
 
-(defconstant SDL_GFXPRIMITIVES_MINOR 0)
+(defconstant SDL-GFX-PRIMITIVES-MINOR 0)
 
-(defconstant SDL_GFXPRIMITIVES_MICRO 13)
+(defconstant SDL-GFX-PRIMITIVES-MICRO 13)
 
 
-(defcfun ("pixelColor" pixelColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("pixelColor" pixel-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (color :uint32))
 
-(defcfun ("pixelRGBA" pixelRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("pixelRGBA" pixel-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (r :uint8)
@@ -500,15 +500,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("hlineColor" hlineColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("hlineColor" hline-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (x2 :int16)
   (y :int16)
   (color :uint32))
 
-(defcfun ("hlineRGBA" hlineRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("hlineRGBA" hline-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (x2 :int16)
   (y :int16)
@@ -517,15 +517,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("vlineColor" vlineColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("vlineColor" vline-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y1 :int16)
   (y2 :int16)
   (color :uint32))
 
-(defcfun ("vlineRGBA" vlineRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("vlineRGBA" vline-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y1 :int16)
   (y2 :int16)
@@ -534,16 +534,16 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("rectangleColor" rectangleColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("rectangleColor" rectangle-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
   (y2 :int16)
   (color :uint32))
 
-(defcfun ("rectangleRGBA" rectangleRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("rectangleRGBA" rectangle-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -553,16 +553,16 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("boxColor" boxColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("boxColor" box-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
   (y2 :int16)
   (color :uint32))
 
-(defcfun ("boxRGBA" boxRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("boxRGBA" box-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -572,16 +572,16 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("lineColor" lineColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("lineColor" line-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
   (y2 :int16)
   (color :uint32))
 
-(defcfun ("lineRGBA" lineRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("lineRGBA" line-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -591,16 +591,16 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("aalineColor" aalineColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aalineColor" aa-line-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
   (y2 :int16)
   (color :uint32))
 
-(defcfun ("aalineRGBA" aalineRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aalineRGBA" aa-line-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -610,15 +610,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("circleColor" circleColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("circleColor" circle-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (r :int16)
   (color :uint32))
 
-(defcfun ("circleRGBA" circleRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("circleRGBA" circle-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -627,15 +627,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("aacircleColor" aacircleColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aacircleColor" aa-circle-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (r :int16)
   (color :uint32))
 
-(defcfun ("aacircleRGBA" aacircleRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aacircleRGBA" aa-circle-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -644,15 +644,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("filledCircleColor" filledCircleColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("filledCircleColor" filled-Circle-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (r :int16)
   (color :uint32))
 
-(defcfun ("filledCircleRGBA" filledCircleRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("filledCircleRGBA" filled-Circle-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -661,16 +661,16 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("ellipseColor" ellipseColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("ellipseColor" ellipse-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
   (ry :int16)
   (color :uint32))
 
-(defcfun ("ellipseRGBA" ellipseRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("ellipseRGBA" ellipse-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
@@ -680,16 +680,16 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("aaellipseColor" aaellipseColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aaellipseColor" aa-ellipse-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (xc :int16)
   (yc :int16)
   (rx :int16)
   (ry :int16)
   (color :uint32))
 
-(defcfun ("aaellipseRGBA" aaellipseRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aaellipseRGBA" aa-ellipse-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
@@ -699,16 +699,16 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("filledEllipseColor" filledEllipseColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("filledEllipseColor" filled-Ellipse-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
   (ry :int16)
   (color :uint32))
 
-(defcfun ("filledEllipseRGBA" filledEllipseRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("filledEllipseRGBA" filled-Ellipse-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rx :int16)
@@ -718,8 +718,8 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("pieColor" pieColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("pieColor" pie-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -727,29 +727,8 @@
   (end :int16)
   (color :uint32))
 
-(defcfun ("pieRGBA" pieRGBA) :int
-  (dst sdl::sdl-surface)
-  (x :int16)
-  (y :int16)
-  (rad :int16)
-  (start :int16)
-  (end :int16)
-  (r :uint8)
-  (g :uint8)
-  (b :uint8)
-  (a :uint8))
-
-(defcfun ("filledPieColor" filledPieColor) :int
-  (dst sdl::sdl-surface)
-  (x :int16)
-  (y :int16)
-  (rad :int16)
-  (start :int16)
-  (end :int16)
-  (color :uint32))
-
-(defcfun ("filledPieRGBA" filledPieRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("pieRGBA" pie-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (rad :int16)
@@ -760,31 +739,29 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("trigonColor" trigonColor) :int
-  (dst sdl::sdl-surface)
-  (x1 :int16)
-  (y1 :int16)
-  (x2 :int16)
-  (y2 :int16)
-  (x3 :int16)
-  (y3 :int16)
+(defcfun ("filledPieColor" filled-Pie-Color) :int
+  (dst sdl-cffi::sdl-surface)
+  (x :int16)
+  (y :int16)
+  (rad :int16)
+  (start :int16)
+  (end :int16)
   (color :uint32))
 
-(defcfun ("trigonRGBA" trigonRGBA) :int
-  (dst sdl::sdl-surface)
-  (x1 :int16)
-  (y1 :int16)
-  (x2 :int16)
-  (y2 :int16)
-  (x3 :int16)
-  (y3 :int16)
+(defcfun ("filledPieRGBA" filled-Pie-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
+  (x :int16)
+  (y :int16)
+  (rad :int16)
+  (start :int16)
+  (end :int16)
   (r :uint8)
   (g :uint8)
   (b :uint8)
   (a :uint8))
 
-(defcfun ("aatrigonColor" aatrigonColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("trigonColor" trigon-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -793,31 +770,8 @@
   (y3 :int16)
   (color :uint32))
 
-(defcfun ("aatrigonRGBA" aatrigonRGBA) :int
-  (dst sdl::sdl-surface)
-  (x1 :int16)
-  (y1 :int16)
-  (x2 :int16)
-  (y2 :int16)
-  (x3 :int16)
-  (y3 :int16)
-  (r :uint8)
-  (g :uint8)
-  (b :uint8)
-  (a :uint8))
-
-(defcfun ("filledTrigonColor" filledTrigonColor) :int
-  (dst sdl::sdl-surface)
-  (x1 :int16)
-  (y1 :int16)
-  (x2 :int16)
-  (y2 :int16)
-  (x3 :int16)
-  (y3 :int16)
-  (color :uint32))
-
-(defcfun ("filledTrigonRGBA" filledTrigonRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("trigonRGBA" trigon-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x1 :int16)
   (y1 :int16)
   (x2 :int16)
@@ -829,15 +783,61 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("polygonColor" polygonColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aatrigonColor" aa-trigon-Color) :int
+  (dst sdl-cffi::sdl-surface)
+  (x1 :int16)
+  (y1 :int16)
+  (x2 :int16)
+  (y2 :int16)
+  (x3 :int16)
+  (y3 :int16)
+  (color :uint32))
+
+(defcfun ("aatrigonRGBA" aa-trigon-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
+  (x1 :int16)
+  (y1 :int16)
+  (x2 :int16)
+  (y2 :int16)
+  (x3 :int16)
+  (y3 :int16)
+  (r :uint8)
+  (g :uint8)
+  (b :uint8)
+  (a :uint8))
+
+(defcfun ("filledTrigonColor" filled-Trigon-Color) :int
+  (dst sdl-cffi::sdl-surface)
+  (x1 :int16)
+  (y1 :int16)
+  (x2 :int16)
+  (y2 :int16)
+  (x3 :int16)
+  (y3 :int16)
+  (color :uint32))
+
+(defcfun ("filledTrigonRGBA" filled-Trigon-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
+  (x1 :int16)
+  (y1 :int16)
+  (x2 :int16)
+  (y2 :int16)
+  (x3 :int16)
+  (y3 :int16)
+  (r :uint8)
+  (g :uint8)
+  (b :uint8)
+  (a :uint8))
+
+(defcfun ("polygonColor" polygon-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
   (color :uint32))
 
-(defcfun ("polygonRGBA" polygonRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("polygonRGBA" polygon-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -846,15 +846,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("aapolygonColor" aapolygonColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aapolygonColor" aa-polygon-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
   (color :uint32))
 
-(defcfun ("aapolygonRGBA" aapolygonRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("aapolygonRGBA" aa-polygon-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -863,15 +863,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("filledPolygonColor" filledPolygonColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("filledPolygonColor" filled-Polygon-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
   (color :uint32))
 
-(defcfun ("filledPolygonRGBA" filledPolygonRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("filledPolygonRGBA" filled-Polygon-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -880,16 +880,16 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("bezierColor" bezierColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("bezierColor" bezier-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
   (s :int)
   (color :uint32))
 
-(defcfun ("bezierRGBA" bezierRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("bezierRGBA" bezier-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (vx :pointer)
   (vy :pointer)
   (n :int)
@@ -899,15 +899,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("characterColor" characterColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("characterColor" character-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (c :char)
   (color :uint32))
 
-(defcfun ("characterRGBA" characterRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("characterRGBA" character-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (c :char)
@@ -916,15 +916,15 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("stringColor" stringColor) :int
-  (dst sdl::sdl-surface)
+(defcfun ("stringColor" string-Color) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (c :string)
   (color :uint32))
 
-(defcfun ("stringRGBA" stringRGBA) :int
-  (dst sdl::sdl-surface)
+(defcfun ("stringRGBA" string-RGBA) :int
+  (dst sdl-cffi::sdl-surface)
   (x :int16)
   (y :int16)
   (c :string)
@@ -933,7 +933,7 @@
   (b :uint8)
   (a :uint8))
 
-(defcfun ("gfxPrimitivesSetFont" gfxPrimitivesSetFont) :void
+(defcfun ("gfxPrimitivesSetFont" gfx-Primitives-Set-Font) :void
   (fontdata sdl-gfx-font-data)
   (cw :int)
   (ch :int))
