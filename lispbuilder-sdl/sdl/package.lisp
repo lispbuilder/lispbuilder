@@ -64,6 +64,7 @@
    free-color
    free-surface
    free-rectangle
+   free-rwops
 
    ;; color.lisp
    color
@@ -165,4 +166,8 @@
    window
    update-display
    clear-display
+
+   ;; rwops.lisp
+   rwops
+   create-RWops-from-file
 ))

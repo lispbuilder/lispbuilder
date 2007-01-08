@@ -33,6 +33,7 @@
 	       (:file "point")
 	       (:file "video")
 	       (:file "image")
+	       (:file "rwops")
 	       (:file "drawing-primitives")
 	       (:file "simple-font")
 	       (:file "sdl-util")

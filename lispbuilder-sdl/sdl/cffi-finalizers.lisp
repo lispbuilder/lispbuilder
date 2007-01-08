@@ -23,3 +23,9 @@
 
 (defmethod initialize-instance :after ((self null-rectangle) &key)
   nil)
+
+;;; Finalize the Rwops, freeing SDL_RWOps
+(defmethod initialize-instance :after ((self rwops) &key)
+  (let ((foreign-pointer (fp self)))
+    (cffi:finalize self (lambda ()
+			  (sdl-cffi::SDL-Free-RW foreign-pointer)))))

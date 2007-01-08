@@ -65,3 +65,5 @@
 (defgeneric free-rectangle (rectangle)
   (:documentation "Free's foreign SDL_Rect in RECTANGLE."))
 
+(defgeneric free-rwops (rwops)
+  (:documentation "Free's foreign SDL_rwops in RWOPS."))
