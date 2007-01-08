@@ -16,7 +16,7 @@
 	      :components
 	      ((:file "package")
 	       (:file "globals" :depends-on ("package"))
-	       (:file "image-example" :depends-on ("package"))
+	       (:file "image-example" :depends-on ("globals" "package"))
 	       (:static-file "lisp.bmp")
 	       (:static-file "lisp.gif")
 	       (:static-file "lisp.jpg")
