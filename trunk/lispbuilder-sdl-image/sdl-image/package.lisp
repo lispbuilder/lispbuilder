@@ -8,7 +8,7 @@
   (:documentation "The main package of `lispbuilder-sdl-image'.")
   (:export
 
-   ;; util-sdl_image.lisp
+   ;; sdl-image-util.lisp
    #:create-image-from-RWops
    #:rwops-p
    #:rwops-type-of
