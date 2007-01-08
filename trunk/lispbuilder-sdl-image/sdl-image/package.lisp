@@ -10,7 +10,7 @@
 
    ;; util-sdl_image.lisp
    #:create-image-from-RWops
-   #:image-type
-   #:is-image
-   #:is-image-from-RWops
+   #:rwops-p
+   #:rwops-type-of
+   #:image-p
    #:load-image))
