@@ -19,6 +19,8 @@
    ;; flood-fill.lisp
    #:flood-fill
    #:flood-fill-timed
+   #:flood-fill-stack
+   #:flood-fill-stack-timed
 
    ;; line-drawing.lisp
    #:line-drawing
