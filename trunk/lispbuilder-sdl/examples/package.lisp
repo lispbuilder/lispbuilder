@@ -16,6 +16,10 @@
    ;; distance-2D.lisp
    #:distance-2d
 
+   ;; flood-fill.lisp
+   #:flood-fill
+   #:flood-fill-timed
+
    ;; line-drawing.lisp
    #:line-drawing
 

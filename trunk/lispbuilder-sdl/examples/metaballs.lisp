@@ -190,20 +190,12 @@
   (loop
      for x from 0 to col
      for x-pos = (* x x-resolution)
-     do (sdl:draw-vline-xy x-pos 0 (* y-resolution row) :surface surface :color color
-			  ;; 	 sdl-gfx:draw-line (sdl:point (sdl-base::to-int x-pos) 0)
-			  ;; 			   (sdl:point (sdl:to-int x-pos) (sdl:to-int (* resolution row)))
-			  ;; 			   :surface surface :color color
-			  ))
+     do (sdl:draw-vline-xy x-pos 0 (* y-resolution row) :surface surface :color color))
   ;; Draw the horizontal lines
   (loop
      for y from 0 to row
      for y-pos = (* y y-resolution)
-     do (sdl:draw-hline-xy 0 (* x-resolution col) y-pos :surface surface :color color
-;; 	 sdl-gfx:draw-line (sdl:point 0 (sdl:to-int y-pos))
-;; 			   (sdl:point (sdl:to-int (* resolution col)) (sdl:to-int y-pos))
-;; 			   :surface surface :color color
-			   )))
+     do (sdl:draw-hline-xy 0 (* x-resolution col) y-pos :surface surface :color color)))
 
 (defun draw-meta-center (manager meta-balls color surface)
   (declare (optimize (safety 0) (speed 3) (space 1)))
@@ -229,19 +221,7 @@
 			   (cast-to-int (* j y-resolution))
 			   (cast-to-int (* i x-resolution))
 			   (cast-to-int (* (+ j 1) y-resolution))
-			   :surface surface :color color)
-	
-;; 	(sdl-gfx:draw-line (sdl:point (sdl:to-int (* i resolution))
-;; 				      (sdl:to-int (* j resolution)))
-;; 			   (sdl:point (sdl:to-int (* (+ i 1) resolution))
-;; 				      (sdl:to-int (* (+ j 1) resolution)))
-;; 			   :surface surface :color color)
-;; 	(sdl-gfx:draw-line (sdl:point (sdl:to-int (* (+ i 1) resolution))
-;; 				      (sdl:to-int (* j resolution)))
-;; 			   (sdl:point (sdl:to-int (* i resolution))
-;; 				      (sdl:to-int (* (+ j 1) resolution)))
-;; 			   :surface surface :color color)
-	))))
+			   :surface surface :color color)))))
 
 (defun handle-keypress (key)
   (case key

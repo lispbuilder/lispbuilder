@@ -26,7 +26,6 @@
 (defvar *M43*	-1.5)
 (defvar *M44*	 0.5)
 
-
 ;; (defun bounds-collision? (bounds1 bounds2)
 ;;   (let ((collision? nil))
 ;;     (destructuring-bind (s1-x1 s1-y1 s1-x2 s1-y2)

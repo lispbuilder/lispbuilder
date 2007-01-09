@@ -15,6 +15,7 @@
 	       (:file "globals" :depends-on ("package"))
 	       (:file "simple-font-demo" :depends-on ("package"))
 	       (:file "bmp-sample" :depends-on ("package"))
+	       (:file "flood-fill" :depends-on ("package"))
 	       (:file "pixels" :depends-on ("package"))
 	       (:file "recursive-rects" :depends-on ("package"))
 	       (:file "mouse-painter" :depends-on ("package"))

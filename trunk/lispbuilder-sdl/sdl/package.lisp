@@ -132,6 +132,7 @@
    draw-string-centered
    draw-font
    initialise-default-font
+   flood-fill
    
    ;; surfaces.lisp
    surface
