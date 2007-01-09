@@ -178,103 +178,103 @@ because it uses PUSH/POP as the stack.  This function is fast."
 ;; Code stolen from:
 ;; http://student.kuleuven.be/~m0216922/CG/floodfill.html
 
-;; (defparameter *ff-stack-size* 16777215)
+(defparameter *ff-stack-size* 16777215)
 
-;; ;; This variable is used for efficient storage of (x,y) coordinates in
-;; ;; the stack.  See FF-PUSH and FF-POP code.
-;; (defparameter *ff-max-height* 1600)
+;; This variable is used for efficient storage of (x,y) coordinates in
+;; the stack.  See FF-PUSH and FF-POP code.
+(defparameter *ff-max-height* 1600)
 
-;; ;; We don't preallocate the stack because it increases the size of the
-;; ;; initial Lisp image
-;; (defparameter *ff-stack* nil)
+;; We don't preallocate the stack because it increases the size of the
+;; initial Lisp image
+(defparameter *ff-stack* nil)
 
-;; (defparameter *ff-stack-pointer* -1)
+(defparameter *ff-stack-pointer* -1)
 
-;; (defun ff-empty-stack()
-;;   "Intializes the stack. Allocates it if necessary."
-;;   (unless *ff-stack*
-;;     (setf *ff-stack* (make-array *ff-stack-size* :element-type 'fixnum)))
-;;   (setf *ff-stack-pointer* -1))
+(defun ff-empty-stack()
+  "Intializes the stack. Allocates it if necessary."
+  (unless *ff-stack*
+    (setf *ff-stack* (make-array *ff-stack-size* :element-type 'fixnum)))
+  (setf *ff-stack-pointer* -1))
 
-;; (defun ff-empty-p()
-;;   "Is the stack empty?"
-;;   (< *ff-stack-pointer* 0))
+(defun ff-empty-p()
+  "Is the stack empty?"
+  (< *ff-stack-pointer* 0))
 
-;; (defun ff-push(x y)
-;;   (declare (type fixnum x y)
-;;            (optimize (speed 3)(safety 0)))
-;;   (when (< (1- *ff-stack-pointer*))
-;;     (incf *ff-stack-pointer*)
-;;     (setf (aref *ff-stack* *ff-stack-pointer*)
-;;           (+ (* x *ff-max-height*) y))))
+(defun ff-push(x y)
+  (declare (type fixnum x y)
+           (optimize (speed 3)(safety 0)))
+  (when (< (1- *ff-stack-pointer*))
+    (incf *ff-stack-pointer*)
+    (setf (aref *ff-stack* *ff-stack-pointer*)
+          (+ (* x *ff-max-height*) y))))
 
-;; (defun ff-pop()
-;;   (when (>= *ff-stack-pointer* 0)
-;;     (let ((x (truncate (/ (aref *ff-stack* *ff-stack-pointer*) *ff-max-height*)))
-;;           (y (mod (aref *ff-stack* *ff-stack-pointer*) *ff-max-height*)))
-;;       (decf *ff-stack-pointer*)
-;;       (values x y))))
+(defun ff-pop()
+  (when (>= *ff-stack-pointer* 0)
+    (let ((x (truncate (/ (aref *ff-stack* *ff-stack-pointer*) *ff-max-height*)))
+          (y (mod (aref *ff-stack* *ff-stack-pointer*) *ff-max-height*)))
+      (decf *ff-stack-pointer*)
+      (values x y))))
 
 
-;; (defun flood-fill-custom-stack (x y &key (surface *default-surface*) (color *default-color*))
-;;   "This function is the same as the one above
-;; but has its own custom array-based stack.  It was more of an
-;; experiment to see if an array would be faster than a bunch of consing.
-;;  The timing of both functions indicates they run at the same speed.
-;; With compiler declarations it may have better results.  Another
-;; disadvantage to this is it preallocates the stack, chewing up quite a
-;; bit of ram."
-;;   (sdl-base::with-pixel (pixels (fp surface))
-;;     (let* ((w (width surface))
-;;            (h (height surface))
-;;            (new-color (sdl:map-color color surface))
-;;            (old-color  (sdl-base::read-pixel pixels x y)))
-;;       (when (/= old-color new-color)
-;;         (ff-empty-stack)
-;;         (let ((y1)
-;;               (span-left)
-;;               (span-right))
-;;           (when (not (ff-push x y)) (return-from flood-fill-custom-stack nil))
-;;           (loop
-;;              :while (not (ff-empty-p))
-;;              :do (multiple-value-bind (x y)(ff-pop)
-;;                    (setf y1 y)
-;;                    (loop
-;;                       :while (and (>= y1 0) (= (sdl-base::read-pixel pixels x y1)
-;;                                                old-color))
-;;                       :do (decf y1))
-;;                    (incf y1)
-;;                    (setf span-left nil)
-;;                    (setf span-right nil)
-;;                    (loop
-;;                       :while (and (< y1 h) (= (sdl-base::read-pixel pixels x y1)
-;;                                               old-color))
-;;                       :do (progn (sdl-base::write-pixel pixels x y1 new-color)
-;;                                  (if (and (not span-left)
-;;                                           (> x 0)
-;;                                           (= (sdl-base::read-pixel pixels (- x 1) y1)
-;;                                              old-color))
-;;                                      (progn (when (not (ff-push (- x 1) y1))
-;;                                               (return-from flood-fill-custom-stack nil))
-;;                                             (setf span-left T))
-;;                                      (if (and span-left
-;;                                               (> x 0)
-;;                                               (/= (sdl-base::read-pixel pixels (- x 1) y1)
-;;                                                   old-color))
-;;                                          (setf span-left nil)))
-;;                                  (if (and (not span-right)
-;;                                           (< x (1- w))
-;;                                           (= (sdl-base::read-pixel pixels (+ x 1) y1)
-;;                                              old-color))
-;;                                      (progn (when (not (ff-push (+ x 1) y1))
-;;                                               (return-from flood-fill-custom-stack nil))
-;;                                             (setf span-right T))
-;;                                      (when (and span-right
-;;                                                 (< x (1- w))
-;;                                                 (/= (sdl-base::read-pixel pixels (+ x 1) y1)
-;;                                                     old-color))
-;;                                        (setf span-right nil)))
-;;                                  (incf y1))))))))))
+(defun flood-fill-stack (x y &key (surface *default-surface*) (color *default-color*))
+  "This function is the same as the one above
+but has its own custom array-based stack.  It was more of an
+experiment to see if an array would be faster than a bunch of consing.
+ The timing of both functions indicates they run at the same speed.
+With compiler declarations it may have better results.  Another
+disadvantage to this is it preallocates the stack, chewing up quite a
+bit of ram."
+  (sdl-base::with-pixel (pixels (fp surface))
+    (let* ((w (width surface))
+           (h (height surface))
+           (new-color (sdl:map-color color surface))
+           (old-color  (sdl-base::read-pixel pixels x y)))
+      (when (/= old-color new-color)
+        (ff-empty-stack)
+        (let ((y1)
+              (span-left)
+              (span-right))
+          (when (not (ff-push x y)) (return-from flood-fill-stack nil))
+          (loop
+             :while (not (ff-empty-p))
+             :do (multiple-value-bind (x y)(ff-pop)
+                   (setf y1 y)
+                   (loop
+                      :while (and (>= y1 0) (= (sdl-base::read-pixel pixels x y1)
+                                               old-color))
+                      :do (decf y1))
+                   (incf y1)
+                   (setf span-left nil)
+                   (setf span-right nil)
+                   (loop
+                      :while (and (< y1 h) (= (sdl-base::read-pixel pixels x y1)
+                                              old-color))
+                      :do (progn (sdl-base::write-pixel pixels x y1 new-color)
+                                 (if (and (not span-left)
+                                          (> x 0)
+                                          (= (sdl-base::read-pixel pixels (- x 1) y1)
+                                             old-color))
+                                     (progn (when (not (ff-push (- x 1) y1))
+                                              (return-from flood-fill-stack nil))
+                                            (setf span-left T))
+                                     (if (and span-left
+                                              (> x 0)
+                                              (/= (sdl-base::read-pixel pixels (- x 1) y1)
+                                                  old-color))
+                                         (setf span-left nil)))
+                                 (if (and (not span-right)
+                                          (< x (1- w))
+                                          (= (sdl-base::read-pixel pixels (+ x 1) y1)
+                                             old-color))
+                                     (progn (when (not (ff-push (+ x 1) y1))
+                                              (return-from flood-fill-stack nil))
+                                            (setf span-right T))
+                                     (when (and span-right
+                                                (< x (1- w))
+                                                (/= (sdl-base::read-pixel pixels (+ x 1) y1)
+                                                    old-color))
+                                       (setf span-right nil)))
+                                 (incf y1))))))))))
 
 
 ;; (defun random-point (max-x max-y)

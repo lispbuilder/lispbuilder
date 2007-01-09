@@ -133,6 +133,8 @@
    draw-font
    initialise-default-font
    flood-fill
+   flood-fill-stack
+   
    
    ;; surfaces.lisp
    surface
