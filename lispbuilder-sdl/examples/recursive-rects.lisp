@@ -32,13 +32,13 @@
       (if (or
 	   (>= min-size w)
 	   (>= min-size h))
-	  (sdl:draw-box-xy x1 y1 x2 y2
-			    :surface surface_ptr
-			    :color (sdl:color :r (random 255)
-					       :g (random 255)
-					       :b (random 255)
-					       :a (random 255))
-			    :clipping-p nil)
+	  (sdl:draw-box (sdl:rectangle-from-edges-* x1 y1 x2 y2) 
+			:surface surface_ptr
+			:color (sdl:color :r (random 255)
+					  :g (random 255)
+					  :b (random 255)
+					  :a (random 255))
+			:clipping-p nil)
 	  (progn
 	    (draw-recursive-rects surface_ptr x1 y1 sx sy min-size (1+ level))
 	    (draw-recursive-rects surface_ptr sx y1 x2 sy min-size (1+ level))

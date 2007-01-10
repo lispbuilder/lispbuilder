@@ -28,10 +28,9 @@
       (let ((surface (if display
 			 (make-instance 'display-surface :surface surface-fp)
 			 (make-instance 'surface :surface surface-fp ))))
- 	(setf (x surface) 0
-	      (y surface) 0
-	      (width surface) (sdl-base::surf-w (fp surface))
- 	      (height surface) (sdl-base::surf-h (fp surface)))
+ 	(set-surface-* surface :x 0 :y 0)
+	(setf (width surface) (sdl-base::surf-w (fp surface))
+	      (height surface) (sdl-base::surf-h (fp surface)))
 	surface)
       (error "SURFACE: SURFACE-FP must be a foreign pointer.")))
 
@@ -39,15 +38,15 @@
 			&body body)
   (let ((surface-ptr (gensym "surface-prt-"))
 	(body-value (gensym "body-value-")))
-    `(symbol-macrolet ((width (width ,var))
-		       (height (height ,var))
-		       (x (x ,var))
-		       (y (y ,var)))
-       (let* ((,@(if surface
-		     `(,var ,surface)
-		     `(,var ,var)))
-	      (*default-surface* ,var)
-	      (,body-value nil))
+    `(let* ((,@(if surface
+		   `(,var ,surface)
+		   `(,var ,var)))
+	    (*default-surface* ,var)
+	    (,body-value nil))
+       (symbol-macrolet ((width (width ,var))
+			 (height (height ,var))
+			 (x (x ,var))
+			 (y (y ,var)))
 	 (sdl-base::with-surface (,surface-ptr (fp ,var) nil)
 	   (setf ,body-value (progn ,@body))
 	   (if ,free-p
@@ -123,11 +122,54 @@
 (defmethod (setf y) (y-val (surface sdl-surface))
   (setf (sdl-base::rect-y (fp-position surface)) y-val))
 
-(defmethod xy ((surface sdl-surface))
+(defmethod point-* ((surface sdl-surface))
+  (values (x surface) (y surface)))
+
+(defmethod get-point ((surface sdl-surface))
   (vector (x surface) (y surface)))
-(defmethod set-xy ((surface sdl-surface) x y)
-  (setf (x surface) x
-	(y surface) y))
+
+(defmethod set-point ((surface sdl-surface) (position vector))
+  (set-point-* surface :x (x position) :y (y position))
+  surface)
+
+(defmethod set-point-* ((surface sdl-surface) &key x y)
+  (when x (setf (x surface) x))
+  (when y (setf (y surface) y))
+  surface)
+
+(defmethod position-* ((surface sdl-surface))
+  (values (x surface) (y surface)))
+
+(defmethod get-position ((surface sdl-surface))
+  (vector (x surface) (y surface)))
+
+(defmethod set-position ((surface sdl-surface) (position vector))
+  (set-position-* surface :x (x position) :y (y position))
+  surface)
+
+(defmethod set-position-* ((surface sdl-surface) &key x y)
+  (when x (setf (x surface) x))
+  (when y (setf (y surface) y))
+  surface)
+
+(defmethod set-surface ((surface sdl-surface) (position vector))
+  (set-surface-* surface :x (x position) :y (y position))
+  surface)
+
+(defmethod set-surface-* ((surface sdl-surface) &key x y)
+  (when x (setf (x surface) x))
+  (when y (setf (y surface) y))
+  surface)
+
+(defmethod rectangle-* ((surface sdl-surface))
+  (values (x surface) (y surface) (width surface) (height surface)))
+
+(defmethod get-rectangle-* ((surface sdl-surface))
+  (rectangle :x (x surface)
+	     :y (y surface)
+	     :w (width surface)
+	     :h (height surface))
+  surface)
 
 (defun clear-color-key (&key (surface *default-surface*) (rle-accel t))
   (sdl-base::clear-color-key (fp surface) rle-accel))
@@ -194,12 +236,17 @@
       (set-alpha alpha-value :surface surf :rle-accel rle-accel))
     surf))
 
-(defun update-surface (surface &key template x y w h)
+;;; TODO: This needs to be optimized.
+(defun update-surface (surface &optional template)
   (if template
       (if (typep template 'rectangle-array)
 	  (sdl-base::update-surface (fp surface) :template (fp template) :number (len template))
 	  (sdl-base::update-surface (fp surface) :template (fp template)))
-      (sdl-base::update-surface (fp surface) :x x :y y :w w :h h))
+      (sdl-base::update-surface (fp surface)))
+  surface)
+
+(defun update-surface-* (surface x y w h)
+  (sdl-base::update-surface (fp surface) :x x :y y :w w :h h)
   surface)
 
 (defun blit-surface (src &optional (surface *default-surface*))
@@ -210,12 +257,15 @@
   (sdl-base::blit-surface (fp src) (fp surface) (cffi:null-pointer) (fp-position src))
   src)
 
-(defun draw-surface-at (src x y &key (surface *default-surface*))
-  (when x (setf (x src) x))
-  (when y (setf (y src) y))
+(defun draw-surface-at-* (src x y &key (surface *default-surface*))
+  (set-surface-* src :x x :y y)
   (draw-surface src :surface surface))
 
-(defun fill-surface (color &key (surface *default-surface*) (template nil) (update-p nil) (clipping-p t))
+(defun draw-surface-at (src point &key (surface *default-surface*))
+  (set-surface src point)
+  (draw-surface src :surface surface))
+
+(defun fill-surface (color &key (template nil) (surface *default-surface*) (update-p nil) (clipping-p t))
   "fill the entire surface with the specified R G B A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
@@ -229,3 +279,11 @@
 			  :update-p update-p)
   surface)
 
+(defun fill-surface-* (color x y w h &key (surface *default-surface*) (update-p nil) (clipping-p t))
+  (with-rectangle (template (rectangle :x x :y y :w w :h h))
+    (fill-surface color
+		  :template template
+		  :surface surface
+		  :clipping-p clipping-p
+		  :update-p update-p))
+  surface)

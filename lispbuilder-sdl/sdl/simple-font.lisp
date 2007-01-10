@@ -78,14 +78,14 @@
 							    :key-color (key-color font)))))
   (fill-surface (key-color font)
 		     :surface surface)
-  (draw-string string 0 0
-	       :surface surface
-	       :font font)
+  (draw-string-* string 0 0
+		 :surface surface
+		 :font font)
   (when cache
     (setf (cached-surface font) surface))
   surface)
 
-(defun draw-character (font x y char &key
+(defun draw-character-* (font x y char &key
 		       (surface *default-surface*))
   "draw a single character at the x y position"
   (let ((image (font-surface font))
@@ -107,27 +107,34 @@
 				  :update-p nil))
 	nil)))
 
-(defun draw-string (str x y &key
-		    (justify :left)
-		    (surface *default-surface*)
-		    (font *default-font*))
+(defun draw-string (str position &key
+		      (justify :left)
+		      (surface *default-surface*)
+		      (font *default-font*))
+  (draw-string-* str (x position) (y position)
+	       :justify justify :surface surface) :font font)
+
+(defun draw-string-* (str x y &key
+		      (justify :left)
+		      (surface *default-surface*)
+		      (font *default-font*))
   "draw a string at the x y position"
   (case justify
-    (:left (draw-string-left-justify str x y :surface surface :font font))
-    (:right (draw-string-right-justify str x y :surface surface :font font))
-    (:center (draw-string-centered str x y :surface surface :font font))
+    (:left (draw-string-left-justify-* str x y :surface surface :font font))
+    (:right (draw-string-right-justify-* str x y :surface surface :font font))
+    (:center (draw-string-centered-* str x y :surface surface :font font))
     (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER"))))
 
-(defun draw-string-left-justify (str x y &key
+(defun draw-string-left-justify-* (str x y &key
 				 (surface *default-surface*)
 				 (font *default-font*))
   (loop for c across str do
        (unless (eql c #\space)
-	 (draw-character font x y c
+	 (draw-character-* font x y c
 			 :surface surface))
        (incf x (font-width font))))
 
-(defun draw-string-right-justify (str x y &key
+(defun draw-string-right-justify-* (str x y &key
 				  (surface *default-surface*)
 				  (font *default-font*))
   "draw a string ending at the x y position"
@@ -135,11 +142,11 @@
 	(rev-str (reverse str)))
     (loop for c across rev-str do
 	 (unless (eql c #\space)
-	   (draw-character font right-x y c
+	   (draw-character-* font right-x y c
 			   :surface surface))
 	 (decf right-x (font-width font)))))
 
-(defun draw-string-centered (str x y &key
+(defun draw-string-centered-* (str x y &key
 			     (surface *default-surface*)
 			     (font *default-font*))
   "draw a string centered at x y"
@@ -147,11 +154,14 @@
 	 (left-x (- x (/ width 2))))
     (loop for c across str do
 	 (unless (eql c #\space)
-	   (draw-character font left-x y c
+	   (draw-character-* font left-x y c
 			   :surface surface))
 	 (incf left-x (font-width font)))))
 
-(defun draw-font (x y &key (font *default-font*) (surface *default-surface*))
+(defun draw-font (position &key (font *default-font*) (surface *default-surface*))
+  (draw-font-* (x position) (y position) :font font :surface surface))
+
+(defun draw-font-* (x y &key (font *default-font*) (surface *default-surface*))
   (when (and x y)
     (setf (x (cached-surface font)) x
 	  (y (cached-surface font)) y)

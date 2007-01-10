@@ -24,7 +24,29 @@
 
 (defgeneric map-color (color &optional surface))
 
-(defgeneric set-color (obj &key r g b a))
+
+;; set-'s and get-'s
+(defgeneric color-* (obj))
+(defgeneric set-color (dst src))
+(defgeneric set-color-* (obj &key r g b a))
+
+(defgeneric point-* (obj))
+(defgeneric set-point (obj point))
+(defgeneric set-point-* (obj &key x y))
+
+(defgeneric position-* (obj))
+(defgeneric set-position (dst src))
+(defgeneric set-position-* (obj &key x y))
+
+(defgeneric rectangle-* (rectangle))
+(defgeneric set-rectangle (rectangle position))
+(defgeneric set-rectangle-* (rectangle &key x y w h))
+
+(defgeneric set-surface (surface position))
+(defgeneric set-surface-* (surface &key x y))
+
+;; end set-'s and get-'s
+
 
 (defgeneric width (obj)
   (:documentation "Returns the width of the surface or rectangle."))
@@ -41,8 +63,6 @@
 (defgeneric x2 (obj))
 (defgeneric y2 (obj))
 
-(defgeneric xy (obj))
-(defgeneric set-xy (obj x y))
 
 (defgeneric (setf width) (value obj))
 (defgeneric (setf height) (value obj))
@@ -52,10 +72,6 @@
 
 (defgeneric (setf x2) (value obj))
 (defgeneric (setf y2) (value obj))
-
-(defgeneric (setf pos) (value obj))
-
-(defgeneric point-from (obj))
 
 (defgeneric free-color (color))
 
@@ -67,3 +83,4 @@
 
 (defgeneric free-rwops (rwops)
   (:documentation "Free's foreign SDL_rwops in RWOPS."))
+

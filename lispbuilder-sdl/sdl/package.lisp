@@ -50,17 +50,34 @@
    b
    a
    map-color
-   set-color
    width
    height
    x
    y
    x2
    x2
-   point-from
-   xy
-   set-xy
-   pos
+
+   color-*
+   set-color
+   set-color-*
+
+   point-*
+   get-point
+   set-point
+   set-point-*
+   position-*
+   get-position
+   set-position
+   set-position-*
+
+   rectangle-*
+   get-rectangle
+   set-rectangle
+   set-rectangle-*
+
+   set-surface
+   set-surface-*
+
    free-color
    free-surface
    free-rectangle
@@ -72,11 +89,11 @@
 
    ;; drawing-primitives
    add-vertex
+   add-vertex-*
    random-rectangle
-   rectangle-from-xy
-   rectangle-from-points
-   rectangle-from-midpoint
-   rectangle-from-surface
+   rectangle-from-edges-*
+   rectangle-from-edges
+   rectangle-from-midpoint-*
    genbez
    with-bezier
    with-curve
@@ -86,19 +103,20 @@
    draw-bezier
    draw-curve
    draw-shape
-   draw-line-xy
+   draw-line-*
    draw-line
-   draw-vline-points
-   draw-hline-points
-   draw-vline-xy
-   draw-hline-xy
+   draw-vline
+   draw-vline-*
+   draw-hline
+   draw-hline-*
    draw-box
-   draw-box-points
-   draw-box-xy
+   draw-box-*
+
    draw-rectangle
-   draw-rectangle-points
-   draw-rectangle-xy
+   draw-rectangle-*
+  
    draw-point
+   draw-point-*
    read-point
 
    ;; events.lisp
@@ -110,31 +128,38 @@
    ;; point.lisp
    with-point
    point
+   copy-point
 
    ;; rectangle.lisp
    rectangle
    with-rectangle
    with-rectangles
-   set-rectangle
 
    ;; sdl-util.lisp
-   points-in-range
-   distance-to-point
+   within-range
+   within-range-*
+   distance
+   distance-*
    rotate-surface
+   flood-fill
+   flood-fill-*
+   flood-fill-stack
+   flood-fill-stack-*
+   
+   ;; simple-font.lisp
    font
    initialise-font
    free-font
    make-text-image
-   draw-character
+   draw-character-*
    draw-string
-   draw-string-left-justify
-   draw-string-right-justify
-   draw-string-centered
+   draw-string-*
+   draw-string-left-justify-*
+   draw-string-right-justify-*
+   draw-string-centered-*
    draw-font
+   draw-font-*
    initialise-default-font
-   flood-fill
-   flood-fill-stack
-   
    
    ;; surfaces.lisp
    surface
@@ -153,10 +178,13 @@
    copy-surface
    create-surface
    update-surface
+   update-surface-*
    blit-surface
    draw-surface
+   draw-surface-at-*
    draw-surface-at
    fill-surface
+   fill-surface-*
 
    ;; util.lisp
    random+1

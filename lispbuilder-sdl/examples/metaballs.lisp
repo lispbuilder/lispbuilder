@@ -44,9 +44,9 @@
 	  (incf frames-per-second (aref frame-times i)))
 	(setf frames-per-second (cast float (/ 1000 (/ frames-per-second frame-values))))
 	(sdl:fill-surface (sdl:color) :surface surface)
-	(sdl:draw-string (format nil "fps : ~d" (coerce frames-per-second 'float))
-			  20 0
-			  :surface surface))
+	(sdl:draw-string-* (format nil "fps : ~d" (coerce frames-per-second 'float))
+			   20 0
+			   :surface surface))
       surface)))
 
 (defstruct mmanager
@@ -190,12 +190,12 @@
   (loop
      for x from 0 to col
      for x-pos = (* x x-resolution)
-     do (sdl:draw-vline-xy x-pos 0 (* y-resolution row) :surface surface :color color))
+     do (sdl:draw-vline-* x-pos 0 (* y-resolution row) :surface surface :color color))
   ;; Draw the horizontal lines
   (loop
      for y from 0 to row
      for y-pos = (* y y-resolution)
-     do (sdl:draw-hline-xy 0 (* x-resolution col) y-pos :surface surface :color color)))
+     do (sdl:draw-hline-* 0 (* x-resolution col) y-pos :surface surface :color color)))
 
 (defun draw-meta-center (manager meta-balls color surface)
   (declare (optimize (safety 0) (speed 3) (space 1)))
@@ -212,16 +212,16 @@
 	(setf i (get-square-coords-i metaball x-resolution y-resolution))
 	(setf j (get-square-coords-j metaball x-resolution y-resolution))
 
-	(sdl:draw-line-xy (cast-to-int (* i x-resolution))
-			   (cast-to-int (* j y-resolution))
-			   (cast-to-int (* (+ i 1) x-resolution))
-			   (cast-to-int (* (+ j 1) y-resolution))
-			   :surface surface :color color)
-	(sdl:draw-line-xy (cast-to-int (* (+ i 1) x-resolution))
-			   (cast-to-int (* j y-resolution))
-			   (cast-to-int (* i x-resolution))
-			   (cast-to-int (* (+ j 1) y-resolution))
-			   :surface surface :color color)))))
+	(sdl:draw-line-* (cast-to-int (* i x-resolution))
+			 (cast-to-int (* j y-resolution))
+			 (cast-to-int (* (+ i 1) x-resolution))
+			 (cast-to-int (* (+ j 1) y-resolution))
+			 :surface surface :color color)
+	(sdl:draw-line-* (cast-to-int (* (+ i 1) x-resolution))
+			 (cast-to-int (* j y-resolution))
+			 (cast-to-int (* i x-resolution))
+			 (cast-to-int (* (+ j 1) y-resolution))
+			 :surface surface :color color)))))
 
 (defun handle-keypress (key)
   (case key
@@ -346,9 +346,9 @@
 							     (+ j (aref offset p1-idx 1))))))
 
 			    ;; Draw Line
-			    (sdl:draw-line-xy iso-p1-x iso-p1-y
-					       iso-p2-x iso-p2-y
-					       :color color :surface surface)
+			    (sdl:draw-line-* iso-p1-x iso-p1-y
+					     iso-p2-x iso-p2-y
+					     :color color :surface surface)
 			    (setf (aref square-flag i j) 1)))))))))))
 
 
@@ -375,11 +375,11 @@
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
       (fps-init)
       (sdl:with-surfaces ((grid (sdl:create-surface (sdl:width sdl:*default-display*)
-						     (sdl:height sdl:*default-display*)
-						     :surface sdl:*default-display*))
-			   (fps (sdl:create-surface 150 20 :surface sdl:*default-display*
-						    :key-color (sdl:color :r 0 :g 0 :b 0))))
-	(sdl:set-xy fps 10 260)
+						    (sdl:height sdl:*default-display*)
+						    :surface sdl:*default-display*))
+			  (fps (sdl:create-surface 150 20 :surface sdl:*default-display*
+						   :key-color (sdl:color :r 0 :g 0 :b 0))))
+	(sdl:set-position-* fps :x 10 :y 260)
 	(draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)

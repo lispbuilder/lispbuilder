@@ -15,17 +15,21 @@
     (setf (sdl-base::frame-rate) 10)
     
     (sdl:with-surfaces ((img-1 (sdl:convert-surface :surface (sdl:load-image "sdl.bmp" *bmp-path*) :free-p t))
-			 (img-2 (sdl:convert-surface :surface (sdl:load-image "lisp.bmp" *bmp-path* :key-color (sdl:color :r 253 :g 59 :b 251)) :free-p t))
-			 (img-3 (sdl:convert-surface :surface (sdl:rotate-surface 90 :surface img-2) :key-color (sdl:color :r 253 :g 59 :b 251) :free-p t)))
-      (sdl:set-xy img-1 10 10)
+			(img-2 (sdl:convert-surface :surface (sdl:load-image "lisp.bmp" *bmp-path* :key-color (sdl:color :r 253 :g 59 :b 251)) :free-p t))
+			(img-3 (sdl:convert-surface :surface (sdl:rotate-surface 90 :surface img-2) :key-color (sdl:color :r 253 :g 59 :b 251) :free-p t)))
+
+      ;; Set position using 'set-position'
+      (sdl:set-position-* img-1 :x 10 :y 10)
       (sdl:draw-surface img-1 :surface sdl:*default-display*)
-      
-      (sdl:draw-surface-at img-2 190 10
-			    :surface sdl:*default-display*)
-      
-      (sdl:draw-surface-at img-3 80 100
-			    :surface sdl:*default-display*))
+
+      ;; Set position using a 'point'
+      (sdl:draw-surface-at img-2 (sdl:point :x 190 :y 10)
+			   :surface sdl:*default-display*)
+
+      ;; Set position using x/y spread coords
+      (sdl:draw-surface-at-* img-3 80 100
+			     :surface sdl:*default-display*))
 
     (sdl:with-events ()
-      (:quit-event () t)
-      (:video-expose-event () (sdl:update-display)))))
+		     (:quit-event () t)
+		     (:video-expose-event () (sdl:update-display)))))
