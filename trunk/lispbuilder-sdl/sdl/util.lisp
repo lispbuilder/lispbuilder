@@ -19,10 +19,6 @@
   "converts radians to degrees."
   (/ radian (/ PI 180)))
 
-(defun distance (x1 y1 x2 y2)
-  (sqrt (+ (expt (- x1 x2) 2) 
-	   (expt (- y1 y2) 2))))
-
 (defun create-list-if-not (var)
   (if (listp var)
       var

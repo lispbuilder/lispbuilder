@@ -46,7 +46,7 @@
 	 (y (random bound-h))
 	 (w (random+1 (- bound-w x)))
 	 (h (random+1 (- bound-h y))))
-    (set-rectangle rectangle :x x :y y :w w :h h))
+    (set-rectangle-* rectangle :x x :y y :w w :h h))
   rectangle)
 
 ;; (defun rectangle-from-wh (width height &key (position *default-position*))
@@ -55,23 +55,20 @@
 ;; 	     :w (+ (x position) width)
 ;; 	     :h (+ (y position) height)))
 
-(defun rectangle-from-xy (x1 y1 x2 y2)
+(defun rectangle-from-edges-* (x1 y1 x2 y2)
   (rectangle :x x1
 	     :y y1
 	     :w (1+ (abs (- x2 x1)))
 	     :h (1+ (abs (- y2 y1)))))
 
-(defun rectangle-from-points (p1 p2)
-  (rectangle-from-xy (x p1) (y p1) (x p2) (y p2)))
+(defun rectangle-from-edges (p1 p2)
+  (rectangle-from-edges-* (x p1) (y p1) (x p2) (y p2)))
 
-(Defun rectangle-from-midpoint (x y w h)
+(defun rectangle-from-midpoint-* (x y w h)
   (rectangle :x (- x (/ w 2))
 	     :y (- y (/ h 2))
 	     :w w
 	     :h h))
-
-(defun rectangle-from-surface (&key (surface *default-surface*))
-  (rectangle :x (x surface) :y (y surface) :w (width surface) :h (height surface)))
 
 (defun genbez (x0 y0 x1 y1 x2 y2 x3 y3 &key (segments 20))
   (let ((gx0 x0) (gy0 y0)
@@ -109,7 +106,9 @@
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
-		  (setf ,point-list (append ,point-list (list point)))))
+		  (setf ,point-list (append ,point-list (list point))))
+		(add-vertex-* (x y)
+		  (add-vertex (point :x x :y y))))
 	 ,@body)
        (draw-bezier ,point-list ,shape-type :segments ,segments))))
 
@@ -117,7 +116,9 @@
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
-		  (setf ,point-list (append ,point-list (list point)))))
+		  (setf ,point-list (append ,point-list (list point))))
+		(add-vertex-* (x y)
+		  (add-vertex (point :x x :y y))))
 	 ,@body)
        (draw-curve ,point-list ,shape-type :segments ,segments))))
 
@@ -125,7 +126,9 @@
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
-		  (setf ,point-list (append ,point-list (list point)))))
+		  (setf ,point-list (append ,point-list (list point))))
+		(add-vertex-* (x y)
+		  (add-vertex (point :x x :y y))))
 	 ,@body)
        (draw-shape ,point-list ,shape-type))))
 
@@ -133,8 +136,7 @@
   (let ((step-size 0)
 	(points nil))
     (when (or (null segments) (= segments 0))
-      (setf segments (distance (x p2) (y p2)
-			       (x p3) (y p3))))
+      (setf segments (distance p2 p3)))
     (setf step-size (coerce (/ 1 segments) 'float))
     (setf points (loop for i from 0.0 below 1.0 by step-size
 		    collecting (point :x (catmull-rom-spline i (x p1) (x p2)
@@ -202,7 +204,7 @@
 		       :surface surface
 		       :color color)))))
 
-(defun draw-line-xy (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+(defun draw-line-* (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   (let ((x0 (sdl-base::to-int x0))
 	(y0 (sdl-base::to-int y0))
 	(x1 (sdl-base::to-int x1))
@@ -267,43 +269,41 @@
 			     (incf e (+ dx dy))))))))))))
 
 (defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  (draw-line-xy (x p1) (y p1)
-		(x p2) (y p2)
-		:clipping-p clipping-p :color color :surface surface))
+  (draw-line-* (x p1) (y p1)
+	       (x p2) (y p2)
+	       :clipping-p clipping-p :color color :surface surface))
 
-(defun draw-vline-points (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  (draw-box-xy (x p1) (y p1) (x p1) (y p2)
-	       :clipping-p clipping-p :surface surface :color color))
+(defun draw-vline (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (with-rectangle (template (rectangle-from-edges-* (x p1) (y p1) (x p1) (y p2)))
+    (draw-box template
+	      :clipping-p clipping-p :surface surface :color color)))
 
-(defun draw-hline-points (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  (draw-box-xy (x p1) (y p1) (x p2) (y p1)
-	       :clipping-p clipping-p :surface surface :color color))
+(defun draw-hline (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (with-rectangle (template (rectangle-from-edges-* (x p1) (y p1) (x p2) (y p1)))
+    (draw-box template
+	      :clipping-p clipping-p :surface surface :color color)))
 
-(defun draw-vline-xy (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  (draw-box-xy x y0 x y1 :clipping-p clipping-p :surface surface :color color))
-
-(defun draw-hline-xy (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  (draw-box-xy x0 y x1 y :clipping-p clipping-p :surface surface :color color))
-
+(defun draw-vline-* (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (with-rectangle (template (rectangle-from-edges-* x y0 x y1))
+    (draw-box template :clipping-p clipping-p :surface surface :color color)))
+  
+(defun draw-hline-* (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (with-rectangle (template (rectangle-from-edges-* x0 y x1 y))
+    (draw-box template :clipping-p clipping-p :surface surface :color color)))
+  
 (defun draw-box (rectangle &key (clipping-p t)
 		 (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
   (fill-surface color :surface surface :template rectangle :clipping-p clipping-p)
   rectangle)
 
-(defun draw-box-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+(defun draw-box-* (x y w h &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified corner co-ordinates and color"
-  (fill-surface color
-		:surface surface
-		:template (rectangle-from-points p1 p2)
-		:clipping-p clipping-p))
-
-(defun draw-box-xy (x1 y1 x2 y2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
-  "Given a surface pointer draw a rectangle with the specified corner co-ordinates and color"
-  (fill-surface color
-		:surface surface
-		:template (rectangle-from-xy x1 y1 x2 y2)
-		:clipping-p clipping-p))
+  (with-rectangle (template (rectangle :x x :y y :w w :h h))
+    (fill-surface color
+		  :surface surface
+		  :template template
+		  :clipping-p clipping-p)))
 
 (defun draw-rectangle (rectangle &key (clipping-p t)
 		       (surface *default-surface*) (color *default-color*))
@@ -311,25 +311,31 @@
   (with-rectangle (rectangle nil nil)
     (let ((x+width (+ x w))
 	  (y+height (+ y h)))
-      (draw-line-xy x y x+width y :surface surface :color color :clipping-p clipping-p)
-      (draw-line-xy x+width y x+width y+height :surface surface :color color :clipping-p clipping-p)
-      (draw-line-xy x+width y+height x y+height :surface surface :color color :clipping-p clipping-p)
-      (draw-line-xy x y+height x y :surface surface :color color :clipping-p clipping-p)))
+      (draw-line-* x y x+width y :surface surface :color color :clipping-p clipping-p)
+      (draw-line-* x+width y x+width y+height :surface surface :color color :clipping-p clipping-p)
+      (draw-line-* x+width y+height x y+height :surface surface :color color :clipping-p clipping-p)
+      (draw-line-* x y+height x y :surface surface :color color :clipping-p clipping-p)))
   surface)
 
-(defun draw-rectangle-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
-  "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-  (draw-rectangle-xy (x p1) (y p1) (x p2) (y p2)
-		     :clipping-p clipping-p :surface surface :color color))
+;; (defun draw-rectangle-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+;;   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
+;;   (draw-rectangle-xy (x p1) (y p1) (x p2) (y p2)
+;; 		     :clipping-p clipping-p :surface surface :color color))
 
 
-(defun draw-rectangle-xy (x1 y1 x2 y2
-				  &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+;; (defun draw-rectangle-xy (x1 y1 x2 y2
+;; 				  &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+;;   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
+;;   (draw-line-* x1 y1 x2 y1 :surface surface :color color :clipping-p clipping-p)
+;;   (draw-line-* x2 y1 x2 y2 :surface surface :color color :clipping-p clipping-p)
+;;   (draw-line-* x2 y2 x1 y2 :surface surface :color color :clipping-p clipping-p)
+;;   (draw-line-* x1 y2 x1 y1 :surface surface :color color :clipping-p clipping-p)
+;;   surface)
+
+(defun draw-rectangle-* (x y w h &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   "Given a surface pointer draw a rectangle with the specified x,y, width, height and color"
-  (draw-line-xy x1 y1 x2 y1 :surface surface :color color :clipping-p clipping-p)
-  (draw-line-xy x2 y1 x2 y2 :surface surface :color color :clipping-p clipping-p)
-  (draw-line-xy x2 y2 x1 y2 :surface surface :color color :clipping-p clipping-p)
-  (draw-line-xy x1 y2 x1 y1 :surface surface :color color :clipping-p clipping-p)
+  (with-rectangle (rect (rectangle :x x :y y :w w :h h))
+    (draw-rectangle rect :surface surface :color color :clipping-p clipping-p))
   surface)
 
 (defun draw-point (point &key (clipping-p t) (surface *default-surface*) (color *default-color*))
@@ -339,6 +345,14 @@
       (sdl-base::check-bounds 0 (height surface) y))
     (sdl-base::with-pixel (surf (fp surface))
       (sdl-base::write-pixel surf x y (map-color color surface)))))
+
+(defun draw-point-* (x y &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+  (when clipping-p
+    (sdl-base::check-bounds 0 (width surface) x)
+    (sdl-base::check-bounds 0 (height surface) y))
+  (sdl-base::with-pixel (surf (fp surface))
+    (sdl-base::write-pixel surf x y (map-color color surface))))
+
 
 (defun read-point (point &key (clipping-p t) (surface *default-surface*))
   (let ((x (x point)) (y (y point)))

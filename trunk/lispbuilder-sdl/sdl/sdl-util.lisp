@@ -7,14 +7,17 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defun points-in-range (p1 p2 distance)
-  "Returns true T, if the distance between the points p1 POINT and p2 POINT is <= DISTANCE"
-  (>= distance (distance-to-point p1 p2)))
 
-(defun distance-to-point (p1 p2)
+(defun within-range (p1 p2 distance)
+  "Returns true T, if the distance between the points p1 POINT and p2 POINT is <= DISTANCE"
+  (>= distance (distance p1 p2)))
+
+(defun within-range-* (x1 y1 x2 y2 distance)
+  (>= distance (distance-* x1 y1 x2 y2)))
+
+(defun distance (p1 p2)
   "Returns the distance between the points p1 POINT and p2 POINT."
-  (sqrt (+ (expt (- (x p1) (x p2)) 2)
-	   (expt (- (y p1) (y p2)) 2))))
+  (distance-* (x p1) (y p1) (x p2) (y p2)))
 
 (defun distance-* (x1 y1 x2 y2)
   (sqrt (+ (expt (- x1 x2) 2) 
@@ -113,7 +116,10 @@ When :free-p is T, the source surface SURFACE is freed."
 ;;
 ;; Code stolen from:
 ;; http://student.kuleuven.be/~m0216922/CG/floodfill.html
-(defun flood-fill (x y &key (surface *default-surface*) (color *default-color*))
+(defun flood-fill (point &key (surface *default-surface*) (color *default-color*))
+  (flood-fill-* (x point) (y point) :surface surface :color color))
+
+(defun flood-fill-* (x y &key (surface *default-surface*) (color *default-color*))
   "A stack based flood fill that does a lot of consing
 because it uses PUSH/POP as the stack.  This function is fast."
   (sdl-base::with-pixel (pixels (fp surface))
@@ -215,8 +221,10 @@ because it uses PUSH/POP as the stack.  This function is fast."
       (decf *ff-stack-pointer*)
       (values x y))))
 
+(defun flood-fill-stack (point &key (surface *default-surface*) (color *default-color*))
+  (flood-fill-stack-* (x point) (y point) :surface surface :color color))
 
-(defun flood-fill-stack (x y &key (surface *default-surface*) (color *default-color*))
+(defun flood-fill-stack-* (x y &key (surface *default-surface*) (color *default-color*))
   "This function is the same as the one above
 but has its own custom array-based stack.  It was more of an
 experiment to see if an array would be faster than a bunch of consing.
@@ -234,7 +242,7 @@ bit of ram."
         (let ((y1)
               (span-left)
               (span-right))
-          (when (not (ff-push x y)) (return-from flood-fill-stack nil))
+          (when (not (ff-push x y)) (return-from flood-fill-stack-* nil))
           (loop
              :while (not (ff-empty-p))
              :do (multiple-value-bind (x y)(ff-pop)
@@ -255,7 +263,7 @@ bit of ram."
                                           (= (sdl-base::read-pixel pixels (- x 1) y1)
                                              old-color))
                                      (progn (when (not (ff-push (- x 1) y1))
-                                              (return-from flood-fill-stack nil))
+                                              (return-from flood-fill-stack-* nil))
                                             (setf span-left T))
                                      (if (and span-left
                                               (> x 0)
@@ -267,7 +275,7 @@ bit of ram."
                                           (= (sdl-base::read-pixel pixels (+ x 1) y1)
                                              old-color))
                                      (progn (when (not (ff-push (+ x 1) y1))
-                                              (return-from flood-fill-stack nil))
+                                              (return-from flood-fill-stack-* nil))
                                             (setf span-right T))
                                      (when (and span-right
                                                 (< x (1- w))

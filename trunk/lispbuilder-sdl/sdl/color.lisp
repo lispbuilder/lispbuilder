@@ -22,14 +22,14 @@
 
 (defmacro with-color ((var &optional color (free-p t))
 		      &body body)
-  `(symbol-macrolet ((r (r ,var))
-		     (g (g ,var))
-		     (b (b ,var))
-		     (a (a ,var)))
-     (let* ((,@(if color
-		   `(,var ,color)
-		   `(,var ,var)))
-	    (*default-color* ,var))
+  `(let* ((,@(if color
+		 `(,var ,color)
+		 `(,var ,var)))
+	  (*default-color* ,var))
+     (symbol-macrolet ((r (r ,var))
+		       (g (g ,var))
+		       (b (b ,var))
+		       (a (a ,var)))
        ,@body
        (if ,free-p
 	   (free-color ,var)))))
@@ -57,12 +57,25 @@
 (defmethod (setf a) (a-val (color color-a))
   (setf (svref (fp color) 3) a-val))
 
-(defmethod set-color ((color sdl-color) &key r g b a)
+(defmethod set-color ((dst sdl-color) (src sdl-color))
+  (set-color-* dst :r (r src) :g (g src) :b (b src) :a (a src))
+  dst)
+
+(defmethod set-color-* ((color sdl-color) &key r g b a)
   (when r (setf (r color) r))
   (when g (setf (g color) g))
   (when b (setf (b color) b))
   (when a (setf (a color) a))
   color)
+
+(defmethod color-* ((color color))
+  (values (r color) (g color) (b color)))
+
+(defmethod color-* ((color color-a))
+  (values (r color) (g color) (b color) (a color)))
+
+(defmethod color-* ((color foreign-color))
+  nil)
 
 (defmethod map-color ((color color) &optional (surface *default-surface*))
   (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format (fp surface))

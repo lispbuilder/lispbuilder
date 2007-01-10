@@ -17,11 +17,11 @@
 					    (sdl-base::push-quit-event)))
 		       (:idle ()
 			      (sdl:fill-surface (sdl:color :r (random 255)
-							     :g (random 255)
-							     :b (random 255))
-						 :template (sdl:random-rectangle width height (sdl:rectangle))
-						 :surface sdl:*default-display*
-						 :update-p t))))))
+							   :g (random 255)
+							   :b (random 255))
+						:template (sdl:random-rectangle width height (sdl:rectangle))
+						:surface sdl:*default-display*
+						:update-p t))))))
 
 (defun random-rects-2 ()
   (let ((width 320) (height 240))
@@ -31,15 +31,13 @@
       (sdl:with-events ()
 		       (:quit-event () t)
 		       (:idle ()
-			      (let ((rect (sdl:rectangle)))
-				(sdl:with-rectangle (rect)
-				  (sdl:random-rectangle width height rect)
-				  (sdl:with-color (col (sdl:color))
-				    (sdl:set-color col :r (random 255) :g (random 255) :b (random 255))
-				    (sdl:fill-surface col
-						       :template rect
-						       :surface sdl:*default-display*
-						       :update-p t)))))))))
+			      (sdl:with-rectangle (rect (sdl:random-rectangle width height))
+				(sdl:with-color (col (sdl:color))
+				  (sdl:set-color-* col :r (random 255) :g (random 255) :b (random 255))
+				  (sdl:fill-surface col
+						    :template rect
+						    :surface sdl:*default-display*
+						    :update-p t))))))))
 
 (defun random-rects-3 ()
   (let ((width 320) (height 240))
@@ -49,7 +47,7 @@
       (sdl:with-events ()
 	(:quit-event () t)
 	(:idle ()
-	       (sdl:draw-box (sdl:random-rectangle width height (sdl:rectangle))
-			      :color (sdl:color :r (random 255) :g (random 255) :b (random 255))
-			      :surface sdl:*default-display*)
+	       (sdl:draw-box (sdl:random-rectangle width height)
+			     :color (sdl:color :r (random 255) :g (random 255) :b (random 255))
+			     :surface sdl:*default-display*)
 	       (sdl:update-display))))))

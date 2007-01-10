@@ -9,20 +9,19 @@
 
 (defmacro with-point ((var &optional point)
 		      &body body)
-  `(symbol-macrolet ((x (x ,var))
-		     (y (y ,var)))
-     (let* ((,@(if point
-		   `(,var ,point)
-		   `(,var ,var)))
-	    (*default-point* ,var))
+  `(let* ((,@(if point
+		 `(,var ,point)
+		 `(,var ,var)))
+	  (*default-point* ,var))
+     (symbol-macrolet ((x (x ,var))
+		       (y (y ,var)))
        ,@body)))
 
-(defun point (&key (x 0) (y 0) (src nil))
-  (cond
-    (src
-     (copy-seq src))
-    (t
-     (vector x y))))
+(defun point (&key (x 0) (y 0))
+  (vector x y))
+
+(defun copy-point (point)
+  (copy-seq point))
 
 (defmethod x ((point vector))
   (elt point 0))
@@ -34,8 +33,29 @@
 (defmethod (setf y) (y-val (point vector))
   (setf (elt point 1) y-val))
 
-(defmethod point-from ((surface surface))
-  (point :x (x surface) :y (y surface)))
-(defmethod (setf pos) (pos-val (surface sdl-surface))
-  (setf (x surface) (x pos-val)
-	(y surface) (y pos-val)))
+(defmethod point-* ((point vector))
+  (values (x point) (y point)))
+
+(defmethod get-point ((point vector))
+  point)
+
+(defmethod set-point ((dst vector) (src vector))
+  (set-point-* dst :x (x src) :y (y src))
+  dst)
+
+(defmethod set-point-* ((point vector) &key x y)
+  (when x (setf (x point) x))
+  (when y (setf (y point) y))
+  point)
+
+(defmethod position-* ((point vector))
+  (values (x point) (y point)))
+
+(defmethod set-position ((dst vector) (src vector))
+  (set-point-* dst :x (x src) :y (y src))
+  dst)
+
+(defmethod set-position-* ((point vector) &key x y)
+  (when x (setf (x point) x))
+  (when y (setf (y point) y))
+  point)

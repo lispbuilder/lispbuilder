@@ -14,12 +14,13 @@
     (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
     
     (sdl:with-surface (surf sdl:*default-display*)
-      (sdl:draw-box-xy 50 50 250 250 :color (sdl:color :r 0 :g 255 :b 255))
+      (sdl:draw-box (sdl:rectangle-from-edges-* 50 50 250 250)
+		    :color (sdl:color :r 0 :g 255 :b 255))
       (sdl:with-color (col (sdl:color :r 0 :g 0 :b 0))
 	(loop for i from 50 to 250 by 5
-	   do (sdl:draw-line-xy (- 300 i) 50 50 i))
-	(sdl:draw-line-xy 250 250 250 50)
-	(sdl:draw-line-xy 250 250 50 250))
+	   do (sdl:draw-line-* (- 300 i) 50 50 i))
+	(sdl:draw-line-* 250 250 250 50)
+	(sdl:draw-line-* 250 250 50 250))
       
       (sdl:with-events ()
 	(:quit-event () t)
