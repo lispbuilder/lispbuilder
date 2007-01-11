@@ -90,6 +90,23 @@
   (sdl-cffi::sdl-map-rgba (sdl-base::pixel-format (fp surface))
 			  (r color) (g color) (b color) (a color)))
 
+(defmethod pack-color ((color color))
+  (let ((col #x00000000))
+    (setf col (logior (ash (r color) 24)
+		      (ash (g color) 16)
+		      (ash (b color) 8)
+		      #xFF))
+    col))
+
+(defmethod pack-color ((color color-a))
+  (let ((col #x00000000))
+    (setf col (logior (ash (r color) 24)
+		      (ash (g color) 16)
+		      (ash (b color) 8)
+		      (a color)))
+    col))
+
+
 (defmethod free-color ((color sdl-color)) nil)
 
 (defmethod free-color ((color foreign-color))
