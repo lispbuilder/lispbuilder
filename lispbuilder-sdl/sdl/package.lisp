@@ -66,6 +66,7 @@
    #:x2
    #:y2
 
+   #:pack-color
    #:color-*
    #:set-color
    #:set-color-*

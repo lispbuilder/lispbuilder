@@ -12,6 +12,8 @@
 
 
 
+(defgeneric pack-color (color))
+
 (defgeneric r (color))
 (defgeneric g (color))
 (defgeneric b (color))
