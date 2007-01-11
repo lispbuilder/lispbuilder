@@ -6,17 +6,8 @@
 ;; Press: 'c' to display the center of each meta-ball
 (in-package #:sdl-gfx-examples)
 
-
 (defvar *draw-gridp* nil)
 (defvar *draw-meta-centerp* nil)
-
-;; From _3b in #lisp
-(defmacro cast (type value)
-  `(coerce ,value ',type))
-
-;; From _3b in #lisp
-(defmacro cast-to-int (value)
-  `(the fixnum (floor (+ ,value 0.5))))
 
 (let* ((frame-values 10)
        (frame-times (make-array frame-values :initial-element 0 :element-type 'fixnum))
@@ -120,9 +111,9 @@
     (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum strength)
 	   (type float ival))
-  (setf (metaball-r mball) (cast float (sqrt (/ strength ival))))
+  (setf (metaball-r mball) (sdl:cast float (sqrt (/ strength ival))))
   ;; Note: (/ 256 64) probably needs to change to screen-width and squares.
-  (setf (metaball-sqr mball) (cast float (/ (metaball-r mball) (/ 256 64)))))
+  (setf (metaball-sqr mball) (sdl:cast float (/ (metaball-r mball) (/ 256 64)))))
 
 (defun set-strength (mball s)
   (declare (optimize (safety 0) (speed 3) (space 1))
@@ -142,27 +133,27 @@
   (let ((dx (- (metaball-center-x mball) x))
 	(dy (- (metaball-center-y mball) y)))
     (declare (type fixnum dx dy))
-  (cast float (/ (metaball-strength mball) (+ (* dx dx) (* dy dy)
+  (sdl:cast float (/ (metaball-strength mball) (+ (* dx dx) (* dy dy)
 					     0.01)))))
 
 (defun square-coords (mball x y)
   (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum x y))
-  (setf (metaball-center-i mball) (cast float (coerce (/ (metaball-center-x mball)
+  (setf (metaball-center-i mball) (sdl:cast float (coerce (/ (metaball-center-x mball)
 							x) 'float)))
-  (setf (metaball-center-j mball) (cast float (coerce (/ (metaball-center-y mball)
+  (setf (metaball-center-j mball) (sdl:cast float (coerce (/ (metaball-center-y mball)
 							y) 'float))))
 
 (defun get-square-coords-i (mball x y)
   (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum x y))
-  (setf (metaball-center-i mball) (cast float (coerce (/ (metaball-center-x mball)
+  (setf (metaball-center-i mball) (sdl:cast float (coerce (/ (metaball-center-x mball)
 							x) 'float))))
 
 (defun get-square-coords-j (mball x y)
   (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum x y))
-  (setf (metaball-center-j mball) (cast float (coerce (/ (metaball-center-y mball)
+  (setf (metaball-center-j mball) (sdl:cast float (coerce (/ (metaball-center-y mball)
 							y) 'float))))
 
 (defun new-metaball (iso-v &key (cx 0) (cy 0) strength)
@@ -240,7 +231,7 @@
 
 (defun render-loop (manager meta-balls color surface)
   (declare (optimize (safety 0) (speed 3) (space 1)))
-  (setf (mmanager-viscosity manager) (cast float (+ ( * 0.5 (mmanager-d-viscosity manager))
+  (setf (mmanager-viscosity manager) (sdl:cast float (+ ( * 0.5 (mmanager-d-viscosity manager))
 						   (mmanager-min-viscosity manager))))
   (let ((line-color (sdl:map-color :color color :surface surface))
 	(grid-size-y (mmanager-grid-size-y manager))
@@ -266,7 +257,7 @@
 		  (setf (aref square-flag x y) 0)
 		  (dolist (meta-ball meta-balls)
 		    (incf meta-grid-target (get-field-at meta-ball (* x-resolution x) (* y-resolution y))))
-		  (incf (aref meta-grid x y) (cast float (/ (- meta-grid-target
+		  (incf (aref meta-grid x y) (sdl:cast float (/ (- meta-grid-target
 							      (aref meta-grid x y))
 							   viscosity))))))
 
@@ -313,14 +304,14 @@
 					     (+ i (aref offset p2-idx 0))
 					     (+ j (aref offset p2-idx 1))))
 			    (if (not (= (- val2 val1) 0))
-				(setf temp (cast float (/ (- iso-value val1)
+				(setf temp (sdl:cast float (/ (- iso-value val1)
 							 (- val2 val1))))
 				(setf temp 0.5))
-			    (setf iso-p1-x (cast-to-int (* x-resolution
+			    (setf iso-p1-x (sdl:cast-to-int (* x-resolution
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
 									(+ i (aref offset p1-idx 0))))
 							     (+ i (aref offset p1-idx 0))))))
-			    (setf iso-p1-y (cast-to-int (* y-resolution
+			    (setf iso-p1-y (sdl:cast-to-int (* y-resolution
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
@@ -336,14 +327,14 @@
 					     (+ i (aref offset p2-idx 0))
 					     (+ j (aref offset p2-idx 1))))
 			    (if (not (= (- val2 val1) 0))
-				(setf temp (cast float (/ (- iso-value val1)
+				(setf temp (sdl:cast float (/ (- iso-value val1)
 							 (- val2 val1))))
 				(setf temp 0.5))
-			    (setf iso-p2-x (cast-to-int (* x-resolution
+			    (setf iso-p2-x (sdl:cast-to-int (* x-resolution
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
 									(+ i (aref offset p1-idx 0))))
 							     (+ i (aref offset p1-idx 0))))))
-			    (setf iso-p2-y (cast-to-int (* y-resolution
+			    (setf iso-p2-y (sdl:cast-to-int (* y-resolution
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
