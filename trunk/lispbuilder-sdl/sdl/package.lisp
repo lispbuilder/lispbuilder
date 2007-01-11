@@ -173,6 +173,7 @@
    #:initialise-default-font
    
    ;; surfaces.lisp
+   #:sdl-surface
    #:surface
    #:with-surface
    #:with-surface-slots
