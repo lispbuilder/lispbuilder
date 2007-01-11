@@ -1,11 +1,11 @@
 ;;; -*- lisp -*-
 
-(defpackage #:lispbuilder-sdl-gfx-system
+(defpackage #:lispbuilder-sdl-gfx-cffi-system
   (:use #:cl #:asdf))
-(in-package #:lispbuilder-sdl-gfx-system)
+(in-package #:lispbuilder-sdl-gfx-cffi-system)
 
-(defsystem lispbuilder-sdl-gfx
-    :description "lispbuilder-sdl-gfx: SDL_gfx v2.0.13 library wrapper and tools"
+(defsystem lispbuilder-sdl-gfx-cffi
+    :description "lispbuilder-sdl-gfx-cffi: SDL_gfx v2.0.13 library wrapper and tools"
     :long-description
     "lispbuilder-sdl-gfx is a wrapper for the SDL_gfx v2.0.13 library. 
     The SDL_gfx library extends the base functionality implemented by SDL
@@ -16,19 +16,19 @@
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-gfx-cffi)
+    :depends-on (cffi lispbuilder-sdl)
     :components
-    ((:module "sdl-gfx"
+    ((:module "cffi"
 	      :components
 	      ((:file "package")
-	       (:file "util")
-	       (:file "sdl-gfx-util" :depends-on ("package" "util")))
+	       (:file "library" :depends-on ("package"))
+	       (:file "gfx" :depends-on ("package" "library")))
 	      :serial t)
      (:module "documentation"
 	      :components
 	      ((:html-file "index")
-             (:static-file "sdl_gfx1.jpg")
-		 (:doc-file "README")
+	       (:static-file "sdl_gfx1.jpg")
+	       (:doc-file "README")
 	       (:doc-file "COPYING")
 	       (:doc-file "CONTRIBUTORS")))
      (:module "build"

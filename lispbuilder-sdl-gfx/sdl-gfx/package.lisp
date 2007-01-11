@@ -6,108 +6,131 @@
   (:use #:cl #:cffi)
   (:nicknames #:sdl-gfx)
   (:documentation "The main package of `lispbuilder-gfx-sdl'.")
-  ;; SDL_gfx
-  ;;
+  (:import-from #:lispbuilder-sdl-gfx-cffi
+		lispbuilder-sdl-gfx-cffi::*font-data*
+		lispbuilder-sdl-gfx-cffi::gfx-Primitives-Set-Font)
   (:export
-   #:FPS_DEFAULT
-   #:FPS_LOWER_LIMIT
-   #:FPS_UPPER_LIMIT
-   #:GFX_FONTDATAMAX
-   #:M_PI
-   #:SDL_GFXPRIMITIVES_MAJOR
-   #:SDL_GFXPRIMITIVES_MICRO
-   #:SDL_GFXPRIMITIVES_MINOR
-   #:SDL_framerateDelay
-   #:SDL_getFramerate
-   #:SDL_imageFilterAbsDiff
-   #:SDL_imageFilterAdd
-   #:SDL_imageFilterAddByte
-   #:SDL_imageFilterAddByteToHalf
-   #:SDL_imageFilterAddUint
-   #:SDL_imageFilterAlignStack
-   #:SDL_imageFilterBinarizeUsingThreshold
-   #:SDL_imageFilterBitAnd
-   #:SDL_imageFilterBitNegatio
-   #:SDL_imageFilterBitOr
-   #:SDL_imageFilterClipToRange
-   #:SDL_imageFilterConvolveKernel3x3Divide
-   #:SDL_imageFilterConvolveKernel3x3ShiftRight
-   #:SDL_imageFilterConvolveKernel5x5Divide
-   #:SDL_imageFilterConvolveKernel5x5ShiftRight
-   #:SDL_imageFilterConvolveKernel7x7Divide
-   #:SDL_imageFilterConvolveKernel7x7ShiftRight
-   #:SDL_imageFilterConvolveKernel9x9Divide
-   #:SDL_imageFilterConvolveKernel9x9ShiftRight
-   #:SDL_imageFilterDiv
-   #:SDL_imageFilterMMXdetect
-   #:SDL_imageFilterMMXoff
-   #:SDL_imageFilterMMXon
-   #:SDL_imageFilterMean
-   #:SDL_imageFilterMult
-   #:SDL_imageFilterMultByByte
-   #:SDL_imageFilterMultDivby2
-   #:SDL_imageFilterMultDivby4
-   #:SDL_imageFilterMultNor
-   #:SDL_imageFilterNormalizeLinear
-   #:SDL_imageFilterRestoreStack
-   #:SDL_imageFilterShiftLeft
-   #:SDL_imageFilterShiftLeftByte
-   #:SDL_imageFilterShiftLeftUint
-   #:SDL_imageFilterShiftRight
-   #:SDL_imageFilterShiftRightAndMultByByte
-   #:SDL_imageFilterShiftRightUint
-   #:SDL_imageFilterSobelX
-   #:SDL_imageFilterSobelXShiftRight
-   #:SDL_imageFilterSub
-   #:SDL_imageFilterSubByte
-   #:SDL_imageFilterSubUint
-   #:SDL_initFramerate
-   #:SDL_setFramerate
-   #:SMOOTHING_OFF
-   #:SMOOTHING_ON
+
+   ;;; gfx.lisp
+   
+;;    #:FPS-DEFAULT
+;;    #:FPS-LOWER-LIMIT
+;;    #:FPS-UPPER-LIMIT
+   #:GFX-FONT-DATA-MAX
+   #:M-PI
+   #:SDL-GFX-PRIMITIVES-MAJOR
+   #:sdl-GFX-PRIMITIVES-MICRO
+   #:sdl-GFX-PRIMITIVES-MINOR
+;;    #:SDL-frame-rate-Delay
+;;    #:SDL-getFramerate
+;;    #:SDL-image-Filter-Abs-Diff
+;;    #:SDL-image-Filter-Add
+;;    #:SDL-image-Filter-Add-Byte
+;;    #:sdl-image-Filter-Add-Byte-To-Half
+;;    #:sdl-image-Filter-Add-Uint
+;;    #:sdl-image-Filter-Align-Stack
+;;    #:sdl-image-Filter-Binarize-Using-Threshold
+;;    #:sdl-image-Filter-Bit-And
+;;    #:sdl-image-Filter-Bit-Negation
+;;    #:sdl-image-Filter-Bit-Or
+;;    #:sdl-image-Filter-Clip-To-Range
+;;    #:sdl-image-Filter-Convolve-Kernel-3x3-Divide
+;;    #:sdl-image-Filter-Convolve-Kernel-3x3-Shift-Right
+;;    #:sdl-image-Filter-Convolve-Kernel-5x5-Divide
+;;    #:sdl-image-Filter-Convolve-Kernel-5x5-Shift-Right
+;;    #:sdl-image-Filter-Convolve-Kernel-7x7-Divide
+;;    #:sdl-image-Filter-Convolve-Kernel-7x7-Shift-Right
+;;    #:sdl-image-Filter-Convolve-Kernel-9x9-Divide
+;;    #:sdl-image-filter-Convolve-Kernel-9x9-Shift-Right
+;;    #:sdl-image-filter-Div
+;;    #:sdl-image-filter-MMX-detect
+;;    #:sdl-image-filter-MMX-off
+;;    #:sdl-image-filter-MMX-on
+;;    #:sdl-image-filter-Mean
+;;    #:sdl-image-filter-Mult
+;;    #:sdl-image-filter-Mult-By-Byte
+;;    #:sdl-image-filter-Mult-Div-by-2
+;;    #:sdl-image-filter-Mult-Div-by-4
+;;    #:sdl-image-filter-Mult-Nor
+;;    #:sdl-image-filter-Normalize-Linear
+;;    #:sdl-image-filter-Restore-Stack
+;;    #:sdl-image-filter-Shift-Left
+;;    #:sdl-image-filter-Shift-Left-Byte
+;;    #:sdl-image-filter-Shift-Left-Uint
+;;    #:sdl-image-filter-Shift-Right
+;;    #:sdl-image-filter-Shift-Right-And-Mult-By-Byte
+;;    #:sdl-image-filter-Shift-Right-Uint
+;;    #:sdl-image-filter-Sobel-X
+;;    #:sdl-image-filter-Sobel-X-Shift-Right
+;;    #:sdl-image-filter-Sub
+;;    #:sdl-image-filter-Sub-Byte
+;;    #:sdl-image-filter-Sub-Uint
+;;    #:sdl-init-Frame-rate
+;;    #:sdl-set-Frame-rate
+   #:SMOOTHING-OFF
+   #:SMOOTHING-ON
+
+   ;;; sdl-gfx-util.lisp
+   
    #:add-vertex
-   #:calculate-curve
-   #:distance
-   #:draw-aacircle
-   #:draw-aaellipse
-   #:draw-aaline
-   #:draw-aapolygon
-   #:draw-aatrigon
+   #:add-vertex-*
+   #:draw-aa-circle
+   #:draw-aa-circle-*
+   #:draw-aa-ellipse
+   #:draw-aa-ellipse-*
+   #:draw-aa-line
+   #:draw-aa-line-*
+   #:draw-aa-polygon
+   #:draw-aa-trigon
    #:draw-bezier
    #:draw-box
+   #:draw-box-*
    #:draw-character
+   #:draw-character-*
    #:draw-circle
+   #:draw-circle-*
    #:draw-curve
    #:draw-ellipse
-   #:draw-filledCircle
-   #:draw-filledEllipse
-   #:draw-filledPie
-   #:draw-filledPolygon
-   #:draw-filledTrigon
+   #:draw-ellipse-*
+   #:draw-filled-Circle
+   #:draw-filled-Circle-*
+   #:draw-filled-Ellipse
+   #:draw-filled-Ellipse-*
+   #:draw-filled-Pie
+   #:draw-filled-Pie-*
+   #:draw-filled-Polygon
+   #:draw-filled-Trigon
    #:draw-hline
    #:draw-line
+   #:draw-line-*
    #:draw-pie
+   #:draw-pie-*
    #:draw-pixel
+   #:draw-pixel-*
    #:draw-polygon
    #:draw-rectangle
-   #:draw-rotozoom
-   #:draw-rotozoom-Size
-   #:draw-rotozoom-Size-XY
-   #:draw-rotozoom-XY
+   #:draw-rectangle-*
+   #:roto-zoom-surface
+   #:roto-zoom-Size
+   #:roto-zoom-Size-XY
+   #:roto-zoom-XY
    #:draw-shape
    #:draw-string
+   #:draw-string-*
    #:draw-trigon
    #:draw-vline
    #:draw-vline
-   #:draw-zoom
-   #:draw-zoom-Size
-   #:font-data
-   #:gfxPrimitivesSetFont
-   #:map-color
-   #:tColorRGBA
-   #:tColorY
+   #:zoom-surface
+   #:zoom-surface-Size
+   #:gfx-Primitives-Set-Font
+   #:t-Color-RGBA
+   #:t-Color-Y
    #:with-bezier
    #:with-curve
    #:with-shape
+
+   ;;; Exports from lispbuilder-sdl-gfx-cffi
+   #:*font-data*
+   #:gfx-Primitives-Set-Font
    ))
 
