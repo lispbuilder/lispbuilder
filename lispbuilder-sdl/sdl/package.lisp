@@ -96,6 +96,7 @@
    ;; color.lisp
    #:*white*
    #:*black*
+   #:sdl-color
    #:color
    #:color-a
    #:with-color
