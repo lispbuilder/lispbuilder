@@ -78,21 +78,33 @@
   (draw-pixel-* (sdl:x position) (sdl:y position) :surface surface :color color))
 
 (defun draw-pixel-* (x y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))  
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::pixel-color (sdl:fp surface) x y
 				 (sdl:pack-color color))
       (sdl-gfx-cffi::pixel-rgba (sdl:fp surface) x y
 				(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-hline (x1 x2 y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::hline-color (sdl:fp surface) x1 x2 y
 				 (sdl:pack-color color))
       (sdl-gfx-cffi::hline-RGBA (sdl:fp surface) x1 x2 y
 				(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-vline (x y1 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::vline-color (sdl:fp surface) x y1 y2
 				 (sdl:pack-color color))
       (sdl-gfx-cffi::vline-RGBA (sdl:fp surface) x y1 y2
@@ -105,7 +117,11 @@
   (draw-rectangle-edges-* x y (+ x w) (+ y h) :surface surface :color color))
 
 (defun draw-rectangle-edges-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::rectangle-color (sdl:fp surface) x1 y1 x2 y2
 				     (sdl:pack-color color))
       (sdl-gfx-cffi::rectangle-RGBA (sdl:fp surface) x1 y1 x2 y2
@@ -118,7 +134,11 @@
   (draw-box-edges-* x y (+ x w) (+ y h) :surface surface :color color))
 
 (defun draw-box-edges-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::box-color (sdl:fp surface) x1 y1 x2 y2
 			       (sdl:pack-color color))
       (sdl-gfx-cffi::box-RGBA (sdl:fp surface) x1 y1 x2 y2
@@ -128,7 +148,11 @@
   (draw-line-* (sdl:x point1) (sdl:y point1) (sdl:x point2) (sdl:y point2) :surface surface :color color))
 
 (defun draw-line-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::line-color (sdl:fp surface) x1 y1 x2 y2
 				(sdl:pack-color color))
       (sdl-gfx-cffi::line-RGBA (sdl:fp surface) x1 y1 x2 y2
@@ -138,7 +162,11 @@
   (draw-aa-line-* (sdl:x point1) (sdl:y point1) (sdl:x point2) (sdl:y point2) :surface surface :color color))
 
 (defun draw-aa-line-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::aa-line-color (sdl:fp surface) x1 y1 x2 y2
 				   (sdl:pack-color color))
       (sdl-gfx-cffi::aa-line-RGBA (sdl:fp surface) x1 y1 x2 y2
@@ -148,7 +176,11 @@
   (draw-circle-* (sdl:x p1) (sdl:y p1) r :surface surface :color color))
 
 (defun draw-circle-* (x y r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::circle-color (sdl:fp surface) x y r
 				  (sdl:pack-color color))
       (sdl-gfx-cffi::circle-RGBA (sdl:fp surface) x y r
@@ -158,7 +190,11 @@
   (draw-aa-circle-* (sdl:x p1) (sdl:y p1) r :surface surface :color color))
 
 (defun draw-aa-circle-* (x y r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::aa-circle-color (sdl:fp surface) x y r
 				     (sdl:pack-color color))
       (sdl-gfx-cffi::aa-circle-RGBA (sdl:fp surface) x y r
@@ -168,7 +204,11 @@
   (draw-filled-circle-* (sdl:x p1) (sdl:y p1) r :surface surface :color color))
 
 (defun draw-filled-circle-* (x y r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::filled-circle-color (sdl:fp surface) x y r
 					 (sdl:pack-color color))
       (sdl-gfx-cffi::filled-circle-RGBA (sdl:fp surface) x y r
@@ -178,7 +218,11 @@
   (draw-ellipse-* (sdl:x p1) (sdl:y p1) rx ry :surface surface :color color))
 
 (defun draw-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::ellipse-color (sdl:fp surface) x y rx ry
 				   (sdl:pack-color color))
       (sdl-gfx-cffi::ellipse-RGBA (sdl:fp surface) x y rx ry
@@ -188,7 +232,11 @@
   (draw-aa-ellipse-* (sdl:x p1) (sdl:y p1) rx ry :surface surface :color color))
 
 (defun draw-aa-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::aa-ellipse-color (sdl:fp surface) x y rx ry
 				      (sdl:pack-color color))
       (sdl-gfx-cffi::aa-ellipse-RGBA (sdl:fp surface) x y rx ry
@@ -198,9 +246,13 @@
   (draw-filled-ellipse-* (sdl:x p1) (sdl:y p1) rx ry :surface surface :color color))
 
 (defun draw-filled-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
   (unless (sdl::all-integers? x y rx ry)
     (error "ERROR, draw-filled-ellipse-*: Parameters must be of type :short."))
-  (if (typep color 'sdl:color)
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::filled-ellipse-color (sdl:fp surface) x y rx ry
 					  (sdl:pack-color color))
       (sdl-gfx-cffi::filled-ellipse-RGBA (sdl:fp surface) x y rx ry
@@ -210,7 +262,11 @@
   (draw-pie-* (sdl:x p1) (sdl:y p1) rad start end :surface surface :color color))
 
 (defun draw-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::pie-color (sdl:fp surface) x y rad start end
 			       (sdl:pack-color color))
       (sdl-gfx-cffi::pie-RGBA (sdl:fp surface) x y rad start end
@@ -220,14 +276,22 @@
   (draw-filled-pie-* (sdl:x p1) (sdl:y p1) rad start end :surface surface :color color))
 
 (defun draw-filled-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::filled-pie-color (sdl:fp surface) x y rad start end
 				      (sdl:pack-color color))
       (sdl-gfx-cffi::filled-pie-RGBA (sdl:fp surface) x y rad start end
 				     (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-trigon (point1 point2 point3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
 				  (sdl:x point2) (sdl:y point2)
 				  (sdl:x point3) (sdl:y point3)
@@ -238,7 +302,11 @@
 				 (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-aa-trigon (point1 point2 point3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::aa-trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
 				     (sdl:x point2) (sdl:y point2)
 				     (sdl:x point3) (sdl:y point3)
@@ -249,7 +317,11 @@
 				    (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-filled-trigon (point1 point2 point3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::filled-trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
 					 (sdl:x point2) (sdl:y point2)
 					 (sdl:x point3) (sdl:y point3)
@@ -260,12 +332,16 @@
 					(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
   (unless (listp points)
     (error "draw-polygon: ~A must be a list of (x y) points." points))
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
 	(poly-surface nil))
-    (if (typep color 'sdl:color)
+    (if (typep color 'sdl:sdl-color)
 	(setf poly-surface (sdl-gfx-cffi::polygon-color (sdl:fp surface) x-array y-array (length points)
 							(sdl:pack-color color)))
 	(setf poly-surface (sdl-gfx-cffi::polygon-RGBA (sdl:fp surface) x-array y-array (length points)
@@ -275,12 +351,16 @@
     poly-surface))
 
 (defun draw-aa-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
   (unless (listp points)
     (error "draw-aapolygon: ~A must be a list of (x y) points." points))
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
 	(poly-surface nil))
-    (if (typep color 'sdl:color)
+    (if (typep color 'sdl:sdl-color)
 	(setf poly-surface (sdl-gfx-cffi::aa-polygon-color (sdl:fp surface) x-array y-array (length points)
 							   (sdl:pack-color color)))
 	(setf poly-surface (sdl-gfx-cffi::aa-polygon-RGBA (sdl:fp surface) x-array y-array (length points)
@@ -291,12 +371,16 @@
     poly-surface))
 
 (defun draw-filled-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
   (unless (listp points)
     (error "draw-filledpolygon: ~A must be a list of (x y) points." points))
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
 	(poly-surface nil))
-    (if (typep color 'sdl:color)
+    (if (typep color 'sdl:sdl-color)
 	(setf poly-surface (sdl-gfx-cffi::filled-polygon-color (sdl:fp surface) x-array y-array (length points)
 							       (sdl:pack-color color)))
 	(setf poly-surface (sdl-gfx-cffi::filled-polygon-RGBA (sdl:fp surface) x-array y-array (length points)
@@ -307,12 +391,16 @@
     poly-surface))
 
 (defun draw-bezier (points steps &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
   (unless (listp points)
     (error "draw-bezier: ~A must be a list of (x y) points." points))
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
 	(bezier-surface nil))
-    (if (typep color 'sdl:color)
+    (if (typep color 'sdl:sdl-color)
 	(setf bezier-surface (sdl-gfx-cffi::bezier-color (sdl:fp surface) x-array y-array (length points) steps (sdl:pack-color color)))
 	(setf bezier-surface (sdl-gfx-cffi::bezier-RGBA (sdl:fp surface) x-array y-array (length points) steps
 							(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
@@ -324,7 +412,11 @@
   (draw-character-* c (sdl:x p1) (sdl:y p1) :surface surface :color color))
 
 (defun draw-character-* (c x y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::character-color (sdl:fp surface) x y c
 				     (sdl:pack-color color))
       (sdl-gfx-cffi::character-RGBA (sdl:fp surface) x y c
@@ -334,7 +426,11 @@
   (draw-string-* c (sdl:x p1) (sdl:y p1) :surface surface :color color))
 
 (defun draw-string-* (c x y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (if (typep color 'sdl:color)
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep color 'sdl:sdl-color)
+    (error ":color must be of type COLOR."))
+  (if (typep color 'sdl:sdl-color)
       (sdl-gfx-cffi::string-color (sdl:fp surface) x y c
 				  (sdl:pack-color color))
       (sdl-gfx-cffi::string-RGBA (sdl:fp surface) x y c
@@ -343,9 +439,13 @@
 ;;; r
 
 (defun roto-zoom-surfaze (angle zoom smooth &key (surface sdl:*default-surface*))
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
   (sdl-gfx-cffi::rotozoomSurface (sdl:fp surface) angle zoom smooth))
 
 (defun roto-zoom-xy (angle zoomx zoomy smooth &key (surface sdl:*default-surface*))
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
   (sdl-gfx-cffi::rotozoomSurfacexy (sdl:fp surface) angle zoomx zoomy smooth))
 
 (defun roto-zoom-size (width height angle zoom)
@@ -361,6 +461,8 @@
 ;;; z
 
 (defun zoom-surface (zoomx zoomy smooth &key (surface sdl:*default-surface*))
+  (unless (typep surface 'sdl:sdl-surface)
+    (error ":surface must be of type SURFACE."))
   (sdl-gfx-cffi::zoomSurface (sdl:fp surface) zoomx zoomy smooth))
 
 (defun zoom-surface-size (width height zoomx zoomy)
