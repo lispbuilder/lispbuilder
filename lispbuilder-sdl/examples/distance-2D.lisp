@@ -11,7 +11,7 @@
 	(max-distance (sdl:distance-* 0 0 200 200)))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Distance 2D, from Processing.org")
-      (setf (sdl-base::frame-rate) 30)
+      (setf (sdl:frame-rate) 30)
       (sdl:with-events ()
 		       (:quit-event () t)
 		       (:mouse-motion-event (:x x :y y)

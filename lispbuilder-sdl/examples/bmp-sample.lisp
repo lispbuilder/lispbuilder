@@ -12,7 +12,7 @@
 (defun bmp-sample ()
   (sdl:with-init ()
     (sdl:window 320 240 :title-caption "simple bmp example" :icon-caption "simple bmp example")
-    (setf (sdl-base::frame-rate) 10)
+    (setf (sdl:frame-rate) 10)
     
     (sdl:with-surfaces ((img-1 (sdl:convert-surface :surface (sdl:load-image "sdl.bmp" *bmp-path*) :free-p t))
 			(img-2 (sdl:convert-surface :surface (sdl:load-image "lisp.bmp" *bmp-path* :key-color (sdl:color :r 253 :g 59 :b 251)) :free-p t))

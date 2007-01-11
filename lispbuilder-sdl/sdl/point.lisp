@@ -18,7 +18,9 @@
        ,@body)))
 
 (defun point (&key (x 0) (y 0))
-  (vector x y))
+  (multiple-value-bind (int-x int-y)
+      (cast-all-to-int x y)
+    (vector int-x int-y)))
 
 (defun copy-point (point)
   (copy-seq point))

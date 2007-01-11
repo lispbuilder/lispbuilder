@@ -46,7 +46,7 @@
   (let ((mouse-x 0) (mouse-y 0))
     (sdl:with-init ()
       (sdl:window *objects-width* *objects-height* :title-caption "Objects, from Processing.org")
-      (setf (sdl-base::frame-rate) 60)
+      (setf (sdl:frame-rate) 60)
       (sdl:clear-display (sdl:color))
       (sdl:with-events ()
 	(:quit-event () t)

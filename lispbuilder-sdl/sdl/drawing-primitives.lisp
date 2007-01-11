@@ -273,21 +273,12 @@
 	       (x p2) (y p2)
 	       :clipping-p clipping-p :color color :surface surface))
 
-(defun draw-vline (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  (with-rectangle (template (rectangle-from-edges-* (x p1) (y p1) (x p1) (y p2)))
-    (draw-box template
-	      :clipping-p clipping-p :surface surface :color color)))
 
-(defun draw-hline (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  (with-rectangle (template (rectangle-from-edges-* (x p1) (y p1) (x p2) (y p1)))
-    (draw-box template
-	      :clipping-p clipping-p :surface surface :color color)))
-
-(defun draw-vline-* (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+(defun draw-vline (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   (with-rectangle (template (rectangle-from-edges-* x y0 x y1))
     (draw-box template :clipping-p clipping-p :surface surface :color color)))
   
-(defun draw-hline-* (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+(defun draw-hline (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   (with-rectangle (template (rectangle-from-edges-* x0 y x1 y))
     (draw-box template :clipping-p clipping-p :surface surface :color color)))
   

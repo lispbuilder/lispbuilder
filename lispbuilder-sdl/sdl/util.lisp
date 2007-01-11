@@ -23,3 +23,23 @@
   (if (listp var)
       var
       (list var)))
+
+;; From _3b in #lisp
+(defmacro cast (type value)
+  `(coerce ,value ',type))
+
+;; From _3b in #lisp
+(defmacro cast-to-int (value)
+  `(the fixnum (floor (+ ,value 0.5))))
+
+(defmacro cast-all-to-int (&rest values)
+  `(values
+     ,@(mapcar #'(lambda (value)
+		   `(the fixnum (floor (+ ,value 0.5))))
+	       values)))
+
+(defmacro all-integers? (&rest values)
+  `(and
+    ,@(mapcar #'(lambda (value)
+		  `(integerp ,value))
+	      values)))
