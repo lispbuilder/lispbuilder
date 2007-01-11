@@ -15,7 +15,7 @@
   (sdl:with-init ()			;Initialize Systems
     ;; init your game
     (sdl:window *WINDOW-WIDTH* *WINDOW-HEIGHT*)
-    (setf (sdl-base::frame-rate) 2) ; Set target framerate (or 0 for unlimited)
+    (setf (sdl:frame-rate) 2) ; Set target framerate (or 0 for unlimited)
 
     (sdl:initialise-default-font)
     ;; Create an image from the string.

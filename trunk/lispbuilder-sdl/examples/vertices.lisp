@@ -9,6 +9,7 @@
   (let ((width 200) (height 200))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Vertices, from Processing.org")
+      (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color))
       (sdl:with-surface (surf sdl:*default-display*)
 	(sdl:with-color (a-col (sdl:color :r 102 :g 102 :b 102))

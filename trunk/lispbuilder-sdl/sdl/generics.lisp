@@ -39,10 +39,10 @@
 (defgeneric set-position-* (obj &key x y))
 
 (defgeneric rectangle-* (rectangle))
-(defgeneric set-rectangle (rectangle position))
+(defgeneric set-rectangle (dst src))
 (defgeneric set-rectangle-* (rectangle &key x y w h))
 
-(defgeneric set-surface (surface position))
+(defgeneric set-surface (dst position))
 (defgeneric set-surface-* (surface &key x y))
 
 ;; end set-'s and get-'s

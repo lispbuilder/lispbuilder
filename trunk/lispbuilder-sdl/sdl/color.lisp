@@ -17,8 +17,13 @@
 (defun color (&key (r 0) (g 0) (b 0) (a nil))
   "Returns a new color from the red R, green G, and blue B INTEGER values."
   (if a
-      (make-instance 'color-a :color (vector r g b a))
-      (make-instance 'color :color (vector r g b))))
+      (make-instance 'color-a :color (vector (cast-to-int r)
+					     (cast-to-int g)
+					     (cast-to-int b)
+					     (cast-to-int a)))
+      (make-instance 'color :color (vector (cast-to-int r)
+					   (cast-to-int g)
+					   (cast-to-int b)))))
 
 (defmacro with-color ((var &optional color (free-p t))
 		      &body body)
@@ -37,17 +42,17 @@
 (defmethod r ((color color))
   (svref (fp color) 0))
 (defmethod (setf r) (r-val (color color))
-  (setf (svref (fp color) 0) r-val))
+  (setf (svref (fp color) 0) (cast-to-int r-val)))
 
 (defmethod g ((color color))
   (svref (fp color) 1))
 (defmethod (setf g) (g-val (color color))
-  (setf (svref (fp color) 1) g-val))
+  (setf (svref (fp color) 1) (cast-to-int g-val)))
 
 (defmethod b ((color color))
   (svref (fp color) 2))
 (defmethod (setf b) (b-val (color color))
-  (setf (svref (fp color) 2) b-val))
+  (setf (svref (fp color) 2) (cast-to-int b-val)))
 
 (defmethod a ((color color))
   nil)
@@ -55,7 +60,7 @@
 (defmethod a ((color color-a))
   (svref (fp color) 3))
 (defmethod (setf a) (a-val (color color-a))
-  (setf (svref (fp color) 3) a-val))
+  (setf (svref (fp color) 3) (cast-to-int a-val)))
 
 (defmethod set-color ((dst sdl-color) (src sdl-color))
   (set-color-* dst :r (r src) :g (g src) :b (b src) :a (a src))

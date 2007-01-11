@@ -8,6 +8,7 @@
   (let ((width 200) (height 200))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Width and Height, from Processing.org")
+      (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 127 :g 127 :b 127))
       
       (loop for i from 0 to height by 20

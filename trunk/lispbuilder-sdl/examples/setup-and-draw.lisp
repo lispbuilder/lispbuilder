@@ -8,7 +8,7 @@
   (let ((width 200) (height 200)
 	(y 100))
     (sdl:with-init ()
-      (setf (sdl-base::frame-rate) 30)
+      (setf (sdl:frame-rate) 30)
       (sdl:window width height :title-caption "Setup and Draw, from Processing.org")
       (sdl:with-events ()
 	(:quit-event () t)
@@ -17,8 +17,8 @@
 	       (decf y 1)
 	       (when (< y 0)
 		 (setf y height))
-	       (sdl:draw-hline-* 0 width y
-				 :clipping-p nil
-				 :color (sdl:color :r 255 :g 255 :b 255)
-				 :surface sdl:*default-display*)
+	       (sdl:draw-hline 0 width y
+			       :clipping-p nil
+			       :color (sdl:color :r 255 :g 255 :b 255)
+			       :surface sdl:*default-display*)
 	       (sdl:update-display))))))

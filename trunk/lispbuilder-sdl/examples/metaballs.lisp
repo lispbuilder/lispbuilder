@@ -9,14 +9,6 @@
 (defvar *draw-gridp* nil)
 (defvar *draw-meta-centerp* nil)
 
-;; From _3b in #lisp
-(defmacro cast (type value)
-  `(coerce ,value ',type))
-
-;; From _3b in #lisp
-(defmacro cast-to-int (value)
-  `(the fixnum (floor (+ ,value 0.5))))
-
 (let* ((frame-values 10)
        (frame-times (make-array frame-values :initial-element 0 :element-type 'fixnum))
        (frame-time-last 0)
@@ -42,7 +34,7 @@
 	(setf frame-count 0)
 	(dotimes (i frame-values)
 	  (incf frames-per-second (aref frame-times i)))
-	(setf frames-per-second (cast float (/ 1000 (/ frames-per-second frame-values))))
+	(setf frames-per-second (sdl:cast float (/ 1000 (/ frames-per-second frame-values))))
 	(sdl:fill-surface (sdl:color) :surface surface)
 	(sdl:draw-string-* (format nil "fps : ~d" (coerce frames-per-second 'float))
 			   20 0
@@ -119,9 +111,9 @@
     (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum strength)
 	   (type float ival))
-  (setf (metaball-r mball) (cast float (sqrt (/ strength ival))))
+  (setf (metaball-r mball) (sdl:cast float (sqrt (/ strength ival))))
   ;; Note: (/ 256 64) probably needs to change to screen-width and squares.
-  (setf (metaball-sqr mball) (cast float (/ (metaball-r mball) (/ 256 64)))))
+  (setf (metaball-sqr mball) (sdl:cast float (/ (metaball-r mball) (/ 256 64)))))
 
 (defun set-strength (mball s)
   (declare (optimize (safety 0) (speed 3) (space 1))
@@ -141,29 +133,29 @@
   (let ((dx (- (metaball-center-x mball) x))
 	(dy (- (metaball-center-y mball) y)))
     (declare (type fixnum dx dy))
-  (cast float (/ (metaball-strength mball) (+ (* dx dx) (* dy dy)
+  (sdl:cast float (/ (metaball-strength mball) (+ (* dx dx) (* dy dy)
 					     0.01)))))
 
 (defun square-coords (mball x y)
   (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum x y))
-  (setf (metaball-center-i mball) (cast float (coerce (/ (metaball-center-x mball)
+  (setf (metaball-center-i mball) (sdl:cast float (coerce (/ (metaball-center-x mball)
 							x) 'float)))
-  (setf (metaball-center-j mball) (cast float (coerce (/ (metaball-center-y mball)
+  (setf (metaball-center-j mball) (sdl:cast float (coerce (/ (metaball-center-y mball)
 							y) 'float))))
 
 (defun get-square-coords-i (mball x y)
   (declare (ignore y))
   (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum x y))
-  (setf (metaball-center-i mball) (cast float (coerce (/ (metaball-center-x mball)
+  (setf (metaball-center-i mball) (sdl:cast float (coerce (/ (metaball-center-x mball)
 							x) 'float))))
 
 (defun get-square-coords-j (mball x y)
   (declare (ignore x))
   (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum x y))
-  (setf (metaball-center-j mball) (cast float (coerce (/ (metaball-center-y mball)
+  (setf (metaball-center-j mball) (sdl:cast float (coerce (/ (metaball-center-y mball)
 							y) 'float))))
 
 (defun new-metaball (iso-v &key (cx 0) (cy 0) strength)
@@ -190,12 +182,12 @@
   (loop
      for x from 0 to col
      for x-pos = (* x x-resolution)
-     do (sdl:draw-vline-* x-pos 0 (* y-resolution row) :surface surface :color color))
+     do (sdl:draw-vline x-pos 0 (* y-resolution row) :surface surface :color color))
   ;; Draw the horizontal lines
   (loop
      for y from 0 to row
      for y-pos = (* y y-resolution)
-     do (sdl:draw-hline-* 0 (* x-resolution col) y-pos :surface surface :color color)))
+     do (sdl:draw-hline 0 (* x-resolution col) y-pos :surface surface :color color)))
 
 (defun draw-meta-center (manager meta-balls color surface)
   (declare (optimize (safety 0) (speed 3) (space 1)))
@@ -212,20 +204,20 @@
 	(setf i (get-square-coords-i metaball x-resolution y-resolution))
 	(setf j (get-square-coords-j metaball x-resolution y-resolution))
 
-	(sdl:draw-line-* (cast-to-int (* i x-resolution))
-			 (cast-to-int (* j y-resolution))
-			 (cast-to-int (* (+ i 1) x-resolution))
-			 (cast-to-int (* (+ j 1) y-resolution))
+	(sdl:draw-line-* (sdl:cast-to-int (* i x-resolution))
+			 (sdl:cast-to-int (* j y-resolution))
+			 (sdl:cast-to-int (* (+ i 1) x-resolution))
+			 (sdl:cast-to-int (* (+ j 1) y-resolution))
 			 :surface surface :color color)
-	(sdl:draw-line-* (cast-to-int (* (+ i 1) x-resolution))
-			 (cast-to-int (* j y-resolution))
-			 (cast-to-int (* i x-resolution))
-			 (cast-to-int (* (+ j 1) y-resolution))
+	(sdl:draw-line-* (sdl:cast-to-int (* (+ i 1) x-resolution))
+			 (sdl:cast-to-int (* j y-resolution))
+			 (sdl:cast-to-int (* i x-resolution))
+			 (sdl:cast-to-int (* (+ j 1) y-resolution))
 			 :surface surface :color color)))))
 
 (defun handle-keypress (key)
   (case key
-    (:SDL-KEY-ESCAPE (sdl-base::push-quit-event))
+    (:SDL-KEY-ESCAPE (sdl:push-quit-event))
     (:SDL-KEY-G (setf *draw-gridp* (not *draw-gridp*)))
 ;;     (:SDLK_PLUS (setf *viscosity* (sdl:clamp (incf *viscosity*) *min-viscosity* *max-viscosity*)))
 ;;     (:SDLK_MINUS (setf *viscosity* (sdl:clamp (decf *viscosity*) *min-viscosity* *max-viscosity*)))
@@ -238,7 +230,7 @@
 
 (defun render-loop (manager meta-balls color surface)
   (declare (optimize (safety 0) (speed 3) (space 1)))
-  (setf (mmanager-viscosity manager) (cast float (+ ( * 0.5 (mmanager-d-viscosity manager))
+  (setf (mmanager-viscosity manager) (sdl:cast float (+ ( * 0.5 (mmanager-d-viscosity manager))
 						   (mmanager-min-viscosity manager))))
   (let ((grid-size-y (mmanager-grid-size-y manager))
 	(grid-size-x (mmanager-grid-size-x manager))
@@ -263,7 +255,7 @@
 		  (setf (aref square-flag x y) 0)
 		  (dolist (meta-ball meta-balls)
 		    (incf meta-grid-target (get-field-at meta-ball (* x-resolution x) (* y-resolution y))))
-		  (incf (aref meta-grid x y) (cast float (/ (- meta-grid-target
+		  (incf (aref meta-grid x y) (sdl:cast float (/ (- meta-grid-target
 							      (aref meta-grid x y))
 							   viscosity))))))
 
@@ -310,14 +302,14 @@
 					     (+ i (aref offset p2-idx 0))
 					     (+ j (aref offset p2-idx 1))))
 			    (if (not (= (- val2 val1) 0))
-				(setf temp (cast float (/ (- iso-value val1)
+				(setf temp (sdl:cast float (/ (- iso-value val1)
 							 (- val2 val1))))
 				(setf temp 0.5))
-			    (setf iso-p1-x (cast-to-int (* x-resolution
+			    (setf iso-p1-x (sdl:cast-to-int (* x-resolution
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
 									(+ i (aref offset p1-idx 0))))
 							     (+ i (aref offset p1-idx 0))))))
-			    (setf iso-p1-y (cast-to-int (* y-resolution
+			    (setf iso-p1-y (sdl:cast-to-int (* y-resolution
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
@@ -333,14 +325,14 @@
 					     (+ i (aref offset p2-idx 0))
 					     (+ j (aref offset p2-idx 1))))
 			    (if (not (= (- val2 val1) 0))
-				(setf temp (cast float (/ (- iso-value val1)
+				(setf temp (sdl:cast float (/ (- iso-value val1)
 							 (- val2 val1))))
 				(setf temp 0.5))
-			    (setf iso-p2-x (cast-to-int (* x-resolution
+			    (setf iso-p2-x (sdl:cast-to-int (* x-resolution
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
 									(+ i (aref offset p1-idx 0))))
 							     (+ i (aref offset p1-idx 0))))))
-			    (setf iso-p2-y (cast-to-int (* y-resolution
+			    (setf iso-p2-y (sdl:cast-to-int (* y-resolution
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
@@ -371,7 +363,7 @@
     (sdl:initialise-default-font)
     (sdl:with-init ()
       (sdl:window (mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
-      (setf (sdl-base::frame-rate) 0)
+      (setf (sdl:frame-rate) 0)
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
       (fps-init)
       (sdl:with-surfaces ((grid (sdl:create-surface (sdl:width sdl:*default-display*)

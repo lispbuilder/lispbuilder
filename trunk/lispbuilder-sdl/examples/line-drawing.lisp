@@ -10,7 +10,7 @@
 (defun line-drawing ()
   (sdl:with-init ()
     (sdl:window 300 300)
-    (setf (sdl-base::frame-rate) 5)
+    (setf (sdl:frame-rate) 5)
     (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
     
     (sdl:with-surface (surf sdl:*default-display*)
@@ -25,6 +25,6 @@
       (sdl:with-events ()
 	(:quit-event () t)
 	(:key-down-event (:key key)
-			 (if (sdl-base::key= key :SDL-KEY-ESCAPE)
-			     (sdl-base::push-quit-event)))
+			 (if (sdl:key= key :SDL-KEY-ESCAPE)
+			     (sdl:push-quit-event)))
 	(:video-expose-event () (sdl:update-display))))))
