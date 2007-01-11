@@ -7,6 +7,9 @@
 
 (in-package #:lispbuilder-sdl)
 
+(defvar *white* (color :r 255 :g 255 :b 255))
+(defvar *black* (color :r 0 :g 0 :b 0))
+
 
 (defun within-range (p1 p2 distance)
   "Returns true T, if the distance between the points p1 POINT and p2 POINT is <= DISTANCE"

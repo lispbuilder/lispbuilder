@@ -8,10 +8,13 @@
   (:documentation "The main package of `lispbuilder-sdl'.")
   (:import-from #:lispbuilder-sdl-base
 		lispbuilder-sdl-base::frame-rate
+		lispbuilder-sdl-base::set-frame-rate
 		lispbuilder-sdl-base::with-events
 		lispbuilder-sdl-base::push-quit-event
 		lispbuilder-sdl-base::key=
 		lispbuilder-sdl-base::display-cursor)
+  (:import-from #:lispbuilder-sdl-cffi
+		lispbuilder-sdl-base::sdl-get-ticks)
   (:export
 
    ;; globals.lisp
@@ -90,6 +93,8 @@
    #:free-rwops
 
    ;; color.lisp
+   #:*white*
+   #:*black*
    #:color
    #:color-a
    #:with-color
@@ -211,12 +216,16 @@
    #:rwops
    #:create-RWops-from-file
 
-   ;;; Imports from lispbuilder-sdl-base
+   ;; Imports from lispbuilder-sdl-cffi
+   #:sdl-get-ticks
+   
+   ;; Imports from lispbuilder-sdl-base
    #:frame-rate
+   #:set-frame-rate
    #:with-events
    #:push-quit-event
    #:key=
    #:display-cursor
-))
+   ))
 
 
