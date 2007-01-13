@@ -14,6 +14,8 @@
 
 (defun save-image (surface filename path)
   "save the supplied filename, must be a bmp file"
+  (unless (typep surface 'sdl-surface)
+    (error "SURFACE must be a lispbuilder Surface object."))
   (let ((file (namestring (merge-pathnames filename path))))
     (sdl-cffi::SDL-Save-BMP-RW (fp surface) (sdl-cffi::SDL-RW-FROM-FILE file "wb") 1)))
 
