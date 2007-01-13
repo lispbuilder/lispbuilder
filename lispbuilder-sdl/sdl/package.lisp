@@ -136,6 +136,7 @@
 
    ;; image.lisp
    #:load-image
+   #:save-image
 
    ;; point.lisp
    #:with-point
