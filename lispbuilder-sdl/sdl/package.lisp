@@ -199,6 +199,9 @@
    #:draw-surface-at
    #:fill-surface
    #:fill-surface-*
+   #:fp-cell
+   #:set-cell
+   #:set-cell-*
 
    ;; util.lisp
    #:random+1

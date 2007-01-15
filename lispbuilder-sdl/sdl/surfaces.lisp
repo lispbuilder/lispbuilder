@@ -9,7 +9,8 @@
 
 (defclass sdl-surface ()
   ((foreign-pointer-to-surface :accessor fp :initform nil :initarg :surface)
-   (foreign-pointer-to-position-rect :accessor fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)))
+   (foreign-pointer-to-position-rect :accessor fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)
+   (foreign-pointer-to-cell-rect :accessor fp-cell :initform (cffi:null-pointer) :initarg cell)))
 
 ;;; An object of type display should never be finalized by CFFI
 ;;; at time of garbage collection.
@@ -188,6 +189,22 @@
   (sdl-base::set-clip-rect (fp surface) (fp rectangle))
   rectangle)
 
+(defun clear-cell (&key (surface *default-surface*))
+  (setf (fp-cell surface) (cffi:null-pointer)))
+
+(defun set-cell (rectangle &key (surface *default-surface*))
+  (if (cffi:null-pointer-p (fp-cell surface))
+      (setf (fp-cell surface) (sdl-base::clone-rectangle (fp rectangle)))
+      (sdl-base::copy-rectangle (fp rectangle) (fp-cell surface))))
+
+(defun set-cell-* (x y w h &key (surface *default-surface*))
+  (if (cffi:null-pointer-p (fp-cell surface))
+      (setf (fp-cell surface) (sdl-base::rectangle)))
+  (setf (sdl-base::rect-x (fp-cell surface)) x
+	(sdl-base::rect-y (fp-cell surface)) y
+	(sdl-base::rect-w (fp-cell surface)) w
+	(sdl-base::rect-h (fp-cell surface)) h))
+
 (defun get-surface-rect (&key (surface *default-surface*) (rectangle (rectangle)))
   (sdl-base::get-surface-rect (fp surface) (fp rectangle))
   rectangle)
@@ -250,11 +267,11 @@
   surface)
 
 (defun blit-surface (src &optional (surface *default-surface*))
-  (sdl-base::blit-surface (fp src) (fp surface) (cffi:null-pointer) (fp-position src))
+  (sdl-base::blit-surface (fp src) (fp surface) (fp-cell surface) (fp-position src))
   src)
 
 (defun draw-surface (src &key (surface *default-surface*))
-  (sdl-base::blit-surface (fp src) (fp surface) (cffi:null-pointer) (fp-position src))
+  (sdl-base::blit-surface (fp src) (fp surface) (fp-cell surface) (fp-position src))
   src)
 
 (defun draw-surface-at-* (src x y &key (surface *default-surface*))
