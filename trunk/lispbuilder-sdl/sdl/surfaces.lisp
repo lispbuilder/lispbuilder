@@ -190,7 +190,9 @@
   rectangle)
 
 (defun clear-cell (&key (surface *default-surface*))
-  (setf (fp-cell surface) (cffi:null-pointer)))
+  (unless (cffi:null-pointer-p (fp-cell surface))
+    (cffi:foreign-free (fp-cell surface))
+    (setf (fp-cell surface) (cffi:null-pointer))))
 
 (defun set-cell (rectangle &key (surface *default-surface*))
   (if (cffi:null-pointer-p (fp-cell surface))
