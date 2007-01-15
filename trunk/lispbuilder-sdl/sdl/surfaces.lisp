@@ -190,16 +190,24 @@
   rectangle)
 
 (defun clear-cell (&key (surface *default-surface*))
+  (unless (typep surface 'sdl-surface)
+    (error ":surface must be of type SURFACE."))
   (unless (cffi:null-pointer-p (fp-cell surface))
     (cffi:foreign-free (fp-cell surface))
     (setf (fp-cell surface) (cffi:null-pointer))))
 
 (defun set-cell (rectangle &key (surface *default-surface*))
+  (unless (typep surface 'sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep rectangle 'sdl:rectangle)
+    (error "rectangle must be of type RECTANGLE."))
   (if (cffi:null-pointer-p (fp-cell surface))
       (setf (fp-cell surface) (sdl-base::clone-rectangle (fp rectangle)))
       (sdl-base::copy-rectangle (fp rectangle) (fp-cell surface))))
 
 (defun set-cell-* (x y w h &key (surface *default-surface*))
+  (unless (typep surface 'sdl-surface)
+    (error ":surface must be of type SURFACE."))  
   (when (cffi:null-pointer-p (fp-cell surface))
     (setf (fp-cell surface) (sdl-base::rectangle)))
   (setf (sdl-base::rect-x (fp-cell surface)) x
@@ -208,10 +216,16 @@
 	(sdl-base::rect-h (fp-cell surface)) h))
 
 (defun get-surface-rect (&key (surface *default-surface*) (rectangle (rectangle)))
+  (unless (typep surface 'sdl-surface)
+    (error ":surface must be of type SURFACE."))
+  (unless (typep rectangle 'sdl:rectangle)
+    (error "rectangle must be of type RECTANGLE."))
   (sdl-base::get-surface-rect (fp surface) (fp rectangle))
   rectangle)
 
 (defun convert-surface (&key (surface *default-surface*) key-color alpha-value (free-p nil))
+  (unless (typep surface 'sdl-surface)
+    (error ":surface must be of type SURFACE."))
   (let ((surf (sdl-base::convert-surface-to-display-format (fp surface)
 							   :key-color (when key-color (map-color key-color surface))
 							   :alpha-value (when alpha-value alpha-value)
@@ -223,8 +237,10 @@
     (surface surf)))
 
 (defun copy-surface (&key (surface *default-surface*) key-color alpha-value (type :sw) rle-accel)
+  (unless (typep surface 'sdl-surface)
+    (error ":surface must be of type SURFACE."))
   (let ((surf (sdl-base::copy-surface (fp surface)
-				      :color-key key-color
+				      :color-key (when key-color (map-color key-color surface))
 				      :alpha alpha-value
 				      :type type
 				      :rle-accel rle-accel)))
