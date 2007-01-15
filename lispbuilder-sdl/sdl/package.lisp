@@ -200,6 +200,7 @@
    #:fill-surface
    #:fill-surface-*
    #:fp-cell
+   #:clear-cell
    #:set-cell
    #:set-cell-*
 
