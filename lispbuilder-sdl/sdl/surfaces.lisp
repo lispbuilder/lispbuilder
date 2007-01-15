@@ -198,8 +198,8 @@
       (sdl-base::copy-rectangle (fp rectangle) (fp-cell surface))))
 
 (defun set-cell-* (x y w h &key (surface *default-surface*))
-  (if (cffi:null-pointer-p (fp-cell surface))
-      (setf (fp-cell surface) (sdl-base::rectangle)))
+  (when (cffi:null-pointer-p (fp-cell surface))
+    (setf (fp-cell surface) (sdl-base::rectangle)))
   (setf (sdl-base::rect-x (fp-cell surface)) x
 	(sdl-base::rect-y (fp-cell surface)) y
 	(sdl-base::rect-w (fp-cell surface)) w
@@ -267,11 +267,11 @@
   surface)
 
 (defun blit-surface (src &optional (surface *default-surface*))
-  (sdl-base::blit-surface (fp src) (fp surface) (fp-cell surface) (fp-position src))
+  (sdl-base::blit-surface (fp src) (fp surface) (fp-cell src) (fp-position src))
   src)
 
 (defun draw-surface (src &key (surface *default-surface*))
-  (sdl-base::blit-surface (fp src) (fp surface) (fp-cell surface) (fp-position src))
+  (sdl-base::blit-surface (fp src) (fp surface) (fp-cell src) (fp-position src))
   src)
 
 (defun draw-surface-at-* (src x y &key (surface *default-surface*))
