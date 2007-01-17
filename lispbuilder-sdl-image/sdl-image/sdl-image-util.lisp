@@ -9,15 +9,6 @@
 
 
 (defmethod create-image-from-RWops ((source sdl:rwops) &key image-type force free)
-  "Returns a new SDL surface RESULT from the image SOURCE. The 'magic number' contained in the image SOURCE 
-is used to detect the image type, if one is available. 
-RESULT is a foreign type SDL:SDL_Surface, or NIL if SOURCE does not contain a valid image.
-SOURCE is a foreign type SDL:SDL_RWops.
-Use :IMAGE-TYPE to load an image when the 'magic number' is unavailable, where :IMAGE-TYPE is one of 
-:BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TGA, :TIF, :XCF, :XPM or :XV. Note: All 'non-magicable' image types, 
-such as TGA must have the image type specified using :IMAGE-TYPE.
-Use :FORCE T to override the 'magic number' when attempting to load an image as a different type.
-Use :FREE T to automatically free SOURCE."
   (let ((image nil))
     (setf image (if image-type
 		    (if force
@@ -42,12 +33,6 @@ Use :FREE T to automatically free SOURCE."
       (sdl:surface image))))
 
 (defmethod rwops-p ((source sdl:rwops) image-type)
-  "Verifies that an image SOURCE is of the image type IMAGE-TYPE, where :IMAGE-TYPE can be one of 
-:BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. Attempts to detect the image type using the 
-'magic number' contained in the image, if one is available. Note: This means that NIL is always returned for images 
-of type TGA.
-RESULT is IMAGE-TYPE if (eql SOURCE IMAGE-TYPE), or NIL if the image is of a different type.
-SOURCE is a foreign type SDL:SDL_RWops."
   (case image-type
     (:BMP (if (sdl-image-cffi::img-is-BMP (sdl:fp source)) 
 	      :BMP))
@@ -74,13 +59,6 @@ SOURCE is a foreign type SDL:SDL_RWops."
     (otherwise nil)))
 
 (defmethod rwops-type-of ((source sdl:rwops))
-  "Returns the image type found at the location specified by FILENAME and PATHNAME. Attempts to detect the image type 
-using the 'magic number' contained in the image, if one is available. 
-FILENAME is a STRING.
-PATHNAME is a STRING.
-RESULT is one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV, or NIL if the image type 
-cannot be determined or if there is no magic number available. 
-Note: This means that NIL is always returned for images of type TGA."
   (let ((i-type nil))
     (block image-loop
       (dolist (type '(:BMP :PNM :XPM :XCF :PCX :GIF :JPG :TIF :LBM :PNG :XV))
@@ -90,32 +68,51 @@ Note: This means that NIL is always returned for images of type TGA."
     i-type))
 
 (defun image-p (filename pathname image-type)
-  "Verifies that the image found at FILENAME and PATHNAME is of the image type :IMAGE-TYPE, where :IMAGE-TYPE can be 
-one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. Attempts to detect the image type using the 
-'magic number' contained in the image, if one is available. Note: This means that NIL is always returned for images 
-of type TGA.
-RESULT is IMAGE-TYPE if (eql image IMAGE-TYPE), or NIL if the image is of a different type.
-FILENAME is a STRING.
-PATHNAME is a STRING."
+  "Returns T if the image at location FILENAME and PATHNAME is of the type IMAGE-TYPE, returns NIL if otherwise.
+Attempts to detect the image type using the 'magic number' contained in the image, if one is available. 
+
+FILENAME and PATHNAME are STRINGS. 
+
+:IMAGE-TYPE can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. 
+Note: This means that NIL is always returned for images of type TGA."
   (let ((rwops (sdl:create-RWops-from-file filename PATHNAME)))
     (when rwops
       (let ((result (rwops-p rwops image-type)))
 	(sdl:free-rwops rwops)
 	result))))
 
+(defun image-type-of (filename pathname)
+  "Returns the image type of the image at location FILENAME and PATHNAME.
+Attempts to detect the image type using the 'magic number' contained in the image, if one is available. 
+
+FILENAME and PATHNAME are both STRINGS.
+
+Returns one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV, or NIL if the image type 
+cannot be determined or if there is no magic number available.
+Note: This means that NIL is always returned for images of type TGA."
+  (let ((rwops (sdl:create-RWops-from-file filename PATHNAME)))
+    (when rwops
+      (let ((result (rwops-type-of rwops)))
+	(sdl:free-rwops rwops)
+	result))))
+
+
 (defun load-image (filename pathname &key image-type force)
-  "Returns a new SDL surface RESULT from the image at location FILENAME and PATHNAME. The 'magic number' contained 
-in the image is used to detect the image type, if one is available. 
-RESULT is a foreign type SDL:SDL_Surface, or NIL if the image cannot be loaded or the image type cannot be determined.
-Note: SDL:SDL_Surface is automatically converted to the SDL screen format.
-FILENAME is a STRING.
-PATHNAME is a STRING.
-:KEY-COLOR sets the key color SDL:COLOR of the image.
-:ALPHA-VALUE sets the alpha value of the image, an INTEGER (between 0 and 255).
-Use :IMAGE-TYPE to load an image when the 'magic number' is unavailable, where :IMAGE-TYPE is one of 
-:BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TGA, :TIF, :XCF, :XPM or :XV. Note: All 'non-magicable' image types, 
-such as TGA must have the image type specified using :IMAGE-TYPE.
-Use :FORCE T to override the 'magic number' when attempting to load an image as a different type."
+  "Creates a new sdl:SURFACE from the image loaded at location FILENAME and PATHNAME. 
+The image 'magic number' contained in the image is used to detect the image type and automatically load the image. 
+
+FILENAME and PATHNAME are STRINGs.
+
+Returns a new SURFACE, or NIL if the image cannot be loaded or the image type cannot be determined.
+
+To load an image as a specific image type, set the :IMAGE-TYPE to the desired type. 
+The image type can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TGA, :TIF, :XCF, :XPM or :XV. 
+If the 'magic number' is available and does not match :IMAGE-TYPE, then :IMAGE-TYPE is ignored.
+
+Use :FORCE T to override the 'magic number' when attempting to load an image as a different type.
+
+All 'non-magicable' image formats, such as TGA, must be specified using :iMAGE-TYPE or :FORCE and IMAGE-TYPE. 
+For example, to load a TGA image use :IMAGE-TYPE :TGA"
   (create-image-from-RWops (sdl:create-RWops-from-file filename pathname)
 			   :free t
 			   :image-type image-type
