@@ -2,7 +2,7 @@
 (in-package #:lispbuilder-sdl-image)
 
 (defgeneric create-image-from-RWops (source &key image-type force free)
-  (:documentation "Creates a new SDL:SURFACE from a image contained in SOURCE.
+  (:documentation "Creates a new SDL:SURFACE from the image contained in SOURCE.
 The image 'magic number' contained in the image is used to detect the image type and automatically load the image. 
 
 SOURCE is of type sdl:RWOPS
@@ -23,18 +23,20 @@ For example, to load a TGA image use :IMAGE-TYPE :TGA"))
 (defgeneric rwops-type-of (source)
   (:documentation "Returns the image type of SOURCE. Where SOURCE is of the type RWOPS.
 Attempts to detect the image type using the 'magic number' contained in the image, if one is available. 
+
 Returns one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV, or NIL if the image type 
 cannot be determined or if there is no magic number available. 
+
 Note: This means that NIL is always returned for images of type TGA."))
 
 (defgeneric rwops-p (source image-type)
-  (:documentation "Returns T if an image SOURCE is of the specified type IMAGE-TYPE, 
-returns NIL if otherwise.
+  (:documentation "Returns T if an image SOURCE is of the specified type IMAGE-TYPE, returns NIL if otherwise.
 Attempts to detect the image type using the 'magic number' contained in the image, if one is available. 
 
 SOURCE is of type RWOPS
 
 :IMAGE-TYPE can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. 
+
 Note: NIL is always returned for images of type TGA, as a TGA image does not cotain a 'magic number'."))
 
 
