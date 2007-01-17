@@ -17,23 +17,24 @@
 	(lispbuilder-sdl-mixer:Mix-Load-MUS file)	
 	(error "Music file ~A does not exist." file))))
 
-; do stuff when a key is pressed
+; play music
+(defun play-music()
+  (if (null music)
+      (progn 
+	(setf music (load-music music-file *audio-path*))
+	(lispbuilder-sdl-mixer:Mix-Play-Music music 0)
+	(if (cffi:null-pointer-p music)
+	    (error "unable to load music")))
+    (progn
+      (lispbuilder-sdl-mixer:Mix-Halt-Music)
+      (lispbuilder-sdl-mixer:Mix-Free-Music music)
+      (setf music nil))))
+    
 (defun handle-key(key)
   "handle key presses"
   (if (sdl-base::key= key :SDL-KEY-M)
-      (progn
-	(format t "Music ~a~%" music)
-	(if (null music)
-	    (progn 
-	      (setf music (load-music music-file *audio-path*))
-	      (if (cffi:null-pointer-p music)
-		  (error "unable to load music"))
-	      (lispbuilder-sdl-mixer:Mix-Play-Music music 0))
-	  (progn
-	    (lispbuilder-sdl-mixer:Mix-Halt-Music)
-	    (lispbuilder-sdl-mixer:Mix-Free-Music music)
-	    (setf music nil))))
-    (format t "Press M not ~a~%" key)))
+      (play-music)
+    (format t "Press M to play music (not ~a)~%" key)))
 
 (defun mixer()
   "Demonstrates music file basic playback"
@@ -45,6 +46,7 @@
 		   (if (= 0 (lispbuilder-sdl-mixer:MIX-OPEN-AUDIO 22050 sdl-cffi::AUDIO-S16 2 4096))
 		       (setf mixer-loaded t)
 		     (error "Unable to open audio mixer")))
+		 (play-music)
 		 (sdl::window 200 50 :title-caption "Mp3 playback" :icon-caption "Mp3 playback")
 		 (setf (sdl-base::frame-rate) 30)
 		 (sdl:with-events ()
