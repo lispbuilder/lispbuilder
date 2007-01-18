@@ -14,4 +14,5 @@
    #:rwops-type-of
    #:image-p
    #:image-type-of
-   #:load-image))
+   #:load-image
+   #:load-and-convert-image))

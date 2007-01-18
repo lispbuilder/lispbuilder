@@ -103,7 +103,7 @@ The image 'magic number' contained in the image is used to detect the image type
 
 FILENAME and PATHNAME are STRINGs.
 
-Returns a new SURFACE, or NIL if the image cannot be loaded or the image type cannot be determined.
+Returns a new SDL:SURFACE, or NIL if the image cannot be loaded or the image type cannot be determined.
 
 To load an image as a specific image type, set the :IMAGE-TYPE to the desired type. 
 The image type can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TGA, :TIF, :XCF, :XPM or :XV. 
@@ -117,3 +117,16 @@ For example, to load a TGA image use :IMAGE-TYPE :TGA"
 			   :free t
 			   :image-type image-type
 			   :force force))
+
+(defun load-and-convert-image (filename pathname &rest named-pairs &key image-type force &allow-other-keys)
+  "Loads an image as per LOAD-IMAGE. Then Converts this image as per SDL:CONVERT-SURFACE.
+Returns a new SDL:SURFACE, or NIL if the image cannot be loaded or the image type cannot be determined.
+Parameters are per LOAD-IMAGE and SDL:CONVERT-IMAGE."
+  (apply #'sdl:convert-surface
+	 :surface (create-image-from-RWops (sdl:create-RWops-from-file filename pathname)
+					   :free t
+					   :image-type image-type
+					   :force force)
+	 :free-p t
+	 :allow-other-keys t
+	 named-pairs))
