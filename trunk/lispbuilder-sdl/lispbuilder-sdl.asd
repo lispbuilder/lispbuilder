@@ -45,12 +45,19 @@
      (:module "documentation"
 	      :components
 	      ((:html-file "index")
+	       (:html-file "lispbuilder-sdl")
+	       (:html-file "footer")
+	       (:html-file "header")
 	       (:static-file "sdl1.png")
 	       (:static-file "groovy1.png")
-	       (:doc-file "README")
-	       (:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")
-             (:doc-file "cl-sdl_LICENSE")))
-     (:module "build"
-	      :components
-	      ((:static-file "sdlswig.i")))))
+	       (:static-file "sdl-gfx-examples_bezier.png")
+	       (:static-file "sdl-gfx-examples_distance-2d.png")
+	       (:static-file "sdl-gfx-examples_functions.png")
+	       (:static-file "sdl-gfx-examples_objects.png")
+	       (:static-file "sdl-gfx-examples_points-and-lines.png")
+	       (:static-file "sdl-gfx-examples_random-circles.png")
+	       (:static-file "sdl-gfx-examples_recursion.png")
+	       (:static-file "sdl-gfx-examples_shape-primitives.png")
+	       (:static-file "sdl-gfx-examples_vertices.png")
+	       (:static-file "sdl-gfx-examples_width-height.png")
+	       (:doc-file "COPYING")))))
