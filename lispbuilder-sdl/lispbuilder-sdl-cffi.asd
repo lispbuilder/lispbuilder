@@ -38,15 +38,6 @@
 	       (:file "video")
 	       (:file "sdl"))
 	      :serial t)
-     (:module "documentation"
-	      :components
-	      ((:html-file "index")
-	       (:static-file "sdl1.png")
-	       (:static-file "groovy1.png")
-	       (:doc-file "README")
-	       (:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")
-             (:doc-file "cl-sdl_LICENSE")))
      (:module "build"
 	      :components
 	      ((:static-file "sdlswig.i")))))
