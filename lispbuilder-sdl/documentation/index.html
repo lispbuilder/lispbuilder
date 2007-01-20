@@ -344,7 +344,6 @@
 	  <ol>
 	    <li><a href="#windows">Windows</a></li>
 	    <li><a href="#linux">Linux</a></li>
-	    <li><a href="#optional">Optional Libs</a></li>
 	  </ol>
 	  <li><a href="#usage">Using LISPBUILDER-SDL</a></li>
 	  <li><a href="#examples">Examples</a></li>
@@ -590,34 +589,15 @@
     </p>
 
     
-    <h3><a class=none name="optional">Optional Libraries</a></h3>
-      <p>The following libraries are optional:</p>
-      <ul>
-	<li>JPG support requires the JPEG library:</li>
-	<ul>
-	  <li><a href="http://www.ijg.org/">http://www.ijg.org/</a></li>
-	</ul>
-	<li>PNG support requires the PNG library, and the ZLib library:</li>
-	<ul>
-	  <li><a href="http://www.libpng.org/pub/png/libpng.html">http://www.libpng.org/pub/png/libpng.html</a>, and </li>
-	  <li><a href="http://www.gzip.org/zlib/">http://www.gzip.org/zlib/</a></li>
-	</ul>
-	<li>TIFF support requires the TIFF library:</li>
-	<ul>
-	  <li><a href="ftp://ftp.sgi.com/graphics/tiff/">ftp://ftp.sgi.com/graphics/tiff/</a></li>
-	</ul>
-      </ul>
-
-
-      <br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER-SDL</a></h2>
-      <p>Enter the following at the REPL to load LISPBUILDER-SDL:</p>
-      <pre>
-	(asdf:operate 'asdf:load-op :lispbuilder-sdl)
+    <br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER-SDL</a></h2>
+    <p>Enter the following at the REPL to load LISPBUILDER-SDL:</p>
+    <pre>
+      (asdf:operate 'asdf:load-op :lispbuilder-sdl)
       </pre>
-      <p>ASDF will take care of loading the CFFI and :lispbuilder-sdl dependencies. The SDL.dll library will also be loaded
-	into the Lisp image at this time.</p>
-      
-      <p>Now run <a href="#examples">one of the examples</a>.</p>
+    <p>ASDF will take care of loading the CFFI and :lispbuilder-sdl dependencies. The SDL.dll library will also be loaded
+      into the Lisp image at this time.</p>
+    
+    <p>Now run <a href="#examples">one of the examples</a>.</p>
       
       
       <br>&nbsp;</br><h2><a class=none name="examples">Running examples from LISPBUILDER-SDL-EXAMPLES</a></h2>
