@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   
   <head>
-    <title>LISPBUILDER-SDL</title>
+    <title>LISPBUILDER</title>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
     <style type="text/css">
 
@@ -74,7 +74,7 @@
       h1 {
       margin-top: 40px;
       margin-bottom: 0px;
-      color: #4682B4;
+      color: black;
       }
       
       h1:before {
@@ -334,18 +334,38 @@
 
     <div class="index">
       <ol>
-	<li><a href="#lispbuilder-sdl">lispbuilder-SDL</a></li>
+	<li><a href="#lispbuilder">LISPBUILDER</a></li>
 	<ol>
 	  <li><a href="#abstract">Abstract</a></li>
 	  <li><a href="#shots">Screenshots</a></li>
+	  <ol>
+	    <li><a href="shots.html">Additional Screenshots</a></li>
+	  </ol>
 	  <li><a href="#release">Releases</a></li>
+	  <ol>
+	    <li><a href="#release">lispbuilder-CAL3D</a></li>
+	    <li><a href="#release">lispbuilder-CLAWK</a></li>
+	    <li><a href="#release">lispbuilder-LEXER</a></li>
+	    <li><a href="#release">lispbuilder-ODE</a></li>
+	    <li><a href="#release">lispbuilder-OPENRM</a></li>
+	    <li><a href="#release">lispbuilder-REGEX</a></li>
+	    <li><a href="#release">lispbuilder-SDL</a></li>
+	    <li><a href="#release">lispbuilder-SDL-GFX</a></li>
+	    <li><a href="#release">lispbuilder-SDL-IMAGE</a></li>
+	    <li><a href="#release">lispbuilder-SDL-MIXER</a></li>
+	    <li><a href="#release">lispbuilder-SDL-NET</a></li>
+	    <li><a href="#release">lispbuilder-SDL-TIF</a></li>
+	    <li><a href="#release">lispbuilder-SDL-TTF</a></li>
+	    <li><a href="#release">lispbuilder-WINDOWS</a></li>
+	    <li><a href="#release">lispbuilder-YACC</a></li>
+	  </ol>
 	  <li><a href="#download">Download</a></li>
 	  <li><a href="#installation">Installation</a></li>
 	  <ol>
 	    <li><a href="#windows">Windows</a></li>
 	    <li><a href="#linux">Linux</a></li>
 	  </ol>
-	  <li><a href="#usage">Using LISPBUILDER-SDL</a></li>
+	  <li><a href="#usage">Using LISPBUILDER</a></li>
 	  <li><a href="#examples">Examples</a></li>
 	  <li><a href="#support">Support</a></li>
 	  <li><a href="#contrib">Contributors</a></li>
@@ -356,76 +376,45 @@
     </div>
     
     
-    <h1><a name="lispbuilder-sdl" class="none">LISPBUILDER-SDL</a></h1>
+    <h1><a name="lispbuilder-sdl" class="none">LISPBUILDER</a></h1>
     
     <blockquote>
       <br>&nbsp;</br><h2><a name="abstract" class="none">Abstract</a></h2>
       
       <p>
-	LISPBUILDER-SDL provides a Lisp wrapper for the 
-	<a href="http://www.libsdl.org">SDL</a> library. 
-	LISPBUILDER-SDL is distributed under the 
-	<a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
-      </p>
-      <p>
-	LISPBUILDER-SDL provides several cross-platform packages 
-	suitable for game development in Common Lisp. 
-	These packages are: 
+	LISPBUILDER, or Common Lisp Application Builder is part of the 
+	<a href="http://wiki.alu.org/Gardeners_Projects">Common Lisp Gardeners project</a>.
+	LISPBUILDER contains several packages for useful for developing cross-platform applications 
+	in Common Lisp.	These packages are: 
       </p>
       <ul>
-	<li>lispbuilder-sdl: Provides the core functionality 
-	  for window and event management, rendering graphics, 
-	  and sound support. Uses 
-	  <a href="http://www.libsdl.org" title="http://www.libsdl.org" rel="nofollow">SDL</a>, 
-	  a 2D graphics library</li>
-	<li>lispbuilder-sdl-gfx: 2D graphical effects such as
-	  zooming, rotation, circles, polygons and squares, 
-	  using 
-	  <a href="http://www.ferzkopp.net/Software/SDL_gfx-2.0/" title="http://www.ferzkopp.net/Software/SDL_gfx-2.0/"  rel="nofollow">SDL_gfx</a></li>
-	<li> <a href="lispbuilder-sdl-image.html" title="lispbuilder-sdl-image">lispbuilder-sdl-image</a>: 
-	  Support for loading several 2D image formats such
+	<li>LISPBUILDER-CAL3D: 3D character animation</li>
+	<li>LISPBUILDER-CLAWK: AWK for Lisp</li>
+	<li>LISPBUILDER-LEXER: A Lisp lexer</li>
+	<li>LISPBUILDER-ODE: Physics</li>
+	<li>LISPBUILDER-OPENRM: OpenGL Scene Graph</li>
+	<li>LISPBUILDER-REGEX: Regular exression handling</li>
+	<li>LISPBUILDER-SDL: Window and event management, rendering graphics, 
+	  and sound support.</li>
+	<li>LISPBUILDER-SDL-GFX: 2D graphical effects such as
+	  zooming, rotation, drawing circles, polygons and squares</li>
+	<li> <a href="lispbuilder-sdl-image.html" title="lispbuilder-sdl-image">LISPBUILDER-SDL-IMAGE</a>: 
+	  Loading many 2D image formats such 
 	  as <acronym title="Portable Network Graphics">PNG</acronym> and 
-	  <acronym title="Joint Photographics Experts Group">JPG</acronym>, 
-	  using <a href="http://www.libsdl.org/projects/SDL_image/" title="http://www.libsdl.org/projects/SDL_image/"  rel="nofollow">SDL_image</a></li>
-	<li>lispbuilder-sdl-mixer: Sound mixing, using 
-	  <a href="http://www.libsdl.org/projects/SDL_mixer/" title="http://www.libsdl.org/projects/SDL_mixer/"  rel="nofollow">SDL_mixer</a> 
-	  a multi-channel audio mixer library</li>
-	<li>lispbuilder-sdl-ttf: True-type font rendering, using 
-	  <a href="http://www.libsdl.org/projects/SDL_ttf/" title="http://www.libsdl.org/projects/SDL_ttf/"  rel="nofollow">SDL_ttf</a></li>
-	<li>lispbuilder-sdl-net: Networking, using 
-	  <a href="http://www.libsdl.org" title="http://www.libsdl.org"  rel="nofollow">SDL_net</a> 
-	  a cross-platform, blocking network library</li>
-	<li>lispbuilder-cal3d: 3D character animation, using 
-	  <a href="https://gna.org/projects/cal3d/" title="https://gna.org/projects/cal3d/"  rel="nofollow">Cal3D</a></li>
-	<li>lispbuilder-openrm: A Scene Graph, using 
-	  <a href="http://www.openrm.org/" title="http://www.openrm.org/"  rel="nofollow">OpenRM</a>
-	  an OpenGL scene graph <acronym title="Application Programming Interface">API</acronym></li>
-	<li>lispbuilder-ode: Physics</li>
-      </ul>
-      <p>
-	The aim is not aim to provide a 'pure-lisp' solution 
-	but rather leverage existing functionality provided 
-	by third party non-Lisp (C or C++) libraries. 
-	LISPBUILDER-SDL uses the CFFI for 
-	compatibity across Lisp implementations.
+	  <acronym title="Joint Photographics Experts Group">JPG</acronym></li>
+	<li>LISPBUILDER-SDL-MIXER: Multi-channel audio mixing</li>
+	<li>LISPBUILDER-SDL-NET: Simple socket networking</li>
+	<li>LISPBUILDER-SDL-TTF: True-type font rendering</li>
+	<li>LISPBUILDER-WINDOWS: CFFI wrappers for Windows Windows <code>windows.h</code>.</li>
+	<li>LISPBUILDER-YACC: YACC for Lisp</li>
+      </ul>    
     </blockquote>
 
     <br>&nbsp;</br><h2><a class=none name="shots">Screenshots</a></h2>
-
-    <img src="sdl-gfx-examples_bezier.png" align=left width="206" height="232" title="(sdl-examples:bezier)" alt="(sdl-examples:bezier)" />
-    <img src="sdl-gfx-examples_distance-2d.png" align=right width="206" height="232" title="(sdl-examples:distance-2D)" alt="(sdl-examples:distance-2)" />
+    <img src="sdl-gfx-examples_distance-2d.png" align=left width="206" height="232" title="(sdl-examples:distance-2D)" alt="(sdl-examples:distance-2)" />
+    <img src="openrm1.jpg" align=right width="320" height="253" title="OpenRM Example" alt="OpenRM Example" />
     <BR CLEAR=ALL>
-    <img src="sdl-gfx-examples_functions.png" align=left width="206" height="232" title="(sdl-gfx-examples:functions)" alt="(sdl-gfx-examples:functions)" />
-    <img src="sdl-gfx-examples_objects.png" align=right width="206" height="232" title="(sdl-gfx-examples:objects)" alt="(sdl-gfx-examples:objects)" />
-    <BR CLEAR=ALL>
-    <img src="sdl-gfx-examples_recursion.png" align=left width="206" height="232" title="(sdl-gfx-examples:recursion)" alt="(sdl-gfx-examples:recursion)" />
-    <img src="sdl-gfx-examples_shape-primitives.png" align=right width="206" height="232" title="(sdl-gfx-examples:shape-primitives)" alt="(sdl-gfx-examples:shape-primitives)" />
-    <BR CLEAR=ALL>
-    <img src="sdl-gfx-examples_vertices.png" align=left width="206" height="232" title="(sdl-examples:vertices)" alt="(sdl-examples:vertices)" />
-    <img src="sdl-gfx-examples_width-height.png" align=right width="206" height="232" title="(sdl-examples:width-height)" alt="(sdl-examples:width-height)" />
-    <BR CLEAR=ALL>
-    <img src="sdl-gfx-examples_random-circles.png" width="646" height="512" title="(sdl-gfx-examples:random-circles)" alt="(sdl-gfx-examples:random-circles)" />
-
+    <p><a href="shots.html">More Screenshots</a>.</p>
 
     <br>&nbsp;</br><h2><a class=none name="release">Latest Release</a></h2>
 
@@ -440,6 +429,66 @@
 	<th>Released</th>
 	<th>Lib Name</th>
 	<th>Version</th>
+      </tr>
+      <tr>
+	<th class="spec" scope="row">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-cal3d" 
+	     title="lispbuilder-cal3d">lispbuilder-cal3d</a>     
+	</th>
+	<td>-</td>
+	<td>In <a href="http://svn.sourceforge.net/viewvc/lispbuilder/trunk/" class="urlextern" title="http://svn.sourceforge.net/viewvc/lispbuilder/trunk/"  rel="nofollow">SVN</a> </td>
+	<td><a href="https://gna.org/projects/cal3d/" title="https://gna.org/projects/cal3d/"  rel="nofollow">Cal3D</a></td>
+	<td>0.10.0</td>
+      </tr>
+      <tr>
+	<th class="specalt" scope="row">
+	  <a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-clawk/index.html" 
+	     title="lispbuilder-clawk">lispbuilder-clawk</a>     
+	</th>
+	<td class="alt"><a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-clawk/index.html">Initial</a></td>
+	<td class="alt">28 Feb 2006</td>
+	<td class="alt">N/A</td>
+	<td class="alt">N/A</td>
+      </tr>
+      <tr>
+	<th class="spec" scope="row">
+	  <a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-lexer/index.html" 
+	     title="lispbuilder-lexer">lispbuilder-lexer</a>     
+	</th>
+	<td><a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-lexer/index.html">Initial</a></td>
+	<td>28 Feb 2006</td>
+	<td>N/A</td>
+	<td>N/A</td>
+      </tr>
+      <tr>
+	<th scope="row" class="specalt">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-ode" 
+	     title="lispbuilder-ode">lispbuilder-ode</a>
+	</th>
+	<td class="alt">-</td>
+	<td class="alt">-</td>
+	<td class="alt">ODE</td>
+	<td class="alt">-</td>
+      </tr>
+      <tr>
+	<th scope="row" class="spec">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-openrm" 
+	     title="lispbuilder-openrm">lispbuilder-openrm</a>
+	</th>
+	<td>0.1.0</td>
+	<td>Oct 20, 2006</td>
+	<td><a href="http://www.openrm.org/" title="http://www.openrm.org/"  rel="nofollow">OpenRM</a> </td>
+	<td>1.6.0-2</td>
+      </tr>
+      <tr>
+	<th scope="row" class="specalt">
+	  <a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-regex/index.html" 
+	     title="lispbuilder-regex">lispbuilder-regex</a>
+	</th>
+	<td class="alt"><a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-regex/index.html">Initial</a></td>
+	<td class="alt">28 Feb 2006</td>
+	<td class="alt">N/A</td>
+	<td class="alt">N/A</td>
       </tr>
       <tr>
 	<th class="spec" scope="row">  
@@ -483,53 +532,43 @@
       </tr>
       <tr>
 	<th class="spec" scope="row">
-	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl-ttf" 
-	     title="lispbuilder-sdl-ttf">lispbuilder-sdl-ttf</a>   
-	</th>
-	<td>0.1.0</td>
-	<td>Oct 20, 2006</td>
-	<td><a href="http://www.libsdl.org/projects/SDL_ttf/" title="http://www.libsdl.org/projects/SDL_ttf/"  rel="nofollow">SDL_ttf</a></td>
-	<td>2.0</td>
-      </tr>
-      <tr>
-	<th class="specalt" scope="row">
 	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl-net" 
 	     title="lispbuilder-sdl-net">lispbuilder-sdl-net</a>   
 	</th>
-	<td class="alt">Placeholder</td>
-	<td class="alt">N/A</td>
-	<td class="alt"><a href="http://www.libsdl.org" title="http://www.libsdl.org"  rel="nofollow">SDL_net</a></td>
-	<td class="alt">Placeholder</td>
-      </tr>
-      <tr>
-	<th class="spec" scope="row">
-	  <a href="/dokuwiki/doku.php?id=lispbuilder-cal3d" 
-	     title="lispbuilder-cal3d">lispbuilder-cal3d</a>     
-	</th>
-	<td>In <a href="http://svn.sourceforge.net/viewvc/lispbuilder/trunk/" class="urlextern" title="http://svn.sourceforge.net/viewvc/lispbuilder/trunk/"  rel="nofollow">SVN</a> </td>
+	<td>Placeholder</td>
 	<td>N/A</td>
-	<td><a href="https://gna.org/projects/cal3d/" title="https://gna.org/projects/cal3d/"  rel="nofollow">Cal3D</a></td>
-	<td>0.10.0</td>
+	<td><a href="http://www.libsdl.org" title="http://www.libsdl.org"  rel="nofollow">SDL_net</a></td>
+	<td>Placeholder</td>
       </tr>
       <tr>
-	<th scope="row" class="specalt">
-	  <a href="/dokuwiki/doku.php?id=lispbuilder-openrm" 
-	     title="lispbuilder-openrm">lispbuilder-openrm</a>
+	<th class="specalt" scope="row">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl-ttf" 
+	     title="lispbuilder-sdl-ttf">lispbuilder-sdl-ttf</a>   
 	</th>
 	<td class="alt">0.1.0</td>
 	<td class="alt">Oct 20, 2006</td>
-	<td class="alt"><a href="http://www.openrm.org/" title="http://www.openrm.org/"  rel="nofollow">OpenRM</a> </td>
-	<td class="alt">1.6.0-2</td>
+	<td class="alt"><a href="http://www.libsdl.org/projects/SDL_ttf/" title="http://www.libsdl.org/projects/SDL_ttf/"  rel="nofollow">SDL_ttf</a></td>
+	<td class="alt">2.0</td>
       </tr>
       <tr>
-	<th scope="row" class="spec">
-	  <a href="/dokuwiki/doku.php?id=lispbuilder-ode" 
-	     title="lispbuilder-ode">lispbuilder-ode</a>
+	<th class="spec" scope="row">
+	  <a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-windows/documentation/index.html" 
+	     title="lispbuilder-windows">lispbuilder-windows</a>   
 	</th>
-	<td>Placeholder</td>
+	<td><a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-windows/documentation/index.html">Initial</a></td>
+	<td>10 Dec 2006</td>
 	<td>N/A</td>
-	<td>ODE</td>
-	<td>Placeholder</td>
+	<td>N/A</td>
+      </tr>
+      <tr>
+	<th class="specalt" scope="row">
+	  <a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-yacc/index.html" 
+	     title="lispbuilder-yacc">lispbuilder-yacc</a>   
+	</th>
+	<td class="alt"><a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-yacc/index.html">Initial</a></td>
+	<td class="alt">28 Feb 2006</td>
+	<td class="alt">N/A</td>
+	<td class="alt">N/A</td>
       </tr>
     </table>
     
@@ -542,8 +581,9 @@
 	</pre>
       </li>
       <li>
-	<font color=red>Stable:</font> The latest stable versions are available from the
-	<a href="http://sourceforge.net/project/showfiles.php?group_id=159740">LISPBUILDER-SDL repository on SourceForge.</a>
+	<font color=red>Stable:</font> The latest stable versions are available 
+	<a href="http://sourceforge.net/project/showfiles.php?group_id=159740">
+	  from the LISPBUILDER repository on SourceForge.</a>
       </li>
       <li>
 	<font color=red>'Lisp Starter Pack':</font> The 
@@ -589,14 +629,16 @@
     </p>
 
     
-    <br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER-SDL</a></h2>
-    <p>Enter the following at the REPL to load LISPBUILDER-SDL:</p>
+    <br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER</a></h2>
+    <p>Enter the following at the REPL to load the LISPBUILDER-SDL package:</p>
     <pre>
       (asdf:operate 'asdf:load-op :lispbuilder-sdl)
       </pre>
     <p>ASDF will take care of loading the CFFI and :lispbuilder-sdl dependencies. The SDL.dll library will also be loaded
       into the Lisp image at this time.</p>
-    
+    <p>Replace <code>:lispbulder-sdl</code> above to load the 
+      other LISPBUILDER packages.</p>
+      
     <p>Now run <a href="#examples">one of the examples</a>.</p>
       
       
