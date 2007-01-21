@@ -1,0 +1,596 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+<title>Creating Applications using the lispbuilder-SDL (CFFI SDL bindings)</title>
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
+<style type="text/css">
+
+body {
+margin: 10px 20px 20px 200px;
+padding: 0px;
+font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+font-size: small;
+text-align: justify;
+max-width: 50em;
+background-color: white;
+}
+
+a, a:visited {
+text-decoration: none;
+color: maroon;
+}
+
+/* index */
+
+div.index {
+position: fixed;
+top: 0px;
+left: 0px;
+width: 160px;
+height: 100%;
+margin: 0px;
+padding: 5px;
+font-size: 12px;
+background-color: #DCDCDC;
+border-right: thin black solid;
+}
+
+div.index ol {
+color: navy;
+margin: 0px;
+padding-left: 0px;
+}
+
+div.index ol li {
+list-style: none;
+}
+
+div.index ol li:before {
+display: marker;
+content: counter(heading1) ". ";
+counter-increment: heading1;
+}
+
+div.index ol ol {
+padding-left: 10px;
+font-size: 10px;
+list-style: none;
+counter-reset: heading2;
+}
+
+div.index ol ol li:before {
+display: marker;
+content: counter(heading1)"." counter(heading2)" ";
+counter-increment: heading2;
+}
+
+/* heading styles */
+
+body > h1 {
+margin-top: 0px;
+}
+
+h1 {
+margin-top: 40px;
+margin-bottom: 0px;
+color: #4682B4;
+}
+
+h1:before {
+display: marker;
+content: counter(chapter) ". ";
+counter-increment: chapter;
+counter-reset: section1;
+}
+
+h1 + p {
+margin-top: 5px;
+}
+
+h2 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h2:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "  ";
+counter-increment: section1;
+}
+
+h2 + p {
+margin-top: 0px;
+}
+
+h3 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h3:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "." counter(section2) "  ";
+counter-increment: section2;
+}
+
+h3 + p {
+margin-top: 0px;
+}
+
+h4 {
+margin-top: 20px;
+color: #000000;
+margin-bottom: 0px;
+}
+
+h4:before {
+display: marker;
+content: counter(chapter) "." counter(section1) "." counter(section2) "." counter(section3) "  ";
+counter-increment: section3;
+}
+
+h4 + p {
+margin-top: 0px;
+}
+
+/* generated content for images and tables */
+
+img:after {
+content: "[" counter(image) "] " attr(title);
+counter-increment: image;
+display: block;
+font-size: 10px;
+font-weight: bold;
+margin-top: 5px;
+margin-bottom: 20px;
+color: black;
+}
+
+table:after {
+content: "Table " counter(table) ": " attr(summary);
+counter-increment: table;
+display: table-caption;
+caption-side: bottom;
+font-size: 10px;
+font-weight: bold;
+margin-top: 5px;
+margin-bottom: 20px;
+white-space: nowrap;
+color: black;
+}
+
+/* code for examples, code and pathnames*/
+
+div.example table {
+color: black;
+}
+
+div.example, div.code, div.path, div.sequence {
+margin: 10px 0px;
+border: 1px black solid;
+padding: 10px;
+background-color: #F4F4F4;
+counter-reset: image;
+color: maroon;
+}
+
+div.example:before {
+content: "Example " counter(example);
+counter-increment: example;
+display: block;
+}
+
+div.example + p {
+margin-bottom: 0px;
+}
+
+div.code:before {
+content: "Code";
+}
+
+div.path:before {
+content: "Path";
+}
+
+div.sequence:before {
+content: "Sequence";
+}
+
+p.reference:before {
+display: marker;
+content: "[" counter(reference) "]";
+counter-increment: reference;
+font-weight: bold;
+margin-right: 5px;
+}
+
+div.code:before, div.example:before, div.path:before, div.sequence:before {
+font-weight: bold;
+font-size: 15px;
+margin-bottom: 20px;
+color: black;
+}
+
+pre {
+color: Green;
+margin: 0px;
+padding: 0px;
+}
+
+
+/* equation counter */
+
+e:after {
+content: "[" counter(equation) "]";
+counter-increment: equation;
+display: block;
+float: right;
+margin-right: 10px;
+}
+
+/* to prevent the CC image from being numbered */
+
+img[alt="Creative Commons License"] {
+display: inline;
+}
+
+img[alt="Creative Commons License"]:after {
+display: none;
+}
+
+div#cc {
+background-color: #DCDCDC;
+border: thin black solid;
+padding: 10px;
+font-size: 10px;
+}
+
+</style>
+</head>
+
+<!--
+(CC) 2003 Luke Crook. Some Rights Reserved.
+http://creativecommons.org/licenses/by/1.0
+This page is licensed under a Creative Commons License.
+
+Maintained by the Common Lisp Application Builder project at www.lispbuilder.org
+
+The entire styleguide was copied wholesale from http://www.markschenk.com/cssexp/publication/article.xml
+
+(CC) 2003 Mark Schenk. Some Rights Reserved.
+http://creativecommons.org/licenses/by/1.0
+This page is licensed under a Creative Commons License.
+-->
+
+<BODY BGCOLOR=#FFFFFF >
+
+<div class="index">
+<ol>
+<li><a href="#lispbuilder-SDL">lispbuilder-SDL</a></li>
+    <ol>
+    <li><a href="#Overview">Overview</a></li>
+    <li><a href="#Implementations">Supported Lisp Implementations</a></li>
+	<li><a href="#Prerequisites">Prerequisites</a></li>
+    <li><a href="#Installation">Installation on Win32 Platforms</a></li>
+	<ol>
+	<li><a href="#Win32: ASDF and CFFI">ASDF and CFFI</a></li>
+	<li><a href="#Win32: lispbuilder-sdl and the SDL binary">lispbuilder-sdl and the SDL binary</a></li>
+	</ol>
+    <li><a href="#Win32: Configuration">Configuration on Win32 Platforms</a></li>
+        <ol>
+	<li><a href="#Win32: ASDF Configuration">ASDF Configuration</a></li>
+	</ol>
+    <li><a href="#Fire it Up">Fire it Up</a></li>
+    <li><a href="#Running the included SDL examples">Running the included SDL examples</a></li>
+    <li><a href="#Rebuilding the CFFI bindings">Rebuilding the CFFI bindings</a></li>
+    </ol>
+</ol>
+
+</div>
+
+
+<h1 id="lispbuilder-SDL">lispbuilder-SDL</h1>
+
+<h2 id="Overview">Overview</h2>
+<p>The lispbuilder-SDL package is a part of the <a href="http://www.lispbuilder.org/">Common Lisp Application Builder</a> 
+project	which is in turn a part of the umbrella <a href="http://www.lispniks.com/cl-gardeners/">Common Lisp Gardeners</a>
+project.</p>
+<p>The purpose of this documement is to describe a step-by-step process by which the user may install, configure and
+begin using the lispbuilder-SDL package to create applications using one of the 
+<a href="#Implementations">supported Lisp implementations</a>.</p>
+<p>The list of credits is contained in <a href="../documentation/CONTRIBUTORS">CONTRIBUTORS</a>. A copy of the license is contained in 
+<a href="../documentation/COPYING">COPYING</a>.</p>
+
+<h2 id="Implementations">Supported Implementations</h2>
+<p>The following table describes the status of the Lisp implementations that have been tested with lispbuilder-SDL:</p>
+
+<table border="1" cellpadding="2" cellspacing="0" summary="Supported Implementations"> 
+     <tr bgcolor="yellow">
+       <td><b>Lisp Implementation</b></td>
+       <td colspan="3"><b>lispbuilder-SDL Status</b></td>
+       <td><b>Comments</b></td>
+     </tr>	
+     <tr bgcolor="yellow">
+       <td colspan="1"></td>
+       <td><b>Win32</b></td>
+       <td><b>Linux</b></td>
+       <td><b>MacOS</b></td>
+       <td></td></td>
+    </tr>
+     <tr>
+      <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
+      <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.lispworks.com/">Lispworks v2.4.6 Personal</a></td>
+      <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.franz.com/">Allegro Express 8.0</a></td>
+      <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td></td>
+    </tr>
+    <tr>
+    <td><a href="http://openmcl.clozure.com/">OpenMCL</a></td>
+    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+    <td bgcolor="#ff6060">Unknown</td>
+    <td></td>
+    </tr>
+    <tr>
+      <td><a href="http://www.sbcl.org/">SBCL</a></td>
+      <td bgcolor=blue><font color="#FFFFFF">When, oh when?</font></td>
+      <td bgcolor="#60c060">Working</td>
+      <td bgcolor="#ff6060">Unknown</td>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td><a href="http://www.cons.org/cmucl/">CMUCL</a></td>
+      
+    <td bgcolor=blue><font color="#FFFFFF">When already?</font></td>
+      <td bgcolor="#ff6060">Unknown</td>
+      
+    <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+      <td>
+      
+      </td>
+    </tr>
+</table>
+
+<h2 id="Prerequisites">Prerequisites</h2>
+<p>The <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
+ and <a href="http://common-lisp.net/project/cffi/tarballs/cffi-060225.tar.gz">CFFI</a> packages are required 
+ prior to the installation of lispbuilder-SDL. The installation of these packages is descibed in <a href="#Win32: ASDF and CFFI">following section</a>.</p>
+
+<h2 id="Installation">Installation on Win32 Platforms</h2>
+
+<h3 id="Win32: ASDF and CFFI">ASDF and CFFI</h3>
+<p>This section describes the installation of the ASDF and CFFI packages for CLISP in Windows.</p>
+<ul>
+  <li> install <a href="http://clisp.cons.org/">CLISP</a> to, e.g.  
+  <pre>c:\programme\clisp-2.38\</pre></li>
+  <li> create a directory asdf in the clisp-2.38 directory</li>
+  <pre>c:\programme\clisp-2.38\asdf\</pre></li>
+  <li> save <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
+    in the asdf directory
+  <pre>c:\programme\clisp-2.38\asdf\asdf.lisp</pre></li>
+  <li> download <a href="http://common-lisp.net/project/cffi/tarballs/cffi-060225.tar.gz">CFFI</a> 
+    and unpack it (use <a href="http://www.7-zip.org/">7-Zip</a> or another program 
+    to unpack .tgz files) in the asdf directory, rename the directory to &quot;cffi&quot;. So you should have 
+    a file like:
+    <pre>c:\programme\clisp-2.38\asdf\cffi\cffi.asd</pre>
+    </li>
+</ul>
+
+<h3 id="Win32: lispbuilder-sdl and the SDL binary">Installation of lispbuilder-sdl</h3>
+<p>This section describes the installation of the lispbuilder-sdl package.</p>
+<ul>
+    <li> download the latest version of the 
+    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
+package from sourceforge and unpack it to the asdf directory, e.g.
+    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl_0.7.1\lispbuilder-sdl.asd</pre>
+    </li>
+</ul>
+
+<h3 id="Win32: lispbuilder-sdl and the SDL binary">Installation of the SDL binary</h3>
+<p>This section describes the installation of the SDL binaries for Windows.</p>
+<ul>
+  <li> install the SDL dynamic library by doing <u>one</u> of the following: 
+  <ul>
+    <li> download <a href="http://www.libsdl.org/release/SDL-1.2.11-win32.zip">SDL</a> and 
+    copy the SDL.dll to following system folder:
+    <pre>c:\windows\system32</pre>
+    </li>
+    <li> download the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-sdl-binaries</a> package from sourceforge and unpack it into the asdf directory, e.g.
+    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\lispbuilder-sdl-binaries.asd</pre>
+    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\bin\SDL.dll</pre>
+    </li>
+  </ul>
+</ul>
+
+<h2 id="Installation">Installation on Linux Platforms</h2>
+<h3 id="Linux: ASDF and CFFI">ASDF and CFFI</h3>
+<p>
+<ul>
+  <li><u>ASDF</u>: For users of SBCL, OpenMCL, ECL or ACL, ASDF is already installed. Otherwise, Linux users 
+  please refer to the official
+<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/README?rev=HEAD&content-type=text/plain">ASDF README</a> for installation instructions.</li>
+  <li><u>CFFI</u>: It's always best to use the latest development tarball for CFFI 
+<a href="http://common-lisp.net/project/cffi/tarballs/?M=D">available here</a>.</li>
+</ul>
+</p>
+
+
+<h3 id="Linux: lispbuilder-sdl">Installation of lispbuilder-sdl</h3>
+<p>This section describes the installation of the lispbuilder-sdl package for Linux users. Download the latest version 
+of the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
+package from sourceforge, and:</p>
+<ul>
+    <li><u>ASDF-Install</u>: The package is ASDF-Install'able, so install the package using ASDF-install: <code>(asdf-install:install "lispbuilder-sdl_0.7.1.tgz")</code>, or</li>
+    <li><u>Manual installation</u>: Extract the package to the correct asdf systems directory.
+    </li>
+</ul>
+
+<h3 id="Linux: The SDL binary">Installation of the SDL binary</h3>
+<p>This section describes the installation of the SDL binaries for Linux.</p>
+<ul>
+  <li>For Fedora Linux:
+   <ul>
+    <li><u>Application Manager</u>: Download and install the latest SDL RPMs using the Fedora Application Manager, or</li>
+    <li><u>Manual Installation</u>: Download and install the SDL RPMs from the <a href="http://www.libsdl.org/download-1.2.php">official SDL site</a>
+    </li>
+   </ul>
+</ul>
+
+<h2 id="Win32: Configuration">Configuration on Win32 Platforms</h2>
+
+<h3 id="Win32: ASDF Configuration">ASDF Configuration</h3>
+<div class="code">
+  <p>Change the *central-registry* parameter in the asdf.lisp file (somewhere 
+    at line 346):</p>
+  <pre>
+(defvar *central-registry*
+  '("c:/programme/clisp-2.38/asdf/cffi/"
+    "c:/programme/clisp-2.38/asdf/lispbuilder-sdl_0.7.1/"))
+</pre>
+  <p>Set "lispbuilder-sdl_0.7.1/" to the version number of the lispbuilder-sdl package, e.g. "lispbuilder-sdl_{version_number}/".
+</div>
+
+<h2 id="Fire it Up">Fire it Up</h2>
+<div class="sequence">
+ <p>Now start CLISP and enter the following at the prompt:</p>
+<pre>
+(load "c:/programme/clisp-2.38/asdf/asdf.lisp")
+(asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+</pre>
+
+<p>ASDF will take care of loading the CFFI and :lispbuilder-sdl dependencies. The SDL.dll library will also be loaded
+into the Lisp image at this time.</p>
+
+<p>Great. If you received any errors during this processes then go back and verify that the pathnames entered into the
+*central-registry* match the directories where the packages were installed. Also verify that the SDL.dll library 
+is located somewhere in the search path, as described above.</p>
+</div>
+<h2 id="Running the included SDL examples">Running the included SDL examples</h2>
+<div class="example">
+<p>To verify that lispbuilder-sdl is installed correctly, run one of the examples by entering:</p>
+<pre>
+(sdl-examples:recursive-rects)
+</pre>
+
+<p>You should see a window like this:</p>
+<img src="sdl1.png" width="320" height="253" title="(sdl-examples:recursive-rects)" alt="recursive-rects" />
+</div>
+
+<div class="example">
+<p>After closing the window, you can try the painter demo where you can draw with the mouse:</p>
+<pre>
+(sdl-examples:mouse-painter)
+</pre>
+
+<p>Groovy. You should see a window like this:</p>
+<img src="groovy1.png" width="320" height="253" title="(sdl-examples:mouse-painter)" alt="mouse-painter" />
+</div>
+
+<h2 id="Rebuilding the CFFI bindings">Rebuilding the CFFI Bindings using SWIG</h2>
+<p>The Common Lisp Application Builder project relies on <a href="http://www.swig.org">SWIG</a> to create the
+CFFI bindings for SDL. SWIG requires an interface (.i) file (<a href="../build/sdlswig.i">lispbuilder-sdl/sdlswig.i</a>) 
+to create the CFFI bindings from the SDL C headers. To recreate the SDL CFFI bindings from scratch, download the
+ SDL development libraries from <a href="http://www.libsdl.org/">SDL</a> (these contain the SDL C header files) 
+and place the sdlswig.i interface file into the include/ directory. Retrieve and compile the latest version of 
+<a href="http://www.swig.org">SWIG</a> from <b>CVS</b> (the CVS version contains additions necessary to 
+perform the CFFI conversion).</p>
+
+<p>Currently SWIG does not provide a fully automated build solution and there are a few things that must be modified 
+in the SDL headers as described below. There are only a handful of changes that are easily wrapped in "#ifdef SWIG" 
+blocks allowing the headers to remain unchanged if SDL is rebuild from sources.</p>
+
+<h3 id="SDL Header Modifications">SDL Header Modifications</h3>
+<ul>
+<li> In "SDL_events.h"</li>
+</ul>
+<div class="code">
+<p>Remove event bit masks (SDL_EVENTMASK) by enclosing in SWIG defines as follows:</p>
+<pre>
+#ifndef SWIG
+/* Predefined event masks */
+#define SDL_EVENTMASK(X)	(1<<(X))
+enum {
+	SDL_ACTIVEEVENTMASK	= SDL_EVENTMASK(SDL_ACTIVEEVENT),
+	SDL_KEYDOWNMASK		= SDL_EVENTMASK(SDL_KEYDOWN),
+	SDL_KEYUPMASK		= SDL_EVENTMASK(SDL_KEYUP),
+	SDL_MOUSEMOTIONMASK	= SDL_EVENTMASK(SDL_MOUSEMOTION),
+	SDL_MOUSEBUTTONDOWNMASK	= SDL_EVENTMASK(SDL_MOUSEBUTTONDOWN),
+	SDL_MOUSEBUTTONUPMASK	= SDL_EVENTMASK(SDL_MOUSEBUTTONUP),
+	SDL_MOUSEEVENTMASK	= SDL_EVENTMASK(SDL_MOUSEMOTION)|
+	                          SDL_EVENTMASK(SDL_MOUSEBUTTONDOWN)|
+	                          SDL_EVENTMASK(SDL_MOUSEBUTTONUP),
+	SDL_JOYAXISMOTIONMASK	= SDL_EVENTMASK(SDL_JOYAXISMOTION),
+	SDL_JOYBALLMOTIONMASK	= SDL_EVENTMASK(SDL_JOYBALLMOTION),
+	SDL_JOYHATMOTIONMASK	= SDL_EVENTMASK(SDL_JOYHATMOTION),
+	SDL_JOYBUTTONDOWNMASK	= SDL_EVENTMASK(SDL_JOYBUTTONDOWN),
+	SDL_JOYBUTTONUPMASK	= SDL_EVENTMASK(SDL_JOYBUTTONUP),
+	SDL_JOYEVENTMASK	= SDL_EVENTMASK(SDL_JOYAXISMOTION)|
+	                          SDL_EVENTMASK(SDL_JOYBALLMOTION)|
+	                          SDL_EVENTMASK(SDL_JOYHATMOTION)|
+	                          SDL_EVENTMASK(SDL_JOYBUTTONDOWN)|
+	                          SDL_EVENTMASK(SDL_JOYBUTTONUP),
+	SDL_VIDEORESIZEMASK	= SDL_EVENTMASK(SDL_VIDEORESIZE),
+	SDL_VIDEOEXPOSEMASK	= SDL_EVENTMASK(SDL_VIDEOEXPOSE),
+	SDL_QUITMASK		= SDL_EVENTMASK(SDL_QUIT),
+	SDL_SYSWMEVENTMASK	= SDL_EVENTMASK(SDL_SYSWMEVENT)
+};
+#endif
+</pre>
+</div>
+
+<h3 id="Modifications sdlswig.i post-swig.lisp">Modifications to sdlswig.i and post-swig.lisp</h3>
+<p>As described above, SWIG uses rules specified in the interface file, <b>sdlswig.i</b>, to create the the CFFI bindings.
+This interface file contains several structures that by necessity are redefined in Lisp. When rebuilding the CFFI 
+bindings from scratch using a version of SDL <em>later than 1.2.11</em>, care must be taken to ensure that the structure of the 
+manual overrides match the constructs in the C header files. All overrides are grouped in the interface file within 
+the following tags:</p>
+<pre>
+;;;; Overrides to C header files follow:
+;;;;
+
+;;;;
+;;;; end Overrides
+</pre>
+
+<p>The <b>post-swig.lisp</b> file also contains C header file overrides. These are not included in 
+sdlswig.i as SWIG places all manual overrides prior to the generated bindings. The overrides in the post-swig.lisp 
+file must be located post- generated bindings. As with the sdlswig.i file, when rebuilding the CFFI bindings from 
+scratch using a version of SDL later than 1.2.11, care must be taken to ensure that the structure of the manual overrides 
+match the constructs in the C header files. All overrides are grouped in the interface file within the following tags:</p>
+<pre>
+;;;; Overrides to C header files follow:
+;;;;
+
+;;;;
+;;;; end Overrides
+</pre>
+
+<h3 id="Running SWIG">Running SWIG</h3>
+<p>Run swig using:</p>
+<pre>
+swig -cffi -ILib -ILib\cffi sdlswig.i
+</pre>
+
+</div>
+
+</body>
+</html>

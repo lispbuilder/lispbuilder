@@ -1,0 +1,615 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  
+  <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
+    <title>~A - ~A</title>
+    <style type="text/css">
+      
+      body {
+      margin: 10px 20px 20px 220px;
+      padding: 0px;
+      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      font-size: small;
+      text-align: justify;
+      max-width: 50em;
+      background-color: white;
+      }
+      
+      a, a:visited {
+      text-decoration: none;
+      color: maroon;
+      }
+      
+      /* index */
+      
+      div.index {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 180px;
+      height: 100%;
+      margin: 0px;
+      padding: 5px;
+      font-size: 12px;
+      background-color: #DCDCDC;
+      border-right: thin black solid;
+      }
+      
+      div.index ol {
+      color: navy;
+      margin: 0px;
+      padding-left: 0px;
+      }
+      
+      div.index ol li {
+      list-style: none;
+      }
+      
+      div.index ol li:before {
+      display: marker;
+      content: counter(heading1) ". ";
+      counter-increment: heading1;
+      }
+      
+      div.index ol ol {
+      padding-left: 10px;
+      font-size: 10px;
+      list-style: none;
+      counter-reset: heading2;
+      }
+      
+      div.index ol ol li:before {
+      display: marker;
+      content: counter(heading1)"." counter(heading2)" ";
+      counter-increment: heading2;
+      }
+      
+      /* heading styles */
+      
+      body > h1 {
+      margin-top: 0px;
+      }
+      
+      h1 {
+      margin-top: 40px;
+      margin-bottom: 0px;
+      color: #4682B4;
+      }
+      
+      h1:before {
+      display: marker;
+      content: counter(chapter) ". ";
+      counter-increment: chapter;
+      counter-reset: section1;
+      }
+      
+      h1 + p {
+      margin-top: 5px;
+      }
+      
+      h2 {
+      margin-top: 20px;
+      color: #000000;
+      margin-bottom: 0px;
+      }
+      
+      h2:before {
+      display: marker;
+      content: counter(chapter) "." counter(section1) "  ";
+      counter-increment: section1;
+      }
+      
+      h2 + p {
+      margin-top: 0px;
+      }
+      
+      h3 {
+      margin-top: 20px;
+      color: #000000;
+      margin-bottom: 0px;
+      }
+      
+      h3:before {
+      display: marker;
+      content: counter(chapter) "." counter(section1) "." counter(section2) "  ";
+      counter-increment: section2;
+      }
+      
+      h3 + p {
+      margin-top: 0px;
+      }
+      
+      h4 {
+      margin-top: 20px;
+      color: #000000;
+      margin-bottom: 0px;
+      }
+      
+      h4:before {
+      display: marker;
+      content: counter(chapter) "." counter(section1) "." counter(section2) "." counter(section3) "  ";
+      counter-increment: section3;
+      }
+      
+      h4 + p {
+      margin-top: 0px;
+      }
+      
+      /* generated content for images and tables */
+      
+      img:after {
+      content: "[" counter(image) "] " attr(title);
+      counter-increment: image;
+      display: block;
+      font-size: 10px;
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      color: black;
+      }
+      
+      table:after {
+      content: "Table " counter(table) ": " attr(summary);
+      counter-increment: table;
+      display: table-caption;
+      caption-side: bottom;
+      font-size: 10px;
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      white-space: nowrap;
+      color: black;
+      }
+      
+      /* code for examples, code and pathnames*/
+      
+      div.example table {
+      color: black;
+      }
+      
+      div.example, div.code, div.path, div.sequence {
+      margin: 10px 0px;
+      border: 1px black solid;
+      padding: 10px;
+      background-color: #F4F4F4;
+      counter-reset: image;
+      color: maroon;
+      }
+      
+      div.example:before {
+      content: "Example " counter(example);
+      counter-increment: example;
+      display: block;
+      }
+      
+      div.example + p {
+      margin-bottom: 0px;
+      }
+      
+      div.code:before {
+      content: "Code";
+      }
+      
+      div.path:before {
+      content: "Path";
+      }
+      
+      div.sequence:before {
+      content: "Sequence";
+      }
+      
+      p.reference:before {
+      display: marker;
+      content: "[" counter(reference) "]";
+      counter-increment: reference;
+      font-weight: bold;
+      margin-right: 5px;
+      }
+      
+      div.code:before, div.example:before, div.path:before, div.sequence:before {
+      font-weight: bold;
+      font-size: 15px;
+      margin-bottom: 20px;
+      color: black;
+      }
+      
+      pre {
+      color: Green;
+      margin: 0px;
+      padding: 0px;
+      }
+      
+      
+      /* equation counter */
+      
+      e:after {
+      content: "[" counter(equation) "]";
+      counter-increment: equation;
+      display: block;
+      float: right;
+      margin-right: 10px;
+      }
+      
+      /* to prevent the CC image from being numbered */
+      
+      img[alt="Creative Commons License"] {
+      display: inline;
+      }
+      
+      img[alt="Creative Commons License"]:after {
+      display: none;
+      }
+      
+      div#cc {
+      background-color: #DCDCDC;
+      border: thin black solid;
+      padding: 10px;
+      font-size: 10px;
+      }
+      
+    </style>
+  </head>
+  
+  <!--
+      (CC) 2003 Luke Crook. Some Rights Reserved.
+      http://creativecommons.org/licenses/by/1.0
+      This page is licensed under a Creative Commons License.
+      
+      Maintained by the Common Lisp Application Builder project at www.lispbuilder.org
+      
+      The entire styleguide was copied wholesale from http://www.markschenk.com/cssexp/publication/article.xml
+      
+      (CC) 2003 Mark Schenk. Some Rights Reserved.
+      http://creativecommons.org/licenses/by/1.0
+      This page is licensed under a Creative Commons License.
+    -->
+  
+  <BODY BGCOLOR=#FFFFFF >
+    
+    <h1><a name=abstract class=lispbuilder-sdl-image> ~2:*~A - ~A</a></h1>
+    
+    <blockquote>
+      <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
+      
+      <p>
+	LISPBUILDER-SDL provides a Lisp wrapper for the 
+	<a href="http://www.libsdl.org">SDL</a> library. 
+	LISPBUILDER-SDL provides core functionality for 
+	window and event management, graphics, and sound 
+	support. LISPBUILDER-SDL is distributed under the 
+	<a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
+      </p>
+      <ul>
+	<li>lispbuilder-sdl: Provides the core functionality 
+	  for window and event management, rendering graphics, 
+	  and sound support. Uses 
+	  <a href="http://www.libsdl.org" title="http://www.libsdl.org" rel="nofollow">SDL</a>, 
+	  a 2D graphics library</li>
+	<li>lispbuilder-sdl-gfx: 2D graphical effects such as
+	  zooming, rotation, circles, polygons and squares, 
+	  using 
+	  <a href="http://www.ferzkopp.net/Software/SDL_gfx-2.0/" title="http://www.ferzkopp.net/Software/SDL_gfx-2.0/"  rel="nofollow">SDL_gfx</a></li>
+	<li> <a href="lispbuilder-sdl-image.html" title="lispbuilder-sdl-image">lispbuilder-sdl-image</a>: 
+	  Support for loading several 2D image formats such
+	  as <acronym title="Portable Network Graphics">PNG</acronym> and 
+	  <acronym title="Joint Photographics Experts Group">JPG</acronym>, 
+	  using <a href="http://www.libsdl.org/projects/SDL_image/" title="http://www.libsdl.org/projects/SDL_image/"  rel="nofollow">SDL_image</a></li>
+	<li>lispbuilder-sdl-mixer: Sound mixing, using 
+	  <a href="http://www.libsdl.org/projects/SDL_mixer/" title="http://www.libsdl.org/projects/SDL_mixer/"  rel="nofollow">SDL_mixer</a> 
+	  a multi-channel audio mixer library</li>
+	<li>lispbuilder-sdl-ttf: True-type font rendering, using 
+	  <a href="http://www.libsdl.org/projects/SDL_ttf/" title="http://www.libsdl.org/projects/SDL_ttf/"  rel="nofollow">SDL_ttf</a></li>
+	<li>lispbuilder-sdl-net: Networking, using 
+	  <a href="http://www.libsdl.org" title="http://www.libsdl.org"  rel="nofollow">SDL_net</a> 
+	  a cross-platform, blocking network library</li>
+	<li>lispbuilder-cal3d: 3D character animation, using 
+	  <a href="https://gna.org/projects/cal3d/" title="https://gna.org/projects/cal3d/"  rel="nofollow">Cal3D</a></li>
+	<li>lispbuilder-openrm: A Scene Graph, using 
+	  <a href="http://www.openrm.org/" title="http://www.openrm.org/"  rel="nofollow">OpenRM</a>
+	  an OpenGL scene graph <acronym title="Application Programming Interface">API</acronym></li>
+	<li>lispbuilder-ode: Physics</li>
+      </ul>
+      <p>
+	The aim is not aim to provide a 'pure-lisp' solution 
+	but rather leverage existing functionality provided 
+	by third party non-Lisp (C or C++) libraries. 
+	LISPBUILDER-SDL uses the CFFI for 
+	compatibity across Lisp implementations.
+      </p>
+      <p>
+	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL-IMAGE is version <a href="#download">0.2</a>.
+      </p>
+<!--       <p> -->
+<!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/~A.zip">http://www.balooga.com/lispbuilder/~:*~A.zip</a>. -->
+<!--       </p> -->
+    </blockquote>
+    
+    <br>&nbsp;</br><h2><a class=none name="packageover">Package Overview</a></h2>
+    <p>
+      LISPBUILDER-SDL-IMAGE supports the following image formats: 
+      TGA, BMP, PNM, PBM, PGM, PPM, XPM, XCF, PCX , GIF, JPG, TIF, LBM and PNG.
+    </p>
+    <p>
+      LISPBUILDER-SDL-IMAGE will attempt to automatically load an image by using the 
+      <a href="http://en.wikipedia.org/wiki/Magic_number_(programming)#Magic_numbers_in_files">Magic Number</a> 
+      in the image file. For image formats that have no magic number such as targa (.TGA), the 
+      LISPBUILDER-SDL-IMAGE API allows the image type to be specified as a parameter.
+    </p>
+    <p>
+      Functions and symbols exported from the LISPBUILDER-SDL-IMAGE package are 
+      accessible from the <code>LISPBUILDER-SDL-IMAGE:</code> prefix or the 
+      shorter form <code>SDL-IMAGE:</code>.
+    </p>
+    
+    <p>
+      Note that additional libraries are required to load JPG, PNG and TIFF images:
+    </p>
+    <ul>
+      <li>JPG support requires the JPEG library:</li>
+      <ul>
+	<li><a href="http://www.ijg.org/">http://www.ijg.org/</a></li>
+      </ul>
+      <li>PNG support requires the PNG library, and the ZLib library:</li>
+      <ul>
+	<li><a href="http://www.libpng.org/pub/png/libpng.html">http://www.libpng.org/pub/png/libpng.html</a>, and </li>
+	<li><a href="http://www.gzip.org/zlib/">http://www.gzip.org/zlib/</a></li>
+      </ul>
+      <li>TIFF support requires the TIFF library:</li>
+      <ul>
+	<li><a href="ftp://ftp.sgi.com/graphics/tiff/">ftp://ftp.sgi.com/graphics/tiff/</a></li>
+      </ul>
+    </ul>
+
+
+    <br>&nbsp;</br><h2><a class=none name="release">Latest Release</a></h2>
+
+    <table id="mytable" cellspacing="0" summary="Latest Release">
+      <tr>
+	<th colspan="3">Packages</th>
+	<th colspan="2">Binary Library</th>
+      </tr>
+      <tr>
+	<th>Package Name</th>
+	<th>Version</th>
+	<th>Released</th>
+	<th>Lib Name</th>
+	<th>Version</th>
+      </tr>
+      <tr>
+	<th class="spec" scope="row">  
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl" 
+	     title="lispbuilder-sdl">lispbuilder-sdl</a>       
+	</th>
+	<td>0.8.0</td>
+	<td>Oct 20, 2006</td>
+	<td><a href="http://www.libsdl.org" title="http://www.libsdl.org"  rel="nofollow">SDL</a></td>
+	<td>1.2.11</td>
+      </tr>
+      <tr>
+	<th class="specalt" scope="row">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl-gfx" 
+	     title="lispbuilder-sdl-gfx">lispbuilder-sdl-gfx</a>   
+	</th>
+	<td class="alt">0.5.0</td>
+	<td class="alt">Oct 20, 2006</td>
+	<td class="alt"><a href="http://www.ferzkopp.net/Software/SDL_gfx-2.0/" title="http://www.ferzkopp.net/Software/SDL_gfx-2.0/"  rel="nofollow">SDL_gfx</a></td>
+	<td class="alt">2.0.13</td>
+      </tr>
+      <tr>
+	<th class="spec" scope="row">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl-image" 
+	     title="lispbuilder-sdl-image">lispbuilder-sdl-image</a> 
+	</th>
+	<td>0.2.0</td>
+	<td>Oct 20, 2006</td>
+	<td><a href="http://www.libsdl.org/projects/SDL_image/" title="http://www.libsdl.org/projects/SDL_image/"  rel="nofollow">SDL_image</a></td>
+	<td>1.2.5</td>
+      </tr>
+      <tr>
+	<th class="specalt" scope="row">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl-mixer" 
+	     title="lispbuilder-sdl-mixer">lispbuilder-sdl-mixer</a> 
+	</th>
+	<td class="alt">0.1.0</td>
+	<td class="alt">Oct 20, 2006</td>
+	<td class="alt"><a href="http://www.libsdl.org/projects/SDL_mixer/" title="http://www.libsdl.org/projects/SDL_mixer/"  rel="nofollow">SDL_mixer</a></td>
+	<td class="alt">1.2.7</td>
+      </tr>
+      <tr>
+	<th class="spec" scope="row">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl-ttf" 
+	     title="lispbuilder-sdl-ttf">lispbuilder-sdl-ttf</a>   
+	</th>
+	<td>0.1.0</td>
+	<td>Oct 20, 2006</td>
+	<td><a href="http://www.libsdl.org/projects/SDL_ttf/" title="http://www.libsdl.org/projects/SDL_ttf/"  rel="nofollow">SDL_ttf</a></td>
+	<td>2.0</td>
+      </tr>
+      <tr>
+	<th class="specalt" scope="row">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-sdl-net" 
+	     title="lispbuilder-sdl-net">lispbuilder-sdl-net</a>   
+	</th>
+	<td class="alt">Placeholder</td>
+	<td class="alt">N/A</td>
+	<td class="alt"><a href="http://www.libsdl.org" title="http://www.libsdl.org"  rel="nofollow">SDL_net</a></td>
+	<td class="alt">Placeholder</td>
+      </tr>
+      <tr>
+	<th class="spec" scope="row">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-cal3d" 
+	     title="lispbuilder-cal3d">lispbuilder-cal3d</a>     
+	</th>
+	<td>In <a href="http://svn.sourceforge.net/viewvc/lispbuilder/trunk/" class="urlextern" title="http://svn.sourceforge.net/viewvc/lispbuilder/trunk/"  rel="nofollow">SVN</a> </td>
+	<td>N/A</td>
+	<td><a href="https://gna.org/projects/cal3d/" title="https://gna.org/projects/cal3d/"  rel="nofollow">Cal3D</a></td>
+	<td>0.10.0</td>
+      </tr>
+      <tr>
+	<th scope="row" class="specalt">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-openrm" 
+	     title="lispbuilder-openrm">lispbuilder-openrm</a>
+	</th>
+	<td class="alt">0.1.0</td>
+	<td class="alt">Oct 20, 2006</td>
+	<td class="alt"><a href="http://www.openrm.org/" title="http://www.openrm.org/"  rel="nofollow">OpenRM</a> </td>
+	<td class="alt">1.6.0-2</td>
+      </tr>
+      <tr>
+	<th scope="row" class="spec">
+	  <a href="/dokuwiki/doku.php?id=lispbuilder-ode" 
+	     title="lispbuilder-ode">lispbuilder-ode</a>
+	</th>
+	<td>Placeholder</td>
+	<td>N/A</td>
+	<td>ODE</td>
+	<td>Placeholder</td>
+      </tr>
+    </table>
+
+
+
+
+    <br>&nbsp;</br><h2><a class=none name="examplesimple">Simple Example</a></h2>
+    <div class="example">
+      <p>
+	This example was created with the following code:
+      </p>
+      <p>
+	<img src="alien.png" width="200" height="167" title="Alien Technology" alt="Alien Technology"/>
+      </p>
+      
+      <pre>
+  (sdl:with-init ()
+    (sdl:window 320 240)
+    (sdl:draw-surface (sdl-image:load-image "lisp.tga" *bmp-path*
+					    :image-type :TGA :force t)
+		      :surface sdl:*default-display*)
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:video-expose-event (sdl:update-display))))
+      </pre>
+    </div>
+    
+    
+    <div class="index">
+      <p><a href="#lispbuilder-sdl-image">LISPBUILDER-SDL-IMAGE</a></p>
+      <ol>
+	<li><a href="#abstract">Abstract</a>
+	<li><a href="#packageover">Package Overview</a>
+	<li><a href="#examplesimple">Simple Example</a>
+	<li><a href="#compatibility">Compatibility</a>
+	<li><a href="#dependency">Dependencies</a>
+	<li><a href="#download">Download</a>
+	<li><a href="#installation">Installation</a></li>
+	<ol>
+	  <li><a href="#windows">Windows</a></li>	  
+	  <li><a href="#windowsalt">Windows Alternate</a></li>	  
+	  <li><a href="#linux">Linux</a></li>
+	</ol>
+	<li><a href="#run">Running Lispbuilder</a>
+	<li><a href="#support">Support</a>
+	<li><a href="#license">License</a>
+	<li><a href="#contrib">Contributors</a>
+	<li><a href="#ref">References and Links</a>
+	<li><a href="#dictionary">The ~A dictionary</a>
+	  <ol>
+	    ~{      <li><a href="#~A"><code>~:*~A</code></a>
+	      ~}    </ol>
+	<li><a href="#ack">Acknowledgements</a>
+      </ol>
+    </div>
+    
+    
+    <br>&nbsp;</br><h2><a class=none name="compatibility">Compatibility</h2>
+    <p>
+      The following table describes the status of the Lisp implementations that have been tested with 
+      LISPBUILDER-SDL-IMAGE:
+    </p>
+    
+    <table border="1" cellpadding="2" cellspacing="0" summary="Compatibility"> 
+      <tr bgcolor="yellow">
+	<td><b>Lisp Implementation</b></td>
+	<td colspan="3"><b>LISPBUILDER-SDL-IMAGE Status</b></td>
+	<td><b>Comments</b></td>
+      </tr>	
+      <tr bgcolor="yellow">
+	<td colspan="1"></td>
+	<td><b>Win32</b></td>
+	<td><b>Linux</b></td>
+	<td><b>MacOS</b></td>
+	<td></td>
+</td>
+</tr>
+<tr>
+  <td><a href="http://clisp.cons.org/">CLISP v2.38</a></td>
+  <td bgcolor="#60c060">Working</td>
+  <td bgcolor="#60c060">Working</td>
+  <td bgcolor="#ff6060">No</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="http://www.lispworks.com/">Lispworks v2.4.6 Personal</a></td>
+  <td bgcolor="#60c060">Working</td>
+  <td bgcolor="#60c060">Working</td>
+  <td bgcolor="#ff6060">No</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="http://www.franz.com/">Allegro Express 8.0</a></td>
+  <td bgcolor="#ff6060">Unknown</td>
+  <td bgcolor="#ff6060">Unknown</td>
+  <td bgcolor="#ff6060">No</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="http://openmcl.clozure.com/">OpenMCL</a></td>
+  <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+  <td bgcolor=blue><font color="#FFFFFF">NA</font></td>
+  <td bgcolor="#ff6060">Unknown</td>
+  <td></td>
+</tr>
+<tr>
+  <td><a href="http://www.sbcl.org/">SBCL</a></td>
+  <td bgcolor="#60c060">Working</td>
+  <td bgcolor="#60c060">Working</td>
+  <td bgcolor="#ff6060">No</td>
+  <td>
+  </td>
+</tr>
+</table>
+
+<br>&nbsp;</br><h2><a class=none name="dependency">Dependencies</a></h2>
+<p>LISPBUILDER-SDL-IMAGE has a dependency on LISPBUILDER-SDL.</p>
+
+
+<br>&nbsp;</br><h2><a class=none name="download">Download</a></h2>
+<p><font color=red>Development Version:</font> Available via anonymous SVN at:
+  <pre>
+    svn co https://lispbuilder.svn.sourceforge.net/svnroot/lispbuilder lispbuilder
+  </pre>
+</p>
+<p>
+  <font color=red>Stable Version:</font> The latest stable version is available from the
+  <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">LISPBUILDER-SDL repository on SourceForge.</a>
+</p>
+<p>
+  <font color=red>The Edi Weitz 'Starter Pack' Version:</font> The stable version of Lispbuilder, 
+  suitable for the installation of installation ~2:*~A using the Lisp Starter Pack from Edi Weitz is can be downloaded from 
+  <a href="http://www.balooga.com/lispbuilder/~2:*~A.zip">http://www.balooga.com/lispbuilder/~:*~A.zip</a>.
+</p>
+
+
+
+<br>&nbsp;</br><h2><a class=none name="license">License</a></h2>
+<p>
+  LISPBUILDER-SDL-IMAGE is distributed under the 
+  <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
+</p>
+
+    
+
+<br>&nbsp;</br><h2><a class=none name="dictionar">The ~A dictionary</a></h2>
+
+      
