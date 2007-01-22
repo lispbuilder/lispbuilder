@@ -24,5 +24,5 @@
 	      :components
 	      ((:html-file "header")
 	       (:html-file "footer")
-	       (:doc-file "lispbuilder-sdl-image")
+	       (:html-file "lispbuilder-sdl-image")
 	       (:static-file "alien.png")))))
