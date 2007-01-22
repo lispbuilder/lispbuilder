@@ -13,4 +13,4 @@
   (let ((rwops (sdl-base::create-RWops-from-file filename path)))
     (if (sdl-base::is-valid-ptr rwops)
 	(make-instance 'rwops :rwops rwops)
-	(error "ERROR, CREATE-RWOPS-FROM-FILE: Cannot load ~A ~A~%" filename path))))
+	nil)))
