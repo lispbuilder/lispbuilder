@@ -615,8 +615,12 @@ For example, to load a TGA image use :IMAGE-TYPE :TGA
 <p><br>[Function]<br><a class=none name='image-p'><b>image-p</b> <i>filename pathname image-type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns T if the image at location FILENAME and PATHNAME is of the type IMAGE-TYPE, returns NIL if otherwise.
-Attempts to detect the image type using the &#039;magic number&#039; contained in the image, if one is available. 
+Returns T if the image at location FILENAME and PATHNAME is of the type IMAGE-TYPE.
+Returns NIL if:
+ - The file at FILENAME and PATHNAME does not exist, or
+ - The IMAGE-TYPE cannot be determined if the magic number is not supported or the magic number is not found
+
+Detects the image type using the &#039;magic number&#039; contained in the image, if one is available.
 
 FILENAME and PATHNAME are STRINGS. 
 
@@ -633,13 +637,15 @@ Note: This means that NIL is always returned for images of type TGA.
 <p><br>[Function]<br><a class=none name='image-type-of'><b>image-type-of</b> <i>filename pathname</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the image type of the image at location FILENAME and PATHNAME.
-Attempts to detect the image type using the &#039;magic number&#039; contained in the image, if one is available. 
+Returns the type of image at location FILENAME and PATHNAME.
+Where image type is one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV
+Returns NIL if:
+ - The image type cannot be determined if the magic number is not supported or the magic number is not found, or 
+ - The file specified at FILENAME and PATHNAME is not found
 
-FILENAME and PATHNAME are both STRINGS.
+FILENAME and PATHNAME are STRINGS.
 
-Returns one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV, or NIL if the image type 
-cannot be determined or if there is no magic number available.
+Detects the image type using the &#039;magic number&#039; contained in the image, if one is available.  
 Note: This means that NIL is always returned for images of type TGA.
 
 </blockquote>
@@ -652,9 +658,9 @@ Note: This means that NIL is always returned for images of type TGA.
 <p><br>[Function]<br><a class=none name='load-and-convert-image'><b>load-and-convert-image</b> <i>filename pathname <tt>&amp;rest</tt> named-pairs <tt>&amp;key</tt> image-type force <tt>&amp;allow-other-keys</tt></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Loads an image as per LOAD-IMAGE. Then Converts this image as per SDL:CONVERT-SURFACE.
+Loads an image as per LOAD-IMAGE and converts this surface using SDL:CONVERT-SURFACE.
 Returns a new SDL:SURFACE, or NIL if the image cannot be loaded or the image type cannot be determined.
-Parameters are per LOAD-IMAGE and SDL:CONVERT-IMAGE.
+Parameters supported are the same as those for LOAD-IMAGE and SDL:CONVERT-IMAGE.
 
 </blockquote>
 

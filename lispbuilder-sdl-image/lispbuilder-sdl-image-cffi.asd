@@ -21,9 +21,4 @@
 	       (:file "library" :depends-on ("package"))
 	       (:file "image" :depends-on ("package" "library"))
 	       (:file "translate" :depends-on ("image"))
-	       ))
-     (:module "documentation"
-	      :components
-	      ((:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")
-	       (:doc-file "README")))))
+	       ))))
