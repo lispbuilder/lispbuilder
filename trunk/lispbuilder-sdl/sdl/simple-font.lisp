@@ -13,6 +13,9 @@
 (defmethod fp ((font font))
   (fp (cached-surface font)))
 
+(defmethod fp-position ((font font))
+  (fp-position (cached-surface font)))
+
 (defmethod width ((font font))
   (sdl-base::surf-w (fp (cached-surface font))))
 (defmethod (setf width) (w-val (font font))
@@ -32,9 +35,6 @@
   (sdl-base::rect-y (fp-position (cached-surface font))))
 (defmethod (setf y) (y-val (font font))
   (setf (sdl-base::rect-y (fp-position (cached-surface font))) y-val))
-
-(defmethod fp-position ((font font))
-  (fp-position (cached-surface font)))
 
 (defun make-char-map (str)
   "given a string of characters make a hash table which returns an index from 0 to n where 0 is the first char, and n is the last"
@@ -159,11 +159,10 @@
 	 (incf left-x (font-width font)))))
 
 (defun draw-font (&key (font *default-font*) (surface *default-surface*))
-  (sdl-base::blit-surface (fp font) (fp surface) (cffi::null-pointer) (fp-position (cached-surface font))
-			  :update-p nil))
+  (sdl-base::blit-surface (fp font) (fp surface) (cffi:null-pointer) (fp-position font)))
 
 (defun draw-font-at (position &key (font *default-font*) (surface *default-surface*))
-  (draw-font-* (x position) (y position) :font font :surface surface))
+  (draw-font-at-* (x position) (y position) :font font :surface surface))
 
 (defun draw-font-at-* (x y &key (font *default-font*) (surface *default-surface*))
   (when (and x y)
