@@ -37,6 +37,6 @@ SOURCE is of type RWOPS
 
 :IMAGE-TYPE can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. 
 
-Note: NIL is always returned for images of type TGA, as a TGA image does not cotain a 'magic number'."))
+Note: NIL is always returned for images of type TGA, as a TGA image does not contain a 'magic number'."))
 
 
