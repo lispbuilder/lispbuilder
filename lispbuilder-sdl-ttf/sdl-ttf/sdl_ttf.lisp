@@ -46,7 +46,7 @@
 
 ;; Initialize the TTF engine - returns t if successful, NIL on error
 ;; extern DECLSPEC int SDLCALL TTF_Init(void);
-(defcfun ("TTF_Init" Init) ttf-return-val-0-1)
+(defcfun ("TTF_Init" ttf-Init) ttf-return-val-0-1)
 
 ;; Open a font file and create a font of the specified point size.
 ;; Some .fon fonts will have several sizes embedded in the file, so the
@@ -296,16 +296,16 @@
 
 ;; Close an opened font file
 ;; extern DECLSPEC void SDLCALL TTF_CloseFont(TTF_Font *font);
-(defcfun ("TTF_CloseFont" Close-Font) :void
+(defcfun ("TTF_CloseFont" ttf-Close-Font) :void
   (font ttf-font))
 
 ;; De-initialize the TTF engine
 ;; extern DECLSPEC void SDLCALL TTF_Quit(void);
-(defcfun ("TTF_Quit" Quit) :void)
+(defcfun ("TTF_Quit" ttf-Quit) :void)
 
 ;; Check if the TTF engine is initialized
 ;; extern DECLSPEC int SDLCALL TTF_WasInit(void);
-(defcfun ("TTF_WasInit" is-Init) ttf-return-val-0+1)
+(defcfun ("TTF_WasInit" ttf-was-Init) ttf-return-val-0+1)
 
 ;; /* We'll use SDL for reporting errors */
 ;; #define TTF_SetError	SDL_SetError
