@@ -172,7 +172,8 @@
    #:draw-string-right-justify-*
    #:draw-string-centered-*
    #:draw-font
-   #:draw-font-*
+   #:draw-font-at
+   #:draw-font-at-*
    #:initialise-default-font
    
    ;; surfaces.lisp
