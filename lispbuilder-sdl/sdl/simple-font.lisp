@@ -158,15 +158,18 @@
 			   :surface surface))
 	 (incf left-x (font-width font)))))
 
-(defun draw-font (position &key (font *default-font*) (surface *default-surface*))
+(defun draw-font (&key (font *default-font*) (surface *default-surface*))
+  (sdl-base::blit-surface (fp font) (fp surface) (cffi::null-pointer) (fp-position (cached-surface font))
+			  :update-p nil))
+
+(defun draw-font-at (position &key (font *default-font*) (surface *default-surface*))
   (draw-font-* (x position) (y position) :font font :surface surface))
 
-(defun draw-font-* (x y &key (font *default-font*) (surface *default-surface*))
+(defun draw-font-at-* (x y &key (font *default-font*) (surface *default-surface*))
   (when (and x y)
     (setf (x (cached-surface font)) x
 	  (y (cached-surface font)) y)
-    (sdl-base::blit-surface (fp font) (fp surface) (cffi::null-pointer) (fp-position (cached-surface font))
-			    :update-p nil))
+    (draw-font :font font :surface surface))
   font)
 
 ;; (defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional (font-path ""))
