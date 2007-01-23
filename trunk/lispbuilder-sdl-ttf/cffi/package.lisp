@@ -2,12 +2,14 @@
 
 (in-package #:cl-user)
 
-(defpackage #:lispbuilder-sdl-ttf
+(defpackage #:lispbuilder-sdl-ttf-cffi
   (:use #:cl #:cffi)
-  (:nicknames #:sdl-ttf)
-  (:documentation "The main package of `lispbuilder-sdl-ttf'.")
+  (:nicknames #:sdl-ttf-cffi)
+  (:documentation "The main package of `lispbuilder-sdl-ttf-cffi'.")
   (:export
 
+   ;; globals.lisp
+   #:*default-font*
    ;; util-sdl_ttf.lisp
    #:render-font-blended
    #:render-font-shaded
@@ -17,7 +19,7 @@
    #:open-font
    #:with-init
    #:with-open-font
-   *default-font*
+
    
    ;; sdl_ttf.lisp
 

@@ -1,47 +1,47 @@
 ;;;; SDL_ttf2.0 CFFI lisp wrapper
 
-(in-package #:lispbuilder-sdl-ttf)
+(in-package #:lispbuilder-sdl-ttf-cffi)
 
 (defctype sdl-version :pointer)
 (defctype ttf-font :pointer)
 (defctype ttf-return-val-0-1 :int)
 (defctype ttf-return-val-0+1 :int)
 (defctype ttf-font-style :int)
-(defctype sdl-color sdl::sdl_color)
+(defctype sdl-color sdl-cffi::sdl-color)
 (defctype ttf-swapped-unicode :int)
 
 ;; #define SDL_TTF_MAJOR_VERSION	2
-(defconstant MAJOR-VERSION 2)
+(defconstant TTF-MAJOR-VERSION 2)
 
 ;; #define SDL_TTF_MINOR_VERSION	0
-(defconstant MINOR-VERSION 0)
+(defconstant TTF-MINOR-VERSION 0)
 
 ;; #define SDL_TTF_PATCHLEVEL	8
-(defconstant PATCHLEVEL 0)
+(defconstant TTF-PATCH-LEVEL 0)
 
 (defun VERSION (x)
-  (setf (cffi:foreign-slot-value x 'sdl:sdl_version 'sdl:major) MAJOR-VERSION
-	(cffi:foreign-slot-value x 'sdl:sdl_version 'sdl:minor) MINOR-VERSION
-	(cffi:foreign-slot-value x 'sdl:sdl_version 'sdl:patch) PATCHLEVEL)
+  (setf (cffi:foreign-slot-value x 'sdl-cffi::sdl-version 'sdl-cffi::major) TTF-MAJOR-VERSION
+	(cffi:foreign-slot-value x 'sdl-cffi::sdl-version 'sdl-cffi::minor) TTF-MINOR-VERSION
+	(cffi:foreign-slot-value x 'sdl-cffi::sdl-version 'sdl-cffi::patch) TTF-PATCH-LEVEL)
   x)
 
 ;; This function gets the version of the dynamically linked SDL_ttf library.
 ;; it should NOT be used to fill a version structure, instead you should
 ;; use the SDL_TTF_VERSION() macro.
 ;; extern DECLSPEC const SDL_version * SDLCALL TTF_Linked_Version(void);
-(defcfun ("TTF_Linked_Version" Linked-Version) sdl-version)
+(defcfun ("TTF_Linked_Version" ttf-Linked-Version) sdl-version)
 
 ;; #define UNICODE_BOM_NATIVE	0xFEFF
-(defconstant UNICODE_BOM_NATIVE #xFEFF)
+(defconstant UNICODE-BOM-NATIVE #xFEFF)
 
 ;; #define UNICODE_BOM_SWAPPED	0xFFFE
-(defconstant UNICODE_BOM_SWAPPED #xFFFE)
+(defconstant UNICODE-BOM-SWAPPED #xFFFE)
 
 ;; This function tells the library whether UNICODE text is generally
 ;; byteswapped.  A UNICODE BOM character in a string will override
 ;; this setting for the remainder of that string.
 ;; extern DECLSPEC void SDLCALL TTF_ByteSwappedUNICODE(int swapped);
-(defcfun ("TTF_ByteSwappedUNICODE" Byte-Swapped-UNICODE) :void
+(defcfun ("TTF_ByteSwappedUNICODE" ttf-Byte-Swapped-UNICODE) :void
   (swapped ttf-swapped-unicode))
 
 ;; Initialize the TTF engine - returns t if successful, NIL on error
@@ -53,25 +53,25 @@
 ;; point size becomes the index of choosing which size.  If the value
 ;; is too high, the last indexed size will be the default.
 ;; extern DECLSPEC TTF_Font * SDLCALL TTF_OpenFont(const char *file, int ptsize);
-(defcfun ("TTF_OpenFont" OpenFont) ttf-font
+(defcfun ("TTF_OpenFont" ttf-Open-Font) ttf-font
   (file :string)
   (ptsize :int))
 
 ;; extern DECLSPEC TTF_Font * SDLCALL TTF_OpenFontIndex(const char *file, int ptsize, long index);
-(defcfun ("TTF_OpenFontIndex" Open-Font-Index) ttf-font
+(defcfun ("TTF_OpenFontIndex" ttf-Open-Font-Index) ttf-font
   (file :string)
   (ptsize :int)
   (index :long))
 
 ;; extern DECLSPEC TTF_Font * SDLCALL TTF_OpenFontRW(SDL_RWops *src, int freesrc, int ptsize);
-(defcfun ("TTF_OpenFontRW" Open-Font-RW) ttf-font
-  (src sdl::SDL-RWops)
+(defcfun ("TTF_OpenFontRW" ttf-Open-Font-RW) ttf-font
+  (src sdl-cffi::SDL-RWops)
   (freesrc :int)
   (ptsize :int))
 
 ;; extern DECLSPEC TTF_Font * SDLCALL TTF_OpenFontIndexRW(SDL_RWops *src, int freesrc, int ptsize, long index);
-(defcfun ("TTF_OpenFontIndexRW" Open-Font-Index-RW) ttf-font
-  (src sdl::SDL-RWops)
+(defcfun ("TTF_OpenFontIndexRW" ttf-Open-Font-Index-RW) ttf-font
+  (src sdl-cffi::SDL-RWops)
   (freesrc :int)
   (ptsize :int)
   (index :long))
@@ -80,64 +80,64 @@
 ;; This font style is implemented by modifying the font glyphs, and
 ;; doesn't reflect any inherent properties of the truetype font file.
 ;; #define TTF_STYLE_NORMAL	0x00
-(defconstant TTF_STYLE_NORMAL #x00)
+(defconstant TTF-STYLE-NORMAL #x00)
 
 ;; #define TTF_STYLE_BOLD		0x01
-(defconstant TTF_STYLE_BOLD #x01)
+(defconstant TTF-STYLE-BOLD #x01)
 
 ;; #define TTF_STYLE_ITALIC	0x02
-(defconstant TTF_STYLE_ITALIC #x02)
+(defconstant TTF-STYLE-ITALIC #x02)
 
 ;; #define TTF_STYLE_UNDERLINE	0x04
-(defconstant TTF_STYLE_UNDERLINE #x04)
+(defconstant TTF-STYLE-UNDERLINE #x04)
 
 ;; extern DECLSPEC int SDLCALL TTF_GetFontStyle(TTF_Font *font);
-(defcfun ("TTF_GetFontStyle" GetFontStyle) ttf-font-style
+(defcfun ("TTF_GetFontStyle" ttf-Get-Font-Style) ttf-font-style
   (font ttf-font))
 
 ;; extern DECLSPEC void SDLCALL TTF_SetFontStyle(TTF_Font *font, int style) ;
-(defcfun ("TTF_SetFontStyle" SetFontStyle) :void
+(defcfun ("TTF_SetFontStyle" ttf-Set-Font-Style) :void
   (font ttf-font)
   (style ttf-font-style))
 
 ;; Get the total height of the font - usually equal to point size
 ;; extern DECLSPEC int SDLCALL TTF_FontHeight(TTF_Font *font);
-(defcfun ("TTF_FontHeight" getFontHeight) :int
+(defcfun ("TTF_FontHeight" ttf-get-Font-Height) :int
   (font ttf-font))
 
 ;; Get the offset from the baseline to the top of the font
 ;; This is a positive value, relative to the baseline.
 ;; extern DECLSPEC int SDLCALL TTF_FontAscent(TTF_Font *font);
-(defcfun ("TTF_FontAscent" getFontAscent) :int
+(defcfun ("TTF_FontAscent" ttf-get-Font-Ascent) :int
   (font ttf-font))
 
 ;; Get the offset from the baseline to the bottom of the font
 ;; This is a negative value, relative to the baseline.
 ;; extern DECLSPEC int SDLCALL TTF_FontDescent(TTF_Font *font);
-(defcfun ("TTF_FontDescent" getFontDescent) :int
+(defcfun ("TTF_FontDescent" ttf-get-Font-Descent) :int
   (font ttf-font))
 
 ;; Get the recommended spacing between lines of text for this font
 ;; extern DECLSPEC int SDLCALL TTF_FontLineSkip(TTF_Font *font);
-(defcfun ("TTF_FontLineSkip" getFontLineSkip) :int
+(defcfun ("TTF_FontLineSkip" ttf-get-Font-Line-Skip) :int
   (font ttf-font))
 
 ;; Get the number of faces of the font
 ;; extern DECLSPEC long SDLCALL TTF_FontFaces(TTF_Font *font);
-(defcfun ("TTF_FontFaces" getFontFaces) :long
+(defcfun ("TTF_FontFaces" ttf-get-Font-Faces) :long
   (font ttf-font))
 
 ;; Get the font face attributes, if any
 ;; extern DECLSPEC int SDLCALL TTF_FontFaceIsFixedWidth(TTF_Font *font);
-(defcfun ("TTF_FontFaceIsFixedWidth" getFontFaceIsFixedWidth) ttf-return-val-0+1
+(defcfun ("TTF_FontFaceIsFixedWidth" ttf-get-Font-Face-Is-Fixed-Width) ttf-return-val-0+1
   (font ttf-font))
 
 ;; extern DECLSPEC char * SDLCALL TTF_FontFaceFamilyName(TTF_Font *font);
-(defcfun ("TTF_FontFaceFamilyName" getFontFaceFamilyName) :string
+(defcfun ("TTF_FontFaceFamilyName" ttf-get-Font-Face-Family-Name) :string
   (font ttf-font))
 
 ;; extern DECLSPEC char * SDLCALL TTF_FontFaceStyleName(TTF_Font *font) ;
-(defcfun ("TTF_FontFaceStyleName" getFontFaceStyleName) :string
+(defcfun ("TTF_FontFaceStyleName" ttf-get-Font-Face-Style-Name) :string
   (font ttf-font))
 
 ;; Get the metrics (dimensions) of a glyph
@@ -146,7 +146,7 @@
 ;; extern DECLSPEC int SDLCALL TTF_GlyphMetrics(TTF_Font *font, Uint16 ch,
 ;; 				     int *minx, int *maxx,
 ;;                                      int *miny, int *maxy, int *advance);
-(defcfun ("TTF_GlyphMetrics" GlyphMetrics) ttf-return-val-0-1
+(defcfun ("TTF_GlyphMetrics" ttf-Glyph-Metrics) ttf-return-val-0-1
   (font ttf-font)
   (ch :unsigned-short)
   (minx :pointer)
@@ -157,21 +157,21 @@
 
 ;; Get the dimensions of a rendered string of text
 ;; extern DECLSPEC int SDLCALL TTF_SizeText(TTF_Font *font, const char *text, int *w, int *h);
-(defcfun ("TTF_SizeText" SizeText) ttf-return-val-0-1
+(defcfun ("TTF_SizeText" ttf-Size-Text) ttf-return-val-0-1
   (font ttf-font)
   (text :string)
   (w :pointer)
   (h :pointer))
 
 ;; extern DECLSPEC int SDLCALL TTF_SizeUTF8(TTF_Font *font, const char *text, int *w, int *h);
-(defcfun ("TTF_SizeUTF8" SizeUTF8) ttf-return-val-0-1
+(defcfun ("TTF_SizeUTF8" ttf-Size-UTF8) ttf-return-val-0-1
   (font ttf-font)
   (text :string)
   (w :pointer)
   (h :pointer))
 
 ;; extern DECLSPEC int SDLCALL TTF_SizeUNICODE(TTF_Font *font, const Uint16 *text, int *w, int *h)	;
-(defcfun ("TTF_SizeUNICODE" SizeUNICODE) ttf-return-val-0-1
+(defcfun ("TTF_SizeUNICODE" ttf-Size-UNICODE) ttf-return-val-0-1
   (font ttf-font)
   (text :pointer)
   (w :pointer)
@@ -184,21 +184,21 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Solid(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-(defcfun ("TTF_RenderText_Solid" Render-Text-Solid) sdl::sdl-surface
+(defcfun ("TTF_RenderText_Solid" ttf-Render-Text-Solid) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Solid(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-(defcfun ("TTF_RenderUTF8_Solid" Render-UTF8-Solid) sdl::sdl-surface
+(defcfun ("TTF_RenderUTF8_Solid" ttf-Render-UTF8-Solid) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Solid(TTF_Font *font,
 ;; 				const Uint16 *text, SDL_Color fg);
-(defcfun ("TTF_RenderUNICODE_Solid" RenderUNICODE-Solid) sdl::sdl-surface
+(defcfun ("TTF_RenderUNICODE_Solid" ttf-Render-UNICODE-Solid) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :pointer)
   (fg sdl-color))
@@ -211,7 +211,7 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Solid(TTF_Font *font,
 ;; 					Uint16 ch, SDL_Color fg);
-(defcfun ("TTF_RenderGlyph_Solid" Render-Glyph-Solid) sdl::sdl-surface
+(defcfun ("TTF_RenderGlyph_Solid" ttf-Render-Glyph-Solid) sdl-cffi::sdl-surface
   (font ttf-font)
   (ch :unsigned-short)
   (fg sdl-color))
@@ -222,7 +222,7 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Shaded(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg, SDL_Color bg);
-(defcfun ("TTF_RenderText_Shaded" Render-Text-Shaded) sdl::sdl-surface
+(defcfun ("TTF_RenderText_Shaded" ttf-Render-Text-Shaded) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color)
@@ -230,7 +230,7 @@
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Shaded(TTF_Font *font,
 ;; 								     const char *text, SDL_Color fg, SDL_Color bg) ;
-(defcfun ("TTF_RenderUTF8_Shaded" Render-UTF8-Shaded) sdl::sdl-surface
+(defcfun ("TTF_RenderUTF8_Shaded" ttf-Render-UTF8-Shaded) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color)
@@ -238,7 +238,7 @@
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Shaded(TTF_Font *font,
 ;; 									const Uint16 *text, SDL_Color fg, SDL_Color bg)	;
-(defcfun ("TTF_RenderUNICODE_Shaded" RenderUNICODE-Shaded) sdl::sdl-surface
+(defcfun ("TTF_RenderUNICODE_Shaded" ttf-Render-UNICODE-Shaded) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :pointer)
   (fg sdl-color)
@@ -252,7 +252,7 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Shaded(TTF_Font *font,
 ;; 				Uint16 ch, SDL_Color fg, SDL_Color bg);
-(defcfun ("TTF_RenderGlyph_Shaded" Render-Glyph-Shaded) sdl::sdl-surface
+(defcfun ("TTF_RenderGlyph_Shaded" ttf-Render-Glyph-Shaded) sdl-cffi::sdl-surface
   (font ttf-font)
   (ch :unsigned-short)
   (fg sdl-color)
@@ -263,21 +263,21 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Blended(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-(defcfun ("TTF_RenderText_Blended" Render-Text-Blended) sdl::sdl-surface
+(defcfun ("TTF_RenderText_Blended" ttf-Render-Text-Blended) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Blended(TTF_Font *font,
 ;; 								      const char *text, SDL_Color fg) ;
-(defcfun ("TTF_RenderUTF8_Blended" Render-UTF8-Blended) sdl::sdl-surface
+(defcfun ("TTF_RenderUTF8_Blended" ttf-Render-UTF8-Blended) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Blended(TTF_Font *font,
 ;; 				const Uint16 *text, SDL_Color fg);
-(defcfun ("TTF_RenderUNICODE_Blended" RenderUNICODE-Blended) sdl::sdl-surface
+(defcfun ("TTF_RenderUNICODE_Blended" ttf-Render-UNICODE-Blended) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :pointer)
   (fg sdl-color))
@@ -289,7 +289,7 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Blended(TTF_Font *font,
 ;; 						Uint16 ch, SDL_Color fg);
-(defcfun ("TTF_RenderGlyph_Blended" Render-Glyph-Blended) sdl::sdl-surface
+(defcfun ("TTF_RenderGlyph_Blended" ttf-Render-Glyph-Blended) sdl-cffi::sdl-surface
   (font ttf-font)
   (ch :unsigned-short)
   (fg sdl-color))

@@ -13,16 +13,16 @@
     :author "Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl)
+    :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-ttf-cffi)
     :components
     ((:module "sdl-ttf"
 	      :components
-	      ((:file "package")
-	       (:file "library" :depends-on ("package"))
-	       (:file "sdl_ttf" :depends-on ("package" "library"))
-	       (:file "translate" :depends-on ("sdl_ttf"))
-	       (:file "util-sdl_ttf" :depends-on ("sdl_ttf" "translate"))))
+	      ((:file "globals")
+	       (:file "font")
+	       (:file "sdl-util-ttf" :depends-on ("globals"))
+	       (:file "cffi-finalizers" :depends-on "sdl-util-ttf")))
      (:module "documentation"
 	      :components
-	      ((:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")))))
+	      (:html-file "header.html")
+	      (:html-file "footer.html")
+	      (:html-file "lispbuilder-sdl-ttf"))))

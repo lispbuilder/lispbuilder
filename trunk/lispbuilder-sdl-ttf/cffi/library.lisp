@@ -1,6 +1,6 @@
 ;;; -*- lisp -*-
 
-(in-package #:lispbuilder-sdl-ttf) 
+(in-package #:lispbuilder-sdl-ttf-cffi) 
 
 #+win32(eval-when (:compile-toplevel :load-toplevel :execute)
   (pushnew (merge-pathnames "../bin/" (directory-namestring (or *load-truename* *default-pathname-defaults*)))
