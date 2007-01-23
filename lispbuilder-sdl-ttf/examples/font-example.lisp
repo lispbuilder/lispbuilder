@@ -9,9 +9,11 @@
 
 (defun font-example ()
   (sdl:with-init ()
-    (sdl:with-display (320 240)
-      (sdl-ttf:with-open-font ("Vera.ttf" 32 *ttf-path*)
-	(sdl-ttf:render-font-solid "Hello TTF World!" :update-p t))
-      (sdl:with-events ()
-	(:quit () t)
-	(:videoexpose () (sdl:update-display))))))
+    (sdl:window 320 240)
+    (sdl-ttf:initialize-default-font "Vera.ttf" 32 *ttf-path*)
+    (sdl-ttf:render-font-solid "Hello TTF World!")
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:video-expose-event () (sdl:update-display)))))
+
+
