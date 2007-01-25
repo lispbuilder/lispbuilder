@@ -29,79 +29,66 @@
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderText_Solid(TTF_Font *font,
 								const char *text, SDL_Color *fg) {
-  SDL_Color color={fg->r,fg->g,fg->b};
-  return TTF_RenderText_Solid(font, text, color);
+  return TTF_RenderText_Solid(font, text, *fg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderUTF8_Solid(TTF_Font *font,
 								const char *text, SDL_Color *fg) {
-  SDL_Color color={fg->r,fg->g,fg->b};
-  return TTF_RenderUTF8_Solid(font, text, color);
+  return TTF_RenderUTF8_Solid(font, text, *fg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderUNICODE_Solid(TTF_Font *font,
 								   const Uint16 *text, SDL_Color *fg) {
-  SDL_Color color={fg->r,fg->g,fg->b};
-  return TTF_RenderUNICODE_Solid(font, text, color);
+  return TTF_RenderUNICODE_Solid(font, text, *fg);
 }
 
 
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderGlyph_Solid(TTF_Font *font,
 								 Uint16 ch, SDL_Color *fg) {
-  SDL_Color color={fg->r,fg->g,fg->b};
-  return TTF_RenderGlyph_Solid(font, ch, color);
+  return TTF_RenderGlyph_Solid(font, ch, *fg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderText_Shaded(TTF_Font *font,
 								 const char *text, SDL_Color *fg, SDL_Color *bg) {
-  SDL_Color fg_color={fg->r,fg->g,fg->b};
-  SDL_Color bg_color={bg->r,bg->g,bg->b};
-  return TTF_RenderText_Shaded(font, text, fg_color, bg_color);
+  return TTF_RenderText_Shaded(font, text, *fg, *bg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderUTF8_Shaded(TTF_Font *font,
 								 const char *text, SDL_Color *fg, SDL_Color *bg) {
-  SDL_Color fg_color={fg->r,fg->g,fg->b};
-  SDL_Color bg_color={bg->r,bg->g,bg->b};
-  return TTF_RenderUTF8_Shaded(font, text, fg_color, bg_color);
+  return TTF_RenderUTF8_Shaded(font, text, *fg, *bg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderUNICODE_Shaded(TTF_Font *font,
 								    const Uint16 *text, SDL_Color *fg, SDL_Color *bg) {
-  SDL_Color fg_color={fg->r,fg->g,fg->b};
-  SDL_Color bg_color={bg->r,bg->g,bg->b};
-  return TTF_RenderUNICODE_Shaded(font, text, fg_color, bg_color);
+  return TTF_RenderUNICODE_Shaded(font, text, *fg, *bg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderGlyph_Shaded(TTF_Font *font,
 								  Uint16 ch, SDL_Color *fg, SDL_Color *bg) {
-  SDL_Color fg_color={fg->r,fg->g,fg->b};
-  SDL_Color bg_color={bg->r,bg->g,bg->b};
-  return TTF_RenderGlyph_Shaded(font, ch, fg_color, bg_color);
+  return TTF_RenderGlyph_Shaded(font, ch, *fg, *bg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderText_Blended(TTF_Font *font,
 								  const char *text, SDL_Color *fg) {
-  SDL_Color color={fg->r,fg->g,fg->b};
-  return TTF_RenderText_Blended(font, text, color);
+  return TTF_RenderText_Blended(font, text, *fg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderUTF8_Blended(TTF_Font *font,
 								  const char *text, SDL_Color *fg) {
   SDL_Color color={fg->r,fg->g,fg->b};
-  return TTF_RenderUTF8_Blended(font, text, color);
+  return TTF_RenderUTF8_Blended(font, text, *fg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderUNICODE_Blended(TTF_Font *font,
 								     const Uint16 *text, SDL_Color *fg) {
   SDL_Color color={fg->r,fg->g,fg->b};
-  return TTF_RenderUNICODE_Blended(font, text, color);
+  return TTF_RenderUNICODE_Blended(font, text, *fg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderGlyph_Blended(TTF_Font *font,
 								   Uint16 ch, SDL_Color *fg) {
   SDL_Color color={fg->r,fg->g,fg->b};
-  return TTF_RenderGlyph_Blended(font, ch, color);
+  return TTF_RenderGlyph_Blended(font, ch, *fg);
 }
 
