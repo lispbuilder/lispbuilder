@@ -5,13 +5,14 @@
 
 (in-package #:sdl-ttf-examples)
 
-(defvar *ttf-path* (or *load-truename* *default-pathname-defaults*))
 
 (defun font-example ()
   (sdl:with-init ()
     (sdl:window 320 240)
-    (sdl-ttf:initialize-default-font "Vera.ttf" 32 *ttf-path*)
-    (sdl-ttf:render-font-solid "Hello TTF World!")
+    (sdl-ttf::initialise-default-font)
+    (sdl:with-surface (disp sdl:*default-display*)
+      (sdl-ttf::draw-string-solid-* "Hello TTF World!" 25 50
+				    :color (sdl:color :r 255 :g 0 :b 255)))
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl:update-display)))))
