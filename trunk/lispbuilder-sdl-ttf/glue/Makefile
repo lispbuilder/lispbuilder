@@ -1,16 +1,15 @@
-# this should work for FreeBSD and most Linux distros
+#### -*- Mode: Makefile -*-
+#### Author: Matthew Danish <mrd@debian.org>
+#### C glue GNU makefile
 
-# lispbuilder-sdl-ttf-glue.so:
-# 	gcc -I/usr/local/include -fPIC -c lispbuilder-sdl-ttf-glue.c
-# 	ld -shared -lgd -lz -lpng -ljpeg -lfreetype -liconv -lm -lc lispbuider-sdl-ttf-glue.o -o lispbuider-sdl-ttf-glue.dll -L/.
-# 	rm lispbuider-sdl-ttf-glue.o
+include ../Makefile.opts
+include ../Makefile.common
 
-lispbuilder-sdl-ttf-glue.dll:
-	gcc -ISDL-1.2.11/include -ISDL_ttf-2.0.8 -c lispbuilder-sdl-ttf-glue.c
-	ld -shared -LSDL_ttf-2.0.8/SDL_ttf.dll lispbuilder-sdl-ttf-glue.o -o lispbuider-sdl-ttf-glue.dll
-	rm lispbuilder-sdl-ttf-glue.o
+all: $(STUBS)
+	mv $(STUBS) ../build/
 
-# # this should work for Mac OS X
+lispbuilder-sdl-ttf-glue.$(SHLIB_SUFFIX): lispbuilder-sdl-ttf-glue.c
+	$(CC) $(SDL_TTF_CFLAGS) -o $@ $< $(SDL_TTF_LDFLAGS)
 
-# cl-gd-glue.dylib:
-# 	gcc -lgd -ljpeg -dynamiclib cl-gd-glue.c -o cl-gd-glue.dylib
+clean:
+	rm -f $(STUBS)
