@@ -13,7 +13,7 @@
   (:unix (:or "libSDL_ttf2.0" "libSDL_ttf-2.0.so.0")))
 
 (cffi:define-foreign-library sdl-ttf-glue
-  (:windows "ttf_glue.dll"))
+  (:windows "lispbuilder-sdl-ttf-glue.dll"))
 
 (cffi:use-foreign-library sdl-ttf)
 (cffi:use-foreign-library sdl-ttf-glue)

@@ -2,6 +2,9 @@
 #### Author: Matthew Danish <mrd@debian.org>
 #### C glue GNU makefile
 
+#### Modified by: Luke Crook <luke@balooga.com>
+
+
 include ../Makefile.opts
 include ../Makefile.common
 

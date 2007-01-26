@@ -2,13 +2,12 @@
 (in-package #:lispbuilder-sdl-ttf)
 
 (defclass font ()
-  ((foreign-pointer-to-font :accessor fp :initform nil :initarg :font)
-   (foreign-pointer-to-position-rect :accessor fp-position
-				     :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle)
-				     :initarg :position)
+  ((foreign-pointer-to-font :accessor fp-font :initform nil :initarg :font)
+   (font-style :accessor font-style :initform nil :initarg :style)
+   (font-encoding :accessor font-encoding :initform nil :initarg :encoding)
    (cached-surface :accessor cached-surface :initform nil)))
 
-(defun font (fp)
+(defun new-font (fp)
   (when (sdl:is-valid-ptr fp)
     (make-instance 'font :font fp)))
 
@@ -25,7 +24,7 @@
 (defmethod fp-position ((font font))
   (fp-position (cached-surface font)))
 
-(defmethod free-font ((font font))
-  (sdl-ttf-cffi::ttf-close-font (fp font))
-  #-clisp(cffi:cancel-finalization rectangle)
+(defun free-font (font)
+  (sdl-ttf-cffi::ttf-close-font (fp-font font))
+  #-clisp(cffi:cancel-finalization font)
   )

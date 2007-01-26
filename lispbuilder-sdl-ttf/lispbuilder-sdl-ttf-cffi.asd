@@ -20,4 +20,8 @@
 	      ((:file "package")
 	       (:file "library" :depends-on ("package"))
 	       (:file "ttf" :depends-on ("package" "library"))
-	       (:file "translate" :depends-on ("ttf"))))))
+	       (:file "translate" :depends-on ("ttf"))))
+     (:module "glue"
+	      :components
+	      ((:static-file "Makefile")
+	       (:static-file "lispbuilder-sdl-ttf-glue.c")))))

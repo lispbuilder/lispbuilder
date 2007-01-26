@@ -17,12 +17,15 @@
     :components
     ((:module "sdl-ttf"
 	      :components
-	      ((:file "globals")
-	       (:file "font")
-	       (:file "sdl-util-ttf" :depends-on ("globals"))
-	       (:file "cffi-finalizers" :depends-on "sdl-util-ttf")))
+	      ((:file "package")
+	       (:file "globals" :depends-on ("package"))
+	       (:file "font" :depends-on ("package"))
+	       (:file "cffi-finalizers" :depends-on ("font" "package"))
+	       (:file "sdl-util-ttf" :depends-on ("font" "globals" "package"))
+	       (:static-file "bitstream-vera-copyright")
+	       (:static-file "Vera.ttf")))
      (:module "documentation"
 	      :components
-	      (:html-file "header.html")
-	      (:html-file "footer.html")
-	      (:html-file "lispbuilder-sdl-ttf"))))
+	      ((:html-file "header.html")
+	       (:html-file "footer.html")
+	       (:html-file "lispbuilder-sdl-ttf")))))
