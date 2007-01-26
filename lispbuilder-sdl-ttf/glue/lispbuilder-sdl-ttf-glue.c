@@ -76,19 +76,16 @@ extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderText_Blended(TTF_Font *font
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderUTF8_Blended(TTF_Font *font,
 								  const char *text, SDL_Color *fg) {
-  SDL_Color color={fg->r,fg->g,fg->b};
   return TTF_RenderUTF8_Blended(font, text, *fg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderUNICODE_Blended(TTF_Font *font,
 								     const Uint16 *text, SDL_Color *fg) {
-  SDL_Color color={fg->r,fg->g,fg->b};
   return TTF_RenderUNICODE_Blended(font, text, *fg);
 }
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderGlyph_Blended(TTF_Font *font,
 								   Uint16 ch, SDL_Color *fg) {
-  SDL_Color color={fg->r,fg->g,fg->b};
   return TTF_RenderGlyph_Blended(font, ch, *fg);
 }
 
