@@ -1,0 +1,13 @@
+#### -*- Mode: Makefile -*-
+
+CC=gcc
+CFLAGS= -g -shared -Wall -fPIC
+LDFLAGS= -L/usr/X11R6/lib/
+SHLIB_SUFFIX=so
+
+SDL_CFLAGS=$(CFLAGS) `sdl-config --cflags`
+SDL_LDFLAGS=$(LDFLAGS) `sdl-config --libs` -lpthread
+
+SDL_TTF_CFLAGS=$(SDL_CFLAGS)
+SDL_TTF_LDFLAGS=$(LDFLAGS) -lSDL_ttf
+

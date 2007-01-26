@@ -1,0 +1,8 @@
+#### -*- Mode: Makefile -*-
+#### Author: Matthew Danish <mrd@debian.org>
+#### Common Makefile options
+
+#### Modified by: Luke Crook <luke@balooga.com>
+
+STUBS=  lispbuilder-sdl-ttf-glue.$(SHLIB_SUFFIX)
+

@@ -1,0 +1,14 @@
+#### -*- Mode: Makefile -*-
+
+CC=gcc
+CFLAGS=-shared -Wall -fPIC
+LDFLAGS=
+SHLIB_SUFFIX=so
+SDL_CONFIG=sdl11-config		# sane default for FreeBSD, should be detected anyway
+
+SDL_CFLAGS=$(CFLAGS) `${SDL_CONFIG} --cflags`
+SDL_LDFLAGS=$(LDFLAGS) `${SDL_CONFIG} --libs` -lc
+
+SDL_TTF_CFLAGS=$(SDL_CFLAGS)
+SDL_TTF_LDFLAGS=$(SDL_LDFLAGS) -lSDL_ttf
+

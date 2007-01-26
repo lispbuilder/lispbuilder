@@ -1,0 +1,9 @@
+#### -*- Mode: Makefile -*-
+
+CC=gcc
+CFLAGS=-shared -Wall
+LDFLAGS=
+SHLIB_SUFFIX=dll
+
+SDL_TTF_CFLAGS=$(CFLAGS) -ISDL-1.2.11/include -ISDL_ttf-2.0.8
+SDL_TTF_LDFLAGS=$(LDFLAGS) -L../bin/ -lSDL_ttf
