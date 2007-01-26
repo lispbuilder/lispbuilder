@@ -155,19 +155,24 @@ Returns NIL otherwise."
 (defun init-sdl (&optional (init (sdl-init-on-startup)))
   "Initializes SDL using INIT-SDL when the &optional parameter INIT is T, or
 the value returned by \(SDL-INIT-ON-STARTUP\) when INIT is unspecified."
-  (if (or init
-	  (not *sdl-initialized*))
-      (if (sdl-base::init-sdl :flags nil)
-	  (setf *sdl-initialized* t)
-	  nil)
-      t))
+  (let ((initialized? (if (or init
+			      (not *sdl-initialized*))
+			  (if (sdl-base::init-sdl :flags nil)
+			      (setf *sdl-initialized* t)
+			      nil)
+			  t)))
+    (dolist (fn *external-init-on-startup*)
+      (funcall fn))
+    initialized?))
 
 (defun quit-sdl (&optional (quit (sdl-quit-on-exit)))
   "Uninitalizes SDL using QUIT-SDL when the &optional parameter QUIT is T, or 
 the value returned by \(SDL-QUIT-ON-EXIT\) if QUIT is unspecified."
   (when quit
     (setf *sdl-initialized* nil)
-    (sdl-cffi::SDL-Quit)))
+    (sdl-cffi::SDL-Quit))
+  (dolist (fn *external-quit-on-exit*)
+    (funcall fn)))
 
 (defun sdl-init-on-startup ()
   "Returns T if INIT-SDL will be called in the macro WITH-INIT. 

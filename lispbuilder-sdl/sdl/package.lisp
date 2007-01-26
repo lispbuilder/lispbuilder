@@ -38,6 +38,9 @@
 
    #:*sdl-initialized*
 
+   #:*external-init-on-startup*
+   #:*external-quit-on-exit*
+
    ;; init.lisp
    #:with-init
    #:initialize-on-startup
@@ -101,6 +104,7 @@
    #:color
    #:color-a
    #:with-color
+   #:with-foreign-color-copy
 
    ;; drawing-primitives
    #:add-vertex
@@ -162,7 +166,7 @@
    
    ;; simple-font.lisp
    #:font
-   #:initialise-font
+   #:load-font
    #:free-font
    #:make-text-image
    #:draw-character-*

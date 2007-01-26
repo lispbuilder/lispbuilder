@@ -543,7 +543,7 @@
   `(progn
      ,@forms))
 
-(defmacro with-events (args &rest events)
+(defmacro with-events (args &body events)
   "(with-events
      (:active-event (:gain gain :state state)
 		     t)

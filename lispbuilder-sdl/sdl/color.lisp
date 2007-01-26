@@ -113,3 +113,11 @@
   (cffi:foreign-free (fp color))
   #-clisp(cffi:cancel-finalization color)
   )
+
+(defmacro with-foreign-color-copy ((struct color) &body body)
+  `(cffi:with-foreign-object (,struct 'sdl-cffi::SDL-Color)
+     (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct sdl-cffi::SDL-Color)
+       (setf sdl-cffi::r (r ,color)
+	     sdl-cffi::g (g ,color)
+	     sdl-cffi::b (b ,color)))
+     ,@body))
