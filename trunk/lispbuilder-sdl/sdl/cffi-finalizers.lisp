@@ -29,3 +29,11 @@
   (let ((foreign-pointer (fp self)))
     (cffi:finalize self (lambda ()
 			  (sdl-cffi::SDL-Free-RW foreign-pointer)))))
+
+;;; Finalize the FONT, freeing all associated surfaces
+;; (defmethod initialize-instance :after ((self font) &key)
+;;   (let ((fp-surface (font-surface self))
+;; 	(fp-cached-surface (cached-surface self)))
+;;     (cffi:finalize self (lambda ()
+;; 			  (free-surface)
+;; 			  (sdl-cffi::SDL-Free-RW foreign-pointer)))))

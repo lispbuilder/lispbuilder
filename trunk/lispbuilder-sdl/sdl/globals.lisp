@@ -30,6 +30,11 @@
 (defvar *initialize-on-startup* (logior sdl-cffi::SDL-INIT-VIDEO))
 (defvar *quit-on-exit* (logior sdl-cffi::SDL-INIT-VIDEO))
 
+(defvar *external-init-on-startup* nil
+  "A list of functions that are called in \(INIT-SDL\)")
+(defvar *external-quit-on-exit* nil
+  "A list of functions that are called in \(quit-SDL\)")
+
 (defun default-surface ()
   *default-surface*)
 (defun (setf default-surface) (surface)
