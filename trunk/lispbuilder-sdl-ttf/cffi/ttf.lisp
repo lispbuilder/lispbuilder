@@ -184,21 +184,21 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Solid(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-(defcfun ("TTF_RenderText_Solid" ttf-Render-Text-Solid) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderText_Solid" ttf-Render-Text-Solid) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Solid(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-(defcfun ("TTF_RenderUTF8_Solid" ttf-Render-UTF8-Solid) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderUTF8_Solid" ttf-Render-UTF8-Solid) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Solid(TTF_Font *font,
 ;; 				const Uint16 *text, SDL_Color fg);
-(defcfun ("TTF_RenderUNICODE_Solid" ttf-Render-UNICODE-Solid) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderUNICODE_Solid" ttf-Render-UNICODE-Solid) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :pointer)
   (fg sdl-color))
@@ -211,7 +211,7 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Solid(TTF_Font *font,
 ;; 					Uint16 ch, SDL_Color fg);
-(defcfun ("TTF_RenderGlyph_Solid" ttf-Render-Glyph-Solid) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderGlyph_Solid" ttf-Render-Glyph-Solid) sdl-cffi::sdl-surface
   (font ttf-font)
   (ch :unsigned-short)
   (fg sdl-color))
@@ -222,7 +222,7 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Shaded(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg, SDL_Color bg);
-(defcfun ("TTF_RenderText_Shaded" ttf-Render-Text-Shaded) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderText_Shaded" ttf-Render-Text-Shaded) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color)
@@ -230,7 +230,7 @@
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Shaded(TTF_Font *font,
 ;; 								     const char *text, SDL_Color fg, SDL_Color bg) ;
-(defcfun ("TTF_RenderUTF8_Shaded" ttf-Render-UTF8-Shaded) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderUTF8_Shaded" ttf-Render-UTF8-Shaded) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color)
@@ -238,7 +238,7 @@
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Shaded(TTF_Font *font,
 ;; 									const Uint16 *text, SDL_Color fg, SDL_Color bg)	;
-(defcfun ("TTF_RenderUNICODE_Shaded" ttf-Render-UNICODE-Shaded) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderUNICODE_Shaded" ttf-Render-UNICODE-Shaded) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :pointer)
   (fg sdl-color)
@@ -252,7 +252,7 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Shaded(TTF_Font *font,
 ;; 				Uint16 ch, SDL_Color fg, SDL_Color bg);
-(defcfun ("TTF_RenderGlyph_Shaded" ttf-Render-Glyph-Shaded) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderGlyph_Shaded" ttf-Render-Glyph-Shaded) sdl-cffi::sdl-surface
   (font ttf-font)
   (ch :unsigned-short)
   (fg sdl-color)
@@ -263,21 +263,21 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Blended(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-(defcfun ("TTF_RenderText_Blended" ttf-Render-Text-Blended) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderText_Blended" ttf-Render-Text-Blended) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Blended(TTF_Font *font,
 ;; 								      const char *text, SDL_Color fg) ;
-(defcfun ("TTF_RenderUTF8_Blended" ttf-Render-UTF8-Blended) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderUTF8_Blended" ttf-Render-UTF8-Blended) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :string)
   (fg sdl-color))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Blended(TTF_Font *font,
 ;; 				const Uint16 *text, SDL_Color fg);
-(defcfun ("TTF_RenderUNICODE_Blended" ttf-Render-UNICODE-Blended) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderUNICODE_Blended" ttf-Render-UNICODE-Blended) sdl-cffi::sdl-surface
   (font ttf-font)
   (text :pointer)
   (fg sdl-color))
@@ -289,7 +289,7 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Blended(TTF_Font *font,
 ;; 						Uint16 ch, SDL_Color fg);
-(defcfun ("TTF_RenderGlyph_Blended" ttf-Render-Glyph-Blended) sdl-cffi::sdl-surface
+(defcfun ("TTF_glue_RenderGlyph_Blended" ttf-Render-Glyph-Blended) sdl-cffi::sdl-surface
   (font ttf-font)
   (ch :unsigned-short)
   (fg sdl-color))
