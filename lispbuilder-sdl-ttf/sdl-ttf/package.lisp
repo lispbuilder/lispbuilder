@@ -10,45 +10,47 @@
 
    ;; globals.lisp
    #:*default-font*
-   ;; util-sdl_ttf.lisp
-   #:render-font-blended
-   #:render-font-shaded
-   #:render-font-solid
-   #:get-Glyph-Metric
-   #:get-Font-Size
-   #:open-font
+   #:*default-font-path*
+   
+   ;; font.lisp
+   #:font
+   #:new-font
+   #:x
+   #:y
+   #:fp-position
+   #:free-font
+
+   ;; sdl-util-ttf.lisp
+   #:is-init
    #:with-init
    #:with-open-font
-
+   #:init-ttf
+   #:quit-ttf
+   #:initialise-font
+   #:initialise-default-font
+   #:close-font
+   #:get-Glyph-Metric
+   #:get-Font-Size
+   #:get-font-style
+   #:get-font-height
+   #:get-font-ascent
+   #:get-font-descent
+   #:get-font-line-skip
+   #:get-font-faces
+   #:is-font-face-fixed-width
+   #:get-font-face-family-name
+   #:get-font-face-style-name
+   #:open-font
+   #:draw-string-solid
+   #:draw-string-solid-*
+   #:draw-string-shaded
+   #:draw-string-shaded-*
+   #:draw-string-blended
+   #:draw-string-blended-*
+   #:draw-font
+   #:draw-font-at
+   #:draw-font-at-*
+   #:set-font-style
    
-   ;; sdl_ttf.lisp
-
- ;  #:Byte-Swapped-UNICODE
-   #:Close-Font
-   #:Get-Font-Style
-;   #:Init
-   #:Linked-Version
-   #:MAJOR-VERSION
-   #:MINOR-VERSION
-   #:Open-Font
-   #:Open-Font-Index
-;   #:Open-Font-Index-RW
-;   #:Open-Font-RW
-   #:PATCHLEVEL
-   #:Quit
-   #:Set-Font-Style
-   #:VERSION
-   #:is-Init
-   #:get-Font-Ascent
-   #:get-Font-Descent
-   #:get-Font-Face-Family-Name
-   #:get-Font-Face-Is-Fixed-Width
-   #:get-Font-Face-Style-Name
-   #:get-Font-Faces
-   #:get-Font-Height
-   #:get-Font-Line-Skip
-   ;; #:Render-UNICODE-Solid
-   ;; #:RenderUNICODE-Blended
-   ;; #:RenderUNICODE-Shaded
-   ;; #:get-Size-UNICODE
+   
    ))
