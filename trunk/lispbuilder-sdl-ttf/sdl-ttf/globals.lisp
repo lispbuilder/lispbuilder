@@ -7,7 +7,7 @@
   "When a LISPBUILDER-SDL-TTF function or macro has an &OPTIONAL or :KEYword argument 
 FONT, the default action is to bind to *default-font*.
 *default-font* is set to NIL initially.
-WITH-OPEN-FONT will bind *default-font* to a Truetype font.")
+WITH-OPEN-FONT, INITIALISE-FONT, AND INITIALISE-DEFAULT-FONT will bind *default-font* to a Truetype font FONT.")
 
 ;; (defvar *default-font-path* (or *load-truename* *default-pathname-defaults*)
 ;;   "Path to the default font, \"Bitstream Vera\"")

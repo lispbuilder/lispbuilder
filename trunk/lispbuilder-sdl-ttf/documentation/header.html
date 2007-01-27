@@ -372,8 +372,10 @@
       <pre>
   (sdl:with-init ()
     (sdl:window 320 240)
-    (sdl-ttf:initialize-default-font "Vera.ttf" 32 *ttf-path*)
-    (sdl-ttf:render-font-solid "Hello TTF World!")
+    (sdl-ttf:initialise-default-font)
+    (sdl:with-surface (disp sdl:*default-display*)
+      (sdl-ttf:draw-string-solid-* "Hello TTF World!" 25 50
+				   :color (sdl:color :r 255 :g 0 :b 255)))
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl:update-display))))
@@ -390,21 +392,31 @@
 	  <li><a href="#compatibility">Compatibility</a></li>
 	  <li><a href="#download">Download</a></li>
 	  <li><a href="#installation">Installation</a></li>
+	  <li><a href="#build">Build Instructions</a></li>
+	  <ol>
+	    <li><a href="#buildwindows">Windows Instructions</a></li>
+	    <li><a href="#buildlinux">Linux Instructions</a></li>
+	  </ol>
 	  <li><a href="#usage">Usage</a></li>
 	  <li><a href="#examples">Examples</a></li>
 	  <li><a href="#dependency">Dependencies</a></li>
 	  <li><a href="#license">License</a></li>
-	  <li><a href="#dictionar">The ~A dictionary</a></li>
+	  <li><a href="#dictionar">LISPBUILDER-SDL-TTF dictionary</a></li>
 	  <ol>
-	    ~{      <li><a href="#~A"><code>~:*~A</code></a>
-	      ~}    
-	    </li>
+	    <li><a href="#dictionary">INDEX</a></li>
 	  </ol>
 	  <li><a href="#ack">Acknowledgements</a></li>
 	</ol>
       </div>
-    
-    
+      
+      <br>&nbsp;</br><h2><a class=none name="dictionary">The ~A dictionary Index</h2>
+	<ol>
+	  ~{      <li><a href="#~A"><code>~:*~A</code></a>
+	    ~}    
+	  </li>
+	</ol>
+	
+	
       <br>&nbsp;</br><h2><a class=none name="compatibility">Compatibility</h2>
 	<p>
 	  The following table describes the status of the Lisp implementations that have been tested with 
@@ -429,7 +441,7 @@
 	      <a href="http://clisp.cons.org/">CLISP v2.38</a>
 	    </th>
 	    <td bgcolor="#60c060">Working</td>
-	    <td bgcolor="#60c060">Working</td>
+	    <td bgcolor="#60c060">Perhaps</td>
 	    <td bgcolor="#ff6060">No</td>
 	    <td></td>
 	  </tr>
@@ -438,7 +450,7 @@
 	      <a href="http://www.lispworks.com/">Lispworks v2.4.6 Personal</a>
 	    </th>
 	    <td class="alt" bgcolor="#60c060">Working</td>
-	    <td class="alt" bgcolor="#60c060">Working</td>
+	    <td class="alt" bgcolor="#60c060">Perhaps</td>
 	    <td class="alt" bgcolor="#ff6060">No</td>
 	    <td></td>
 	  </tr>
@@ -465,7 +477,7 @@
 	      <a href="http://www.sbcl.org/">SBCL</a>
 	    </th>
 	    <td bgcolor="#60c060">Working</td>
-	    <td bgcolor="#60c060">Working</td>
+	    <td bgcolor="#60c060">Perhaps</td>
 	    <td bgcolor="#ff6060">No</td>
 	    <td></td>
 	  </tr>
@@ -494,6 +506,43 @@
 	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#installation">the LISPBUILDER documentation</a>
 	  for installation instructions.
 	</p>
+	<br>&nbsp;</br><h2><a class=none name="build">Build Instructions</a></h2>
+	<p>LISPBUILDER-SDL-TTF requires that a glue library <code>lispbuilder-sdl-ttf-glue</code> is also installed
+	  in the library search path. <code>lispbuilder-sdl-ttf-glue</code> wraps the native font rendering functions
+	  provided by <code>SDL_TTF</code> as these functions require that a <code>SDL_Color</code> struct is passed
+	  by value. However CFFI only supports passing structs by reference.
+	</p>
+	<br>&nbsp;</br><h3><a class=none name="buildwindows">Windows Build Instructions</a></h2>
+	<p><code>lispbuilder-sdl-ttf-glue</code> is installed as part of the <code>LISPBUILDER-SDL-TTF-BINARIES</code>
+	  package into the directory <code>LISPBUILDER-SDL-TTF/BIN</code>.
+	</p>
+	<p>To rebuild the glue library:
+	  <ol>
+	    <li>A working installation of <a href="http://www.mingw.org/">MingW</a> is required.</i>
+	    <li>Make sure that the path to the include files for SDL and SDL_TTF are specified 
+	      correctly in <code>LISPBUILDER-SDL-TTF/Makefile.mingw</code>. Modify the existing line 
+	      <code>SDL_TTF_CFLAGS=$(CFLAGS) -ISDL-1.2.11/include -ISDL_ttf-2.0.8</code>.</li>
+	    <li>In the <code>LISPBUILDER-SDL-TTF/</code> directory, execute <code>make</code> 
+	      to create the glue library.</li>
+	    <li>If the build is successful, the <code>lispbuilder-sdl-ttf-glue</code> library will be found in the 
+	      <code>LISPBUILDER-SDL-TTF/BUILD/</code> directory.</li>
+	    <li>Copy or move this file <code>LISPBUILDER-SDL-TTF/BUILD/lispbuilder-sdl-ttf-glue.dll</code> to the 
+	      <code>BIN</code> directory <code>LISPBUILDER-SDL-TTF/BIN/lispbuilder-sdl-ttf-glue.dll</code></li>
+	  </ol>
+	</p>
+
+	<br>&nbsp;</br><h3><a class=none name="buildlinux">Linux Build Instructions</a></h2>
+	<p>To rebuild the glue library:
+	  <ol>
+	    <li>In the <code>LISPBUILDER-SDL-TTF/</code> directory, execute <code>make</code> 
+	      to create the glue library.</li>
+	    <li>If the build is successful, the <code>lispbuilder-sdl-ttf-glue</code> library will be found in the 
+	      <code>LISPBUILDER-SDL-TTF/BUILD/</code> directory.</li>
+	    <li>In the <code>LISPBUILDER-SDL-TTF/</code> directory, execute <code>make install_ttf</code> 
+	      to install the <code>lispbuilder-sdl-ttf-glue</code> library.</li>
+	  </ol>
+	</p>
+
 	
 	<br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER-SDL-TTF</a></h2>
 	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#usage">the LISPBUILDER documentation</a>

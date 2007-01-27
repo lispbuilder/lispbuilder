@@ -18,8 +18,9 @@
     ((:module "sdl-ttf"
 	      :components
 	      ((:file "package")
+	       (:file "generics" :depends-on ("package"))
 	       (:file "globals" :depends-on ("package"))
-	       (:file "font" :depends-on ("package"))
+	       (:file "font" :depends-on ("package" "generics"))
 	       (:file "cffi-finalizers" :depends-on ("font" "package"))
 	       (:file "sdl-util-ttf" :depends-on ("font" "globals" "package"))
 	       (:static-file "bitstream-vera-copyright")
