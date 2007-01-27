@@ -25,6 +25,7 @@
   (fp-position (cached-surface font)))
 
 (defun free-font (font)
+  "Free's the resources used by FONT."
   (sdl-ttf-cffi::ttf-close-font (fp-font font))
   #-clisp(cffi:cancel-finalization font)
   )

@@ -337,6 +337,8 @@ Returns a new FONT, or NIL upon error."
 			    (color sdl:*default-color*))
   "Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
 using the Solid mode. 
+Caches the new surface in the FONT object. This cached surface
+
 
 X/Y are the x and y position coordinates, as INTEGERS.
 
@@ -553,12 +555,21 @@ must match :ENCODING.
      nil)))
 
 (defun draw-font (font &key (surface sdl:*default-surface*))
+  "Blit the cached SURFACE in FONT to the destination surface SURFACE. 
+The cached surface is created during a previous call to any of the DRAW-STRING* functions. 
+Uses POSITION in the cached SURFACE to render to the X/Y coordinates on the destination SURFACE. 
+
+This function can speed up blitting when the text remains unchanged between screen updates."
   (sdl:blit-surface (cached-surface font) surface))
 
 (defun draw-font-at (font point &key (surface sdl:*default-surface*))
+  "See DRAW-FONT. 
+POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT."
   (sdl:draw-surface-at (cached-surface font) point :surface surface))
 
 (defun draw-font-at-* (font x y &key (surface sdl:*default-surface*))
+    "See DRAW-FONT. 
+X and Y are used to position the cached SURFACE, where X and Y are INTEGERS."
   (sdl:draw-surface-at-* (cached-surface font) x y :surface surface))
 
 ;;; s
