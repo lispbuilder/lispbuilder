@@ -374,6 +374,7 @@
 	  </ol>
 	  <li><a href="#usage">Using LISPBUILDER</a></li>
 	  <li><a href="#examples">Examples</a></li>
+	  <li><a href="#swig">SWIG</a></li>
 	  <li><a href="#support">Support</a></li>
 	  <li><a href="#contrib">Contributors</a></li>
 	  <li><a href="#ref">Links</a></li>
@@ -658,7 +659,7 @@
       configuring LISPBUILDER. For example, 
       when the user has an existing Lisp environment installed.
     </p>
-    <h4><a class=none name="prereq">Prerequisites</a></h4>
+    <h4><a class=none name="prereq">Prerequisites and Dependencies</a></h4>
     <p>Some LISPBUILDER packages (LISPBUILDER-SDL) require that 
       the <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
       and <a href="http://common-lisp.net/project/cffi">CFFI</a> are installed. 
@@ -753,14 +754,24 @@
       <p>Groovy. You should see a window like this:</p>
       <img src="groovy1.png" width="320" height="253" title="(sdl-examples:mouse-painter)" alt="mouse-painter" />
     </div>
-    
-    
+
+    <br>&nbsp;</br><h2><a class=none name="swig">Generating the Initial SWIG CFFI Wrappers</a></h2>
+    <p><a href="http://www.swig.org">SWIG</a> is used to create the low level CFFI bindings for most of the LISPBUILDER-*
+      packages. SWIG generates CFFI wrappers from C header files using the translation and substitution rules 
+      specified in an interface (.i) file. If a LISPBUILDER package uses SWIG then the corresponding interface file 
+      will be found in the <code>/build</code> directory. For example, <code>LISPBUILDER-SDL/build/sdlswig.i</code>.
+    </p>
+    <p>
+      A <code>post-swig.lisp</code> file contains additional C header file overrides. These overrides cannot be included 
+      in the main SWIG interface file as SWIG places all manual overrides in the .(i) interface file prior to 
+      the CFFI generated bindings. The overrides in the post-swig.lisp file must be located post- SWIG generated bindings.
+    </p>
+        
     <br>&nbsp;</br><h2><a class=none name="support">Support & Mailing List</a></h2>
     <p>
       If you have any questions please send an email to the 
       <a href="http://www.lispniks.com/mailman/listinfo/application-builder">lispbuilder discussion list</a>
     </p>
-    
     
     <br>&nbsp;</br><h2><a class=none name="contrib">Contributors</a></h2>
     <ul>
