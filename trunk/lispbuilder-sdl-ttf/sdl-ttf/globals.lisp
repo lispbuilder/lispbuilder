@@ -17,9 +17,3 @@ WITH-OPEN-FONT will bind *default-font* to a Truetype font.")
 					   :directory (pathname-directory #.(or *compile-file-truename*
 										*load-truename*)))
   "The path to the default font, \"Bitstream Vera\"")
-
-(defvar *ttf-init-on-startup* nil
-  "The function called in SDL:INIT-SDL. Initialises the font library.")
-
-(defvar *ttf-quit-on-exit* nil
-  "The function called in SDL:QUIT-SDL. Uninitialises the font library.")

@@ -1,5 +1,6 @@
 ;; This file contains some useful functions for using SDL_ttf from Common lisp
 ;; 2006 (c) Rune Nesheim, see LICENCE.
+;; 2007 (c) Luke Crook
 
 (in-package #:lispbuilder-sdl-ttf)
 
@@ -312,31 +313,28 @@ Returns a new FONT, or NIL upon error."
 
 (defun draw-string-solid (text position &key 
 			  (encoding :text)
-			  (type :solid)
-			  (style :normal)
+;; 			  (type :solid)
+;; 			  (style :normal)
 			  (font *default-font*)
 			  (surface sdl:*default-surface*)
-			  (color sdl:*default-color*)
-			  update-p)
+			  (color sdl:*default-color*))
   "See DRAW-STRING-SOLID-*.
 :POSITION is the x/y position to render the text, or type SDL:POINT."
   (draw-string-solid-* text (sdl:x position) (sdl:y position)
 		       :encoding encoding
-		       :type type
-		       :style style
+;; 		       :type type
+;; 		       :style style
 		       :font font
 		       :surface surface
-		       :color color
-		       :update-p update-p))
+		       :color color))
 
 (defun draw-string-solid-* (text x y &key 
 			    (encoding :text)
-			    (type :solid)
-			    (style :normal)
+;; 			    (type :solid)
+;; 			    (style :normal)
 			    (font *default-font*)
 			    (surface sdl:*default-surface*)
-			    (color sdl:*default-color*)
-			    update-p)
+			    (color sdl:*default-color*))
   "Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
 using the Solid mode. 
 
@@ -353,9 +351,7 @@ must match :ENCODING.
 
 :SURFACE is the surface to render text onto, of type SDL:SURFACE 
 
-:COLOR color is the color used to render text, of type SDL:COLOR-STRUCT
-
-:UPDATE-P will update the SURFACE when T."
+:COLOR color is the color used to render text, of type SDL:COLOR-STRUCT"
   (unless (typep font 'font)
     (error "ERROR: draw-string-solid-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
@@ -393,27 +389,24 @@ must match :ENCODING.
 
 (defun draw-string-shaded (text position fg-color bg-color &key
 			     (encoding :text)
-			     (type :shaded)
-			     (style :normal)
+;; 			     (type :shaded)
+;; 			     (style :normal)
 			     (font *default-font*)
-			     (surface sdl:*default-surface*)
-			     update-p)
+			     (surface sdl:*default-surface*))
   "See DRAW-STRING-SHADED-*"
   (draw-string-shaded-* text (sdl:x position) (sdl:y position) fg-color bg-color
 			:encoding encoding
-			:type type
-			:style style
+;; 			:type type
+;; 			:style style
 			:font font
-			:surface surface
-			:update-p update-p))
+			:surface surface))
 
 (defun draw-string-shaded-* (text x y fg-color bg-color &key
 			     (encoding :text)
-			     (type :shaded)
-			     (style :normal)
+;; 			     (type :shaded)
+;; 			     (style :normal)
 			     (font *default-font*)
-			     (surface sdl:*default-surface*)
-			     update-p)
+			     (surface sdl:*default-surface*))
   "Render text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
 onto surface :SURFACE, using the Shaded mode. 
 
@@ -434,9 +427,7 @@ BG-COLOR is the background color of the text, of type SDL:COLOR-STRUCT
 
 :POSITION is the x/y position to render the text, or type SDL:POINT.
 
-:SURFACE is the surface to render text onto, of type SDL:SURFACE 
-
-:UPDATE-P will update the SURFACE when T."
+:SURFACE is the surface to render text onto, of type SDL:SURFACE "
   (unless (typep font 'font)
     (error "ERROR: draw-string-shaded-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
@@ -482,30 +473,27 @@ BG-COLOR is the background color of the text, of type SDL:COLOR-STRUCT
 
 (defun draw-string-blended (text position &key
 			    (encoding :text)
-			    (type :blended)
-			    (style :normal)
+;; 			    (type :blended)
+;; 			    (style :normal)
 			    (font *default-font*)
 			    (surface sdl:*default-surface*)
-			    (color sdl:*default-color*)
-			    update-p)
+			    (color sdl:*default-color*))
   "See DRAW-STRING-BLENDED-*."
   (draw-string-blended-* text (sdl:x position) (sdl:y position)
 			 :encoding encoding
-			 :type type
-			 :style style
+;; 			 :type type
+;; 			 :style style
 			 :font font
 			 :surface surface
-			 :color color
-			 :upadate-p update-p))
+			 :color color))
 
 (defun draw-string-blended-* (text x y &key
 			      (encoding :text)
-			      (type :blended)
-			      (style :normal)
+;; 			      (type :blended)
+;; 			      (style :normal)
 			      (font *default-font*)
 			      (surface sdl:*default-surface*)
-			      (color sdl:*default-color*)
-			      update-p)
+			      (color sdl:*default-color*))
   "Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
 using the Blended mode. 
 
@@ -525,9 +513,7 @@ must match :ENCODING.
 
 :SURFACE is the surface to render text onto, of type SDL:SURFACE 
 
-:COLOR color is the color used to render text, of type SDL:COLOR-STRUCT
-
-:UPDATE-P will update the SURFACE when T."
+:COLOR color is the color used to render text, of type SDL:COLOR-STRUCT"
   (unless (typep font 'font)
     (error "ERROR: draw-string-blended-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
@@ -562,6 +548,15 @@ must match :ENCODING.
      ;;     (if text-surf
      ;; 	(sdl:blit-surface text-surf surface :dst-rect position  :update-p update-p))))
      nil)))
+
+(defun draw-font (font &key (surface sdl:*default-surface*))
+  (sdl:blit-surface (cached-surface font) surface))
+
+(defun draw-font-at (font point &key (surface sdl:*default-surface*))
+  (sdl:draw-surface-at (cached-surface font) point :surface surface))
+
+(defun draw-font-at-* (font x y &key (surface sdl:*default-surface*))
+  (sdl:draw-surface-at-* (cached-surface font) x y :surface surface))
 
 ;;; s
 
