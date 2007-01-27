@@ -319,7 +319,7 @@ Returns a new FONT, or NIL upon error."
 			  (surface sdl:*default-surface*)
 			  (color sdl:*default-color*))
   "See DRAW-STRING-SOLID-*.
-:POSITION is the x/y position to render the text, or type SDL:POINT."
+:POSITION is the x and y position to render the text, of type SDL:POINT."
   (draw-string-solid-* text (sdl:x position) (sdl:y position)
 		       :encoding encoding
 ;; 		       :type type
@@ -338,7 +338,9 @@ Returns a new FONT, or NIL upon error."
   "Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
 using the Solid mode. 
 
-x/y are the x and y position coordinates, as INTEGERS.
+X/Y are the x and y position coordinates, as INTEGERS.
+
+FONT is a FONT object.
 
 TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
 must match :ENCODING.
@@ -393,7 +395,8 @@ must match :ENCODING.
 ;; 			     (style :normal)
 			     (font *default-font*)
 			     (surface sdl:*default-surface*))
-  "See DRAW-STRING-SHADED-*"
+  "See DRAW-STRING-SHADED-*
+:POSITION is the x and y position to render the text, of type SDL:POINT."
   (draw-string-shaded-* text (sdl:x position) (sdl:y position) fg-color bg-color
 			:encoding encoding
 ;; 			:type type
@@ -410,6 +413,8 @@ must match :ENCODING.
   "Render text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
 onto surface :SURFACE, using the Shaded mode. 
 
+X/Y are the x and y position coordinates, as INTEGERS.
+
 FONT is a FONT object.
 
 TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
@@ -424,8 +429,6 @@ BG-COLOR is the background color of the text, of type SDL:COLOR-STRUCT
   :UTF8
   :UNICODE
   :GLYPH
-
-:POSITION is the x/y position to render the text, or type SDL:POINT.
 
 :SURFACE is the surface to render text onto, of type SDL:SURFACE "
   (unless (typep font 'font)
@@ -478,7 +481,8 @@ BG-COLOR is the background color of the text, of type SDL:COLOR-STRUCT
 			    (font *default-font*)
 			    (surface sdl:*default-surface*)
 			    (color sdl:*default-color*))
-  "See DRAW-STRING-BLENDED-*."
+  "See DRAW-STRING-BLENDED-*.
+:POSITION is the x and y position to render the text, of type SDL:POINT."
   (draw-string-blended-* text (sdl:x position) (sdl:y position)
 			 :encoding encoding
 ;; 			 :type type
@@ -497,19 +501,18 @@ BG-COLOR is the background color of the text, of type SDL:COLOR-STRUCT
   "Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
 using the Blended mode. 
 
+X/Y are the x and y position coordinates, as INTEGERS.
+
 FONT is a FONT object.
 
 TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
 must match :ENCODING.
-
 
 :ENCODING specifies the format of the text to render and is one of: 
   :LATIN1
   :UTF8
   :UNICODE
   :GLYPH
-
-:POSITION is the x/y position to render the text, or type SDL:POINT.
 
 :SURFACE is the surface to render text onto, of type SDL:SURFACE 
 
