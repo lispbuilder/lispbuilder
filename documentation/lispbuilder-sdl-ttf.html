@@ -1,0 +1,1345 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  
+  <head>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
+    <title>LISPBUILDER-SDL-TTF - </title>
+    <style type="text/css">
+      
+      body {
+      margin: 10px 20px 20px 220px;
+      padding: 0px;
+      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+      font-size: small;
+      text-align: justify;
+      max-width: 50em;
+      background-color: white;
+      }
+      
+      a, a:visited {
+      text-decoration: none;
+      color: maroon;
+      }
+      
+      /* index */
+      
+      div.index {
+      position: fixed;
+      top: 0px;
+      left: 0px;
+      width: 180px;
+      height: 100%;
+      margin: 0px;
+      padding: 5px;
+      font-size: 12px;
+      background-color: #DCDCDC;
+      border-right: thin black solid;
+      }
+      
+      div.index ol {
+      color: navy;
+      margin: 0px;
+      padding-left: 0px;
+      }
+      
+      div.index ol li {
+      list-style: none;
+      }
+      
+      div.index ol li:before {
+      display: marker;
+      content: counter(heading1) ". ";
+      counter-increment: heading1;
+      }
+      
+      div.index ol ol {
+      padding-left: 10px;
+      font-size: 10px;
+      list-style: none;
+      counter-reset: heading2;
+      }
+      
+      div.index ol ol li:before {
+      display: marker;
+      content: counter(heading1)"." counter(heading2)" ";
+      counter-increment: heading2;
+      }
+      
+      /* heading styles */
+      
+      body > h1 {
+      margin-top: 0px;
+      }
+      
+      h1 {
+      margin-top: 40px;
+      margin-bottom: 0px;
+      color: #4682B4;
+      }
+      
+      h1:before {
+      display: marker;
+      content: counter(chapter) ". ";
+      counter-increment: chapter;
+      counter-reset: section1;
+      }
+      
+      h1 + p {
+      margin-top: 5px;
+      }
+      
+      h2 {
+      margin-top: 20px;
+      color: #000000;
+      margin-bottom: 0px;
+      }
+      
+      h2:before {
+      display: marker;
+      content: counter(chapter) "." counter(section1) "  ";
+      counter-increment: section1;
+      }
+      
+      h2 + p {
+      margin-top: 0px;
+      }
+      
+      h3 {
+      margin-top: 20px;
+      color: #000000;
+      margin-bottom: 0px;
+      }
+      
+      h3:before {
+      display: marker;
+      content: counter(chapter) "." counter(section1) "." counter(section2) "  ";
+      counter-increment: section2;
+      }
+      
+      h3 + p {
+      margin-top: 0px;
+      }
+      
+      h4 {
+      margin-top: 20px;
+      color: #000000;
+      margin-bottom: 0px;
+      }
+      
+      h4:before {
+      display: marker;
+      content: counter(chapter) "." counter(section1) "." counter(section2) "." counter(section3) "  ";
+      counter-increment: section3;
+      }
+      
+      h4 + p {
+      margin-top: 0px;
+      }
+      
+      /* generated content for images and tables */
+      
+      img:after {
+      content: "[" counter(image) "] " attr(title);
+      counter-increment: image;
+      display: block;
+      font-size: 10px;
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      color: black;
+      }
+      
+      table:after {
+      content: "Table " counter(table) ": " attr(summary);
+      counter-increment: table;
+      display: table-caption;
+      caption-side: bottom;
+      font-size: 10px;
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      white-space: nowrap;
+      color: black;
+      }
+      
+      /* code for examples, code and pathnames*/
+      
+      div.example table {
+      color: black;
+      }
+      
+      div.example, div.code, div.path, div.sequence {
+      margin: 10px 0px;
+      border: 1px black solid;
+      padding: 10px;
+      background-color: #F4F4F4;
+      counter-reset: image;
+      color: maroon;
+      }
+      
+      div.example:before {
+      content: "Example " counter(example);
+      counter-increment: example;
+      display: block;
+      }
+      
+      div.example + p {
+      margin-bottom: 0px;
+      }
+      
+      div.code:before {
+      content: "Code";
+      }
+      
+      div.path:before {
+      content: "Path";
+      }
+      
+      div.sequence:before {
+      content: "Sequence";
+      }
+      
+      p.reference:before {
+      display: marker;
+      content: "[" counter(reference) "]";
+      counter-increment: reference;
+      font-weight: bold;
+      margin-right: 5px;
+      }
+      
+      div.code:before, div.example:before, div.path:before, div.sequence:before {
+      font-weight: bold;
+      font-size: 15px;
+      margin-bottom: 20px;
+      color: black;
+      }
+      
+      pre {
+      color: Green;
+      margin: 0px;
+      padding: 0px;
+      }
+      
+      
+      /* equation counter */
+      
+      e:after {
+      content: "[" counter(equation) "]";
+      counter-increment: equation;
+      display: block;
+      float: right;
+      margin-right: 10px;
+      }
+      
+      /* to prevent the CC image from being numbered */
+      
+      img[alt="Creative Commons License"] {
+      display: inline;
+      }
+      
+      img[alt="Creative Commons License"]:after {
+      display: none;
+      }
+      
+      div#cc {
+      background-color: #DCDCDC;
+      border: thin black solid;
+      padding: 10px;
+      font-size: 10px;
+      }
+
+      /* Table Design */
+      /* http://www.duoh.com/csstutorials/csstables/ */
+      #mytable {
+      width: 700px;
+      padding: 0;
+      margin: 0;
+      }
+      
+      caption {
+      padding: 0 0 5px 0;
+      width: 700px;	 
+      font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+      text-align: right;
+      }
+      
+      th {
+      font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+      color: #4f6b72;
+      border-right: 1px solid #C1DAD7;
+      border-bottom: 1px solid #C1DAD7;
+      border-top: 1px solid #C1DAD7;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-align: left;
+      padding: 6px 6px 6px 12px;
+      background: #CAE8EA url(images/bg_header.jpg) no-repeat;
+      }
+      
+      th.nobg {
+      border-top: 0;
+      border-left: 0;
+      border-right: 1px solid #C1DAD7;
+      background: none;
+      }
+      
+      td {
+      border-right: 1px solid #C1DAD7;
+      border-bottom: 1px solid #C1DAD7;
+      background: #fff;
+      padding: 6px 6px 6px 12px;
+      color: #4f6b72;
+      }
+      
+      
+      td.alt {
+      background: #F5FAFA;
+      color: #797268;
+      }
+      
+      th.spec {
+      border-left: 1px solid #C1DAD7;
+      border-top: 0;
+      background: #fff url(images/bullet1.gif) no-repeat;
+      font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+      }
+      
+      th.specalt {
+      border-left: 1px solid #C1DAD7;
+      border-top: 0;
+      background: #f5fafa url(images/bullet2.gif) no-repeat;
+      font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+      color: #797268;
+      }
+      
+    </style>
+  </head>
+  
+  <!--
+      (CC) 2003 Luke Crook. Some Rights Reserved.
+      http://creativecommons.org/licenses/by/1.0
+      This page is licensed under a Creative Commons License.
+      
+      Maintained by the Common Lisp Application Builder project at www.lispbuilder.org
+      
+      The entire styleguide was copied wholesale from http://www.markschenk.com/cssexp/publication/article.xml
+      
+      (CC) 2003 Mark Schenk. Some Rights Reserved.
+      http://creativecommons.org/licenses/by/1.0
+      This page is licensed under a Creative Commons License.
+    -->
+  
+  <BODY BGCOLOR=#FFFFFF >
+    
+    <h1><a name="top" class=none> LISPBUILDER-SDL-TTF - </a></h1>
+    
+    <blockquote>
+      <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
+      
+      <p>
+	LISPBUILDER-SDL-TTF provides a Lisp wrapper for the 
+	<a href="http://www.libsdl.org/projects/SDL_ttf/">SDL_TTF</a> library,
+	and provides support for loading and rendering True-Type fonts in an 
+	SDL application.
+	LISPBUILDER-SDL-TTF has a dependency on the LISPBUILDER-SDL package.
+	LISPBUILDER-SDL-TTF is distributed under the 
+	<a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
+      </p>
+      <p>
+	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL-TTF is version <a href="#download">0.2</a>.
+      </p>
+<!--       <p> -->
+<!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl-ttf.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl-ttf.zip</a>. -->
+<!--       </p> -->
+    </blockquote>
+    
+    <br>&nbsp;</br><h2><a class=none name="packageover">Package Overview</a></h2>
+    <p>
+      Functions and symbols exported from the LISPBUILDER-SDL-TTF package are 
+      accessible from the <code>LISPBUILDER-SDL-TTF:</code> prefix or the 
+      shorter form <code>SDL-TTF:</code> nickname.
+    </p>
+    
+    <br>&nbsp;</br><h2><a class=none name="examplesimple">Simple Example</a></h2>
+    <div class="example">
+      <p>
+	This example was created with the following code:
+      </p>
+      <p>
+	<img src="ttf-hello-world.png" width="200" height="167" title="TTF Hello World!" alt="TTF Hello World!"/>
+      </p>
+      
+      <pre>
+  (sdl:with-init ()
+    (sdl:window 320 240)
+    (sdl-ttf:initialise-default-font)
+    (sdl:with-surface (disp sdl:*default-display*)
+      (sdl-ttf:draw-string-solid-* "Hello TTF World!" 25 50
+				   :color (sdl:color :r 255 :g 0 :b 255)))
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:video-expose-event () (sdl:update-display))))
+      </pre>
+    </div>
+        
+    <div class="index">
+      <ol>
+	<li><a href="#top">LISPBUILDER-SDL-IMAGE</a></li>
+	<ol>
+	  <li><a href="#abstract">Abstract</a></li>
+	  <li><a href="#packageover">Package Overview</a></li>
+	  <li><a href="#examplesimple">Simple Example</a></li>
+	  <li><a href="#compatibility">Compatibility</a></li>
+	  <li><a href="#download">Download</a></li>
+	  <li><a href="#installation">Installation</a></li>
+	  <li><a href="#build">Build Instructions</a></li>
+	  <ol>
+	    <li><a href="#buildwindows">Windows Instructions</a></li>
+	    <li><a href="#buildlinux">Linux Instructions</a></li>
+	  </ol>
+	  <li><a href="#usage">Usage</a></li>
+	  <li><a href="#examples">Examples</a></li>
+	  <li><a href="#dependency">Dependencies</a></li>
+	  <li><a href="#license">License</a></li>
+	  <li><a href="#dictionar">LISPBUILDER-SDL-TTF dictionary</a></li>
+	  <ol>
+	    <li><a href="#dictionary">INDEX</a></li>
+	  </ol>
+	  <li><a href="#ack">Acknowledgements</a></li>
+	</ol>
+      </div>
+      
+      <br>&nbsp;</br><h2><a class=none name="dictionary">The LISPBUILDER-SDL-TTF dictionary Index</h2>
+	<ol>
+	        <li><a href="#*default-font*"><code>*default-font*</code></a>
+	          <li><a href="#*default-font-path*"><code>*default-font-path*</code></a>
+	          <li><a href="#close-font"><code>close-font</code></a>
+	          <li><a href="#draw-font"><code>draw-font</code></a>
+	          <li><a href="#draw-font-at"><code>draw-font-at</code></a>
+	          <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a>
+	          <li><a href="#draw-string-blended"><code>draw-string-blended</code></a>
+	          <li><a href="#draw-string-blended-*"><code>draw-string-blended-*</code></a>
+	          <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a>
+	          <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a>
+	          <li><a href="#draw-string-solid"><code>draw-string-solid</code></a>
+	          <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a>
+	          <li><a href="#font"><code>font</code></a>
+	          <li><a href="#fp-position"><code>fp-position</code></a>
+	          <li><a href="#free-font"><code>free-font</code></a>
+	          <li><a href="#get-font-ascent"><code>get-font-ascent</code></a>
+	          <li><a href="#get-font-descent"><code>get-font-descent</code></a>
+	          <li><a href="#get-font-face-family-name"><code>get-font-face-family-name</code></a>
+	          <li><a href="#get-font-face-style-name"><code>get-font-face-style-name</code></a>
+	          <li><a href="#get-font-faces"><code>get-font-faces</code></a>
+	          <li><a href="#get-font-height"><code>get-font-height</code></a>
+	          <li><a href="#get-font-line-skip"><code>get-font-line-skip</code></a>
+	          <li><a href="#get-font-size"><code>get-font-size</code></a>
+	          <li><a href="#get-font-style"><code>get-font-style</code></a>
+	          <li><a href="#get-glyph-metric"><code>get-glyph-metric</code></a>
+	          <li><a href="#init-ttf"><code>init-ttf</code></a>
+	          <li><a href="#initialise-default-font"><code>initialise-default-font</code></a>
+	          <li><a href="#initialise-font"><code>initialise-font</code></a>
+	          <li><a href="#is-font-face-fixed-width"><code>is-font-face-fixed-width</code></a>
+	          <li><a href="#is-init"><code>is-init</code></a>
+	          <li><a href="#new-font"><code>new-font</code></a>
+	          <li><a href="#open-font"><code>open-font</code></a>
+	          <li><a href="#quit-ttf"><code>quit-ttf</code></a>
+	          <li><a href="#set-font-style"><code>set-font-style</code></a>
+	          <li><a href="#with-init"><code>with-init</code></a>
+	          <li><a href="#with-open-font"><code>with-open-font</code></a>
+	          <li><a href="#x"><code>x</code></a>
+	          <li><a href="#y"><code>y</code></a>
+	        
+	  </li>
+	</ol>
+	
+	
+      <br>&nbsp;</br><h2><a class=none name="compatibility">Compatibility</h2>
+	<p>
+	  The following table describes the status of the Lisp implementations that have been tested with 
+	  LISPBUILDER-SDL-IMAGE:
+	</p>
+	
+	<table id="mytable" cellspacing="0" summary="Compatibility"> 
+	  <tr>
+	    <th><b>Lisp Implementation</b></th>
+	    <th colspan="3"><b>LISPBUILDER-SDL-IMAGE Status</b></th>
+	    <th><b>Comments</b></th>
+	  </tr>	
+	  <tr>
+	    <th colspan="1"></th>
+	    <th><b>Win32</b></th>
+	    <th><b>Linux</b></th>
+	    <th><b>MacOS</b></th>
+	    <th></th>
+	  </tr>
+	  <tr>
+	    <th class="spec" scope="row">
+	      <a href="http://clisp.cons.org/">CLISP v2.38</a>
+	    </th>
+	    <td bgcolor="#60c060">Working</td>
+	    <td bgcolor="#60c060">Perhaps</td>
+	    <td bgcolor="#ff6060">No</td>
+	    <td></td>
+	  </tr>
+	  <tr>
+	    <th class="specalt" scope="row">
+	      <a href="http://www.lispworks.com/">Lispworks v2.4.6 Personal</a>
+	    </th>
+	    <td class="alt" bgcolor="#60c060">Working</td>
+	    <td class="alt" bgcolor="#60c060">Perhaps</td>
+	    <td class="alt" bgcolor="#ff6060">No</td>
+	    <td></td>
+	  </tr>
+	  <tr>
+	    <th class="spec" scope="row">
+	      <a href="http://www.franz.com/">Allegro Express 8.0</a>
+	    </th>
+	    <td bgcolor="#ff6060">Unknown</td>
+	    <td bgcolor="#ff6060">Unknown</td>
+	    <td bgcolor="#ff6060">No</td>
+	    <td></td>
+	  </tr>
+	  <tr>
+	    <th class="specalt" scope="row">
+	      <a href="http://openmcl.clozure.com/">OpenMCL</a>
+	    </th>
+	    <td class="alt" bgcolor=blue><font color="#FFFFFF">NA</font></td>
+	    <td class="alt" bgcolor=blue><font color="#FFFFFF">NA</font></td>
+	    <td class="alt" bgcolor="#ff6060">Unknown</td>
+	    <td></td>
+	  </tr>
+	  <tr>
+	    <th class="spec" scope="row">
+	      <a href="http://www.sbcl.org/">SBCL</a>
+	    </th>
+	    <td bgcolor="#60c060">Working</td>
+	    <td bgcolor="#60c060">Perhaps</td>
+	    <td bgcolor="#ff6060">No</td>
+	    <td></td>
+	  </tr>
+	</table>
+	
+	
+	<br>&nbsp;</br><h2><a class=none name="download">Download</a></h2>
+	<ul>
+	  <li><font color=red>Development:</font> Available via anonymous SVN at:
+	    <pre>
+	      svn co https://lispbuilder.svn.sourceforge.net/svnroot/lispbuilder lispbuilder
+	    </pre>
+	  </li>
+	  <li>
+	    <font color=red>Stable:</font> The latest stable versions are available from the
+	    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">LISPBUILDER-SDL repository on SourceForge.</a>
+	  </li>
+	  <li>
+	    <font color=red>The Edi Weitz 'Starter Pack' Version:</font> The stable version of Lispbuilder, 
+	    suitable for the installation of installation LISPBUILDER-SDL-TTF using the Lisp Starter Pack from Edi Weitz is can be downloaded from 
+	    <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl-ttf.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl-ttf.zip</a>.
+	  </li>
+	</ul>
+	
+	<br>&nbsp;</br><h2><a class=none name="installation">Installation</a></h2>
+	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#installation">the LISPBUILDER documentation</a>
+	  for installation instructions.
+	</p>
+	<br>&nbsp;</br><h2><a class=none name="build">Build Instructions</a></h2>
+	<p>LISPBUILDER-SDL-TTF requires that a glue library <code>lispbuilder-sdl-ttf-glue</code> is also installed
+	  in the library search path. <code>lispbuilder-sdl-ttf-glue</code> wraps the native font rendering functions
+	  provided by <code>SDL_TTF</code> as these functions require that a <code>SDL_Color</code> struct is passed
+	  by value. However CFFI only supports passing structs by reference.
+	</p>
+	<br>&nbsp;</br><h3><a class=none name="buildwindows">Windows Build Instructions</a></h2>
+	<p><code>lispbuilder-sdl-ttf-glue</code> is installed as part of the <code>LISPBUILDER-SDL-TTF-BINARIES</code>
+	  package into the directory <code>LISPBUILDER-SDL-TTF/BIN</code>.
+	</p>
+	<p>To rebuild the glue library:
+	  <ol>
+	    <li>A working installation of <a href="http://www.mingw.org/">MingW</a> is required.</i>
+	    <li>Make sure that the path to the include files for SDL and SDL_TTF are specified 
+	      correctly in <code>LISPBUILDER-SDL-TTF/Makefile.mingw</code>. Modify the existing line 
+	      <code>SDL_TTF_CFLAGS=$(CFLAGS) -ISDL-1.2.11/include -ISDL_ttf-2.0.8</code>.</li>
+	    <li>In the <code>LISPBUILDER-SDL-TTF/</code> directory, execute <code>make</code> 
+	      to create the glue library.</li>
+	    <li>If the build is successful, the <code>lispbuilder-sdl-ttf-glue</code> library will be found in the 
+	      <code>LISPBUILDER-SDL-TTF/BUILD/</code> directory.</li>
+	    <li>Copy or move this file <code>LISPBUILDER-SDL-TTF/BUILD/lispbuilder-sdl-ttf-glue.dll</code> to the 
+	      <code>BIN</code> directory <code>LISPBUILDER-SDL-TTF/BIN/lispbuilder-sdl-ttf-glue.dll</code></li>
+	  </ol>
+	</p>
+
+	<br>&nbsp;</br><h3><a class=none name="buildlinux">Linux Build Instructions</a></h2>
+	<p>To rebuild the glue library:
+	  <ol>
+	    <li>In the <code>LISPBUILDER-SDL-TTF/</code> directory, execute <code>make</code> 
+	      to create the glue library.</li>
+	    <li>If the build is successful, the <code>lispbuilder-sdl-ttf-glue</code> library will be found in the 
+	      <code>LISPBUILDER-SDL-TTF/BUILD/</code> directory.</li>
+	    <li>In the <code>LISPBUILDER-SDL-TTF/</code> directory, execute <code>make install_ttf</code> 
+	      to install the <code>lispbuilder-sdl-ttf-glue</code> library.</li>
+	  </ol>
+	</p>
+
+	
+	<br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER-SDL-TTF</a></h2>
+	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#usage">the LISPBUILDER documentation</a>
+	  for Usage instructions.
+	</p>
+	
+	<br>&nbsp;</br><h2><a class=none name="examples">Running Examples in LISPBUILDER-SDL-TTF-EXAMPLES</a></h2>
+	<p>The following examples are contained in the package LISPBUILDER-SDL-TTF-EXAMPLES:
+	</p>
+	<ul>
+	  <li>(SDL-TTF-EXAMPLES:FONT-EXAMPLE)</li>
+	</ul>
+	<p>Enter the following at the REPL to load the examples in the 
+	  LISPBUILDER-SDL-TTF-EXAMPLES package:</p>
+	<pre>
+	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-TTF-examples)
+	</pre>
+	
+	
+	<br>&nbsp;</br><h2><a class=none name="dependency">Dependencies</a></h2>
+	<p>LISPBUILDER-SDL-TTF has a dependency on LISPBUILDER-SDL.</p>
+	
+	
+	<br>&nbsp;</br><h2><a class=none name="license">License</a></h2>
+	<p>
+	  LISPBUILDER-SDL-TTF is distributed under the 
+	  <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
+	</p>
+	
+	
+	
+	<br>&nbsp;</br><h2><a class=none name="dictionar">The LISPBUILDER-SDL-TTF dictionary</a></h2>
+	
+	
+	
+
+
+<!-- Entry for *DEFAULT-FONT* -->
+
+<p><br>[Special variable]<br><a class=none name='*default-font*'><b>*default-font*</b></a>
+<blockquote><br>
+
+When a LISPBUILDER-SDL-TTF function or macro has an &amp;OPTIONAL or :KEYword argument 
+FONT, the default action is to bind to *default-font*.
+*default-font* is set to NIL initially.
+WITH-OPEN-FONT, INITIALISE-FONT, AND INITIALISE-DEFAULT-FONT will bind *default-font* to a Truetype font FONT.
+
+</blockquote>
+
+<!-- End of entry for *DEFAULT-FONT* -->
+
+
+<!-- Entry for *DEFAULT-FONT-PATH* -->
+
+<p><br>[Special variable]<br><a class=none name='*default-font-path*'><b>*default-font-path*</b></a>
+<blockquote><br>
+
+The path to the default font, &quot;Bitstream Vera&quot;
+
+</blockquote>
+
+<!-- End of entry for *DEFAULT-FONT-PATH* -->
+
+
+<!-- Entry for CLOSE-FONT -->
+
+<p><br>[Function]<br><a class=none name='close-font'><b>close-font</b> <i><tt>&amp;key</tt> font *default-font*</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Closes the font FONT when the font library is intitialized, and returns T.
+Returns NIL if the font cannot be closed or the font library is not initialized.
+Does not uninitialise the font library.
+
+</blockquote>
+
+<!-- End of entry for CLOSE-FONT -->
+
+
+<!-- Entry for DRAW-FONT -->
+
+<p><br>[Function]<br><a class=none name='draw-font'><b>draw-font</b> <i>font <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Blit the cached SURFACE in FONT to the destination surface SURFACE. 
+The cached surface is created during a previous call to any of the DRAW-STRING* functions. 
+Uses POSITION in the cached SURFACE to render to the X/Y coordinates on the destination SURFACE. 
+
+This function can speed up blitting when the text remains unchanged between screen updates.
+
+</blockquote>
+
+<!-- End of entry for DRAW-FONT -->
+
+
+<!-- Entry for DRAW-FONT-AT -->
+
+<p><br>[Function]<br><a class=none name='draw-font-at'><b>draw-font-at</b> <i>font point <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+See DRAW-FONT. 
+POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT.
+
+</blockquote>
+
+<!-- End of entry for DRAW-FONT-AT -->
+
+
+<!-- Entry for DRAW-FONT-AT-* -->
+
+<p><br>[Function]<br><a class=none name='draw-font-at-*'><b>draw-font-at-*</b> <i>font x y <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+See DRAW-FONT. 
+X and Y are used to position the cached SURFACE, where X and Y are INTEGERS.
+
+</blockquote>
+
+<!-- End of entry for DRAW-FONT-AT-* -->
+
+
+<!-- Entry for DRAW-STRING-BLENDED -->
+
+<p><br>[Function]<br><a class=none name='draw-string-blended'><b>draw-string-blended</b> <i>text position <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+See DRAW-STRING-BLENDED-*.
+:POSITION is the x and y position to render the text, of type SDL:POINT.
+
+</blockquote>
+
+<!-- End of entry for DRAW-STRING-BLENDED -->
+
+
+<!-- Entry for DRAW-STRING-BLENDED-* -->
+
+<p><br>[Function]<br><a class=none name='draw-string-blended-*'><b>draw-string-blended-*</b> <i>text x y <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
+using the Blended mode. 
+
+X/Y are the x and y position coordinates, as INTEGERS.
+
+FONT is a FONT object.
+
+TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
+must match :ENCODING.
+
+:ENCODING specifies the format of the text to render and is one of: 
+  :LATIN1
+  :UTF8
+  :UNICODE
+  :GLYPH
+
+:SURFACE is the surface to render text onto, of type SDL:SURFACE 
+
+:COLOR color is the color used to render text, of type SDL:COLOR-STRUCT
+
+</blockquote>
+
+<!-- End of entry for DRAW-STRING-BLENDED-* -->
+
+
+<!-- Entry for DRAW-STRING-SHADED -->
+
+<p><br>[Function]<br><a class=none name='draw-string-shaded'><b>draw-string-shaded</b> <i>text position fg-color bg-color <tt>&amp;key</tt> encoding font surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+See DRAW-STRING-SHADED-*
+:POSITION is the x and y position to render the text, of type SDL:POINT.
+
+</blockquote>
+
+<!-- End of entry for DRAW-STRING-SHADED -->
+
+
+<!-- Entry for DRAW-STRING-SHADED-* -->
+
+<p><br>[Function]<br><a class=none name='draw-string-shaded-*'><b>draw-string-shaded-*</b> <i>text x y fg-color bg-color <tt>&amp;key</tt> encoding font surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Render text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
+onto surface :SURFACE, using the Shaded mode. 
+
+X/Y are the x and y position coordinates, as INTEGERS.
+
+FONT is a FONT object.
+
+TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
+must match :ENCODING.
+
+FG-COLOR is the foreground color of the text, of type SDL:COLOR-STRUCT 
+
+BG-COLOR is the background color of the text, of type SDL:COLOR-STRUCT 
+
+:ENCODING specifies the format of the text to render and is one of: 
+  :LATIN1
+  :UTF8
+  :UNICODE
+  :GLYPH
+
+:SURFACE is the surface to render text onto, of type SDL:SURFACE 
+
+</blockquote>
+
+<!-- End of entry for DRAW-STRING-SHADED-* -->
+
+
+<!-- Entry for DRAW-STRING-SOLID -->
+
+<p><br>[Function]<br><a class=none name='draw-string-solid'><b>draw-string-solid</b> <i>text position <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+See DRAW-STRING-SOLID-*.
+:POSITION is the x and y position to render the text, of type SDL:POINT.
+
+</blockquote>
+
+<!-- End of entry for DRAW-STRING-SOLID -->
+
+
+<!-- Entry for DRAW-STRING-SOLID-* -->
+
+<p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>text x y <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
+using the Solid mode. 
+Caches the new surface in the FONT object. This cached surface
+
+
+X/Y are the x and y position coordinates, as INTEGERS.
+
+FONT is a FONT object.
+
+TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
+must match :ENCODING.
+
+:ENCODING specifies the format of the text to render and is one of: 
+  :LATIN1
+  :UTF8
+  :UNICODE
+  :GLYPH
+
+:SURFACE is the surface to render text onto, of type SDL:SURFACE 
+
+:COLOR color is the color used to render text, of type SDL:COLOR-STRUCT
+
+</blockquote>
+
+<!-- End of entry for DRAW-STRING-SOLID-* -->
+
+
+<!-- Entry for FONT -->
+
+<p><br>[Standard class]<br><a class=none name='font'><b>font</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FONT -->
+
+
+<!-- Entry for FP-POSITION -->
+
+<p><br>[Generic function]<br><a class=none name='fp-position'><b>fp-position</b> <i>font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the foreign SDL_Rect that determines the position of the FONT.
+
+</blockquote>
+
+<!-- End of entry for FP-POSITION -->
+
+
+<!-- Entry for FP-POSITION -->
+
+<p><br>[Method]<br><a class=none><b>fp-position</b> <i>(font font)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FP-POSITION -->
+
+
+<!-- Entry for FREE-FONT -->
+
+<p><br>[Function]<br><a class=none name='free-font'><b>free-font</b> <i>font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Free&#039;s the resources used by FONT.
+
+</blockquote>
+
+<!-- End of entry for FREE-FONT -->
+
+
+<!-- Entry for GET-FONT-ASCENT -->
+
+<p><br>[Function]<br><a class=none name='get-font-ascent'><b>get-font-ascent</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the maximum pixel ascent of all glyphs of font FONT. 
+This can also be interpreted as the distance from the top of the font to the baseline. 
+It could be used when drawing an individual glyph relative to a top point, 
+by combining it with the glyph&#039;s maxy metric to resolve the top of the rectangle used when 
+blitting the glyph on the screen. 
+
+FONT is a FONT object. 
+
+Returns the ascent of the font as an INTEGER.
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-ASCENT -->
+
+
+<!-- Entry for GET-FONT-DESCENT -->
+
+<p><br>[Function]<br><a class=none name='get-font-descent'><b>get-font-descent</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the maximum pixel descent of all glyphs of font FONT. 
+This can also be interpreted as the distance from the baseline to the bottom of the font. 
+It could be used when drawing an individual glyph relative to a bottom point, 
+by combining it with the glyph’s maxy metric to resolve the top of the rectangle used when 
+blitting the glyph on the screen. 
+
+FONT is a FONT object. 
+
+Returns the descent of the font as an INTEGER.
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-DESCENT -->
+
+
+<!-- Entry for GET-FONT-FACE-FAMILY-NAME -->
+
+<p><br>[Function]<br><a class=none name='get-font-face-family-name'><b>get-font-face-family-name</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the current font face family name of font FONT or NIL if the information is unavailable. 
+
+FONT is a FONT object. 
+
+Returns the name of the font face family name as a STRING, or NIL if unavailable.
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-FACE-FAMILY-NAME -->
+
+
+<!-- Entry for GET-FONT-FACE-STYLE-NAME -->
+
+<p><br>[Function]<br><a class=none name='get-font-face-style-name'><b>get-font-face-style-name</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the current font face style name of font FONT, or NIL if the information is unavailable. 
+
+FONT is a FONT object. 
+
+Returns the name of the font face style as a STRING, or NIL if unavailable.
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-FACE-STYLE-NAME -->
+
+
+<!-- Entry for GET-FONT-FACES -->
+
+<p><br>[Function]<br><a class=none name='get-font-faces'><b>get-font-faces</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the number of faces &#039;sub-fonts&#039; available in the font FONT. 
+This is a count of the number of specific fonts (based on size and style and other
+ typographical features perhaps) contained in the font itself. It seems to be a useless
+ fact to know, since it can’t be applied in any other SDL_ttf functions.
+
+FONT is a FONT object. 
+
+Returns the number of faces in the FONT as an INTEGER.
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-FACES -->
+
+
+<!-- Entry for GET-FONT-HEIGHT -->
+
+<p><br>[Function]<br><a class=none name='get-font-height'><b>get-font-height</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the maximum pixel height of all glyphs of font FONT. 
+Use this height for rendering text as close together vertically as possible, 
+though adding at least one pixel height to it will space it so they can&#039;t touch. 
+Remember that SDL_ttf doesn&#039;t handle multiline printing, so you are responsible 
+for line spacing, see GET-FONT-LINE-SKIP as well. 
+
+FONT is a FONT object. 
+
+Retuns the height of the font as an INTEGER.
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-HEIGHT -->
+
+
+<!-- Entry for GET-FONT-LINE-SKIP -->
+
+<p><br>[Function]<br><a class=none name='get-font-line-skip'><b>get-font-line-skip</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the recommended pixel height of a rendered line of text of the font FONT. 
+This is usually larger than the GET-FONT-HEIGHT of the font. 
+
+FONT is a FONT object. 
+
+Returns the pixel height of the font as an INTEGER.
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-LINE-SKIP -->
+
+
+<!-- Entry for GET-FONT-SIZE -->
+
+<p><br>[Function]<br><a class=none name='get-font-size'><b>get-font-size</b> <i>text <tt>&amp;key</tt> size encoding font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Calculates and returns the resulting SIZE (width or height) of the SDL:SURFACE required to render the 
+font FONT, or NIL on error.
+No actual rendering is performed however correct kerning is calculated for the actual width. 
+The height returned is the same as returned using GET-FONT-HEIGHT. 
+
+FONT is the font from which to calculate the size of the string.
+
+TEXT is the LATIN1 string to size. 
+
+:SIZE may be one of: 
+  :W , text width
+  :H , text height
+
+:ENCODING may be one of: 
+  :TEXT
+  :UTF8
+  :UNICODE
+
+Returns the width or height of the specified SDL:SURFACE, or NIL upon error.
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-SIZE -->
+
+
+<!-- Entry for GET-FONT-STYLE -->
+
+<p><br>[Function]<br><a class=none name='get-font-style'><b>get-font-style</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the rendering style of font. If no style is set then :STYLE-NORMAL is returned, 
+or NIL upon error.
+  
+FONT is a FONT object. 
+
+Retuns the font style as one or more of:
+  :STYLE-NORMAL
+  :STYLE-NORMAL
+  :STYLE-BOLD
+  :STYLE-ITALIC
+  :STYLE-UNDERLINE
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-STYLE -->
+
+
+<!-- Entry for GET-GLYPH-METRIC -->
+
+<p><br>[Function]<br><a class=none name='get-glyph-metric'><b>get-glyph-metric</b> <i>ch <tt>&amp;key</tt> metric font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns the specified glyph metrics for the character CH, or NIL upon error. 
+The glyph metrics are specified by the keyword parameter :METRIC.
+
+FONT is a FONT object from which to retrieve the glyph metrics of the character CH.
+
+CH is a UNICODE chararacter specified as an INTEGER.
+
+:METRIC may be one of: 
+  :MINX , for the minimum X offset
+  :MAXX , for the maximum X offset
+  :MINY , for the minimum Y offset
+  :MAXY , for the maximum Y
+  :ADVANCE , for the advance offset
+
+RESULT is the glyph metric returend as an INTEGER.
+
+</blockquote>
+
+<!-- End of entry for GET-GLYPH-METRIC -->
+
+
+<!-- Entry for INIT-TTF -->
+
+<p><br>[Function]<br><a class=none name='init-ttf'><b>init-ttf</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Initializes the font library if uninitialized and returns T, 
+or else returns NIL if uninitialized.
+
+</blockquote>
+
+<!-- End of entry for INIT-TTF -->
+
+
+<!-- Entry for INITIALISE-DEFAULT-FONT -->
+
+<p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Binds *DEFAULT-FONT* to a FONT file FILENAME at PATHNAME, of size SIZE.
+Closes any previous font that is already bound to *DEFAULT-FONT*.
+
+FILENAME is the file name of the FONT, of type STRING.
+
+PATHNAME is the pathname of the FONT, of type STRING.
+
+SIZE is the size of the font to initialise, of type INTEGER.
+
+</blockquote>
+
+<!-- End of entry for INITIALISE-DEFAULT-FONT -->
+
+
+<!-- Entry for INITIALISE-FONT -->
+
+<p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>filename pathname size</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Binds *DEFAULT-FONT* to a FONT file FILENAME at PATHNAME, of size SIZE.
+Closes any previous font that is already bound to *DEFAULT-FONT*.
+Automatically initilises the font library if uninitialised 
+at FONT load time. 
+
+FILENAME is the file name of the FONT, of type STRING.
+
+PATHNAME is the pathname of the FONT, of type STRING.
+
+SIZE is the size of the font to initialise, of type INTEGER.
+
+</blockquote>
+
+<!-- End of entry for INITIALISE-FONT -->
+
+
+<!-- Entry for IS-FONT-FACE-FIXED-WIDTH -->
+
+<p><br>[Function]<br><a class=none name='is-font-face-fixed-width'><b>is-font-face-fixed-width</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Returns T if the font face is of a fixed width, or NIL otherwise. 
+Fixed width fonts are monospace, meaning every character that exists in the font is the same width. 
+
+FONT is a FONT object. 
+
+Retuns T FONT is of fixed width, and NIL otherwise.
+
+</blockquote>
+
+<!-- End of entry for IS-FONT-FACE-FIXED-WIDTH -->
+
+
+<!-- Entry for IS-INIT -->
+
+<p><br>[Function]<br><a class=none name='is-init'><b>is-init</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Queries the initialization status of the truetype library. 
+Returns T if already initialized and NIL if uninitialized.
+
+</blockquote>
+
+<!-- End of entry for IS-INIT -->
+
+
+<!-- Entry for NEW-FONT -->
+
+<p><br>[Function]<br><a class=none name='new-font'><b>new-font</b> <i>fp</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for NEW-FONT -->
+
+
+<!-- Entry for OPEN-FONT -->
+
+<p><br>[Function]<br><a class=none name='open-font'><b>open-font</b> <i>filename size <tt>&amp;optional</tt> pathname</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Attempts to open the specified truetype font. 
+Returns a FONT object if successful, returns NIL if unsuccessful.
+
+FILENAME is the name of the truetype font to be opened, of type STRING
+PATHNAME is the path to the truetype font to be opened, of type STRING
+
+SIZE is the size of the font, as an INTEGER 
+
+Returns a new FONT, or NIL upon error.
+
+</blockquote>
+
+<!-- End of entry for OPEN-FONT -->
+
+
+<!-- Entry for QUIT-TTF -->
+
+<p><br>[Function]<br><a class=none name='quit-ttf'><b>quit-ttf</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Uninitializes the font library if initialized. Returns NIL.
+
+</blockquote>
+
+<!-- End of entry for QUIT-TTF -->
+
+
+<!-- Entry for SET-FONT-STYLE -->
+
+<p><br>[Function]<br><a class=none name='set-font-style'><b>set-font-style</b> <i>style <tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Sets the rendering style STYLE of font FONT. This will flush the internal cache of previously 
+rendered glyphs, even if there is no change in style, so it may be best to check the
+ current style using GET-FONT-STYLE first. 
+
+NOTE: Combining :STYLE-UNDERLINE with anything can cause a segfault, other combinations 
+may also do this. 
+
+FONT is a FONT object. 
+
+STYLE is a list of one or more: 
+  :STYLE-NORMAL
+  :STYLE-BOLD
+  :STYLE-ITALIC
+  :STYLE-UNDERLINE
+
+</blockquote>
+
+<!-- End of entry for SET-FONT-STYLE -->
+
+
+<!-- Entry for WITH-INIT -->
+
+<p><br>[Macro]<br><a class=none name='with-init'><b>with-init</b> <i>nil declaration* statement*</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Initialises the truetype font library. Will exit if the libary cannot be initialised. 
+WITH-INIT must be called before using other functions in this library. 
+LISPBUILDER-SDL does not have to be initialized prior to this call.
+
+</blockquote>
+
+<!-- End of entry for WITH-INIT -->
+
+
+<!-- Entry for WITH-OPEN-FONT -->
+
+<p><br>[Macro]<br><a class=none name='with-open-font'><b>with-open-font</b> <i>(font-name size <tt>&amp;optional</tt> font-path) declaration* statement*</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+This is a convenience macro that will first attempt to intialize the truetype font library 
+of FONT-NAME by calling WITH-INIT, and if successfull open the specified truetype font using OPEN-FONT. 
+Will exit if the library cannot be initialized or the font cannot be opened. 
+
+Binds *default-font* to the font in font-name. 
+
+Several truetype fonts or font sizes may be opened for use within a single SDL application.
+However only a single FONT may be open at any one time. WITH-OPEN-FONT calls may not be nested.
+
+FONT-NAME is the name of the truetype font to be opened, of type STRING
+
+SIZE is the size of the font, as an INTEGER
+
+FONT-PATH is the path to the font, of type STRING
+
+</blockquote>
+
+<!-- End of entry for WITH-OPEN-FONT -->
+
+
+<!-- Entry for X -->
+
+<p><br>[Generic accessor]<br><a class=none name='x'><b>x</b> <i>font</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>x</b> <i>font</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+Returns the top left X position of the font.
+
+</blockquote>
+
+<!-- End of entry for X -->
+
+
+<!-- Entry for X -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(font font)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>x</b> <i>(font font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for X -->
+
+
+<!-- Entry for Y -->
+
+<p><br>[Generic accessor]<br><a class=none name='y'><b>y</b> <i>font</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>y</b> <i>font</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+Returns the top left Y position of the font.
+
+</blockquote>
+
+<!-- End of entry for Y -->
+
+
+<!-- Entry for Y -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(font font)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>y</b> <i>(font font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for Y -->
+<br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
+
+<ul>
+  <li>
+    Documentation prepared using Edi Weitz's  
+    <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+  </li>
+</ul>
+
+<p>
+  <a href="index.html">BACK</a>
+</p>
+  
+</body>
+</html>
