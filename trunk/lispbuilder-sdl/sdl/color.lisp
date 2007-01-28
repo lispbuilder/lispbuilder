@@ -115,6 +115,8 @@
   )
 
 (defmacro with-foreign-color-copy ((struct color) &body body)
+  "Creates a new foreign SDL_Color object STRUCT on the stack. Then copies the color components from COLOR into STRUCT.
+STRUCT is free'd after BODY." 
   `(cffi:with-foreign-object (,struct 'sdl-cffi::SDL-Color)
      (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct sdl-cffi::SDL-Color)
        (setf sdl-cffi::r (r ,color)
