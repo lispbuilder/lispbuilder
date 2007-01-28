@@ -69,22 +69,22 @@
   ;;  (#-clisp(cffi:cancel-finalization font))
   )
 
-(defun make-text-image (string &key
-			(cache nil) (font *default-font*) surface)
-  "given an initialised font and a string, draw the string to a surface and return the surface pointer"
-  (unless surface
-    (setf surface (convert-surface :surface (create-surface (* (font-width font)
-							       (length string))
-							    (font-height font)
-							    :key-color (key-color font)))))
-  (fill-surface (key-color font)
-		:surface surface)
-  (draw-string-* string 0 0
-		 :surface surface
-		 :font font)
-  (when cache
-    (setf (cached-surface font) surface))
-  surface)
+(defun render-string (string &key
+		      (font *default-font*))
+  "given an initialised font and a string, draw the string to a new surface cached in the FONT."
+  (let ((new-surface (convert-surface :surface (create-surface (* (font-width font)
+								  (length string))
+							       (font-height font)
+							       :key-color (key-color font)))))
+    (when (typep (cached-surface font) 'sdl-surface)
+      (free-surface (cached-surface font)))
+    (fill-surface (key-color font)
+		  :surface new-surface)
+    (draw-string-* string 0 0
+		   :surface new-surface
+		   :font font)
+    (setf (cached-surface font) new-surface))
+  (cached-surface font))
 
 (defun draw-character-* (font x y char &key
 			 (surface *default-surface*))
@@ -160,17 +160,13 @@
 	 (incf left-x (font-width font)))))
 
 (defun draw-font (&key (font *default-font*) (surface *default-surface*))
-  (sdl-base::blit-surface (fp font) (fp surface) (cffi:null-pointer) (fp-position font)))
+  (blit-surface (cached-surface font) surface))
 
 (defun draw-font-at (position &key (font *default-font*) (surface *default-surface*))
-  (draw-font-at-* (x position) (y position) :font font :surface surface))
+  (draw-surface-at (cached-surface font) position :surface surface))
 
 (defun draw-font-at-* (x y &key (font *default-font*) (surface *default-surface*))
-  (when (and x y)
-    (setf (x (cached-surface font)) x
-	  (y (cached-surface font)) y)
-    (draw-font :font font :surface surface))
-  font)
+  (draw-surface-at-* (cached-surface font) x y :surface surface))
 
 ;; (defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional (font-path ""))
 ;; 			  &body body)

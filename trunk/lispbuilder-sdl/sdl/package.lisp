@@ -168,7 +168,7 @@
    #:font
    #:load-font
    #:free-font
-   #:make-text-image
+   #:render-string
    #:draw-character-*
    #:draw-string
    #:draw-string-*
