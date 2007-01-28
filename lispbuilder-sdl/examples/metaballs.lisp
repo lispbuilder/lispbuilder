@@ -9,7 +9,7 @@
 (defvar *draw-gridp* nil)
 (defvar *draw-meta-centerp* nil)
 
-(let* ((frame-values 10)
+(let* ((frame-values 30)
        (frame-times (make-array frame-values :initial-element 0 :element-type 'fixnum))
        (frame-time-last 0)
        (frame-count 0))
@@ -21,7 +21,7 @@
     (setf frame-count 0
 	  frame-time-last (sdl-cffi::SDL-get-ticks)))
 
-  (defun display-fps (surface)
+  (defun display-fps (x y surface)
     (declare (optimize (safety 0) (speed 3) (space 1)))
     (let ((get-ticks (sdl-cffi::SDL-get-ticks))
           (frames-per-second 0.0))
@@ -35,11 +35,8 @@
 	(dotimes (i frame-values)
 	  (incf frames-per-second (aref frame-times i)))
 	(setf frames-per-second (sdl:cast float (/ 1000 (/ frames-per-second frame-values))))
-	(sdl:fill-surface (sdl:color) :surface surface)
-	(sdl:draw-string-* (format nil "fps : ~d" (coerce frames-per-second 'float))
-			   20 0
-			   :surface surface))
-      surface)))
+	(sdl:render-string (format nil "fps : ~d" (coerce frames-per-second 'float))))
+      (sdl:draw-font-at-* x y :surface surface))))
 
 (defstruct mmanager
   (screen-width 0 :type fixnum)
@@ -366,12 +363,9 @@
       (setf (sdl:frame-rate) 0)
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
       (fps-init)
-      (sdl:with-surfaces ((grid (sdl:create-surface (sdl:width sdl:*default-display*)
-						    (sdl:height sdl:*default-display*)
-						    :surface sdl:*default-display*))
-			  (fps (sdl:create-surface 150 20 :surface sdl:*default-display*
-						   :key-color (sdl:color :r 0 :g 0 :b 0))))
-	(sdl:set-position-* fps :x 10 :y 260)
+      (sdl:with-surface (grid (sdl:create-surface (sdl:width sdl:*default-display*)
+						  (sdl:height sdl:*default-display*)
+						  :surface sdl:*default-display*) t)
 	(draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)
@@ -392,5 +386,5 @@
 		 (when *draw-meta-centerp* ()
 		       (draw-meta-center manager meta-balls meta-center-color sdl:*default-display*))
 		 (render-loop manager meta-balls meta-color sdl:*default-display*)
-		 (sdl:draw-surface (display-fps fps) :surface sdl:*default-display*)
+		 (display-fps 10 260 sdl:*default-display*)
 		 (sdl:update-display)))))))
