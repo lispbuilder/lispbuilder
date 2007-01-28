@@ -55,15 +55,15 @@
   (+ (sdl-base::rect-x (fp rectangle))
      (sdl-base::rect-w (fp rectangle))))
 (defmethod (setf x2) (h-val (rectangle rectangle))
-  (setf (sdl-base::rect-w (fp rectangle)) (+ (sdl-base::rect-x (fp rectangle))
-					     h-val)))
+  (setf (sdl-base::rect-w (fp rectangle)) (- h-val
+					     (sdl-base::rect-x (fp rectangle)))))
 
 (defmethod y2 ((rectangle rectangle))
   (+ (sdl-base::rect-y (fp rectangle))
      (sdl-base::rect-h (fp rectangle))))
 (defmethod (setf y2) (h-val (rectangle rectangle))
-  (setf (sdl-base::rect-h (fp rectangle)) (+ (sdl-base::rect-y (fp rectangle))
-					     h-val)))
+  (setf (sdl-base::rect-h (fp rectangle)) (- h-val
+					     (sdl-base::rect-y (fp rectangle)))))
 
 (defmethod width ((rectangle rectangle))
   (sdl-base::rect-w (fp rectangle)))
