@@ -89,12 +89,10 @@
   (vector (x rectangle) (y rectangle)))
 
 (defmethod set-point ((rectangle rectangle) (position vector))
-  (set-rectangle-* rectangle :x (x position) (y position))
-  rectangle)
+  (set-rectangle-* rectangle :x (x position) (y position)))
 
 (defmethod set-point-* ((rectangle rectangle) &key x y)
-  (set-rectangle-* rectangle :x x :y y)
-  rectangle)
+  (set-rectangle-* rectangle :x x :y y))
 
 (defmethod position-* ((rectangle rectangle))
   (values (x rectangle) (y rectangle)))
@@ -103,12 +101,10 @@
   (vector (x rectangle) (y rectangle)))
 
 (defmethod set-position ((rectangle rectangle) (position vector))
-  (set-rectangle-* rectangle :x (x position) (y position))
-  rectangle)
+  (set-rectangle-* rectangle :x (x position) (y position)))
 
 (defmethod set-position-* ((rectangle rectangle) &key x y)
-  (set-rectangle-* rectangle :x x :y y)
-  rectangle)
+  (set-rectangle-* rectangle :x x :y y))
 
 (defmethod rectangle-* ((rectangle rectangle))
   (values (x rectangle) (y rectangle) (width rectangle) (height rectangle)))
@@ -117,10 +113,12 @@
   rectangle)
 
 (defmethod set-rectangle ((dst rectangle) (src rectangle))
-  (set-rectangle-* dst :x (x src) :y (y src) :w (width src) :h (height src))
-  dst)
+  (set-rectangle-* dst :x (x src) :y (y src) :w (width src) :h (height src)))
 
 (defmethod set-rectangle-* ((rectangle rectangle) &key x y w h)
+  "Sets the coordinates of the rectangle RECTANGLE to the specified X, Y , width W and height HEIGHT.
+X, Y, W and H are &KEYword parameters of type INTEGER. 
+Returns the rectangle RECTANGLE as RESULT."
   (when x (setf (x rectangle) x))
   (when y (setf (y rectangle) y))
   (when w (setf (width rectangle) w))
