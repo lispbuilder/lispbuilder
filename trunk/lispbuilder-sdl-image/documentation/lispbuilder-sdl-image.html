@@ -567,43 +567,38 @@
 	<br>&nbsp;</br><h2><a class=none name="dictionar">The LISPBUILDER-SDL-IMAGE dictionary</a></h2>
 	
 	
-	
 
 
 <!-- Entry for CREATE-IMAGE-FROM-RWOPS -->
 
-<p><br>[Generic function]<br><a class=none name='create-image-from-rwops'><b>create-image-from-rwops</b> <i>source <tt>&amp;key</tt> image-type force free</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='create-image-from-rwops'><b>create-image-from-rwops</b> <i>source <tt>&amp;key</tt> image-type force free</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Creates a new SDL:SURFACE from the image contained in SOURCE.
-The image &#039;magic number&#039; contained in the image is used to detect the image type and automatically load the image. 
+Creates a new SDL:SURFACE from the SDL:RWOPS in SOURCE. 
 
-SOURCE is of type sdl:RWOPS
+  * SOURCE is of type sdl:RWOPS. Throws an error if SOURCE is not of type SDL:RWOPS. 
 
-Retuns a new SURFACE, or NIL if SOURCE does not contain a valid image, or the image type cannot be determined.
+  * :IMAGE-TYPE type can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TGA, :TIF, :XCF, :XPM or :XV. 
 
-Will free the sdl:RWOPS if :FREE is T. 
+  * :FORCE T will force an image to be loaded as :IMAGE-TYPE, ignoring the &#039;magic number&#039; when present. 
 
-To load an image as a specific image type, set the :IMAGE-TYPE to the desired type. 
-The image type can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TGA, :TIF, :XCF, :XPM or :XV. 
-If the &#039;magic number&#039; is available and does not match :IMAGE-TYPE, then :IMAGE-TYPE is ignored.
+  * Frees the SDL:RWOPS in SOURCE when :FREE is T. 
 
-Use :FORCE T to override the &#039;magic number&#039; when attempting to load an image as a different type.
+  * Retuns a new SDL:SURFACE, or NIL if SOURCE does not contain a valid image or the image type cannot be determined. 
 
-All &#039;non-magicable&#039; image formats, such as TGA, must be specified using :iMAGE-TYPE or :FORCE and IMAGE-TYPE. 
-For example, to load a TGA image use :IMAGE-TYPE :TGA
+Unless :FORCE T, the image &#039;magic number&#039; is always used to determine the image type. 
+To load an image as a specific image when the &#039;magic number&#039; is unavailable, specify the image type using the 
+KEYword :IMAGE-TYPE. If the &#039;magic number&#039; is available and does not match :IMAGE-TYPE, then :IMAGE-TYPE is ignored. 
+To load an image as :IMAGE-TYPE when the &#039;magic number&#039; is available (effectively ignoring the &#039;magic number&#039;), 
+specify :FORCE T. It is probably best to avoid doing this unless you know what you are doing. 
 
-</blockquote>
+All &#039;non-magicable&#039; image formats, such as TGA, must be specified using :iMAGE-TYPE. For example, to load a 
+TGA image use :IMAGE-TYPE :TGA 
 
-<!-- End of entry for CREATE-IMAGE-FROM-RWOPS -->
-
-
-<!-- Entry for CREATE-IMAGE-FROM-RWOPS -->
-
-<p><br>[Method]<br><a class=none><b>create-image-from-rwops</b> <i>(source rwops) <tt>&amp;key</tt> image-type force free</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
+For example; 
+  * To load a BMP image using the &#039;magic number&#039;: (CREATE-IMAGE-FROM-RWOPS SOURCE)
+  * To load a TGA image:                          (CREATE-IMAGE-FROM-RWOPS SOURCE :IMAGE-TYPE :TGA)
+  * To load a BMP image as TGA:                   (CREATE-IMAGE-FROM-RWOPS SOURCE :IMAGE-TYPE :TGA :FORCE T)
 
 </blockquote>
 
@@ -615,17 +610,22 @@ For example, to load a TGA image use :IMAGE-TYPE :TGA
 <p><br>[Function]<br><a class=none name='image-p'><b>image-p</b> <i>filename pathname image-type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns T if the image at location FILENAME and PATHNAME is of the type IMAGE-TYPE.
-Returns NIL if:
- - The file at FILENAME and PATHNAME does not exist, or
- - The IMAGE-TYPE cannot be determined if the magic number is not supported or the magic number is not found
+Returns T if the image at location FILENAME and PATHNAME is of the type IMAGE-TYPE, returns NIL otherwise.
+Attempts to detect the image type using the &#039;magic number&#039; contained in the image, if one is available. 
 
-Detects the image type using the &#039;magic number&#039; contained in the image, if one is available.
+  * FILENAME and PATHNAME are STRINGS. 
 
-FILENAME and PATHNAME are STRINGS. 
+  * :IMAGE-TYPE can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. 
 
-:IMAGE-TYPE can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. 
-Note: This means that NIL is always returned for images of type TGA.
+  * Returns T if the image is of IMAGE-TYPE 
+  * Returns NIL if:
+    * The file at FILENAME and PATHNAME does not exist, or
+    * The IMAGE-TYPE cannot be determined if the magic number is not supported or the magic number is not found
+
+Note: NIL is always returned for images of type TGA as a TGA image does not contain a &#039;magic number&#039;.
+
+For example; 
+  * (IMAGE-P &quot;image.bmp&quot; &quot;c:/images/&quot; :IMAGE-TYPE :BMP)
 
 </blockquote>
 
@@ -638,15 +638,19 @@ Note: This means that NIL is always returned for images of type TGA.
 <blockquote><br>
 
 Returns the type of image at location FILENAME and PATHNAME.
-Where image type is one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV
-Returns NIL if:
- - The image type cannot be determined if the magic number is not supported or the magic number is not found, or 
- - The file specified at FILENAME and PATHNAME is not found
+Attempts to detect the image type using the &#039;magic number&#039; contained in the image, if one is available. 
 
-FILENAME and PATHNAME are STRINGS.
+  * FILENAME and PATHNAME are STRINGS.
 
-Detects the image type using the &#039;magic number&#039; contained in the image, if one is available.  
-Note: This means that NIL is always returned for images of type TGA.
+  * Returns one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV, if the image type can be determined 
+  * Returns NIL if: 
+    * The file at FILENAME and PATHNAME does not exist, or 
+    * The image type cannot be determined if the magic number is not supported or the magic number is not found 
+
+Note: NIL is always returned for images of type TGA as a TGA image does not contain a &#039;magic number&#039;. 
+
+For example; 
+  * (IMAGE-TYPE-OF &quot;image.bmp&quot; &quot;c:/images/&quot;)
 
 </blockquote>
 
@@ -658,9 +662,8 @@ Note: This means that NIL is always returned for images of type TGA.
 <p><br>[Function]<br><a class=none name='load-and-convert-image'><b>load-and-convert-image</b> <i>filename pathname <tt>&amp;rest</tt> named-pairs <tt>&amp;key</tt> image-type force <tt>&amp;allow-other-keys</tt></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Loads an image as per LOAD-IMAGE and converts this surface using SDL:CONVERT-SURFACE.
-Returns a new SDL:SURFACE, or NIL if the image cannot be loaded or the image type cannot be determined.
-Parameters supported are the same as those for LOAD-IMAGE and SDL:CONVERT-IMAGE.
+Loads an image as per LOAD-IMAGE and converts this surface to the current display format using SDL:CONVERT-SURFACE. 
+Parameters supported are the same as those for LOAD-IMAGE and SDL:CONVERT-IMAGE. 
 
 </blockquote>
 
@@ -672,21 +675,29 @@ Parameters supported are the same as those for LOAD-IMAGE and SDL:CONVERT-IMAGE.
 <p><br>[Function]<br><a class=none name='load-image'><b>load-image</b> <i>filename pathname <tt>&amp;key</tt> image-type force</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Creates a new sdl:SURFACE from the image loaded at location FILENAME and PATHNAME. 
-The image &#039;magic number&#039; contained in the image is used to detect the image type and automatically load the image. 
+Creates a new SDL:SURFACE from the image load from location FILENAME and PATHNAME. 
 
-FILENAME and PATHNAME are STRINGs.
+  * FILENAME and PATHNAME are STRINGs.
 
-Returns a new SDL:SURFACE, or NIL if the image cannot be loaded or the image type cannot be determined.
+  * :IMAGE-TYPE type can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TGA, :TIF, :XCF, :XPM or :XV. 
 
-To load an image as a specific image type, set the :IMAGE-TYPE to the desired type. 
-The image type can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TGA, :TIF, :XCF, :XPM or :XV. 
-If the &#039;magic number&#039; is available and does not match :IMAGE-TYPE, then :IMAGE-TYPE is ignored.
+  * :FORCE T will force an image to be loaded as :IMAGE-TYPE, ignoring the &#039;magic number&#039; when present. 
 
-Use :FORCE T to override the &#039;magic number&#039; when attempting to load an image as a different type.
+  * Retuns a new SDL:SURFACE, or NIL if the file does not contain a valid image or the image type cannot be determined. 
 
-All &#039;non-magicable&#039; image formats, such as TGA, must be specified using :iMAGE-TYPE or :FORCE and IMAGE-TYPE. 
-For example, to load a TGA image use :IMAGE-TYPE :TGA
+Unless :FORCE T, the image &#039;magic number&#039; is always used to determine the image type. 
+To load an image as a specific image when the &#039;magic number&#039; is unavailable, specify the image type using the 
+KEYword :IMAGE-TYPE. If the &#039;magic number&#039; is available and does not match :IMAGE-TYPE, then :IMAGE-TYPE is ignored. 
+To load an image as :IMAGE-TYPE when the &#039;magic number&#039; is available (effectively ignoring the &#039;magic number&#039;), 
+specify :FORCE T. It is probably best to avoid doing this unless you know what you are doing. 
+
+All &#039;non-magicable&#039; image formats, such as TGA, must be specified using :iMAGE-TYPE. For example, to load a 
+TGA image use :IMAGE-TYPE :TGA 
+
+For example; 
+  * To load a BMP image using the &#039;magic number&#039;: (LOAD-IMAGE &quot;image.bmp&quot; &quot;c:/images/&quot;)
+  * To load a TGA image:                          (LOAD-IMAGE &quot;image.tga&quot; &quot;c:/images/&quot; :IMAGE-TYPE :TGA)
+  * To load a BMP image as TGA:                   (LOAD-IMAGE &quot;image.bmp&quot; &quot;c:/images/&quot; :IMAGE-TYPE :BMP :FORCE T)
 
 </blockquote>
 
@@ -695,29 +706,20 @@ For example, to load a TGA image use :IMAGE-TYPE :TGA
 
 <!-- Entry for RWOPS-P -->
 
-<p><br>[Generic function]<br><a class=none name='rwops-p'><b>rwops-p</b> <i>source image-type</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='rwops-p'><b>rwops-p</b> <i>source image-type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns T if an image SOURCE is of the specified type IMAGE-TYPE, returns NIL if otherwise.
+Returns T if the image type of the SDL:RWOPS in SOURCE is of the type IMAGE-TYPE, returns NIL otherwise. 
 Attempts to detect the image type using the &#039;magic number&#039; contained in the image, if one is available. 
 
-SOURCE is of type RWOPS
+  * SOURCE is of type SDL:RWOPS. Throws an error if source is not of type SDL:RWOPS. 
 
-:IMAGE-TYPE can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. 
+  * :IMAGE-TYPE can be one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV. 
 
-Note: NIL is always returned for images of type TGA, as a TGA image does not cotain a &#039;magic number&#039;.
+Note: NIL is always returned for images of type TGA as a TGA image does not contain a &#039;magic number&#039;.
 
-</blockquote>
-
-<!-- End of entry for RWOPS-P -->
-
-
-<!-- Entry for RWOPS-P -->
-
-<p><br>[Method]<br><a class=none><b>rwops-p</b> <i>(source rwops) image-type</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
+For example; 
+  * (RWOPS-P SOURCE :IMAGE-TYPE :BMP)
 
 </blockquote>
 
@@ -726,28 +728,22 @@ Note: NIL is always returned for images of type TGA, as a TGA image does not cot
 
 <!-- Entry for RWOPS-TYPE-OF -->
 
-<p><br>[Generic function]<br><a class=none name='rwops-type-of'><b>rwops-type-of</b> <i>source</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='rwops-type-of'><b>rwops-type-of</b> <i>source</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the image type of SOURCE. Where SOURCE is of the type RWOPS.
+Returns the image type of the SDL:RWOPS in SOURCE. 
 Attempts to detect the image type using the &#039;magic number&#039; contained in the image, if one is available. 
 
-Returns one of :BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV, or NIL if the image type 
+  * SOURCE is of type SDL:RWOPS. Throws an error if source is not of type SDL:RWOPS. 
+
+  * Returns the image type of SOURCE which may be one of 
+:BMP, :GIF, :JPG, :LBM, :PCX, :PNG, :PNM, :TIF, :XCF, :XPM or :XV, or NIL if the image type 
 cannot be determined or if there is no magic number available. 
 
-Note: This means that NIL is always returned for images of type TGA.
+Note: This means that NIL is returned for images of type TGA as a TGA image does not contain a &#039;magic number&#039;.
 
-</blockquote>
-
-<!-- End of entry for RWOPS-TYPE-OF -->
-
-
-<!-- Entry for RWOPS-TYPE-OF -->
-
-<p><br>[Method]<br><a class=none><b>rwops-type-of</b> <i>(source rwops)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
+For example; 
+  * (RWOPS-TYPE-OF SOURCE)
 
 </blockquote>
 
