@@ -13,7 +13,7 @@
     :author "Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-ttf-cffi)
+    :depends-on (cffi lispbuilder-sdl-ttf-cffi lispbuilder-sdl)
     :components
     ((:module "sdl-ttf"
 	      :components
@@ -21,7 +21,7 @@
 	       (:file "generics" :depends-on ("package"))
 	       (:file "globals" :depends-on ("package"))
 	       (:file "font" :depends-on ("package" "generics"))
-	       (:file "cffi-finalizers" :depends-on ("font" "package"))
+	       #-clisp(:file "cffi-finalizers" :depends-on ("font" "package"))
 	       (:file "sdl-util-ttf" :depends-on ("font" "globals" "package"))
 	       (:static-file "bitstream-vera-copyright")
 	       (:static-file "Vera.ttf")))
