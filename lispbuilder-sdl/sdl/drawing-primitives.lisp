@@ -42,6 +42,14 @@
 
 
 (defun random-rectangle (bound-w bound-h &optional (rectangle (rectangle)))
+  "Returns a rectangle of random x, y width and height coordinates within the specified
+bounds of width BOUND-W and height BOUND-H.
+
+If the &optional parameter RECTANGLE is unset then a new RECTANGLE object is created and returned.
+If the &optional parameter RECTANGLE is set then the coordinates if this rectangle are modified and 
+this RECTANGLE object is returned."
+  (unless (typep rectangle 'rectangle)
+    (error "ERROR; RANDOM-RECTANGLE: RECTANGLE must be of type RECTANGLE."))
   (let* ((x (random bound-w))
 	 (y (random bound-h))
 	 (w (random+1 (- bound-w x)))
@@ -55,20 +63,49 @@
 ;; 	     :w (+ (x position) width)
 ;; 	     :h (+ (y position) height)))
 
-(defun rectangle-from-edges-* (x1 y1 x2 y2)
-  (rectangle :x x1
-	     :y y1
-	     :w (1+ (abs (- x2 x1)))
-	     :h (1+ (abs (- y2 y1)))))
+(defun rectangle-from-edges-* (x1 y1 x2 y2 &optional (rectangle (rectangle)))
+  "Returns a rectangle using the bounds specified by the INTEGERS X1, X2, Y1 Y2.
+X1, Y1 specifies the top left coordinate. 
+X2, Y2 specifies the top left coordinate. 
 
-(defun rectangle-from-edges (p1 p2)
-  (rectangle-from-edges-* (x p1) (y p1) (x p2) (y p2)))
+The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT = \(- Y2 Y1\) 
 
-(defun rectangle-from-midpoint-* (x y w h)
-  (rectangle :x (- x (/ w 2))
-	     :y (- y (/ h 2))
-	     :w w
-	     :h h))
+If the &optional parameter RECTANGLE is unset then a new RECTANGLE object is created and returned. 
+If the &optional parameter RECTANGLE is set then the coordinates if this rectangle are modified and 
+this RECTANGLE object is returned.
+
+RESULT is an object of type RECTANGLE."
+  (unless (typep rectangle 'rectangle)
+    (error "ERROR; RECTANGLE-FROM-EDGES-*: RECTANGLE must be of type RECTANGLE."))
+  (set-rectangle-* rectangle
+		   :x x1
+		   :y y1
+		   :w (1+ (abs (- x2 x1)))
+		   :h (1+ (abs (- y2 y1)))))
+
+(defun rectangle-from-edges (p1 p2 &optional (rectangle (rectangle)))
+  "See RECTANGLE-FROM-EDGES-*.
+P1 and P2 are POINTS that specify the bounds of the RECTANGLE. 
+P1 specifies the top left coordinate.
+P2 specifies the lower right coordinate."
+  (rectangle-from-edges-* (x p1) (y p1) (x p2) (y p2) rectangle))
+
+
+(defun rectangle-from-midpoint-* (x y w h &optional (rectangle (rectangle)))
+  "Returns a rectangle of width W and height H with the rectangle mid-point at X and Y. 
+
+If the &optional parameter RECTANGLE is unset then a new RECTANGLE object is created and returned. 
+If the &optional parameter RECTANGLE is set then the coordinates if this rectangle are modified and 
+this RECTANGLE object is returned.
+
+RESULT is an object of type RECTANGLE."
+  (unless (typep rectangle 'rectangle)
+    (error "ERROR; RECTANGLE-FROM-MIDPOINT-*: RECTANGLE must be of type RECTANGLE."))
+  (set-rectangle-* rectangle
+		   :x (- x (/ w 2))
+		   :y (- y (/ h 2))
+		   :w w
+		   :h h))
 
 (defun genbez (x0 y0 x1 y1 x2 y2 x3 y3 &key (segments 20))
   (let ((gx0 x0) (gy0 y0)
@@ -210,63 +247,70 @@
 	(x1 (sdl-base::to-int x1))
 	(y1 (sdl-base::to-int y1)))
     (declare (type fixnum x0 y0 x1 y1))
+    (cond
+      ((eq x0 x1)
+       ;; Optimization. If (eq x0 x1) then draw using vline.
+       (draw-vline x0 y0 y1 :surface surface :color color :clipping-p clipping-p))
+      ((eq y0 y1)
+       ;; Optimization. If (eq y0 y1) then draw using hline.
+       (draw-hline x0 x1 y0 :surface surface :color color :clipping-p clipping-p))
+      (t
+       (when clipping-p
+	 ;; simple clipping, should be improved with Cohen-Sutherland line clipping
+	 (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
+	 (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
+       
+       ;; draw line with Bresenham algorithm
+       (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
+	     (color (map-color color surface)))
+	 (declare (type fixnum x y dx dy color))
+	 (when (> x0 x1)
+	   (rotatef x0 x1)
+	   (rotatef y0 y1))
+	 (setf e 0)
+	 (setf x x0)
+	 (setf y y0)
+	 (setf dx (- x1 x0))
+	 (setf dy (- y1 y0))
 
-    (when clipping-p
-      ;; simple clipping, should be improved with Cohen-Sutherland line clipping
-      (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
-      (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
-
-    ;; draw line with Bresenham algorithm
-    (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
-	  (color (map-color color surface)))
-      (declare (type fixnum x y dx dy color))
-      (when (> x0 x1)
-	(rotatef x0 x1)
-	(rotatef y0 y1))
-      (setf e 0)
-      (setf x x0)
-      (setf y y0)
-      (setf dx (- x1 x0))
-      (setf dy (- y1 y0))
-
-      (sdl-base::with-pixel (pix (fp surface))
-	(if (>= dy 0)
-	    (if (>= dx dy)
-		(loop for x from x0 to x1 do
-		     (sdl-base::write-pixel pix x y color)
-		     (if (< (* 2 (+ e dy)) dx)
-			 (incf e dy)
-			 (progn
-			   (incf y)
-			   (incf e (- dy dx)))))
-		(loop for y from y0 to y1 do
-		     (sdl-base::write-pixel pix x y color)
-		     (if (< (* 2 (+ e dx)) dy)
-			 (incf e dx)
-			 (progn
-			   (incf x)
-			   (incf e (- dx dy))))))
-	    (if (>= dx (- dy))
-		(loop for x from x0 to x1 do
-		     (sdl-base::write-pixel pix x y color)
-		     (if (> (* 2 (+ e dy)) (- dx))
-			 (incf e dy)
-			 (progn
-			   (decf y)
-			   (incf e (+ dy dx)))))
-		(progn
-		  (rotatef x0 x1)
-		  (rotatef y0 y1)
-		  (setf x x0)
-		  (setf dx (- x1 x0))
-		  (setf dy (- y1 y0))
-		  (loop for y from y0 to y1 do
-		       (sdl-base::write-pixel pix x y color)
-		       (if (> (* 2 (+ e dx)) (- dy))
-			   (incf e dx)
-			   (progn
-			     (decf x)
-			     (incf e (+ dx dy))))))))))))
+	 (sdl-base::with-pixel (pix (fp surface))
+	   (if (>= dy 0)
+	       (if (>= dx dy)
+		   (loop for x from x0 to x1 do
+			(sdl-base::write-pixel pix x y color)
+			(if (< (* 2 (+ e dy)) dx)
+			    (incf e dy)
+			    (progn
+			      (incf y)
+			      (incf e (- dy dx)))))
+		   (loop for y from y0 to y1 do
+			(sdl-base::write-pixel pix x y color)
+			(if (< (* 2 (+ e dx)) dy)
+			    (incf e dx)
+			    (progn
+			      (incf x)
+			      (incf e (- dx dy))))))
+	       (if (>= dx (- dy))
+		   (loop for x from x0 to x1 do
+			(sdl-base::write-pixel pix x y color)
+			(if (> (* 2 (+ e dy)) (- dx))
+			    (incf e dy)
+			    (progn
+			      (decf y)
+			      (incf e (+ dy dx)))))
+		   (progn
+		     (rotatef x0 x1)
+		     (rotatef y0 y1)
+		     (setf x x0)
+		     (setf dx (- x1 x0))
+		     (setf dy (- y1 y0))
+		     (loop for y from y0 to y1 do
+			  (sdl-base::write-pixel pix x y color)
+			  (if (> (* 2 (+ e dx)) (- dy))
+			      (incf e dx)
+			      (progn
+				(decf x)
+				(incf e (+ dx dy))))))))))))))
 
 (defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   (draw-line-* (x p1) (y p1)
@@ -302,10 +346,14 @@
   (with-rectangle (rectangle nil nil)
     (let ((x+width (+ x w))
 	  (y+height (+ y h)))
-      (draw-line-* x y x+width y :surface surface :color color :clipping-p clipping-p)
-      (draw-line-* x+width y x+width y+height :surface surface :color color :clipping-p clipping-p)
-      (draw-line-* x+width y+height x y+height :surface surface :color color :clipping-p clipping-p)
-      (draw-line-* x y+height x y :surface surface :color color :clipping-p clipping-p)))
+      ;; top hline
+      (draw-hline x x+width y :surface surface :color color :clipping-p clipping-p)
+      ;; bottom hline
+      (draw-hline x x+width y+height :surface surface :color color :clipping-p clipping-p)
+      ;; left vline
+      (draw-vline x y y+height :surface surface :color color :clipping-p clipping-p)
+      ;; right vline
+      (draw-vline x+width y y+height :surface surface :color color :clipping-p clipping-p)))
   surface)
 
 ;; (defun draw-rectangle-points (p1 p2 &key (clipping-p t) (surface *default-surface*) (color *default-color*))
