@@ -13,13 +13,12 @@
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-image-cffi)
+    :depends-on (cffi lispbuilder-sdl-image-cffi lispbuilder-sdl)
     :components
     ((:module "sdl-image"
 	      :components
 	      ((:file "package")
-	       (:file "generics" :depends-on ("package"))
-	       (:file "sdl-image-util" :depends-on ("generics"))))
+	       (:file "sdl-image-util" :depends-on ("package"))))
      (:module "documentation"
 	      :components
 	      ((:html-file "header")
