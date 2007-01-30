@@ -27,6 +27,6 @@
 	       (:static-file "Vera.ttf")))
      (:module "documentation"
 	      :components
-	      ((:html-file "header.html")
-	       (:html-file "footer.html")
+	      ((:html-file "header")
+	       (:html-file "footer")
 	       (:html-file "lispbuilder-sdl-ttf")))))

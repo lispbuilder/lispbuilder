@@ -4,11 +4,13 @@
 
 (in-package #:lispbuilder-sdl-ttf)
 
-;;; Macros
 
-
+;;; Add INIT-TTF to LISPBUILDER-SDL's external initialization list.
+;;; Functions in this list are called within the macro SDL:WITH-INIT, and the function SDL:INIT-SDL 
 (pushnew 'init-ttf sdl:*external-init-on-startup*)
 
+;;; Add the QUIT-TTF to LISPBUILDER-SDL's external uninitialization list.
+;;; Functions in this list are called when the macro SDL:WITH-INIT exits, and the function SDL:QUIT-SDL 
 (pushnew 'quit-ttf sdl:*external-quit-on-exit*)
 
 (defun is-init ()
@@ -16,35 +18,32 @@
 Returns T if already initialized and NIL if uninitialized."
   (sdl-ttf-cffi::ttf-was-init))
 
-
-;;; w
-
 (defmacro with-init (() &body body)
   "Initialises the truetype font library. Will exit if the libary cannot be initialised. 
-WITH-INIT must be called before using other functions in this library. 
-LISPBUILDER-SDL does not have to be initialized prior to this call."
+The truetype library must be initialized prior to using functions in the LISPBUILDER-SDL-TTF package.
+The truetype library may be initialized explicitely using this WITH-INIT macro or implicitely by adding the 
+function INIT-TTF to sdl:*external-init-on-startup*.
+LISPBUILDER-SDL does not have to be initialized prior initialization of the library."
   `(unwind-protect
-	(progn
-	  (init-ttf)
+	(when (init-ttf)
 	  ,@body)
      (close-font :font *default-font*)
      (quit-ttf)))
 
 (defmacro with-open-font ((font-name size &optional font-path) &body body)
-  "This is a convenience macro that will first attempt to intialize the truetype font library 
-of FONT-NAME by calling WITH-INIT, and if successfull open the specified truetype font using OPEN-FONT. 
-Will exit if the library cannot be initialized or the font cannot be opened. 
+  "This is a convenience macro that will first attempt to intialize the truetype font library and if successful, 
+open the font FONT-NAME and execute BODY. Will exit if the library cannot be initialized or the FONT cannot be opened. 
+Binds *DEFAULT-FONT* to the FONT in FONT-NAME. It is an ERROR if *DEFAULT-FONT* is already bound to a FONT when
+WITH-OPEN-FONT is called.
 
-Binds *default-font* to the font in font-name. 
+Although several truetype fonts may used within a single SDL application, only a single FONT may remain open 
+at any one time. For this reason WITH-OPEN-FONT calls may not be nested.
 
-Several truetype fonts or font sizes may be opened for use within a single SDL application.
-However only a single FONT may be open at any one time. WITH-OPEN-FONT calls may not be nested.
+  * FONT-NAME is the name of the truetype font to be opened, of type STRING
 
-FONT-NAME is the name of the truetype font to be opened, of type STRING
+  * SIZE is the size of the font, as an INTEGER
 
-SIZE is the size of the font, as an INTEGER
-
-FONT-PATH is the path to the font, of type STRING"
+  * FONT-PATH is an &optional path to FONT-NAME, of type STRING"
   `(with-init ()
      (when (typep *default-font* 'font)
        (error "WITH-OPEN-FONT; *default-font* is already bound to a FONT."))
@@ -68,36 +67,38 @@ or else returns NIL if uninitialized."
       (sdl-ttf-cffi::ttf-quit)))
 
 (defun initialise-font (filename pathname size)
-  "Binds *DEFAULT-FONT* to a FONT file FILENAME at PATHNAME, of size SIZE.
-Closes any previous font that is already bound to *DEFAULT-FONT*.
-Automatically initilises the font library if uninitialised 
-at FONT load time. 
+  "Creates a new FONT object loaded from FILENAME and PATHNAME, of size SIZE.
+Automatically initialises the truetype font library if uninitialised at FONT load time. 
+Binds *DEFAULT-FONT* to FONT. Closes any FONT already bound to *DEFAULT-FONT* when INITIALISE-FONT is called.
 
-FILENAME is the file name of the FONT, of type STRING.
+  * FILENAME is the file name of the FONT, of type STRING.
 
-PATHNAME is the pathname of the FONT, of type STRING.
+  * PATHNAME is the pathname of the FONT, of type STRING.
 
-SIZE is the size of the font to initialise, of type INTEGER."
+  * SIZE is the size of the font to initialise, of type INTEGER.
+
+  * Returns a new FONT, or NIL if unsuccessful."
   (when (is-init)
-    (close-font :font *default-font*))
+    (when (typep *default-font* 'font)
+      (close-font :font *default-font*)))
   (init-ttf)
   (setf *default-font* (open-font filename size pathname)))
 
 (defun initialise-default-font ()
-  "Binds *DEFAULT-FONT* to a FONT file FILENAME at PATHNAME, of size SIZE.
+  "Binds *DEFAULT-FONT* to the LISPBUILDER-SDL-TTF default FONT. 
 Closes any previous font that is already bound to *DEFAULT-FONT*.
+Automatically initialises the truetype font library if uninitialised at FONT load time. 
 
-FILENAME is the file name of the FONT, of type STRING.
-
-PATHNAME is the pathname of the FONT, of type STRING.
-
-SIZE is the size of the font to initialise, of type INTEGER."
+  * Returns a new FONT, or NIL if unsuccessful."
   (initialise-font "Vera.ttf" *default-font-path* 32))
 
 (defun close-font (&key font *default-font*)
-  "Closes the font FONT when the font library is intitialized, and returns T.
-Returns NIL if the font cannot be closed or the font library is not initialized.
-Does not uninitialise the font library."
+  "Closes the font FONT when the font library is intitialized. 
+NOTE: Does not uninitialise the font library. Does not bind *DEFAULT-FONT* to NIL. 
+
+  * Returns T if successful, or NIL if the font cannot be closed or the font library is not initialized. "
+  (unless (typep font 'font)
+    (error "ERROR; CLOSE-FONT: FONT must be of type FONT."))
   (if (is-init)
       (if (typep font 'font)
 	  (free-font font)))
@@ -106,21 +107,25 @@ Does not uninitialise the font library."
 ;;; g
 
 (defun get-Glyph-Metric (ch &key metric (font *default-font*))
-  "Returns the specified glyph metrics for the character CH, or NIL upon error. 
-The glyph metrics are specified by the keyword parameter :METRIC.
+  "Returns the glyph metrics METRIC for the character CH, or NIL upon error. 
 
-FONT is a FONT object from which to retrieve the glyph metrics of the character CH.
+  * CH is a UNICODE chararacter specified as an INTEGER.
 
-CH is a UNICODE chararacter specified as an INTEGER.
+  * FONT is a FONT object from which to retrieve the glyph metrics of the character CH. Bound to *DEFAULT-FONT* by default.
 
-:METRIC may be one of: 
-  :MINX , for the minimum X offset
-  :MAXX , for the maximum X offset
-  :MINY , for the minimum Y offset
-  :MAXY , for the maximum Y
-  :ADVANCE , for the advance offset
+  * METRIC is a KEYword argument and may be one of: 
+    * :MINX , for the minimum X offset
+    * :MAXX , for the maximum X offset
+    * :MINY , for the minimum Y offset
+    * :MAXY , for the maximum Y
+    * :ADVANCE , for the advance offset
 
-RESULT is the glyph metric returend as an INTEGER."
+  * Returns the glyph metric as an INTEGER.
+
+For example;
+  * (GET-GLYPH-METRIC UNICODE-CHAR :METRIC :MINX :FONT *DEFAULT-FONT*)"
+  (unless (typep font 'font)
+    (error "ERROR; GET-GLYPH-METRIC: FONT must be of type FONT."))
   (let ((p-minx (cffi:null-pointer))
 	(p-miny (cffi:null-pointer))
 	(p-maxx (cffi:null-pointer))
@@ -152,25 +157,26 @@ RESULT is the glyph metric returend as an INTEGER."
     val))
 
 (defun get-Font-Size (text &key size encoding (font *default-font*))
-  "Calculates and returns the resulting SIZE \(width or height\) of the SDL:SURFACE required to render the 
-font FONT, or NIL on error.
-No actual rendering is performed however correct kerning is calculated for the actual width. 
-The height returned is the same as returned using GET-FONT-HEIGHT. 
+  "Calculates and returns the resulting SIZE of the SDL:SURFACE that is required to render the 
+font FONT, or NIL on error. No actual rendering is performed however correct kerning is calculated for the 
+actual width. The height returned is the same as returned using GET-FONT-HEIGHT. 
 
-FONT is the font from which to calculate the size of the string.
+  * FONT is the font from which to calculate the size of the string. Bound to *DEFAULT-FONT* by default.
 
-TEXT is the LATIN1 string to size. 
+  * TEXT is the LATIN1 string to size. 
 
-:SIZE may be one of: 
-  :W , text width
-  :H , text height
+  * :SIZE may be one of: 
+    * :W , text width
+    * :H , text height
 
-:ENCODING may be one of: 
-  :TEXT
-  :UTF8
-  :UNICODE
+  * :ENCODING may be one of: 
+    * :TEXT
+    * :UTF8
+    * :UNICODE
 
-Returns the width or height of the specified SDL:SURFACE, or NIL upon error."
+    * Returns the width or height of the specified SDL:SURFACE, or NIL upon error."
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-SIZE: FONT must be of type FONT."))
   (let ((p-w (cffi:null-pointer))
 	(p-h (cffi:null-pointer))
 	(val nil)
@@ -195,14 +201,16 @@ Returns the width or height of the specified SDL:SURFACE, or NIL upon error."
   "Returns the rendering style of font. If no style is set then :STYLE-NORMAL is returned, 
 or NIL upon error.
   
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
-Retuns the font style as one or more of:
-  :STYLE-NORMAL
-  :STYLE-NORMAL
-  :STYLE-BOLD
-  :STYLE-ITALIC
-  :STYLE-UNDERLINE"
+  * Retuns the font style as one or more of:
+    * :STYLE-NORMAL
+    * :STYLE-NORMAL
+    * :STYLE-BOLD
+    * :STYLE-ITALIC
+    * :STYLE-UNDERLINE"
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-STYLE: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-Style (fp-font font)))
 
 (defun get-font-height (&key (font *default-font*))
@@ -212,9 +220,11 @@ though adding at least one pixel height to it will space it so they can't touch.
 Remember that SDL_ttf doesn't handle multiline printing, so you are responsible 
 for line spacing, see GET-FONT-LINE-SKIP as well. 
 
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
-Retuns the height of the font as an INTEGER."
+  * Retuns the height of the font as an INTEGER."
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-HEIGHT: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-height (fp-font font)))
 
 (defun get-font-ascent (&key (font *default-font*))
@@ -224,9 +234,11 @@ It could be used when drawing an individual glyph relative to a top point,
 by combining it with the glyph's maxy metric to resolve the top of the rectangle used when 
 blitting the glyph on the screen. 
 
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
 
-Returns the ascent of the font as an INTEGER."
+  * Returns the ascent of the font as an INTEGER."
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-ASCENT: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-Ascent (fp-font font)))
 
 (defun get-font-descent (&key (font *default-font*))
@@ -236,18 +248,22 @@ It could be used when drawing an individual glyph relative to a bottom point,
 by combining it with the glyph’s maxy metric to resolve the top of the rectangle used when 
 blitting the glyph on the screen. 
 
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
 
-Returns the descent of the font as an INTEGER."
+  * Returns the descent of the font as an INTEGER."
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-DESCENT: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-Descent (fp-font font)))
 
 (defun get-font-line-skip (&key (font *default-font*))
   "Returns the recommended pixel height of a rendered line of text of the font FONT. 
 This is usually larger than the GET-FONT-HEIGHT of the font. 
 
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
 
-Returns the pixel height of the font as an INTEGER."
+  * Returns the pixel height of the font as an INTEGER."
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-LINE-SKIP: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-Line-Skip (fp-font font)))
 
 (defun get-font-faces (&key (font *default-font*))
@@ -256,58 +272,61 @@ This is a count of the number of specific fonts (based on size and style and oth
  typographical features perhaps) contained in the font itself. It seems to be a useless
  fact to know, since it can’t be applied in any other SDL_ttf functions.
 
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
-Returns the number of faces in the FONT as an INTEGER."
+  * Returns the number of faces in the FONT as an INTEGER."
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-FACES: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-faces (fp-font font)))
 
 (defun is-font-face-fixed-width (&key (font *default-font*))
   "Returns T if the font face is of a fixed width, or NIL otherwise. 
 Fixed width fonts are monospace, meaning every character that exists in the font is the same width. 
 
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
-Retuns T FONT is of fixed width, and NIL otherwise."
+  * Retuns T FONT is of fixed width, and NIL otherwise."
+  (unless (typep font 'font)
+    (error "ERROR; IS-FONT-FACE-FIXED-WIDTH: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-face-is-fixed-width (fp-font font)))
 
 (defun get-font-face-family-name (&key (font *default-font*))
   "Returns the current font face family name of font FONT or NIL if the information is unavailable. 
 
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
-Returns the name of the font face family name as a STRING, or NIL if unavailable."
+  * Returns the name of the font face family name as a STRING, or NIL if unavailable."
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-FACE-FAMILY-NAME: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-face-Family-Name (fp-font font)))
 
 (defun get-font-face-style-name (&key (font *default-font*))
   "Returns the current font face style name of font FONT, or NIL if the information is unavailable. 
 
-FONT is a FONT object. 
+  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
-Returns the name of the font face style as a STRING, or NIL if unavailable."
+  * Returns the name of the font face style as a STRING, or NIL if unavailable."
+  (unless (typep font 'font)
+    (error "ERROR; GET-FONT-FACE-STYLE-NAME: FONT must be of type FONT."))
   (sdl-ttf-cffi::ttf-Get-Font-face-Style-Name (fp-font font)))
 
-;;; i
-
-
-;;; o
 
 (defun open-font (filename size &optional (pathname nil))
-  "Attempts to open the specified truetype font. 
-Returns a FONT object if successful, returns NIL if unsuccessful.
+  "Attempts to open the truetype font at FILENAME and PATHNAME. 
+NOTE: Does not bind *DEFAULT-FONT* to FONT. 
+Does not attempt to initialize the truetype library if uninitialised. 
 
-FILENAME is the name of the truetype font to be opened, of type STRING
-PATHNAME is the path to the truetype font to be opened, of type STRING
+  * FILENAME is the name of the truetype font to be opened, of type STRING 
 
-SIZE is the size of the font, as an INTEGER 
+  * PATHNAME is the path to the truetype font to be opened, of type STRING 
 
-Returns a new FONT, or NIL upon error."
-  (let* ((fontname (namestring (if pathname
-				   (merge-pathnames filename pathname)
-				   filename)))
-	 (font (new-font (sdl-ttf-cffi::ttf-Open-Font fontname size))))
-    (unless font
-      (error (concatenate 'string "Failed to open font in location: " filename)))
-    font))
+  * SIZE is the size of the font, as an INTEGER 
+
+  * Returns new FONT object if successful, returns NIL if unsuccessful."
+  (new-font (sdl-ttf-cffi::ttf-Open-Font (namestring (if pathname
+								(merge-pathnames filename pathname)
+								filename))
+						size)))
 
 ;;; r
 
@@ -319,7 +338,8 @@ Returns a new FONT, or NIL upon error."
 			  (surface sdl:*default-surface*)
 			  (color sdl:*default-color*))
   "See DRAW-STRING-SOLID-*.
-:POSITION is the x and y position to render the text, of type SDL:POINT."
+
+  * :POSITION is the x and y position to render the text, of type SDL:POINT."
   (draw-string-solid-* text (sdl:x position) (sdl:y position)
 		       :encoding encoding
 ;; 		       :type type
@@ -335,27 +355,29 @@ Returns a new FONT, or NIL upon error."
 			    (font *default-font*)
 			    (surface sdl:*default-surface*)
 			    (color sdl:*default-color*))
-  "Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
-using the Solid mode. 
-Caches the new surface in the FONT object. This cached surface
+  "Render text TEXT using font FONT with color COLOR onto surface SURFACE, using the Solid mode. 
+Caches the new surface in the FONT object.
 
+  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
-X/Y are the x and y position coordinates, as INTEGERS.
+  * X/Y are the x and y position coordinates, as INTEGERS.
 
-FONT is a FONT object.
+  * ENCODING specifies the format of the text to render and is one of: 
+    * :LATIN1
+    * :UTF8
+    * :UNICODE
+    * :GLYPH
 
-TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
-must match :ENCODING.
+  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
 
-:ENCODING specifies the format of the text to render and is one of: 
-  :LATIN1
-  :UTF8
-  :UNICODE
-  :GLYPH
+  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
 
-:SURFACE is the surface to render text onto, of type SDL:SURFACE 
+  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
 
-:COLOR color is the color used to render text, of type SDL:COLOR-STRUCT"
+  * Returns the cached SDL:SDL-SURFACE.
+
+For example:
+  * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep font 'font)
     (error "ERROR: draw-string-solid-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
@@ -398,7 +420,8 @@ must match :ENCODING.
 			     (font *default-font*)
 			     (surface sdl:*default-surface*))
   "See DRAW-STRING-SHADED-*
-:POSITION is the x and y position to render the text, of type SDL:POINT."
+
+  * :POSITION is the x and y position to render the text, of type SDL:POINT."
   (draw-string-shaded-* text (sdl:x position) (sdl:y position) fg-color bg-color
 			:encoding encoding
 ;; 			:type type
@@ -413,26 +436,28 @@ must match :ENCODING.
 			     (font *default-font*)
 			     (surface sdl:*default-surface*))
   "Render text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
-onto surface :SURFACE, using the Shaded mode. 
+onto surface :SURFACE, using the Shaded mode. Caches the new surface in the FONT object.
 
-X/Y are the x and y position coordinates, as INTEGERS.
+  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
-FONT is a FONT object.
+  * X/Y are the x and y position coordinates, as INTEGERS.
 
-TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
-must match :ENCODING.
+  * FG-COLOR is the foreground color of the text, of type SDL:SDL-COLOR
 
-FG-COLOR is the foreground color of the text, of type SDL:COLOR-STRUCT 
+  * BG-COLOR is the background color of the text, of type SDL:SDL-COLOR
 
-BG-COLOR is the background color of the text, of type SDL:COLOR-STRUCT 
+  * ENCODING specifies the format of the text to render and is one of: 
+  *  :LATIN1
+  *  :UTF8
+  *  :UNICODE
+  *  :GLYPH
 
-:ENCODING specifies the format of the text to render and is one of: 
-  :LATIN1
-  :UTF8
-  :UNICODE
-  :GLYPH
+  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
 
-:SURFACE is the surface to render text onto, of type SDL:SURFACE "
+  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
+
+For example:
+  * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep font 'font)
     (error "ERROR: draw-string-shaded-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
@@ -500,25 +525,29 @@ BG-COLOR is the background color of the text, of type SDL:COLOR-STRUCT
 			      (font *default-font*)
 			      (surface sdl:*default-surface*)
 			      (color sdl:*default-color*))
-  "Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, 
-using the Blended mode. 
+  "Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, using the Blended mode. 
+Caches the new surface in the FONT object. 
 
-X/Y are the x and y position coordinates, as INTEGERS.
+  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
-FONT is a FONT object.
+  * X/Y are the x and y position coordinates, as INTEGERS.
 
-TEXT is the text to render when TEXT may be of LATIN1, UTF8, UNICODE, GLYPH. The TEXT specified
-must match :ENCODING.
+  * ENCODING specifies the format of the text to render and is one of: 
+    * :LATIN1
+    * :UTF8
+    * :UNICODE
+    * :GLYPH
 
-:ENCODING specifies the format of the text to render and is one of: 
-  :LATIN1
-  :UTF8
-  :UNICODE
-  :GLYPH
+  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
 
-:SURFACE is the surface to render text onto, of type SDL:SURFACE 
+  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
 
-:COLOR color is the color used to render text, of type SDL:COLOR-STRUCT"
+  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
+
+  * Returns the cached SDL:SDL-SURFACE.
+
+For example:
+  * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep font 'font)
     (error "ERROR: draw-string-blended-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
