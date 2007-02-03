@@ -263,7 +263,8 @@ RESULT is an object of type RECTANGLE."
        ;; draw line with Bresenham algorithm
        (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
 	     (color (map-color color surface)))
-	 (declare (type fixnum x y dx dy color))
+	 (declare (type fixnum x y dx dy)
+		  (type (unsigned-byte 32) color))
 	 (when (> x0 x1)
 	   (rotatef x0 x1)
 	   (rotatef y0 y1))
@@ -346,13 +347,9 @@ RESULT is an object of type RECTANGLE."
   (with-rectangle (rectangle nil nil)
     (let ((x+width (+ x w))
 	  (y+height (+ y h)))
-      ;; top hline
       (draw-hline x x+width y :surface surface :color color :clipping-p clipping-p)
-      ;; bottom hline
       (draw-hline x x+width y+height :surface surface :color color :clipping-p clipping-p)
-      ;; left vline
       (draw-vline x y y+height :surface surface :color color :clipping-p clipping-p)
-      ;; right vline
       (draw-vline x+width y y+height :surface surface :color color :clipping-p clipping-p)))
   surface)
 
