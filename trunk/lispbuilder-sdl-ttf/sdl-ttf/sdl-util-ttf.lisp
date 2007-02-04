@@ -47,7 +47,7 @@ at any one time. For this reason WITH-OPEN-FONT calls may not be nested.
   `(with-init ()
      (when (typep *default-font* 'font)
        (error "WITH-OPEN-FONT; *default-font* is already bound to a FONT."))
-     (when (initialise-font ,font-name ,size ,font-path)
+     (when (initialise-font ,font-name ,font-path ,size)
        ,@body
        (close-font :font *default-font*)
        (setf *default-font* nil))))
