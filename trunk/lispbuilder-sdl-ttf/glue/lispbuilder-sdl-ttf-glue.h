@@ -24,8 +24,8 @@
    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
-#include "sdl.h"
-#include "sdl_ttf.h"
+#include <SDL.h>
+#include <SDL_ttf.h>
 
 
 extern DECLSPEC SDL_Surface * SDLCALL TTF_glue_RenderText_Solid(TTF_Font *font,
