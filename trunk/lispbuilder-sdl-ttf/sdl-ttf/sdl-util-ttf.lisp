@@ -18,17 +18,16 @@
 Returns T if already initialized and NIL if uninitialized."
   (sdl-ttf-cffi::ttf-was-init))
 
-(defmacro with-init (() &body body)
-  "Initialises the truetype font library. Will exit if the libary cannot be initialised. 
-The truetype library must be initialized prior to using functions in the LISPBUILDER-SDL-TTF package.
-The truetype library may be initialized explicitely using this WITH-INIT macro or implicitely by adding the 
-function INIT-TTF to sdl:*external-init-on-startup*.
-LISPBUILDER-SDL does not have to be initialized prior initialization of the library."
-  `(unwind-protect
-	(when (init-ttf)
-	  ,@body)
-     (close-font :font *default-font*)
-     (quit-ttf)))
+;; (defmacro with-init (() &body body)
+;;   "Initialises the truetype font library. Will exit if the libary cannot be initialised. 
+;; The truetype library must be initialized prior to using functions in the LISPBUILDER-SDL-TTF package.
+;; The truetype library may be initialized explicitely using this WITH-INIT macro or implicitely by adding the 
+;; function INIT-TTF to sdl:*external-init-on-startup*.
+;; LISPBUILDER-SDL does not have to be initialized prior initialization of the library."
+;;   `(unwind-protect
+;; 	(when (init-ttf)
+;; 	  ,@body)
+;;      (quit-ttf)))
 
 (defmacro with-open-font ((font-name size &optional font-path) &body body)
   "This is a convenience macro that will first attempt to intialize the truetype font library and if successful, 
@@ -100,8 +99,7 @@ NOTE: Does not uninitialise the font library. Does not bind *DEFAULT-FONT* to NI
   (unless (typep font 'font)
     (error "ERROR; CLOSE-FONT: FONT must be of type FONT."))
   (if (is-init)
-      (if (typep font 'font)
-	  (free-font font)))
+      (free-font font))
   (setf font nil))
 
 ;;; g
@@ -170,7 +168,7 @@ actual width. The height returned is the same as returned using GET-FONT-HEIGHT.
     * :H , text height
 
   * :ENCODING may be one of: 
-    * :TEXT
+    * :LATIN1
     * :UTF8
     * :UNICODE
 
@@ -186,7 +184,7 @@ actual width. The height returned is the same as returned using GET-FONT-HEIGHT.
 	(:w (setf p-w w))
 	(:h (setf p-h h)))
       (case encoding
-	(:TEXT (setf r-val (sdl-ttf-cffi::ttf-Size-Text (fp-font font) text p-w p-h)))
+	(:LATIN1 (setf r-val (sdl-ttf-cffi::ttf-Size-Text (fp-font font) text p-w p-h)))
 	(:UTF8 (setf r-val (sdl-ttf-cffi::ttf-Size-UTF8 (fp-font font) text p-w p-h))))
       (if r-val
 	  (cond
@@ -331,7 +329,7 @@ Does not attempt to initialize the truetype library if uninitialised.
 ;;; r
 
 (defun draw-string-solid (text position &key 
-			  (encoding :text)
+			  (encoding :latin1)
 ;; 			  (type :solid)
 ;; 			  (style :normal)
 			  (font *default-font*)
@@ -349,7 +347,7 @@ Does not attempt to initialize the truetype library if uninitialised.
 		       :color color))
 
 (defun draw-string-solid-* (text x y &key 
-			    (encoding :text)
+			    (encoding :latin1)
 ;; 			    (type :solid)
 ;; 			    (style :normal)
 			    (font *default-font*)
@@ -377,7 +375,7 @@ Caches the new surface in the FONT object.
   * Returns the cached SDL:SDL-SURFACE.
 
 For example:
-  * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
+  * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep font 'font)
     (error "ERROR: draw-string-solid-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
@@ -385,7 +383,7 @@ For example:
   (unless (typep color 'sdl:sdl-color)
     (error "ERROR: draw-string-solid-*; COLOR must be of type SDL:SDL-COLOR."))  
   (case encoding
-    (:text
+    (:latin1
      (when (cached-surface font)
        (sdl:free-surface (cached-surface font)))
      (sdl:with-foreign-color-copy (col-struct color)
@@ -397,14 +395,14 @@ For example:
        (sdl:free-surface (cached-surface font)))
      (sdl:with-foreign-color-copy (col-struct color)
        (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-Solid (fp-font font) text col-struct))))
-     (sdl:set-surface-* (cached-surface font) x y)
+     (sdl:set-surface-* (cached-surface font) :x x :y y)
      (sdl:blit-surface (cached-surface font) surface))
     (:GLYPH
      (when (cached-surface font)
        (sdl:free-surface (cached-surface font)))
      (sdl:with-foreign-color-copy (col-struct color)
        (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-Solid (fp-font font) text col-struct))))
-     (sdl:set-surface-* (cached-surface font) x y)
+     (sdl:set-surface-* (cached-surface font) :x x :y y)
      (sdl:blit-surface (cached-surface font) surface))
     (:UNICODE
      ;; (defun draw-text-UNICODE-solid (surface font text color position &key update-p)
@@ -414,7 +412,7 @@ For example:
      nil)))
 
 (defun draw-string-shaded (text position fg-color bg-color &key
-			     (encoding :text)
+			     (encoding :latin1)
 ;; 			     (type :shaded)
 ;; 			     (style :normal)
 			     (font *default-font*)
@@ -430,7 +428,7 @@ For example:
 			:surface surface))
 
 (defun draw-string-shaded-* (text x y fg-color bg-color &key
-			     (encoding :text)
+			     (encoding :latin1)
 ;; 			     (type :shaded)
 ;; 			     (style :normal)
 			     (font *default-font*)
@@ -457,7 +455,7 @@ onto surface :SURFACE, using the Shaded mode. Caches the new surface in the FONT
   * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
 
 For example:
-  * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
+  * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep font 'font)
     (error "ERROR: draw-string-shaded-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
@@ -467,7 +465,7 @@ For example:
   (unless (typep bg-color 'sdl:sdl-color)
     (error "ERROR: draw-string-shaded-*; BG-COLOR must be of type SDL:SDL-COLOR."))  
   (case encoding
-    (:text
+    (:latin1
      (when (cached-surface font)
        (sdl:free-surface (cached-surface font)))
      (sdl:with-foreign-color-copy (fg-struct fg-color)
@@ -502,7 +500,7 @@ For example:
      nil)))
 
 (defun draw-string-blended (text position &key
-			    (encoding :text)
+			    (encoding :latin1)
 ;; 			    (type :blended)
 ;; 			    (style :normal)
 			    (font *default-font*)
@@ -519,7 +517,7 @@ For example:
 			 :color color))
 
 (defun draw-string-blended-* (text x y &key
-			      (encoding :text)
+			      (encoding :latin1)
 ;; 			      (type :blended)
 ;; 			      (style :normal)
 			      (font *default-font*)
@@ -547,7 +545,7 @@ Caches the new surface in the FONT object.
   * Returns the cached SDL:SDL-SURFACE.
 
 For example:
-  * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
+  * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep font 'font)
     (error "ERROR: draw-string-blended-*; FONT must be of type FONT."))
   (unless (typep surface 'sdl:sdl-surface)
@@ -555,25 +553,25 @@ For example:
   (unless (typep color 'sdl:sdl-color)
     (error "ERROR: draw-string-blended-*; COLOR must be of type SDL:SDL-COLOR."))  
   (case encoding
-    (:text
+    (:latin1
      (when (cached-surface font)
        (sdl:free-surface (cached-surface font)))
      (sdl:with-foreign-color-copy (col-struct color)
-       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-blended (fp-font font) text color))))
+       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-blended (fp-font font) text col-struct))))
      (sdl:set-surface-* (cached-surface font) :x x :y y)
      (sdl:blit-surface (cached-surface font) surface))
     (:UTF8
      (when (cached-surface font)
        (sdl:free-surface (cached-surface font)))
      (sdl:with-foreign-color-copy (col-struct color)
-       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-blended (fp-font font) text color))))
+       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-blended (fp-font font) text col-struct))))
      (sdl:set-surface-* (cached-surface font) :x x :y y)
      (sdl:blit-surface (cached-surface font) surface))
     (:GLYPH
      (when (cached-surface font)
        (sdl:free-surface (cached-surface font)))
      (sdl:with-foreign-color-copy (col-struct color)
-       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-blended (fp-font font) text color))))
+       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-blended (fp-font font) text col-struct))))
      (sdl:set-surface-* (cached-surface font) :x x :y y)
      (sdl:blit-surface (cached-surface font) surface))
     (:UNICODE

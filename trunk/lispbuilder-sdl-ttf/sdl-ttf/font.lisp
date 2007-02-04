@@ -41,6 +41,7 @@ FP is a pointer to a foreign TTF_Font object."
   "Free's the resources used by FONT. 
 Closes the SDL_Font object. Explicitely free's the FONT's cached surface."
   (sdl-ttf-cffi::ttf-close-font (fp-font font))
-  (sdl:free-surface (cached-surface font))
+  (when (cached-surface font)
+    (sdl:free-surface (cached-surface font)))
   #-clisp(cffi:cancel-finalization font)
   )
