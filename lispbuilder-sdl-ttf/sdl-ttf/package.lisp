@@ -22,7 +22,7 @@
 
    ;; sdl-util-ttf.lisp
    #:is-init
-   #:with-init
+;;   #:with-init
    #:with-open-font
    #:init-ttf
    #:quit-ttf
