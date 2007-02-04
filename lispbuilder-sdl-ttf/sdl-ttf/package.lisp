@@ -15,9 +15,9 @@
    ;; font.lisp
    #:font
    #:new-font
-   #:x
-   #:y
-   #:fp-position
+;;    #:x
+;;    #:y
+;;    #:fp-position
    #:free-font
 
    ;; sdl-util-ttf.lisp
