@@ -43,7 +43,7 @@ at any one time. For this reason WITH-OPEN-FONT calls may not be nested.
   * SIZE is the size of the font, as an INTEGER
 
   * FONT-PATH is an &optional path to FONT-NAME, of type STRING"
-  `(with-init ()
+  `(progn
      (when (typep *default-font* 'font)
        (error "WITH-OPEN-FONT; *default-font* is already bound to a FONT."))
      (when (initialise-font ,font-name ,font-path ,size)
@@ -77,10 +77,10 @@ Binds *DEFAULT-FONT* to FONT. Closes any FONT already bound to *DEFAULT-FONT* wh
   * SIZE is the size of the font to initialise, of type INTEGER.
 
   * Returns a new FONT, or NIL if unsuccessful."
-  (when (is-init)
-    (when (typep *default-font* 'font)
-      (close-font :font *default-font*)))
-  (init-ttf)
+  (if (is-init)
+      (when (typep *default-font* 'font)
+	(close-font :font *default-font*))
+      (init-ttf))
   (setf *default-font* (open-font filename size pathname)))
 
 (defun initialise-default-font ()
