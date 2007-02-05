@@ -39,8 +39,10 @@ FP is a pointer to a foreign TTF_Font object."
 ;;   (fp-position (cached-surface font)))
 
 (defun free-font (font)
-  "Free's the resources used by FONT. 
-Closes the SDL_Font object. Explicitely free's the FONT's cached surface."
+  "Free's the resources used by FONT. Explicitely free's the FONT's cached surface.
+Closes the SDL_Font object only when the font has been created within the current INIT-TTF/QUIT-TTF sequence. In other
+words, when (EQ (GENERATION FONT) *GENERATION*). Otherwise it is assumed that the font resources have already been
+freed in a previous call to QUIT-TTF."
   (if (eq (generation font) *generation*)
       (sdl-ttf-cffi::ttf-close-font (fp-font font)))
   (when (cached-surface font)
