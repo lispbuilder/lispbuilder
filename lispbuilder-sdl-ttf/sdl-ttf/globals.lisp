@@ -18,4 +18,5 @@ WITH-OPEN-FONT, INITIALISE-FONT, AND INITIALISE-DEFAULT-FONT will bind *default-
 										*load-truename*)))
   "The path to the default font, \"Bitstream Vera\"")
 
-(defvar *generation* 0)
+(defvar *generation* 0
+  "Stores the number of times QUIT-TTF is called.")

@@ -32,30 +32,43 @@ Returns T if already initialized and NIL if uninitialized."
 (defmacro with-open-font ((font-name size &optional font-path) &body body)
   "This is a convenience macro that will first attempt to intialize the truetype font library and if successful, 
 open the font FONT-NAME and execute BODY. Will exit if the library cannot be initialized or the FONT cannot be opened. 
-Binds *DEFAULT-FONT* to the FONT in FONT-NAME. It is an ERROR if *DEFAULT-FONT* is already bound to a FONT when
-WITH-OPEN-FONT is called.
 
-Although several truetype fonts may used within a single SDL application, only a single FONT may remain open 
-at any one time. For this reason WITH-OPEN-FONT calls may not be nested.
+WITH-OPEN-FONT calls may be nested.
 
   * FONT-NAME is the name of the truetype font to be opened, of type STRING
 
   * SIZE is the size of the font, as an INTEGER
 
   * FONT-PATH is an &optional path to FONT-NAME, of type STRING"
-  `(progn
-     (when (typep *default-font* 'font)
-       (error "WITH-OPEN-FONT; *default-font* is already bound to a FONT."))
-     (when (initialise-font ,font-name ,font-path ,size)
-       ,@body
-       (close-font :font *default-font*)
-       (setf *default-font* nil))))
+  (let ((font (gensym "font-")))
+    `(let ((,font (initialise-font ,font-name ,font-path ,size)))
+       (when ,font
+	 ,@body
+	 (close-font :font ,font)))))
+
+(defmacro with-default-open-font ((font-name size &optional font-path) &body body)
+  "See WITH-OPEN-FONT.
+Binds *DEFAULT-FONT* to the FONT in FONT-NAME. Although several truetype fonts may used within a single 
+SDL application, only a single FONT may be bound to *DEFAULT-FONT* at any one time. 
+For this reason calls to WITH-DEFAULT-OPEN-FONT may not be nested; and it is an ERROR if *DEFAULT-FONT* 
+is already bound to a FONT when WITH-OPEN-FONT is called."
+  (let ((font (gensym "font-")))
+    `(progn
+       (when (typep *default-font* 'font)
+	 (error "WITH-OPEN-FONT; *default-font* is already bound to a FONT."))
+       (let ((,font (initialise-font ,font-name ,font-path ,size)))
+	 (when ,font
+	   (setf *default-font* ,font)
+	   ,@body
+	   (close-font :font ,font)
+	   (setf *default-font* nil))))))
 
 ;;; Functions
 
 (defun init-ttf ()
-  "Initializes the font library if uninitialized and returns T, 
-or else returns NIL if uninitialized."
+  "Initializes the font library if uninitialized. 
+
+  * Returns T if the library was initialized and was successfully uninitialized, or else returns NIL if uninitialized."
   (unless *generation*
     (setf *generation* 0))
   (if (is-init)
@@ -63,7 +76,9 @@ or else returns NIL if uninitialized."
       (sdl-ttf-cffi::ttf-init)))
 
 (defun quit-ttf ()
-  "Uninitializes the font library if initialized. Returns NIL."
+  "Uninitializes the font library if initialized. Increments the *generation* count. 
+
+  * Returns NIL."
   (incf *generation*)
   (if (is-init)
       (sdl-ttf-cffi::ttf-quit)))
@@ -71,7 +86,6 @@ or else returns NIL if uninitialized."
 (defun initialise-font (filename pathname size)
   "Creates a new FONT object loaded from FILENAME and PATHNAME, of size SIZE.
 Automatically initialises the truetype font library if uninitialised at FONT load time. 
-Binds *DEFAULT-FONT* to FONT. Closes any FONT already bound to *DEFAULT-FONT* when INITIALISE-FONT is called.
 
   * FILENAME is the file name of the FONT, of type STRING.
 
@@ -80,19 +94,16 @@ Binds *DEFAULT-FONT* to FONT. Closes any FONT already bound to *DEFAULT-FONT* wh
   * SIZE is the size of the font to initialise, of type INTEGER.
 
   * Returns a new FONT, or NIL if unsuccessful."
-  (if (is-init)
-      (when (typep *default-font* 'font)
-	(close-font :font *default-font*))
-      (init-ttf))
-  (setf *default-font* (open-font filename size pathname)))
+  (unless (is-init)
+    (init-ttf))
+  (open-font filename size pathname))
 
-(defun initialise-default-font ()
-  "Binds *DEFAULT-FONT* to the LISPBUILDER-SDL-TTF default FONT. 
-Closes any previous font that is already bound to *DEFAULT-FONT*.
-Automatically initialises the truetype font library if uninitialised at FONT load time. 
-
-  * Returns a new FONT, or NIL if unsuccessful."
-  (initialise-font "Vera.ttf" *default-font-path* 32))
+(defun initialise-default-font (&optional (filename "Vera.ttf") (pathname *default-font-path*) (size 32))
+  "See INITIALIZE-FONT.
+Binds *DEFAULT-FONT* to FONT. Closes any FONT already bound to *DEFAULT-FONT* when INITIALISE-FONT is called."
+  (when (typep *default-font* 'font)
+    (close-font :font *default-font*))
+  (setf *default-font* (initialise-font filename pathname size)))
 
 (defun close-font (&key font *default-font*)
   "Closes the font FONT when the font library is intitialized. 

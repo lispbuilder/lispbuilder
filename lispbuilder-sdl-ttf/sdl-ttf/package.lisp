@@ -24,6 +24,7 @@
    #:is-init
 ;;   #:with-init
    #:with-open-font
+   #:with-default-open-font
    #:init-ttf
    #:quit-ttf
    #:initialise-font
