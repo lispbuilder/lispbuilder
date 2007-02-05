@@ -17,3 +17,5 @@ WITH-OPEN-FONT, INITIALISE-FONT, AND INITIALISE-DEFAULT-FONT will bind *default-
 					   :directory (pathname-directory #.(or *compile-file-truename*
 										*load-truename*)))
   "The path to the default font, \"Bitstream Vera\"")
+
+(defvar *generation* 0)

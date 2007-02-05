@@ -56,12 +56,15 @@ at any one time. For this reason WITH-OPEN-FONT calls may not be nested.
 (defun init-ttf ()
   "Initializes the font library if uninitialized and returns T, 
 or else returns NIL if uninitialized."
+  (unless *generation*
+    (setf *generation* 0))
   (if (is-init)
       t
       (sdl-ttf-cffi::ttf-init)))
 
 (defun quit-ttf ()
   "Uninitializes the font library if initialized. Returns NIL."
+  (incf *generation*)
   (if (is-init)
       (sdl-ttf-cffi::ttf-quit)))
 

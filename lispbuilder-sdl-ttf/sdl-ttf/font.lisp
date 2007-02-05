@@ -5,7 +5,8 @@
   ((foreign-pointer-to-font :accessor fp-font :initform nil :initarg :font)
    (font-style :accessor font-style :initform nil :initarg :style)
    (font-encoding :accessor font-encoding :initform nil :initarg :encoding)
-   (cached-surface :accessor cached-surface :initform nil))
+   (cached-surface :accessor cached-surface :initform nil)
+   (generation :accessor generation :initform *generation* :initarg :generation))
   (:documentation
    "The FONT object is a CLOS wrapper around a foreign TTF_Font object. 
 The FONT object maintains the most recent surface SDL:SURFACE created by a call to any of the DRAW-STRING* functions. 
@@ -40,7 +41,8 @@ FP is a pointer to a foreign TTF_Font object."
 (defun free-font (font)
   "Free's the resources used by FONT. 
 Closes the SDL_Font object. Explicitely free's the FONT's cached surface."
-  (sdl-ttf-cffi::ttf-close-font (fp-font font))
+  (if (eq (generation font) *generation*)
+      (sdl-ttf-cffi::ttf-close-font (fp-font font)))
   (when (cached-surface font)
     (sdl:free-surface (cached-surface font)))
   #-clisp(cffi:cancel-finalization font)
