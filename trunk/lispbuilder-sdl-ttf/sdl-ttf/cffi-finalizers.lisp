@@ -6,6 +6,8 @@
 ;;; Finalize the Font, closing and freeing TTF_Font.
 (defmethod initialize-instance :after ((self font) &key)
   (let ((foreign-pointer (fp-font self)))
-    (cffi:finalize self (lambda ()
-			  (sdl-ttf-cffi::ttf-close-font foreign-pointer)))))
+    (cffi:finalize self (let ((generation (generation self)))
+			  (lambda ()
+			    (if (eq generation *generation*)
+				(sdl-ttf-cffi::ttf-close-font foreign-pointer)))))))
 
