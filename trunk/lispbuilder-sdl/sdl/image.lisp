@@ -12,7 +12,7 @@
 	  surf)
 	(error "ERROR, LOAD-IMAGE: file ~A, ~A not found" filename path))))
 
-(defun save-image (surface filename path)
+(defun save-image (surface filename &optional (path #P""))
   "save the supplied filename, must be a bmp file"
   (unless (typep surface 'sdl-surface)
     (error "SURFACE must be a lispbuilder Surface object."))

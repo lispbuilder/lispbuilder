@@ -134,3 +134,21 @@ Specifically free's the wrapped foreign SDL_Rect."))
 (defgeneric free-rwops (rwops)
   (:documentation "Free's the resources associated with RWOPS.
 Specifically free's the wrapped foreign SDL_rwops."))
+
+(defgeneric free-font (font)
+  (:documentation "Free's the resources associated with the FONT."))
+
+(defgeneric draw-font (&key font surface)
+  (:documentation "Blit the cached SURFACE in FONT to the destination surface SURFACE. 
+The cached surface is created during a previous call to any of the DRAW-STRING* functions. 
+Uses POSITION in the cached SURFACE to render to the X/Y coordinates on the destination SURFACE. 
+
+This function can speed up blitting when the text remains unchanged between screen updates."))
+
+(defgeneric draw-font-at (position &key font surface)
+  (:documentation "See DRAW-FONT. 
+POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT."))
+
+(defgeneric draw-font-at-* (x y &key font surface)
+  (:documentation "See DRAW-FONT. 
+X and Y are used to position the cached SURFACE, where X and Y are INTEGERS."))
