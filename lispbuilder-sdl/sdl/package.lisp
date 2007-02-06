@@ -15,7 +15,9 @@
 		lispbuilder-sdl-base::display-cursor
 		lispbuilder-sdl-base::is-valid-ptr)
   (:import-from #:lispbuilder-sdl-cffi
-		lispbuilder-sdl-base::sdl-get-ticks)
+		sdl-cffi::sdl-opengl
+		lispbuilder-sdl-base::sdl-get-ticks
+		lispbuilder-sdl-base::sdl-gl-swap-buffers)
   (:export
 
    ;; globals.lisp
@@ -69,6 +71,8 @@
    #:y
    #:x2
    #:y2
+   #:cached-surface
+   #:free-font
 
    #:pack-color
    #:color-*
@@ -232,6 +236,8 @@
 
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
+   #:sdl-opengl
+   #:sdl-gl-swap-buffers
    
    ;; Imports from lispbuilder-sdl-base
    #:frame-rate

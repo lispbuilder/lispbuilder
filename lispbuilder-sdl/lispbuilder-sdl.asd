@@ -35,6 +35,7 @@
 	       (:file "image")
 	       (:file "rwops")
 	       (:file "drawing-primitives")
+	       (:file "font")
 	       (:file "simple-font")
 	       (:file "sdl-util")
 	       #-clisp(:file "cffi-finalizers")

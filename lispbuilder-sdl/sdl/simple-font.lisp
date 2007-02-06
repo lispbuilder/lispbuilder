@@ -2,39 +2,12 @@
 
 (in-package :lispbuilder-sdl)
 
-(defclass font ()
+(defclass font (sdl-font)
   ((font-surface :reader font-surface :initform nil :initarg :font-surface)
    (font-width :reader font-width :initform nil :initarg :font-width)
    (font-height :reader font-height :initform nil :initarg :font-height)
    (char-map :reader char-map :initform nil :initarg :char-map)
-   (key-color :reader key-color :initform nil :initarg :key-color)
-   (cached-surface :accessor cached-surface :initform nil)))
-
-(defmethod fp ((font font))
-  (fp (cached-surface font)))
-
-(defmethod fp-position ((font font))
-  (fp-position (cached-surface font)))
-
-(defmethod width ((font font))
-  (sdl-base::surf-w (fp (cached-surface font))))
-(defmethod (setf width) (w-val (font font))
-  (setf (sdl-base::rect-w (fp-position (cached-surface font))) w-val))
-
-(defmethod height ((font font))
-  (sdl-base::surf-h (fp (cached-surface font))))
-(defmethod (setf height) (h-val (font font))
-  (setf (sdl-base::rect-h (fp-position (cached-surface font))) h-val))
-
-(defmethod x ((font font))
-  (sdl-base::rect-x (fp-position (cached-surface font))))
-(defmethod (setf x) (x-val (font font))
-  (setf (sdl-base::rect-x (fp-position (cached-surface font))) x-val))
-
-(defmethod y ((font font))
-  (sdl-base::rect-y (fp-position (cached-surface font))))
-(defmethod (setf y) (y-val (font font))
-  (setf (sdl-base::rect-y (fp-position (cached-surface font))) y-val))
+   (key-color :reader key-color :initform nil :initarg :key-color)))
 
 (defun make-char-map (str)
   "given a string of characters make a hash table which returns an index from 0 to n where 0 is the first char, and n is the last"
@@ -60,7 +33,7 @@
 		       :key-color key-color)
 	(error "LOAD-FONT: Font cannot be initialised."))))
 
-(defun free-font (font)
+(defmethod free-font ((font font))
   "free up the font image surface"
   (if (font-surface font)
       (free-surface (font-surface font)))
@@ -159,14 +132,6 @@
 			   :surface surface))
 	 (incf left-x (font-width font)))))
 
-(defun draw-font (&key (font *default-font*) (surface *default-surface*))
-  (blit-surface (cached-surface font) surface))
-
-(defun draw-font-at (position &key (font *default-font*) (surface *default-surface*))
-  (draw-surface-at (cached-surface font) position :surface surface))
-
-(defun draw-font-at-* (x y &key (font *default-font*) (surface *default-surface*))
-  (draw-surface-at-* (cached-surface font) x y :surface surface))
 
 ;; (defmacro with-open-font ((font-image-name font-width font-height char-map-string key-color &optional (font-path ""))
 ;; 			  &body body)
