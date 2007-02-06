@@ -30,24 +30,24 @@ For example:
     (error "ERROR: RENDER-STRING-SOLID; FONT must be of type FONT."))
   (unless (typep color 'sdl:sdl-color)
     (error "ERROR: RENDER-STRING-SOLID; COLOR must be of type SDL:SDL-COLOR."))
-  (when (cached-surface font)
-    (sdl:free-surface (cached-surface font)))
+  (when (sdl:cached-surface font)
+    (sdl:free-surface (sdl:cached-surface font)))
   (case encoding
     (:latin1
      (sdl:with-foreign-color-copy (col-struct color)
-       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-Solid (fp-font font) text col-struct)))))
+       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-Solid (fp-font font) text col-struct)))))
     (:UTF8
      (sdl:with-foreign-color-copy (col-struct color)
-       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-Solid (fp-font font) text col-struct)))))
+       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-Solid (fp-font font) text col-struct)))))
     (:GLYPH
      (sdl:with-foreign-color-copy (col-struct color)
-       (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-Solid (fp-font font) text col-struct)))))
+       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-Solid (fp-font font) text col-struct)))))
     (:UNICODE
      ;; TODO
      )
     (otherwise
      (error "ERROR: RENDER-STRING-SOLID; ENCODING must be one of :LATIN1, :UTF8, :GLYPH or :UNICODE.")))
-  (cached-surface font))
+  (sdl:cached-surface font))
 
 (defun draw-string-solid (text position &key 
 			  (encoding :latin1)
@@ -57,7 +57,7 @@ For example:
   "See DRAW-STRING-SOLID-*.
 
   * :POSITION is the x and y position to render the text, of type SDL:POINT."
-  (unless (typep position 'sdl:point)
+  (unless (typep surface 'sdl:point)
     (error "ERROR: DRAW-STRING-SOLID; POSITION must be of type SDL:POINT."))
   (draw-string-solid-* text (sdl:x position) (sdl:y position)
 		       :encoding encoding
@@ -94,7 +94,7 @@ Caches the new surface in the FONT object.
 For example:
   * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep surface 'sdl:sdl-surface)
-    (error "ERROR: draw-string-solid-*; SURFACE must be of type SDL:SDL-SURFACE."))
+    (error "ERROR: DRAW-STRING-SOLID-*; SURFACE must be of type SDL:SDL-SURFACE."))
   (let ((font-surface (render-string-solid text :encoding encoding :font font :color color)))
     (sdl:set-surface-* font-surface :x x :y y)
     (sdl:blit-surface font-surface surface)

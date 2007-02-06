@@ -33,30 +33,30 @@ For example:
     (error "ERROR: RENDER-STRING-SHADED; FG-COLOR must be of type SDL:SDL-COLOR."))
   (unless (typep bg-color 'sdl:sdl-color)
     (error "ERROR: RENDER-STRING-SHADED; BG-COLOR must be of type SDL:SDL-COLOR."))
-  (when (cached-surface font)
-    (sdl:free-surface (cached-surface font)))
+  (when (sdl:cached-surface font)
+    (sdl:free-surface (sdl:cached-surface font)))
   (case encoding
     (:latin1
      (sdl:with-foreign-color-copy (fg-struct fg-color)
        (sdl:with-foreign-color-copy (bg-struct bg-color)
-	 (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-shaded (fp-font font)
+	 (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-shaded (fp-font font)
 											text fg-struct bg-struct))))))
     (:UTF8
      (sdl:with-foreign-color-copy (fg-struct fg-color)
        (sdl:with-foreign-color-copy (bg-struct bg-color)
-	 (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-shaded (fp-font font)
+	 (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-shaded (fp-font font)
 											text fg-struct bg-struct))))))
     (:GLYPH
      (sdl:with-foreign-color-copy (fg-struct fg-color)
        (sdl:with-foreign-color-copy (bg-struct bg-color)
-	 (setf (cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-shaded (fp-font font)
+	 (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-shaded (fp-font font)
 											 text fg-struct bg-struct))))))
     (:UNICODE
      ;; TODO
      )
     (otherwise
      (error "ERROR: RENDER-STRING-SHADED; ENCODING must be one of :LATIN1, :UTF8, :GLYPH or :UNICODE.")))
-  (cached-surface font))
+  (sdl:cached-surface font))
 
 (defun draw-string-shaded (text position fg-color bg-color &key
 			     (encoding :latin1)
