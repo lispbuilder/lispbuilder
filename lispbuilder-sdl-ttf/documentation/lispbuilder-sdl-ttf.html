@@ -359,20 +359,18 @@
       The functions INIT-TTF and QUIT-TTF are added to the lists SDL:*EXTERNAL-INIT-ON-STARTUP* and 
       SDL:*EXTERNAL-QUIT-ON-EXIT*. LISPBUILDER-SDL iterates over these lists in calls to SDL:INIT-SDL, SDL:QUIT-SDL 
       and SDL:WITH-INIT in order to initialize or uninitialize any external libraries such as LISPBUILDER-SDL-TTF.</p>
-    <p>To open a TrueType font use INITIALISE-FONT or the macro WITH-OPEN-FONT.  LISPBUILDER-SDL-TTF allows more than 
+    <p>To open a TrueType font use INITIALISE-FONT or the macro WITH-OPEN-FONT. LISPBUILDER-SDL-TTF allows more than 
       one FONT to be used simultaneously within a single SDL application. 
     </p>
     <p>
       LISPBUILDER-SDL-TTF has the concept of a *DEFAULT-FONT*. A FONT may be bound to *DEFAULT-FONT* by using
-      INITIALISE-DEFAULT-FONT or WITH-OPEN-FONT, or WITH-DEFAULT-FONT. 
-      All functions that take a &KEYword or &OPTIONAL FONT argument accept *DEFAULT-FONT* as the default
-      unless a FONT is specified. This makes calling functions a bit easier as 
-      the :FONT parameter need not be explicitely. For example:
+      INITIALISE-DEFAULT-FONT,  WITH-OPEN-FONT, or WITH-DEFAULT-FONT. 
+      All functions that take a &KEYword or &OPTIONAL FONT argument accept *DEFAULT-FONT* unless a FONT is specified. 
+      This makes calling functions a bit easier as the :FONT parameter need not be explicitely passed. For example:
       
       (GET-FONT-SIZE "TEXT" :SIZE :W), compared to 
       (GET-FONT-SIZE "TEXT" :SIZE :W :FONT ANY-FONT)
     </p>
-    
     <p>
       Functions and symbols exported from the LISPBUILDER-SDL-TTF package are 
       accessible from the <code>LISPBUILDER-SDL-TTF:</code> prefix or the 
@@ -1116,11 +1114,19 @@ Initializes the font library if uninitialized.
 <p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i><tt>&amp;optional</tt> free filename pathname size</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See INITIALIZE-FONT.
-Binds the global symbol *DEFAULT-FONT* to FONT. Although several truetype fonts may used within a single 
-SDL application, only a single FONT may be bound to the global *DEFAULT-FONT* at any one time. 
+Binds the symbol *DEFAULT-FONT* to FONT. Although several truetype fonts may used within a single 
+SDL application, only a single FONT may be bound to the symbol *DEFAULT-FONT* at any one time. 
+Returns ERROR if :FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when INITIALISE-DEFAULT-FONT is called.
 
-  * Returns a new FONT. Returns ERROR if FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when WITH-OPEN-FONT is called.
+  * :FREE when set to T will automatically free any font already bound to *DEFAULT-FONT*.
+
+  * FILENAME is the optional file name of the font, as a STRING.
+
+  * PATHNAME is the path to the font file on the disk, as a STRING.
+
+  * SIZE is the INTEGER point size to load the FONT as.
+
+  * Returns a new FONT, or NIL if unsuccessful.
 
 </blockquote>
 
@@ -1139,7 +1145,7 @@ Automatically initialises the truetype font library if uninitialised at FONT loa
 
   * PATHNAME is the pathname of the FONT, of type STRING.
 
-  * SIZE is the size of the font to initialise, of type INTEGER.
+  * SIZE is the INTEGER point size to load the FONT as.
 
   * Returns a new FONT, or NIL if unsuccessful.
 
@@ -1196,7 +1202,7 @@ FP is a pointer to a foreign TTF_Font object.
 <p><br>[Function]<br><a class=none name='open-font'><b>open-font</b> <i>filename size <tt>&amp;optional</tt> pathname</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Attempts to open the truetype font at FILENAME and PATHNAME. 
+Attempts to load the truetype font at the location specified by FILENAME and PATHNAME. 
 NOTE: Does not bind *DEFAULT-FONT* to FONT. 
 Does not attempt to initialize the truetype library if uninitialised. 
 
@@ -1257,7 +1263,7 @@ STYLE is a list of one or more:
 <p><br>[Macro]<br><a class=none name='with-default-font'><b>with-default-font</b> <i>(font) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Dynamically binds FONT to *DEFAULT-FONT*.
+Dynamically binds FONT to *DEFAULT-FONT* within the scope of WITH-DEFAULT-FONT.
 
 </blockquote>
 
@@ -1270,16 +1276,16 @@ Dynamically binds FONT to *DEFAULT-FONT*.
 <blockquote><br>
 
 This is a convenience macro that will first attempt to intialize the truetype font library and if successful, 
-open the font FONT-NAME and execute BODY. Will exit if the library cannot be initialized or the FONT cannot be opened. 
-Binds a shadowed instance of *DEFAULT-FONT* to the FONT in FONT-NAME. Calls to WITH-DEFAULT-OPEN-FONT may be nested
-
+open the font FONT-NAME and execute the forms in BODY. Will exit if the library cannot be initialized or the 
+FONT cannot be opened. 
+Binds the FONT to a shadowed instance of *DEFAULT-FONT* within the scope of WITH-OPEN-FONT. 
 WITH-OPEN-FONT calls may be nested.
 
   * FONT is the variable name of the new font, of type FONT.
 
   * FONT-NAME is the name of the truetype font to be opened, of type STRING
 
-  * SIZE is the size of the font, as an INTEGER
+  * SIZE is the INTEGER point size of the font.
 
   * FONT-PATH is an &amp;optional path to FONT-NAME, of type STRING
 

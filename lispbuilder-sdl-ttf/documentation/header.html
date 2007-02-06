@@ -359,20 +359,18 @@
       The functions INIT-TTF and QUIT-TTF are added to the lists SDL:*EXTERNAL-INIT-ON-STARTUP* and 
       SDL:*EXTERNAL-QUIT-ON-EXIT*. LISPBUILDER-SDL iterates over these lists in calls to SDL:INIT-SDL, SDL:QUIT-SDL 
       and SDL:WITH-INIT in order to initialize or uninitialize any external libraries such as LISPBUILDER-SDL-TTF.</p>
-    <p>To open a TrueType font use INITIALISE-FONT or the macro WITH-OPEN-FONT.  LISPBUILDER-SDL-TTF allows more than 
+    <p>To open a TrueType font use INITIALISE-FONT or the macro WITH-OPEN-FONT. LISPBUILDER-SDL-TTF allows more than 
       one FONT to be used simultaneously within a single SDL application. 
     </p>
     <p>
       LISPBUILDER-SDL-TTF has the concept of a *DEFAULT-FONT*. A FONT may be bound to *DEFAULT-FONT* by using
-      INITIALISE-DEFAULT-FONT or WITH-OPEN-FONT, or WITH-DEFAULT-FONT. 
-      All functions that take a &KEYword or &OPTIONAL FONT argument accept *DEFAULT-FONT* as the default
-      unless a FONT is specified. This makes calling functions a bit easier as 
-      the :FONT parameter need not be explicitely. For example:
+      INITIALISE-DEFAULT-FONT,  WITH-OPEN-FONT, or WITH-DEFAULT-FONT. 
+      All functions that take a &KEYword or &OPTIONAL FONT argument accept *DEFAULT-FONT* unless a FONT is specified. 
+      This makes calling functions a bit easier as the :FONT parameter need not be explicitely passed. For example:
       
       (GET-FONT-SIZE "TEXT" :SIZE :W), compared to 
       (GET-FONT-SIZE "TEXT" :SIZE :W :FONT ANY-FONT)
     </p>
-    
     <p>
       Functions and symbols exported from the LISPBUILDER-SDL-TTF package are 
       accessible from the <code>LISPBUILDER-SDL-TTF:</code> prefix or the 
