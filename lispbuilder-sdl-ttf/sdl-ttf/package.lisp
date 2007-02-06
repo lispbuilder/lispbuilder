@@ -23,8 +23,8 @@
    ;; sdl-util-ttf.lisp
    #:is-init
 ;;   #:with-init
+   #:with-default-font
    #:with-open-font
-   #:with-default-open-font
    #:init-ttf
    #:quit-ttf
    #:initialise-font

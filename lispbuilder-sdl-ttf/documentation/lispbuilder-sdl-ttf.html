@@ -3,7 +3,7 @@
   
   <head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
-    <title>LISPBUILDER-SDL-TTF - </title>
+    <title>LISPBUILDER-SDL-TTF - a cool library</title>
     <style type="text/css">
       
       body {
@@ -331,7 +331,7 @@
   
   <BODY BGCOLOR=#FFFFFF >
     
-    <h1><a name="top" class=none> LISPBUILDER-SDL-TTF - </a></h1>
+    <h1><a name="top" class=none> LISPBUILDER-SDL-TTF - a cool library</a></h1>
     
     <blockquote>
       <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
@@ -340,7 +340,8 @@
 	LISPBUILDER-SDL-TTF provides a Lisp wrapper for the 
 	<a href="http://www.libsdl.org/projects/SDL_ttf/">SDL_TTF</a> library,
 	and provides support for loading and rendering True-Type fonts in an 
-	SDL application.
+	SDL application. The SDL_TTF wrapper is in itself a wrapper around the 
+	FreeType 1.2 library, available at: <a href="http://www.freetype.org/">Freetype Homepage</a>. 
 	LISPBUILDER-SDL-TTF has a dependency on the LISPBUILDER-SDL package.
 	LISPBUILDER-SDL-TTF is distributed under the 
 	<a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
@@ -354,6 +355,24 @@
     </blockquote>
     
     <br>&nbsp;</br><h2><a class=none name="packageover">Package Overview</a></h2>
+    <p>The TrueType library is automatically initialized and uninitialized by the LISPBUILDER-SDL package.
+      The functions INIT-TTF and QUIT-TTF are added to the lists SDL:*EXTERNAL-INIT-ON-STARTUP* and 
+      SDL:*EXTERNAL-QUIT-ON-EXIT*. LISPBUILDER-SDL iterates over these lists in calls to SDL:INIT-SDL, SDL:QUIT-SDL 
+      and SDL:WITH-INIT in order to initialize or uninitialize any external libraries such as LISPBUILDER-SDL-TTF.</p>
+    <p>To open a TrueType font use INITIALISE-FONT or the macro WITH-OPEN-FONT.  LISPBUILDER-SDL-TTF allows more than 
+      one FONT to be used simultaneously within a single SDL application. 
+    </p>
+    <p>
+      LISPBUILDER-SDL-TTF has the concept of a *DEFAULT-FONT*. A FONT may be bound to *DEFAULT-FONT* by using
+      INITIALISE-DEFAULT-FONT or WITH-OPEN-FONT, or WITH-DEFAULT-FONT. 
+      All functions that take a &KEYword or &OPTIONAL FONT argument accept *DEFAULT-FONT* as the default
+      unless a FONT is specified. This makes calling functions a bit easier as 
+      the :FONT parameter need not be explicitely. For example:
+      
+      (GET-FONT-SIZE "TEXT" :SIZE :W), compared to 
+      (GET-FONT-SIZE "TEXT" :SIZE :W :FONT ANY-FONT)
+    </p>
+    
     <p>
       Functions and symbols exported from the LISPBUILDER-SDL-TTF package are 
       accessible from the <code>LISPBUILDER-SDL-TTF:</code> prefix or the 
@@ -424,7 +443,6 @@
 	          <li><a href="#draw-string-solid"><code>draw-string-solid</code></a>
 	          <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a>
 	          <li><a href="#font"><code>font</code></a>
-	          <li><a href="#fp-position"><code>fp-position</code></a>
 	          <li><a href="#free-font"><code>free-font</code></a>
 	          <li><a href="#get-font-ascent"><code>get-font-ascent</code></a>
 	          <li><a href="#get-font-descent"><code>get-font-descent</code></a>
@@ -445,10 +463,8 @@
 	          <li><a href="#open-font"><code>open-font</code></a>
 	          <li><a href="#quit-ttf"><code>quit-ttf</code></a>
 	          <li><a href="#set-font-style"><code>set-font-style</code></a>
-	          <li><a href="#with-init"><code>with-init</code></a>
+	          <li><a href="#with-default-font"><code>with-default-font</code></a>
 	          <li><a href="#with-open-font"><code>with-open-font</code></a>
-	          <li><a href="#x"><code>x</code></a>
-	          <li><a href="#y"><code>y</code></a>
 	        
 	  </li>
 	</ol>
@@ -741,7 +757,7 @@ Caches the new surface in the FONT object.
   * Returns the cached SDL:SDL-SURFACE.
 
 For example:
-  * (DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
+  * (DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
 
 </blockquote>
 
@@ -789,7 +805,7 @@ onto surface :SURFACE, using the Shaded mode. Caches the new surface in the FONT
   * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
 
 For example:
-  * (DRAW-STRING-SHADED-* &quot;Hello World!&quot; 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
+  * (DRAW-STRING-SHADED-* &quot;Hello World!&quot; 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
 
 </blockquote>
 
@@ -837,7 +853,7 @@ Caches the new surface in the FONT object.
   * Returns the cached SDL:SDL-SURFACE.
 
 For example:
-  * (DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :ENCODING :TEXT :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
+  * (DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
 
 </blockquote>
 
@@ -859,25 +875,15 @@ Prior to the first call to a DRAW-STRING* function, the cached surface is NIL.
 <!-- End of entry for FONT -->
 
 
-<!-- Entry for FP-POSITION -->
-
-<p><br>[Generic function]<br><a class=none name='fp-position'><b>fp-position</b> <i>font</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-Returns the foreign SDL_Rect that determines the position of the FONT.
-
-</blockquote>
-
-<!-- End of entry for FP-POSITION -->
-
-
 <!-- Entry for FREE-FONT -->
 
 <p><br>[Function]<br><a class=none name='free-font'><b>free-font</b> <i>font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Free&#039;s the resources used by FONT. 
-Closes the SDL_Font object. Explicitely free&#039;s the FONT&#039;s cached surface.
+Free&#039;s the resources used by FONT. Explicitely free&#039;s the FONT&#039;s cached surface.
+Closes the SDL_Font object only when the font has been created within the current INIT-TTF/QUIT-TTF sequence. In other
+words, when (EQ (GENERATION FONT) *GENERATION*). Otherwise it is assumed that the font resources have already been
+freed in a previous call to QUIT-TTF.
 
 </blockquote>
 
@@ -1030,7 +1036,7 @@ actual width. The height returned is the same as returned using GET-FONT-HEIGHT.
     * :H , text height
 
   * :ENCODING may be one of: 
-    * :TEXT
+    * :LATIN1
     * :UTF8
     * :UNICODE
 
@@ -1096,8 +1102,9 @@ For example;
 <p><br>[Function]<br><a class=none name='init-ttf'><b>init-ttf</b> <i></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Initializes the font library if uninitialized and returns T, 
-or else returns NIL if uninitialized.
+Initializes the font library if uninitialized. 
+
+  * Returns T if the library was initialized and was successfully uninitialized, or else returns NIL if uninitialized.
 
 </blockquote>
 
@@ -1106,14 +1113,14 @@ or else returns NIL if uninitialized.
 
 <!-- Entry for INITIALISE-DEFAULT-FONT -->
 
-<p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i></i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i><tt>&amp;optional</tt> free filename pathname size</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Binds *DEFAULT-FONT* to the LISPBUILDER-SDL-TTF default FONT. 
-Closes any previous font that is already bound to *DEFAULT-FONT*.
-Automatically initialises the truetype font library if uninitialised at FONT load time. 
+See INITIALIZE-FONT.
+Binds the global symbol *DEFAULT-FONT* to FONT. Although several truetype fonts may used within a single 
+SDL application, only a single FONT may be bound to the global *DEFAULT-FONT* at any one time. 
 
-  * Returns a new FONT, or NIL if unsuccessful.
+  * Returns a new FONT. Returns ERROR if FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when WITH-OPEN-FONT is called.
 
 </blockquote>
 
@@ -1127,7 +1134,6 @@ Automatically initialises the truetype font library if uninitialised at FONT loa
 
 Creates a new FONT object loaded from FILENAME and PATHNAME, of size SIZE.
 Automatically initialises the truetype font library if uninitialised at FONT load time. 
-Binds *DEFAULT-FONT* to FONT. Closes any FONT already bound to *DEFAULT-FONT* when INITIALISE-FONT is called.
 
   * FILENAME is the file name of the FONT, of type STRING.
 
@@ -1212,7 +1218,9 @@ Does not attempt to initialize the truetype library if uninitialised.
 <p><br>[Function]<br><a class=none name='quit-ttf'><b>quit-ttf</b> <i></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Uninitializes the font library if initialized. Returns NIL.
+Uninitializes the font library if initialized. Increments the *generation* count. 
+
+  * Returns NIL.
 
 </blockquote>
 
@@ -1244,20 +1252,16 @@ STYLE is a list of one or more:
 <!-- End of entry for SET-FONT-STYLE -->
 
 
-<!-- Entry for WITH-INIT -->
+<!-- Entry for WITH-DEFAULT-FONT -->
 
-<p><br>[Macro]<br><a class=none name='with-init'><b>with-init</b> <i>nil declaration* statement*</i> =&gt; <i>result</i></a>
+<p><br>[Macro]<br><a class=none name='with-default-font'><b>with-default-font</b> <i>(font) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Initialises the truetype font library. Will exit if the libary cannot be initialised. 
-The truetype library must be initialized prior to using functions in the LISPBUILDER-SDL-TTF package.
-The truetype library may be initialized explicitely using this WITH-INIT macro or implicitely by adding the 
-function INIT-TTF to sdl:*external-init-on-startup*.
-LISPBUILDER-SDL does not have to be initialized prior initialization of the library.
+Dynamically binds FONT to *DEFAULT-FONT*.
 
 </blockquote>
 
-<!-- End of entry for WITH-INIT -->
+<!-- End of entry for WITH-DEFAULT-FONT -->
 
 
 <!-- Entry for WITH-OPEN-FONT -->
@@ -1267,11 +1271,11 @@ LISPBUILDER-SDL does not have to be initialized prior initialization of the libr
 
 This is a convenience macro that will first attempt to intialize the truetype font library and if successful, 
 open the font FONT-NAME and execute BODY. Will exit if the library cannot be initialized or the FONT cannot be opened. 
-Binds *DEFAULT-FONT* to the FONT in FONT-NAME. It is an ERROR if *DEFAULT-FONT* is already bound to a FONT when
-WITH-OPEN-FONT is called.
+Binds a shadowed instance of *DEFAULT-FONT* to the FONT in FONT-NAME. Calls to WITH-DEFAULT-OPEN-FONT may be nested
 
-Although several truetype fonts may used within a single SDL application, only a single FONT may remain open 
-at any one time. For this reason WITH-OPEN-FONT calls may not be nested.
+WITH-OPEN-FONT calls may be nested.
+
+  * FONT is the variable name of the new font, of type FONT.
 
   * FONT-NAME is the name of the truetype font to be opened, of type STRING
 
@@ -1282,32 +1286,6 @@ at any one time. For this reason WITH-OPEN-FONT calls may not be nested.
 </blockquote>
 
 <!-- End of entry for WITH-OPEN-FONT -->
-
-
-<!-- Entry for X -->
-
-<p><br>[Generic accessor]<br><a class=none name='x'><b>x</b> <i>font</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>x</b> <i>font</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-Returns the top left X position of the font.
-
-</blockquote>
-
-<!-- End of entry for X -->
-
-
-<!-- Entry for Y -->
-
-<p><br>[Generic accessor]<br><a class=none name='y'><b>y</b> <i>font</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>y</b> <i>font</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-Returns the top left Y position of the font.
-
-</blockquote>
-
-<!-- End of entry for Y -->
 <br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
 
 <ul>
