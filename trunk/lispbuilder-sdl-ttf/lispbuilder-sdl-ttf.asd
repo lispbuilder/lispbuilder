@@ -23,6 +23,9 @@
 	       (:file "font" :depends-on ("package" "generics" "globals"))
 	       #-clisp(:file "cffi-finalizers" :depends-on ("font" "package" "globals"))
 	       (:file "sdl-util-ttf" :depends-on ("font" "globals" "package"))
+	       (:file "string-solid" :depends-on ("sdl-util-ttf"))
+	       (:file "string-shaded" :depends-on ("sdl-util-ttf"))
+	       (:file "string-blended" :depends-on ("sdl-util-ttf"))
 	       (:static-file "bitstream-vera-copyright")
 	       (:static-file "Vera.ttf")))
      (:module "documentation"

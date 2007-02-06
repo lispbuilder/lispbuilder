@@ -42,10 +42,13 @@
    #:get-font-face-family-name
    #:get-font-face-style-name
    #:open-font
+   #:render-string-solid
    #:draw-string-solid
    #:draw-string-solid-*
+   #:render-string-shaded
    #:draw-string-shaded
    #:draw-string-shaded-*
+   #:render-string-blended
    #:draw-string-blended
    #:draw-string-blended-*
    #:draw-font
