@@ -8,6 +8,7 @@
 (defun font-example ()
   (sdl:with-init ()
     (sdl:window 320 300 :title-caption "SDL-TTF Font Example" :icon-caption "SDL-TTF Font Example")
+    (setf (sdl:frame-rate) 5)
     (sdl-ttf:initialise-default-font)
     (sdl:with-surface (disp sdl:*default-display*)
       (sdl-ttf:draw-string-solid-* "Text LATIN1 - Solid" 0 0
