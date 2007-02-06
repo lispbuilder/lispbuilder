@@ -107,9 +107,9 @@ free'd, using CLOSE-FONT."
 (defun initialise-default-font (&optional (free t) (filename "Vera.ttf") (pathname *default-font-path*) (size 32))
   "Binds the symbol *DEFAULT-FONT* to FONT. Although several truetype fonts may used within a single 
 SDL application, only a single FONT may be bound to the symbol *DEFAULT-FONT* at any one time. 
-Returns ERROR if :FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when INITIALISE-DEFAULT-FONT is called.
+Returns ERROR if FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when INITIALISE-DEFAULT-FONT is called.
 
-  * :FREE when set to T will automatically free any font already bound to *DEFAULT-FONT*.
+  * FREE when set to T will automatically free any font already bound to *DEFAULT-FONT*.
 
   * FILENAME is the optional file name of the font, as a STRING.
 
