@@ -3,7 +3,7 @@
   
   <head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
-    <title>LISPBUILDER-SDL-TTF - a cool library</title>
+    <title>LISPBUILDER-SDL-TTF - </title>
     <style type="text/css">
       
       body {
@@ -331,7 +331,7 @@
   
   <BODY BGCOLOR=#FFFFFF >
     
-    <h1><a name="top" class=none> LISPBUILDER-SDL-TTF - a cool library</a></h1>
+    <h1><a name="top" class=none> LISPBUILDER-SDL-TTF - </a></h1>
     
     <blockquote>
       <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
@@ -431,9 +431,6 @@
 	        <li><a href="#*default-font*"><code>*default-font*</code></a>
 	          <li><a href="#*default-font-path*"><code>*default-font-path*</code></a>
 	          <li><a href="#close-font"><code>close-font</code></a>
-	          <li><a href="#draw-font"><code>draw-font</code></a>
-	          <li><a href="#draw-font-at"><code>draw-font-at</code></a>
-	          <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a>
 	          <li><a href="#draw-string-blended"><code>draw-string-blended</code></a>
 	          <li><a href="#draw-string-blended-*"><code>draw-string-blended-*</code></a>
 	          <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a>
@@ -460,6 +457,9 @@
 	          <li><a href="#new-font"><code>new-font</code></a>
 	          <li><a href="#open-font"><code>open-font</code></a>
 	          <li><a href="#quit-ttf"><code>quit-ttf</code></a>
+	          <li><a href="#render-string-blended"><code>render-string-blended</code></a>
+	          <li><a href="#render-string-shaded"><code>render-string-shaded</code></a>
+	          <li><a href="#render-string-solid"><code>render-string-solid</code></a>
 	          <li><a href="#set-font-style"><code>set-font-style</code></a>
 	          <li><a href="#with-default-font"><code>with-default-font</code></a>
 	          <li><a href="#with-open-font"><code>with-open-font</code></a>
@@ -673,55 +673,13 @@ NOTE: Does not uninitialise the font library. Does not bind *DEFAULT-FONT* to NI
 <!-- End of entry for CLOSE-FONT -->
 
 
-<!-- Entry for DRAW-FONT -->
-
-<p><br>[Function]<br><a class=none name='draw-font'><b>draw-font</b> <i>font <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-Blit the cached SURFACE in FONT to the destination surface SURFACE. 
-The cached surface is created during a previous call to any of the DRAW-STRING* functions. 
-Uses POSITION in the cached SURFACE to render to the X/Y coordinates on the destination SURFACE. 
-
-This function can speed up blitting when the text remains unchanged between screen updates.
-
-</blockquote>
-
-<!-- End of entry for DRAW-FONT -->
-
-
-<!-- Entry for DRAW-FONT-AT -->
-
-<p><br>[Function]<br><a class=none name='draw-font-at'><b>draw-font-at</b> <i>font point <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-See DRAW-FONT. 
-POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT.
-
-</blockquote>
-
-<!-- End of entry for DRAW-FONT-AT -->
-
-
-<!-- Entry for DRAW-FONT-AT-* -->
-
-<p><br>[Function]<br><a class=none name='draw-font-at-*'><b>draw-font-at-*</b> <i>font x y <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-See DRAW-FONT. 
-X and Y are used to position the cached SURFACE, where X and Y are INTEGERS.
-
-</blockquote>
-
-<!-- End of entry for DRAW-FONT-AT-* -->
-
-
 <!-- Entry for DRAW-STRING-BLENDED -->
 
 <p><br>[Function]<br><a class=none name='draw-string-blended'><b>draw-string-blended</b> <i>text position <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 See DRAW-STRING-BLENDED-*.
-:POSITION is the x and y position to render the text, of type SDL:POINT.
+  * :POSITION is the x and y position to render the text, of type SDL:POINT.
 
 </blockquote>
 
@@ -733,7 +691,7 @@ See DRAW-STRING-BLENDED-*.
 <p><br>[Function]<br><a class=none name='draw-string-blended-*'><b>draw-string-blended-*</b> <i>text x y <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Render text TEXT using font :FONT with color :COLOR onto surface :SURFACE, using the Blended mode. 
+Draw text TEXT using font :FONT with color :COLOR onto surface :SURFACE, using the Blended mode. 
 Caches the new surface in the FONT object. 
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
@@ -781,7 +739,7 @@ See DRAW-STRING-SHADED-*
 <p><br>[Function]<br><a class=none name='draw-string-shaded-*'><b>draw-string-shaded-*</b> <i>text x y fg-color bg-color <tt>&amp;key</tt> encoding font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Render text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
+Draw text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
 onto surface :SURFACE, using the Shaded mode. Caches the new surface in the FONT object.
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
@@ -803,7 +761,7 @@ onto surface :SURFACE, using the Shaded mode. Caches the new surface in the FONT
   * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
 
 For example:
-  * (DRAW-STRING-SHADED-* &quot;Hello World!&quot; 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
+  * (DRAW-STRING-SHADED-* &quot;Hello World!&quot; 0 0 fg-col bg-col :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE)
 
 </blockquote>
 
@@ -829,7 +787,7 @@ See DRAW-STRING-SOLID-*.
 <p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>text x y <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Render text TEXT using font FONT with color COLOR onto surface SURFACE, using the Solid mode. 
+Draw text TEXT using font FONT with color COLOR onto surface SURFACE, using the Solid mode. 
 Caches the new surface in the FONT object.
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
@@ -875,7 +833,19 @@ Prior to the first call to a DRAW-STRING* function, the cached surface is NIL.
 
 <!-- Entry for FREE-FONT -->
 
-<p><br>[Function]<br><a class=none name='free-font'><b>free-font</b> <i>font</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='free-font'><b>free-font</b> <i>font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FREE-FONT -->
+
+
+<!-- Entry for FREE-FONT -->
+
+<p><br>[Method]<br><a class=none><b>free-font</b> <i>(font font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 Free&#039;s the resources used by FONT. Explicitely free&#039;s the FONT&#039;s cached surface.
@@ -1116,9 +1086,9 @@ Initializes the font library if uninitialized.
 
 Binds the symbol *DEFAULT-FONT* to FONT. Although several truetype fonts may used within a single 
 SDL application, only a single FONT may be bound to the symbol *DEFAULT-FONT* at any one time. 
-Returns ERROR if :FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when INITIALISE-DEFAULT-FONT is called.
+Returns ERROR if FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when INITIALISE-DEFAULT-FONT is called.
 
-  * :FREE when set to T will automatically free any font already bound to *DEFAULT-FONT*.
+  * FREE when set to T will automatically free any font already bound to *DEFAULT-FONT*.
 
   * FILENAME is the optional file name of the font, as a STRING.
 
@@ -1231,6 +1201,95 @@ Uninitializes the font library if initialized. Increments the *generation* count
 </blockquote>
 
 <!-- End of entry for QUIT-TTF -->
+
+
+<!-- Entry for RENDER-STRING-BLENDED -->
+
+<p><br>[Function]<br><a class=none name='render-string-blended'><b>render-string-blended</b> <i>text <tt>&amp;key</tt> encoding font color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Render text TEXT using font FONT with color COLOR into the FONT&#039;s cached surface, using the Blended mode. 
+
+  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
+
+  * ENCODING specifies the format of the text to render and is one of: 
+    * :LATIN1
+    * :UTF8
+    * :UNICODE
+    * :GLYPH
+
+  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
+
+  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
+
+  * Returns the cached SDL:SDL-SURFACE.
+
+For example:
+  * (DRAW-STRING-BLENDED &quot;Hello World!&quot; :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :COLOR A-COLOR)
+
+</blockquote>
+
+<!-- End of entry for RENDER-STRING-BLENDED -->
+
+
+<!-- Entry for RENDER-STRING-SHADED -->
+
+<p><br>[Function]<br><a class=none name='render-string-shaded'><b>render-string-shaded</b> <i>text fg-color bg-color <tt>&amp;key</tt> encoding font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Render text TEXT using font FONT with color COLOR into the FONT&#039;s cached surface, using the Shaded mode. 
+
+  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
+
+  * FG-COLOR is the foreground color of the text, of type SDL:SDL-COLOR
+
+  * BG-COLOR is the background color of the text, of type SDL:SDL-COLOR
+
+  * ENCODING specifies the format of the text to render and is one of: 
+    * :LATIN1
+    * :UTF8
+    * :UNICODE
+    * :GLYPH
+
+  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
+
+  * Returns the cached SDL:SDL-SURFACE.
+
+For example:
+  * (DRAW-STRING-SHADED &quot;Hello World!&quot; fg-col bg-col :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :COLOR A-COLOR)
+
+</blockquote>
+
+<!-- End of entry for RENDER-STRING-SHADED -->
+
+
+<!-- Entry for RENDER-STRING-SOLID -->
+
+<p><br>[Function]<br><a class=none name='render-string-solid'><b>render-string-solid</b> <i>text <tt>&amp;key</tt> encoding font color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+Render text TEXT using font FONT with color COLOR into the FONT&#039;s cached surface, using the Solid mode. 
+
+  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
+
+  * ENCODING specifies the format of the text to render and is one of: 
+    * :LATIN1
+    * :UTF8
+    * :UNICODE
+    * :GLYPH
+
+  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
+
+  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
+
+  * Returns the cached SDL:SDL-SURFACE.
+
+For example:
+  * (DRAW-STRING-SOLID &quot;Hello World!&quot; :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :COLOR A-COLOR)
+
+</blockquote>
+
+<!-- End of entry for RENDER-STRING-SOLID -->
 
 
 <!-- Entry for SET-FONT-STYLE -->
