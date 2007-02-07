@@ -6,7 +6,10 @@
   (:use #:cl #:cffi)
   (:nicknames #:sdl-ttf)
   (:documentation "The main package of `lispbuilder-sdl-ttf'.")
-		
+  (:import-from #:lispbuilder-sdl
+		lispbuilder-sdl:draw-font
+		lispbuilder-sdl:draw-font-at
+		lispbuilder-sdl:draw-font-at-*)
   (:export
 
    ;; globals.lisp
@@ -56,6 +59,7 @@
    #:draw-font-at
    #:draw-font-at-*
    #:set-font-style
-   
+
+   ;;
    
    ))
