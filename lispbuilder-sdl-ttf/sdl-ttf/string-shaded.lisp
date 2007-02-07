@@ -6,8 +6,10 @@
 
 (defun render-string-shaded (text fg-color bg-color &key
 			     (encoding :latin1)
-			     (font *default-font*))
+			     (font *default-font*)
+			     (free nil))
   "Render text TEXT using font FONT with color COLOR into the FONT's cached surface, using the Shaded mode. 
+Unless :FREE T, the caller is responsible for freeing the new SURFACE.
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
@@ -23,7 +25,9 @@
 
   * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
 
-  * Returns the cached SDL:SDL-SURFACE.
+  * FREE when T will free the old cached SURFACE in FONT.
+
+  * Returns the new cached surface SDL:SDL-SURFACE.
 
 For example:
   * (DRAW-STRING-SHADED \"Hello World!\" fg-col bg-col :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :COLOR A-COLOR)"
@@ -33,7 +37,7 @@ For example:
     (error "ERROR: RENDER-STRING-SHADED; FG-COLOR must be of type SDL:SDL-COLOR."))
   (unless (typep bg-color 'sdl:sdl-color)
     (error "ERROR: RENDER-STRING-SHADED; BG-COLOR must be of type SDL:SDL-COLOR."))
-  (when (sdl:cached-surface font)
+  (when (and free (sdl:cached-surface font))
     (sdl:free-surface (sdl:cached-surface font)))
   (case encoding
     (:latin1
@@ -77,7 +81,9 @@ For example:
 			     (font *default-font*)
 			     (surface sdl:*default-surface*))
   "Draw text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
-onto surface :SURFACE, using the Shaded mode. Caches the new surface in the FONT object.
+onto surface :SURFACE, using the Shaded mode. 
+Caches the new surface in the FONT object.
+Note: Calls RENDER-STRING-SHADED with :FREE T so the old cached surface is automatically free'd. 
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
@@ -97,11 +103,13 @@ onto surface :SURFACE, using the Shaded mode. Caches the new surface in the FONT
 
   * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
 
+  * Returns the font FONT.
+
 For example:
   * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 fg-col bg-col :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE)"
   (unless (typep surface 'sdl:sdl-surface)
     (error "ERROR: DRAW-STRING-SHADED-*; SURFACE must be of type SDL:SDL-SURFACE."))
-  (let ((font-surface (render-string-shaded text fg-color bg-color :encoding encoding :font font)))
+  (let ((font-surface (render-string-shaded text fg-color bg-color :encoding encoding :font font :free t)))
     (sdl:set-surface-* font-surface :x x :y y)
     (sdl:blit-surface font-surface surface)
-    font-surface))
+    font))
