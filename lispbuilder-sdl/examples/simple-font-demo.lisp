@@ -20,7 +20,7 @@
     (sdl:initialise-default-font)
     ;; Create an image from the string.
     ;; Then cache this image in the font to be used later.
-    (sdl:render-string "draw text image")
+    (sdl:render-string "draw text image" :free t)
 
     (sdl:with-events  ()
       (:quit-event () t)

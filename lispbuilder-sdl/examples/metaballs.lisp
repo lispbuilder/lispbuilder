@@ -35,7 +35,7 @@
 	(dotimes (i frame-values)
 	  (incf frames-per-second (aref frame-times i)))
 	(setf frames-per-second (sdl:cast float (/ 1000 (/ frames-per-second frame-values))))
-	(sdl:render-string (format nil "fps : ~d" (coerce frames-per-second 'float))))
+	(sdl:render-string (format nil "fps : ~d" (coerce frames-per-second 'float)) :free t))
       (sdl:draw-font-at-* x y :surface surface))))
 
 (defstruct mmanager
