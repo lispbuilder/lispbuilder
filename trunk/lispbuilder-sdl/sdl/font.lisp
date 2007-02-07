@@ -34,10 +34,13 @@
   (setf (sdl-base::rect-y (fp-position (cached-surface font))) y-val))
 
 (defmethod draw-font (&key (font *default-font*) (surface *default-surface*))
-  (blit-surface (cached-surface font) surface))
+  (when (cached-surface font)
+    (blit-surface (cached-surface font) surface)))
 
 (defmethod draw-font-at (position &key (font *default-font*) (surface *default-surface*))
-  (draw-surface-at (cached-surface font) position :surface surface))
+  (when (cached-surface font)
+    (draw-surface-at (cached-surface font) position :surface surface)))
 
 (defmethod draw-font-at-* (x y &key (font *default-font*) (surface *default-surface*))
-  (draw-surface-at-* (cached-surface font) x y :surface surface))
+  (when (cached-surface font)
+    (draw-surface-at-* (cached-surface font) x y :surface surface)))

@@ -43,13 +43,16 @@
   )
 
 (defun render-string (string &key
-		      (font *default-font*))
-  "given an initialised font and a string, draw the string to a new surface cached in the FONT."
+		      (font *default-font*)
+		      (free nil))
+  "given an initialised font and a string, draw the string to a new surface cached in the FONT.
+Unless :FREE T, the caller is responsible for freeing the new SURFACE."
+  
   (let ((new-surface (convert-surface :surface (create-surface (* (font-width font)
 								  (length string))
 							       (font-height font)
 							       :key-color (key-color font)))))
-    (when (typep (cached-surface font) 'sdl-surface)
+    (when (and free (typep (cached-surface font) 'sdl-surface))
       (free-surface (cached-surface font)))
     (fill-surface (key-color font)
 		  :surface new-surface)
