@@ -9,7 +9,7 @@
 (defvar *draw-gridp* nil)
 (defvar *draw-meta-centerp* nil)
 
-(let* ((frame-values 30)
+(let* ((frame-values 60)
        (frame-times (make-array frame-values :initial-element 0 :element-type 'fixnum))
        (frame-time-last 0)
        (frame-count 0))
@@ -369,6 +369,9 @@
 	(draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)
+
+	(sdl:render-string "Calculating FPS....." :free t)
+	
 	(sdl:with-events ()
 	  (:quit-event () t)
 	  (:key-down-event (:key key) (handle-keypress key))
