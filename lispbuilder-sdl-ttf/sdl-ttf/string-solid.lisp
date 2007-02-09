@@ -8,9 +8,11 @@
 			    (encoding :latin1)
 			    (font *default-font*)
 			    (color sdl:*default-color*)
-			    (free nil))
-  "Render text TEXT using font FONT with color COLOR into the FONT's cached surface, using the Solid mode. 
+			    (free nil)
+			    (cache nil))
+  "Render text TEXT using font FONT with color COLOR into a new SURFACE, using the Solid mode. 
 Unless :FREE T, the caller is responsible for freeing the new SURFACE.
+Use :CACHE T to cache the newly created surface in the FONT object.
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
@@ -26,6 +28,8 @@ Unless :FREE T, the caller is responsible for freeing the new SURFACE.
 
   * FREE when T will free the old cached SURFACE in FONT.
 
+  * CACHE when T will cache the newly created SURFACE in FONT.
+
   * Returns the new cached surface SDL:SDL-SURFACE.
 
 For example:
@@ -35,23 +39,28 @@ For example:
   (unless (typep color 'sdl:sdl-color)
     (error "ERROR: RENDER-STRING-SOLID; COLOR must be of type SDL:SDL-COLOR."))
   (when (and free (sdl:cached-surface font))
-    (sdl:free-surface (sdl:cached-surface font)))
-  (case encoding
-    (:latin1
-     (sdl:with-foreign-color-copy (col-struct color)
-       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-Solid (fp-font font) text col-struct)))))
-    (:UTF8
-     (sdl:with-foreign-color-copy (col-struct color)
-       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-Solid (fp-font font) text col-struct)))))
-    (:GLYPH
-     (sdl:with-foreign-color-copy (col-struct color)
-       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-Solid (fp-font font) text col-struct)))))
-    (:UNICODE
-     ;; TODO
-     )
-    (otherwise
-     (error "ERROR: RENDER-STRING-SOLID; ENCODING must be one of :LATIN1, :UTF8, :GLYPH or :UNICODE.")))
-  (sdl:cached-surface font))
+    (sdl:free-surface (sdl:cached-surface font))
+    (setf (sdl:cached-surface font) nil))
+  (let ((surf
+	 (case encoding
+	   (:latin1
+	    (sdl:with-foreign-color-copy (col-struct color)
+	      (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-Solid (fp-font font) text col-struct))))
+	   (:UTF8
+	    (sdl:with-foreign-color-copy (col-struct color)
+	      (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-Solid (fp-font font) text col-struct))))
+	   (:GLYPH
+	    (sdl:with-foreign-color-copy (col-struct color)
+	      (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-Solid (fp-font font) text col-struct))))
+	   (:UNICODE
+	    ;; TODO
+	    )
+	   (otherwise
+	    (error "ERROR: RENDER-STRING-SOLID; ENCODING must be one of :LATIN1, :UTF8, :GLYPH or :UNICODE.")))))
+    (when cache
+      (setf (sdl:cached-surface font) surf))
+	surf))
+
 
 (defun draw-string-solid (text position &key 
 			  (encoding :latin1)
@@ -60,7 +69,7 @@ For example:
 			  (color sdl:*default-color*))
   "See DRAW-STRING-SOLID-*.
 
-  * :POSITION is the x and y position to render the text, of type SDL:POINT."
+  * POSITION is the x and y position to render the text, of type SDL:POINT."
   (unless (typep surface 'sdl:point)
     (error "ERROR: DRAW-STRING-SOLID; POSITION must be of type SDL:POINT."))
   (draw-string-solid-* text (sdl:x position) (sdl:y position)
@@ -75,8 +84,6 @@ For example:
 			    (surface sdl:*default-surface*)
 			    (color sdl:*default-color*))
   "Draw text TEXT using font FONT with color COLOR onto surface SURFACE, using the Solid mode. 
-Caches the new SURFACE containing the TEXT in the FONT object. 
-Note: Calls RENDER-STRING-SOLID with :FREE T so the old cached surface is automatically free'd. 
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
@@ -100,7 +107,13 @@ For example:
   * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep surface 'sdl:sdl-surface)
     (error "ERROR: DRAW-STRING-SOLID-*; SURFACE must be of type SDL:SDL-SURFACE."))
-  (let ((font-surface (render-string-solid text :encoding encoding :font font :color color :free t)))
+  (sdl:with-surface (font-surface (render-string-solid text
+						       :encoding encoding
+						       :font font
+						       :color color
+						       :free nil
+						       :cache nil)
+				  t)
     (sdl:set-surface-* font-surface :x x :y y)
-    (sdl:blit-surface font-surface surface)
-    font))
+    (sdl:blit-surface font-surface surface))
+  font)

@@ -8,9 +8,9 @@
    (generation :accessor generation :initform *generation* :initarg :generation))
   (:documentation
    "The FONT object is a CLOS wrapper around a foreign TTF_Font object. 
-The FONT object maintains the most recent surface SDL:SURFACE created by a call to any of the DRAW-STRING* functions. 
+The FONT object maintains the most recent surface SDL:SURFACE created by a call to any of the RENDER-STRING* functions. 
 Use DRAW-FONT, DRAW-FONT-AT or DRAW-FONT-AT-* to draw the cached surface.
-Prior to the first call to a DRAW-STRING* function, the cached surface is NIL."))
+Prior to the first call to a RENDER-STRING* function, the cached surface is NIL."))
 
 (defun new-font (fp)
   "Creates and returns a new FONT object, returns NIL otherwise. 

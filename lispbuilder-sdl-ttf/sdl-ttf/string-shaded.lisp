@@ -7,9 +7,11 @@
 (defun render-string-shaded (text fg-color bg-color &key
 			     (encoding :latin1)
 			     (font *default-font*)
-			     (free nil))
-  "Render text TEXT using font FONT with color COLOR into the FONT's cached surface, using the Shaded mode. 
+			     (free nil)
+			     (cache nil))
+  "Render text TEXT using font FONT with color COLOR into a new SURFACE, using the Shaded mode. 
 Unless :FREE T, the caller is responsible for freeing the new SURFACE.
+Use :CACHE T to cache the newly created surface in the FONT object.
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
@@ -27,6 +29,8 @@ Unless :FREE T, the caller is responsible for freeing the new SURFACE.
 
   * FREE when T will free the old cached SURFACE in FONT.
 
+  * CACHE when T will cache the newly created SURFACE in FONT.
+
   * Returns the new cached surface SDL:SDL-SURFACE.
 
 For example:
@@ -38,29 +42,34 @@ For example:
   (unless (typep bg-color 'sdl:sdl-color)
     (error "ERROR: RENDER-STRING-SHADED; BG-COLOR must be of type SDL:SDL-COLOR."))
   (when (and free (sdl:cached-surface font))
-    (sdl:free-surface (sdl:cached-surface font)))
-  (case encoding
-    (:latin1
-     (sdl:with-foreign-color-copy (fg-struct fg-color)
-       (sdl:with-foreign-color-copy (bg-struct bg-color)
-	 (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-shaded (fp-font font)
-											text fg-struct bg-struct))))))
-    (:UTF8
-     (sdl:with-foreign-color-copy (fg-struct fg-color)
-       (sdl:with-foreign-color-copy (bg-struct bg-color)
-	 (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-shaded (fp-font font)
-											text fg-struct bg-struct))))))
-    (:GLYPH
-     (sdl:with-foreign-color-copy (fg-struct fg-color)
-       (sdl:with-foreign-color-copy (bg-struct bg-color)
-	 (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-shaded (fp-font font)
-											 text fg-struct bg-struct))))))
-    (:UNICODE
-     ;; TODO
-     )
-    (otherwise
-     (error "ERROR: RENDER-STRING-SHADED; ENCODING must be one of :LATIN1, :UTF8, :GLYPH or :UNICODE.")))
-  (sdl:cached-surface font))
+    (sdl:free-surface (sdl:cached-surface font))
+    (setf (sdl:cached-surface font) nil))
+  (let ((surf
+	 (case encoding
+	   (:latin1
+	    (sdl:with-foreign-color-copy (fg-struct fg-color)
+	      (sdl:with-foreign-color-copy (bg-struct bg-color)
+		(sdl:surface (sdl-ttf-cffi::ttf-Render-Text-shaded (fp-font font)
+								   text fg-struct bg-struct)))))
+	   (:UTF8
+	    (sdl:with-foreign-color-copy (fg-struct fg-color)
+	      (sdl:with-foreign-color-copy (bg-struct bg-color)
+		(sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-shaded (fp-font font)
+								   text fg-struct bg-struct)))))
+	   (:GLYPH
+	    (sdl:with-foreign-color-copy (fg-struct fg-color)
+	      (sdl:with-foreign-color-copy (bg-struct bg-color)
+		(sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-shaded (fp-font font)
+								    text fg-struct bg-struct)))))
+	   (:UNICODE
+	    ;; TODO
+	    )
+	   (otherwise
+	    (error "ERROR: RENDER-STRING-SHADED; ENCODING must be one of :LATIN1, :UTF8, :GLYPH or :UNICODE.")))))
+    (when cache
+      (setf (sdl:cached-surface font) surf))
+    surf))
+
 
 (defun draw-string-shaded (text position fg-color bg-color &key
 			     (encoding :latin1)
@@ -82,8 +91,6 @@ For example:
 			     (surface sdl:*default-surface*))
   "Draw text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
 onto surface :SURFACE, using the Shaded mode. 
-Caches the new surface in the FONT object.
-Note: Calls RENDER-STRING-SHADED with :FREE T so the old cached surface is automatically free'd. 
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
@@ -109,7 +116,12 @@ For example:
   * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 fg-col bg-col :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE)"
   (unless (typep surface 'sdl:sdl-surface)
     (error "ERROR: DRAW-STRING-SHADED-*; SURFACE must be of type SDL:SDL-SURFACE."))
-  (let ((font-surface (render-string-shaded text fg-color bg-color :encoding encoding :font font :free t)))
+  (sdl:with-surface (font-surface (render-string-shaded text fg-color bg-color
+							:encoding encoding
+							:font font
+							:cache nil
+							:free nil)
+				  t)
     (sdl:set-surface-* font-surface :x x :y y)
-    (sdl:blit-surface font-surface surface)
-    font))
+    (sdl:blit-surface font-surface surface))
+  font)

@@ -9,9 +9,11 @@
 			      (encoding :latin1)
 			      (font *default-font*)
 			      (color sdl:*default-color*)
-			      (free nil))
-  "Render text TEXT using font FONT with color COLOR into the FONT's cached surface, using the Blended mode. 
+			      (free nil)
+			      (cache nil))
+  "Render text TEXT using font FONT with color COLOR into a new SURFACE, using the Blended mode. 
 Unless :FREE T, the caller is responsible for freeing the new SURFACE.
+Use :CACHE T to cache the newly created surface in the FONT object.
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
@@ -27,6 +29,8 @@ Unless :FREE T, the caller is responsible for freeing the new SURFACE.
 
   * FREE when T will free the old cached SURFACE in FONT.
 
+  * CACHE when T will cache the newly created SURFACE in FONT.
+
   * Returns the new cached surface SDL:SDL-SURFACE.
 
 For example:
@@ -36,23 +40,28 @@ For example:
   (unless (typep color 'sdl:sdl-color)
     (error "ERROR: RENDER-STRING-BLENDED; COLOR must be of type SDL:SDL-COLOR."))
   (when (and free (sdl:cached-surface font))
-    (sdl:free-surface (sdl:cached-surface font)))
-  (case encoding
-    (:latin1
-     (sdl:with-foreign-color-copy (col-struct color)
-       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-blended (fp-font font) text col-struct)))))
-     (:UTF8
-     (sdl:with-foreign-color-copy (col-struct color)
-       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-blended (fp-font font) text col-struct)))))
-    (:GLYPH
-     (sdl:with-foreign-color-copy (col-struct color)
-       (setf (sdl:cached-surface font) (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-blended (fp-font font) text col-struct)))))
-    (:UNICODE
-     ;; TODO
-     )
-    (otherwise
-     (error "ERROR: RENDER-STRING-BLENDED; ENCODING must be one of :LATIN1, :UTF8, :GLYPH or :UNICODE.")))
-  (sdl:cached-surface font))
+    (sdl:free-surface (sdl:cached-surface font))
+    (setf (sdl:cached-surface font) nil))
+  (let ((surf 
+	 (case encoding
+	   (:latin1
+	    (sdl:with-foreign-color-copy (col-struct color)
+	      (sdl:surface (sdl-ttf-cffi::ttf-Render-Text-blended (fp-font font) text col-struct))))
+	   (:UTF8
+	    (sdl:with-foreign-color-copy (col-struct color)
+	      (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-blended (fp-font font) text col-struct))))
+	   (:GLYPH
+	    (sdl:with-foreign-color-copy (col-struct color)
+	      (sdl:surface (sdl-ttf-cffi::ttf-Render-Glyph-blended (fp-font font) text col-struct))))
+	   (:UNICODE
+	    ;; TODO
+	    )
+	   (otherwise
+	    (error "ERROR: RENDER-STRING-BLENDED; ENCODING must be one of :LATIN1, :UTF8, :GLYPH or :UNICODE.")))))
+    (when cache
+      (setf (sdl:cached-surface font) surf))
+    surf))
+
 
 (defun draw-string-blended (text position &key
 			    (encoding :latin1)
@@ -76,8 +85,6 @@ For example:
 			      (surface sdl:*default-surface*)
 			      (color sdl:*default-color*))
   "Draw text TEXT using font :FONT with color :COLOR onto surface :SURFACE, using the Blended mode. 
-Caches the new surface in the FONT object. 
-Note: Calls RENDER-STRING-BLENDED with :FREE T so the old cached surface is automatically free'd. 
 
   * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
 
@@ -101,8 +108,14 @@ For example:
   * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
   (unless (typep surface 'sdl:sdl-surface)
     (error "ERROR: DRAW-STRING-BLENDED-*; SURFACE must be of type SDL:SDL-SURFACE."))
-  (let ((font-surface (render-string-blended text :encoding encoding :font font :color color :free t)))
+  (sdl:with-surface (font-surface (render-string-blended text
+							 :encoding encoding
+							 :font font
+							 :color color
+							 :cache nil
+							 :free nil)
+				  t)
     (sdl:set-surface-* font-surface :x x :y y)
-    (sdl:blit-surface font-surface surface)
-    font))
+    (sdl:blit-surface font-surface surface))
+  font)
 
