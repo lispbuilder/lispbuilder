@@ -9,7 +9,15 @@
   (:import-from #:lispbuilder-sdl-gfx-cffi
 		lispbuilder-sdl-gfx-cffi::*font-data*
 		lispbuilder-sdl-gfx-cffi::gfx-Primitives-Set-Font)
+  (:import-from #:lispbuilder-sdl
+		lispbuilder-sdl:free-font
+		lispbuilder-sdl:draw-font
+		lispbuilder-sdl:draw-font-at
+		lispbuilder-sdl:draw-font-at-*)
   (:export
+
+   ;;; globals.lisp
+   #:*default-font*
 
    ;;; gfx.lisp
    
@@ -70,8 +78,7 @@
    #:SMOOTHING-OFF
    #:SMOOTHING-ON
 
-   ;;; sdl-gfx-util.lisp
-   
+   ;;; sdl-gfx-util.lisp   
    #:add-vertex
    #:add-vertex-*
    #:draw-aa-circle
@@ -85,8 +92,6 @@
    #:draw-bezier
    #:draw-box
    #:draw-box-*
-   #:draw-character
-   #:draw-character-*
    #:draw-circle
    #:draw-circle-*
    #:draw-curve
@@ -115,8 +120,6 @@
    #:roto-zoom-Size-XY
    #:roto-zoom-XY
    #:draw-shape
-   #:draw-string
-   #:draw-string-*
    #:draw-trigon
    #:draw-vline
    #:draw-vline
@@ -129,8 +132,27 @@
    #:with-curve
    #:with-shape
 
+   ;;; font.lisp
+   #:initialise-default-font
+   #:render-string-shaded
+   #:draw-character-shaded
+   #:draw-character-shaded-*
+   #:draw-string-shaded
+   #:draw-string-shaded-*
+   #:render-string-solid
+   #:draw-character-solid
+   #:draw-character-solid-*
+   #:draw-string-solid
+   #:draw-string-solid-*
+
    ;;; Exports from lispbuilder-sdl-gfx-cffi
    #:*font-data*
    #:gfx-Primitives-Set-Font
+
+   ;;; Exports from lispbuilder-sdl
+   #:free-font
+   #:draw-font
+   #:draw-font-at
+   #:draw-font-at-*
    ))
 
