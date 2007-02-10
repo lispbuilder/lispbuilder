@@ -43,3 +43,9 @@
     ,@(mapcar #'(lambda (value)
 		  `(integerp ,value))
 	      values)))
+
+(defmacro check-types (type &rest rest)
+  `(progn
+     ,@(mapcar #'(lambda (var)
+		   `(check-type ,var ,type))
+	       rest)))

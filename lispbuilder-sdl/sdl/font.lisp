@@ -33,6 +33,12 @@
 (defmethod (setf y) (y-val (font sdl-font))
   (setf (sdl-base::rect-y (fp-position (cached-surface font))) y-val))
 
+(defmethod free-cached-surface ((font sdl-font))
+  (when (and (sdl:cached-surface font)
+	     (typep (sdl:cached-surface font) 'sdl:sdl-surface))
+    (free-surface (sdl:cached-surface font))
+    (setf (sdl:cached-surface font) nil)))
+
 (defmethod draw-font (&key (font *default-font*) (surface *default-surface*))
   (unless (typep font 'sdl-font)
     (error "ERROR; DRAW-FONT: FONT must be of type SDL-FONT."))
@@ -53,3 +59,4 @@
   (unless (cached-surface font)
     (error "ERROR; DRAW-FONT-AT-*: FONT does not contain a cached SURFACE."))
   (draw-surface-at-* (cached-surface font) x y :surface surface))
+
