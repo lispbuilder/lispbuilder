@@ -21,13 +21,13 @@ Use :CACHE T to cache the newly created surface in the FONT object.
 
 For example:
   * (DRAW-STRING-SHADED \"Hello World!\" F-COLOR B-COLOR)"
-  (when (and free (typep (sdl:cached-surface *default-font*) 'sdl:sdl-surface))
-    (sdl:free-surface (sdl:cached-surface *default-font*)))
+  (sdl:check-types sdl:sdl-color fg-color bg-color)
+  (when free
+    (sdl:free-cached-surface *default-font*))
   (let ((surf (sdl:convert-surface :surface (sdl:create-surface (* (font-width *default-font*)
 								   (length string))
 								(font-height *default-font*))
 				   :free-p t)))
-    (sdl:fill-surface bg-color :surface surf)
     (draw-string-shaded-* string 0 0 fg-color bg-color
 			  :surface surf)
     (when cache 
@@ -38,6 +38,7 @@ For example:
   "See DRAW-CHARACTER-SHADED-*.
 
   * P1 is the x and y position to render the text, of type SDL:POINT."  
+  (check-type p1 sdl:point)
   (draw-character-shaded-* c (sdl:x p1) (sdl:y p1) fg-color bg-color :surface surface))
 
 (defun draw-character-shaded-* (c x y fg-color bg-color &key (surface sdl:*default-surface*))
@@ -58,12 +59,8 @@ onto surface SURFACE, using the Solid mode.
 
 For example:
   * (DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)"
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep fg-color 'sdl:color) (typep fg-color 'sdl:color-a))
-    (error "FG-COLOR must be of type SDL:COLOR or SDL:COLOR-A."))
-  (unless (or (typep bg-color 'sdl:color) (typep bg-color 'sdl:color-a))
-    (error "BG-COLOR must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (sdl:check-types sdl:sdl-color fg-color bg-color)
   (sdl:draw-box-* x y
 		  (* (font-width *default-font*)
 		     (length c))
@@ -81,6 +78,7 @@ For example:
   "See DRAW-STRING-SHADED-*.
 
   * P1 is the x and y position to render the text, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-string-shaded-* c (sdl:x p1) (sdl:y p1) fg-color bg-color :surface surface))
 
 (defun draw-string-shaded-* (c x y fg-color bg-color &key (surface sdl:*default-surface*))
@@ -101,12 +99,8 @@ onto surface SURFACE, using the SHADED mode.
 
 For example:
   * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)"
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep fg-color 'sdl:color) (typep fg-color 'sdl:color-a))
-    (error "FG-COLOR must be of type SDL:COLOR or SDL:COLOR-A."))
-  (unless (or (typep bg-color 'sdl:color) (typep bg-color 'sdl:color-a))
-    (error "BG-COLOR must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (sdl:check-types sdl:sdl-color fg-color bg-color)
   (sdl:draw-box-* x y
 		  (* (font-width *default-font*)
 		     (length c))

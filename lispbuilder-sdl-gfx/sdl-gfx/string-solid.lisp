@@ -19,8 +19,9 @@ Use :CACHE T to cache the newly created surface in the FONT object.
 
 For example:
   * (DRAW-STRING-SOLID \"Hello World!\" :COLOR A-COLOR)"
-  (when (and free (typep (sdl:cached-surface *default-font*) 'sdl:sdl-surface))
-    (sdl:free-surface (sdl:cached-surface *default-font*)))
+  (check-type color sdl:sdl-color)
+  (when free
+    (sdl:free-cached-surface *default-font*))
   (let ((surf (sdl:convert-surface :surface (sdl:create-surface (* (font-width *default-font*)
 								   (length string))
 								(font-height *default-font*)
@@ -37,6 +38,7 @@ For example:
   "See DRAW-CHARACTER-SOLID-*.
 
   * P1 is the x and y position to render the text, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-character-solid-* c (sdl:x p1) (sdl:y p1) :surface surface :color color))
 
 (defun draw-character-solid-* (c x y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -54,10 +56,8 @@ For example:
 
 For example:
   * (DRAW-CHARACTER-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)"
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::character-color (sdl:fp surface) x y c
 				   (sdl:pack-color color)))
@@ -69,6 +69,7 @@ For example:
   "See DRAW-STRING-SOLID-*.
 
   * P1 is the x and y position to render the text, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-string-solid-* c (sdl:x p1) (sdl:y p1) :surface surface :color color))
 
 (defun draw-string-solid-* (c x y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -86,10 +87,8 @@ For example:
 
 For example:
   * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)"
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::string-color (sdl:fp surface) x y c
 				(sdl:pack-color color)))

@@ -36,7 +36,8 @@
 	  (incf frames-per-second (aref frame-times i)))
 	(setf frames-per-second (sdl:cast float (/ 1000 (/ frames-per-second frame-values))))
 	(sdl-gfx:render-string-shaded (format nil "fps : ~d" (coerce frames-per-second 'float))
-				      sdl:*white* sdl:*black*
+				      sdl:*white*
+				      sdl:*black*
 				      :free t
 				      :cache t))
       (sdl-gfx:draw-font-at-* x y
@@ -376,10 +377,10 @@
 		   grid-color grid)
 
 	(sdl-gfx:render-string-shaded "Calculating FPS....."
-				     sdl:*white*
-				     sdl:*black*
-				     :free t
-				     :cache t)
+				      sdl:*white*
+				      sdl:*black*
+				      :free t
+				      :cache t)
 	
 	(sdl:with-events ()
 	  (:quit-event () t)

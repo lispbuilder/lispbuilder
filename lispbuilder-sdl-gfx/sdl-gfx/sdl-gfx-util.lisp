@@ -78,6 +78,7 @@
   "See DRAW-PIXEL-*.
 
   * POSITION is the X/Y coordinate of the pixel, of type SDL:POINT."
+  (check-type position sdl:point)
   (draw-pixel-* (sdl:x position) (sdl:y position) :surface surface :color color))
 
 (defun draw-pixel-* (x y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -88,10 +89,8 @@
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the new color of the pixel, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::pixel-color (sdl:fp surface) x y
 			       (sdl:pack-color color)))
@@ -109,10 +108,8 @@
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the line color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::hline-color (sdl:fp surface) x1 x2 y
 			       (sdl:pack-color color)))
@@ -130,10 +127,8 @@
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the line color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SDL-SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::vline-color (sdl:fp surface) x y1 y2
 			       (sdl:pack-color color)))
@@ -145,6 +140,7 @@
   "See DRAW-RECTANGLE-*.
 
   * RECT is the rectangle to draw, of type SDL:RECTANGLE."
+  (check-type rect sdl:rectangle)
   (draw-rectangle-* (sdl:x rect) (sdl:y rect) (sdl:width rect) (sdl:height rect) :surface surface :color color))
 
 (defun draw-rectangle-* (x y w h &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -169,10 +165,8 @@
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the line color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::rectangle-color (sdl:fp surface) x1 y1 x2 y2
 				   (sdl:pack-color color)))
@@ -184,6 +178,7 @@
   "See DRAW-BOX-*.
 
   * RECT is filled rectangle to draw, of type SDL:RECTANGLE."
+  (check-type rect sdl:rectangle)
   (draw-box-* (sdl:x rect) (sdl:y rect) (sdl:width rect) (sdl:height rect) :surface surface :color color))
 
 (defun draw-box-* (x y w h &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -208,10 +203,8 @@
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::box-color (sdl:fp surface) x1 y1 x2 y2
 			     (sdl:pack-color color)))
@@ -223,6 +216,7 @@
   "See DRAW-LINE-*
 
   * POINT1 and POINT2 are the start and end x/y co-ordinates of the line, of type SDL:POINT."
+  (sdl:check-types sdl:point point1 point2)
   (draw-line-* (sdl:x point1) (sdl:y point1) (sdl:x point2) (sdl:y point2) :surface surface :color color))
 
 (defun draw-line-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -235,10 +229,8 @@
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::line-color (sdl:fp surface) x1 y1 x2 y2
 			      (sdl:pack-color color)))
@@ -250,6 +242,7 @@
   "See DRAW-AA-LINE-*
 
   * POINT1 and POINT2 are the start and end x/y co-ordinates of the line, of type SDL:POINT."
+  (sdl:check-types sdl:point point1 point2)
   (draw-aa-line-* (sdl:x point1) (sdl:y point1) (sdl:x point2) (sdl:y point2) :surface surface :color color))
 
 (defun draw-aa-line-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -262,10 +255,8 @@
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::aa-line-color (sdl:fp surface) x1 y1 x2 y2
 				 (sdl:pack-color color)))
@@ -277,6 +268,7 @@
   "See DRAW-CIRCLE-*
 
   * P1 is the X/Y coordinate of the center of the circle, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-circle-* (sdl:x p1) (sdl:y p1) r :surface surface :color color))
 
 (defun draw-circle-* (x y r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -290,10 +282,8 @@ Note that this is not a 'filled circle'. Only the circle circumference is drawn.
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::circle-color (sdl:fp surface) x y r
 				(sdl:pack-color color)))
@@ -305,6 +295,7 @@ Note that this is not a 'filled circle'. Only the circle circumference is drawn.
   "See DRAW-AA-CIRCLE-*
 
   * P1 is the X/Y coordinate of the center of the antialiased circle, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-aa-circle-* (sdl:x p1) (sdl:y p1) r :surface surface :color color))
 
 (defun draw-aa-circle-* (x y r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -318,10 +309,8 @@ Note that this is not a 'filled circle'. Only the circle circumference is drawn.
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::aa-circle-color (sdl:fp surface) x y r
 				   (sdl:pack-color color)))
@@ -333,6 +322,7 @@ Note that this is not a 'filled circle'. Only the circle circumference is drawn.
   "See DRAW-FILLED-CIRCLE-*
 
   * P1 is the X/Y coordinate of the center of the filled circle, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-filled-circle-* (sdl:x p1) (sdl:y p1) r :surface surface :color color))
 
 (defun draw-filled-circle-* (x y r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -345,10 +335,8 @@ Note that this is not a 'filled circle'. Only the circle circumference is drawn.
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::filled-circle-color (sdl:fp surface) x y r
 				       (sdl:pack-color color)))
@@ -360,6 +348,7 @@ Note that this is not a 'filled circle'. Only the circle circumference is drawn.
   "See DRAW-ELLIPSE-*
 
   * P1 is the X/Y coordinate of the center of the ellipse, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-ellipse-* (sdl:x p1) (sdl:y p1) rx ry :surface surface :color color))
 
 (defun draw-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -373,10 +362,8 @@ Note that this is not a 'filled ellipse'. Only the ellipse circumference is draw
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::ellipse-color (sdl:fp surface) x y rx ry
 				 (sdl:pack-color color)))
@@ -388,6 +375,7 @@ Note that this is not a 'filled ellipse'. Only the ellipse circumference is draw
   "See DRAW-AA-ELLIPSE-*
 
   * P1 is the X/Y coordinate of the center of the antialiased ellipse, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-aa-ellipse-* (sdl:x p1) (sdl:y p1) rx ry :surface surface :color color))
 
 (defun draw-aa-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -401,10 +389,8 @@ Note that this is not a 'filled ellipse'. Only the ellipse circumference is draw
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::aa-ellipse-color (sdl:fp surface) x y rx ry
 				    (sdl:pack-color color)))
@@ -416,6 +402,7 @@ Note that this is not a 'filled ellipse'. Only the ellipse circumference is draw
   "See DRAW-FILLED-ELLIPSE-*
 
   * P1 is the X/Y coordinate of the center of the filled ellipse, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-filled-ellipse-* (sdl:x p1) (sdl:y p1) rx ry :surface surface :color color))
 
 (defun draw-filled-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -428,12 +415,8 @@ Note that this is not a 'filled ellipse'. Only the ellipse circumference is draw
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
-  (unless (sdl::all-integers? x y rx ry)
-    (error "ERROR, draw-filled-ellipse-*: Parameters must be of type :short."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::filled-ellipse-color (sdl:fp surface) x y rx ry
 					(sdl:pack-color color)))
@@ -445,6 +428,7 @@ Note that this is not a 'filled ellipse'. Only the ellipse circumference is draw
   "See DRAW-PIE-*
 
   * P1 is the X/Y coordinate of the center of the pie, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-pie-* (sdl:x p1) (sdl:y p1) rad start end :surface surface :color color))
 
 (defun draw-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -462,10 +446,8 @@ Note that this is not a 'filled pie'. Only the pie circumference is drawn.
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::pie-color (sdl:fp surface) x y rad start end
 			     (sdl:pack-color color)))
@@ -477,6 +459,7 @@ Note that this is not a 'filled pie'. Only the pie circumference is drawn.
   "See DRAW-PIE-*
 
   * P1 is the X/Y coordinate of the center of the filled pie, of type SDL:POINT."
+  (check-type p1 sdl:point)
   (draw-filled-pie-* (sdl:x p1) (sdl:y p1) rad start end :surface surface :color color))
 
 (defun draw-filled-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -493,10 +476,8 @@ Note that this is not a 'filled pie'. Only the pie circumference is drawn.
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::filled-pie-color (sdl:fp surface) x y rad start end
 				    (sdl:pack-color color)))
@@ -513,10 +494,9 @@ Note: The trigon is not filled, only the edges are drawn.
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (sdl:check-types sdl:point point1 point2 point3)
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
 				(sdl:x point2) (sdl:y point2)
@@ -537,10 +517,9 @@ Note: The trigon is not filled, only the edges are drawn.
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (sdl:check-types sdl:point point1 point2 point3)
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::aa-trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
 				   (sdl:x point2) (sdl:y point2)
@@ -560,10 +539,9 @@ Note: The trigon is not filled, only the edges are drawn.
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
+  (sdl:check-types sdl:point point1 point2 point3)
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::filled-trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
 				       (sdl:x point2) (sdl:y point2)
@@ -585,12 +563,9 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
   * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
-  (unless (listp points)
-    (error "draw-polygon: ~A must be a list of (x y) points." points))
+  (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
 	(poly-surface nil))
@@ -605,12 +580,9 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
     poly-surface))
 
 (defun draw-aa-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
-  (unless (listp points)
-    (error "draw-aapolygon: ~A must be a list of (x y) points." points))
+  (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
 	(poly-surface nil))
@@ -626,12 +598,9 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
     poly-surface))
 
 (defun draw-filled-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
-  (unless (listp points)
-    (error "draw-filledpolygon: ~A must be a list of (x y) points." points))
+  (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
 	(poly-surface nil))
@@ -647,12 +616,9 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
     poly-surface))
 
 (defun draw-bezier (points steps &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
-  (unless (or (typep color 'sdl:color) (typep color 'sdl:color-a))
-    (error ":color must be of type SDL:COLOR or SDL:COLOR-A."))
-  (unless (listp points)
-    (error "draw-bezier: ~A must be a list of (x y) points." points))
+  (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:sdl-color)
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
 	(bezier-surface nil))
@@ -668,13 +634,11 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
 ;;; r
 
 (defun roto-zoom-surfaze (angle zoom smooth &key (surface sdl:*default-surface*))
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
+  (check-type surface sdl:sdl-surface)
   (sdl-gfx-cffi::rotozoomSurface (sdl:fp surface) angle zoom smooth))
 
 (defun roto-zoom-xy (angle zoomx zoomy smooth &key (surface sdl:*default-surface*))
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
+  (check-type surface sdl:sdl-surface)
   (sdl-gfx-cffi::rotozoomSurfacexy (sdl:fp surface) angle zoomx zoomy smooth))
 
 (defun roto-zoom-size (width height angle zoom)
@@ -690,8 +654,7 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
 ;;; z
 
 (defun zoom-surface (zoomx zoomy smooth &key (surface sdl:*default-surface*))
-  (unless (typep surface 'sdl:sdl-surface)
-    (error ":surface must be of type SDL:SURFACE."))
+  (check-type surface sdl:sdl-surface)
   (sdl-gfx-cffi::zoomSurface (sdl:fp surface) zoomx zoomy smooth))
 
 (defun zoom-surface-size (width height zoomx zoomy)
