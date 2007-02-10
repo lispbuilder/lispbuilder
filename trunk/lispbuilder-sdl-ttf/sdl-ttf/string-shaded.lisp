@@ -28,12 +28,10 @@ Use :CACHE T to cache the newly created surface in the FONT object.
 
 For example:
   * (DRAW-STRING-SHADED \"Hello World!\" fg-col bg-col  :FONT *DEFAULT-FONT* :COLOR A-COLOR)"
-  (check-type font font "FONT must be of type FONT.")
-  (check-type fg-color sdl:sdl-color "FG-COLOR must be of type SDL:SDL-COLOR.")
-  (check-type bg-color sdl:sdl-color "BG-COLOR must be of type SDL:SDL-COLOR.")
-  (when (and free (sdl:cached-surface font))
-    (sdl:free-surface (sdl:cached-surface font))
-    (setf (sdl:cached-surface font) nil))
+  (check-type font font)
+  (sdl:check-types sdl:sdl-color fg-color bg-color)
+  (when free
+    (sdl:free-cached-surface font))
   (let ((surf
 	 (sdl:with-foreign-color-copy (fg-struct fg-color)
 	   (sdl:with-foreign-color-copy (bg-struct bg-color)
@@ -50,7 +48,7 @@ For example:
   "See DRAW-STRING-SHADED-*
 
   * :POSITION is the x and y position to render the text, of type SDL:POINT."
-  (check-type position sdl:point "POSITION must be of type SDL:POINT")
+  (check-type position sdl:point)
   (draw-string-shaded-* text (sdl:x position) (sdl:y position) fg-color bg-color
 			:font font
 			:surface surface))
@@ -77,7 +75,7 @@ onto surface :SURFACE, using the Shaded mode.
 
 For example:
   * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 fg-col bg-col :FONT *DEFAULT-FONT* :SURFACE A-SURFACE)"
-  (check-type surface sdl:sdl-surface "SURFACE must be of type SDL:SDL-SURFACE.")
+  (check-type surface sdl:sdl-surface)
   (sdl:with-surface (font-surface (render-string-shaded text fg-color bg-color
 							:font font
 							:cache nil

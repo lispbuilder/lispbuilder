@@ -86,12 +86,6 @@ Automatically initialises the truetype font library if uninitialised at FONT loa
   * SIZE is the INTEGER point size to load the FONT as.
 
   * Returns a new FONT, or NIL if unsuccessful."
-  (unless (or (stringp filename)
-	      (pathnamep filename))
-    (error "ERROR; INITIALISE-DEFAULT-FONT; FILENAME must be a STRING or PATHNAME."))
-  (unless (or (stringp pathname)
-	      (pathnamep pathname))
-    (error "ERROR; INITIALISE-DEFAULT-FONT; PATHNAME must be a STRING or PATHNAME."))
   (unless (is-init)
     (init-ttf))
   (open-font filename size pathname))
@@ -99,6 +93,7 @@ Automatically initialises the truetype font library if uninitialised at FONT loa
 (defun valid-font (font)
   "Returns T if the font FONT was created in the current *generation*, meaning that it's resources can still be 
 free'd, using CLOSE-FONT."
+  (check-type font font)
   (when (is-init)
     (when (typep *default-font* 'font)
       (when (eq *generation* (generation font))
@@ -129,8 +124,7 @@ Returns ERROR if FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when 
 NOTE: Does not uninitialise the font library. Does not bind *DEFAULT-FONT* to NIL. 
 
   * Returns T if successful, or NIL if the font cannot be closed or the font library is not initialized. "
-  (unless (typep font 'font)
-    (error "ERROR; CLOSE-FONT: FONT must be of type FONT."))
+  (check-type font font)
   (if (is-init)
       (free-font font))
   (setf font nil))
@@ -155,8 +149,7 @@ NOTE: Does not uninitialise the font library. Does not bind *DEFAULT-FONT* to NI
 
 For example;
   * (GET-GLYPH-METRIC UNICODE-CHAR :METRIC :MINX :FONT *DEFAULT-FONT*)"
-  (unless (typep font 'font)
-    (error "ERROR; GET-GLYPH-METRIC: FONT must be of type FONT."))
+  (check-type font font)
   (let ((p-minx (cffi:null-pointer))
 	(p-miny (cffi:null-pointer))
 	(p-maxx (cffi:null-pointer))
@@ -187,7 +180,7 @@ For example;
 	  (setf val r-val)))
     val))
 
-(defun get-Font-Size (text &key size encoding (font *default-font*))
+(defun get-Font-Size (text &key size (font *default-font*))
   "Calculates and returns the resulting SIZE of the SDL:SURFACE that is required to render the 
 font FONT, or NIL on error. No actual rendering is performed however correct kerning is calculated for the 
 actual width. The height returned is the same as returned using GET-FONT-HEIGHT. 
@@ -200,14 +193,8 @@ actual width. The height returned is the same as returned using GET-FONT-HEIGHT.
     * :W , text width
     * :H , text height
 
-  * :ENCODING may be one of: 
-    * :LATIN1
-    * :UTF8
-    * :UNICODE
-
     * Returns the width or height of the specified SDL:SURFACE, or NIL upon error."
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-SIZE: FONT must be of type FONT."))
+  (check-type font font)
   (let ((p-w (cffi:null-pointer))
 	(p-h (cffi:null-pointer))
 	(val nil)
@@ -216,9 +203,7 @@ actual width. The height returned is the same as returned using GET-FONT-HEIGHT.
       (case size
 	(:w (setf p-w w))
 	(:h (setf p-h h)))
-      (case encoding
-	(:LATIN1 (setf r-val (sdl-ttf-cffi::ttf-Size-Text (fp-font font) text p-w p-h)))
-	(:UTF8 (setf r-val (sdl-ttf-cffi::ttf-Size-UTF8 (fp-font font) text p-w p-h))))
+      (setf r-val (sdl-ttf-cffi::ttf-Size-UTF8 (fp-font font) text p-w p-h))
       (if r-val
 	  (cond
 	    ((sdl:is-valid-ptr p-w)
@@ -240,8 +225,7 @@ or NIL upon error.
     * :STYLE-BOLD
     * :STYLE-ITALIC
     * :STYLE-UNDERLINE"
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-STYLE: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-Style (fp-font font)))
 
 (defun get-font-height (&key (font *default-font*))
@@ -254,8 +238,7 @@ for line spacing, see GET-FONT-LINE-SKIP as well.
   * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
   * Retuns the height of the font as an INTEGER."
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-HEIGHT: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-height (fp-font font)))
 
 (defun get-font-ascent (&key (font *default-font*))
@@ -268,8 +251,7 @@ blitting the glyph on the screen.
   * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
 
   * Returns the ascent of the font as an INTEGER."
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-ASCENT: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-Ascent (fp-font font)))
 
 (defun get-font-descent (&key (font *default-font*))
@@ -282,8 +264,7 @@ blitting the glyph on the screen.
   * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
 
   * Returns the descent of the font as an INTEGER."
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-DESCENT: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-Descent (fp-font font)))
 
 (defun get-font-line-skip (&key (font *default-font*))
@@ -293,8 +274,7 @@ This is usually larger than the GET-FONT-HEIGHT of the font.
   * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
 
   * Returns the pixel height of the font as an INTEGER."
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-LINE-SKIP: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-Line-Skip (fp-font font)))
 
 (defun get-font-faces (&key (font *default-font*))
@@ -306,8 +286,7 @@ This is a count of the number of specific fonts (based on size and style and oth
   * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
   * Returns the number of faces in the FONT as an INTEGER."
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-FACES: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-faces (fp-font font)))
 
 (defun is-font-face-fixed-width (&key (font *default-font*))
@@ -317,8 +296,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
   * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
   * Retuns T FONT is of fixed width, and NIL otherwise."
-  (unless (typep font 'font)
-    (error "ERROR; IS-FONT-FACE-FIXED-WIDTH: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-face-is-fixed-width (fp-font font)))
 
 (defun get-font-face-family-name (&key (font *default-font*))
@@ -327,8 +305,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
   * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
   * Returns the name of the font face family name as a STRING, or NIL if unavailable."
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-FACE-FAMILY-NAME: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-face-Family-Name (fp-font font)))
 
 (defun get-font-face-style-name (&key (font *default-font*))
@@ -337,8 +314,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
   * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
 
   * Returns the name of the font face style as a STRING, or NIL if unavailable."
-  (unless (typep font 'font)
-    (error "ERROR; GET-FONT-FACE-STYLE-NAME: FONT must be of type FONT."))
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Get-Font-face-Style-Name (fp-font font)))
 
 
@@ -369,12 +345,13 @@ rendered glyphs, even if there is no change in style, so it may be best to check
 NOTE: Combining :STYLE-UNDERLINE with anything can cause a segfault, other combinations 
 may also do this. 
 
-FONT is a FONT object. 
+  * FONT is a FONT object. 
 
-STYLE is a list of one or more: 
-  :STYLE-NORMAL
-  :STYLE-BOLD
-  :STYLE-ITALIC
-  :STYLE-UNDERLINE"
+  * STYLE is a list of one or more: 
+    * :STYLE-NORMAL
+    * :STYLE-BOLD
+    * :STYLE-ITALIC
+    * :STYLE-UNDERLINE"
+  (check-type font font)
   (sdl-ttf-cffi::ttf-Set-Font-Style (fp-font font) style))
 
