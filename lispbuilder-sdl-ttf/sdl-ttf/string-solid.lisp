@@ -27,11 +27,10 @@ Use :CACHE T to cache the newly created surface in the FONT object.
 
 For example:
   * (DRAW-STRING-SOLID \"Hello World!\" :FONT *DEFAULT-FONT* :COLOR A-COLOR)"
-  (check-type font font "FONT must be of type FONT.")
-  (check-type color sdl:sdl-color "COLOR must be of type SDL:SDL-COLOR.")
-  (when (and free (sdl:cached-surface font))
-    (sdl:free-surface (sdl:cached-surface font))
-    (setf (sdl:cached-surface font) nil))
+  (check-type font font)
+  (check-type color sdl:sdl-color)
+  (when free
+    (sdl:free-cached-surface font))
   (let ((surf
 	 (sdl:with-foreign-color-copy (col-struct color)
 	   (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-Solid (fp-font font) text col-struct)))))
@@ -46,7 +45,7 @@ For example:
   "See DRAW-STRING-SOLID-*.
 
   * POSITION is the x and y position to render the text, of type SDL:POINT."
-  (check-type position sdl:point "POSITION must be of type SDL:POINT") 
+  (check-type position sdl:point) 
   (draw-string-solid-* text (sdl:x position) (sdl:y position)
 		       :font font
 		       :surface surface
@@ -72,7 +71,7 @@ For example:
 
 For example:
   * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
-  (check-type surface sdl:sdl-surface "SURFACE must be of type SDL:SDL-SURFACE.")
+  (check-type surface sdl:sdl-surface)
   (sdl:with-surface (font-surface (render-string-solid text
 						       :font font
 						       :color color
