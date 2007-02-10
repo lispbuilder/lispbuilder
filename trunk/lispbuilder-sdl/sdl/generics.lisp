@@ -138,6 +138,10 @@ Specifically free's the wrapped foreign SDL_rwops."))
 (defgeneric free-font (font)
   (:documentation "Free's the resources associated with the FONT."))
 
+(defgeneric free-cached-surface (font)
+  (:documentation "Frees the cached surface in FONT, if any. 
+Sets the CACHED-SURFACE slot to NIL."))
+
 (defgeneric draw-font (&key font surface)
   (:documentation "Blit the cached SURFACE in FONT to the destination surface SURFACE. 
 The cached surface is created during a previous call to any of the DRAW-STRING* functions. 

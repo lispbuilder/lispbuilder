@@ -17,6 +17,9 @@
 		       (y (y ,var)))
        ,@body)))
 
+(deftype point ()
+  `vector)
+
 (defun point (&key (x 0) (y 0))
   (multiple-value-bind (int-x int-y)
       (cast-all-to-int x y)

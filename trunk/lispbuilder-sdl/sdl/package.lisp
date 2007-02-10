@@ -100,6 +100,7 @@
    #:free-surface
    #:free-rectangle
    #:free-rwops
+   #:free-cached-surface
 
    ;; color.lisp
    #:*white*
@@ -224,6 +225,7 @@
    #:all-integers?
    #:distance
    #:create-list-if-not
+   #:check-types
 
    ;; video.lisp
    #:window
