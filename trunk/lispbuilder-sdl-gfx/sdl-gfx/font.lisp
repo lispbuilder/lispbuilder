@@ -9,12 +9,18 @@
 Use DRAW-FONT, DRAW-FONT-AT or DRAW-FONT-AT-* to draw the cached surface.
 Prior to the first call to a RENDER-STRING* function, the cached surface is NIL."))
 
+(defun initialise-font (font-data width height)
+  "Creates a new FONT object from the font data in FONT-DATA.
+Binds the symbol *DEFAULT-FONT* to FONT.
+  * Returns a new FONT, or NIL if unsuccessful."
+  (sdl-gfx-cffi::gfx-Primitives-Set-Font font-data width height)
+  (setf *default-font* (make-instance 'font
+				      :font-width width
+				      :font-height height)))
+
 (defun initialise-default-font ()
-  "Creates a new FONT object from the font data in *font-data*.
+  "Creates a new FONT object from the font data in SDL-GFX-CFFI:*FONT-DATA*.
 Binds the symbol *DEFAULT-FONT* to FONT
   * Returns a new FONT, or NIL if unsuccessful."
-  (gfx-Primitives-Set-Font *font-data* 8 8)
-  (setf *default-font* (make-instance 'font
-				      :font-width 8
-				      :font-height 8)))
+  (initialise-font sdl-gfx-cffi::*font-data* 8 8))
 
