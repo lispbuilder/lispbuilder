@@ -223,8 +223,9 @@ RESULT is an object of type RECTANGLE."
 	   (p2 (cdr p1) (cdr p1)))
 	  ((or (null p2)
 	       (null p1)))
-       (draw-line (first p1) (first p2) :clipping-p clipping-p
-				  :surface surface :color color)))
+       (draw-line (first p1) (first p2)
+		  :clipping-p clipping-p
+		  :surface surface :color color)))
     (:lines
      (do* ((p1 points (if (cdr p1)
 			  (cddr p1)
@@ -232,8 +233,9 @@ RESULT is an object of type RECTANGLE."
 	   (p2 (cdr p1) (cdr p1)))
 	  ((or (null p2)
 	       (null p1)))
-       (draw-line (first p1) (first p2) :clipping-p clipping-p
-				  :surface surface :color color)))
+       (draw-line (first p1) (first p2)
+		  :clipping-p clipping-p
+		  :surface surface :color color)))
     (:points
      (loop for point in points
 	do (draw-point point
@@ -320,10 +322,14 @@ RESULT is an object of type RECTANGLE."
 
 
 (defun draw-vline (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (when (> y0 y1)
+    (rotatef y0 y1))
   (with-rectangle (template (rectangle-from-edges-* x y0 x y1))
     (draw-box template :clipping-p clipping-p :surface surface :color color)))
   
 (defun draw-hline (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p t))
+  (when (> x0 x1)
+    (rotatef x0 x1))
   (with-rectangle (template (rectangle-from-edges-* x0 y x1 y))
     (draw-box template :clipping-p clipping-p :surface surface :color color)))
   
