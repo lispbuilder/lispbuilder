@@ -6,9 +6,6 @@
   (:use #:cl #:cffi)
   (:nicknames #:sdl-gfx)
   (:documentation "The main package of `lispbuilder-gfx-sdl'.")
-  (:import-from #:lispbuilder-sdl-gfx-cffi
-		lispbuilder-sdl-gfx-cffi::*font-data*
-		lispbuilder-sdl-gfx-cffi::gfx-Primitives-Set-Font)
   (:import-from #:lispbuilder-sdl
 		lispbuilder-sdl:free-font
 		lispbuilder-sdl:draw-font
@@ -134,6 +131,7 @@
 
    ;;; font.lisp
    #:initialise-default-font
+   #:initialise-font
    #:render-string-shaded
    #:draw-character-shaded
    #:draw-character-shaded-*
@@ -144,10 +142,6 @@
    #:draw-character-solid-*
    #:draw-string-solid
    #:draw-string-solid-*
-
-   ;;; Exports from lispbuilder-sdl-gfx-cffi
-   #:*font-data*
-   #:gfx-Primitives-Set-Font
 
    ;;; Exports from lispbuilder-sdl
    #:free-font
