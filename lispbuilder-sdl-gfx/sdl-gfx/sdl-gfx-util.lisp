@@ -13,6 +13,25 @@
 ;;; w
 
 (defmacro with-bezier ((&optional (segments 10)) &body body)
+  "Draw a bezier curve to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
+A vertex specifies a control point for the Bezier curve. A vertex may be added
+using ADD-VERTEX which accepts an SDL:POINT, or the x/y spread version 
+ADD-VERTEX-*.
+
+ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-BEZIER.
+
+The number of segments used to draw the Bezier curve defaults to 10.
+However this number may be increased by specifying SEGMENTS. 
+The greater the number of segments, the smoother the Bezier curve.
+
+Example:
+\(SDL:WITH-SURFACE \(DSP SDL:*DEFAULT-DISPLAY*\)
+  \(SDL:WITH-COLOR \(COL \(SDL:COLOR\)\)
+    \(WITH-BEZIER \(30\)
+      \(ADD-VERTEX-* 60  40\)
+      \(ADD-VERTEX-* 160 10\)
+      \(ADD-VERTEX-* 170 150\)
+      \(ADD-VERTEX-* 60  150\)\)\)\)"
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
@@ -23,6 +42,35 @@
        (draw-bezier ,point-list ,segments))))
 
 (defmacro with-curve ((shape-type &optional (segments 10)) &body body)
+  "Draw a Cattmul-Rom spline to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
+A vertex specifies a waypoint for the spline. A vertex may be added
+using ADD-VERTEX which accepts an SDL:POINT, or the x/y spread version 
+ADD-VERTEX-*.
+
+ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-CURVE.
+
+  * WITH-CURVE accepts a SHAPE-TYPE where SHAPE-TYPE may be one of 
+:LINE-STRIP, :LINES, or :POINTS.
+    
+    * When SHAPE-TYPE is :LINE-STRIP, a single continuous line is drawn through the
+specified waypoints.
+
+    * When SHAPE-TYPE is :LINES, a line is drawn to alternate waypoint pairs.
+
+    * When SHAPE-TYPE is :POINTS, a single point is drawn at each waypoint.
+
+The number of segments used to draw the Catmull-Rom spline defaults to 10.
+However this number may be increased by specifying SEGMENTS. 
+The greater the number of segments, the smoother the spline.
+
+Example:
+\(SDL:WITH-SURFACE \(DSP SDL:*DEFAULT-DISPLAY*\)
+  \(SDL:WITH-COLOR \(COL \(SDL:COLOR\)\)
+    \(WITH-CURVE \(:LINE-STRIP 30\)
+      \(ADD-VERTEX-* 60  40\)
+      \(ADD-VERTEX-* 160 10\)
+      \(ADD-VERTEX-* 170 150\)
+      \(ADD-VERTEX-* 60  150\)\)\)\)"
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
@@ -33,6 +81,30 @@
        (draw-curve ,point-list ,shape-type ,segments))))
 
 (defmacro with-shape ((shape-type) &body body)
+  "Draw a polygon to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
+Addional vertices are added using ADD-VERTEX which accepts an SDL:POINT, 
+or the x/y spread version ADD-VERTEX-*.
+
+ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE.
+
+  * WITH-SHAPE accepts a SHAPE-TYPE where SHAPE-TYPE may be one of 
+:LINE-STRIP, :LINES, or :POINTS.
+    
+    * When SHAPE-TYPE is :LINE-STRIP, a single continuous line is drawn through the
+specified vertices.
+
+    * When SHAPE-TYPE is :LINES, a line is drawn to alternate vertex pairs.
+
+    * When SHAPE-TYPE is :POINTS, a single point is drawn at each vertex.
+
+Example:
+\(SDL:WITH-SURFACE \(DSP SDL:*DEFAULT-DISPLAY*\)
+  \(SDL:WITH-COLOR \(COL \(SDL:COLOR\)\)
+    \(WITH-SHAPE \(:POINTS\)
+      \(ADD-VERTEX-* 60  40\)
+      \(ADD-VERTEX-* 160 10\)
+      \(ADD-VERTEX-* 170 150\)
+      \(ADD-VERTEX-* 60  150\)\)\)\)"
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
@@ -46,15 +118,59 @@
 
 ;;; d
 
-(defun draw-curve (points type segments)
+(defun draw-curve (points type segments &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw a Cattmul-Rom spline to the surface SURFACE using color COLOR.
+
+  * POINTS is a list of vertices or waypoints for the spline. A vertex is of type SDL:POINT
+
+  * TYPE is the shape type where TYPE may be one of 
+:LINE-STRIP, :LINES, or :POINTS.
+    
+    * When TYPE is :LINE-STRIP, a single continuous line is drawn through the
+specified waypoints.
+
+    * When TYPE is :LINES, a line is drawn to alternate waypoint pairs.
+
+    * When TYPE is :POINTS, a single point is drawn at each waypoint.
+
+  * SEGMENTS is the  number of segments used to draw the Catmull-Rom spline.
+The greater the number of segments, the smoother the spline.
+
+Example:
+\(DRAW-CURVE \(LIST \(SDL:POINT :X 60  :Y 40\)
+		  \(SDL:POINT :X 160 :Y 10\)
+		  \(SDL:POINT :X 170 :Y 150\)
+		  \(SDL:POINT :X 60  :Y 150\)\)
+	    :LINE-STRIP
+	    10\)"
   (do* ((p1 points (cdr p1))
 	(p2 (cdr p1) (cdr p1))
 	(p3 (cdr p2) (cdr p2))
 	(p4 (cdr p3) (cdr p3)))
        ((or (null p4) (null p3) (null p2) (null p1)))
-    (draw-shape (sdl:calculate-curve (first p1) (first p2) (first p3) (first p4) segments) type)))
+    (draw-shape (sdl:calculate-curve (first p1) (first p2) (first p3) (first p4) segments)
+		type :surface surface :color color)))
 
-(defun draw-shape (points type)
+(defun draw-shape (points type &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw a polygon using the vertices in POINTS to the surface SURFACE using color COLOR.
+
+  * POINTS is a list of vertices. A vertex is of type SDL:POINT
+
+  * TYPE is the shape type where TYPE may be one of 
+:LINE-STRIP, :LINES, or :POINTS.
+    
+    * When TYPE is :LINE-STRIP, a single continuous line is drawn through the vertices in POINTS
+
+    * When TYPE is :LINES, a line is drawn to alternate vertex pairs.
+
+    * When TYPE is :POINTS, a single point is drawn at each vertex.
+
+Example:
+\(DRAW-SHAPE \(LIST \(SDL:POINT :X 60  :Y 40\)
+		    \(SDL:POINT :X 160 :Y 10\)
+		    \(SDL:POINT :X 170 :Y 150\)
+   		    \(SDL:POINT :X 60  :Y 150\)\)
+	    :LINE-STRIP\)"
   (case type
     (:line-strip
      (do* ((p1 points (cdr p1))
@@ -72,7 +188,7 @@
        (draw-line (first p1) (first p2))))
     (:points
      (loop for point in points
-	do (draw-pixel point)))))
+	do (draw-pixel point :surface surface :color color)))))
 
 (defun draw-pixel (position &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See DRAW-PIXEL-*.
@@ -557,8 +673,7 @@ Note: The trigon is not filled, only the edges are drawn.
   "Draw a polygon, of color COLOR to surface SURFACE.
 Note: The polygon is not filled, only the edges are drawn.
 
-  * POINT1, POINT2 and POINT3 THAT specify the vertices of the polygon, of type SDL:POINT.
-of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type SDL:POINT.
+  * POINTS is the list of vertices for the polygon. POINTS is a list of SDL:POINTs.
 
   * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
 
@@ -580,6 +695,14 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
     poly-surface))
 
 (defun draw-aa-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw an antialiased polygon, of color COLOR to surface SURFACE.
+Note: The polygon is not filled, only the edges are drawn.
+
+  * POINTS is the list of vertices for the polygon. POINTS is a list of SDL:POINTs.
+
+  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
+
+  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
   (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
@@ -598,6 +721,13 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
     poly-surface))
 
 (defun draw-filled-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw a filled polygon, of color COLOR to surface SURFACE.
+
+  * POINTS is the list of vertices for the polygon. POINTS is a list of SDL:POINTs.
+
+  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
+
+  * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default."
   (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
@@ -616,6 +746,20 @@ of the polygon, of type SDL:POINT.specify the vertices of the polygon, of type S
     poly-surface))
 
 (defun draw-bezier (points steps &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw a bezier curve to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
+
+  * POINTS contains the list of vertices. A vertex specifies a control point for the Bezier curve. 
+POINTS is a LIST of SDL:POINTs
+
+  * STEPS is the number of segments used to draw the Bezier curve.
+The greater the number of segments, the smoother the Bezier curve.
+
+Example:
+    \(DRAW-BEZIER \(LIST \(SDL:POINT :X 60  :Y 40\)
+                         \(SDL:POINT :X 160 :Y 10\)
+                         \(SDL:POINT :X 170 :Y 150\)
+                         \(SDL:POINT :X 60 :Y 150\)\)
+                   10\)"
   (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
