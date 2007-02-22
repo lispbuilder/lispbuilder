@@ -258,7 +258,7 @@
       (gl::glCallList *gear3*))))
 
 (defun draw-screen ()
-  (gl::glClear (sdl::set-flags gl::GL_COLOR_BUFFER_BIT gl::GL_DEPTH_BUFFER_BIT))
+  (gl::glClear (sdl-base::set-flags gl::GL_COLOR_BUFFER_BIT gl::GL_DEPTH_BUFFER_BIT))
     
   (gl::glEnable gl::GL_LIGHTING)
   (gl::glEnable gl::GL_LIGHT0)
@@ -280,8 +280,8 @@
             
     (gl::glPolygonMode gl::GL_FRONT_AND_BACK gl::GL_FILL))
     
-  (sdl::SDL_GL_SwapBuffers))
-          
+  (sdl-cffi::sdl-gl-swap-buffers))
+
 (defun setup-opengl (width height)
   (let ((screen-ratio (coerce (/ height width) 'double-float)))        
     (gl::glViewport 0 0 width height)
@@ -350,23 +350,27 @@
     (gl::glEnable gl::GL_NORMALIZE)))
     
 (defun opengl-gears ()
-  (sdl::with-init ()
-    (let ((display (sdl::set-window *screen-width* *screen-height* :flags sdl::SDL_OPENGL)))
-      (setup-opengl *screen-width* *screen-height*)    
-      (create-display-lists)
-      (sdl::with-events
-	(:quit () t)
-	(:keydown (:state state :key key)
-		  (if (sdl:key= key :SDLK_ESCAPE)
-		      (sdl:push-quitevent)))
-	(:mousemotion (:state state :x-rel xrel :y-rel yrel)
-		      (cond
-			((eql state 1)
-			 (setf *view_rotx* (+ *view_rotx* xrel))
-			 (setf *view_roty* (+ *view_roty* yrel )))))
-	(:idle ()         
-	 (move-objects)
-	 (draw-screen))))))
+  (sdl:with-init ()
+    (sdl:window *screen-width* *screen-height*
+		:flags sdl-cffi::sdl-opengl
+		:title-caption "OpenGL Gears"
+		:icon-caption "OpenGL Gears")
+    (setup-opengl *screen-width* *screen-height*)
+    (setf (sdl:frame-rate) 30)
+    (create-display-lists)
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:key-down-event (:key key)
+		       (if (sdl:key= key :SDL-KEY-ESCAPE)
+			   (sdl:push-quit-event)))
+      (:mouse-motion-event (:state state :x-rel xrel :y-rel yrel)
+			   (cond
+			     ((eql state 1)
+			      (setf *view_rotx* (+ *view_rotx* xrel))
+			      (setf *view_roty* (+ *view_roty* yrel )))))
+      (:idle ()         
+	     (move-objects)
+	     (draw-screen)))))
 
 ;;; Some parameters to set while opengl-grears is running...
 ;;; (setf *timescale* 0.3)
