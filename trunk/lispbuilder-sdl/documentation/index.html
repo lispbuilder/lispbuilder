@@ -337,6 +337,7 @@
 	<li><a href="#lispbuilder">LISPBUILDER</a></li>
 	<ol>
 	  <li><a href="#abstract">Abstract</a></li>
+	  <li><a href="#news">News</a></li>
 	  <li><a href="#shots">Screenshots</a></li>
 	  <ol>
 	    <li><a href="shots.html">Additional Screenshots</a></li>
@@ -354,7 +355,6 @@
 	    <li><a href="#release">lispbuilder-SDL-IMAGE</a></li>
 	    <li><a href="#release">lispbuilder-SDL-MIXER</a></li>
 	    <li><a href="#release">lispbuilder-SDL-NET</a></li>
-	    <li><a href="#release">lispbuilder-SDL-TIF</a></li>
 	    <li><a href="#release">lispbuilder-SDL-TTF</a></li>
 	    <li><a href="#release">lispbuilder-WINDOWS</a></li>
 	    <li><a href="#release">lispbuilder-YACC</a></li>
@@ -363,7 +363,6 @@
 	  <li><a href="#installation">Installation</a></li>
 	  <ol>
 	    <li><a href="#windows">Windows</a></li>
-	    <li><a href="#macosx">Mac OS-X</a></li>
 	    <li><a href="#linux">Linux</a></li>
 	    <li><a href="#winalt">Windows Alternate</a></li>
 	    <ol>
@@ -375,6 +374,7 @@
 	  </ol>
 	  <li><a href="#usage">Using LISPBUILDER</a></li>
 	  <li><a href="#examples">Examples</a></li>
+	  <li><a href="#swig">SWIG</a></li>
 	  <li><a href="#support">Support</a></li>
 	  <li><a href="#contrib">Contributors</a></li>
 	  <li><a href="#ref">Links</a></li>
@@ -406,7 +406,7 @@
 	     title="lispbuilder-regex">LISPBUILDER-REGEX</a>: Regular exression handling</li>
 	<li>LISPBUILDER-SDL: Window and event management, rendering graphics, 
 	  and sound support.</li>
-	<li>LISPBUILDER-SDL-GFX: 2D graphical effects such as
+	<li><a href="lispbuilder-sdl-gfx.html" title="lispbuilder-sdl-gfx">LISPBUILDER-SDL-GFX</a>: 2D graphical effects such as
 	  zooming, rotation, drawing circles, polygons and squares</li>
 	<li> <a href="lispbuilder-sdl-image.html" title="lispbuilder-sdl-image">LISPBUILDER-SDL-IMAGE</a>: 
 	  Loading many 2D image formats such 
@@ -414,7 +414,7 @@
 	  <acronym title="Joint Photographics Experts Group">JPG</acronym></li>
 	<li>LISPBUILDER-SDL-MIXER: Multi-channel audio mixing</li>
 	<li>LISPBUILDER-SDL-NET: Simple socket networking</li>
-	<li>LISPBUILDER-SDL-TTF: True-type font rendering</li>
+	<li> <a href="lispbuilder-sdl-ttf.html" title="lispbuilder-sdl-ttf">LISPBUILDER-SDL-TTF</a>: True-type font rendering</li>
 	<li><a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-windows/documentation/index.html"
 	       title="lispbuilder-windows">LISPBUILDER-WINDOWS</a>: CFFI wrappers for Windows Windows <code>windows.h</code>.</li>
 	<li><a href="http://svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-yacc/index.html" 
@@ -422,6 +422,14 @@
       </ul>    
     </blockquote>
 
+    <br>&nbsp;</br><h2><a class=none name="news">News</a></h2>
+    <p>
+      <ul>
+	<li><code>[2007/02/13]</code>: Added documentation for the <code>LISPBUILDER-SDL-GFX</code> package.</li>
+	<li><code>[2007/01/24]</code>: Added documentation for the <code>LISPBUILDER-SDL-TTF</code> package.</li>
+      </ul>
+    </p>
+        
     <br>&nbsp;</br><h2><a class=none name="shots">Screenshots</a></h2>
     <img src="sdl-gfx-examples_distance-2d.png" align=left width="206" height="232" title="(sdl-examples:distance-2D)" alt="(sdl-examples:distance-2)" />
     <img src="openrm1.jpg" align=right width="320" height="253" title="OpenRM Example" alt="OpenRM Example" />
@@ -621,24 +629,7 @@
       </li>
     </ol>
 
-    <h3><a class=none name="macosx">Mac OS-X Installation</a></h3>
-    <p> In addition to downloading LISPBUILDER you need to install the SDL framework 
-      <a href="http://www.libsdl.org/">available here.</a>
-    </p>
-    <p>
-      To use SDL you first need to compile the OS-X specific helper library located
-      in lispbuilder-sdl/cocoahelper, just cd to this directory and type "make".
-      Then before trying to run any SDL programs you need to load the cocoahelper
-      package:
-    </p>
-    <pre>(asdf:operate 'asdf:load-op :cocoahelper)
-    </pre>
-    <p>
-      This creates an instance of NSApplication that serves as a bridge between SDL 
-      and Cocoa, similiar to that used by the Python project Pygame. If this is
-      successful, you should see the icon for a generic OS-X ap appear in your dock.
-    </p>
-      
+
     <h3><a class=none name="linux">Linux Installation</a></h3>
     
     <p>The LISPBUILDER-SDL-* libraries are ASDF-INSTALL compatible. 
@@ -669,7 +660,7 @@
       configuring LISPBUILDER. For example, 
       when the user has an existing Lisp environment installed.
     </p>
-    <h4><a class=none name="prereq">Prerequisites</a></h4>
+    <h4><a class=none name="prereq">Prerequisites and Dependencies</a></h4>
     <p>Some LISPBUILDER packages (LISPBUILDER-SDL) require that 
       the <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
       and <a href="http://common-lisp.net/project/cffi">CFFI</a> are installed. 
@@ -764,26 +755,45 @@
       <p>Groovy. You should see a window like this:</p>
       <img src="groovy1.png" width="320" height="253" title="(sdl-examples:mouse-painter)" alt="mouse-painter" />
     </div>
-    
-    
+
+    <br>&nbsp;</br><h2><a class=none name="swig">Generating the Initial SWIG CFFI Wrappers</a></h2>
+    <p><a href="http://www.swig.org">SWIG</a> is used to create the low level CFFI bindings for most of the LISPBUILDER-*
+      packages. SWIG generates CFFI wrappers from C header files using the translation and substitution rules 
+      specified in an interface (.i) file. If a LISPBUILDER package uses SWIG then the corresponding interface file 
+      will be found in the <code>/build</code> directory. For example, <code>LISPBUILDER-SDL/build/sdlswig.i</code>.
+    </p>
+    <p>
+      A <code>post-swig.lisp</code> file contains additional C header file overrides. These overrides cannot be included 
+      in the main SWIG interface file as SWIG places all manual overrides in the .(i) interface file prior to 
+      the CFFI generated bindings. The overrides in the post-swig.lisp file must be located post- SWIG generated bindings.
+    </p>
+        
     <br>&nbsp;</br><h2><a class=none name="support">Support & Mailing List</a></h2>
     <p>
       If you have any questions please send an email to the 
       <a href="http://www.lispniks.com/mailman/listinfo/application-builder">lispbuilder discussion list</a>
     </p>
     
-    
     <br>&nbsp;</br><h2><a class=none name="contrib">Contributors</a></h2>
     <ul>
-      <li><font color=green>Application Project Leader:</font> Frank Buss</li>
+      <li><font color=green>Application Project Leader:</font>  - Frank Buss</li>
       <li><font color=green>SDL Wrappers:</font>               	- Justin Heyes-Jones, Luke J Crook</li>
       <li><font color=green>Additional SDL work:</font>		- Justin Heyes-Jones, Jeremy Smith, Luke Crook</li>
-      <li><font color=green>SWIG and CFFI:</font>              	- Surendra Singh</li>
-      <li><font color=green>SDL_gfx Wrappers:</font>		- Luke Crook</li>
-      <li><font color=green>Additional SDL_gfx work:</font>		- Luke Crook</li>
-      <li><font color=green>SDL_ttf Wrappers:</font>		- Rune Nesheim, Luke Crook</li>
+      <li><font color=green>SDL_gfx Wrappers:</font>	        - Luke Crook</li>
+      <li><font color=green>Additional SDL_gfx work:</font>     - Luke Crook</li>
+      <li><font color=green>SDL_ttf Wrappers:</font>		- Luke Crook, Rune Nesheim</li>
       <li><font color=green>SDL_image Wrappers:</font>		- Luke Crook</li>
+      <li><font color=green>SWIG and CFFI:</font>               - Surendra Singh</li>
     </ul>
+    <p>Bug reports, patches:</p>
+    <ul>
+      <li>Anthony Fairchild, Samium Gromoff, John Fred Connors, Jonathan Heusser, Brad Beveridge</li>
+    </ul>
+    <p>Credits for source code appropriations from other projects:</p>
+    <ul>
+      <li>Matthew Danish; for his Makefiles from the CL-SDL project.</li>
+    </ul>
+    </p>
     
     <br>&nbsp;</br><h2><a class=none name="ref">References and Links</a></h2>
     <ul>
