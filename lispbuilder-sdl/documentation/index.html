@@ -363,6 +363,7 @@
 	  <li><a href="#installation">Installation</a></li>
 	  <ol>
 	    <li><a href="#windows">Windows</a></li>
+	    <li><a href="#macosx">Mac OS-X</a></li>
 	    <li><a href="#linux">Linux</a></li>
 	    <li><a href="#winalt">Windows Alternate</a></li>
 	    <ol>
@@ -630,7 +631,24 @@
       </li>
     </ol>
 
-
+    <h3><a class=none name="macosx">Mac OS-X Installation</a></h3>
+    <p> In addition to downloading LISPBUILDER you need to install the SDL framework 
+      <a href="http://www.libsdl.org/">available here.</a>
+    </p>
+    <p>
+      To use SDL you first need to compile the OS-X specific helper library located
+      in lispbuilder-sdl/cocoahelper, just cd to this directory and type "make".
+      Then before trying to run any SDL programs you need to load the cocoahelper
+      package:
+    </p>
+    <pre>(asdf:operate 'asdf:load-op :cocoahelper)
+    </pre>
+    <p>
+      This creates an instance of NSApplication that serves as a bridge between SDL 
+      and Cocoa, similiar to that used by the Python project Pygame. If this is
+      successful, you should see the icon for a generic OS-X ap appear in your dock.
+    </p>
+      
     <h3><a class=none name="linux">Linux Installation</a></h3>
     
     <p>The LISPBUILDER-SDL-* libraries are ASDF-INSTALL compatible. 
