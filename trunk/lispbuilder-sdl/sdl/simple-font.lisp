@@ -34,12 +34,12 @@
 	(error "LOAD-FONT: Font cannot be initialised."))))
 
 (defmethod free-font ((font font))
-  "free up the font image surface"
+  "Free resources associated with the font FONT."
   (if (font-surface font)
       (free-surface (font-surface font)))
   (if (cached-surface font)
       (free-surface (cached-surface font)))
-  ;;  (#-clisp(cffi:cancel-finalization font))
+  ;;(tg:cancel-finalization font)
   )
 
 (defun render-string (string &key
