@@ -49,7 +49,7 @@
 	(:quit-event () t)
 	(:idle ()
 	       (sdl:draw-box (sdl:random-rectangle width height)
-			     :color (sdl:color :r (random 255) :g (random 255) :b (random 255) :a (random 255))
+			     :color (sdl:color :r (random 255) :g (random 255) :b (random 255))
 			     :stroke-color sdl:*white*)
 	       (sdl:update-display))))))
 
@@ -62,7 +62,7 @@
 	(:quit-event () t)
 	(:idle ()
 	       (sdl:draw-box (sdl:random-rectangle width height)
-			     :color (sdl:color :r (random 255) :g (random 255) :b (random 255) :a 255)
+			     :color (sdl:color :r (random 255) :g (random 255) :b (random 255) :a (random 255))
 			     :alpha 255)
 	       (sdl:update-display))))))
 
