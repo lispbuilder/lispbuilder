@@ -111,8 +111,7 @@
 
 (defmethod free-color ((color foreign-color))
   (cffi:foreign-free (fp color))
-  #-clisp(cffi:cancel-finalization color)
-  )
+  (tg:cancel-finalization color))
 
 (defmacro with-foreign-color-copy ((struct color) &body body)
   "Creates a new foreign SDL_Color object STRUCT on the stack. Then copies the color components from COLOR into STRUCT.
@@ -123,3 +122,20 @@ STRUCT is free'd after BODY."
 	     sdl-cffi::g (g ,color)
 	     sdl-cffi::b (b ,color)))
      ,@body))
+
+(defmethod color= ((color1 color) (color2 color))
+  (and (eq (r color1) (r color2))
+       (eq (g color1) (g color2))
+       (eq (b color1) (b color2))))
+
+(defmethod color= ((color1 color-a) (color2 color-a))
+  (and (eq (r color1) (r color2))
+       (eq (g color1) (g color2))
+       (eq (b color1) (b color2))
+       (eq (a color1) (a color2))))
+
+(defmethod any-color-but-this (color1)
+  (color :r (if (> (r color1) 254)
+		0
+		255)))
+

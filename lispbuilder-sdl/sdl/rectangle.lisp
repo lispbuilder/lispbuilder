@@ -79,8 +79,7 @@
 
 (defmethod free-rectangle ((rectangle rectangle))
   (cffi:foreign-free (fp rectangle))
-  #-clisp(cffi:cancel-finalization rectangle)
-  )
+  (tg:cancel-finalization rectangle))
 
 (defmethod point-* ((rectangle rectangle))
   (values (x rectangle) (y rectangle)))

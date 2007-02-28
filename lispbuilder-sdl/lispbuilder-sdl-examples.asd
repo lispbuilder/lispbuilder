@@ -30,7 +30,10 @@
 	       (:file "points-and-lines" :depends-on ("package"))
 	       (:file "distance-2D" :depends-on ("package"))
 	       (:file "metaballs" :depends-on ("package"))
-
+	       (:file "inbuilt-fonts" :depends-on ("package"))
+	       (:file "circle" :depends-on ("package"))
+	       (:file "stroke" :depends-on ("package"))	       
+	       
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
  	       (:module "squashed"

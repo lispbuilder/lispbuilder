@@ -25,6 +25,5 @@
 							    max-distance)
 							 66)))
 					    (sdl:draw-box (sdl:rectangle-from-midpoint-* i j size size)
-							  :surface sdl:*default-display*
 							  :color (sdl:color :r 255 :g 255 :b 255)))))
 			      (sdl:update-display))))))

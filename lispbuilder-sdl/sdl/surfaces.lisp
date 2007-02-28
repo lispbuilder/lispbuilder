@@ -8,8 +8,8 @@
 (in-package #:lispbuilder-sdl)
 
 (defclass sdl-surface ()
-  ((foreign-pointer-to-surface :accessor fp :initform nil :initarg :surface)
-   (foreign-pointer-to-position-rect :accessor fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)
+  ((foreign-pointer-to-surface :reader fp :initform nil :initarg :surface)
+   (foreign-pointer-to-position-rect :reader fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)
    (foreign-pointer-to-cell-rect :accessor fp-cell :initform (cffi:null-pointer) :initarg cell)))
 
 ;;; An object of type display should never be finalized by CFFI
@@ -96,12 +96,21 @@
 (defmethod free-surface ((surface sdl-surface)) nil)
 
 (defmethod free-surface ((self surface))
-  (let ((foreign-pointer (fp self)))
-    (setf (slot-value self 'foreign-pointer-to-surface) nil)
-    (sdl-cffi::sdl-free-surface foreign-pointer))
-  (cffi:foreign-free (fp-position self))
-  #-clisp(cffi:cancel-finalization self)
-  )
+  "Free the foreign SDL_Surface and the SDL_Rect used for position.
+Also free the SDL_Rect used as the cell mask."
+  (tg:cancel-finalization self)
+  (let ((surface-pointer (fp self))
+	(fp-position (fp-position self))
+	(fp-cell (fp-cell self)))
+    (when (is-valid-ptr surface-pointer)
+      (setf (slot-value self 'foreign-pointer-to-surface) nil)
+      (sdl-cffi::sdl-free-surface surface-pointer))
+    (when (is-valid-ptr fp-position)
+      (setf (slot-value self 'foreign-pointer-to-position-rect) nil)
+      (cffi:foreign-free fp-position))
+    (when (is-valid-ptr fp-cell)
+      (setf (slot-value self 'foreign-pointer-to-cell-rect) nil)
+      (cffi:foreign-free fp-cell))))
 
 (defmethod width ((surface sdl-surface))
   (sdl-base::surf-w (fp surface)))
@@ -173,41 +182,44 @@
   surface)
 
 (defun clear-color-key (&key (surface *default-surface*) (rle-accel t))
+  (check-type surface sdl-surface)
   (sdl-base::clear-color-key (fp surface) rle-accel))
 
 (defun set-color-key (color &key (surface *default-surface*) (rle-accel t))
+  (check-type surface sdl-surface)
   (sdl-base::set-color-key (fp surface) (map-color color surface ) rle-accel))
   
 (defun set-alpha (alpha &key (surface *default-surface*) (rle-accel nil))
+  (check-type surface sdl-surface)
   (sdl-base::set-alpha (fp surface) alpha rle-accel))
 
 (defun get-clip-rect (&key (surface *default-surface*) (rectangle (rectangle)))
+  (check-type surface sdl-surface)
+  (check-type rectangle rectangle)
   (sdl-base::get-clip-rect (fp surface) (fp rectangle))
   rectangle)
 
 (defun set-clip-rect (rectangle &key (surface *default-surface*))
+  (check-type surface sdl-surface)
+  (check-type rectangle rectangle)
   (sdl-base::set-clip-rect (fp surface) (fp rectangle))
   rectangle)
 
 (defun clear-cell (&key (surface *default-surface*))
-  (unless (typep surface 'sdl-surface)
-    (error ":surface must be of type SURFACE."))
+  (check-type surface sdl-surface)
   (unless (cffi:null-pointer-p (fp-cell surface))
     (cffi:foreign-free (fp-cell surface))
     (setf (fp-cell surface) (cffi:null-pointer))))
 
 (defun set-cell (rectangle &key (surface *default-surface*))
-  (unless (typep surface 'sdl-surface)
-    (error ":surface must be of type SURFACE."))
-  (unless (typep rectangle 'sdl:rectangle)
-    (error "rectangle must be of type RECTANGLE."))
+  (check-type surface sdl-surface)
+  (check-type rectangle rectangle)
   (if (cffi:null-pointer-p (fp-cell surface))
       (setf (fp-cell surface) (sdl-base::clone-rectangle (fp rectangle)))
       (sdl-base::copy-rectangle (fp rectangle) (fp-cell surface))))
 
 (defun set-cell-* (x y w h &key (surface *default-surface*))
-  (unless (typep surface 'sdl-surface)
-    (error ":surface must be of type SURFACE."))  
+  (check-type surface sdl-surface)
   (when (cffi:null-pointer-p (fp-cell surface))
     (setf (fp-cell surface) (sdl-base::rectangle)))
   (setf (sdl-base::rect-x (fp-cell surface)) x
@@ -216,16 +228,15 @@
 	(sdl-base::rect-h (fp-cell surface)) h))
 
 (defun get-surface-rect (&key (surface *default-surface*) (rectangle (rectangle)))
-  (unless (typep surface 'sdl-surface)
-    (error ":surface must be of type SURFACE."))
-  (unless (typep rectangle 'sdl:rectangle)
-    (error "rectangle must be of type RECTANGLE."))
+  (check-type surface sdl-surface)
+  (check-type rectangle rectangle)
   (sdl-base::get-surface-rect (fp surface) (fp rectangle))
   rectangle)
 
 (defun convert-surface (&key (surface *default-surface*) key-color alpha-value (free-p nil))
-  (unless (typep surface 'sdl-surface)
-    (error ":surface must be of type SURFACE."))
+  (check-type surface sdl-surface)
+  (when key-color
+    (check-type key-color sdl-color))
   (let ((surf (sdl-base::convert-surface-to-display-format (fp surface)
 							   :key-color (when key-color (map-color key-color surface))
 							   :alpha-value (when alpha-value alpha-value)
@@ -237,8 +248,9 @@
     (surface surf)))
 
 (defun copy-surface (&key (surface *default-surface*) key-color alpha-value (type :sw) rle-accel)
-  (unless (typep surface 'sdl-surface)
-    (error ":surface must be of type SURFACE."))
+  (check-type surface sdl-surface)
+  (when key-color
+    (check-type key-color sdl-color))
   (let ((surf (sdl-base::copy-surface (fp surface)
 				      :color-key (when key-color (map-color key-color surface))
 				      :alpha alpha-value
@@ -255,6 +267,10 @@
 
 (defun create-surface (width height &key
 		       (bpp 32) surface key-color alpha-value (type :sw) (rle-accel t))
+  (when surface
+    (check-type surface sdl-surface))
+  (when key-color
+    (check-type key-color sdl-color))
   (let ((surf (sdl-base::create-surface width height
 					:bpp bpp
 					:surface (when surface (fp surface))
@@ -273,22 +289,32 @@
 
 ;;; TODO: This needs to be optimized.
 (defun update-surface (surface &optional template)
+  (check-type surface sdl-surface)
   (if template
       (if (typep template 'rectangle-array)
 	  (sdl-base::update-surface (fp surface) :template (fp template) :number (len template))
-	  (sdl-base::update-surface (fp surface) :template (fp template)))
+	  (progn
+	    (check-type template rectagle)
+	    (sdl-base::update-surface (fp surface) :template (fp template))))
       (sdl-base::update-surface (fp surface)))
   surface)
 
 (defun update-surface-* (surface x y w h)
+  (check-type surface sdl-surface)
   (sdl-base::update-surface (fp surface) :x x :y y :w w :h h)
   surface)
 
 (defun blit-surface (src &optional (surface *default-surface*))
+  (unless surface
+    (setf surface *default-display*))
+  (check-types sdl-surface src surface)
   (sdl-base::blit-surface (fp src) (fp surface) (fp-cell src) (fp-position src))
   src)
 
 (defun draw-surface (src &key (surface *default-surface*))
+  (unless surface
+    (setf surface *default-display*))
+  (check-types sdl-surface src surface)
   (sdl-base::blit-surface (fp src) (fp surface) (fp-cell src) (fp-position src))
   src)
 
@@ -300,11 +326,17 @@
   (set-surface src point)
   (draw-surface src :surface surface))
 
-(defun fill-surface (color &key (template nil) (surface *default-surface*) (update-p nil) (clipping-p t))
+(defun fill-surface (color &key (template nil) (surface *default-surface*) (update-p nil) (clipping-p nil))
   "fill the entire surface with the specified R G B A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update."
+  (unless surface
+    (setf surface *default-display*))
+  (check-type surface sdl-surface)
+  (check-type color sdl-color)
+  (when template
+    (check-type template rectangle))
   (sdl-base::fill-surface (fp surface)
 			  (map-color color surface)
 			  :template (if template
@@ -313,6 +345,7 @@
 			  :clipping-p clipping-p
 			  :update-p update-p)
   surface)
+    
 
 (defun fill-surface-* (color x y w h &key (surface *default-surface*) (update-p nil) (clipping-p t))
   (with-rectangle (template (rectangle :x x :y y :w w :h h))

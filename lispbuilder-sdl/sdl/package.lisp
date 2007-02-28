@@ -73,6 +73,8 @@
    #:y2
    #:cached-surface
    #:free-font
+   #:color=
+   #:any-color-but-this
 
    #:pack-color
    #:color-*
@@ -101,6 +103,12 @@
    #:free-rectangle
    #:free-rwops
    #:free-cached-surface
+
+   #:draw-font
+   #:draw-font-at
+   #:draw-font-at-*
+
+   #:free-font
 
    ;; color.lisp
    #:*white*
@@ -141,6 +149,11 @@
    #:draw-point-*
    #:read-point
 
+   #:draw-circle
+   #:draw-circle-*
+   #:draw-filled-circle
+   #:draw-filled-circle-*
+   
    ;; events.lisp
    #:with-events
 
@@ -168,22 +181,6 @@
    #:flood-fill-*
    #:flood-fill-stack
    #:flood-fill-stack-*
-   
-   ;; simple-font.lisp
-   #:font
-   #:load-font
-   #:free-font
-   #:render-string
-   #:draw-character-*
-   #:draw-string
-   #:draw-string-*
-   #:draw-string-left-justify-*
-   #:draw-string-right-justify-*
-   #:draw-string-centered-*
-   #:draw-font
-   #:draw-font-at
-   #:draw-font-at-*
-   #:initialise-default-font
    
    ;; surfaces.lisp
    #:sdl-surface
@@ -236,6 +233,52 @@
    #:rwops
    #:create-RWops-from-file
 
+   ;; bitmap-font.lisp
+;;    #:font
+;;    #:load-font
+   #:char-width
+   #:char-height
+   #:with-default-font
+   #:with-font
+;;    #:with-load-font   
+   #:initialise-default-font
+   #:initialise-font
+   
+   ;; bitmap-font-data.lisp
+   #:*font-8x8*
+   #:*font-5x7*
+   #:*font-5x8*
+   #:*font-6x9*
+   #:*font-6x10*
+   #:*font-6x12*
+   #:*font-6x13*
+   #:*font-6x13B*
+   #:*font-6x13O*
+   #:*font-7x13*
+   #:*font-7x13B*
+   #:*font-7x13O*
+   #:*font-7x14*
+   #:*font-7x14B*
+   #:*font-8x13*
+   #:*font-8x13B*
+   #:*font-8x13O*
+   #:*font-9x15*
+   #:*font-9x15B*
+   #:*font-9x18*
+   #:*font-9x18B*
+   #:*font-10x20*
+
+   ;; string-solid.lisp
+   #:render-string-solid
+   #:draw-string-solid
+   #:draw-string-solid-*
+
+   ;; string-shaded.lisp
+   #:render-string-shaded
+   #:draw-string-shaded
+   #:draw-string-shaded-*
+
+   
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
    #:sdl-opengl

@@ -47,18 +47,23 @@
    #:points-and-lines
 
    ;; random-rects.lisp
-   #:random-rects-1
-   #:random-rects-2
-   #:random-rects-3
+   #:random-rects
+   #:random-box-1
+   #:random-box-2
+   #:random-box-3
+   #:random-box-4
 
    ;; recursive-rects.lisp
    #:recursive-rects
 
-   ;; setup-and-draw
+   ;; setup-and-draw.lisp
    #:setup-and-draw
 
-   ;; simple-font-demo
+   ;; simple-font-demo.lisp
    #:simple-font-demo
+
+   ;; inbuilt-font.lisp
+   #:inbuilt-fonts
 
    ;; vertices.lisp
    #:vertices
@@ -66,5 +71,14 @@
    ;; width-height.lisp
    #:width-height
 
+   ;; circle.lisp
+   #:circle-1
+   #:circle-2
+   #:circle-3
+   #:circle-4
+
+   ;; stroke.lisp
+   #:stroke
+   
    ;; squashed.lisp
    #:squashed))
