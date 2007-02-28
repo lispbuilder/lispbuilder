@@ -551,7 +551,7 @@
 	       t)
      (:key-up-event (:state state :scancode scancode :key key :mod mod :unicode unicode)
 	     t)
-     (:mouse-motion-event (:state state :x x :y y :xrel xrel :yrel yrel)
+     (:mouse-motion-event (:state state :x x :y y :x-rel xrel :y-rel yrel)
 		   t)
      (:mouse-button-down-event (:button button :state state :x x :y y)
 		       t)

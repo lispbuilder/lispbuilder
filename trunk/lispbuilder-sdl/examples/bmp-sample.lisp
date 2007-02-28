@@ -12,7 +12,7 @@
 (defun bmp-sample ()
   (sdl:with-init ()
     (sdl:window 320 240 :title-caption "simple bmp example" :icon-caption "simple bmp example")
-    (setf (sdl:frame-rate) 10)
+    (setf (sdl:frame-rate) 5)
     
     (sdl:with-surfaces ((img-1 (sdl:convert-surface :surface (sdl:load-image "sdl.bmp" *bmp-path*) :free-p t))
 			(img-2 (sdl:convert-surface :surface (sdl:load-image "lisp.bmp" *bmp-path* :key-color (sdl:color :r 253 :g 59 :b 251)) :free-p t))
@@ -24,17 +24,15 @@
       (sdl:draw-surface img-1 :surface sdl:*default-display*)
 
       ;; Set position using a 'point'
-      (sdl:draw-surface-at img-2 (sdl:point :x 190 :y 10)
-			   :surface sdl:*default-display*)
+      (sdl:draw-surface-at img-2 (sdl:point :x 190 :y 10) :surface sdl:*default-display*)
 
       ;; Set position using x/y spread coords
-      (sdl:draw-surface-at-* img-3 80 100
-			     :surface sdl:*default-display*)
+      (sdl:draw-surface-at-* img-3 80 100 :surface sdl:*default-display*)
 
       ;; Specify a cell to clip the surface as if rendering from a sprite sheet
       (sdl:set-cell-* 10 10 80 80 :surface img-4)
       (sdl:draw-surface-at-* img-4 200 150 :surface sdl:*default-display*))
-
+    
     (sdl:with-events ()
-		     (:quit-event () t)
-		     (:video-expose-event () (sdl:update-display)))))
+      (:quit-event () t)
+      (:video-expose-event () (sdl:update-display)))))

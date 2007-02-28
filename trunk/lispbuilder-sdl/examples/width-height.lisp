@@ -13,11 +13,9 @@
       
       (loop for i from 0 to height by 20
 	 do (progn (sdl:draw-box (sdl:rectangle :x 0 :y i :w 200 :h 10)
-				  :color (sdl:color)
-				  :surface sdl:*default-display*)
+				  :color (sdl:color))
 		   (sdl:draw-box (sdl:rectangle :x i :y 0 :w 10 :h 200)
-				  :color (sdl:color :r 255 :g 255 :b 255)
-				  :surface sdl:*default-display*)))
+				  :color (sdl:color :r 255 :g 255 :b 255))))
 
       (sdl:with-events ()
 	(:quit-event () t)

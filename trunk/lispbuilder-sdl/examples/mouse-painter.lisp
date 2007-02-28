@@ -28,6 +28,5 @@
       (:mouse-motion-event (:state state :x x :y y :x-rel xrel :y-rel yrel)
 			   (when (= 1 state)
 			     (sdl:draw-line-* x y (- x xrel) (- y yrel)
-					      :color (sdl:color)
-					      :surface sdl:*default-display*)
+					      :color (sdl:color))
 			     (sdl:update-display))))))

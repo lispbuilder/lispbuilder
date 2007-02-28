@@ -19,6 +19,5 @@
 		 (setf y height))
 	       (sdl:draw-hline 0 width y
 			       :clipping-p nil
-			       :color (sdl:color :r 255 :g 255 :b 255)
-			       :surface sdl:*default-display*)
+			       :color (sdl:color :r 255 :g 255 :b 255))
 	       (sdl:update-display))))))

@@ -126,8 +126,6 @@
    returns NIL if the surface cannot be converted."
   ;; LJC: Added support for converting to an alpha surface.
   ;; LJC: Freeing surface is now optional.
-  (unless (is-valid-ptr surface)
-    (error "ERROR, CONVERT-SURFACE-TO-DISPLAY-FORMAT: SURFACE must be a pointer to an SDL_Surface."))
   (if key-color
       (set-color-key surface key-color))
   (if alpha-value
@@ -256,7 +254,7 @@
 		  (rect-h template) (- (clamp y2 0 (surf-h surface))
 				       (rect-y template)))))
 	(sdl-cffi::sdl-Fill-Rect surface template color))
-      (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))	
+      (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))
   (when update-p
     (update-surface surface :template template))
   template)

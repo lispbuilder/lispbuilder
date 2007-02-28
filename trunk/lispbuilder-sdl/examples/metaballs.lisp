@@ -35,8 +35,11 @@
 	(dotimes (i frame-values)
 	  (incf frames-per-second (aref frame-times i)))
 	(setf frames-per-second (sdl:cast float (/ 1000 (/ frames-per-second frame-values))))
-	(sdl:render-string (format nil "fps : ~d" (coerce frames-per-second 'float)) :free t))
-      (sdl:draw-font-at-* x y :surface surface))))
+	(sdl:render-string-solid (format nil "fps : ~2$" (coerce frames-per-second 'float))
+				 :color sdl:*white*
+				 :cache t
+				 :free t))
+     (sdl:draw-font-at-* x y :surface surface))))
 
 (defstruct mmanager
   (screen-width 0 :type fixnum)
@@ -357,7 +360,7 @@
 	 (manager (new-mmanager :y-res res-width :x-res res-height :iso-value 16.0 
 				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
 				:x-squares horizontal-res :y-squares vertical-res)))
-    (sdl:initialise-default-font)
+    (sdl:initialise-default-font sdl:*font-5x7*)
     (sdl:with-init ()
       (sdl:window (mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
       (setf (sdl:frame-rate) 0)
@@ -370,7 +373,10 @@
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)
 
-	(sdl:render-string "Calculating FPS....." :free t)
+	(sdl:render-string-solid "Calculating FPS....."
+				 :color sdl:*white*
+				 :cache t
+				 :free t)
 	
 	(sdl:with-events ()
 	  (:quit-event () t)

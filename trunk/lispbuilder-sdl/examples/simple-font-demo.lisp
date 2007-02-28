@@ -15,31 +15,26 @@
   (sdl:with-init ()			;Initialize Systems
     ;; init your game
     (sdl:window *WINDOW-WIDTH* *WINDOW-HEIGHT*)
-    (setf (sdl:frame-rate) 2) ; Set target framerate (or 0 for unlimited)
+    (setf (sdl:frame-rate) 5) ; Set target framerate (or 0 for unlimited)
 
-    (sdl:initialise-default-font)
-    ;; Create an image from the string.
-    ;; Then cache this image in the font to be used later.
-    (sdl:render-string "draw text image" :free t)
-
-    (sdl:with-events  ()
-      (:quit-event () t)
-      (:idle ()
-	     ;; fill the background
-	     (sdl:clear-display (sdl:color :r #x22 :g #x22 :b #x44))
-	     ;; Do stuff
-	     (sdl:with-surface (disp sdl:*default-display*)
-
-	       ;; Draw the font using the previously
-	       ;; created cached image.
-	       (sdl:draw-font-at-* (+ (- (screen-center-x) 100) (random 200))
-				   (+ (- (screen-center-y) 100) (random 200)))
-
-	       (sdl:draw-string-* "draw string centered" (screen-center-x) (- (screen-center-y) 10)
-				  :justify :center)
-	       (sdl:draw-string-* "draw string left justified" (screen-center-x) (screen-center-y)
-				  :justify :left)
-	       (sdl:draw-string-* "draw string right justified" (screen-center-x) (+ (screen-center-y) 10)
-				  :justify :right))
-	     ;; Update the whole screen 
-	     (sdl:update-display)))))
+    (let ((1st-font (sdl:initialise-default-font sdl:*font-10x20*))
+	  (2nd-font (sdl:initialise-default-font sdl:*font-10x20*)))
+      
+      (sdl:with-events  ()
+	(:quit-event () t)
+	(:idle ()
+	       ;; fill the background
+	       (sdl:clear-display (sdl:color :r #x22 :g #x22 :b #x44))
+	       ;; Do stuff
+	       (sdl:draw-string-shaded-* "draw string random"
+					 (+ (- (screen-center-x) 100) (random 200))
+					 (+ (- (screen-center-y) 100) (random 200))
+					 sdl:*black* sdl:*white* :font 2nd-font)
+	       (sdl:draw-string-solid-* "draw string centered" (screen-center-x) (- (screen-center-y) 10)
+					:justify :center :color sdl:*white* :font 1st-font)
+	       (sdl:draw-string-solid-* "draw string left justified" (screen-center-x) (screen-center-y)
+					:justify :left :color sdl:*white* :font 1st-font)
+	       (sdl:draw-string-solid-* "draw string right justified" (screen-center-x) (+ (screen-center-y) 10)
+					:justify :right :color sdl:*white* :font 1st-font)
+	;; Update the whole screen 
+	       (sdl:update-display))))))

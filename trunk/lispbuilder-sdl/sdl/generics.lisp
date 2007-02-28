@@ -156,3 +156,10 @@ POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT."
 (defgeneric draw-font-at-* (x y &key font surface)
   (:documentation "See DRAW-FONT. 
 X and Y are used to position the cached SURFACE, where X and Y are INTEGERS."))
+
+(defgeneric color= (color1 color2)
+  (:documentation "Returns T of colors are equal, returns NIL otherwise."))
+
+(defgeneric any-color-but-this (color)
+  (:documentation "Returns color2 if it is not equal to color1.
+Modifies color2 if it is equal to color1. Then returns color2."))

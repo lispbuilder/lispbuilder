@@ -14,7 +14,7 @@
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl-cffi lispbuilder-sdl-base)
+    :depends-on (cffi trivial-garbage lispbuilder-sdl-cffi lispbuilder-sdl-base)
     :components
     ((:module "sdl"
 	      :components
@@ -23,6 +23,7 @@
 	       (:file "generics")
 	       (:file "classes")
 	       (:file "util")
+	       (:file "bitmap-font-data")
 	       (:file "init")
 	       (:file "events")
 	       (:file "primitives")
@@ -36,11 +37,13 @@
 	       (:file "rwops")
 	       (:file "drawing-primitives")
 	       (:file "font")
-	       (:file "simple-font")
+;; 	       (:file "simple-font")
+	       (:file "bitmap-font")	       
+	       (:file "string-solid")
+	       (:file "string-shaded")
 	       (:file "sdl-util")
-	       #-clisp(:file "cffi-finalizers")
-
-	       (:static-file "font.bmp")
+	       (:file "cffi-finalizers")
+;;	       (:static-file "font.bmp")
 	       )
 	      :serial t)
      (:module "documentation"

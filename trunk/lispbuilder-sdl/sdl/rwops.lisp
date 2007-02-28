@@ -6,8 +6,7 @@
 
 (defmethod free-rwops ((rwops rwops))
   (sdl-cffi::SDL-Free-RW (fp rwops))
-  #-clisp(cffi:cancel-finalization rwops)
-  )
+  (tg:cancel-finalization rwops))
 
 (defun create-RWops-from-file (filename path)
   (let ((rwops (sdl-base::create-RWops-from-file filename path)))
