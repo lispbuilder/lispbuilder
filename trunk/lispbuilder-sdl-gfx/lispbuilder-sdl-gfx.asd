@@ -26,15 +26,13 @@
 	       (:file "font" :depends-on ("package" "globals"))
 	       (:file "string-solid" :depends-on ("font"))
 	       (:file "string-shaded" :depends-on ("font"))
-	       (:file "sdl-gfx-util" :depends-on ("package" "util" "globals"))))
+	       (:file "sdl-gfx-util" :depends-on ("package" "util" "globals"))
+	       (:file "cffi-finalizers")))
      (:module "documentation"
 	      :components
-	      ((:html-file "index")
-	       (:static-file "sdl_gfx1.jpg")
-	       (:doc-file "README")
-	       (:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")))
-     (:module "build"
-	      :components
-	      ((:static-file "sdlgfxswig.i")))))
+	      ((:html-file "lispbuilder-sdl-gfx")
+	       (:html-file "header")
+	       (:html-file "footer")
+	       (:static-file "width-height.png")
+	       (:doc-file "README")))))
 

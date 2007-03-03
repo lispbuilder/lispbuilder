@@ -353,28 +353,6 @@
     </blockquote>
     
     <br>&nbsp;</br><h2><a class=none name="packageover">Package Overview</a></h2>
-    <br>&nbsp;</br><h3><a class=none name="surfaces">Primitives</a></h3>
-    <p>
-      LISPBUILDER-SDL-GFX provides support for rendering several graphics primitives directly to any SDL surface.
-      The drawing functions take the &KEYwords SURFACE and COLOR. These are respectively 
-      bound to *DEFAULT-SURFACE* and *DEFAULT-COLOR* by default.
-    </p>
-    <br>&nbsp;</br><h3><a class=none name="fonts">Font Handling</a></h3>
-    <p>
-      LISPBUILDER-SDL-GFX has the concept of a *DEFAULT-FONT*. A FONT is bound to *DEFAULT-FONT* by using INITIALISE-DEFAULT-FONT, or INITIALISE-FONT.
-      The LISPBUILDER-SDL-GFX library suppports only a single font at any one time. Subsequent calls to INITIALISE-FONT
-      will replace the current font. Unlike the packages LISPBULDER-SDL, or LISPBUILDER-SDL-TTF, 
-      the *DEFAULT-FONT* defined in LISPBUILDER-SDL_GFX is only used to store the WIDTH and HEIGHT of 
-      the character glyph as well as the FONT's cached surface.
-      The FONT's cached surface is set by calling any of the RENDER-STRING* functions. The cached surface may be
-      drawn to any surface using the methods DRAW-FONT, DRAW-FONT-AT and DRAW-FONT-AT-*.
-    </p>
-    <p>
-      A font may be rendered as SOLID using a single color over a transparent background, 
-      or SHADED using a foreground color for the font and a background color.
-    </p>
-
-    <br>&nbsp;</br><h3><a class=none name="usage">Usage</a></h3>
     <p>
       Functions and symbols exported from the LISPBUILDER-SDL-GFX package are 
       accessible from the <code>LISPBUILDER-SDL-GFX:</code> prefix or the 
@@ -396,15 +374,14 @@
     (sdl:with-init ()
       (sdl:window width height :title-caption "Width and Height, from Processing.org")
       (sdl:clear-display (sdl:color :r 127 :g 127 :b 127))
-      (sdl:with-surface (disp sdl:*default-display*)
-	(loop for i from 0 to height by 20
-	   do (progn (sdl-gfx:draw-box (sdl:rectangle :x 0 :y i :w 200 :h 10)
-				       :color sdl:*black*)
-		     (sdl-gfx:draw-box (sdl:rectangle :x i :y 0 :w 10 :h 200)
-				       :color sdl:*white*)))
-	(sdl:with-events ()
-			 (:quit-event () t)
-			 (:video-expose-event () (sdl:update-display)))))))
+      (loop for i from 0 to height by 20
+	 do (progn (sdl-gfx:draw-box (sdl:rectangle :x 0 :y i :w 200 :h 10)
+				     :color sdl:*black*)
+		   (sdl-gfx:draw-box (sdl:rectangle :x i :y 0 :w 10 :h 200)
+				     :color sdl:*white*)))
+      (sdl:with-events ()
+	(:quit-event () t)
+	(:video-expose-event () (sdl:update-display))))))
       </pre>
     </div>
         
@@ -537,7 +514,7 @@
 	<p>Enter the following at the REPL to load the examples included in the 
 	  LISPBUILDER-SDL-GFX-EXAMPLES package:</p>
 	<pre>
-	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-GFX-examples)
+	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-gfx-examples)
 	</pre>
 	<p>Run the examples by entering any of the following at the REPL:
 	</p>

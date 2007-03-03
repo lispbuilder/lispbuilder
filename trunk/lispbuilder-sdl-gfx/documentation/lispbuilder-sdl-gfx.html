@@ -353,28 +353,6 @@
     </blockquote>
     
     <br>&nbsp;</br><h2><a class=none name="packageover">Package Overview</a></h2>
-    <br>&nbsp;</br><h3><a class=none name="surfaces">Primitives</a></h3>
-    <p>
-      LISPBUILDER-SDL-GFX provides support for rendering several graphics primitives directly to any SDL surface.
-      The drawing functions take the &KEYwords SURFACE and COLOR. These are respectively 
-      bound to *DEFAULT-SURFACE* and *DEFAULT-COLOR* by default.
-    </p>
-    <br>&nbsp;</br><h3><a class=none name="fonts">Font Handling</a></h3>
-    <p>
-      LISPBUILDER-SDL-GFX has the concept of a *DEFAULT-FONT*. A FONT is bound to *DEFAULT-FONT* by using INITIALISE-DEFAULT-FONT, or INITIALISE-FONT.
-      The LISPBUILDER-SDL-GFX library suppports only a single font at any one time. Subsequent calls to INITIALISE-FONT
-      will replace the current font. Unlike the packages LISPBULDER-SDL, or LISPBUILDER-SDL-TTF, 
-      the *DEFAULT-FONT* defined in LISPBUILDER-SDL_GFX is only used to store the WIDTH and HEIGHT of 
-      the character glyph as well as the FONT's cached surface.
-      The FONT's cached surface is set by calling any of the RENDER-STRING* functions. The cached surface may be
-      drawn to any surface using the methods DRAW-FONT, DRAW-FONT-AT and DRAW-FONT-AT-*.
-    </p>
-    <p>
-      A font may be rendered as SOLID using a single color over a transparent background, 
-      or SHADED using a foreground color for the font and a background color.
-    </p>
-
-    <br>&nbsp;</br><h3><a class=none name="usage">Usage</a></h3>
     <p>
       Functions and symbols exported from the LISPBUILDER-SDL-GFX package are 
       accessible from the <code>LISPBUILDER-SDL-GFX:</code> prefix or the 
@@ -396,15 +374,14 @@
     (sdl:with-init ()
       (sdl:window width height :title-caption "Width and Height, from Processing.org")
       (sdl:clear-display (sdl:color :r 127 :g 127 :b 127))
-      (sdl:with-surface (disp sdl:*default-display*)
-	(loop for i from 0 to height by 20
-	   do (progn (sdl-gfx:draw-box (sdl:rectangle :x 0 :y i :w 200 :h 10)
-				       :color sdl:*black*)
-		     (sdl-gfx:draw-box (sdl:rectangle :x i :y 0 :w 10 :h 200)
-				       :color sdl:*white*)))
-	(sdl:with-events ()
-			 (:quit-event () t)
-			 (:video-expose-event () (sdl:update-display)))))))
+      (loop for i from 0 to height by 20
+	 do (progn (sdl-gfx:draw-box (sdl:rectangle :x 0 :y i :w 200 :h 10)
+				     :color sdl:*black*)
+		   (sdl-gfx:draw-box (sdl:rectangle :x i :y 0 :w 10 :h 200)
+				     :color sdl:*white*)))
+      (sdl:with-events ()
+	(:quit-event () t)
+	(:video-expose-event () (sdl:update-display))))))
       </pre>
     </div>
         
@@ -433,6 +410,28 @@
       <br>&nbsp;</br><h2><a class=none name="dictionary">The LISPBUILDER-SDL-GFX dictionary Index</h2>
 	<ol>
 	        <li><a href="#*default-font*"><code>*default-font*</code></a>
+	          <li><a href="#*font-10x20*"><code>*font-10x20*</code></a>
+	          <li><a href="#*font-5x7*"><code>*font-5x7*</code></a>
+	          <li><a href="#*font-5x8*"><code>*font-5x8*</code></a>
+	          <li><a href="#*font-6x10*"><code>*font-6x10*</code></a>
+	          <li><a href="#*font-6x12*"><code>*font-6x12*</code></a>
+	          <li><a href="#*font-6x13*"><code>*font-6x13*</code></a>
+	          <li><a href="#*font-6x13b*"><code>*font-6x13b*</code></a>
+	          <li><a href="#*font-6x13o*"><code>*font-6x13o*</code></a>
+	          <li><a href="#*font-6x9*"><code>*font-6x9*</code></a>
+	          <li><a href="#*font-7x13*"><code>*font-7x13*</code></a>
+	          <li><a href="#*font-7x13b*"><code>*font-7x13b*</code></a>
+	          <li><a href="#*font-7x13o*"><code>*font-7x13o*</code></a>
+	          <li><a href="#*font-7x14*"><code>*font-7x14*</code></a>
+	          <li><a href="#*font-7x14b*"><code>*font-7x14b*</code></a>
+	          <li><a href="#*font-8x13*"><code>*font-8x13*</code></a>
+	          <li><a href="#*font-8x13b*"><code>*font-8x13b*</code></a>
+	          <li><a href="#*font-8x13o*"><code>*font-8x13o*</code></a>
+	          <li><a href="#*font-8x8*"><code>*font-8x8*</code></a>
+	          <li><a href="#*font-9x15*"><code>*font-9x15*</code></a>
+	          <li><a href="#*font-9x15b*"><code>*font-9x15b*</code></a>
+	          <li><a href="#*font-9x18*"><code>*font-9x18*</code></a>
+	          <li><a href="#*font-9x18b*"><code>*font-9x18b*</code></a>
 	          <li><a href="#draw-aa-circle"><code>draw-aa-circle</code></a>
 	          <li><a href="#draw-aa-circle-*"><code>draw-aa-circle-*</code></a>
 	          <li><a href="#draw-aa-ellipse"><code>draw-aa-ellipse</code></a>
@@ -482,6 +481,9 @@
 	          <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a>
 	          <li><a href="#draw-trigon"><code>draw-trigon</code></a>
 	          <li><a href="#draw-vline"><code>draw-vline</code></a>
+	          <li><a href="#font"><code>font</code></a>
+	          <li><a href="#font-height"><code>font-height</code></a>
+	          <li><a href="#font-width"><code>font-width</code></a>
 	          <li><a href="#free-font"><code>free-font</code></a>
 	          <li><a href="#initialise-default-font"><code>initialise-default-font</code></a>
 	          <li><a href="#initialise-font"><code>initialise-font</code></a>
@@ -490,6 +492,7 @@
 	          <li><a href="#roto-zoom-size"><code>roto-zoom-size</code></a>
 	          <li><a href="#roto-zoom-size-xy"><code>roto-zoom-size-xy</code></a>
 	          <li><a href="#roto-zoom-xy"><code>roto-zoom-xy</code></a>
+	          <li><a href="#set-default-font"><code>set-default-font</code></a>
 	          <li><a href="#with-bezier"><code>with-bezier</code></a>
 	          <li><a href="#with-curve"><code>with-curve</code></a>
 	          <li><a href="#with-shape"><code>with-shape</code></a>
@@ -599,7 +602,7 @@
 	<p>Enter the following at the REPL to load the examples included in the 
 	  LISPBUILDER-SDL-GFX-EXAMPLES package:</p>
 	<pre>
-	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-GFX-examples)
+	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-gfx-examples)
 	</pre>
 	<p>Run the examples by entering any of the following at the REPL:
 	</p>
@@ -643,13 +646,275 @@
 <p><br>[Special variable]<br><a class=none name='*default-font*'><b>*default-font*</b></a>
 <blockquote><br>
 
-When a LISPBUILDER-SDL-GFX function or macro has an &amp;OPTIONAL or :KEYword argument 
-FONT, the default action is to bind to *DEFAULT-FONT*.
-*DEFAULT-FONT* is set to NIL initially.
+<p>When a LISPBUILDER-SDL-GFX function or macro has an <code>OPTIONAL</code> or <code>KEY</code>word argument  <code>FONT</code>, the default action is to bind to <code>*DEFAULT-FONT*</code>.<code>*DEFAULT-FONT*</code> is set to <code>NIL</code> initially.  A font must be initialized by calling <a href="#initialise-default-font">INITIALISE-DEFAULT-FONT</a> prior to use. </p>
 
 </blockquote>
 
 <!-- End of entry for *DEFAULT-FONT* -->
+
+
+<!-- Entry for *FONT-10X20* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-10x20*'><b>*font-10x20*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 10x20 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-10X20* -->
+
+
+<!-- Entry for *FONT-5X7* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-5x7*'><b>*font-5x7*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 5x7 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-5X7* -->
+
+
+<!-- Entry for *FONT-5X8* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-5x8*'><b>*font-5x8*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 5x8 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-5X8* -->
+
+
+<!-- Entry for *FONT-6X10* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-6x10*'><b>*font-6x10*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 6x10 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-6X10* -->
+
+
+<!-- Entry for *FONT-6X12* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-6x12*'><b>*font-6x12*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 6x12 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-6X12* -->
+
+
+<!-- Entry for *FONT-6X13* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-6x13*'><b>*font-6x13*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 6x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-6X13* -->
+
+
+<!-- Entry for *FONT-6X13B* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-6x13b*'><b>*font-6x13b*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 6x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-6X13B* -->
+
+
+<!-- Entry for *FONT-6X13O* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-6x13o*'><b>*font-6x13o*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 6x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-6X13O* -->
+
+
+<!-- Entry for *FONT-6X9* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-6x9*'><b>*font-6x9*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 6x9 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-6X9* -->
+
+
+<!-- Entry for *FONT-7X13* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-7x13*'><b>*font-7x13*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 7x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-7X13* -->
+
+
+<!-- Entry for *FONT-7X13B* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-7x13b*'><b>*font-7x13b*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 7x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-7X13B* -->
+
+
+<!-- Entry for *FONT-7X13O* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-7x13o*'><b>*font-7x13o*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 7x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-7X13O* -->
+
+
+<!-- Entry for *FONT-7X14* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-7x14*'><b>*font-7x14*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 7x14 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-7X14* -->
+
+
+<!-- Entry for *FONT-7X14B* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-7x14b*'><b>*font-7x14b*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 7x14 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-7X14B* -->
+
+
+<!-- Entry for *FONT-8X13* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-8x13*'><b>*font-8x13*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 8x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-8X13* -->
+
+
+<!-- Entry for *FONT-8X13B* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-8x13b*'><b>*font-8x13b*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 8x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-8X13B* -->
+
+
+<!-- Entry for *FONT-8X13O* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-8x13o*'><b>*font-8x13o*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 8x13 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-8X13O* -->
+
+
+<!-- Entry for *FONT-8X8* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-8x8*'><b>*font-8x8*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 8x8 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-8X8* -->
+
+
+<!-- Entry for *FONT-9X15* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-9x15*'><b>*font-9x15*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 9x15 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-9X15* -->
+
+
+<!-- Entry for *FONT-9X15B* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-9x15b*'><b>*font-9x15b*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 9x15 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-9X15B* -->
+
+
+<!-- Entry for *FONT-9X18* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-9x18*'><b>*font-9x18*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 9x18 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-9X18* -->
+
+
+<!-- Entry for *FONT-9X18B* -->
+
+<p><br>[Special variable]<br><a class=none name='*font-9x18b*'><b>*font-9x18b*</b></a>
+<blockquote><br>
+
+<p>Contains the font data for an 9x18 bitmap font. </p>
+
+</blockquote>
+
+<!-- End of entry for *FONT-9X18B* -->
 
 
 <!-- Entry for DRAW-AA-CIRCLE -->
@@ -657,9 +922,9 @@ FONT, the default action is to bind to *DEFAULT-FONT*.
 <p><br>[Function]<br><a class=none name='draw-aa-circle'><b>draw-aa-circle</b> <i>p1 r <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-AA-CIRCLE-*
-
-  * P1 is the X/Y coordinate of the center of the antialiased circle, of type SDL:POINT.
+<p>See <a href="#draw-aa-circle-*">DRAW-AA-CIRCLE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the X/Y coordinate of the center of the antialiased circle, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -671,16 +936,12 @@ See DRAW-AA-CIRCLE-*
 <p><br>[Function]<br><a class=none name='draw-aa-circle-*'><b>draw-aa-circle-*</b> <i>x y r <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws an antialiased circle of color COLOR to the surface SURFACE.
-Note that this is not a &#039;filled circle&#039;. Only the circle circumference is drawn.
-
-  * X and Y specify the center coordinate of the circle, of type INTEGER.
-
-  * R is the circle radius, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws the circumference of a circle of color COLOR to the surface SURFACE using anti-aliasing. Use <a href="#draw-filled-circle-*">DRAW-FILLED-CIRCLE-*</a> to draw a filled circle. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the circle, of type <code>INTEGER</code>. </li>
+<li><code>R</code> is the circle radius, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -692,9 +953,9 @@ Note that this is not a &#039;filled circle&#039;. Only the circle circumference
 <p><br>[Function]<br><a class=none name='draw-aa-ellipse'><b>draw-aa-ellipse</b> <i>p1 rx ry <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-AA-ELLIPSE-*
-
-  * P1 is the X/Y coordinate of the center of the antialiased ellipse, of type SDL:POINT.
+<p>See <a href="#draw-aa-ellipse-*">DRAW-AA-ELLIPSE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the X/Y coordinate of the center of the ellipse, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -706,16 +967,12 @@ See DRAW-AA-ELLIPSE-*
 <p><br>[Function]<br><a class=none name='draw-aa-ellipse-*'><b>draw-aa-ellipse-*</b> <i>x y rx ry <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws an antialiased ellipse of color COLOR to the surface SURFACE.
-Note that this is not a &#039;filled ellipse&#039;. Only the ellipse circumference is drawn.
-
-  * X and Y specify the center coordinate of the ellipse, of type INTEGER.
-
-  * RX and RY is the ellipse radius, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws the circumference of an ellipse of color COLOR to the surface SURFACE using anti-aliasing. Use <a href="#draw-filled-ellipse-*">DRAW-FILLED-ELLIPSE-*</a> to draw a filled ellipse. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the ellipse, of type <code>INTEGER</code>. </li>
+<li><code>RX</code> and <code>RY</code> specify the ellipse radius, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -727,9 +984,9 @@ Note that this is not a &#039;filled ellipse&#039;. Only the ellipse circumferen
 <p><br>[Function]<br><a class=none name='draw-aa-line'><b>draw-aa-line</b> <i>point1 point2 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-AA-LINE-*
-
-  * POINT1 and POINT2 are the start and end x/y co-ordinates of the line, of type SDL:POINT.
+<p>See <a href="#draw-aa-line-*">DRAW-AA-LINE-*</a>-* </p><h5>Parameters </h5>
+<ul><li><code>POINT1</code> and <code>POINT2</code> are the start and end x/y co-ordinates of the line, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -741,15 +998,12 @@ See DRAW-AA-LINE-*
 <p><br>[Function]<br><a class=none name='draw-aa-line-*'><b>draw-aa-line-*</b> <i>x1 y1 x2 y2 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws an antialiased line of color COLOR to the surface SURFACE.
-
-  * X1 Y1 are the start X/Y coordinates of the line, of type INTEGER.
-
-  * X2 Y2 are the end X/Y coordinates of the line, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws an antialiased line of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>X1</code><code>Y1</code> are the start X/Y coordinates of the line, of type <code>INTEGER</code>. </li>
+<li><code>X2</code><code>Y2</code> are the end X/Y coordinates of the line, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -761,14 +1015,11 @@ Draws an antialiased line of color COLOR to the surface SURFACE.
 <p><br>[Function]<br><a class=none name='draw-aa-polygon'><b>draw-aa-polygon</b> <i>points <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw an antialiased polygon, of color COLOR to surface SURFACE.
-Note: The polygon is not filled, only the edges are drawn.
-
-  * POINTS is the list of vertices for the polygon. POINTS is a list of SDL:POINTs.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw the circumference of a polygon of color <code>COLOR</code> to surface SURFACE using the vertices in <code>POINTS</code>. The polygon is anti-aliased. Use <a href="#draw-filled-polygon-*">DRAW-FILLED-POLYGON-*</a> to draw a filled polygon. </p><h5>Parameters </h5>
+<ul><li><code>POINTS</code> is the list of vertices of type <code>SDL:POINT</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -780,14 +1031,11 @@ Note: The polygon is not filled, only the edges are drawn.
 <p><br>[Function]<br><a class=none name='draw-aa-trigon'><b>draw-aa-trigon</b> <i>point1 point2 point3 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw an antialiased trigon, of color COLOR to surface SURFACE.
-Note: The trigon is not filled, only the edges are drawn.
-
-  * POINT1, POINT2 and POINT3 specify the vertices of the trigon, of type SDL:POINT.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw the outline of a trigon or triangle, of color <code>COLOR</code> to surface <code>SURFACE</code> using anti-aliasing. Use <a href="#draw-filled-trigon-*">DRAW-FILLED-TRIGON-*</a> to draw a filled trigon. </p><h5>Parameters </h5>
+<ul><li><code>POINT1</code>, <code>POINT2</code> and <code>POINT3</code> specify the vertices of the trigon, of type <code>SDL:POINT</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -799,20 +1047,18 @@ Note: The trigon is not filled, only the edges are drawn.
 <p><br>[Function]<br><a class=none name='draw-bezier'><b>draw-bezier</b> <i>points steps <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a bezier curve to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
-
-  * POINTS contains the list of vertices. A vertex specifies a control point for the Bezier curve. 
-POINTS is a LIST of SDL:POINTs
-
-  * STEPS is the number of segments used to draw the Bezier curve.
-The greater the number of segments, the smoother the Bezier curve.
-
-Example:
-    (DRAW-BEZIER (LIST (SDL:POINT :X 60  :Y 40)
-                         (SDL:POINT :X 160 :Y 10)
-                         (SDL:POINT :X 170 :Y 150)
-                         (SDL:POINT :X 60 :Y 150))
-                   10)
+<p>Draw a bezier curve of color <code>COLOR</code> to the surface <code>SURFACE</code>. The shape of the Bezier curve is defined by several control points.  A control point is a vertex containing an X and Y coordinate pair. </p><h5>Parameters </h5>
+<ul><li><code>POINTS</code> is the list of control points of type <code>SDL:POINT</code>. </li>
+<li><code>STEPS</code> is the number of segments used to draw the Bezier curve. The greater the number of segments, the smoother the Bezier curve. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-BEZIER (LIST (SDL:POINT :X 60  :Y 40)
+                     (SDL:POINT :X 160 :Y 10)
+                     (SDL:POINT :X 170 :Y 150)
+                     (SDL:POINT :X 60 :Y 150))
+               10)
+</code></pre>
 
 </blockquote>
 
@@ -824,9 +1070,9 @@ Example:
 <p><br>[Function]<br><a class=none name='draw-box'><b>draw-box</b> <i>rect <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-BOX-*.
-
-  * RECT is filled rectangle to draw, of type SDL:RECTANGLE.
+<p>See <a href="#draw-box-*">DRAW-BOX-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>RECT</code> is the rectangle to fill, of type <code>SDL:RECTANGLE</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -838,15 +1084,12 @@ See DRAW-BOX-*.
 <p><br>[Function]<br><a class=none name='draw-box-*'><b>draw-box-*</b> <i>x y w h <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a filled rectangle of color COLOR to surface SURFACE.
-
-  * X and Y are the INTEGER coordinates of the top-left corner of the rectangle.
-
-  * W and H are the width and height of the rectangle, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws a filled rectangle of color <code>COLOR</code> to surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> are the <code>INTEGER</code> coordinates of the top-left corner of the rectangle. </li>
+<li><code>W</code> and <code>H</code> are the width and height of the rectangle, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -855,12 +1098,12 @@ Draws a filled rectangle of color COLOR to surface SURFACE.
 
 <!-- Entry for DRAW-CHARACTER-SHADED -->
 
-<p><br>[Function]<br><a class=none name='draw-character-shaded'><b>draw-character-shaded</b> <i>c p1 fg-color bg-color <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-character-shaded'><b>draw-character-shaded</b> <i>c p1 fg-color bg-color <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-CHARACTER-SHADED-*.
-
-  * P1 is the x and y position to render the text, of type SDL:POINT.
+<p>See <a href="#draw-character-shaded-*">DRAW-CHARACTER-SHADED-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the x and y position to render the character, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -869,26 +1112,20 @@ See DRAW-CHARACTER-SHADED-*.
 
 <!-- Entry for DRAW-CHARACTER-SHADED-* -->
 
-<p><br>[Function]<br><a class=none name='draw-character-shaded-*'><b>draw-character-shaded-*</b> <i>c x y fg-color bg-color <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-character-shaded-*'><b>draw-character-shaded-*</b> <i>c x y fg-color bg-color <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw character C with foreground and background colors FG-COLOR and BG-COLOR 
-onto surface SURFACE, using the Solid mode. 
-
-  * C is the character to render. 
-
-  * X/Y are the x and y position coordinates, as INTEGERS.
-
-  * FG-COLOR color is the foreground color used to render text, of type SDL:SDL-COLOR
-
-  * BG-COLOR color is the background color used to render text, of type SDL:SDL-COLOR
-
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
-
-  * Returns the font FONT.
-
-For example:
-  * (DRAW-CHARACTER-SHADED-* &quot;Hello World!&quot; 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)
+<p>Draw the character <code>C</code> at location <code>X</code><code>Y</code> using font <code>FONT</code> with text color <code>FG-COLOR</code> and background color <code>BG-COLOR</code> onto surface <code>SURFACE</code>.  The surface background is filled with <code>BG-COLOR</code> so the surface cannot be keyed over other surfaces. </p><ul><li><code>C</code> is the character to render.  </li>
+<li><code>X</code> and <code>Y</code> are the x and y position coordinates, as <code>INTEGERS</code>. </li>
+<li><code>FG-COLOR</code> color is the character color, of type SDL:SDL-COLOR </li>
+<li><code>BG-COLOR</code> color is the background color used to fill the surface <code>SURFACE</code>, of type SDL:SDL-COLOR </li>
+<li><code>FONT</code> is the font face used to render the character. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the font <code>FONT</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-CHARACTER-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)
+</code></pre>
 
 </blockquote>
 
@@ -897,12 +1134,12 @@ For example:
 
 <!-- Entry for DRAW-CHARACTER-SOLID -->
 
-<p><br>[Function]<br><a class=none name='draw-character-solid'><b>draw-character-solid</b> <i>c p1 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-character-solid'><b>draw-character-solid</b> <i>c p1 <tt>&amp;key</tt> font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-CHARACTER-SOLID-*.
-
-  * P1 is the x and y position to render the text, of type SDL:POINT.
+<p>See <a href="#draw-character-solid-*">DRAW-CHARACTER-SOLID-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the x and y position to render the character, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -911,23 +1148,20 @@ See DRAW-CHARACTER-SOLID-*.
 
 <!-- Entry for DRAW-CHARACTER-SOLID-* -->
 
-<p><br>[Function]<br><a class=none name='draw-character-solid-*'><b>draw-character-solid-*</b> <i>c x y <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-character-solid-*'><b>draw-character-solid-*</b> <i>c x y <tt>&amp;key</tt> font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw character C with color COLOR onto surface SURFACE, using the Solid mode. 
-
-  * C is the character to render. 
-
-  * X/Y are the x and y position coordinates, as INTEGERS.
-
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
-
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
-
-  * Returns the font FONT.
-
-For example:
-  * (DRAW-CHARACTER-SOLID-* &quot;Hello World!&quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)
+<p>Draw character <code>C</code> at location <code>X</code><code>Y</code> using font <code>FONT</code> with text color <code>COLOR</code> onto surface <code>SURFACE</code>. The character is keyed onto SURFACE. </p><h5>Parameters </h5>
+<ul><li><code>C</code> is the character to render.  </li>
+<li><code>X</code> and <code>Y</code> are the x and y position coordinates, as <code>INTEGERS</code>. </li>
+<li><code>FONT</code> is the font face used to render the character. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> color is the character color, of type <code>SDL:SDL-COLOR</code>. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the font <code>FONT</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-CHARACTER-SOLID-* &amp;quot;Hello World!&amp;quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -939,9 +1173,9 @@ For example:
 <p><br>[Function]<br><a class=none name='draw-circle'><b>draw-circle</b> <i>p1 r <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-CIRCLE-*
-
-  * P1 is the X/Y coordinate of the center of the circle, of type SDL:POINT.
+<p>See <a href="#draw-circle-*">DRAW-CIRCLE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the X/Y coordinate of the center of the circle, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -953,16 +1187,12 @@ See DRAW-CIRCLE-*
 <p><br>[Function]<br><a class=none name='draw-circle-*'><b>draw-circle-*</b> <i>x y r <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a circle of color COLOR to the surface SURFACE.
-Note that this is not a &#039;filled circle&#039;. Only the circle circumference is drawn.
-
-  * X and Y specify the center coordinate of the circle, of type INTEGER.
-
-  * R is the circle radius, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws a circle circumference of color <code>COLOR</code> to the surface <code>SURFACE</code>. Use <a href="#draw-filled-circle-*">DRAW-FILLED-CIRCLE-*</a> to draw a filled circle. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the circle, of type <code>INTEGER</code>. </li>
+<li><code>R</code> is the circle radius, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -974,30 +1204,20 @@ Note that this is not a &#039;filled circle&#039;. Only the circle circumference
 <p><br>[Function]<br><a class=none name='draw-curve'><b>draw-curve</b> <i>points type segments <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a Cattmul-Rom spline to the surface SURFACE using color COLOR.
-
-  * POINTS is a list of vertices or waypoints for the spline. A vertex is of type SDL:POINT
-
-  * TYPE is the shape type where TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When TYPE is :LINE-STRIP, a single continuous line is drawn through the
-specified waypoints.
-
-    * When TYPE is :LINES, a line is drawn to alternate waypoint pairs.
-
-    * When TYPE is :POINTS, a single point is drawn at each waypoint.
-
-  * SEGMENTS is the  number of segments used to draw the Catmull-Rom spline.
-The greater the number of segments, the smoother the spline.
-
-Example:
-(DRAW-CURVE (LIST (SDL:POINT :X 60  :Y 40)
-		  (SDL:POINT :X 160 :Y 10)
-		  (SDL:POINT :X 170 :Y 150)
-		  (SDL:POINT :X 60  :Y 150))
-	    :LINE-STRIP
-	    10)
+<p>Draw a Cattmul-Rom spline using color <code>COLOR</code> to the surface <code>SURFACE</code>. The shape of the curve is defined by waypoints.  A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Parameters </h5>
+<ul><li><code>POINTS</code> is a list of waypoints or vetices for the spline, of type <code>SDL:POINT</code></li>
+<li><code>TYPE</code> describes the line style used to draw the curve and may be one of  <code>:LINE-STRIP</code>, <code>:LINES</code>, or <code>:POINTS</code>. Use <code>:LINE-STRIP</code> to draw a single continuous line through the specified waypoints. Use <code>:LINES</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+<li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline.   Default is 10 segments if unspecified. The greater the number of segments,  the smoother the spline. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>.  </li>
+<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-CURVE (LIST (SDL:POINT :X 60  :Y 40)
+    	  (SDL:POINT :X 160 :Y 10)
+	  (SDL:POINT :X 170 :Y 150)
+	  (SDL:POINT :X 60  :Y 150))
+    :LINE-STRIP
+    10)
+</code></pre>
 
 </blockquote>
 
@@ -1009,9 +1229,9 @@ Example:
 <p><br>[Function]<br><a class=none name='draw-ellipse'><b>draw-ellipse</b> <i>p1 rx ry <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-ELLIPSE-*
-
-  * P1 is the X/Y coordinate of the center of the ellipse, of type SDL:POINT.
+<p>See <a href="#draw-ellipse-*">DRAW-ELLIPSE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the X/Y coordinate of the center of the ellipse, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1023,16 +1243,12 @@ See DRAW-ELLIPSE-*
 <p><br>[Function]<br><a class=none name='draw-ellipse-*'><b>draw-ellipse-*</b> <i>x y rx ry <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws an ellipse of color COLOR to the surface SURFACE.
-Note that this is not a &#039;filled ellipse&#039;. Only the ellipse circumference is drawn.
-
-  * X and Y specify the center coordinate of the ellipse, of type INTEGER.
-
-  * RX and RY is the ellipse radius, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws an ellipse circumference of color <code>COLOR</code> to the surface <code>SURFACE</code>. Use <a href="#draw-filled-ellipse-*">DRAW-FILLED-ELLIPSE-*</a> to draw a filled ellipse. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the ellipse, of type <code>INTEGER</code>. </li>
+<li><code>RX</code> and <code>RY</code> specify the ellipse radius, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1044,9 +1260,9 @@ Note that this is not a &#039;filled ellipse&#039;. Only the ellipse circumferen
 <p><br>[Function]<br><a class=none name='draw-filled-circle'><b>draw-filled-circle</b> <i>p1 r <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-FILLED-CIRCLE-*
-
-  * P1 is the X/Y coordinate of the center of the filled circle, of type SDL:POINT.
+<p>See <a href="#draw-filled-circle-*">DRAW-FILLED-CIRCLE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the X/Y coordinate of the center of the filled circle, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1058,15 +1274,12 @@ See DRAW-FILLED-CIRCLE-*
 <p><br>[Function]<br><a class=none name='draw-filled-circle-*'><b>draw-filled-circle-*</b> <i>x y r <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws an filled circle of color COLOR to the surface SURFACE.
-
-  * X and Y specify the center coordinate of the circle, of type INTEGER.
-
-  * R is the circle radius, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws a filled circle of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the circle, of type <code>INTEGER</code>. </li>
+<li><code>R</code> is the circle radius, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1078,9 +1291,9 @@ Draws an filled circle of color COLOR to the surface SURFACE.
 <p><br>[Function]<br><a class=none name='draw-filled-ellipse'><b>draw-filled-ellipse</b> <i>p1 rx ry <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-FILLED-ELLIPSE-*
-
-  * P1 is the X/Y coordinate of the center of the filled ellipse, of type SDL:POINT.
+<p>See <a href="#draw-filled-ellipse-*">DRAW-FILLED-ELLIPSE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the X/Y coordinate of the center of the filled ellipse, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1092,15 +1305,12 @@ See DRAW-FILLED-ELLIPSE-*
 <p><br>[Function]<br><a class=none name='draw-filled-ellipse-*'><b>draw-filled-ellipse-*</b> <i>x y rx ry <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a filled ellipse of color COLOR to the surface SURFACE.
-
-  * X and Y specify the center coordinate of the ellipse, of type INTEGER.
-
-  * RX and RY is the ellipse radius, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws a filled ellipse of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the ellipse, of type <code>INTEGER</code>. </li>
+<li><code>RX</code> and <code>RY</code> specify the ellipse radius, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1112,9 +1322,9 @@ Draws a filled ellipse of color COLOR to the surface SURFACE.
 <p><br>[Function]<br><a class=none name='draw-filled-pie'><b>draw-filled-pie</b> <i>p1 rad start end <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-PIE-*
-
-  * P1 is the X/Y coordinate of the center of the filled pie, of type SDL:POINT.
+<p>See <a href="#draw-filled-pie-*">DRAW-FILLED-PIE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the X/Y coordinate of the center of the filled pie, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1126,19 +1336,14 @@ See DRAW-PIE-*
 <p><br>[Function]<br><a class=none name='draw-filled-pie-*'><b>draw-filled-pie-*</b> <i>x y rad start end <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a filled pie of color COLOR to the surface SURFACE.
-
-  * X and Y specify the center coordinate of the pie, of type INTEGER.
-
-  * RAD is the pie radius, of type INTEGER.
-
-  * START is the pie start, of type INTEGER.
-
-  * END is the pie end, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws a filled pie of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the pie, of type <code>INTEGER</code>. </li>
+<li><code>RAD</code> is the pie radius, of type <code>INTEGER</code>. </li>
+<li><code>START</code> is the pie start, of type <code>INTEGER</code>. </li>
+<li><code>END</code> is the pie end, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1150,13 +1355,11 @@ Draws a filled pie of color COLOR to the surface SURFACE.
 <p><br>[Function]<br><a class=none name='draw-filled-polygon'><b>draw-filled-polygon</b> <i>points <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a filled polygon, of color COLOR to surface SURFACE.
-
-  * POINTS is the list of vertices for the polygon. POINTS is a list of SDL:POINTs.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw a filled polygon, of color <code>COLOR</code> to surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>POINTS</code> is the list of vertices of type <code>SDL:POINT</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1168,13 +1371,11 @@ Draw a filled polygon, of color COLOR to surface SURFACE.
 <p><br>[Function]<br><a class=none name='draw-filled-trigon'><b>draw-filled-trigon</b> <i>point1 point2 point3 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a filled trigon, of color COLOR to surface SURFACE.
-
-  * POINT1, POINT2 and POINT3 specify the vertices of the trigon, of type SDL:POINT.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw a filled trigon, of color <code>COLOR</code> to surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>POINT1</code>, <code>POINT2</code> and <code>POINT3</code> specify the vertices of the trigon, of type <code>SDL:POINT</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1186,11 +1387,7 @@ Draw a filled trigon, of color COLOR to surface SURFACE.
 <p><br>[Generic function]<br><a class=none name='draw-font'><b>draw-font</b> <i><tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Blit the cached SURFACE in FONT to the destination surface SURFACE. 
-The cached surface is created during a previous call to any of the DRAW-STRING* functions. 
-Uses POSITION in the cached SURFACE to render to the X/Y coordinates on the destination SURFACE. 
-
-This function can speed up blitting when the text remains unchanged between screen updates.
+<p>Blit the cached SURFACE in FONT to the destination surface SURFACE.  The cached surface is created during a previous call to any of the DRAW-STRING* functions.  Uses POSITION in the cached SURFACE to render to the X/Y coordinates on the destination SURFACE.  </p><p>This function can speed up blitting when the text remains unchanged between screen updates. </p>
 
 </blockquote>
 
@@ -1214,8 +1411,7 @@ This function can speed up blitting when the text remains unchanged between scre
 <p><br>[Generic function]<br><a class=none name='draw-font-at'><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-FONT. 
-POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT.
+<p>See DRAW-FONT.  POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT. </p>
 
 </blockquote>
 
@@ -1239,8 +1435,7 @@ POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT.
 <p><br>[Generic function]<br><a class=none name='draw-font-at-*'><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-FONT. 
-X and Y are used to position the cached SURFACE, where X and Y are INTEGERS.
+<p>See DRAW-FONT.  X and Y are used to position the cached SURFACE, where X and Y are INTEGERS. </p>
 
 </blockquote>
 
@@ -1264,15 +1459,12 @@ X and Y are used to position the cached SURFACE, where X and Y are INTEGERS.
 <p><br>[Function]<br><a class=none name='draw-hline'><b>draw-hline</b> <i>x1 x2 y <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a horizontal line of color COLOR from X1 to X2 through Y onto the surface SURFACE. 
-
-  * X1 and X2 are the horizontal start and end points of the line, of type INTEGER.
-
-  * X is the vertical INTEGER coordinate that the horizontal line must intersect.  
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw a horizontal line of color <code>COLOR</code> from <code>X1</code> to <code>X2</code> through <code>Y</code> onto the surface <code>SURFACE</code>.  </p><h5>Parameters </h5>
+<ul><li><code>X1</code> and <code>X2</code> are the horizontal start and end points of the line, of type <code>INTEGER</code>. </li>
+<li><code>Y</code> is the vertical <code>INTEGER</code> coordinate that the horizontal line must intersect.   </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1284,9 +1476,9 @@ Draws a horizontal line of color COLOR from X1 to X2 through Y onto the surface 
 <p><br>[Function]<br><a class=none name='draw-line'><b>draw-line</b> <i>point1 point2 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-LINE-*
-
-  * POINT1 and POINT2 are the start and end x/y co-ordinates of the line, of type SDL:POINT.
+<p>See <a href="#draw-line-*">DRAW-LINE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>POINT1</code> and <code>POINT2</code> are the start and end x/y co-ordinates of the line, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1298,15 +1490,12 @@ See DRAW-LINE-*
 <p><br>[Function]<br><a class=none name='draw-line-*'><b>draw-line-*</b> <i>x1 y1 x2 y2 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a line of color COLOR to the surface SURFACE.
-
-  * X1 Y1 are the start X/Y coordinates of the line, of type INTEGER.
-
-  * X2 Y2 are the end X/Y coordinates of the line, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws a line of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>X1</code><code>Y1</code> are the start X/Y coordinates of the line, of type <code>INTEGER</code>. </li>
+<li><code>X2</code><code>Y2</code> are the end X/Y coordinates of the line, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1318,9 +1507,9 @@ Draws a line of color COLOR to the surface SURFACE.
 <p><br>[Function]<br><a class=none name='draw-pie'><b>draw-pie</b> <i>p1 rad start end <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-PIE-*
-
-  * P1 is the X/Y coordinate of the center of the pie, of type SDL:POINT.
+<p>See <a href="#draw-pie-*">DRAW-PIE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the X/Y coordinate of the center of the pie, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1332,20 +1521,14 @@ See DRAW-PIE-*
 <p><br>[Function]<br><a class=none name='draw-pie-*'><b>draw-pie-*</b> <i>x y rad start end <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a pie of color COLOR to the surface SURFACE.
-Note that this is not a &#039;filled pie&#039;. Only the pie circumference is drawn.
-
-  * X and Y specify the center coordinate of the pie, of type INTEGER.
-
-  * RAD is the pie radius, of type INTEGER.
-
-  * START is the pie start, of type INTEGER.
-
-  * END is the pie end, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draws a pie of color <code>COLOR</code> to the surface <code>SURFACE</code>. Use <a href="#draw-filled-pie-*">DRAW-FILLED-PIE-*</a> to draw a filled pie. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the pie, of type <code>INTEGER</code>. </li>
+<li><code>RAD</code> is the pie radius, of type <code>INTEGER</code>. </li>
+<li><code>START</code> is the pie start, of type <code>INTEGER</code>. </li>
+<li><code>END</code> is the pie end, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1357,9 +1540,9 @@ Note that this is not a &#039;filled pie&#039;. Only the pie circumference is dr
 <p><br>[Function]<br><a class=none name='draw-pixel'><b>draw-pixel</b> <i>position <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-PIXEL-*.
-
-  * POSITION is the X/Y coordinate of the pixel, of type SDL:POINT.
+<p>See <a href="#draw-pixel-*">DRAW-PIXEL-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>POSITION</code> is the X/Y coordinate of the pixel, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1371,13 +1554,11 @@ See DRAW-PIXEL-*.
 <p><br>[Function]<br><a class=none name='draw-pixel-*'><b>draw-pixel-*</b> <i>x y <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw the color COLOR to the surface SURFACE at the specified X and Y coordiates. 
-
-  * X Y specify the coordinates of the pixel, and are of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the new color of the pixel, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw a single pixel of color <code>COLOR</code> to the surface <code>SURFACE</code> at the specified <code>X</code> and <code>Y</code> coordiates.  </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the coordinates of the pixel, and are of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the pixel color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1389,14 +1570,11 @@ Draw the color COLOR to the surface SURFACE at the specified X and Y coordiates.
 <p><br>[Function]<br><a class=none name='draw-polygon'><b>draw-polygon</b> <i>points <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a polygon, of color COLOR to surface SURFACE.
-Note: The polygon is not filled, only the edges are drawn.
-
-  * POINTS is the list of vertices for the polygon. POINTS is a list of SDL:POINTs.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw the circumference of a polygon of color <code>COLOR</code> to surface SURFACE using the vertices in <code>POINTS</code>. Use <a href="#draw-filled-polygon-*">DRAW-FILLED-POLYGON-*</a> to draw a filled polygon. </p><h5>Parameters </h5>
+<ul><li><code>POINTS</code> is the list of vertices for the polygon. <code>POINTS</code> is a list of <code>SDL:POINT</code>s. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1408,9 +1586,9 @@ Note: The polygon is not filled, only the edges are drawn.
 <p><br>[Function]<br><a class=none name='draw-rectangle'><b>draw-rectangle</b> <i>rect <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-RECTANGLE-*.
-
-  * RECT is the rectangle to draw, of type SDL:RECTANGLE.
+<p>See <a href="#draw-rectangle-*">DRAW-RECTANGLE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>RECT</code> is the rectangle to draw, of type <code>SDL:RECTANGLE</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1422,15 +1600,12 @@ See DRAW-RECTANGLE-*.
 <p><br>[Function]<br><a class=none name='draw-rectangle-*'><b>draw-rectangle-*</b> <i>x y w h <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a rectangle of color COLOR to the surface SURFACE.
-
-  * X and Y are the INTEGER coordinates of the top-left corner of the rectangle.
-
-  * W and H are the width and height of the rectangle, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw a rectangle outline of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> are the <code>INTEGER</code> coordinates of the top-left corner of the rectangle. </li>
+<li><code>W</code> and <code>H</code> are the width and height of the rectangle, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1442,25 +1617,18 @@ Draws a rectangle of color COLOR to the surface SURFACE.
 <p><br>[Function]<br><a class=none name='draw-shape'><b>draw-shape</b> <i>points type <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a polygon using the vertices in POINTS to the surface SURFACE using color COLOR.
-
-  * POINTS is a list of vertices. A vertex is of type SDL:POINT
-
-  * TYPE is the shape type where TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When TYPE is :LINE-STRIP, a single continuous line is drawn through the vertices in POINTS
-
-    * When TYPE is :LINES, a line is drawn to alternate vertex pairs.
-
-    * When TYPE is :POINTS, a single point is drawn at each vertex.
-
-Example:
-(DRAW-SHAPE (LIST (SDL:POINT :X 60  :Y 40)
-		    (SDL:POINT :X 160 :Y 10)
-		    (SDL:POINT :X 170 :Y 150)
-   		    (SDL:POINT :X 60  :Y 150))
-	    :LINE-STRIP)
+<p>Draw a polygon of color <code>COLOR</code> to the surface <code>SURFACE</code> using the vertices in <code>POINTS</code>. </p><h5>Parameters </h5>
+<ul><li><code>POINTS</code> is a list of vertices, of type <code>SDL:POINT</code></li>
+<li><code>TYPE</code> describes the line style used to draw the polygon and may be one of  <code>:LINE-STRIP</code>, <code>:LINES</code>, or <code>:POINTS</code>. Use <code>:LINE-STRIP</code> to draw a single continuous line through the specified waypoints. Use <code>:LINES</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-SHAPE (LIST (SDL:POINT :X 60  :Y 40)
+	    (SDL:POINT :X 160 :Y 10)
+	    (SDL:POINT :X 170 :Y 150)
+	    (SDL:POINT :X 60  :Y 150))
+    :LINE-STRIP)
+</code></pre>
 
 </blockquote>
 
@@ -1469,12 +1637,12 @@ Example:
 
 <!-- Entry for DRAW-STRING-SHADED -->
 
-<p><br>[Function]<br><a class=none name='draw-string-shaded'><b>draw-string-shaded</b> <i>c p1 fg-color bg-color <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-shaded'><b>draw-string-shaded</b> <i>c p1 fg-color bg-color <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-STRING-SHADED-*.
-
-  * P1 is the x and y position to render the text, of type SDL:POINT.
+<p>See <a href="#draw-string-shaded-*">DRAW-STRING-SHADED-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the x and y position to render the text, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1483,26 +1651,20 @@ See DRAW-STRING-SHADED-*.
 
 <!-- Entry for DRAW-STRING-SHADED-* -->
 
-<p><br>[Function]<br><a class=none name='draw-string-shaded-*'><b>draw-string-shaded-*</b> <i>c x y fg-color bg-color <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-shaded-*'><b>draw-string-shaded-*</b> <i>c x y fg-color bg-color <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw text C with foreground and background colors FG-COLOR and BG-COLOR color COLOR 
-onto surface SURFACE, using the SHADED mode. 
-
-  * C is the text to render. 
-
-  * X/Y are the x and y position coordinates, as INTEGERS.
-
-  * FG-COLOR color is the foreground color used to render text, of type SDL:SDL-COLOR
-
-  * BG-COLOR color is the background color used to render text, of type SDL:SDL-COLOR
-
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
-
-  * Returns the font FONT.
-
-For example:
-  * (DRAW-STRING-SHADED-* &quot;Hello World!&quot; 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)
+<p>Draw text <code>C</code> using at location <code>X</code><code>Y</code> using font <code>FONT</code> with text color <code>FG-COLOR</code> and background color <code>BG-COLOR</code> onto surface <code>SURFACE</code>.  The surface background is filled with <code>BG-COLOR</code> so the surface cannot be keyed over other surfaces. </p><ul><li><code>C</code> is the text to render.  </li>
+<li><code>X</code> and <code>Y</code> are the x and y position coordinates, as <code>INTEGERS</code>. </li>
+<li><code>FG-COLOR</code> color is the text color, of type SDL:SDL-COLOR </li>
+<li><code>BG-COLOR</code> color is the background color used to fill the surface <code>SURFACE</code>, of type SDL:SDL-COLOR </li>
+<li><code>FONT</code> is the font face used to render the text. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the font <code>FONT</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)
+</code></pre>
 
 </blockquote>
 
@@ -1511,12 +1673,12 @@ For example:
 
 <!-- Entry for DRAW-STRING-SOLID -->
 
-<p><br>[Function]<br><a class=none name='draw-string-solid'><b>draw-string-solid</b> <i>c p1 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-solid'><b>draw-string-solid</b> <i>c p1 <tt>&amp;key</tt> font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-STRING-SOLID-*.
-
-  * P1 is the x and y position to render the text, of type SDL:POINT.
+<p>See <a href="#draw-string-solid-*">DRAW-STRING-SOLID-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the x and y position to render the text, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1525,23 +1687,20 @@ See DRAW-STRING-SOLID-*.
 
 <!-- Entry for DRAW-STRING-SOLID-* -->
 
-<p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>c x y <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>c x y <tt>&amp;key</tt> font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw text C with color COLOR onto surface SURFACE, using the Solid mode. 
-
-  * C is the text to render. 
-
-  * X/Y are the x and y position coordinates, as INTEGERS.
-
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
-
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
-
-  * Returns the font FONT.
-
-For example:
-  * (DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)
+<p>Draw text <code>C</code> at location <code>X</code><code>Y</code> using font <code>FONT</code> with color <code>COLOR</code> onto surface <code>SURFACE</code>. The text is keyed onto SURFACE. </p><h5>Parameters </h5>
+<ul><li><code>C</code> is the text to render.  </li>
+<li><code>X</code> and <code>Y</code> are the x and y position coordinates, as <code>INTEGERS</code>. </li>
+<li><code>FONT</code> is the font face used to render the string. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> color is the text color, of type <code>SDL:SDL-COLOR</code>. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the font <code>FONT</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SOLID-* &amp;quot;Hello World!&amp;quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -1553,14 +1712,11 @@ For example:
 <p><br>[Function]<br><a class=none name='draw-trigon'><b>draw-trigon</b> <i>point1 point2 point3 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a trigon, of color COLOR to surface SURFACE.
-Note: The trigon is not filled, only the edges are drawn.
-
-  * POINT1, POINT2 and POINT3 specify the vertices of the trigon, of type SDL:POINT.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw the outline of a trigon or triangle, of color <code>COLOR</code> to surface <code>SURFACE</code>. Use <a href="#draw-filled-trigon-*">DRAW-FILLED-TRIGON-*</a> to draw a filled trigon. </p><h5>Parameters </h5>
+<ul><li><code>POINT1</code>, <code>POINT2</code> and <code>POINT3</code> specify the vertices of the trigon, of type <code>SDL:POINT</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -1572,19 +1728,76 @@ Note: The trigon is not filled, only the edges are drawn.
 <p><br>[Function]<br><a class=none name='draw-vline'><b>draw-vline</b> <i>x y1 y2 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draws a vertical line of color COLOR from Y1 to Y2 through X onto the surface SURFACE. 
-
-  * X is the horizontal INTEGER coordinate that the vertical line must intersect.  
-
-  * Y1 and Y2 are the vertical start and end points of the line, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL:SDL-SURFACE. Binds to SDL:*DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type SDL:COLOR or SDL:COLOR-A. Binds to SDL:*DEFAULT-COLOR* by default.
+<p>Draw a vertical line of color <code>COLOR</code> from <code>Y1</code> to <code>Y2</code> through <code>X</code> onto the surface <code>SURFACE</code>.  </p><h5>Parameters </h5>
+<ul><li><code>X</code> is the horizontal <code>INTEGER</code> coordinate that the vertical line must intersect.   </li>
+<li><code>Y1</code> and <code>Y2</code> are the vertical start and end points of the line, of type <code>INTEGER</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
 <!-- End of entry for DRAW-VLINE -->
+
+
+<!-- Entry for FONT -->
+
+<p><br>[Standard class]<br><a class=none name='font'><b>font</b></a>
+<blockquote><br>
+
+<p>A <code>FONT</code> object manages the resources for the font. These resources include  any cached surface as well as the foreign array containing the font data. </p><p>The cached surface is created by a call to any of the RENDER-STRING* functions.  Use <a href="#draw-font">DRAW-FONT</a>, <a href="#draw-font-at">DRAW-FONT-AT</a>  or <a href="#draw-font-at-*">DRAW-FONT-AT-*</a> to draw the cached surface. </p><p>Prior to the first call to a RENDER-STRING* function, the cached surface is <code>NIL</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for FONT -->
+
+
+<!-- Entry for FONT-HEIGHT -->
+
+<p><br>[Generic function]<br><a class=none name='font-height'><b>font-height</b> <i>font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FONT-HEIGHT -->
+
+
+<!-- Entry for FONT-HEIGHT -->
+
+<p><br>[Method]<br><a class=none><b>font-height</b> <i>(font font)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FONT-HEIGHT -->
+
+
+<!-- Entry for FONT-WIDTH -->
+
+<p><br>[Generic function]<br><a class=none name='font-width'><b>font-width</b> <i>font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FONT-WIDTH -->
+
+
+<!-- Entry for FONT-WIDTH -->
+
+<p><br>[Method]<br><a class=none><b>font-width</b> <i>(font font)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FONT-WIDTH -->
 
 
 <!-- Entry for FREE-FONT -->
@@ -1592,7 +1805,7 @@ Draws a vertical line of color COLOR from Y1 to Y2 through X onto the surface SU
 <p><br>[Generic function]<br><a class=none name='free-font'><b>free-font</b> <i>font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Free&#039;s the resources associated with the FONT.
+
 
 </blockquote>
 
@@ -1604,19 +1817,7 @@ Free&#039;s the resources associated with the FONT.
 <p><br>[Method]<br><a class=none><b>free-font</b> <i>(font font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Free resources associated with the font FONT.
-
-</blockquote>
-
-<!-- End of entry for FREE-FONT -->
-
-
-<!-- Entry for FREE-FONT -->
-
-<p><br>[Method]<br><a class=none><b>free-font</b> <i>(font sdl-font)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-Free resources associated with the font FONT.
+<p>Free resources associated with the font <code>FONT</code>. This includes freeing the cached surface and the foreign array containing the font data. </p>
 
 </blockquote>
 
@@ -1625,12 +1826,10 @@ Free resources associated with the font FONT.
 
 <!-- Entry for INITIALISE-DEFAULT-FONT -->
 
-<p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i></i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i><tt>&amp;optional</tt> font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Creates a new FONT object from the font data in SDL-GFX-CFFI:*FONT-DATA*.
-Binds the symbol *DEFAULT-FONT* to FONT
-  * Returns a new FONT, or NIL if unsuccessful.
+<p>Creates a new <code>FONT</code> object from the font definition in <code>FONT-DEFINITION</code>. Sets the font <code>FONT</code> as the default font to be used for subsequent font rendering or drawing operations.  </p><p>Binds the symbol <code>*DEFAULT-FONT*</code> to font. Functions that take a <code>FONT</code> argument use <code>*DEFAULT-FONT*</code>  unless otherwise specified. Returns a new <code>FONT</code>, or <code>NIL</code> if unsuccessful. </p>
 
 </blockquote>
 
@@ -1639,12 +1838,10 @@ Binds the symbol *DEFAULT-FONT* to FONT
 
 <!-- Entry for INITIALISE-FONT -->
 
-<p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>font-data width height</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Creates a new FONT object from the font data in FONT-DATA.
-Binds the symbol *DEFAULT-FONT* to FONT.
-  * Returns a new FONT, or NIL if unsuccessful.
+<p>Creates a new <code>FONT</code> object from the font data in <code>FONT-DEFINITION</code>. Returns a new <code>FONT</code>, or <code>NIL</code> if unsuccessful. </p>
 
 </blockquote>
 
@@ -1653,28 +1850,21 @@ Binds the symbol *DEFAULT-FONT* to FONT.
 
 <!-- Entry for RENDER-STRING-SHADED -->
 
-<p><br>[Function]<br><a class=none name='render-string-shaded'><b>render-string-shaded</b> <i>string fg-color bg-color <tt>&amp;key</tt> free cache</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='render-string-shaded'><b>render-string-shaded</b> <i>string fg-color bg-color <tt>&amp;key</tt> font free cache</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Render string STRING with foreground and background colors FG-COLOR and BG-COLOR 
-into a new SURFACE, using the Shaded mode. 
-Unless :FREE T, the caller is responsible for freeing the new SURFACE.
-Use :CACHE T to cache the newly created surface in the FONT object.
-
-  * STRING is the text to render. 
-
-  * FG-COLOR color is the foreground color used to render text, of type SDL:SDL-COLOR
-
-  * BG-COLOR color is the background color used to render text, of type SDL:SDL-COLOR
-
-  * FREE when T will free the old cached SURFACE in FONT.
-
-  * CACHE when T will cache the newly created SURFACE in FONT.
-
-  * Returns the new cached surface SDL:SDL-SURFACE.
-
-For example:
-  * (DRAW-STRING-SHADED &quot;Hello World!&quot; F-COLOR B-COLOR)
+<p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>FG-COLOR</code> and background color <code>BG-COLOR</code> to a new <code>SURFACE</code>.  The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is filled with <code>BG-COLOR</code> so the surface cannot be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters </h5>
+<ul><li><code>STRING</code> is the text to render.  </li>
+<li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>FG-COLOR</code> color is the text color, of type SDL:SDL-COLOR </li>
+<li><code>BG-COLOR</code> color is the background color used to fill the surface, of type SDL:SDL-COLOR </li>
+<li><code>FREE</code> when <code>T</code> will free any exisitng cached surface in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns a new cached surface <code>SDL:SDL-SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SHADED &amp;quot;Hello World!&amp;quot; F-COLOR B-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -1683,25 +1873,20 @@ For example:
 
 <!-- Entry for RENDER-STRING-SOLID -->
 
-<p><br>[Function]<br><a class=none name='render-string-solid'><b>render-string-solid</b> <i>string <tt>&amp;key</tt> color free cache</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='render-string-solid'><b>render-string-solid</b> <i>string <tt>&amp;key</tt> font color free cache</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Render string STRING with color COLOR into a new SURFACE, using the Solid mode. 
-Unless :FREE T, the caller is responsible for freeing the new SURFACE.
-Use :CACHE T to cache the newly created surface in the FONT object.
-
-  * STRING is the text to render. 
-
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
-
-  * FREE when T will free the old cached SURFACE in FONT.
-
-  * CACHE when T will cache the newly created SURFACE in FONT.
-
-  * Returns the new cached surface SDL:SDL-SURFACE.
-
-For example:
-  * (DRAW-STRING-SOLID &quot;Hello World!&quot; :COLOR A-COLOR)
+<p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>COLOR</code> to a new <code>SURFACE</code>.  The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is transparent and therefore can be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters </h5>
+<ul><li><code>STRING</code> is the text to render.  </li>
+<li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>COLOR</code> color is the text color, of type <code>SDL:SDL-COLOR</code>. </li>
+<li><code>FREE</code> when <code>T</code> will free any exisitng cached surface in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns a new cached surface <code>SDL:SDL-SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SOLID &amp;quot;Hello World!&amp;quot; :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -1744,30 +1929,36 @@ For example:
 <!-- End of entry for ROTO-ZOOM-XY -->
 
 
+<!-- Entry for SET-DEFAULT-FONT -->
+
+<p><br>[Function]<br><a class=none name='set-default-font'><b>set-default-font</b> <i>font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the font <code>FONT</code> as the default font to be used for subsequent font rendering or drawing operations. Binds the symbol <code>*DEFAULT-FONT*</code> to font.  Functions that take a <code>FONT</code> argument use <code>*DEFAULT-FONT*</code> unless otherwise specified. Returns a new <code>FONT</code>, or <code>NIL</code> if unsuccessful. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-DEFAULT-FONT -->
+
+
 <!-- Entry for WITH-BEZIER -->
 
 <p><br>[Macro]<br><a class=none name='with-bezier'><b>with-bezier</b> <i>(<tt>&amp;optional</tt> segments) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a bezier curve to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
-A vertex specifies a control point for the Bezier curve. A vertex may be added
-using ADD-VERTEX which accepts an SDL:POINT, or the x/y spread version 
-ADD-VERTEX-*.
-
-ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-BEZIER.
-
-The number of segments used to draw the Bezier curve defaults to 10.
-However this number may be increased by specifying SEGMENTS. 
-The greater the number of segments, the smoother the Bezier curve.
-
-Example:
-(SDL:WITH-SURFACE (DSP SDL:*DEFAULT-DISPLAY*)
-  (SDL:WITH-COLOR (COL (SDL:COLOR))
-    (WITH-BEZIER (30)
-      (ADD-VERTEX-* 60  40)
-      (ADD-VERTEX-* 160 10)
-      (ADD-VERTEX-* 170 150)
-      (ADD-VERTEX-* 60  150))))
+<p>Draw a bezier curve of color <code>*DEFAULT-COLOR*</code> to the surface <code>*DEFAULT-SURFACE*</code>. The shape of the Bezier curve is defined by control points.  A control point is a vertex containing an X and Y coordinate pair. </p><h5>Local Methods </h5>
+<p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or  </li>
+<li><code>ADD-VERTEX-*</code> which is the x/y spread version </li>
+</ul><p><code>ADD-VERTEX</code> and <code>ADD-VERTEX-*</code> are valid only within the scop of <code>WITH-BEZIER</code>. </p><h5>Parameters </h5>
+<ul><li><code>SEGMENTS</code> is the number of segments used to draw the Bezier curve.   Default is 10 segments if unspecified. The greater the number of segments,  the smoother the curve. </li>
+</ul><h5>Example </h5>
+<pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
+   (WITH-BEZIER (30)
+     (ADD-VERTEX-* 60  40)
+     (ADD-VERTEX-* 160 10)
+     (ADD-VERTEX-* 170 150)
+     (ADD-VERTEX-* 60  150)))
+</code></pre>
 
 </blockquote>
 
@@ -1779,35 +1970,20 @@ Example:
 <p><br>[Macro]<br><a class=none name='with-curve'><b>with-curve</b> <i>(shape-type <tt>&amp;optional</tt> segments) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a Cattmul-Rom spline to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
-A vertex specifies a waypoint for the spline. A vertex may be added
-using ADD-VERTEX which accepts an SDL:POINT, or the x/y spread version 
-ADD-VERTEX-*.
-
-ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-CURVE.
-
-  * WITH-CURVE accepts a SHAPE-TYPE where SHAPE-TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When SHAPE-TYPE is :LINE-STRIP, a single continuous line is drawn through the
-specified waypoints.
-
-    * When SHAPE-TYPE is :LINES, a line is drawn to alternate waypoint pairs.
-
-    * When SHAPE-TYPE is :POINTS, a single point is drawn at each waypoint.
-
-The number of segments used to draw the Catmull-Rom spline defaults to 10.
-However this number may be increased by specifying SEGMENTS. 
-The greater the number of segments, the smoother the spline.
-
-Example:
-(SDL:WITH-SURFACE (DSP SDL:*DEFAULT-DISPLAY*)
-  (SDL:WITH-COLOR (COL (SDL:COLOR))
-    (WITH-CURVE (:LINE-STRIP 30)
-      (ADD-VERTEX-* 60  40)
-      (ADD-VERTEX-* 160 10)
-      (ADD-VERTEX-* 170 150)
-      (ADD-VERTEX-* 60  150))))
+<p>Draw a Cattmul-Rom spline of color <code>*DEFAULT-COLOR*</code> to the surface <code>*DEFAULT-SURFACE*</code>. The shape of the curve is defined by waypoints.  A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Local Methods </h5>
+<p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or  </li>
+<li><code>ADD-VERTEX-*</code> which is the x/y spread version </li>
+</ul><p><code>ADD-VERTEX</code> and <code>ADD-VERTEX-*</code> are valid only within the scope of <code>WITH-CURVE</code>. </p><h5>Parameters </h5>
+<ul><li><code>SHAPE-TYPE</code> describes the line style used to draw the curve and may be one of  <code>:LINE-STRIP</code>, <code>:LINES</code>, or <code>:POINTS</code>. Use <code>:LINE-STRIP</code> to draw a single continuous line through the specified waypoints. Use <code>:LINES</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+<li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline.   Default is 10 segments if unspecified. The greater the number of segments,  the smoother the spline. </li>
+</ul><h5>Example </h5>
+<pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
+   (WITH-CURVE (:LINE-STRIP 30)
+     (ADD-VERTEX-* 60  40)
+     (ADD-VERTEX-* 160 10)
+     (ADD-VERTEX-* 170 150)
+     (ADD-VERTEX-* 60  150)))
+</code></pre>
 
 </blockquote>
 
@@ -1819,30 +1995,19 @@ Example:
 <p><br>[Macro]<br><a class=none name='with-shape'><b>with-shape</b> <i>(shape-type) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw a polygon to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
-Addional vertices are added using ADD-VERTEX which accepts an SDL:POINT, 
-or the x/y spread version ADD-VERTEX-*.
-
-ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE.
-
-  * WITH-SHAPE accepts a SHAPE-TYPE where SHAPE-TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When SHAPE-TYPE is :LINE-STRIP, a single continuous line is drawn through the
-specified vertices.
-
-    * When SHAPE-TYPE is :LINES, a line is drawn to alternate vertex pairs.
-
-    * When SHAPE-TYPE is :POINTS, a single point is drawn at each vertex.
-
-Example:
-(SDL:WITH-SURFACE (DSP SDL:*DEFAULT-DISPLAY*)
-  (SDL:WITH-COLOR (COL (SDL:COLOR))
-    (WITH-SHAPE (:POINTS)
-      (ADD-VERTEX-* 60  40)
-      (ADD-VERTEX-* 160 10)
-      (ADD-VERTEX-* 170 150)
-      (ADD-VERTEX-* 60  150))))
+<p>Draw a polygon of color <code>*DEFAULT-COLOR*</code> to the surface <code>*DEFAULT-SURFACE*</code>. </p><h5>Local Methods </h5>
+<p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or  </li>
+<li><code>ADD-VERTEX-*</code> which is the x/y spread version </li>
+</ul><p>ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE. </p><h5>Parameters </h5>
+<ul><li><code>SHAPE-TYPE</code> describes the line style used to draw the shape and may be one of  <code>:LINE-STRIP</code>, <code>:LINES</code>, or <code>:POINTS</code>. Use <code>:LINE-STRIP</code> to draw a single continuous line through the specified waypoints. Use <code>:LINES</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+</ul><h5>Example </h5>
+<pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
+   (WITH-SHAPE (:POINTS)
+     (ADD-VERTEX-* 60  40)
+     (ADD-VERTEX-* 160 10)
+     (ADD-VERTEX-* 170 150)
+     (ADD-VERTEX-* 60  150)))
+</code></pre>
 
 </blockquote>
 
@@ -1875,9 +2040,18 @@ Example:
 
 <ul>
   <li>
-    Documentation prepared using Edi Weitz's  
-    <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+    Documentation prepared using:
   </li>
+  <ul>
+    <li>
+      Edi Weitz's  
+      <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+    </li>
+    <li>
+      Gary King's 
+      <a href="http://common-lisp.net/project/cl-markdown/">CL-MARKDOWN</a>.
+      </li>
+  </ul>
 </ul>
 
 <p>
