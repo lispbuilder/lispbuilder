@@ -1,5 +1,5 @@
 ;;; -*- lisp -*-
-
+ 
 (in-package #:cl-user)
 
 (defpackage #:lispbuilder-sdl-gfx
@@ -7,10 +7,31 @@
   (:nicknames #:sdl-gfx)
   (:documentation "The main package of `lispbuilder-gfx-sdl'.")
   (:import-from #:lispbuilder-sdl
-		lispbuilder-sdl:free-font
 		lispbuilder-sdl:draw-font
 		lispbuilder-sdl:draw-font-at
-		lispbuilder-sdl:draw-font-at-*)
+		lispbuilder-sdl:draw-font-at-*
+		lispbuilder-sdl:*font-5x7*
+		lispbuilder-sdl:*font-5x8*
+		lispbuilder-sdl:*font-6x9*
+		lispbuilder-sdl:*font-6x10*
+		lispbuilder-sdl:*font-6x12*
+		lispbuilder-sdl:*font-6x13*
+		lispbuilder-sdl:*font-6x13B*
+		lispbuilder-sdl:*font-6x13O*
+		lispbuilder-sdl:*font-7x13*
+		lispbuilder-sdl:*font-7x13B*
+		lispbuilder-sdl:*font-7x13O*
+		lispbuilder-sdl:*font-7x14*
+		lispbuilder-sdl:*font-7x14B*
+		lispbuilder-sdl:*font-8x8*
+		lispbuilder-sdl:*font-8x13*
+		lispbuilder-sdl:*font-8x13B*
+		lispbuilder-sdl:*font-8x13O*
+		lispbuilder-sdl:*font-9x15*
+		lispbuilder-sdl:*font-9x15B*
+		lispbuilder-sdl:*font-9x18*
+		lispbuilder-sdl:*font-9x18B*
+		lispbuilder-sdl:*font-10x20*)
   (:export
 
    ;;; globals.lisp
@@ -130,6 +151,8 @@
    #:with-shape
 
    ;;; font.lisp
+   #:font
+   #:free-font
    #:initialise-default-font
    #:initialise-font
    #:render-string-shaded
@@ -142,11 +165,37 @@
    #:draw-character-solid-*
    #:draw-string-solid
    #:draw-string-solid-*
+   #:set-default-font
+   #:font-width
+   #:font-height
 
    ;;; Exports from lispbuilder-sdl
-   #:free-font
    #:draw-font
    #:draw-font-at
    #:draw-font-at-*
+
+   ;;; Exports from lispbuilder-sdl-gfx-cffi
+   #:*font-8x8*
+   #:*font-5x7*
+   #:*font-5x8*
+   #:*font-6x9*
+   #:*font-6x10*
+   #:*font-6x12*
+   #:*font-6x13*
+   #:*font-6x13B*
+   #:*font-6x13O*
+   #:*font-7x13*
+   #:*font-7x13B*
+   #:*font-7x13O*
+   #:*font-7x14*
+   #:*font-7x14B*
+   #:*font-8x13*
+   #:*font-8x13B*
+   #:*font-8x13O*
+   #:*font-9x15*
+   #:*font-9x15B*
+   #:*font-9x18*
+   #:*font-9x18B*
+   #:*font-10x20*
    ))
 

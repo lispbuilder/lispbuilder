@@ -24,13 +24,6 @@
 	       (:file "library" :depends-on ("package"))
 	       (:file "gfx" :depends-on ("package" "library")))
 	      :serial t)
-     (:module "documentation"
-	      :components
-	      ((:html-file "index")
-	       (:static-file "sdl_gfx1.jpg")
-	       (:doc-file "README")
-	       (:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")))
      (:module "build"
 	      :components
 	      ((:static-file "sdlgfxswig.i")))))

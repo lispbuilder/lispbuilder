@@ -2,62 +2,94 @@
 (in-package :lispbuilder-sdl-gfx)
 
 
-(defun render-string-solid (string &key (color sdl:*default-color*) (free nil) (cache nil))
-  "Render string STRING with color COLOR into a new SURFACE, using the Solid mode. 
-Unless :FREE T, the caller is responsible for freeing the new SURFACE.
-Use :CACHE T to cache the newly created surface in the FONT object.
+(defun render-string-solid (string &key
+			    (font *default-font*)
+			    (color sdl:*default-color*)
+			    (free nil)
+			    (cache nil))
+  "Render the string `STRING` using font `FONT` with text color `COLOR` to a new `SURFACE`. 
+The dimensions of the new surface are height == `FONT` height, and width == `FONT` width * `STRING` length.
+The surface background is transparent and therefore can be keyed over other surfaces.
+Use `:CACHE T` to cache the new surface in the `FONT` object.
+When `:FREE T` any exisiting cached surface in `FONT` is automatically freed.
+When `:FREE NIL` the caller is responsible for freeing any existing cached surface in `FONT`.
 
-  * STRING is the text to render. 
+##### Parameters
 
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
+* `STRING` is the text to render. 
+* `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `COLOR` color is the text color, of type `SDL:SDL-COLOR`.
+* `FREE` when `T` will free any exisitng cached surface in `FONT`.
+* `CACHE` when `T` will cache the newly created SURFACE in `FONT`.
 
-  * FREE when T will free the old cached SURFACE in FONT.
+##### Returns
 
-  * CACHE when T will cache the newly created SURFACE in FONT.
+* Returns a new cached surface `SDL:SDL-SURFACE`.
 
-  * Returns the new cached surface SDL:SDL-SURFACE.
+##### Example
 
-For example:
-  * (DRAW-STRING-SOLID \"Hello World!\" :COLOR A-COLOR)"
-  (check-type color sdl:sdl-color)
+    \(DRAW-STRING-SOLID \"Hello World!\" :COLOR A-COLOR\)"
   (when free
-    (sdl:free-cached-surface *default-font*))
-  (let ((surf (sdl:convert-surface :surface (sdl:create-surface (* (font-width *default-font*)
+    (sdl:free-cached-surface font))
+  (let ((surf (sdl:convert-surface :surface (sdl:create-surface (* (font-width font)
 								   (length string))
-								(font-height *default-font*)
+								(font-height font)
 								:key-color sdl:*black*)
 				   :free-p t)))
     (draw-string-solid-* string 0 0
+			 :font font
 			 :surface surf
 			 :color color)
     (when cache
-      (setf (sdl:cached-surface *default-font*) surf))
+      (setf (sdl:cached-surface font) surf))
     surf))
 
-(defun draw-character-solid (c p1 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "See DRAW-CHARACTER-SOLID-*.
+(defun draw-character-solid (c p1 &key
+			     (font *default-font*)
+			     (surface sdl:*default-surface*)
+			     (color sdl:*default-color*))
+  "See [DRAW-CHARACTER-SOLID-*](#draw-character-solid-*).
 
-  * P1 is the x and y position to render the text, of type SDL:POINT."
+##### Parameters
+
+* `P1` is the x and y position to render the character, of type `SDL:POINT`."
   (check-type p1 sdl:point)
-  (draw-character-solid-* c (sdl:x p1) (sdl:y p1) :surface surface :color color))
+  (draw-character-solid-* c (sdl:x p1) (sdl:y p1)
+			  :font font
+			  :surface surface
+			  :color color))
 
-(defun draw-character-solid-* (c x y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "Draw character C with color COLOR onto surface SURFACE, using the Solid mode. 
+(defun draw-character-solid-* (c x y &key
+			       (font *default-font*)
+			       (surface sdl:*default-surface*)
+			       (color sdl:*default-color*))
+  "Draw character `C` at location `X` `Y` using font `FONT` with text color `COLOR` onto surface `SURFACE`.
+The character is keyed onto SURFACE.
 
-  * C is the character to render. 
+##### Parameters
 
-  * X/Y are the x and y position coordinates, as INTEGERS.
+* `C` is the character to render. 
+* `X` and `Y` are the x and y position coordinates, as `INTEGERS`.
+* `FONT` is the font face used to render the character. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` color is the character color, of type `SDL:SDL-COLOR`.
 
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
+##### Returns
 
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
+* Returns the font `FONT`.
 
-  * Returns the font FONT.
+##### Example
 
-For example:
-  * (DRAW-CHARACTER-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)"
+    \(DRAW-CHARACTER-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR\)"
+  (check-type font font)
+  (unless surface
+    (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
+
+  (unless (default-font-p font)
+    (set-default-font font))
+  
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::character-color (sdl:fp surface) x y c
 				   (sdl:pack-color color)))
@@ -65,30 +97,52 @@ For example:
     (sdl-gfx-cffi::character-RGBA (sdl:fp surface) x y c
 				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-string-solid (c p1 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "See DRAW-STRING-SOLID-*.
+(defun draw-string-solid (c p1 &key
+			  (font *default-font*)
+			  (surface sdl:*default-surface*)
+			  (color sdl:*default-color*))
+  "See [DRAW-STRING-SOLID-*](#draw-string-solid-*).
 
-  * P1 is the x and y position to render the text, of type SDL:POINT."
+##### Parameters
+
+* `P1` is the x and y position to render the text, of type `SDL:POINT`."
   (check-type p1 sdl:point)
-  (draw-string-solid-* c (sdl:x p1) (sdl:y p1) :surface surface :color color))
+  (draw-string-solid-* c (sdl:x p1) (sdl:y p1)
+		       :font font
+		       :surface surface
+		       :color color))
 
-(defun draw-string-solid-* (c x y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "Draw text C with color COLOR onto surface SURFACE, using the Solid mode. 
+(defun draw-string-solid-* (c x y &key
+			    (font *default-font*)
+			    (surface sdl:*default-surface*)
+			    (color sdl:*default-color*))
+  "Draw text `C` at location `X` `Y` using font `FONT` with color `COLOR` onto surface `SURFACE`.
+The text is keyed onto SURFACE.
 
-  * C is the text to render. 
+##### Parameters
 
-  * X/Y are the x and y position coordinates, as INTEGERS.
+* `C` is the text to render. 
+* `X` and `Y` are the x and y position coordinates, as `INTEGERS`.
+* `FONT` is the font face used to render the string. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` color is the text color, of type `SDL:SDL-COLOR`.
 
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
+##### Returns
 
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
+* Returns the font `FONT`.
 
-  * Returns the font FONT.
+##### Example
 
-For example:
-  * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)"
+    \(DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR\)"
+  (check-type font font)
+  (unless surface
+    (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
+
+  (unless (default-font-p font)
+    (set-default-font font))
+
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::string-color (sdl:fp surface) x y c
 				(sdl:pack-color color)))
