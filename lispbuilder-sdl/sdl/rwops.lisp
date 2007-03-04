@@ -8,8 +8,8 @@
   (sdl-cffi::SDL-Free-RW (fp rwops))
   (tg:cancel-finalization rwops))
 
-(defun create-RWops-from-file (filename path)
-  (let ((rwops (sdl-base::create-RWops-from-file filename path)))
+(defun create-RWops-from-file (filename)
+  (let ((rwops (sdl-base::create-RWops-from-file filename)))
     (if (sdl-base::is-valid-ptr rwops)
 	(make-instance 'rwops :rwops rwops)
 	nil)))

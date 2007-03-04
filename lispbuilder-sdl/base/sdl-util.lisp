@@ -51,9 +51,9 @@
 	(apply #'logior keywords))
       (apply #'logior keyword-args)))
 
-(defun load-image (filename path)
+(defun load-image (filename)
   "load in the supplied filename, must be a bmp file"
-  (let ((file (namestring (merge-pathnames filename path))))
+  (let ((file (namestring filename)))
     (if (and (stringp file) (probe-file file)) ; LJC: Make sure filename is a string and the filename exists.
 	(sdl-cffi::SDL-Load-BMP-RW (sdl-cffi::sdl-RW-From-File file "rb") 1)
 	(error "File ~A does not exist." file))))

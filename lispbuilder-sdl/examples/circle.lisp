@@ -79,3 +79,20 @@
 	     (display-fps 10 200 sdl:*default-display*)
 	     (sdl:update-display)))))
 
+(defun circle-5 ()
+  (sdl:with-init ()
+    (setf (sdl:frame-rate) 0)
+    (sdl:window 320 240 :title-caption "Circle-5: Filled Circles" :icon-caption "Circle-5: Filled Circles")
+
+    (fps-init)
+    (sdl:initialise-default-font sdl:*font-5x7*)
+    (sdl:render-string-solid "Calculating FPS....." :color sdl:*white* :cache t :free t)
+
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:video-expose-event () (sdl:update-display))
+      (:idle ()
+	     (sdl:draw-filled-circle-* (random 320) (random 240) (random 50)
+				       :color (sdl:color :r (random 255) :g (random 255) :b (random 255)))
+	     (display-fps 10 200 sdl:*default-display*)
+	     (sdl:update-display)))))

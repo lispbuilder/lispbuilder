@@ -46,16 +46,16 @@ Binds the symbol *DEFAULT-FONT* to FONT
 
 (defmethod free-font ((font bitmap-font))
   "Free resources associated with the font FONT."
-  (when (sdl:cached-surface font)
-    (sdl:free-cached-surface font))
-  (cffi:foreign-free (font-data font))
-  #-clisp(maphash #'(lambda (key val)
-		      (declare (ignore key))
-		      (when val
-			(free-surface (glyph-surface val))))
-		  (characters font))
-  (clrhash (characters font))
   (tg:cancel-finalization font)
+  (when (cached-surface font)
+    (free-cached-surface font))
+  (cffi:foreign-free (font-data font))
+;;   #-clisp(maphash #'(lambda (key val)
+;; 		      (declare (ignore key))
+;; 		      (when val
+;; 			(free-surface (glyph-surface val))))
+;; 		  (characters font))
+  (clrhash (characters font))
   font)
 
 (defun glyph (char font)
