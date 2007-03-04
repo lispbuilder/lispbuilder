@@ -21,7 +21,7 @@
 	       (:file "generics" :depends-on ("package"))
 	       (:file "globals" :depends-on ("package"))
 	       (:file "font" :depends-on ("package" "generics" "globals"))
-	       #-clisp(:file "cffi-finalizers" :depends-on ("font" "package" "globals"))
+	       (:file "cffi-finalizers" :depends-on ("font" "package" "globals"))
 	       (:file "sdl-util-ttf" :depends-on ("font" "globals" "package"))
 	       (:file "string-solid" :depends-on ("sdl-util-ttf"))
 	       (:file "string-shaded" :depends-on ("sdl-util-ttf"))

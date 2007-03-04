@@ -9,24 +9,25 @@
 			    (color sdl:*default-color*)
 			    (free nil)
 			    (cache nil))
-  "Render text TEXT using font FONT with color COLOR into a new SURFACE, using the Solid mode. 
-Unless :FREE T, the caller is responsible for freeing the new SURFACE.
-Use :CACHE T to cache the newly created surface in the FONT object.
+  "Render text `TEXT` using font `FONT` with color `COLOR` into a new `SURFACE`, using the Solid mode. 
+Unless `:FREE T`, the caller is responsible for freeing the new `SURFACE`.
+Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 
-  * TEXT is the text to render.
+##### Parameters
 
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
+* `TEXT` is the text to render, of type `STRING`.
+* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default. 
+* `COLOR` is the color used to render the `TEXT`, of type `SDL:SDL-COLOR`
+* `FREE` when `T` will free the existing cached `SURFACE` in `FONT`.
+* `CACHE` when `T` will cache the newly created `SURFACE` in `FONT`.
 
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
+##### Return
 
-  * FREE when T will free the old cached SURFACE in FONT.
+* Returns the new surface `SDL:SDL-SURFACE`.
 
-  * CACHE when T will cache the newly created SURFACE in FONT.
+##### Example
 
-  * Returns the new cached surface SDL:SDL-SURFACE.
-
-For example:
-  * (DRAW-STRING-SOLID \"Hello World!\" :FONT *DEFAULT-FONT* :COLOR A-COLOR)"
+     \(DRAW-STRING-SOLID \"Hello World!\" :FONT *DEFAULT-FONT* :COLOR A-COLOR\)"
   (check-type font font)
   (check-type color sdl:sdl-color)
   (when free
@@ -42,9 +43,11 @@ For example:
 			  (font *default-font*)
 			  (surface sdl:*default-surface*)
 			  (color sdl:*default-color*))
-  "See DRAW-STRING-SOLID-*.
+  "See [DRAW-STRING-SOLID-*](#draw-string-solid-*).
 
-  * POSITION is the x and y position to render the text, of type SDL:POINT."
+##### Parmeters
+
+* `POSITION` is the `X` and `Y` coordinates to render `TEXT`, of type `SDL:POINT`."
   (check-type position sdl:point) 
   (draw-string-solid-* text (sdl:x position) (sdl:y position)
 		       :font font
@@ -55,22 +58,25 @@ For example:
 			    (font *default-font*)
 			    (surface sdl:*default-surface*)
 			    (color sdl:*default-color*))
-  "Draw text TEXT using font FONT with color COLOR onto surface SURFACE, using the Solid mode. 
+  "Draw text `TEXT` using font `FONT` with color `COLOR` onto surface `SURFACE`, using the Solid mode. 
 
-  * TEXT is the text to render.
+##### Parameters
 
-  * X/Y are the x and y position coordinates, as INTEGERS.
+* `TEXT` is the text to render, of type `STRING`.
+* `X` and `Y` are the x and y coordinates of the `TEXT`, as `INTEGER`s.
+* `FONT` is a `FONT` object.  Binds to `\*DEFAULT-FONT\*` by default. 
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. 
+* `COLOR` is the color used to render `TEXT`, of type `SDL:SDL-COLOR`
 
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
+##### Return
 
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
+* Returns the font `FONT`.
 
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
+##### Example
 
-  * Returns the font FONT.
-
-For example:
-  * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)"
+    \(DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR\)"
+  (unless surface
+    (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (sdl:with-surface (font-surface (render-string-solid text
 						       :font font
