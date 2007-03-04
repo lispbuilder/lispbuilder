@@ -63,6 +63,8 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 onto surface `SURFACE`. 
 The surface background is filled with `BG-COLOR` so the surface cannot be keyed over other surfaces.
 
+##### Parameters
+
 * `C` is the character to render. 
 * `X` and `Y` are the x and y position coordinates, as `INTEGERS`.
 * `FG-COLOR` color is the character color, of type SDL:SDL-COLOR
