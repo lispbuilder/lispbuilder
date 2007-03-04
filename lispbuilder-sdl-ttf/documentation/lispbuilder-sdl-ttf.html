@@ -390,9 +390,8 @@
   (sdl:with-init ()
     (sdl:window 320 240)
     (sdl-ttf:initialise-default-font)
-    (sdl:with-surface (disp sdl:*default-display*)
-      (sdl-ttf:draw-string-solid-* "Hello TTF World!" 25 50
-				   :color (sdl:color :r 255 :g 0 :b 255)))
+    (sdl-ttf:draw-string-solid-* "Hello TTF World!" 25 50
+			   :color (sdl:color :r 255 :g 0 :b 255))
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl:update-display))))
@@ -640,10 +639,7 @@
 <p><br>[Special variable]<br><a class=none name='*default-font*'><b>*default-font*</b></a>
 <blockquote><br>
 
-When a LISPBUILDER-SDL-TTF function or macro has an &amp;OPTIONAL or :KEYword argument 
-FONT, the default action is to bind to *default-font*.
-*default-font* is set to NIL initially.
-WITH-OPEN-FONT, INITIALISE-FONT, AND INITIALISE-DEFAULT-FONT will bind *default-font* to a Truetype font FONT.
+<p>When a <code>LISPBUILDER-SDL-TTF</code> function or macro has an <code>OPTIONAL</code> or <code>KEY</code>word argument  <code>FONT</code>, the default action is to bind to <code>*DEFAULT-FONT*</code>. <code>*DEFAULT-FONT*</code> is set to <code>NIL</code> initially. A font must be initialized by calling <a href="#with-open-font">WITH-OPEN-FONT</a>,  <a href="#initialise-font">INITIALISE-FONT</a>, or <a href="#initialise-default-font">INITIALISE-DEFAULT-FONT</a>.  These will bind <code>*DEFAULT-FONT*</code> to a Truetype font <code>FONT</code>. </p>
 
 </blockquote>
 
@@ -655,7 +651,7 @@ WITH-OPEN-FONT, INITIALISE-FONT, AND INITIALISE-DEFAULT-FONT will bind *default-
 <p><br>[Special variable]<br><a class=none name='*default-font-path*'><b>*default-font-path*</b></a>
 <blockquote><br>
 
-The path to the default font, &quot;Bitstream Vera&quot;
+<p>The path to the default Truetype font, <code>&amp;quot;Bitstream Vera&amp;quot;</code></p>
 
 </blockquote>
 
@@ -667,10 +663,7 @@ The path to the default font, &quot;Bitstream Vera&quot;
 <p><br>[Function]<br><a class=none name='close-font'><b>close-font</b> <i><tt>&amp;key</tt> font *default-font*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Closes the font FONT when the font library is intitialized. 
-NOTE: Does not uninitialise the font library. Does not bind *DEFAULT-FONT* to NIL. 
-
-  * Returns T if successful, or NIL if the font cannot be closed or the font library is not initialized. 
+<p>Closes the font <code>FONT</code> when the <code>SDL_TTF</code> font library is intitialized.  NOTE: <code>CLOSE-FONT</code> does not uninitialise the font library, and does not bind <code>*DEFAULT-FONT*</code> to <code>NIL</code>. Returns <code>T</code>  if successful, or <code>NIL</code> if the font cannot be closed or the <code>SDL_TTF</code> font library is not initialized. </p>
 
 </blockquote>
 
@@ -682,11 +675,7 @@ NOTE: Does not uninitialise the font library. Does not bind *DEFAULT-FONT* to NI
 <p><br>[Generic function]<br><a class=none name='draw-font'><b>draw-font</b> <i><tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Blit the cached SURFACE in FONT to the destination surface SURFACE. 
-The cached surface is created during a previous call to any of the DRAW-STRING* functions. 
-Uses POSITION in the cached SURFACE to render to the X/Y coordinates on the destination SURFACE. 
-
-This function can speed up blitting when the text remains unchanged between screen updates.
+<p>Blit the cached SURFACE in FONT to the destination surface SURFACE.  The cached surface is created during a previous call to any of the DRAW-STRING* functions.  Uses POSITION in the cached SURFACE to render to the X/Y coordinates on the destination SURFACE.  </p><p>This function can speed up blitting when the text remains unchanged between screen updates. </p>
 
 </blockquote>
 
@@ -710,8 +699,7 @@ This function can speed up blitting when the text remains unchanged between scre
 <p><br>[Generic function]<br><a class=none name='draw-font-at'><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-FONT. 
-POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT.
+<p>See DRAW-FONT.  POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT. </p>
 
 </blockquote>
 
@@ -735,8 +723,7 @@ POINT is used to position the cached SURFACE, where POINT is of type SDL:POINT.
 <p><br>[Generic function]<br><a class=none name='draw-font-at-*'><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-FONT. 
-X and Y are used to position the cached SURFACE, where X and Y are INTEGERS.
+<p>See DRAW-FONT.  X and Y are used to position the cached SURFACE, where X and Y are INTEGERS. </p>
 
 </blockquote>
 
@@ -757,11 +744,11 @@ X and Y are used to position the cached SURFACE, where X and Y are INTEGERS.
 
 <!-- Entry for DRAW-STRING-BLENDED -->
 
-<p><br>[Function]<br><a class=none name='draw-string-blended'><b>draw-string-blended</b> <i>text position <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-blended'><b>draw-string-blended</b> <i>text position <tt>&amp;key</tt> font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-STRING-BLENDED-*.
-  * :POSITION is the x and y position to render the text, of type SDL:POINT.
+<p>See <a href="#draw-string-blended-*">DRAW-STRING-BLENDED-*</a>. </p><ul><li><code>POSITION</code> is the <code>X</code> and <code>Y</code> coordinates to render <code>TEXT</code>, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -770,33 +757,20 @@ See DRAW-STRING-BLENDED-*.
 
 <!-- Entry for DRAW-STRING-BLENDED-* -->
 
-<p><br>[Function]<br><a class=none name='draw-string-blended-*'><b>draw-string-blended-*</b> <i>text x y <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-blended-*'><b>draw-string-blended-*</b> <i>text x y <tt>&amp;key</tt> font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw text TEXT using font :FONT with color :COLOR onto surface :SURFACE, using the Blended mode. 
-Caches the new surface in the FONT object. 
-Note: Calls RENDER-STRING-BLENDED with :FREE T so the old cached surface is automatically free&#039;d. 
-
-  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
-
-  * X/Y are the x and y position coordinates, as INTEGERS.
-
-  * ENCODING specifies the format of the text to render and is one of: 
-    * :LATIN1
-    * :UTF8
-    * :UNICODE
-    * :GLYPH
-
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
-
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
-
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
-
-  * Returns the font FONT.
-
-For example:
-  * (DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
+<p>Draw text <code>TEXT</code> using font <code>FONT</code> with color <code>COLOR</code> onto surface <code>SURFACE</code>, using the Blended mode.  </p><h5>Parameters </h5>
+<ul><li><code>TEXT</code> is the text to render, of type <code>STRING</code>. </li>
+<li><code>X</code> and <code>Y</code> are the x and y coordinates of the <code>TEXT</code>, as <code>INTEGER</code>s. </li>
+<li><code>FONT</code> is a <code>FONT</code> object.  Binds to <code>*DEFAULT-FONT*</code> by default.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>.  </li>
+<li><code>COLOR</code> is the color used to render <code>TEXT</code>, of type <code>SDL:SDL-COLOR</code></li>
+</ul><h5>Return </h5>
+<ul><li>Returns the font <code>FONT</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SOLID-* &amp;quot;Hello World!&amp;quot; 0 0 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -805,12 +779,12 @@ For example:
 
 <!-- Entry for DRAW-STRING-SHADED -->
 
-<p><br>[Function]<br><a class=none name='draw-string-shaded'><b>draw-string-shaded</b> <i>text position fg-color bg-color <tt>&amp;key</tt> encoding font surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-shaded'><b>draw-string-shaded</b> <i>text position fg-color bg-color <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-STRING-SHADED-*
-
-  * :POSITION is the x and y position to render the text, of type SDL:POINT.
+<p>See <a href="#draw-string-shaded-*">DRAW-STRING-SHADED-*</a></p><h5>Parmeters </h5>
+<ul><li><code>POSITION</code> is the <code>X</code> and <code>Y</code> coordinates to render <code>TEXT</code>, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -819,36 +793,21 @@ See DRAW-STRING-SHADED-*
 
 <!-- Entry for DRAW-STRING-SHADED-* -->
 
-<p><br>[Function]<br><a class=none name='draw-string-shaded-*'><b>draw-string-shaded-*</b> <i>text x y fg-color bg-color <tt>&amp;key</tt> encoding font surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-shaded-*'><b>draw-string-shaded-*</b> <i>text x y fg-color bg-color <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw text TEXT using font :FONT with foreground color FG-COLOR and background color BG-COLOR 
-onto surface :SURFACE, using the Shaded mode. 
-Caches the new surface in the FONT object.
-Note: Calls RENDER-STRING-SHADED with :FREE T so the old cached surface is automatically free&#039;d. 
-
-  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
-
-  * X/Y are the x and y position coordinates, as INTEGERS.
-
-  * FG-COLOR is the foreground color of the text, of type SDL:SDL-COLOR
-
-  * BG-COLOR is the background color of the text, of type SDL:SDL-COLOR
-
-  * ENCODING specifies the format of the text to render and is one of: 
-  *  :LATIN1
-  *  :UTF8
-  *  :UNICODE
-  *  :GLYPH
-
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
-
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
-
-  * Returns the font FONT.
-
-For example:
-  * (DRAW-STRING-SHADED-* &quot;Hello World!&quot; 0 0 fg-col bg-col :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE)
+<p>Draw text <code>TEXT</code> using font <code>FONT</code> with foreground color <code>FG-COLOR</code> and background color <code>BG-COLOR</code>  onto surface <code>SURFACE</code>, using the Shaded mode.  </p><h5>Parameters </h5>
+<ul><li><code>TEXT</code> is the text to render, of type <code>STRING</code>. </li>
+<li><code>X</code> and <code>Y</code> are the x and y coordinates of the <code>TEXT</code>, as <code>INTEGER</code>s. </li>
+<li><code>FG-COLOR</code> is the foreground color of the <code>TEXT</code>, of type <code>SDL:SDL-COLOR</code></li>
+<li><code>BG-COLOR</code> is the background color of the <code>TEXT</code>, of type <code>SDL:SDL-COLOR</code></li>
+<li><code>FONT</code> is a <code>FONT</code> object.  Binds to <code>*DEFAULT-FONT*</code> by default.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>.  </li>
+</ul><h5>Return </h5>
+<ul><li>Returns the font <code>FONT</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 fg-col bg-col :FONT *DEFAULT-FONT* :SURFACE A-SURFACE)
+</code></pre>
 
 </blockquote>
 
@@ -857,12 +816,12 @@ For example:
 
 <!-- Entry for DRAW-STRING-SOLID -->
 
-<p><br>[Function]<br><a class=none name='draw-string-solid'><b>draw-string-solid</b> <i>text position <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-solid'><b>draw-string-solid</b> <i>text position <tt>&amp;key</tt> font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-See DRAW-STRING-SOLID-*.
-
-  * :POSITION is the x and y position to render the text, of type SDL:POINT.
+<p>See <a href="#draw-string-solid-*">DRAW-STRING-SOLID-*</a>. </p><h5>Parmeters </h5>
+<ul><li><code>POSITION</code> is the <code>X</code> and <code>Y</code> coordinates to render <code>TEXT</code>, of type <code>SDL:POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -871,33 +830,20 @@ See DRAW-STRING-SOLID-*.
 
 <!-- Entry for DRAW-STRING-SOLID-* -->
 
-<p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>text x y <tt>&amp;key</tt> encoding font surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>text x y <tt>&amp;key</tt> font surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Draw text TEXT using font FONT with color COLOR onto surface SURFACE, using the Solid mode. 
-Caches the new SURFACE containing the TEXT in the FONT object. 
-Note: Calls RENDER-STRING-SOLID with :FREE T so the old cached surface is automatically free&#039;d. 
-
-  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
-
-  * X/Y are the x and y position coordinates, as INTEGERS.
-
-  * ENCODING specifies the format of the text to render and is one of: 
-    * :LATIN1
-    * :UTF8
-    * :UNICODE
-    * :GLYPH
-
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
-
-  * SURFACE is the surface to render text onto, of type SDL:SDL-SURFACE 
-
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
-
-  * Returns the font FONT.
-
-For example:
-  * (DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
+<p>Draw text <code>TEXT</code> using font <code>FONT</code> with color <code>COLOR</code> onto surface <code>SURFACE</code>, using the Solid mode.  </p><h5>Parameters </h5>
+<ul><li><code>TEXT</code> is the text to render, of type <code>STRING</code>. </li>
+<li><code>X</code> and <code>Y</code> are the x and y coordinates of the <code>TEXT</code>, as <code>INTEGER</code>s. </li>
+<li><code>FONT</code> is a <code>FONT</code> object.  Binds to <code>*DEFAULT-FONT*</code> by default.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>.  </li>
+<li><code>COLOR</code> is the color used to render <code>TEXT</code>, of type <code>SDL:SDL-COLOR</code></li>
+</ul><h5>Return </h5>
+<ul><li>Returns the font <code>FONT</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SOLID-* &amp;quot;Hello World!&amp;quot; 0 0 :FONT *DEFAULT-FONT* :SURFACE A-SURFACE :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -909,10 +855,7 @@ For example:
 <p><br>[Standard class]<br><a class=none name='font'><b>font</b></a>
 <blockquote><br>
 
-The FONT object is a CLOS wrapper around a foreign TTF_Font object. 
-The FONT object maintains the most recent surface SDL:SURFACE created by a call to any of the DRAW-STRING* functions. 
-Use DRAW-FONT, DRAW-FONT-AT or DRAW-FONT-AT-* to draw the cached surface.
-Prior to the first call to a DRAW-STRING* function, the cached surface is NIL.
+<p>A <code>FONT</code> object is wrapper around a foreign <code>TTF_Font</code> object.  </p><p>The <code>FONT</code> object maintains the most recent surface <code>SDL:SURFACE</code> created by a call to any of the  <code>RENDER-STRING*</code> functions. Use <a href="#draw-font">DRAW-FONT</a>, <a href="#draw-font-at">DRAW-FONT-AT</a>  or <a href="#draw-font-at-*">DRAW-FONT-AT-*</a> to draw the cached surface. </p><p>Prior to the first call to a <code>RENDER-STRING*</code> function, the cached surface is <code>NIL</code>. </p>
 
 </blockquote>
 
@@ -936,10 +879,7 @@ Prior to the first call to a DRAW-STRING* function, the cached surface is NIL.
 <p><br>[Method]<br><a class=none><b>free-font</b> <i>(font font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Free&#039;s the resources used by FONT. Explicitely free&#039;s the FONT&#039;s cached surface.
-Closes the SDL_Font object only when the font has been created within the current INIT-TTF/QUIT-TTF sequence. In other
-words, when (EQ (GENERATION FONT) *GENERATION*). Otherwise it is assumed that the font resources have already been
-freed in a previous call to QUIT-TTF.
+<p>Free the resources used by the font <code>FONT</code>.  Free&#039;s any cached surface. Closes the <code>TTF_Font</code> object only when the <code>FONT</code> was created within the  current <a href="#init-ttf">INIT-TTF</a>/<a href="#quit-ttf">QUIT-TTF</a> sequence.  In other words, when <code>(EQ (GENERATION FONT) *GENERATION)</code>. Otherwise it is assumed that the <code>TTF_Font</code>  was closed in a previous call to <code>QUIT-TTF</code>. </p>
 
 </blockquote>
 
@@ -951,15 +891,11 @@ freed in a previous call to QUIT-TTF.
 <p><br>[Function]<br><a class=none name='get-font-ascent'><b>get-font-ascent</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the maximum pixel ascent of all glyphs of font FONT. 
-This can also be interpreted as the distance from the top of the font to the baseline. 
-It could be used when drawing an individual glyph relative to a top point, 
-by combining it with the glyph&#039;s maxy metric to resolve the top of the rectangle used when 
-blitting the glyph on the screen. 
-
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
-
-  * Returns the ascent of the font as an INTEGER.
+<p>Returns the maximum pixel ascent of all glyphs of font <code>FONT</code>.  This can also be interpreted as the distance from the top of the font to the baseline.  It could be used when drawing an individual glyph relative to a top point,  by combining it with the glyph&#039;s maxy metric to resolve the top of the rectangle used when  blitting the glyph on the screen.  </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the ascent of the <code>FONT</code> as an <code>INTEGER</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -971,15 +907,11 @@ blitting the glyph on the screen.
 <p><br>[Function]<br><a class=none name='get-font-descent'><b>get-font-descent</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the maximum pixel descent of all glyphs of font FONT. 
-This can also be interpreted as the distance from the baseline to the bottom of the font. 
-It could be used when drawing an individual glyph relative to a bottom point, 
-by combining it with the glyph’s maxy metric to resolve the top of the rectangle used when 
-blitting the glyph on the screen. 
-
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
-
-  * Returns the descent of the font as an INTEGER.
+<p>Returns the maximum pixel descent of all glyphs of font <code>FONT</code>.  This can also be interpreted as the distance from the baseline to the bottom of the font.  It could be used when drawing an individual glyph relative to a bottom point,  by combining it with the glyph’s maxy metric to resolve the top of the rectangle used when  blitting the glyph on the screen.  </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the descent of the <code>FONT</code> as an <code>INTEGER</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -991,11 +923,11 @@ blitting the glyph on the screen.
 <p><br>[Function]<br><a class=none name='get-font-face-family-name'><b>get-font-face-family-name</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the current font face family name of font FONT or NIL if the information is unavailable. 
-
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
-
-  * Returns the name of the font face family name as a STRING, or NIL if unavailable.
+<p>Returns the current font face family name of font <code>FONT</code> or <code>NIL</code> if the information is unavailable.  </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the name of the <code>FONT</code> face family name as a <code>STRING</code>, or <code>NIL</code> if unavailable. </li>
+</ul>
 
 </blockquote>
 
@@ -1007,11 +939,11 @@ Returns the current font face family name of font FONT or NIL if the information
 <p><br>[Function]<br><a class=none name='get-font-face-style-name'><b>get-font-face-style-name</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the current font face style name of font FONT, or NIL if the information is unavailable. 
-
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
-
-  * Returns the name of the font face style as a STRING, or NIL if unavailable.
+<p>Returns the current font face style name of font <code>FONT</code>, or <code>NIL</code> if the information is unavailable.  </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the name of the <code>FONT</code> face style as a <code>STRING</code>, or <code>NIL</code> if unavailable. </li>
+</ul>
 
 </blockquote>
 
@@ -1023,14 +955,11 @@ Returns the current font face style name of font FONT, or NIL if the information
 <p><br>[Function]<br><a class=none name='get-font-faces'><b>get-font-faces</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the number of faces &#039;sub-fonts&#039; available in the font FONT. 
-This is a count of the number of specific fonts (based on size and style and other
- typographical features perhaps) contained in the font itself. It seems to be a useless
- fact to know, since it can’t be applied in any other SDL_ttf functions.
-
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
-
-  * Returns the number of faces in the FONT as an INTEGER.
+<p>Returns the number of faces &#039;sub-fonts&#039; available in the font <code>FONT</code>.  This is a count of the number of specific fonts (based on size and style and other  typographical features perhaps) contained in the font itself. It seems to be a useless  fact to know, since it can’t be applied in any other <code>SDL_TTF</code> functions. </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the number of faces in the <code>FONT</code> as an <code>INTEGER</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1042,15 +971,11 @@ This is a count of the number of specific fonts (based on size and style and oth
 <p><br>[Function]<br><a class=none name='get-font-height'><b>get-font-height</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the maximum pixel height of all glyphs of font FONT. 
-Use this height for rendering text as close together vertically as possible, 
-though adding at least one pixel height to it will space it so they can&#039;t touch. 
-Remember that SDL_ttf doesn&#039;t handle multiline printing, so you are responsible 
-for line spacing, see GET-FONT-LINE-SKIP as well. 
-
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
-
-  * Retuns the height of the font as an INTEGER.
+<p>Returns the maximum pixel height of all glyphs of font <code>FONT</code>.  Use this height for rendering text as close together vertically as possible,  though adding at least one pixel height to it will space it so they can&#039;t touch.  Remember that <code>SDL_TTF</code> doesn&#039;t handle multiline printing so you are responsible  for line spacing, see <a href="#get-font-line-skip">GET-FONT-LINE-SKIP</a> as well.  </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.  </li>
+</ul><h5>Returns </h5>
+<ul><li>Retuns the height of the <code>FONT</code> as an <code>INTEGER</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1062,12 +987,11 @@ for line spacing, see GET-FONT-LINE-SKIP as well.
 <p><br>[Function]<br><a class=none name='get-font-line-skip'><b>get-font-line-skip</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the recommended pixel height of a rendered line of text of the font FONT. 
-This is usually larger than the GET-FONT-HEIGHT of the font. 
-
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default.
-
-  * Returns the pixel height of the font as an INTEGER.
+<p>Returns the recommended pixel height of a rendered line of text of the font <code>FONT</code>.  This is usually larger than the <a href="#get-font-height">GET-FONT-HEIGHT</a> of the font.  </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the pixel height of the <code>FONT</code> as an <code>INTEGER</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -1076,27 +1000,16 @@ This is usually larger than the GET-FONT-HEIGHT of the font.
 
 <!-- Entry for GET-FONT-SIZE -->
 
-<p><br>[Function]<br><a class=none name='get-font-size'><b>get-font-size</b> <i>text <tt>&amp;key</tt> size encoding font</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='get-font-size'><b>get-font-size</b> <i>text <tt>&amp;key</tt> size font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Calculates and returns the resulting SIZE of the SDL:SURFACE that is required to render the 
-font FONT, or NIL on error. No actual rendering is performed however correct kerning is calculated for the 
-actual width. The height returned is the same as returned using GET-FONT-HEIGHT. 
-
-  * FONT is the font from which to calculate the size of the string. Bound to *DEFAULT-FONT* by default.
-
-  * TEXT is the LATIN1 string to size. 
-
-  * :SIZE may be one of: 
-    * :W , text width
-    * :H , text height
-
-  * :ENCODING may be one of: 
-    * :LATIN1
-    * :UTF8
-    * :UNICODE
-
-    * Returns the width or height of the specified SDL:SURFACE, or NIL upon error.
+<p>Calculates and returns the resulting <code>SIZE</code> of the <code>SDL:SURFACE</code> that is required to render the  text <code>TEXT</code>, or <code>NIL</code> on error. No actual rendering is performed, however correct kerning is calculated for the  actual width. The height returned is the same as returned using <a href="#get-font-height">GET-FONT-HEIGHT</a>.  </p><h5>Parameters </h5>
+<ul><li><code>TEXT</code> is the string to size, of type <code>STRING</code>.  </li>
+<li><code>SIZE</code> must be one of; <code>:W</code> for the text width or <code>:H</code> for the text height. </li>
+<li><code>FONT</code> is the font used to calculate the size of the <code>TEXT</code>. Binds to <code>*DEFAULT-FONT*</code> by default. </li>
+</ul><h5>Return </h5>
+<ul><li>Returns the width or height of the specified <code>SDL:SURFACE</code>, or <code>NIL</code> upon error. </li>
+</ul>
 
 </blockquote>
 
@@ -1108,17 +1021,11 @@ actual width. The height returned is the same as returned using GET-FONT-HEIGHT.
 <p><br>[Function]<br><a class=none name='get-font-style'><b>get-font-style</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the rendering style of font. If no style is set then :STYLE-NORMAL is returned, 
-or NIL upon error.
-  
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
-
-  * Retuns the font style as one or more of:
-    * :STYLE-NORMAL
-    * :STYLE-NORMAL
-    * :STYLE-BOLD
-    * :STYLE-ITALIC
-    * :STYLE-UNDERLINE
+<p>Returns the rendering style of the font <code>FONT</code>. If no style is set then <code>:STYLE-NORMAL</code> is returned,  or <code>NIL</code> upon error. </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binfs to <code>*DEFAULT-FONT*</code> by default.  </li>
+</ul><h5>Return </h5>
+<ul><li>Retuns the font style as one or more of: <code>:STYLE-NORMAL</code>, <code>:STYLE-BOLD</code>, <code>:STYLE-ITALIC</code>, <code>:STYLE-UNDERLINE</code></li>
+</ul>
 
 </blockquote>
 
@@ -1130,23 +1037,15 @@ or NIL upon error.
 <p><br>[Function]<br><a class=none name='get-glyph-metric'><b>get-glyph-metric</b> <i>ch <tt>&amp;key</tt> metric font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns the glyph metrics METRIC for the character CH, or NIL upon error. 
-
-  * CH is a UNICODE chararacter specified as an INTEGER.
-
-  * FONT is a FONT object from which to retrieve the glyph metrics of the character CH. Bound to *DEFAULT-FONT* by default.
-
-  * METRIC is a KEYword argument and may be one of: 
-    * :MINX , for the minimum X offset
-    * :MAXX , for the maximum X offset
-    * :MINY , for the minimum Y offset
-    * :MAXY , for the maximum Y
-    * :ADVANCE , for the advance offset
-
-  * Returns the glyph metric as an INTEGER.
-
-For example;
-  * (GET-GLYPH-METRIC UNICODE-CHAR :METRIC :MINX :FONT *DEFAULT-FONT*)
+<p>Returns the glyph metrics <code>METRIC</code> for the character <code>CH</code>, or <code>NIL</code> upon error.  </p><h5>Parameters </h5>
+<ul><li><code>CH</code> is a UNICODE chararacter specified as an <code>INTEGER</code>. </li>
+<li><code>FONT</code> is a <code>FONT</code> object from which to retrieve the glyph metrics of the character <code>CH</code>. Binds to <code>*DEFAULT-FONT*</code>  by default. </li>
+<li><code>METRIC</code> is a <code>KEY</code>word argument and may be one of;  <code>:MINX</code>, for the minimum <code>X</code> offset.   <code>:MAXX</code>, for the maximum <code>X</code> offset.  <code>:MINY</code>, for the minimum <code>Y</code> offset.  <code>:MAXY</code>, for the maximum <code>Y</code> offset.  <code>:ADVANCE</code>, for the advance offset.  </li>
+</ul><h5>Return </h5>
+<ul><li>Returns the glyph metric as an <code>INTEGER</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(GET-GLYPH-METRIC UNICODE-CHAR :METRIC :MINX :FONT *DEFAULT-FONT*)
+</code></pre>
 
 </blockquote>
 
@@ -1158,9 +1057,7 @@ For example;
 <p><br>[Function]<br><a class=none name='init-ttf'><b>init-ttf</b> <i></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Initializes the font library if uninitialized. 
-
-  * Returns T if the library was initialized and was successfully uninitialized, or else returns NIL if uninitialized.
+<p>Initializes the <code>SDL_TTF</code> font library if uninitialized. Returns <code>T</code> if the library was uninitialized and  is successfully initialized, or else returns <code>NIL</code> if uninitialized. </p>
 
 </blockquote>
 
@@ -1169,22 +1066,16 @@ Initializes the font library if uninitialized.
 
 <!-- Entry for INITIALISE-DEFAULT-FONT -->
 
-<p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i><tt>&amp;optional</tt> free filename pathname size</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i><tt>&amp;optional</tt> free filename size</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Binds the symbol *DEFAULT-FONT* to FONT. Although several truetype fonts may used within a single 
-SDL application, only a single FONT may be bound to the symbol *DEFAULT-FONT* at any one time. 
-Returns ERROR if FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when INITIALISE-DEFAULT-FONT is called.
-
-  * FREE when set to T will automatically free any font already bound to *DEFAULT-FONT*.
-
-  * FILENAME is the optional file name of the font, as a STRING.
-
-  * PATHNAME is the path to the font file on the disk, as a STRING.
-
-  * SIZE is the INTEGER point size to load the FONT as.
-
-  * Returns a new FONT, or NIL if unsuccessful.
+<p>Creates a new <code>FONT</code> object that is loaded from the file at location <code>FILENAME</code>, and binds this to the symbol  <code>*DEFAULT-FONT*</code>. Although several truetype fonts may used within a single SDL application, only a single  <code>FONT</code> may be bound to the symbol <code>*DEFAULT-FONT*</code> at any one time. Generates an <code>ERROR</code> if <code>FREE</code> is <code>NIL</code>  and <code>*DEFAULT-FONT*</code> is already bound to a <code>FONT</code> when <code>INITIALISE-DEFAULT-FONT</code> is called. </p><h5>Parameters </h5>
+<ul><li><code>FREE</code> when set to <code>T</code> will automatically free any font that is already bound to <code>*DEFAULT-FONT*</code>. </li>
+<li><code>FILENAME</code> is the optional file name of the font, as a STRING. Default value is <code>Vera.ttf</code>. </li>
+<li><code>SIZE</code> is the <code>INTEGER</code> point size of the new <code>FONT</code>. </li>
+</ul><h5>Return </h5>
+<ul><li>Returns a new <code>FONT</code>, or <code>NIL</code> if unsuccessful. </li>
+</ul>
 
 </blockquote>
 
@@ -1193,19 +1084,15 @@ Returns ERROR if FREE is NIL and *DEFAULT-FONT* is already bound to a FONT when 
 
 <!-- Entry for INITIALISE-FONT -->
 
-<p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>filename pathname size</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>filename size</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Creates a new FONT object loaded from FILENAME and PATHNAME, of size SIZE.
-Automatically initialises the truetype font library if uninitialised at FONT load time. 
-
-  * FILENAME is the file name of the FONT, of type STRING.
-
-  * PATHNAME is the pathname of the FONT, of type STRING.
-
-  * SIZE is the INTEGER point size to load the FONT as.
-
-  * Returns a new FONT, or NIL if unsuccessful.
+<p>Creates a new <code>FONT</code> object of size <code>SIZE</code> loaded from the file at location <code>FILENAME</code>. Automatically initialises the <code>SDL_TTF</code> truetype font library if the library is uninitialised when <code>FONT</code> is loaded.  </p><h5>Parameters </h5>
+<ul><li><code>FILENAME</code> is the file name of the <code>FONT</code>, of type <code>STRING</code>. </li>
+<li><code>SIZE</code> is the <code>INTEGER</code> point size of the new <code>FONT</code>. </li>
+</ul><h5>Return </h5>
+<ul><li>Returns a new <code>FONT</code>, or <code>NIL</code> if unsuccessful. </li>
+</ul>
 
 </blockquote>
 
@@ -1217,12 +1104,11 @@ Automatically initialises the truetype font library if uninitialised at FONT loa
 <p><br>[Function]<br><a class=none name='is-font-face-fixed-width'><b>is-font-face-fixed-width</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Returns T if the font face is of a fixed width, or NIL otherwise. 
-Fixed width fonts are monospace, meaning every character that exists in the font is the same width. 
-
-  * FONT is a FONT object. Bound to *DEFAULT-FONT* by default. 
-
-  * Retuns T FONT is of fixed width, and NIL otherwise.
+<p>Returns <code>T</code> if the font face is of a fixed width, or <code>NIL</code> otherwise.  Fixed width fonts are monospace, meaning every character that exists in the font is the same width.  </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default. </li>
+</ul><h5>Returns </h5>
+<ul><li>Retuns <code>T</code> if <code>FONT</code> is of fixed width, and <code>NIL</code> otherwise. </li>
+</ul>
 
 </blockquote>
 
@@ -1234,8 +1120,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 <p><br>[Function]<br><a class=none name='is-init'><b>is-init</b> <i></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Queries the initialization status of the truetype library. 
-Returns T if already initialized and NIL if uninitialized.
+<p>Queries the initialization status of the <code>SDL_TTF</code> truetype library.  Returns <code>T</code> if this library is already initialized and <code>NIL</code> if uninitialized. </p>
 
 </blockquote>
 
@@ -1247,8 +1132,7 @@ Returns T if already initialized and NIL if uninitialized.
 <p><br>[Function]<br><a class=none name='new-font'><b>new-font</b> <i>fp</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Creates and returns a new FONT object, returns NIL otherwise. 
-FP is a pointer to a foreign TTF_Font object.
+<p>Creates and returns a new <code>FONT</code> object when <code>FP</code> is a pointer to a foreign <code>TTF_Font</code> object.  Returns <code>NIL</code> otherwise. </p>
 
 </blockquote>
 
@@ -1257,20 +1141,15 @@ FP is a pointer to a foreign TTF_Font object.
 
 <!-- Entry for OPEN-FONT -->
 
-<p><br>[Function]<br><a class=none name='open-font'><b>open-font</b> <i>filename size <tt>&amp;optional</tt> pathname</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='open-font'><b>open-font</b> <i>filename size</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Attempts to load the truetype font at the location specified by FILENAME and PATHNAME. 
-NOTE: Does not bind *DEFAULT-FONT* to FONT. 
-Does not attempt to initialize the truetype library if uninitialised. 
-
-  * FILENAME is the name of the truetype font to be opened, of type STRING 
-
-  * PATHNAME is the path to the truetype font to be opened, of type STRING 
-
-  * SIZE is the size of the font, as an INTEGER 
-
-  * Returns new FONT object if successful, returns NIL if unsuccessful.
+<p>Creates a new <code>FONT</code> from the file loaded at the location specified by <code>FILENAME</code>.  NOTE: Does not bind the new <code>FONT</code> to <code>*DEFAULT-FONT*</code>. Does not attempt to initialize the <code>SDL_TTF</code>  truetype library if the library is uninitialised.  </p><h5>Parameters </h5>
+<ul><li><code>FILENAME</code> is the name of the truetype font to be loaded, of type <code>STRING</code></li>
+<li><code>SIZE</code> is the size of the <code>FONT</code>, as an <code>INTEGER</code>.  </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns new <code>FONT</code> object if successful, returns <code>NIL</code> if unsuccessful. </li>
+</ul>
 
 </blockquote>
 
@@ -1282,9 +1161,7 @@ Does not attempt to initialize the truetype library if uninitialised.
 <p><br>[Function]<br><a class=none name='quit-ttf'><b>quit-ttf</b> <i></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Uninitializes the font library if initialized. Increments the *generation* count. 
-
-  * Returns NIL.
+<p>Uninitializes the <code>SDL_TTF</code> font library if already initialized. Increments the <code>*generation*</code> count. Returns <code>NIL</code>. </p>
 
 </blockquote>
 
@@ -1293,30 +1170,20 @@ Uninitializes the font library if initialized. Increments the *generation* count
 
 <!-- Entry for RENDER-STRING-BLENDED -->
 
-<p><br>[Function]<br><a class=none name='render-string-blended'><b>render-string-blended</b> <i>text <tt>&amp;key</tt> encoding font color free</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='render-string-blended'><b>render-string-blended</b> <i>text <tt>&amp;key</tt> font color free cache</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Render text TEXT using font FONT with color COLOR into the FONT&#039;s cached surface, using the Blended mode. 
-Unless :FREE T, the caller is responsible for freeing the new SURFACE.
-
-  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
-
-  * ENCODING specifies the format of the text to render and is one of: 
-    * :LATIN1
-    * :UTF8
-    * :UNICODE
-    * :GLYPH
-
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
-
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
-
-  * FREE when T will free the old cached SURFACE in FONT.
-
-  * Returns the new cached surface SDL:SDL-SURFACE.
-
-For example:
-  * (DRAW-STRING-BLENDED &quot;Hello World!&quot; :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :COLOR A-COLOR)
+<p>Render text <code>TEXT</code> using font <code>FONT</code> with color <code>COLOR</code> into a new <code>SURFACE</code>, using the Blended mode.  Unless <code>:FREE T</code>, the caller is responsible for freeing the new <code>SURFACE</code>. Use <code>:CACHE T</code> to cache the newly created surface in the <code>FONT</code> object. </p><h5>Parameters </h5>
+<ul><li><code>TEXT</code> is the text to render, of type <code>STRING</code>. </li>
+<li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.  </li>
+<li><code>COLOR</code> is the color used to render the <code>TEXT</code>, of type <code>SDL:SDL-COLOR</code></li>
+<li><code>FREE</code> when <code>T</code> will free the existing cached <code>SURFACE</code> in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created <code>SURFACE</code> in <code>FONT</code>. </li>
+</ul><h5>Return </h5>
+<ul><li>Returns the new surface <code>SDL:SDL-SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-BLENDED &amp;quot;Hello World!&amp;quot; :FONT *DEFAULT-FONT* :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -1325,32 +1192,20 @@ For example:
 
 <!-- Entry for RENDER-STRING-SHADED -->
 
-<p><br>[Function]<br><a class=none name='render-string-shaded'><b>render-string-shaded</b> <i>text fg-color bg-color <tt>&amp;key</tt> encoding font free</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='render-string-shaded'><b>render-string-shaded</b> <i>text fg-color bg-color <tt>&amp;key</tt> font free cache</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Render text TEXT using font FONT with color COLOR into the FONT&#039;s cached surface, using the Shaded mode. 
-Unless :FREE T, the caller is responsible for freeing the new SURFACE.
-
-  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
-
-  * FG-COLOR is the foreground color of the text, of type SDL:SDL-COLOR
-
-  * BG-COLOR is the background color of the text, of type SDL:SDL-COLOR
-
-  * ENCODING specifies the format of the text to render and is one of: 
-    * :LATIN1
-    * :UTF8
-    * :UNICODE
-    * :GLYPH
-
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
-
-  * FREE when T will free the old cached SURFACE in FONT.
-
-  * Returns the new cached surface SDL:SDL-SURFACE.
-
-For example:
-  * (DRAW-STRING-SHADED &quot;Hello World!&quot; fg-col bg-col :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :COLOR A-COLOR)
+<p>Render text <code>TEXT</code> using font <code>FONT</code> with foreground and background colors <code>FG-COLOR</code> and <code>BG-COLOR</code>  into a new <code>SURFACE</code>, using the Solid mode.  Unless <code>:FREE T</code>, the caller is responsible for freeing the new <code>SURFACE</code>. Use <code>:CACHE T</code> to cache the newly created surface in the <code>FONT</code> object. </p><h5>Parameters </h5>
+<ul><li><code>TEXT</code> is the text to render, of type <code>STRING</code>. </li>
+<li><code>FG-COLOR</code> is the foreground color of the <code>TEXT</code>, of type <code>SDL:SDL-COLOR</code></li>
+<li><code>BG-COLOR</code> is the background color of the <code>TEXT</code>, of type <code>SDL:SDL-COLOR</code></li>
+<li><code>FONT</code> is a <code>FONT</code> object.  Binds to *<code>DEFAULT-FONT*</code> by default.  </li>
+<li><code>FREE</code> when <code>T</code> will free the existing cached <code>SURFACE</code> in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created <code>SURFACE</code> in <code>FONT</code>. </li>
+</ul><h5>Return </h5>
+<ul><li>Returns the new surface <code>SDL:SDL-SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<p>(DRAW-STRING-SHADED &quot;Hello World!&quot; fg-col bg-col  :FONT <EM>DEFAULT-FONT</EM> :COLOR A-COLOR) </p>
 
 </blockquote>
 
@@ -1359,30 +1214,20 @@ For example:
 
 <!-- Entry for RENDER-STRING-SOLID -->
 
-<p><br>[Function]<br><a class=none name='render-string-solid'><b>render-string-solid</b> <i>text <tt>&amp;key</tt> encoding font color free</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='render-string-solid'><b>render-string-solid</b> <i>text <tt>&amp;key</tt> font color free cache</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Render text TEXT using font FONT with color COLOR into the FONT&#039;s cached surface, using the Solid mode. 
-Unless :FREE T, the caller is responsible for freeing the new SURFACE.
-
-  * TEXT is the text to render. TEXT may be of the encoding type LATIN1, UTF8, UNICODE, GLYPH. TEXT must match :ENCODING
-
-  * ENCODING specifies the format of the text to render and is one of: 
-    * :LATIN1
-    * :UTF8
-    * :UNICODE
-    * :GLYPH
-
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
-
-  * COLOR color is the color used to render text, of type SDL:SDL-COLOR
-
-  * FREE when T will free the old cached SURFACE in FONT.
-
-  * Returns the new cached surface SDL:SDL-SURFACE.
-
-For example:
-  * (DRAW-STRING-SOLID &quot;Hello World!&quot; :ENCODING :LATIN1 :FONT *DEFAULT-FONT* :COLOR A-COLOR)
+<p>Render text <code>TEXT</code> using font <code>FONT</code> with color <code>COLOR</code> into a new <code>SURFACE</code>, using the Solid mode.  Unless <code>:FREE T</code>, the caller is responsible for freeing the new <code>SURFACE</code>. Use <code>:CACHE T</code> to cache the newly created surface in the <code>FONT</code> object. </p><h5>Parameters </h5>
+<ul><li><code>TEXT</code> is the text to render, of type <code>STRING</code>. </li>
+<li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.  </li>
+<li><code>COLOR</code> is the color used to render the <code>TEXT</code>, of type <code>SDL:SDL-COLOR</code></li>
+<li><code>FREE</code> when <code>T</code> will free the existing cached <code>SURFACE</code> in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created <code>SURFACE</code> in <code>FONT</code>. </li>
+</ul><h5>Return </h5>
+<ul><li>Returns the new surface <code>SDL:SDL-SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<pre><code> (DRAW-STRING-SOLID &amp;quot;Hello World!&amp;quot; :FONT *DEFAULT-FONT* :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -1394,20 +1239,10 @@ For example:
 <p><br>[Function]<br><a class=none name='set-font-style'><b>set-font-style</b> <i>style <tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Sets the rendering style STYLE of font FONT. This will flush the internal cache of previously 
-rendered glyphs, even if there is no change in style, so it may be best to check the
- current style using GET-FONT-STYLE first. 
-
-NOTE: Combining :STYLE-UNDERLINE with anything can cause a segfault, other combinations 
-may also do this. 
-
-FONT is a FONT object. 
-
-STYLE is a list of one or more: 
-  :STYLE-NORMAL
-  :STYLE-BOLD
-  :STYLE-ITALIC
-  :STYLE-UNDERLINE
+<p>Sets the rendering style <code>STYLE</code> of font <code>FONT</code>. This will flush the internal cache of previously  rendered glyphs, even if there is no change in style, so it may be best to check the  current style using <a href="#get-font-style">GET-FONT-STYLE</a> first.  </p><h5>Parameters </h5>
+<ul><li><code>FONT</code> is a <code>FONT</code> object.  </li>
+<li><code>STYLE</code> is a list of one or more: <code>:STYLE-NORMAL</code>, <code>:STYLE-BOLD</code>, <code>:STYLE-ITALIC</code>, <code>:STYLE-UNDERLINE</code>.  NOTE: Combining <code>:STYLE-UNDERLINE</code> with anything  can cause a segfault, other combinations may also do this. </li>
+</ul>
 
 </blockquote>
 
@@ -1419,7 +1254,7 @@ STYLE is a list of one or more:
 <p><br>[Macro]<br><a class=none name='with-default-font'><b>with-default-font</b> <i>(font) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Dynamically binds FONT to *DEFAULT-FONT* within the scope of WITH-DEFAULT-FONT.
+<p>Binds <code>FONT</code> to <code>*DEFAULT-FONT*</code> within the scope of <code>WITH-DEFAULT-FONT</code>. </p>
 
 </blockquote>
 
@@ -1428,22 +1263,13 @@ Dynamically binds FONT to *DEFAULT-FONT* within the scope of WITH-DEFAULT-FONT.
 
 <!-- Entry for WITH-OPEN-FONT -->
 
-<p><br>[Macro]<br><a class=none name='with-open-font'><b>with-open-font</b> <i>(font-name size <tt>&amp;optional</tt> font-path) declaration* statement*</i> =&gt; <i>result</i></a>
+<p><br>[Macro]<br><a class=none name='with-open-font'><b>with-open-font</b> <i>(font-name size) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-This is a convenience macro that will first attempt to intialize the truetype font library and if successful, 
-open the font FONT-NAME and execute the forms in BODY. Will exit if the library cannot be initialized or the 
-FONT cannot be opened. 
-Binds the FONT to a shadowed instance of *DEFAULT-FONT* within the scope of WITH-OPEN-FONT. 
-WITH-OPEN-FONT calls may be nested.
-
-  * FONT is the variable name of the new font, of type FONT.
-
-  * FONT-NAME is the name of the truetype font to be opened, of type STRING
-
-  * SIZE is the INTEGER point size of the font.
-
-  * FONT-PATH is an &amp;optional path to FONT-NAME, of type STRING
+<p>This is a convenience macro that will first attempt to initialize the truetype font library and if successful,  will then open the font in the file <code>FONT-NAME</code> prior to evaluating the forms in <code>BODY</code>.  Will exit if the library cannot be initialized or the <code>FONT</code> cannot be opened.  Closes <code>FONT</code> after the forms in  <code>BODY</code> have evaluated.  </p><p>Binds <code>FONT</code> to a shadowed instance of <code>*DEFAULT-FONT*</code> valid within the scope of <code>WITH-OPEN-FONT</code>.  <code>WITH-OPEN-FONT</code> calls may be nested. </p><h5>Parameters </h5>
+<ul><li><code>FONT-NAME</code> is the file name of the truetype font to be opened, of type <code>STRING</code>. </li>
+<li><code>SIZE</code> is the <code>INTEGER</code> point size of the font. </li>
+</ul>
 
 </blockquote>
 
@@ -1452,9 +1278,18 @@ WITH-OPEN-FONT calls may be nested.
 
 <ul>
   <li>
-    Documentation prepared using Edi Weitz's  
-    <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+    Documentation prepared using:
   </li>
+  <ul>
+    <li>
+      Edi Weitz's  
+      <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+    </li>
+    <li>
+      Gary King's 
+      <a href="http://common-lisp.net/project/cl-markdown/">CL-MARKDOWN</a>.
+      </li>
+  </ul>
 </ul>
 
 <p>
