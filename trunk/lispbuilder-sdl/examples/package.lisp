@@ -76,7 +76,8 @@
    #:circle-2
    #:circle-3
    #:circle-4
-
+   #:circle-5
+   
    ;; stroke.lisp
    #:stroke
    
