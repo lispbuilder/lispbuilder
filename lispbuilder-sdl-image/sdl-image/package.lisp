@@ -9,9 +9,6 @@
   (:export
 
    ;; sdl-image-util.lisp
-   #:create-image-from-RWops
-   #:rwops-p
-   #:rwops-type-of
    #:image-p
    #:image-type-of
    #:load-image

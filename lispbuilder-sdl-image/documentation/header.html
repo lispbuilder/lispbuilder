@@ -403,9 +403,7 @@
       <pre>
   (sdl:with-init ()
     (sdl:window 320 240)
-    (sdl:draw-surface (sdl-image:load-image "lisp.tga" *bmp-path*
-					    :image-type :TGA :force t)
-		      :surface sdl:*default-display*)
+    (sdl:draw-surface (sdl-image:load-image "lisp.tga" :image-type :TGA :force t))
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event (sdl:update-display))))
@@ -534,16 +532,16 @@
 	</p>
 	
 	<br>&nbsp;</br><h2><a class=none name="examples">Running Examples in LISPBUILDER-SDL-IMAGE-EXAMPLES</a></h2>
-	<p>The following examples are contained in the package LISPBUILDER-SDL-IMAGE-EXAMPLES:
-	</p>
-	<ul>
-	  <li>(SDL-IMAGE-EXAMPLES:IMAGE-EXAMPLE)</li>
-	</ul>
 	<p>Enter the following at the REPL to load the examples in the 
 	  LISPBUILDER-SDL-IMAGE-EXAMPLES package:</p>
 	<pre>
 	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-image-examples)
 	</pre>
+	<p>The following examples are contained in the package LISPBUILDER-SDL-IMAGE-EXAMPLES:
+	</p>
+	<ul>
+	  <li>(SDL-IMAGE-EXAMPLES:IMAGE-EXAMPLE)</li>
+	</ul>
 	
 	
 	<br>&nbsp;</br><h2><a class=none name="dependency">Dependencies</a></h2>
