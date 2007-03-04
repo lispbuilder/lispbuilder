@@ -51,7 +51,7 @@ unless otherwise specified. Returns a new `FONT`, or `NIL` if unsuccessful."
   (set-default-font (initialise-font font-definition)))
 
 (defmethod free-font ((font font))
-  "Free resources associated with the font `FONT`.
+  "Free the resources associated with the font `FONT`.
 This includes freeing the cached surface and the foreign array containing the font data."
   (tg:cancel-finalization font)
   (when (sdl:cached-surface font)
