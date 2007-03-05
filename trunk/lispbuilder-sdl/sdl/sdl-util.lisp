@@ -29,7 +29,7 @@
 ;;; Anthony Fairchild.
 ;;; http://article.gmane.org/gmane.lisp.cl-lispbuilder.general/559
 (defun rotate-surface (degrees &key
-		       (surface *default-surface*) (free-p nil))
+		       (surface *default-surface*) (free-p nil) (key-color nil) (alpha-value nil))
   "Returns a new Surface rotated 0, 90, 180, or 270 degrees.
 When :free-p is T, the source surface SURFACE is freed."
   (declare (type fixnum degrees)
@@ -49,7 +49,8 @@ When :free-p is T, the source surface SURFACE is freed."
 	     (new-w (if even w h))
 	     (new-h (if even h w)))
 	(with-surfaces ((src surface free-p)
-			(dst (create-surface new-w new-h :surface surface) nil))
+			(dst (create-surface new-w new-h :surface surface
+					     :key-color key-color :alpha-value alpha-value) nil))
 	  (let ((new-x (case degrees
 			 (90  #'(lambda (x y)
 				  (declare (ignore x)(type fixnum x y))

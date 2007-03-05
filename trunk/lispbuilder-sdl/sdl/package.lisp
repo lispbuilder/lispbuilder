@@ -279,6 +279,8 @@
    #:draw-string-shaded
    #:draw-string-shaded-*
 
+   ;; pixel.lisp
+   #:bit-depth
    
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks

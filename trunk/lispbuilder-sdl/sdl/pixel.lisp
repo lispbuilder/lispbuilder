@@ -8,3 +8,7 @@
   
 ;; (defun read-pixel (x y &key (surface *default-surface*))
 ;;   (funcall (pixel-reader surface) x y))
+
+(defun bit-depth (surface)
+  (check-type surface sdl-surface)
+  (foreign-slot-value (sdl-base::pixel-format (fp surface)) 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel))

@@ -14,17 +14,11 @@
     (sdl:window 320 240 :title-caption "simple bmp example" :icon-caption "simple bmp example")
     (setf (sdl:frame-rate) 5)
     
-    (let* ((img-1 (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "sdl.bmp" *bmp-path*))
-				       :free-p t))
-	   (img-2 (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "lisp.bmp" *bmp-path*))
-				       :key-color (sdl:color :r 253 :g 59 :b 251)
-				       :free-p t))
-	   (img-3 (sdl:convert-surface :surface (sdl:rotate-surface 90 :surface img-2)
-				       :key-color (sdl:color :r 253 :g 59 :b 251)
-				       :free-p t))
-	   (img-4 (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "sdl.bmp" *bmp-path*))
-				       :free-p t)))
-
+    (let* ((img-1 (sdl:load-image (sdl:create-path "sdl.bmp" *bmp-path*)))
+	   (img-2 (sdl:load-image (sdl:create-path "lisp.bmp" *bmp-path*)
+				  :key-color (sdl:color :r 253 :g 59 :b 251)))
+	   (img-3 (sdl:rotate-surface 90 :surface img-2))
+	   (img-4 (sdl:load-image (sdl:create-path "sdl.bmp" *bmp-path*))))
       ;; Set position using 'set-position'
       (sdl:set-position-* img-1 :x 10 :y 10)
       (sdl:draw-surface img-1)
