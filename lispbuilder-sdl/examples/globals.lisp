@@ -6,3 +6,4 @@
 							     *load-truename*))
                                   :directory (pathname-directory #.(or *compile-file-truename*
                                                                        *load-truename*))))
+

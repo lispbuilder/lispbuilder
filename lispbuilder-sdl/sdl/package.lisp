@@ -223,6 +223,7 @@
    #:distance
    #:create-list-if-not
    #:check-types
+   #:create-path
 
    ;; video.lisp
    #:window

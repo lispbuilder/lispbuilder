@@ -49,3 +49,8 @@
      ,@(mapcar #'(lambda (var)
 		   `(check-type ,var ,type))
 	       rest)))
+
+(defun create-path (filename &optional path)
+  (if path
+      (namestring (merge-pathnames filename path))
+      filename))
