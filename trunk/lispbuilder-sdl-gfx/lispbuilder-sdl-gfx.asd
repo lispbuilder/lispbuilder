@@ -33,6 +33,6 @@
 	      ((:html-file "lispbuilder-sdl-gfx")
 	       (:html-file "header")
 	       (:html-file "footer")
-	       (:static-file "width-height.png")
+	       (:static-file "sdl-gfx-examples_width-height.png")
 	       (:doc-file "README")))))
 
