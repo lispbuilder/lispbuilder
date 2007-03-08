@@ -35,7 +35,7 @@
 
 (defmethod free-cached-surface ((font sdl-font))
   (when (and (cached-surface font)
-	     (typep (cached-surface font) 'sdl:sdl-surface))
+	     (typep (cached-surface font) 'sdl-surface))
     (free-surface (cached-surface font))
     (setf (cached-surface font) nil)))
 

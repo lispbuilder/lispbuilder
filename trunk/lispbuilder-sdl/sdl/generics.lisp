@@ -163,3 +163,21 @@ X and Y are used to position the cached SURFACE, where X and Y are INTEGERS."))
 (defgeneric any-color-but-this (color)
   (:documentation "Returns color2 if it is not equal to color1.
 Modifies color2 if it is equal to color1. Then returns color2."))
+
+(defgeneric load-image (source &key key-color alpha-value image-type force free)
+  (:documentation
+   "Creates and returns a new surface from the source `SOURCE`.
+
+##### Parameters
+
+* `SOURCE` is the source of the image.
+* `KEY-COLOR` sets the color key to be used for the surface, of type `COLOR', or 'COLOR-A'.
+* `ALPHA-VALUE` sets the alpha value of the surface, of type INTEGER. Must be in the range 0-255. 
+255 is opaque, 0 is transparent.
+* `IMAGE-TYPE` specifies the type of image to load. 
+* `FORCE` forces an image to be loaded as `IMAGE-TYPE`.
+* `FREE` free's resources in `SOURCE` after creating a new `SDL_Surface`.
+
+##### Returns
+
+* Returns a new `SDL:SURFACE`, or `NIL` if `SOURCE` does not contain a valid image."))

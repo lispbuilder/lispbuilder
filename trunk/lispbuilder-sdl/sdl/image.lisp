@@ -2,7 +2,8 @@
 (in-package #:lispbuilder-sdl)
 
 
-(defun load-image (filename &key key-color alpha-value)
+(defmethod load-image ((filename string) &key key-color alpha-value (image-type nil) (force nil) (free nil))
+  (declare (ignore image-type force free))
   (let ((surf (surface (sdl-base::load-image filename))))
     (if surf
 	(progn

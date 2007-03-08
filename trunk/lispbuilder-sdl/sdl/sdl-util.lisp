@@ -99,7 +99,7 @@ When :free-p is T, the source surface SURFACE is freed."
 ;;   (sdl-base::with-pixel (pixels (fp surface))
 ;;     (let ((width (width surface))
 ;;           (height (height surface))
-;;           (replacement-color (sdl:map-color color surface))
+;;           (replacement-color (map-color color surface))
 ;;           (target-color  (sdl-base::read-pixel pixels x y)))
 ;;       (assert (/= target-color replacement-color))
 ;;       (labels ((fill (x y)
@@ -130,7 +130,7 @@ because it uses PUSH/POP as the stack.  This function is fast."
     (let* ((stack nil)
            (w (width surface))
            (h (height surface))
-           (new-color (sdl:map-color color surface))
+           (new-color (map-color color surface))
            (old-color  (sdl-base::read-pixel pixels x y)))
       (when (/= old-color new-color)
         (let ((y1)
@@ -239,7 +239,7 @@ bit of ram."
   (sdl-base::with-pixel (pixels (fp surface))
     (let* ((w (width surface))
            (h (height surface))
-           (new-color (sdl:map-color color surface))
+           (new-color (map-color color surface))
            (old-color  (sdl-base::read-pixel pixels x y)))
       (when (/= old-color new-color)
         (ff-empty-stack)
@@ -290,7 +290,7 @@ bit of ram."
 
 
 ;; (defun random-point (max-x max-y)
-;;   (sdl:point (random max-x) (random max-y)))
+;;   (point (random max-x) (random max-y)))
 
 ;; (defun moveby-rectangle (&key (rectangle *default-rectangle*) (position *default-position*))
 ;;   (setf (rect-x rectangle) (+ (rect-x rectangle) (pos-x position))
