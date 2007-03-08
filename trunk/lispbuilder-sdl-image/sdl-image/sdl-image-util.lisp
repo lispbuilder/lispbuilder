@@ -1,38 +1,38 @@
 ;; This file contains some useful functions for using SDL_image from Common lisp
 ;; 2006 (c) Luke Crook, see LICENCE.
 
-(in-package #:lispbuilder-sdl-image)
+(in-package #:lispbuilder-sdl)
 
 
-(defmethod image-p ((source sdl:rwops) image-type)
-  "Returns `T` when the type of image contained in the `SDL:RWOPS` in the source `SOURCE` is of the type `IMAGE-TYPE`.
+(defmethod image-p ((source rwops) image-type)
+  "Returns `T` when the type of image contained in the `RWOPS` in the source `SOURCE` is of the type `IMAGE-TYPE`.
 
 ##### Parameters
 
-* `SOURCE` is of type `SDL:RWOPS`.
+* `SOURCE` is of type `RWOPS`.
 * `IMAGE-TYPE` must be one of `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TIF`, `:XCF`, `:XPM` or `:XV`."
   (case image-type
-    (:BMP (if (sdl-image-cffi::img-is-BMP (sdl:fp source)) 
+    (:BMP (if (sdl-image-cffi::img-is-BMP (fp source)) 
 	      :BMP))
-    (:GIF (if (sdl-image-cffi::img-is-GIF (sdl:fp source))
+    (:GIF (if (sdl-image-cffi::img-is-GIF (fp source))
 	      :GIF))
-    (:JPG (if (sdl-image-cffi::img-is-JPG (sdl:fp source))
+    (:JPG (if (sdl-image-cffi::img-is-JPG (fp source))
 	      :JPG))
-    (:LBM (if (sdl-image-cffi::img-is-LBM (sdl:fp source))
+    (:LBM (if (sdl-image-cffi::img-is-LBM (fp source))
 	      :LBM))
-    (:PCX (if (sdl-image-cffi::img-is-PCX (sdl:fp source))
+    (:PCX (if (sdl-image-cffi::img-is-PCX (fp source))
 	      :PCX))
-    (:PNG (if (sdl-image-cffi::img-is-PNG (sdl:fp source))
+    (:PNG (if (sdl-image-cffi::img-is-PNG (fp source))
 	      :PNG))
-    (:PNM (if (sdl-image-cffi::img-is-PNM (sdl:fp source))
+    (:PNM (if (sdl-image-cffi::img-is-PNM (fp source))
 	      :PNM))
-    (:TIF (if (sdl-image-cffi::img-is-TIF (sdl:fp source))
+    (:TIF (if (sdl-image-cffi::img-is-TIF (fp source))
 	      :TIF))
-    (:XCF (if (sdl-image-cffi::img-is-XCF (sdl:fp source))
+    (:XCF (if (sdl-image-cffi::img-is-XCF (fp source))
 	      :XCF))
-    (:XPM (if (sdl-image-cffi::img-is-XPM (sdl:fp source))
+    (:XPM (if (sdl-image-cffi::img-is-XPM (fp source))
 	      :XPM))
-    (:XV  (if (sdl-image-cffi::img-is-XV  (sdl:fp source))
+    (:XV  (if (sdl-image-cffi::img-is-XV  (fp source))
 	      :XV))
     (otherwise nil)))
 
@@ -47,18 +47,18 @@
 ##### Examples
 
     \(IMAGE-P \"image.bmp\" :IMAGE-TYPE :BMP\)"
-  (let ((rwops (sdl:create-RWops-from-file source)))
+  (let ((rwops (create-RWops-from-file source)))
     (when rwops
       (let ((result (image-p rwops image-type)))
-	(sdl:free-rwops rwops)
+	(free-rwops rwops)
 	result))))
 
-(defmethod image-type-of ((source sdl:rwops))
-  "Returns the type of image contained in the `SDL:RWOPS` in the source `SOURCE`.
+(defmethod image-type-of ((source rwops))
+  "Returns the type of image contained in the `RWOPS` in the source `SOURCE`.
 
 ##### Parameters
 
-* `SOURCE` is of type `SDL:RWOPS`.
+* `SOURCE` is of type `RWOPS`.
 
 ##### Example
 
@@ -82,47 +82,52 @@
 ##### Example
 
     \(IMAGE-TYPE-OF \"image.bmp\"\)"
-  (let ((rwops (sdl:create-RWops-from-file source)))
+  (let ((rwops (create-RWops-from-file source)))
     (when rwops
       (let ((result (image-type-of rwops)))
-	(sdl:free-rwops rwops)
+	(free-rwops rwops)
 	result))))
 
 
-(defmethod load-image ((source sdl:rwops) &key (image-type nil) (force nil) (free t))
-  "Creates and returns a new surface from the image contained in the `SDL:RWOPS` structure in the source `SOURCE`.
+(defmethod load-image ((source rwops) &key key-color alpha-value (image-type nil) (force nil) (free t))
+  "Creates and returns a new surface from the image contained in the `RWOPS` structure in the source `SOURCE`.
 
 ##### Parameters
 
-* `SOURCE` is of type `SDL:RWOPS`.
+* `SOURCE` is of type `RWOPS`.
 * `IMAGE-TYPE` when specified type may be one of `NIL`, `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TGA`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
 * `FORCE` when `T` will force an image to be loaded as `IMAGE-TYPE`, ignoring any *magic number* when present in `SOURCE`. 
-* `FREE` when `T` will automatically free the `SDL:RWOPS` in `SOURCE`."
-  (check-type source sdl:rwops)
+* `FREE` when `T` will automatically free the `RWOPS` in `SOURCE`."
+  (check-type source rwops)
   (let ((image nil))
     (setf image (if image-type
 		    (if force
 			(case image-type
-			  (:BMP (sdl-image-cffi::img-Load-BMP-RW (sdl:fp source)))
-			  (:GIF (sdl-image-cffi::img-Load-GIF-RW (sdl:fp source)))
-			  (:JPG (sdl-image-cffi::img-Load-JPG-RW (sdl:fp source)))
-			  (:LBM (sdl-image-cffi::img-Load-LBM-RW (sdl:fp source)))
-			  (:PCX (sdl-image-cffi::img-Load-PCX-RW (sdl:fp source)))
-			  (:PNG (sdl-image-cffi::img-Load-PNG-RW (sdl:fp source)))
-			  (:PNM (sdl-image-cffi::img-Load-PNM-RW (sdl:fp source)))
-			  (:TGA (sdl-image-cffi::img-Load-TGA-RW (sdl:fp source)))
-			  (:TIF (sdl-image-cffi::img-Load-TIF-RW (sdl:fp source)))
-			  (:XCF (sdl-image-cffi::img-Load-XCF-RW (sdl:fp source)))
-			  (:XPM (sdl-image-cffi::img-Load-XPM-RW (sdl:fp source)))
-			  (:XV  (sdl-image-cffi::img-Load-XV-RW  (sdl:fp source))))
-			(sdl-image-cffi::img-load-typed-rw (sdl:fp source) nil image-type))
-		    (sdl-image-cffi::img-Load-RW (sdl:fp source) nil)))
+			  (:BMP (sdl-image-cffi::img-Load-BMP-RW (fp source)))
+			  (:GIF (sdl-image-cffi::img-Load-GIF-RW (fp source)))
+			  (:JPG (sdl-image-cffi::img-Load-JPG-RW (fp source)))
+			  (:LBM (sdl-image-cffi::img-Load-LBM-RW (fp source)))
+			  (:PCX (sdl-image-cffi::img-Load-PCX-RW (fp source)))
+			  (:PNG (sdl-image-cffi::img-Load-PNG-RW (fp source)))
+			  (:PNM (sdl-image-cffi::img-Load-PNM-RW (fp source)))
+			  (:TGA (sdl-image-cffi::img-Load-TGA-RW (fp source)))
+			  (:TIF (sdl-image-cffi::img-Load-TIF-RW (fp source)))
+			  (:XCF (sdl-image-cffi::img-Load-XCF-RW (fp source)))
+			  (:XPM (sdl-image-cffi::img-Load-XPM-RW (fp source)))
+			  (:XV  (sdl-image-cffi::img-Load-XV-RW  (fp source))))
+			(sdl-image-cffi::img-load-typed-rw (fp source) nil image-type))
+		    (sdl-image-cffi::img-Load-RW (fp source) nil)))
     (if free
-	(sdl:free-rwops source))
+	(free-rwops source))
     (when (sdl-base::is-valid-ptr image)
-      (sdl:surface image))))
+      (let ((surface (surface image)))
+	(when surface
+	  (when key-color (set-color-key key-color :surface surface))
+	  (when alpha-value (set-alpha alpha-value :surface surface))
+	  surface)))))
 
-(defmethod load-image ((source string) &key (image-type nil) (force nil) (free nil))
+
+(defmethod load-image :around ((source string) &key key-color alpha-value (image-type nil) (force nil) (free nil))
   "Creates and returns a new surface from the image in the file at the location `SOURCE`. 
 
 ##### Parameters
@@ -130,7 +135,7 @@
 * `SOURCE` is the filename and path of the file on the drive of type `STRING`. 
 * `IMAGE-TYPE` when specified type may be one of `NIL`, `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TGA`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
 * `FORCE` when `T` will force an image to be loaded as `IMAGE-TYPE`, ignoring any *magic number* when present in `SOURCE`. 
-* `FREE` is only used when `SOURCE` is `SDL:RWOPS`.
+* `FREE` is only used when `SOURCE` is `RWOPS`.
 
 ##### Example
 
@@ -146,18 +151,24 @@
 
     \(LOAD-IMAGE \"image.bmp\" :IMAGE-TYPE :BMP :FORCE T\)"
   (declare (ignore free))
-  (let ((rwops (sdl:create-RWops-from-file source)))
-    (when rwops (load-image rwops
-			    :free t
-			    :image-type image-type
-			    :force force))))
+  (let ((rwops (create-RWops-from-file source)))
+    (when rwops
+      (let ((surface (load-image rwops
+				 :key-color key-color
+				 :alpha-value alpha-value
+				 :free t
+				 :image-type image-type
+				 :force force)))
+	(if surface
+	    surface
+	    (error "ERROR, LOAD-IMAGE: file ~A, not found" source))))))
 
 (defun load-and-convert-image (source &rest named-pairs &key image-type force &allow-other-keys)
   "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*), 
- converts this image to the current display format using `SDL:CONVERT-SURFACE`. 
+ converts this image to the current display format using `CONVERT-SURFACE`. 
 
-Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `SDL:CONVERT-IMAGE`. "
-  (apply #'sdl:convert-surface
+Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `CONVERT-IMAGE`. "
+  (apply #'convert-surface
 	 :surface (load-image source
 			      :free t
 			      :image-type image-type
