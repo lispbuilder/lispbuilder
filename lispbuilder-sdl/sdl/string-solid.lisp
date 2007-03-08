@@ -72,7 +72,7 @@ For example:
 
   * COLOR color is the color used to render text, of type SDL-COLOR
 
-  * Returns the font FONT.
+  * Returns the surface SURFACE.
 
 For example:
   * (DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)"
@@ -84,4 +84,5 @@ For example:
     (:left (draw-string-left-justify-* str x y color nil :surface surface :font font))
     (:right (draw-string-right-justify-* str x y color nil :surface surface :font font))
     (:center (draw-string-centered-* str x y color nil :surface surface :font font))
-    (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER"))))
+    (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER")))
+  surface)

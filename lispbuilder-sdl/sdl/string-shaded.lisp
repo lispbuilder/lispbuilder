@@ -72,7 +72,7 @@ onto surface SURFACE, using the SHADED mode.
 
   * SURFACE is the surface to render text onto, of type SDL-SURFACE 
 
-  * Returns the font FONT.
+  * Returns the surface SURFACE.
 
 For example:
   * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)"
@@ -84,4 +84,5 @@ For example:
     (:left (draw-string-left-justify-* str x y fg-color bg-color :surface surface :font font))
     (:right (draw-string-right-justify-* str x y fg-color bg-color :surface surface :font font))
     (:center (draw-string-centered-* str x y fg-color bg-color :surface surface :font font))
-    (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER"))))
+    (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER")))
+  surface)
