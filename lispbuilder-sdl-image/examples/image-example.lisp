@@ -5,47 +5,46 @@
 
 (in-package #:sdl-image-examples) 
 
+(defvar *yellow* (sdl:color :r 255 :g 255 :b 0))
 
-(defun create-path (filename)
-  (namestring (merge-pathnames filename *bmp-path*)))
-  
 (defun image-example ()
   (sdl:with-init ()
-    (sdl:window 640 480
-		:title-caption "Example loading images of various types" :icon-caption "Lispbuilder-sdl-image Example")
+    (sdl:window 540 250 :title-caption "Loading images of various formats." :icon-caption "IMAGE-EXAMPLE")
     (setf (sdl:frame-rate) 5)
-    (sdl:with-surfaces ((alien-bmp (sdl-image:load-and-convert-image (create-path "lisp.bmp")
-								     :key-color (sdl:color :r 253 :g 59 :b 251)) t)
-			(alien-gif (sdl-image:load-and-convert-image (create-path "lisp.gif")) t)
-			;; Uncomment alien-jpg if the necessary jpeg libraries are in the search path.
-;; 			(alien-jpg (sdl-image:load-and-convert-image "lisp.jpg" *bmp-path*
-;; 								     :key-color (sdl:color :r 253 :g 59 :b 251)) t)
-			(alien-lbm (sdl-image:load-and-convert-image (create-path "lisp.lbm")) t)
-			(alien-pcx (sdl-image:load-and-convert-image (create-path "lisp.pcx")
-								     :key-color (sdl:color :r 253 :g 59 :b 251)) t)
-			;; pnm (See pbm, ppm, pgm below)
-			(alien-pbm (sdl-image:load-and-convert-image (create-path "lisp.pbm")) t)
-			(alien-ppm (sdl-image:load-and-convert-image (create-path "lisp.ppm")
-								     :key-color (sdl:color :r 253 :g 59 :b 251)) t)
-			(alien-pgm (sdl-image:load-and-convert-image (create-path "lisp.pgm")) t)
-			(alien-tga (sdl-image:load-and-convert-image (create-path "lisp.tga")
-								     :image-type :TGA ; TGA must be 'forced'
-								     :force t
-								     :key-color (sdl:color :r 253 :g 59 :b 251)) t))
+    (sdl:initialise-default-font)
+    (let ((images (list (sdl:draw-string-solid-* "BMP" 0 0 :color *yellow*
+						 :surface (sdl:load-image (sdl:create-path "lisp.bmp" *bmp-path*)
+									  :key-color (sdl:color :r 253 :g 59 :b 251)))
+			(sdl:draw-string-solid-* "GIF" 0 0 :color *yellow*
+						 :surface (sdl:load-image (sdl:create-path "lisp.gif" *bmp-path*)))
+			(sdl:draw-string-solid-* "LBM" 0 0 :color *yellow*
+						 :surface (sdl:load-image (sdl:create-path "lisp.lbm" *bmp-path*)
+									  :key-color (sdl:color :r 253 :g 59 :b 251)))
+			(sdl:draw-string-solid-* "PCX" 0 0 :color *yellow*
+						 :surface (sdl:load-image (sdl:create-path "lisp.pcx" *bmp-path*)
+									  :key-color (sdl:color :r 253 :g 59 :b 251)))
+			(sdl:draw-string-solid-* "PBM" 0 0 :color *yellow*
+						 :surface (sdl:load-image (sdl:create-path "lisp.pbm" *bmp-path*)))
+			(sdl:draw-string-solid-* "PPM" 0 0 :color *yellow*
+						 :surface (sdl:load-image (sdl:create-path "lisp.ppm" *bmp-path*)
+									  :key-color (sdl:color :r 253 :g 59 :b 251)))
+			(sdl:draw-string-solid-* "PGM" 0 0 :color *yellow*
+						 :surface (sdl:load-image (sdl:create-path "lisp.pgm" *bmp-path*)))
+			(sdl:draw-string-solid-* "TGA" 0 0 :color *yellow*
+						 :surface (sdl:load-image (sdl:create-path "lisp.tga" *bmp-path*)
+									  :image-type :TGA ; TGA must be specified
+									  :key-color (sdl:color :r 253 :g 59 :b 251))))))
+      (loop
+	 for image in images
+	 for i from 0
+	 for (y x) = (multiple-value-list (floor i 4))
+	 for position = (sdl:point :x (+ 10 (* x 128))
+				   :y (+ 10 (* y 111)))
+	 do (sdl:draw-surface-at image position))
       
-      (let ((image-width (sdl:width alien-bmp)) (image-height (sdl:height alien-bmp))
-	    (image-gap 10) (x 0) (y 0))
-	(dolist (image (list alien-bmp alien-gif #| alien-jpg |# alien-lbm alien-pcx
-			     alien-pbm alien-pgm alien-ppm alien-tga))
-	  (when (equal 0 (mod x 4))
-	    (incf y)
-	    (setf x 0))
-	  (sdl:draw-surface-at-* image (+ image-gap (* x image-width)) (+ image-gap (* y image-height))
-				 :surface sdl:*default-display*)
-	  (incf x))
-	(sdl:with-events ()
-	  (:quit-event () t)
-	  (:key-down-event (:key key)
-			   (if (sdl:key= key :SDL-KEY-ESCAPE)
-			       (sdl:push-quit-event)))
-	  (:idle () (sdl:update-display)))))))
+      (sdl:with-events ()
+	(:quit-event () t)
+	(:key-down-event (:key key)
+			 (if (sdl:key= key :SDL-KEY-ESCAPE)
+			     (sdl:push-quit-event)))
+	(:video-expose-event () (sdl:update-display))))))
