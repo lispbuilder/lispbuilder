@@ -3,7 +3,6 @@
 
 (in-package #:lispbuilder-sdl)
 
-
 (defmethod image-p ((source rwops) image-type)
   "Returns `T` when the type of image contained in the `RWOPS` in the source `SOURCE` is of the type `IMAGE-TYPE`.
 
