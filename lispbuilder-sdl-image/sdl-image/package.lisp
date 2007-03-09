@@ -2,17 +2,14 @@
 
 (in-package #:cl-user)
 
-(defpackage #:lispbuilder-sdl
-  (:use #:cl #:cffi)
-  (:nicknames #:sdl)
-  (:documentation "The methods defined here extend any methods already defined in `lispbuilder-sdl'.")
-  (:export
-   ;; sdl-image-util.lisp
-   #:image-p
-   #:image-type-of
-   #:load-image
-   #:load-and-convert-image))
-
+;; sdl-image-util.lisp
+(mapcar #'(lambda (symbol)
+	    (export (find-symbol symbol 'lispbuilder-sdl) 'lispbuilder-sdl))
+	(list "IMAGE-P"
+	      "IMAGE-TYPE-OF"
+	      "LOAD-IMAGE"
+	      "LOAD-AND-CONVERT-IMAGE"))
+	  
 (defpackage #:lispbuilder-sdl-image
   (:use #:cl #:cffi)
   (:nicknames #:sdl-image)
@@ -23,6 +20,7 @@
 		lispbuilder-sdl:load-image
 		lispbuilder-sdl:load-and-convert-image)
   (:export
+   ;; sdl-image-util.lisp
    #:image-p
    #:image-type-of
    #:load-image
