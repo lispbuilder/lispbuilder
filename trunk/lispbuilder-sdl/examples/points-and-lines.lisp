@@ -20,7 +20,8 @@
 		      (sdl:draw-point point))
 		  (list (sdl:point :x p1 :y p1) (sdl:point :x p1 :y p3) (sdl:point :x p2 :y p4)
 			(sdl:point :x p3 :y p1) (sdl:point :x p4 :y p2) (sdl:point :x p4 :y p4)))))
-      
+
+      (sdl:update-display)
       (sdl:with-events ()
 		       (:quit-event () t)
 		       (:video-expose-event () (sdl:update-display))))))

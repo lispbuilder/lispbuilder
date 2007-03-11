@@ -1,5 +1,5 @@
 ;;;;; Converted from the "Distance 2D" Processing example at:
-;;;;; "http://www.processing.org/learning/examples/distance2d.html"
+;;;;; http://www.processing.org/learning/examples/distance2d.html
 ;;;;; (C)2006 Luke J Crook
 
 (in-package #:sdl-examples) 

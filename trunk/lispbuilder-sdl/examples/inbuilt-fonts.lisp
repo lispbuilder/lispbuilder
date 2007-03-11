@@ -42,7 +42,8 @@
     (display-font sdl:*font-9x18* '*font-9x18*)
     (display-font sdl:*font-9x18B* '*font-9x18B*)
     (display-font sdl:*font-10x20* '*font-10x20*)
-      
+
+    (sdl:update-display)
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl:update-display)))))

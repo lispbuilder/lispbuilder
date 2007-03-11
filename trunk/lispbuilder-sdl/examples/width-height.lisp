@@ -16,7 +16,7 @@
 				  :color (sdl:color))
 		   (sdl:draw-box (sdl:rectangle :x i :y 0 :w 10 :h 200)
 				  :color (sdl:color :r 255 :g 255 :b 255))))
-
+      (sdl:update-display)
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))))))

@@ -21,7 +21,7 @@
 	   do (sdl:draw-line-* (- 300 i) 50 50 i))
 	(sdl:draw-line-* 250 250 250 50)
 	(sdl:draw-line-* 250 250 50 250))
-      
+      (sdl:update-display)      
       (sdl:with-events ()
 	(:quit-event () t)
 	(:key-down-event (:key key)
