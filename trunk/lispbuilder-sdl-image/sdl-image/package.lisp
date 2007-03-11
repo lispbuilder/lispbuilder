@@ -17,8 +17,8 @@
   (:import-from #:lispbuilder-sdl
 		lispbuilder-sdl:image-p
 		lispbuilder-sdl:image-type-of
-		lispbuilder-sdl:load-image
-		lispbuilder-sdl:load-and-convert-image)
+		lispbuilder-sdl:load-and-convert-image
+		lispbuilder-sdl:load-image)
   (:export
    ;; sdl-image-util.lisp
    #:image-p
