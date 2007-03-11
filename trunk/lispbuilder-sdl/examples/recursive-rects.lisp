@@ -60,5 +60,5 @@
 	(:key-down-event (:key key)
 			 (if (sdl:key= key :SDL-KEY-ESCAPE)
 			     (sdl:push-quit-event)))
-	(:video-expose-event ()
-			     (sdl:update-display)))))
+	(:video-expose-event () (sdl:update-display))
+	(:idle () (sdl:update-display)))))
