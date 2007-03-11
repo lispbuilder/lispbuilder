@@ -32,8 +32,9 @@
 	       (:file "metaballs" :depends-on ("package"))
 	       (:file "inbuilt-fonts" :depends-on ("package"))
 	       (:file "circle" :depends-on ("package"))
-	       (:file "stroke" :depends-on ("package"))	       
-	       
+	       (:file "stroke" :depends-on ("package"))
+	       (:file "mouse-2d" :depends-on ("package"))
+
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
  	       (:module "squashed"

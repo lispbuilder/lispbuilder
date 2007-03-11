@@ -80,6 +80,9 @@
    
    ;; stroke.lisp
    #:stroke
+
+   ;; mouse-2d.lisp
+   #:mouse-2d
    
    ;; squashed.lisp
    #:squashed))
