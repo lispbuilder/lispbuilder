@@ -10,7 +10,7 @@
 	  (when key-color (set-color-key key-color :surface surf))
 	  (when alpha-value (set-alpha alpha-value :surface surf))
 	  surf)
-	(error "ERROR, LOAD-IMAGE: file ~A, ~A not found" filename))))
+	(error "ERROR, LOAD-IMAGE: file ~A not found" filename))))
 
 (defun save-image (surface filename)
   "save the supplied filename, must be a bmp file"

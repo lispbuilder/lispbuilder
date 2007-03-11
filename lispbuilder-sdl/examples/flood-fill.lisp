@@ -45,6 +45,7 @@
 		 :for x :from 1 :to iterations
 		 :do (sdl:with-color (random-color (sdl:color :r (random 256) :g (random 256) :b (random 256)))
 		       (sdl:flood-fill-* 100 100 :surface sdl:*default-display*)))))
+      (sdl:update-display)
       (sdl:with-events ()
 		       (:quit-event () t)
 		       (:video-expose-event () (sdl:update-display))))))
@@ -91,7 +92,9 @@
 		 :for x :from 1 :to iterations
 		 :do (sdl:with-color (random-color (sdl:color :r (random 256) :g (random 256) :b (random 256)))
 		       (sdl:flood-fill-stack-* 100 100 :surface sdl:*default-display*)))))
+
+      (sdl:update-display)
       (sdl:with-events ()
-		       (:quit-event () t)
-		       (:video-expose-event () (sdl:update-display))))))
+	(:quit-event () t)
+	(:video-expose-event () (sdl:update-display))))))
 

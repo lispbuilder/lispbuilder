@@ -32,7 +32,8 @@
       ;; Specify a cell to clip the surface as if rendering from a sprite sheet
       (sdl:set-cell-* 10 10 80 80 :surface img-4)
       (sdl:draw-surface-at-* img-4 200 150))
-    
+
+    (sdl:update-display)
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl:update-display)))))
