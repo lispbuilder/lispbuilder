@@ -3,12 +3,14 @@
 (in-package #:cl-user)
 
 ;; sdl-image-util.lisp
-(mapcar #'(lambda (symbol)
-	    (export (find-symbol symbol 'lispbuilder-sdl) 'lispbuilder-sdl))
-	(list "IMAGE-P"
-	      "IMAGE-TYPE-OF"
-	      "LOAD-IMAGE"
-	      "LOAD-AND-CONVERT-IMAGE"))
+(eval-when (:execute :compile-toplevel :load-toplevel)
+  (mapcar #'(lambda (symbol)
+	      (intern symbol 'lispbuilder-sdl)
+	      (export (find-symbol symbol 'lispbuilder-sdl) 'lispbuilder-sdl))
+	  (list "IMAGE-P"
+		"IMAGE-TYPE-OF"
+		"LOAD-IMAGE"
+		"LOAD-AND-CONVERT-IMAGE")))
 	  
 (defpackage #:lispbuilder-sdl-image
   (:use #:cl #:cffi)
