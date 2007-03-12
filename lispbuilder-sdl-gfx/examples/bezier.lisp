@@ -19,6 +19,8 @@
 					   (sdl:point :x 220 :y 150)
 					   (sdl:point :x (- 120 (/ i 8.0)) :y (+ 150 (/ i 4.0))))
 				     5))))
+
+      (sdl:update-display)
       (sdl:with-events ()
 		       (:quit-event () t)
 		       (:video-expose-event () (sdl:update-display))))))

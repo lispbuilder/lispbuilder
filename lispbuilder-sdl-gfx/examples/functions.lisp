@@ -24,6 +24,8 @@
       (draw-target 68 34 100 10)
       (draw-target 152 16 50 3)
       (draw-target 100 144 40 5)
+
+      (sdl:update-display)
       (sdl:with-events ()
 		       (:quit-event () t)
 		       (:video-expose-event () (sdl:update-display))))))

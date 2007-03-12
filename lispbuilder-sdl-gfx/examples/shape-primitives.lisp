@@ -26,8 +26,10 @@
 	  (sdl-gfx:draw-filled-trigon (sdl:point :x 160 :y 10)
 				      (sdl:point :x 195 :y 200)
 				      (sdl:point :x 160 :y 200))))
+
+      (sdl:update-display)
       (sdl:with-events ()
-		       (:quit-event () t)
-		       (:video-expose-event () (sdl:update-display))))))
+	(:quit-event () t)
+	(:video-expose-event () (sdl:update-display))))))
 
 
