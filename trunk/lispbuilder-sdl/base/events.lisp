@@ -22,6 +22,24 @@
   "Pushes a new SDL_Event of type SDL_QUIT onto the event queue."
   (sdl-cffi::SDL-Push-Event (new-event :sdl-quit-event)))
 
+
+(defun push-user-event (&key (code 0) (data1 nil) (data2 nil))
+  "Pushes a new SDL_Event of type SDL_USEREVENT onto the event queue."
+  (let ((event (new-event :SDL-USER-EVENT)))
+    (setf (cffi:foreign-slot-value event
+				   'sdl-cffi::SDL-user-event
+				   'sdl-cffi::code) code
+				   (cffi:foreign-slot-value event
+							    'sdl-cffi::SDL-user-event
+							    'sdl-cffi::data1) (cffi:convert-to-foreign data1 :pointer)
+				   (cffi:foreign-slot-value event
+							    'sdl-cffi::SDL-user-event
+							    'sdl-cffi::data2) (cffi:convert-to-foreign data2 :pointer))
+    (sdl-cffi::SDL-Push-Event event)))
+
+
+
+
 ;;; Event Handling & Timing routine from here   -----------------------
 
 
