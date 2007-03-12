@@ -14,6 +14,8 @@
 				     :color sdl:*black*)
 		   (sdl-gfx:draw-box (sdl:rectangle :x i :y 0 :w 10 :h 200)
 				     :color sdl:*white*)))
+
+      (sdl:update-display)
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))))))

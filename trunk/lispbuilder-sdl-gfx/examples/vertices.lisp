@@ -43,6 +43,8 @@
 	    (sdl-gfx:add-vertex (sdl:point :x 160 :y 10))
 	    (sdl-gfx:add-vertex (sdl:point :x 170 :y 150))
 	    (sdl-gfx:add-vertex (sdl:point :x 60 :y 150)))))
+
+      (sdl:update-display)
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))))))

@@ -21,7 +21,8 @@
       (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
       (draw-circle 126 170 6)
+
       (sdl:update-display)
       (sdl:with-events ()
-		       (:quit-event () t)
-		       (:video-expose-event () (sdl:update-display))))))
+	(:quit-event () t)
+	(:video-expose-event () (sdl:update-display))))))
