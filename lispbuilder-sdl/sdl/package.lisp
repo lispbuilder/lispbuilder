@@ -13,7 +13,8 @@
 		lispbuilder-sdl-base::push-quit-event
 		lispbuilder-sdl-base::key=
 		lispbuilder-sdl-base::display-cursor
-		lispbuilder-sdl-base::is-valid-ptr)
+		lispbuilder-sdl-base::is-valid-ptr
+		lispbuilder-sdl-base::push-user-event)
   (:import-from #:lispbuilder-sdl-cffi
 		sdl-cffi::sdl-opengl
 		lispbuilder-sdl-base::sdl-get-ticks
@@ -295,6 +296,7 @@
    #:key=
    #:display-cursor
    #:is-valid-ptr
+   #:push-user-event
    ))
 
 

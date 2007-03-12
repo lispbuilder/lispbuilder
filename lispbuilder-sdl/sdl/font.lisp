@@ -49,6 +49,7 @@
 
 (defmethod draw-font-at-* (x y &key (font *default-font*) (surface *default-surface*))
   (check-type font sdl-font)
+  (check-type (cached-surface font) sdl-surface)
   (draw-surface-at-* (cached-surface font) x y :surface surface))
 
 (defmethod free-font ((font sdl-font))
