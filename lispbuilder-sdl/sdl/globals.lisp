@@ -27,8 +27,8 @@
 (defvar *sdl-initialized* nil)
 (defvar *sdl-init-on-startup* nil)
 (defvar *sdl-quit-on-exit* nil)
-(defvar *initialize-on-startup* (logior sdl-cffi::SDL-INIT-VIDEO))
-(defvar *quit-on-exit* (logior sdl-cffi::SDL-INIT-VIDEO))
+(defvar *initialize-on-startup* (logior SDL-INIT-VIDEO))
+(defvar *quit-on-exit* (logior SDL-INIT-VIDEO))
 
 (defvar *external-init-on-startup* nil
   "A list of functions that are called in \(INIT-SDL\)")

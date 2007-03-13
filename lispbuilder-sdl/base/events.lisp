@@ -520,7 +520,7 @@
   `((eql (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type :SDL-QUIT-EVENT)
 	 (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type))
     (setf ,quit (funcall #'(lambda ()
-                             ,@forms)))))
+			     ,@forms)))))
 
 (defun expand-userevent (sdl-event params forms)
   (let ((keyword-list nil)
@@ -561,8 +561,8 @@
   `(progn
      ,@forms))
 
-(defmacro with-events (args &body events)
-  "(with-events
+(defmacro with-events ((&optional (type :poll)) &body events)
+  "(with-events (:poll)
      (:active-event (:gain gain :state state)
 		     t)
      (:key-down-event (:state state :scancode scancode :key key :mod mod :unicode unicode)
@@ -595,99 +595,116 @@
       t)
      (:idle ()
       &body))
-   NOTE: (:quit t) is mandatory if you ever want to exit your application."
-  (declare (ignore args))
-  (let ((quit (gensym "quit")) (sdl-event (gensym "sdl-event")) (poll-event (gensym "poll-event")) 
+   NOTE: (:quit-event ( ) t) is mandatory if you ever want to exit your application."
+  (let ((quit (gensym "quit")) (sdl-event (gensym "sdl-event")) (event-status (gensym "event-status"))
         (previous-ticks (gensym "previous-ticks")) (current-ticks (gensym "current-ticks")))
     `(let ((,sdl-event (new-event))
            (,quit nil)
            (,previous-ticks nil)
            (,current-ticks nil))
-      ;(init-framerate-manager)
-      (do ()
-	  ((eql ,quit t))
-	(do ((,poll-event (sdl-cffi::SDL-Poll-Event ,sdl-event) (sdl-cffi::SDL-Poll-Event ,sdl-event)))
-	    ((eql ,poll-event 0) nil)
-	  (cond
-            ,@(remove nil 
-                      (mapcar #'(lambda (event)
-                                  (case (first event)
-                                    (:active-event
-                                     (expand-activeevent sdl-event 
-                                                         (first (rest event)) 
-							 (rest (rest event))))
-				    (:key-down-event
-				     (expand-keydown sdl-event 
-						     (first (rest event)) 
-						     (rest (rest event))))
-				    (:key-up-event
-				     (expand-keyup sdl-event 
-						   (first (rest event)) 
-						   (rest (rest event))))
-				    (:mouse-motion-event
-				     (expand-mousemotion sdl-event 
-							 (first (rest event)) 
-							 (rest (rest event))))
-				    (:mouse-button-down-event
-				     (expand-mousebuttondown sdl-event
-							     (first (rest event)) 
-							     (rest (rest event))))
-				    (:mouse-button-up-event
-				     (expand-mousebuttonup sdl-event 
-							   (first (rest event)) 
-							   (rest (rest event))))
-				    (:joy-axis-motion-event
-				     (expand-joyaxismotion sdl-event 
-							   (first (rest event)) 
-							   (rest (rest event))))
-				    (:joy-button-down-event
-				     (expand-joybuttondown sdl-event 
-							   (first (rest event)) 
-							   (rest (rest event))))
-				    (:joy-button-up-event
-				     (expand-joybuttonup sdl-event 
-							 (first (rest event)) 
-							 (rest (rest event))))
-				    (:joy-hat-motion-event
-				     (expand-joyhatmotion sdl-event 
+					;(init-framerate-manager)
+       (do ()
+	   ((eql ,quit t))
+	 (do ((,event-status ,(case type
+				    (:poll `(sdl-cffi::SDL-Poll-Event ,sdl-event))
+				    (:wait `(sdl-cffi::SDL-Wait-Event ,sdl-event))
+				    (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type)))
+			     ,(case type
+				    (:poll `(sdl-cffi::SDL-Poll-Event ,sdl-event))
+				    (:wait `(sdl-cffi::SDL-Wait-Event ,sdl-event))
+				    (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type)))))
+	     (,(case type
+		     (:poll `(or ,quit
+				 (eql ,event-status 0)))
+		     (:wait `(or ,quit
+				 (eql ,event-status 0)))) nil)
+	   (cond
+	     ,@(remove nil 
+		       (mapcar #'(lambda (event)
+				   (case (first event)
+				     (:active-event
+				      (expand-activeevent sdl-event 
 							  (first (rest event)) 
 							  (rest (rest event))))
-				    (:joy-ball-motion-event
-				     (expand-joyballmotion sdl-event 
+				     (:key-down-event
+				      (expand-keydown sdl-event 
+						      (first (rest event)) 
+						      (rest (rest event))))
+				     (:key-up-event
+				      (expand-keyup sdl-event 
+						    (first (rest event)) 
+						    (rest (rest event))))
+				     (:mouse-motion-event
+				      (expand-mousemotion sdl-event 
+							  (first (rest event)) 
+							  (rest (rest event))))
+				     (:mouse-button-down-event
+				      (expand-mousebuttondown sdl-event
+							      (first (rest event)) 
+							      (rest (rest event))))
+				     (:mouse-button-up-event
+				      (expand-mousebuttonup sdl-event 
+							    (first (rest event)) 
+							    (rest (rest event))))
+				     (:joy-axis-motion-event
+				      (expand-joyaxismotion sdl-event 
+							    (first (rest event)) 
+							    (rest (rest event))))
+				     (:joy-button-down-event
+				      (expand-joybuttondown sdl-event 
+							    (first (rest event)) 
+							    (rest (rest event))))
+				     (:joy-button-up-event
+				      (expand-joybuttonup sdl-event 
+							  (first (rest event)) 
+							  (rest (rest event))))
+				     (:joy-hat-motion-event
+				      (expand-joyhatmotion sdl-event 
 							   (first (rest event)) 
 							   (rest (rest event))))
-				    (:video-resize-event
-				     (expand-videoresize sdl-event 
-							 (first (rest event)) 
+				     (:joy-ball-motion-event
+				      (expand-joyballmotion sdl-event 
+							    (first (rest event)) 
+							    (rest (rest event))))
+				     (:video-resize-event
+				      (expand-videoresize sdl-event 
+							  (first (rest event)) 
+							  (rest (rest event))))
+				     (:video-expose-event
+				      (expand-videoexpose sdl-event 
+							  (rest (rest event))))
+				     (:sys-wm-event
+				      (expand-syswmevent sdl-event 
 							 (rest (rest event))))
-				    (:video-expose-event
-				     (expand-videoexpose sdl-event 
-							 (rest (rest event))))
-				    (:sys-wm-event
-				     (expand-syswmevent sdl-event 
+				     (:quit-event
+				      (expand-quit sdl-event 
+						   (rest (rest event))
+						   quit))
+				     (:user-event
+				      (expand-userevent sdl-event 
+							(first (rest event)) 
 							(rest (rest event))))
-				    (:quit-event
-				     (expand-quit sdl-event 
-						  (rest (rest event)) 
-						  quit))
-				    (:user-event
-				     (expand-userevent sdl-event 
-						       (first (rest event)) 
-						       (rest (rest event))))))
-                              events))))
-	(if (null ,previous-ticks)
-	    (setf ,previous-ticks (sdl-cffi::SDL-Get-Ticks))
-	    (setf ,previous-ticks ,current-ticks))
-	(setf ,current-ticks (sdl-cffi::SDL-Get-Ticks))
-	(set-timescale (/ 
-			(set-ticks (- ,current-ticks ,previous-ticks)) 
-			(get-worldtime)))
-	,@(remove nil 
-		  (mapcar #'(lambda (event)
-			      (cond
-				((eql :idle (first event))
-				 (expand-idle (rest event)))))
-			  events))
-	(progn
-	  (frame-rate-delay)))
-      (cffi:foreign-free ,sdl-event))))
+				     (:idle nil)
+				     (otherwise
+				      (error
+				       "WITH-EVENTS: EVENTS ~A, must be one or more of; 
+:ACTIVE-EVENT, :KEY-DOWN-EVENT, :KEY-UP-EVENT, :MOUSE-MOTION-EVENT, :MOUSE-BUTTON-DOWN-EVENT, :MOUSE-BUTTON-UP-EVENT,
+:JOY-AXIS-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :JOY-HAT-MOTION-EVENT, :JOY-BALL-MOTION-EVENT, 
+:VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :SYS-WM-EVENT, :QUIT-EVENT, :USER-EVENT or :IDLE." (first event)))))
+			       events))))
+	 (if (null ,previous-ticks)
+	     (setf ,previous-ticks (sdl-cffi::SDL-Get-Ticks))
+	     (setf ,previous-ticks ,current-ticks))
+	 (setf ,current-ticks (sdl-cffi::SDL-Get-Ticks))
+	 (set-timescale (/ 
+			 (set-ticks (- ,current-ticks ,previous-ticks)) 
+			 (get-worldtime)))
+	 ,@(remove nil 
+		   (mapcar #'(lambda (event)
+			       (cond
+				 ((eql :idle (first event))
+				  (expand-idle (rest event)))))
+			   events))
+	 (progn
+	   (frame-rate-delay)))
+       (cffi:foreign-free ,sdl-event))))
