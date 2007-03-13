@@ -5,7 +5,7 @@
 
 
 ;; (defmacro with-init (renderer &body body)
-;;   (let ((rend (gensym "rend-")))
+;;   (let ((rend (gensym "rend-Initializes")))
 ;;     `(let ((,rend ,(if renderer
 ;; 		       `(make-instance ,@renderer)
 ;; 		       `(make-instance 'sdl))))
@@ -17,10 +17,54 @@
 ;; 	   (hook-finalize-engine ,rend))))))
 
 (defmacro with-init (flags &body body)
-  "Initializes the SDL library and SDL subsystems prior to executing the forms in BODY.
-Upon exit will uninitialize the SDL library and subsystems only when SDL-QUIT-ON-EXIT returns true T.
-Initializes the SDL library using INIT-SDL and INIT-SUB-SYSTEMS.
-Uninitializes the SDL library using QUIT-SUB-SYSTEMS and QUIT-SDL."
+  "`WITH-INIT` is a convenience macro that will attempt to initialise the SDL library and SDL subsystems 
+prior to executing the forms in `BODY`. Upon exit `WITH-INIT` will uninitialize the SDL library and SDL subsystems.
+
+The lispbuilder-sdl initialization routines are somewhat complicated by the facts that: 
+* A Lisp development environemnt allows foreign libraries to be loaded and then 
+initialised/uninitialised multiple times prior to be unloaded.
+* Developers of C libraries never expected their creations to be used in a non-C type development environment 
+ and therefore libraries frequently core dump when resources are not feed upon uninitialisation.
+
+lispbuilder-sdl therefore provides mechanisms affording the programmer a finer granularity of control 
+for the loading/unloading initialisation/uninitialisation of foreign libraries:
+* [INITIALIZE-ON-STARTUP](#initialize-on-startup)
+* [QUIT-ON-EXIT](#quit-on-exit)
+* [LIST-SUB-SYSTEMS](#list-sub-systems)
+* [RETURN-SUB-SYSTEMS-OF-STATUS](#return-sub-systems-of-status)
+* [INIT-SUB-SYSTEMS](#init-sub-systems)
+* [QUIT-SUB-SYSTEMS](#quit-sub-systems)
+* [INIT-SDL](#init-sdl)
+* [QUIT-SDL](#quit-sdl)
+
+##### Defaults
+
+* By default the only SDL subsystem initialised by `WITH-INIT` is the video subsystem `SDL-INIT-VIDEO`. 
+Additional SDL subsystems can be initialized by calling [INITIALIZE-ON-STARTUP](#initialize-on-startup).
+* By default the only SDL subsystem uninitialised by `WITH-INIT` is the video subsystem `SDL-INIT-VIDEO`.
+Additional SDL subsystems can be uninitialized by calling [QUIT-ON-EXIT](#quit-on-exit).
+
+###### Initialisation/Uninitialisation of the SDL library
+
+The SDL library is initialised only:
+* If the library is not yet already initialized, or  
+* [SDL-INIT-ON-STARTUP](#sdl-init-on-startup)` is `T`.
+
+The SDL library is uninitialised only:
+* When [SDL-QUIT-ON-EXIT](#sdl-quit-on-exit)` is `T`.
+
+###### Initialisation/Uninitialisation of external libraries
+
+Hooks are provided to allow external libraries to be initialized or uninitialised automatically following 
+the initialisation or uninitialisation of the SDL library.
+
+To initialise an external library, push a function that takes no arguments onto `\*EXTERNAL-INIT-ON-STARTUP\*`.
+
+    \(pushnew 'init-ttf sdl:*external-init-on-startup*\) 
+
+To uninitialise an external library, push a function that takes no arguments onto `\*EXTERNAL-QUIT-ON-EXIT\*`.
+
+    \(pushnew 'quit-ttf sdl:*external-quit-on-exit*\)"
   (declare (ignore flags))
   `(block nil
      (unwind-protect
@@ -31,33 +75,38 @@ Uninitializes the SDL library using QUIT-SUB-SYSTEMS and QUIT-SDL."
        (quit-sdl))))
 
 (defun initialize-on-startup (&rest flags)
-  "Sets one or more SDL subsystems that shall be initialized in 
-subsequent calls to INIT-SUB-SYSTEMS. Where FLAGS may be one or more of:
+  "Sets one or more SDL subsystems that must be initialized in 
+subsequent calls to [INIT-SUB-SYSTEMS](#init-sub-systems).
 
-SDL-CFFI::SDL-INIT-EVERYTHING, SDL-CFFI::SDL-INIT-VIDEO, 
-SDL-CFFI::SDL-INIT-CDROM, SDL-CFFI::SDL-INIT-AUDIO, 
-SDL-CFFI::SDL-INIT-TIMER, SDL-CFFI::SDL-INIT-JOYSTICK,
-SDL-CFFI::SDL-INIT-EVENTTHREAD, SDL-CFFI::SDL-INIT-NOPARACHUTE."
+##### Parameters
+
+* `FLAGS` may be one or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`.
+
+##### Returns
+
+* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS`."
   (setf *initialize-on-startup* (apply #'logior flags)))
 
 (defun quit-on-exit (&rest flags)
-    "Sets one or more SDL subsystems that shall be uninitialized in 
-subsequent calls to QUIT-SUB-SYSTEMS. Where FLAGS may be one or more of:
+    "Sets one or more SDL subsystems that must be uninitialized in 
+subsequent calls to [QUIT-SUB-SYSTEMS](#quit-sub-systems). 
 
-SDL-CFFI::SDL-INIT-EVERYTHING, SDL-CFFI::SDL-INIT-VIDEO, 
-SDL-CFFI::SDL-INIT-CDROM, SDL-CFFI::SDL-INIT-AUDIO, 
-SDL-CFFI::SDL-INIT-TIMER, SDL-CFFI::SDL-INIT-JOYSTICK,
-SDL-CFFI::SDL-INIT-EVENTTHREAD, SDL-CFFI::SDL-INIT-NOPARACHUTE."
+##### Parameters
+
+* `FLAGS` may be one or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`.
+
+##### Returns
+
+* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS`."
   (setf *quit-on-exit* (apply #'logior flags)))
 
 (defun list-sub-systems (flag)
-  "Returns a list of SDL subsystems that are specified in FLAG.
-Where FLAG is an INTEGER bitmask containing the logior of the following:
+  "Returns a list of SDL subsystems that are specified in INTEGER bitmask `FLAGS`.
 
-SDL-CFFI::SDL-INIT-EVERYTHING, SDL-CFFI::SDL-INIT-VIDEO, 
-SDL-CFFI::SDL-INIT-CDROM, SDL-CFFI::SDL-INIT-AUDIO, 
-SDL-CFFI::SDL-INIT-TIMER, SDL-CFFI::SDL-INIT-JOYSTICK,
-SDL-CFFI::SDL-INIT-EVENTTHREAD, SDL-CFFI::SDL-INIT-NOPARACHUTE"
+`FLAGS` may contain a logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`."
   (let ((subsystems nil))
     (if (= flag sdl-cffi::sdl-init-everything)
 	(push (list 'sdl-cffi::sdl-init-everything
@@ -95,17 +144,17 @@ SDL-CFFI::SDL-INIT-EVENTTHREAD, SDL-CFFI::SDL-INIT-NOPARACHUTE"
     subsystems))
 
 (defun return-sub-systems-of-status (flags status)
-  "Returns the status of the the specified SDL subsystems as an INTEGER bitmask. 
+  "Returns the status `STATUS` of the the specified SDL subsystems in `FLAGS` as an INTEGER bitmask. 
 
-Where FLAG is an INTEGER bitmask containing the logior of the following:
-SDL-CFFI::SDL-INIT-EVERYTHING, SDL-CFFI::SDL-INIT-VIDEO, 
-SDL-CFFI::SDL-INIT-CDROM, SDL-CFFI::SDL-INIT-AUDIO, 
-SDL-CFFI::SDL-INIT-TIMER, SDL-CFFI::SDL-INIT-JOYSTICK,
-SDL-CFFI::SDL-INIT-EVENTTHREAD, SDL-CFFI::SDL-INIT-NOPARACHUTE
+##### Parameters
+* `FLAGS` may contain a logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`.
+* `STATUS` when `T` determines the status of initialised subsystems.
+`STATUS` when `NIL`, determines the status of uninitialised subsystems. 
 
-When STATUS is T, the SDL subsystems in FLAG that are initialized are returned as an INTEGER bitmask.
-
-When STATUS is NIL, the SDL subsystems in FLAG that are uninitiazed are returned as an INTEGER bitmask."
+##### Returns
+* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS` that are initialised when `STATUS` is `T` or 
+uninitialised when `STATUS` is `NIL`."
   (let ((subsystems (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything))
 	(to-initialize 0)
 	(status-fn (if status #'/= #'=)))
@@ -118,30 +167,24 @@ When STATUS is NIL, the SDL subsystems in FLAG that are uninitiazed are returned
     to-initialize))
 
 (defun init-sub-systems (&optional (flags *initialize-on-startup*))
-  "Initializes the SDL subsystems specified in FLAGS. 
-Where FLAG is an INTEGER bitmask containing the logior of the following:
-SDL-CFFI::SDL-INIT-EVERYTHING, SDL-CFFI::SDL-INIT-VIDEO, 
-SDL-CFFI::SDL-INIT-CDROM, SDL-CFFI::SDL-INIT-AUDIO, 
-SDL-CFFI::SDL-INIT-TIMER, SDL-CFFI::SDL-INIT-JOYSTICK,
-SDL-CFFI::SDL-INIT-EVENTTHREAD, SDL-CFFI::SDL-INIT-NOPARACHUTE
+  "Initializes the SDL subsystems specified in the `INTEGER` bitmask `FLAGS`. 
+`FLAGS` contains the logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`.
 
-INIT-SUB-SYSTEMS can be called only after SDL is succesfully initialized using INIT-SDL."
+`INIT-SUB-SYSTEMS` can be called only after SDL is succesfully initialized by [INIT-SDL](#init-sdl)."
   (sdl-cffi::sdl-init-sub-system (return-sub-systems-of-status flags nil)))
 
 (defun quit-sub-systems (&optional (flags *quit-on-exit*))
-  "Uninitializes the SDL subsystems specified in FLAGS. 
-Where FLAG is an INTEGER bitmask containing the logior of the following:
-SDL-CFFI::SDL-INIT-EVERYTHING, SDL-CFFI::SDL-INIT-VIDEO, 
-SDL-CFFI::SDL-INIT-CDROM, SDL-CFFI::SDL-INIT-AUDIO, 
-SDL-CFFI::SDL-INIT-TIMER, SDL-CFFI::SDL-INIT-JOYSTICK,
-SDL-CFFI::SDL-INIT-EVENTTHREAD, SDL-CFFI::SDL-INIT-NOPARACHUTE
+  "Uninitializes the SDL subsystems specified in the `INTEGER` bitmask `FLAGS`. 
+`FLAGS` contains the logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`.
 
-QUIT-SUB-SYSTEMS can be called only after SDL is successfully intialized using INIT-SDL."
+`QUIT-SUB-SYSTEMS` can be called only after SDL is successfully intialized using [INIT-SDL](#init-sdl)."
   (sdl-cffi::sdl-quit-sub-system (return-sub-systems-of-status flags t)))
 
 (defun sdl-quit-on-exit ()
-  "Returns T if QUIT-SDL is called when the macro WITH-INIT exits. 
-Returns NIL otherwise."
+  "Returns `T` if the SDL library must be uninitialised in [QUIT-SDL](#quit-sdl), or [WITH-INIT](#with-init). 
+Returns `NIL` otherwise."
   *sdl-quit-on-exit*)
 (defun set-sdl-quit-on-exit (val)
   (setf *sdl-init-on-startup* val
@@ -153,8 +196,8 @@ Returns NIL otherwise."
   (list-sub-systems (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
 
 (defun init-sdl (&optional (init (sdl-init-on-startup)))
-  "Initializes SDL using INIT-SDL when the &optional parameter INIT is T, or
-the value returned by \(SDL-INIT-ON-STARTUP\) when INIT is unspecified."
+  "Initalizes the SDL library when the &OPTIONAL parameter `INIT` is `T`, or 
+the value returned by [SDL-INIT-ON-STARTUP](#sdl-quit-on-exit) is `T`."
   (let ((initialized? (if (or init
 			      (not *sdl-initialized*))
 			  (if (sdl-base::init-sdl :flags nil)
@@ -166,8 +209,8 @@ the value returned by \(SDL-INIT-ON-STARTUP\) when INIT is unspecified."
     initialized?))
 
 (defun quit-sdl (&optional (quit (sdl-quit-on-exit)))
-  "Uninitalizes SDL using QUIT-SDL when the &optional parameter QUIT is T, or 
-the value returned by \(SDL-QUIT-ON-EXIT\) if QUIT is unspecified."
+  "Uninitalizes the SDL library when the &OPTIONAL parameter `QUIT` is `T`, or 
+the value returned by [SDL-QUIT-ON-EXIT](#sdl-quit-on-exit) is `T`."
   (when quit
     (setf *sdl-initialized* nil)
     (sdl-cffi::SDL-Quit))
@@ -175,8 +218,8 @@ the value returned by \(SDL-QUIT-ON-EXIT\) if QUIT is unspecified."
     (funcall fn)))
 
 (defun sdl-init-on-startup ()
-  "Returns T if INIT-SDL will be called in the macro WITH-INIT. 
-Returns NIL otherwise."
+    "Returns `T` if the SDL library must be initialised in [INIT-SDL](#init-sdl), or [WITH-INIT](#with-init). 
+Returns `NIL` otherwise."
   *sdl-init-on-startup*)
 (defun set-sdl-init-on-startup (val)
   (setf *sdl-init-on-startup* val))

@@ -18,7 +18,17 @@
   (:import-from #:lispbuilder-sdl-cffi
 		sdl-cffi::sdl-opengl
 		lispbuilder-sdl-base::sdl-get-ticks
-		lispbuilder-sdl-base::sdl-gl-swap-buffers)
+		lispbuilder-sdl-base::sdl-gl-swap-buffers
+
+		lispbuilder-sdl-cffi::sdl-init-everything
+		lispbuilder-sdl-cffi::sdl-init-video
+		lispbuilder-sdl-cffi::sdl-init-cdrom
+		lispbuilder-sdl-cffi::sdl-init-audio 
+		lispbuilder-sdl-cffi::sdl-init-timer
+		lispbuilder-sdl-cffi::sdl-init-joystick
+		lispbuilder-sdl-cffi::sdl-init-eventthread
+		lispbuilder-sdl-cffi::sdl-init-noparachute
+		)
   (:export
 
    ;; globals.lisp
@@ -287,6 +297,15 @@
    #:sdl-get-ticks
    #:sdl-opengl
    #:sdl-gl-swap-buffers
+   #:sdl-init-everything
+   #:sdl-init-video
+   #:sdl-init-cdrom
+   #:sdl-init-audio 
+   #:sdl-init-timer
+   #:sdl-init-joystick
+   #:sdl-init-eventthread
+   #:sdl-init-noparachute
+   
    
    ;; Imports from lispbuilder-sdl-base
    #:frame-rate
