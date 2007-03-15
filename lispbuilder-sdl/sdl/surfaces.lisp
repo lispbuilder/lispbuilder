@@ -10,21 +10,34 @@
 (defclass sdl-surface ()
   ((foreign-pointer-to-surface :reader fp :initform nil :initarg :surface)
    (foreign-pointer-to-position-rect :reader fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)
-   (foreign-pointer-to-cell-rect :accessor fp-cell :initform (cffi:null-pointer) :initarg cell)))
+   (foreign-pointer-to-cell-rect :accessor fp-cell :initform (cffi:null-pointer) :initarg cell))
+  (:documentation
+   "A wrapper for a foreign object of type SDL_Surface. A `SDL-SURFACE` object contains:
+* a foreign SDL_Surface, 
+* a foreign SDL_Rect used to position the surface for blitting operations, and 
+* an SDL_Rect that defines the bounds of the surface to use when blitting."))
 
 ;;; An object of type display should never be finalized by CFFI
 ;;; at time of garbage collection.
-(defclass display-surface (sdl-surface) ())
+(defclass display-surface (sdl-surface) ()
+  (:documentation
+   "A subclass of `SDL-SURFACE` that holds the surface for the current *display*. 
+This object will never be garbage collected."))
 
 ;;; An object of type is finalized by CFFI
 ;;; at time of garbage collection.
-(defclass surface (sdl-surface) ())
+(defclass surface (sdl-surface) ()
+  (:documentation
+   "A subclass of 'SDL-SURFACE' that holds a standard SDL_Surface object.
+This object will be garbage collected and the surface freed when out of scope."))
 
 (defclass rectangle-array ()
   ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
    (length :reader len :initform nil :initarg :length)))
 
 (defun surface (surface-fp &optional (display nil))
+  "Creates a new `SURFACE` or a new `DISPLAY-SURFACE` when `DISPLAY` is `T`. 
+`SURFACE-FP` must be a pointer to a valid SDL_Surface foreign object."
   (if (sdl-base::is-valid-ptr surface-fp)
       (let ((surface (if display
 			 (make-instance 'display-surface :surface surface-fp)
@@ -113,68 +126,92 @@ Also free the SDL_Rect used as the cell mask."
       (cffi:foreign-free fp-cell))))
 
 (defmethod width ((surface sdl-surface))
+  "Returns the width of the surface `SURFACE` as an `INTEGER`."
   (sdl-base::surf-w (fp surface)))
 (defmethod (setf width) (w-val (surface sdl-surface))
+  "Sets the width of the surface `SURFACE`. Must be an `INTEGER`."
   (setf (sdl-base::rect-w (fp-position surface)) w-val))
 
 (defmethod height ((surface sdl-surface))
+  "Returns the height of the surface `SURFACE` as an `INTEGER`."
   (sdl-base::surf-h (fp surface)))
 (defmethod (setf height) (h-val (surface sdl-surface))
+  "Sets the height of the surface `SURFACE`. Must be an `INTEGER`."
   (setf (sdl-base::rect-h (fp-position surface)) h-val))
 
 (defmethod x ((surface sdl-surface))
+  "Returns the x position coordinate of the surface `SURFACE` as an `INTEGER`."
   (sdl-base::rect-x (fp-position surface)))
 (defmethod (setf x) (x-val (surface sdl-surface))
+  "Returns the `X` position coordinate of the surface `SURFACE`. Must be an `INTEGER`."
   (setf (sdl-base::rect-x (fp-position surface)) x-val))
 
 (defmethod y ((surface sdl-surface))
+  "Returns the y position coordinate of the surface `SURFACE` as an `INTEGER`."
   (sdl-base::rect-y (fp-position surface)))
 (defmethod (setf y) (y-val (surface sdl-surface))
+  "Returns the `Y` position coordinate of the surface `SURFACE`. Must be an `INTEGER`."  
   (setf (sdl-base::rect-y (fp-position surface)) y-val))
 
 (defmethod point-* ((surface sdl-surface))
+  "Returns the `X` and `Y` position coordinates of the surface `SURFACE` as a spread."
   (values (x surface) (y surface)))
 
 (defmethod get-point ((surface sdl-surface))
+  "Returns the `X` and `Y` position coordinates of the surface `SURFACE` as a `POINT`."
   (vector (x surface) (y surface)))
 
 (defmethod set-point ((surface sdl-surface) (position vector))
+  "Sets the `X` and `Y` position coordinates of the surface `SURFACE`. `POSITION` is a `POINT`."
   (set-point-* surface :x (x position) :y (y position))
   surface)
 
 (defmethod set-point-* ((surface sdl-surface) &key x y)
+  "Sets the `X` and `Y` position coordinates of the surface `SURFACE`. `X` and `Y` are `INTEGERS`."
   (when x (setf (x surface) x))
   (when y (setf (y surface) y))
   surface)
 
 (defmethod position-* ((surface sdl-surface))
+  "See [POSITION](#position)."
   (values (x surface) (y surface)))
 
 (defmethod get-position ((surface sdl-surface))
-  (vector (x surface) (y surface)))
+  "See [GET-POINT](#get-point)."
+  (point :x (x surface) :y (y surface)))
 
 (defmethod set-position ((surface sdl-surface) (position vector))
+    "See [SET-POINT](#set-point)."
   (set-position-* surface :x (x position) :y (y position))
   surface)
 
 (defmethod set-position-* ((surface sdl-surface) &key x y)
+  "See [SET-POINT-*](#set-point-*)."
   (when x (setf (x surface) x))
   (when y (setf (y surface) y))
   surface)
 
 (defmethod set-surface ((surface sdl-surface) (position vector))
-  (set-surface-* surface :x (x position) :y (y position))
+"Sets the coordinates of the surface `SURFACE` to `POSITION`, 
+where position is of type `POINT`."
+(set-surface-* surface :x (x position) :y (y position))
   surface)
 
 (defmethod set-surface-* ((surface sdl-surface) &key x y)
+"Sets the coordinates of the surface `SURFACE` to the spead `X` and `Y` `INTEGER` coordinates.
+`X` and `Y` are `KEY`word parameters having default values of `0` if unspecified."
   (when x (setf (x surface) x))
   (when y (setf (y surface) y))
   surface)
 
 (defmethod rectangle-* ((surface sdl-surface))
+  "Returns the `X`, `Y`, `WIDTH` and `HEIGHT` values of the surface `SURFACE` as a spread. 
+The `RESULT` is `\(VALUES X Y WIDTH HEIGHT\)`"
   (values (x surface) (y surface) (width surface) (height surface)))
 
 (defmethod get-rectangle-* ((surface sdl-surface))
+  "Creates and returns a `RECTANGLE` object from the `X`, `Y`, `WIDTH` and `HEIGHT` 
+values in the surface `SURFACE`."
   (rectangle :x (x surface)
 	     :y (y surface)
 	     :w (width surface)
