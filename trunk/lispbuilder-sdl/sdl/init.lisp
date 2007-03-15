@@ -1,4 +1,3 @@
-
 (in-package #:lispbuilder-sdl)
 
 ;;;; Functions
@@ -20,14 +19,16 @@
   "`WITH-INIT` is a convenience macro that will attempt to initialise the SDL library and SDL subsystems 
 prior to executing the forms in `BODY`. Upon exit `WITH-INIT` will uninitialize the SDL library and SDL subsystems.
 
-The lispbuilder-sdl initialization routines are somewhat complicated by the facts that: 
-* A Lisp development environemnt allows foreign libraries to be loaded and then 
-initialised/uninitialised multiple times prior to be unloaded.
-* Developers of C libraries never expected their creations to be used in a non-C type development environment 
- and therefore libraries frequently core dump when resources are not feed upon uninitialisation.
+The lispbuilder-sdl initialization routines are somewhat complicated by the fact that 
+a Lisp development environment will load a foreign library once but then 
+initialise and uninitialise the library multiple times. A C/C++ development environemnt will open and then close a library 
+after each execution, freeing all resources left hanging by an incomplete or buggy uninitialise function. 
+C libraries may therefore frequently core dump in a Lisp environment when resources are not feed properly prior to the library 
+being reinitialized.
 
-lispbuilder-sdl therefore provides mechanisms affording the programmer a finer granularity of control 
-for the loading/unloading initialisation/uninitialisation of foreign libraries:
+LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control 
+of the initialisation/uninitialisation of foreign libraries. The
+fuctions that provide these capabilities are as follows:
 * [INITIALIZE-ON-STARTUP](#initialize-on-startup)
 * [QUIT-ON-EXIT](#quit-on-exit)
 * [LIST-SUB-SYSTEMS](#list-sub-systems)
@@ -39,31 +40,40 @@ for the loading/unloading initialisation/uninitialisation of foreign libraries:
 
 ##### Defaults
 
-* By default the only SDL subsystem initialised by `WITH-INIT` is the video subsystem `SDL-INIT-VIDEO`. 
+* By default `WITH-INIT` will only initialise the `SDL-INIT-VIDEO` SDL subsystem. 
 Additional SDL subsystems can be initialized by calling [INITIALIZE-ON-STARTUP](#initialize-on-startup).
-* By default the only SDL subsystem uninitialised by `WITH-INIT` is the video subsystem `SDL-INIT-VIDEO`.
+* By default `WITH-INIT` will only uninitialise the `SDL-INIT-VIDEO` SDL subsystem. 
 Additional SDL subsystems can be uninitialized by calling [QUIT-ON-EXIT](#quit-on-exit).
 
 ###### Initialisation/Uninitialisation of the SDL library
 
 The SDL library is initialised only:
 * If the library is not yet already initialized, or  
-* [SDL-INIT-ON-STARTUP](#sdl-init-on-startup)` is `T`.
+* [SDL-INIT-ON-STARTUP](#sdl-init-on-startup) is `T`.
 
 The SDL library is uninitialised only:
-* When [SDL-QUIT-ON-EXIT](#sdl-quit-on-exit)` is `T`.
+* When [SDL-QUIT-ON-EXIT](#sdl-quit-on-exit) is `T`.
 
 ###### Initialisation/Uninitialisation of external libraries
 
 Hooks are provided to allow external libraries to be initialized or uninitialised automatically following 
 the initialisation or uninitialisation of the SDL library.
 
-To initialise an external library, push a function that takes no arguments onto `\*EXTERNAL-INIT-ON-STARTUP\*`.
+To initialise an external library, push a function that initialises the external library onto 
+`\*EXTERNAL-INIT-ON-STARTUP\*`. The function must take no arguments. For example:
 
+    \(defun init-ttf \(\)
+       \(if \(is-init\)
+         t
+         \(sdl-ttf-cffi::ttf-init\)\)\)
     \(pushnew 'init-ttf sdl:*external-init-on-startup*\) 
 
-To uninitialise an external library, push a function that takes no arguments onto `\*EXTERNAL-QUIT-ON-EXIT\*`.
+To uninitialise an external library, push a function that uninitialises the external library onto
+ `\*EXTERNAL-QUIT-ON-EXIT\*`. The function must take no arguments. For example:
 
+    \(defun quit-ttf \(\)
+       \(if \(is-init\)
+         \(sdl-ttf-cffi::ttf-quit\)\)\)
     \(pushnew 'quit-ttf sdl:*external-quit-on-exit*\)"
   (declare (ignore flags))
   `(block nil
@@ -75,13 +85,13 @@ To uninitialise an external library, push a function that takes no arguments ont
        (quit-sdl))))
 
 (defun initialize-on-startup (&rest flags)
-  "Sets one or more SDL subsystems that must be initialized in 
+  "Sets the SDL subsystems that must be initialized in 
 subsequent calls to [INIT-SUB-SYSTEMS](#init-sub-systems).
 
 ##### Parameters
 
 * `FLAGS` may be one or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
-`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`.
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD` and `SDL-INIT-NOPARACHUTE`.
 
 ##### Returns
 
@@ -103,10 +113,10 @@ subsequent calls to [QUIT-SUB-SYSTEMS](#quit-sub-systems).
   (setf *quit-on-exit* (apply #'logior flags)))
 
 (defun list-sub-systems (flag)
-  "Returns a list of SDL subsystems that are specified in INTEGER bitmask `FLAGS`.
+  "Returns a list of SDL subsystems that are specified in `FLAGS`.
 
-`FLAGS` may contain a logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
-`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`."
+`FLAGS` is an `INTEGER` bitmask containing the logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD` and `SDL-INIT-NOPARACHUTE`."
   (let ((subsystems nil))
     (if (= flag sdl-cffi::sdl-init-everything)
 	(push (list 'sdl-cffi::sdl-init-everything
@@ -167,9 +177,9 @@ uninitialised when `STATUS` is `NIL`."
     to-initialize))
 
 (defun init-sub-systems (&optional (flags *initialize-on-startup*))
-  "Initializes the SDL subsystems specified in the `INTEGER` bitmask `FLAGS`. 
-`FLAGS` contains the logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
-`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD`, `SDL-INIT-NOPARACHUTE`.
+  "Initializes the SDL subsystems specified in `FLAGS`. 
+`FLAGS` is an `INTEGER` bitmask containing the logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD` and `SDL-INIT-NOPARACHUTE`.
 
 `INIT-SUB-SYSTEMS` can be called only after SDL is succesfully initialized by [INIT-SDL](#init-sdl)."
   (sdl-cffi::sdl-init-sub-system (return-sub-systems-of-status flags nil)))
@@ -197,7 +207,7 @@ Returns `NIL` otherwise."
 
 (defun init-sdl (&optional (init (sdl-init-on-startup)))
   "Initalizes the SDL library when the &OPTIONAL parameter `INIT` is `T`, or 
-the value returned by [SDL-INIT-ON-STARTUP](#sdl-quit-on-exit) is `T`."
+the value returned by [SDL-INIT-ON-STARTUP](#sdl-init-on-startup) is `T`."
   (let ((initialized? (if (or init
 			      (not *sdl-initialized*))
 			  (if (sdl-base::init-sdl :flags nil)

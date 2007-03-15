@@ -42,12 +42,9 @@
 
 
 (defun random-rectangle (bound-w bound-h &optional (rectangle (rectangle)))
-  "Returns a rectangle of random x, y width and height coordinates within the specified
-bounds of width BOUND-W and height BOUND-H.
-
-If the &optional parameter RECTANGLE is unset then a new RECTANGLE object is created and returned.
-If the &optional parameter RECTANGLE is set then the coordinates if this rectangle are modified and 
-this RECTANGLE object is returned."
+  "Creates and return s a new `RECTANGLE` of random x, y width and height within the specified
+bounds of width `BOUND-W` and height `BOUND-H`. `RECTANGLE` if unset will force the creation of a 
+new `RECTANGLE` object. `RECTANGLE` if set will be modified with the coordinates."
   (check-type rectangle rectangle)
   (let* ((x (random bound-w))
 	 (y (random bound-h))
@@ -63,24 +60,22 @@ this RECTANGLE object is returned."
 ;; 	     :h (+ (y position) height)))
 
 (defun rectangle-from-edges (p1 p2 &optional (rectangle (rectangle)))
-  "See RECTANGLE-FROM-EDGES-*.
-P1 and P2 are POINTS that specify the bounds of the RECTANGLE. 
-P1 specifies the top left coordinate.
-P2 specifies the lower right coordinate."
+  "See [RECTANGLE-FROM-EDGES-*](#rectangle-from-edges-*).
+
+* `P1` and `P2` are `POINTS` that specify the bounds of the `RECTANGLE`. 
+`P1` specifies the top left coordinate. `P2` specifies the lower right coordinate."
   (rectangle-from-edges-* (x p1) (y p1) (x p2) (y p2) rectangle))
 
 (defun rectangle-from-edges-* (x1 y1 x2 y2 &optional (rectangle (rectangle)))
-  "Returns a rectangle using the bounds specified by the INTEGERS X1, X2, Y1 Y2.
-X1, Y1 specifies the top left coordinate. 
-X2, Y2 specifies the top left coordinate. 
-
+  "Returns a new `RECTANGLE` using the bounds specified by the `INTEGERS` `X1`, `X2`, `Y1` and `Y2`. 
 The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT = \(- Y2 Y1\) 
 
-If the &optional parameter RECTANGLE is unset then a new RECTANGLE object is created and returned. 
-If the &optional parameter RECTANGLE is set then the coordinates if this rectangle are modified and 
-this RECTANGLE object is returned.
+##### Parameters
 
-RESULT is an object of type RECTANGLE."
+* `X1`, `Y1` specify the top left coordinate as `INTEGERS`. 
+* `X2`, `Y2` specify the bottom right coordinate as `INTEGERS`. 
+* `RECTANGLE` if unset will force the creation of a new `RECTANGLE` object. 
+`RECTANGLE` if set will be modified with the coordinates."
   (check-type rectangle rectangle)
   (set-rectangle-* rectangle
 		   :x x1
@@ -89,13 +84,9 @@ RESULT is an object of type RECTANGLE."
 		   :h (1+ (abs (- y2 y1)))))
 
 (defun rectangle-from-midpoint-* (x y w h &optional (rectangle (rectangle)))
-  "Returns a rectangle of width W and height H with the rectangle mid-point at X and Y. 
-
-If the &optional parameter RECTANGLE is unset then a new RECTANGLE object is created and returned. 
-If the &optional parameter RECTANGLE is set then the coordinates if this rectangle are modified and 
-this RECTANGLE object is returned.
-
-RESULT is an object of type RECTANGLE."
+  "Returns a `RECTANGLE` of width `W` and height `H` with the rectangle mid-point at coordinates `X` and `Y`. 
+`RECTANGLE` if unset will force the creation of a new `RECTANGLE` object. 
+`RECTANGLE` if set will be modified with the coordinates."
   (check-type rectangle rectangle)
   (set-rectangle-* rectangle
 		   :x (- x (/ w 2))
@@ -136,35 +127,40 @@ RESULT is an object of type RECTANGLE."
 	      point-list)))))
 
 (defmacro with-bezier ((shape-type &optional (segments 20)) &body body)
-  "Draw a bezier curve to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
-A vertex specifies a control point for the Bezier curve. A vertex may be added
-using ADD-VERTEX which accepts an POINT, or the x/y spread version 
-ADD-VERTEX-*.
+  "Draw a bezier curve of color `\*DEFAULT-COLOR\*` to the surface `\*DEFAULT-SURFACE\*`.
+The shape of the Bezier curve is defined by control points. 
+A control point is a vertex containing an X and Y coordinate pair.
 
-ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-BEZIER.
-
-  * WITH-CURVE accepts a SHAPE-TYPE where SHAPE-TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When SHAPE-TYPE is :LINE-STRIP, a single continuous line is drawn through the
-specified waypoints.
-
-    * When SHAPE-TYPE is :LINES, a line is drawn to alternate waypoint pairs.
-
-    * When SHAPE-TYPE is :POINTS, a single point is drawn at each waypoint.
-
-The number of segments used to draw the Bezier curve defaults to 10.
-However this number may be increased by specifying SEGMENTS. 
+The number of segments `SEGENTS` used to draw the Bezier curve defaults to 10.
 The greater the number of segments, the smoother the Bezier curve.
 
-Example:
-\(WITH-SURFACE \(DSP *DEFAULT-DISPLAY*\)
-  \(WITH-COLOR \(COL \(COLOR\)\)
-    \(WITH-BEZIER \(:lise-strip 30\)
-      \(ADD-VERTEX-* 60  40\)
-      \(ADD-VERTEX-* 160 10\)
-      \(ADD-VERTEX-* 170 150\)
-      \(ADD-VERTEX-* 60  150\)\)\)\)"
+##### Local Methods
+
+A vertex may be added using:
+* `ADD-VERTEX` which accepts an `POINT`, or 
+* `ADD-VERTEX-*` which is the x/y spread version
+
+`ADD-VERTEX` and `ADD-VERTEX-*` are valid only within the scop of `WITH-BEZIER`.
+
+##### Parameters
+
+* `SHAPE-TYPE` is one of `:LINE-STRIP`, `:LINES`, or `:POINTS`. 
+When `SHAPE-TYPE` is `:LINE-STRIP`, a single continuous line is drawn through the 
+specified waypoints.
+When `SHAPE-TYPE` is `:LINES`, a line is drawn to alternate waypoint pairs.
+When `SHAPE-TYPE` is `:POINTS`, a single point is drawn at each waypoint.
+* `SEGMENTS` is the number of segments used to draw the Bezier curve.  
+Default is 10 segments if unspecified. The greater the number of segments, 
+the smoother the curve.
+
+##### Example
+
+    \(SDL:WITH-COLOR \(COL \(SDL:COLOR\)\)
+       \(WITH-BEZIER \(30\)
+         \(ADD-VERTEX-* 60  40\)
+         \(ADD-VERTEX-* 160 10\)
+         \(ADD-VERTEX-* 170 150\)
+         \(ADD-VERTEX-* 60  150\)\)\)"
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
@@ -175,35 +171,34 @@ Example:
        (draw-bezier ,point-list ,shape-type :segments ,segments))))
 
 (defmacro with-curve ((shape-type &optional (segments 10)) &body body)
-  "Draw a Cattmul-Rom spline to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
-A vertex specifies a waypoint for the spline. A vertex may be added
-using ADD-VERTEX which accepts an POINT, or the x/y spread version 
-ADD-VERTEX-*.
+  "Draw a Cattmul-Rom spline of color `\*DEFAULT-COLOR\*` to the surface `\*DEFAULT-SURFACE\*`.
+The shape of the curve is defined by waypoints. 
+A waypoint is a vertex containing an X and Y coordinate pair.
 
-ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-CURVE.
+##### Local Methods
 
-  * WITH-CURVE accepts a SHAPE-TYPE where SHAPE-TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When SHAPE-TYPE is :LINE-STRIP, a single continuous line is drawn through the
-specified waypoints.
+A vertex may be added using:
+* `ADD-VERTEX` which accepts an `SDL:POINT`, or 
+* `ADD-VERTEX-*` which is the x/y spread version
 
-    * When SHAPE-TYPE is :LINES, a line is drawn to alternate waypoint pairs.
+`ADD-VERTEX` and `ADD-VERTEX-*` are valid only within the scope of `WITH-CURVE`.
 
-    * When SHAPE-TYPE is :POINTS, a single point is drawn at each waypoint.
+##### Parameters
 
-The number of segments used to draw the Catmull-Rom spline defaults to 10.
-However this number may be increased by specifying SEGMENTS. 
-The greater the number of segments, the smoother the spline.
+* `SHAPE-TYPE` describes the line style used to draw the curve and may be one of 
+`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+* `SEGMENTS` is the number of segments used to draw the Catmull-Rom spline.  
+Default is 10 segments if unspecified. The greater the number of segments, 
+the smoother the spline.
 
-Example:
-\(WITH-SURFACE \(DSP *DEFAULT-DISPLAY*\)
-  \(WITH-COLOR \(COL \(COLOR\)\)
-    \(WITH-CURVE \(:LINE-STRIP 30\)
-      \(ADD-VERTEX-* 60  40\)
-      \(ADD-VERTEX-* 160 10\)
-      \(ADD-VERTEX-* 170 150\)
-      \(ADD-VERTEX-* 60  150\)\)\)\)"
+##### Example
+
+    \(SDL:WITH-COLOR \(COL \(SDL:COLOR\)\)
+       \(WITH-CURVE \(:LINE-STRIP 30\)
+         \(ADD-VERTEX-* 60  40\)
+         \(ADD-VERTEX-* 160 10\)
+         \(ADD-VERTEX-* 170 150\)
+         \(ADD-VERTEX-* 60  150\)\)\)"
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
@@ -214,30 +209,29 @@ Example:
        (draw-curve ,point-list ,shape-type :segments ,segments))))
 
 (defmacro with-shape ((shape-type) &body body)
-  "Draw a polygon to the *DEFAULT-SURFACE* using *DEFAULT-COLOR*.
-Addional vertices are added using ADD-VERTEX which accepts an POINT, 
-or the x/y spread version ADD-VERTEX-*.
+  "Draw a polygon of color `\*DEFAULT-COLOR\*` to the surface `\*DEFAULT-SURFACE\*`.
+
+##### Local Methods
+
+A vertex may be added using:
+* `ADD-VERTEX` which accepts an `SDL:POINT`, or 
+* `ADD-VERTEX-*` which is the x/y spread version
 
 ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE.
 
-  * WITH-SHAPE accepts a SHAPE-TYPE where SHAPE-TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When SHAPE-TYPE is :LINE-STRIP, a single continuous line is drawn through the
-specified vertices.
+##### Parameters
 
-    * When SHAPE-TYPE is :LINES, a line is drawn to alternate vertex pairs.
+* `SHAPE-TYPE` describes the line style used to draw the shape and may be one of 
+`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
 
-    * When SHAPE-TYPE is :POINTS, a single point is drawn at each vertex.
+##### Example
 
-Example:
-\(WITH-SURFACE \(DSP *DEFAULT-DISPLAY*\)
-  \(WITH-COLOR \(COL \(COLOR\)\)
-    \(WITH-SHAPE \(:POINTS\)
-      \(ADD-VERTEX-* 60  40\)
-      \(ADD-VERTEX-* 160 10\)
-      \(ADD-VERTEX-* 170 150\)
-      \(ADD-VERTEX-* 60  150\)\)\)\)"
+    \(SDL:WITH-COLOR \(COL \(SDL:COLOR\)\)
+       \(WITH-SHAPE \(:POINTS\)
+         \(ADD-VERTEX-* 60  40\)
+         \(ADD-VERTEX-* 160 10\)
+         \(ADD-VERTEX-* 170 150\)
+         \(ADD-VERTEX-* 60  150\)\)\)"
   (let ((point-list (gensym "point-list-")))
     `(let ((,point-list nil))
        (labels ((add-vertex (point)
@@ -272,6 +266,29 @@ Example:
 
 (defun draw-bezier (points type
 		    &key (clipping-p t) (surface *default-surface*) (color *default-color*) (segments 20))
+  "Draw a bezier curve of color `COLOR` to the surface `SURFACE`. The shape of the Bezier curve is defined by several control points. 
+A control point is a vertex containing an X and Y coordinate pair.
+
+##### Parameters
+
+* `VERTICES` is the list of control points of type `SDL:POINT`.
+* `TYPE` describes the line style used to draw the curve and may be one of 
+`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+* `SEGMENTS` is the number of segments used to draw the curve.
+Default is 10 segments if unspecified. The greater the number of segments, 
+the smoother the curve.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`.
+
+##### Example
+
+    \(DRAW-BEZIER \(LIST \(SDL:POINT :X 60  :Y 40\)
+                         \(SDL:POINT :X 160 :Y 10\)
+                         \(SDL:POINT :X 170 :Y 150\)
+                         \(SDL:POINT :X 60 :Y 150\)\)
+                   :LINE-STRIP\)"
   (do* ((p1 points (cdr p1))
 	(p2 (cdr p1) (cdr p1))
 	(p3 (cdr p2) (cdr p2))
@@ -286,30 +303,30 @@ Example:
   
 (defun draw-curve (points type &key (clipping-p t) (surface *default-surface*) (color *default-color*)
 		   (segments 10))
-  "Draw a Cattmul-Rom spline to the surface SURFACE using color COLOR.
+  "Draw a Cattmul-Rom spline using color `COLOR` to the surface `SURFACE`. The shape of the curve is defined by waypoints. 
+A waypoint is a vertex containing an X and Y coordinate pair.
 
-  * POINTS is a list of vertices or waypoints for the spline. A vertex is of type POINT
+##### Parameters
 
-  * TYPE is the shape type where TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When TYPE is :LINE-STRIP, a single continuous line is drawn through the
-specified waypoints.
+* `POINTS` is a list of waypoints or vetices for the spline, of type `SDL:POINT`
+* `TYPE` describes the line style used to draw the curve and may be one of 
+`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+* `SEGMENTS` is the number of segments used to draw the Catmull-Rom spline.  
+Default is 10 segments if unspecified. The greater the number of segments, 
+the smoother the spline.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. 
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`.
 
-    * When TYPE is :LINES, a line is drawn to alternate waypoint pairs.
+##### Example
 
-    * When TYPE is :POINTS, a single point is drawn at each waypoint.
-
-  * SEGMENTS is the number of segments used to draw the Catmull-Rom spline.
-The greater the number of segments, the smoother the spline.
-
-Example:
-\(DRAW-CURVE \(LIST \(POINT :X 60  :Y 40\)
-		  \(POINT :X 160 :Y 10\)
-		  \(POINT :X 170 :Y 150\)
-		  \(POINT :X 60  :Y 150\)\)
+    \(DRAW-CURVE \(LIST \(SDL:POINT :X 60  :Y 40\)
+	    	  \(SDL:POINT :X 160 :Y 10\)
+		  \(SDL:POINT :X 170 :Y 150\)
+		  \(SDL:POINT :X 60  :Y 150\)\)
 	    :LINE-STRIP
-	    :segments 10\)"
+	    10\)"
   (do* ((p1 points (cdr p1))
 	(p2 (cdr p1) (cdr p1))
 	(p3 (cdr p2) (cdr p2))
@@ -319,24 +336,24 @@ Example:
 		:clipping-p clipping-p :surface surface :color color)))
 
 (defun draw-shape (points type &key (clipping-p t) (surface *default-surface*) (color *default-color*))
-  "Draw a polygon using the vertices in POINTS to the surface SURFACE using color COLOR.
+  "Draw a polygon of color `COLOR` to the surface `SURFACE` using the vertices in `POINTS`.
 
-  * POINTS is a list of vertices. A vertex is of type POINT
+##### Parameters
 
-  * TYPE is the shape type where TYPE may be one of 
-:LINE-STRIP, :LINES, or :POINTS.
-    
-    * When TYPE is :LINE-STRIP, a single continuous line is drawn through the vertices in POINTS
+* `POINTS` is a list of vertices, of type `SDL:POINT`
+* `TYPE` describes the line style used to draw the polygon and may be one of 
+`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`.
 
-    * When TYPE is :LINES, a line is drawn to alternate vertex pairs.
+##### Example
 
-    * When TYPE is :POINTS, a single point is drawn at each vertex.
-
-Example:
-\(DRAW-SHAPE \(LIST \(POINT :X 60  :Y 40\)
-		    \(POINT :X 160 :Y 10\)
-		    \(POINT :X 170 :Y 150\)
-   		    \(POINT :X 60  :Y 150\)\)
+    \(DRAW-SHAPE \(LIST \(SDL:POINT :X 60  :Y 40\)
+		    \(SDL:POINT :X 160 :Y 10\)
+		    \(SDL:POINT :X 170 :Y 150\)
+   		    \(SDL:POINT :X 60  :Y 150\)\)
 	    :LINE-STRIP\)"
   (unless surface
     (setf surface *default-display*))
@@ -369,15 +386,16 @@ Example:
 		       :color color)))))
 
 (defun draw-line-* (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  "Draws a line of color COLOR to the surface SURFACE.
+  "Draws a line of color `COLOR` to the surface `SURFACE`.
 
-  * X1 Y1 are the start X/Y coordinates of the line, of type INTEGER.
+##### Parameters
 
-  * X2 Y2 are the end X/Y coordinates of the line, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default."
+* `X0` `Y0` are the start X/Y coordinates of the line, of type `INTEGER`.
+* `X1` `Y1` are the end X/Y coordinates of the line, of type `INTEGER`.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
@@ -454,9 +472,11 @@ Example:
 				(incf e (+ dx dy))))))))))))))
 
 (defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  "See DRAW-LINE-*
+  "See [DRAW-LINE-*](#draw-line-*).
 
-  * POINT1 and POINT2 are the start and end x/y co-ordinates of the line, of type POINT."
+##### Parameters
+
+* `POINT1` and `POINT2` are the start and end x/y co-ordinates of the line, of type `SDL:POINT`."
     (check-types point p1 p2)
     (draw-line-* (x p1) (y p1)
 		 (x p2) (y p2)
@@ -464,15 +484,16 @@ Example:
 
 
 (defun draw-vline (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p nil))
-  "Draws a vertical line of color COLOR from Y1 to Y2 through X onto the surface SURFACE. 
+  "Draw a vertical line of color `COLOR` from `Y0` to `Y1` through `X` onto the surface `SURFACE`. 
 
-  * X is the horizontal INTEGER coordinate that the vertical line must intersect.  
+##### Parameters
 
-  * Y1 and Y2 are the vertical start and end points of the line, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default."
+* `X` is the horizontal `INTEGER` coordinate that the vertical line must intersect.  
+* `Y0` and `Y1` are the vertical start and end points of the line, of type `INTEGER`.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when `T` will clip the shape to the dimensions of `SURFACE`. 
+The default is `NIL` as the SDL library will perform the necessary clipping automatically."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
@@ -486,15 +507,16 @@ Example:
 		  :clipping-p clipping-p)))
   
 (defun draw-hline (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p nil))
-  "Draws a horizontal line of color COLOR from X1 to X2 through Y onto the surface SURFACE. 
+  "Draw a horizontal line of color `COLOR` from `X0` to `X1` through `Y` onto the surface `SURFACE`. 
 
-  * X1 and X2 are the horizontal start and end points of the line, of type INTEGER.
+##### Parameters
 
-  * X is the vertical INTEGER coordinate that the horizontal line must intersect.  
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default."
+* `X0` and `X1` are the horizontal start and end points of the line, of type `INTEGER`.
+* `Y` is the vertical `INTEGER` coordinate that the horizontal line must intersect.  
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when `T` will clip the shape to the dimensions of `SURFACE`. 
+The default is `NIL` as the SDL library will perform the necessary clipping automatically."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
@@ -507,95 +529,96 @@ Example:
 		  :template template
 		  :clipping-p clipping-p)))
   
-(defun draw-box (rectangle &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
-  "See DRAW-BOX-*.
+(defun draw-box (rect &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
+  "See [DRAW-BOX-*](#draw-box-*).
 
-  * RECT is filled rectangle to draw, of type RECTANGLE."
+##### Parameters
+* `RECT` is the rectangle to fill, of type `SDL:RECTANGLE`."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
   (check-type color sdl-color)
   (when stroke-color
     (check-type stroke-color sdl-color))
-  (check-type rectangle rectangle)
-    (let* ((width  (width rectangle))
-	   (height (height rectangle))
-	   (x (x rectangle))
-	   (y (y rectangle))
+  (check-type rect rectangle)
+    (let* ((width  (width rect))
+	   (height (height rect))
+	   (x (x rect))
+	   (y (y rect))
 	   (surf (if alpha (create-surface width height :alpha-value alpha) surface)))
-      (fill-surface color :surface surf :template (if alpha nil rectangle) :clipping-p clipping-p)
+      (fill-surface color :surface surf :template (if alpha nil rect) :clipping-p clipping-p)
       (when stroke-color
 	(draw-rectangle-* (if alpha 0 x) (if alpha 0 y) width height
 			  :surface surf :clipping-p clipping-p :color stroke-color :alpha nil))
       (when alpha
 	(draw-surface-at-* surf x y :surface surface)
 	(free-surface surf)))
-    rectangle)
+    rect)
 
 (defun draw-box-* (x y w h &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
-  "Draws a filled rectangle of color COLOR to surface SURFACE.
+  "Draws a filled rectangle of color `COLOR` to surface `SURFACE`.
 
-  * X and Y are the INTEGER coordinates of the top-left corner of the rectangle.
+##### Parameters
 
-  * W and H are the width and height of the rectangle, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default.
-
-  * STROKE-COLOR when not NIL will draw a 1 pixel line of color COLOR around the perimiter of the box.
-
-  * ALPHA when between 0 and 255 is used as the alpha transparency value when blitting the box onto SURFACE.
-Note that drawing a box with alpha transparency requires that a new surface with alpha transparency be created, 
-the box is then draw to this surface and this surface is then blitted to SURFACE."
+* `X` and `Y` are the `INTEGER` coordinates of the top-left corner of the rectangle.
+* `W` and `H` are the width and height of the rectangle, of type `INTEGER`.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the fill color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `STROKE-COLOR` when not `NIL` will draw a `1` pixel line of color `COLOR` around the perimiter of the box.
+* `ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
+*Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
+is blitted to `SURFACE`.
+* `CLIPPING-P` when `T` will clip the shape to the dimensions of `SURFACE`. 
+The default is `NIL` as the SDL library will perform the necessary clipping automatically."
   (with-rectangle (template (rectangle :x x :y y :w w :h h))
     (draw-box template :clipping-p clipping-p :surface surface :color color
 	      :stroke-color stroke-color :alpha alpha)))
 
 (defun draw-box-edges-* (x1 y1 x2 y2 &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
-  "Draws a filled rectangle of color COLOR to the surface SURFACE.
+  "Draws a filled rectangle of color `COLOR` to the surface `SURFACE`.
 
-  * X1 and Y1 are the INTEGER coordinates of the top-left corner of the rectangle.
+##### Parameters
 
-  * X2 and Y2 are the INTEGER coordinates of the bottom-right corner of the rectangle.
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default.
-
-  * STROKE-COLOR when not NIL will draw a 1 pixel line of color COLOR around the perimiter of the box.
-
-  * ALPHA when between 0 and 255 is used as the alpha transparency value when blitting the box onto SURFACE.
-Note that drawing a box with alpha transparency requires that a new surface with alpha transparency be created, 
-the box is then draw to this surface and this surface is then blitted to SURFACE."
+* `X0` and `Y0` are the `INTEGER` coordinates of the top-left corner of the rectangle.
+* `X1` and `Y1` are the `INTEGER` coordinates of the bottom-right corner of the rectangle.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the fill color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `STROKE-COLOR` when not `NIL` will draw a `1` pixel line of color `COLOR` around the perimiter of the box.
+* `ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
+*Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
+is blitted to `SURFACE`.
+* `CLIPPING-P` when `T` will clip the shape to the dimensions of `SURFACE`. 
+The default is `NIL` as the SDL library will perform the necessary clipping automatically."
   (with-rectangle (template (rectangle-from-edges-* x1 y1 x2 y2))
     (draw-box template :clipping-p clipping-p :surface surface :color color
 	      :stroke-color stroke-color :alpha alpha)))
 
-(defun draw-rectangle (rectangle &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (alpha nil))
-  "See DRAW-RECTANGLE-*.
+(defun draw-rectangle (rect &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (alpha nil))
+  "See [DRAW-RECTANGLE-*](#draw-rectangle-*).
 
-  * RECT is the rectangle to draw, of type RECTANGLE."
-  (check-type rectangle rectangle)
-  (draw-rectangle-* (x rectangle) (y rectangle)
-		    (width rectangle) (height rectangle)
+##### Parameters
+
+* `RECT` is the rectangle to draw, of type `SDL:RECTANGLE`."
+  (check-type rect rectangle)
+  (draw-rectangle-* (x rect) (y rect)
+		    (width rect) (height rect)
 		    :clipping-p clipping-p :surface surface :color color :alpha alpha)
   surface)
 
 (defun draw-rectangle-* (x y w h &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (alpha nil))
-  "Draws a rectangle of color COLOR to the surface SURFACE.
+  "Draw a rectangle outline of color `COLOR` to the surface `SURFACE`.
 
-  * X and Y are the INTEGER coordinates of the top-left corner of the rectangle.
+##### Parameters
 
-  * W and H are the width and height of the rectangle, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default.
-
-  * ALPHA when between 0 and 255 is used as the alpha transparency value when blitting the rectangle onto SURFACE.
-Note that drawing a rectangle with alpha transparency requires that a new surface with alpha transparency be created, 
-the rectangle is then draw to this surface and this surface is then blitted to SURFACE."
+* `X` and `Y` are the `INTEGER` coordinates of the top-left corner of the rectangle.
+* `W` and `H` are the width and height of the rectangle, of type `INTEGER`.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
+*Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
+is blitted to `SURFACE`.
+* `CLIPPING-P` when `T` will clip the shape to the dimensions of `SURFACE`. 
+The default is `NIL` as the SDL library will perform the necessary clipping automatically."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
@@ -620,42 +643,46 @@ the rectangle is then draw to this surface and this surface is then blitted to S
 ;; 		     :clipping-p clipping-p :surface surface :color color))
 
 
-(defun draw-rectangle-edges-* (x1 y1 x2 y2
+(defun draw-rectangle-edges-* (x0 y0 x1 y1
 			       &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (alpha nil))
-  "Draws a rectangle of color COLOR to the surface SURFACE.
+  "Draw a rectangle outline of color `COLOR` to the surface `SURFACE`.
 
-  * X1 and Y1 are the INTEGER coordinates of the top-left corner of the rectangle.
+##### Parameters
 
-  * X2 and Y2 are the INTEGER coordinates of the bottom-right corner of the rectangle.
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the line color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default.
-
-  * ALPHA when between 0 and 255 is used as the alpha transparency value when blitting the rectangle onto SURFACE.
-Note that drawing a rectangle with alpha transparency requires that a new surface with alpha transparency be created, 
-the rectangle is then draw to this surface and this surface is then blitted to SURFACE."
+* `X0` and `Y0` are the `INTEGER` coordinates of the top-left corner of the rectangle.
+* `X0` and `Y0` are the `INTEGER` coordinates of the bottom-right corner of the rectangle.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
+*Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
+is blitted to `SURFACE`.
+* `CLIPPING-P` when `T` will clip the shape to the dimensions of `SURFACE`. 
+The default is `NIL` as the SDL library will perform the necessary clipping automatically."
   (check-type surface sdl-surface)
   (check-type color sdl-color)
-  (with-rectangle (template (rectangle-from-edges-* x1 y1 x2 y2))
+  (with-rectangle (template (rectangle-from-edges-* x0 y0 x1 y1))
     (draw-rectangle template :surface surface :clipping-p clipping-p :color color :alpha alpha))
   surface)
 
 (defun draw-point (point &key (clipping-p t) (surface *default-surface*) (color *default-color*))
-  "See DRAW-POINT-*.
+  "See [DRAW-POINT-*](#draw-point-*).
 
-  * POSITION is the X/Y coordinate of the pixel, of type POINT."
+##### Parameters
+
+* `POSITION` is the `X`/`Y` coordinates of the pixel, of type `POINT`."
   (check-type point point)
   (draw-point-* (x point) (y point) :clipping-p clipping-p :surface surface :color color))
 
 (defun draw-point-* (x y &key (clipping-p t) (surface *default-surface*) (color *default-color*))
-  "Draw the color COLOR to the surface SURFACE at the specified X and Y coordiates. 
+  "Draw a single pixel of color `COLOR` to the surface `SURFACE` at the specified `X` and `Y` coordiates. 
 
-  * X Y specify the coordinates of the pixel, and are of type INTEGER.
+##### Parameters
 
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the new color of the pixel, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default."
+* `X` and `Y` specify the coordinates of the pixel, and are of type `INTEGER`.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the pixel color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
@@ -676,30 +703,31 @@ the rectangle is then draw to this surface and this surface is then blitted to S
     (sdl-base::with-pixel (surf (fp surface))
       (sdl-base::read-pixel surf x y))))
 
-(defun draw-filled-circle (p1 radius &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
-  "See DRAW-FILLED-CIRCLE-*
+(defun draw-filled-circle (p1 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
+  "See [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*).
 
-  * P1 is the X/Y coordinate of the center of the filled circle, of type POINT."
+##### Parameters
+
+* `P1` is the X/Y coordinate of the center of the filled circle, of type `SDL:POINT`."
   (check-type p1 point)
-  (draw-filled-circle-* (x p1) (y p1) radius
+  (draw-filled-circle-* (x p1) (y p1) r
 			:surface surface :color color :stroke-color stroke-color :alpha alpha))
 
-(defun draw-filled-circle-* (x0 y0 radius &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
-  "Draws an filled circle of color COLOR to the surface SURFACE.
+(defun draw-filled-circle-* (x0 y0 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
+  "Draws a filled circle of color `COLOR` to the surface `SURFACE`.
 
-  * X and Y specify the center coordinate of the circle, of type INTEGER.
+##### Parameters
 
-  * R is the circle radius, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the fill color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default.
-
-  * STROKE-COLOR when not NIL will draw a 1 pixel line of color COLOR around the circumference of the circle.
-
-  * ALPHA when between 0 and 255 is used as the alpha transparency value when blitting the circle onto SURFACE.
-Note that drawing a circle with alpha transparency requires that a new surface with alpha transparency be created, 
-the circle is then draw to this surface and this surface is then blitted to SURFACE."
+* `X` and `Y` specify the center coordinate of the circle, of type `INTEGER`.
+* `R` is the circle radius, of type `INTEGER`.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the fill color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `STROKE-COLOR` when not `NIL` will draw a `1` pixel line of color `COLOR` around the perimiter of the circle
+* `ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
+*Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
+is blitted to `SURFACE`.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
@@ -707,17 +735,17 @@ the circle is then draw to this surface and this surface is then blitted to SURF
   (if stroke-color
       (check-type stroke-color sdl-color))
 
-  (let ((surf (if alpha (create-surface (1+ (* radius 2)) (1+ (* radius 2)) :alpha-value alpha) surface)))
-    (let ((x0 (if alpha radius x0))
-	  (y0 (if alpha radius y0)))
+  (let ((surf (if alpha (create-surface (1+ (* r 2)) (1+ (* r 2)) :alpha-value alpha) surface)))
+    (let ((x0 (if alpha r x0))
+	  (y0 (if alpha r y0)))
       
-      (let ((f (- 1 radius))
+      (let ((f (- 1 r))
 	    (ddf-x 0)
-	    (ddf-y (* -2 radius)))
-	(draw-vline x0 (+ y0 radius) (- y0 radius) :color color :surface surf :clipping-p nil)
-	(draw-hline (+ x0 radius) (- x0 radius) y0 :color color :surface surf :clipping-p nil)
+	    (ddf-y (* -2 r)))
+	(draw-vline x0 (+ y0 r) (- y0 r) :color color :surface surf :clipping-p nil)
+	(draw-hline (+ x0 r) (- x0 r) y0 :color color :surface surf :clipping-p nil)
 	(do ((x 0)
-	     (y radius))
+	     (y r))
 	    ((<= y x))
 	  (when (>= f 0)
 	    (decf y)
@@ -733,82 +761,84 @@ the circle is then draw to this surface and this surface is then blitted to SURF
 
 	;; Draw the circle outline when a color is specified.
 	(when stroke-color
-	  (draw-circle-* x0 y0 radius :surface surf :color stroke-color))))
+	  (draw-circle-* x0 y0 r :surface surf :color stroke-color))))
 
     (when alpha
-      (draw-surface-at-* surf (- x0 radius) (- y0 radius) :surface surface)
+      (draw-surface-at-* surf (- x0 r) (- y0 r) :surface surface)
       (free-surface surf)))
   surface)
 
-(defun draw-circle (p1 radius &key
+(defun draw-circle (p1 r &key
 		    (surface *default-surface*)
 		    (color *default-color*)
 		    (alpha nil))
-  "See DRAW-CIRCLE-*
+  "See [DRAW-CIRCLE-*](#draw-circle-*).
 
-  * P1 is the X/Y coordinate of the center of the circle, of type POINT."
+##### Parameters
+
+* `P1` is the X/Y coordinate of the center of the circle, of type `SDL:POINT`."
   (check-type p1 point)
-  (draw-circle-* (x p1) (y p1) radius
+  (draw-circle-* (x p1) (y p1) r
 		 :surface surface :color color :alpha alpha))
 
-(defun draw-circle-* (x0 y0 radius &key
+(defun draw-circle-* (x0 y0 r &key
 		      (surface *default-surface*)
 		      (color *default-color*)
 		      (alpha nil))
-  "Draws a circle of color COLOR to the surface SURFACE.
-Note that this is not a 'filled circle'. Only the circle circumference is drawn.
+  "Draws a circle circumference of color `COLOR` to the surface `SURFACE`.
+Use [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*) to draw a filled circle.
 
-  * X and Y specify the center coordinate of the circle, of type INTEGER.
+##### Parameters
 
-  * R is the circle radius, of type INTEGER.
-
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default.
-
-  * ALPHA when between 0 and 255 is used as the alpha transparency value when blitting the circle onto SURFACE.
-Note that drawing a circle with alpha transparency requires that a new surface with alpha transparency be created, 
-the circle is then draw to this surface and this surface is then blitted to SURFACE."
+* `X` and `Y` specify the center coordinate of the circle, of type `INTEGER`.
+* `R` is the circle r, of type `INTEGER`.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the circumference color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
+*Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
+is blitted to `SURFACE`.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
   (check-type color sdl-color)
-  (let ((f (- 1 radius))
+  (let ((f (- 1 r))
 	(ddf-x 0)
-	(ddf-y (* -2 radius)))
+	(ddf-y (* -2 r)))
     (labels ((in-bounds (x y w h)
 	       (if (and (>= x 0) (< x w)
 			(>= y 0) (< y h))
 		   t
 		   nil)))
       
-      (let* ((width (if alpha (1+ (* radius 2)) (width surface)))
-	     (height (if alpha (1+ (* radius 2)) (height surface)))
+      (let* ((width (if alpha (1+ (* r 2)) (width surface)))
+	     (height (if alpha (1+ (* r 2)) (height surface)))
 	     (surf (if alpha (create-surface width height :alpha-value alpha) surface))
 	     (col (map-color color surf)))
-	(let ((x0 (if alpha radius x0))
-	      (y0 (if alpha radius y0)))
+	(let ((x0 (if alpha r x0))
+	      (y0 (if alpha r y0)))
 	  
 	  (let ((x-pos 0) (y-pos 0))
 	    (sdl-base::with-pixel (pix (fp surf))
 	      (setf x-pos x0
-		    y-pos (+ y0 radius))
+		    y-pos (+ y0 r))
 	      (when (in-bounds x-pos y-pos width height)
 		(sdl-base::write-pixel pix x-pos y-pos col))
 	      (setf x-pos x0
-		    y-pos (- y0 radius))
+		    y-pos (- y0 r))
 	      (when (in-bounds x-pos y-pos width height)
 		(sdl-base::write-pixel pix x-pos y-pos col))
-	      (setf x-pos (+ x0 radius)
+	      (setf x-pos (+ x0 r)
 		    y-pos y0)
 	      (when (in-bounds x-pos y-pos width height)
 		(sdl-base::write-pixel pix x-pos y-pos col))
-	      (setf x-pos (- x0 radius)
+	      (setf x-pos (- x0 r)
 		    y-pos y0)
 	      (when (in-bounds x-pos y-pos width height)
 		(sdl-base::write-pixel pix x-pos y-pos col))
 	      (do ((x 0)
-		   (y radius))
+		   (y r))
 		  ((<= y x))
 		(when (>= f 0)
 		  (decf y)
@@ -854,19 +884,21 @@ the circle is then draw to this surface and this surface is then blitted to SURF
 		))))
       
 	(when alpha
-	  (draw-surface-at-* surf (- x0 radius) (- y0 radius) :surface surface)
+	  (draw-surface-at-* surf (- x0 r) (- y0 r) :surface surface)
 	  (free-surface surf)))))
     surface)
 
 (defun draw-trigon (p1 p2 p3 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-    "Draw a trigon, of color COLOR to surface SURFACE.
-Note: The trigon is not filled, only the edges are drawn.
+  "Draw the outline of a trigon or triangle, of color `COLOR` to surface `SURFACE`.
+Use [DRAW-FILLED-TRIGON-*](#draw-filled-trigon-*) to draw a filled trigon.
 
-  * P1, P2 and P3 specify the vertices of the trigon, of type POINT.
+##### Parameters
 
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default."
+* `P1`, `P2` and `P3` specify the vertices of the trigon, of type `SDL:POINT`.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the circumference color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`."
   (check-types point p1 p2 p3)
    (unless surface
     (setf surface *default-display*))
@@ -876,14 +908,16 @@ Note: The trigon is not filled, only the edges are drawn.
  (draw-line p3 p1 :surface surface :color color :clipping-p clipping-p))
 
 (defun draw-polygon (vertices &key (surface *default-surface*) (color *default-color*) (clipping-p t))
-  "Draw a polygon, of color COLOR to surface SURFACE.
-Note: The polygon is not filled, only the edges are drawn.
+  "Draw the circumference of a polygon of color `COLOR` to surface SURFACE using the vertices in `POINTS`.
+Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*) to draw a filled polygon.
 
-  * VECTICES is the list of vertices for the polygon. POINTS is a list of POINTs.
+##### Parameters
 
-  * SURFACE is the target surface, of type SDL-SURFACE. Binds to *DEFAULT-SURFACE* by default.
-
-  * COLOR is the circumference color, of type COLOR or COLOR-A. Binds to *DEFAULT-COLOR* by default."
+* `POINTS` is the list of vertices for the polygon. `POINTS` is a list of `SDL:POINT`s.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the circumference color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`."
   (check-type vertices (and list (not null)) "POINTs must be a LIST of POINTs")
   (unless surface
     (setf surface *default-display*))
