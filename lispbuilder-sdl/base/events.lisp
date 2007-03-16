@@ -576,14 +576,14 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 
 (defmacro with-events ((&optional (type :poll)) &body events)
   "`WITH-EVENTS` is a convenience macro for managing the main game loop. It processes 
-incoming SDL events and limiting the game loop to the specified number of frames 
+incoming SDL events and limits the game loop to the specified number of frames 
 per second.
 
 Both the [SDL-POLL-EVENT](#sdl-poll-event) and [SDL-WAIT-EVENT](#sdl-wait-event) 
 event mechanisms are supported by specifying the `TYPE` as `:POLL` or `:WAIT` 
 respectively. 
 
-*NOTE:* `WITH-EVENTS` must be called in the same thread that is used to set 
+*NOTE:* `WITH-EVENTS` must be called in the same thread used to set 
 the video mode.
 
 ##### Example
