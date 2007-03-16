@@ -4493,7 +4493,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-events'><b>with-events</b> <i>(<tt>&amp;optional</tt> type) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p><code>WITH-EVENTS</code> is a convenience macro for managing the main game loop. It processes  incoming SDL events and limiting the game loop to the specified number of frames  per second. </p><p>Both the <a href="#sdl-poll-event">SDL-POLL-EVENT</a> and <a href="#sdl-wait-event">SDL-WAIT-EVENT</a>  event mechanisms are supported by specifying the <code>TYPE</code> as <code>:POLL</code> or <code>:WAIT</code>  respectively.  </p><p><EM>NOTE:</EM><code>WITH-EVENTS</code> must be called in the same thread that is used to set  the video mode. </p><h5>Example </h5>
+<p><code>WITH-EVENTS</code> is a convenience macro for managing the main game loop. It processes  incoming SDL events and limits the game loop to the specified number of frames  per second. </p><p>Both the <a href="#sdl-poll-event">SDL-POLL-EVENT</a> and <a href="#sdl-wait-event">SDL-WAIT-EVENT</a>  event mechanisms are supported by specifying the <code>TYPE</code> as <code>:POLL</code> or <code>:WAIT</code>  respectively.  </p><p><EM>NOTE:</EM><code>WITH-EVENTS</code> must be called in the same thread used to set  the video mode. </p><h5>Example </h5>
 <pre><code>(SDL:WITH-EVENTS (:POLL)
   (:QUIT-EVENT () T)
   (:KEY-DOWN-EVENT (:KEY KEY)
