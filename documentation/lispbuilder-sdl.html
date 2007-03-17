@@ -592,9 +592,16 @@
 	          <li><a href="#rotate-surface"><code>rotate-surface</code></a>
 	          <li><a href="#rwops"><code>rwops</code></a>
 	          <li><a href="#save-image"><code>save-image</code></a>
+	          <li><a href="#sdl-any-format"><code>sdl-any-format</code></a>
+	          <li><a href="#sdl-async-blit"><code>sdl-async-blit</code></a>
 	          <li><a href="#sdl-color"><code>sdl-color</code></a>
+	          <li><a href="#sdl-doublebuf"><code>sdl-doublebuf</code></a>
+	          <li><a href="#sdl-fullscreen"><code>sdl-fullscreen</code></a>
 	          <li><a href="#sdl-get-ticks"><code>sdl-get-ticks</code></a>
 	          <li><a href="#sdl-gl-swap-buffers"><code>sdl-gl-swap-buffers</code></a>
+	          <li><a href="#sdl-hw-accel"><code>sdl-hw-accel</code></a>
+	          <li><a href="#sdl-hw-palette"><code>sdl-hw-palette</code></a>
+	          <li><a href="#sdl-hw-surface"><code>sdl-hw-surface</code></a>
 	          <li><a href="#sdl-init-audio"><code>sdl-init-audio</code></a>
 	          <li><a href="#sdl-init-cdrom"><code>sdl-init-cdrom</code></a>
 	          <li><a href="#sdl-init-eventthread"><code>sdl-init-eventthread</code></a>
@@ -604,9 +611,23 @@
 	          <li><a href="#sdl-init-on-startup"><code>sdl-init-on-startup</code></a>
 	          <li><a href="#sdl-init-timer"><code>sdl-init-timer</code></a>
 	          <li><a href="#sdl-init-video"><code>sdl-init-video</code></a>
+	          <li><a href="#sdl-iyuv-overlay"><code>sdl-iyuv-overlay</code></a>
+	          <li><a href="#sdl-no-frame"><code>sdl-no-frame</code></a>
 	          <li><a href="#sdl-opengl"><code>sdl-opengl</code></a>
+	          <li><a href="#sdl-opengl-blit"><code>sdl-opengl-blit</code></a>
+	          <li><a href="#sdl-pre-alloc"><code>sdl-pre-alloc</code></a>
 	          <li><a href="#sdl-quit-on-exit"><code>sdl-quit-on-exit</code></a>
+	          <li><a href="#sdl-resizable"><code>sdl-resizable</code></a>
+	          <li><a href="#sdl-rle-accel"><code>sdl-rle-accel</code></a>
+	          <li><a href="#sdl-rle-accel-ok"><code>sdl-rle-accel-ok</code></a>
+	          <li><a href="#sdl-src-alpha"><code>sdl-src-alpha</code></a>
+	          <li><a href="#sdl-src-color-key"><code>sdl-src-color-key</code></a>
 	          <li><a href="#sdl-surface"><code>sdl-surface</code></a>
+	          <li><a href="#sdl-sw-surface"><code>sdl-sw-surface</code></a>
+	          <li><a href="#sdl-uyvy-overlay"><code>sdl-uyvy-overlay</code></a>
+	          <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a>
+	          <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a>
+	          <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a>
 	          <li><a href="#set-alpha"><code>set-alpha</code></a>
 	          <li><a href="#set-cell"><code>set-cell</code></a>
 	          <li><a href="#set-cell-*"><code>set-cell-*</code></a>
@@ -638,7 +659,6 @@
 	          <li><a href="#with-default-font"><code>with-default-font</code></a>
 	          <li><a href="#with-events"><code>with-events</code></a>
 	          <li><a href="#with-font"><code>with-font</code></a>
-	          <li><a href="#with-foreign-color-copy"><code>with-foreign-color-copy</code></a>
 	          <li><a href="#with-init"><code>with-init</code></a>
 	          <li><a href="#with-locked-surface"><code>with-locked-surface</code></a>
 	          <li><a href="#with-locked-surfaces"><code>with-locked-surfaces</code></a>
@@ -822,7 +842,7 @@
 <p><br>[Special variable]<br><a class=none name='*black*'><b>*black*</b></a>
 <blockquote><br>
 
-
+<p>The <code>COLOR</code> black. </p>
 
 </blockquote>
 
@@ -918,7 +938,7 @@
 <p><br>[Special variable]<br><a class=none name='*external-init-on-startup*'><b>*external-init-on-startup*</b></a>
 <blockquote><br>
 
-<p>A list of functions that are called in (INIT-SDL) </p>
+<p>The list of functions that are called from <a href="#init-sdl">INIT-SDL</a>. </p>
 
 </blockquote>
 
@@ -930,7 +950,7 @@
 <p><br>[Special variable]<br><a class=none name='*external-quit-on-exit*'><b>*external-quit-on-exit*</b></a>
 <blockquote><br>
 
-<p>A list of functions that are called in (quit-SDL) </p>
+<p>The list of functions that are called from <a href="#quit-sdl">QUIT-SDL</a>. </p>
 
 </blockquote>
 
@@ -1218,7 +1238,7 @@
 <p><br>[Special variable]<br><a class=none name='*white*'><b>*white*</b></a>
 <blockquote><br>
 
-
+<p>The <code>COLOR</code> white. </p>
 
 </blockquote>
 
@@ -1231,7 +1251,7 @@
 <br><a class=none><tt>(setf (</tt><b>a</b> <i>color</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the alpha component of color as an <code>INTEGER</code>. </p>
+<p>Returns the alpha component of color <code>COLOR</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -1268,7 +1288,7 @@
 <p><br>[Macro]<br><a class=none name='all-integers?'><b>all-integers?</b> <i><tt>&amp;rest</tt> values</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns <code>T</code> if all values are <code>INTEGERS</code>. </p>
 
 </blockquote>
 
@@ -1292,7 +1312,7 @@
 <p><br>[Method]<br><a class=none><b>any-color-but-this</b> <i>color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns a new color that is different to the color <code>COLOR</code>. </p>
 
 </blockquote>
 
@@ -1305,7 +1325,7 @@
 <br><a class=none><tt>(setf (</tt><b>b</b> <i>color</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the blue component of color as an <code>INTEGER</code>. </p>
+<p>Returns the blue component of color <code>COLOR</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -1330,7 +1350,7 @@
 <p><br>[Function]<br><a class=none name='bit-depth'><b>bit-depth</b> <i>surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the bit depth (the number of bytes per pixel, or bpp) of the surface <code>SURFACE</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -1392,7 +1412,7 @@
 <p><br>[Macro]<br><a class=none name='cast'><b>cast</b> <i>type value</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Coerces the value <code>VALUE</code> to the type <code>TYPE</code>. </p>
 
 </blockquote>
 
@@ -1404,7 +1424,7 @@
 <p><br>[Macro]<br><a class=none name='cast-all-to-int'><b>cast-all-to-int</b> <i><tt>&amp;rest</tt> values</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Casts the values in <code>REST</code> to <code>FIXNUM</code>s. </p>
 
 </blockquote>
 
@@ -1416,7 +1436,7 @@
 <p><br>[Macro]<br><a class=none name='cast-to-int'><b>cast-to-int</b> <i>value</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Casts the value <code>VALUE</code> to a <code>FIXNUM</code>. </p>
 
 </blockquote>
 
@@ -1488,7 +1508,7 @@
 <p><br>[Macro]<br><a class=none name='check-types'><b>check-types</b> <i>type <tt>&amp;rest</tt> rest</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Performs <code>CHECK-TYPE</code> on items in rest. </p>
 
 </blockquote>
 
@@ -1524,7 +1544,7 @@
 <p><br>[Function]<br><a class=none name='clear-display'><b>clear-display</b> <i>color <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Fills the display <code>SURFACE</code> using color <code>COLOR</code>. <code>SURFACE</code> is bound to <code>*DEFAULT-DISPLAY*</code> if unspecified. </p>
 
 </blockquote>
 
@@ -1569,22 +1589,10 @@
 
 <!-- Entry for COLOR-* -->
 
-<p><br>[Method]<br><a class=none><b>color-*</b> <i>(color rectangle)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for COLOR-* -->
-
-
-<!-- Entry for COLOR-* -->
-
 <p><br>[Method]<br><a class=none><b>color-*</b> <i>(color foreign-color)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Not implemented yet. Returns <code>NIL</code></p>
 
 </blockquote>
 
@@ -1692,7 +1700,7 @@
 <p><br>[Function]<br><a class=none name='copy-point'><b>copy-point</b> <i>point</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns a copy of the point <code>POINT</code>. </p>
 
 </blockquote>
 
@@ -1716,7 +1724,7 @@
 <p><br>[Function]<br><a class=none name='create-list-if-not'><b>create-list-if-not</b> <i>var</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>If <code>VAR</code> is not already a list, then returns <code>(LIST VAR)</code>. </p>
 
 </blockquote>
 
@@ -1728,7 +1736,7 @@
 <p><br>[Function]<br><a class=none name='create-path'><b>create-path</b> <i>filename <tt>&amp;optional</tt> path</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Creates a new path from <code>FILENAME</code> and <code>PATH</code>. </p>
 
 </blockquote>
 
@@ -1740,7 +1748,7 @@
 <p><br>[Function]<br><a class=none name='create-rwops-from-file'><b>create-rwops-from-file</b> <i>filename</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Creates and returns a new <code>RWOPS</code> object from the file at location <code>FILENAME</code>. </p>
 
 </blockquote>
 
@@ -1828,7 +1836,7 @@
 <p><br>[Function]<br><a class=none name='distance'><b>distance</b> <i>p1 p2</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the distance between the points p1 POINT and p2 POINT. </p>
+<p>Returns the distance between the <code>POINT</code>s <code>P1</code> and <code>P2</code>. </p>
 
 </blockquote>
 
@@ -1840,7 +1848,7 @@
 <p><br>[Function]<br><a class=none name='distance-*'><b>distance-*</b> <i>x1 y1 x2 y2</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the distance between the coordinates <code>X1</code>, <code>Y1</code> and <code>X2</code>, <code>Y2</code>. </p>
 
 </blockquote>
 
@@ -2016,7 +2024,7 @@
 <p><br>[Function]<br><a class=none name='draw-font'><b>draw-font</b> <i><tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Blit the cached surface in the font <code>FONT</code> to  the destination surface <code>SURFACE</code>. The cached surface is created during a previous call to any of  the DRAW-STRING* functions. Uses the <code>POSITION</code> of the cached surface to render at X/Y coordinates  on the destination <code>SURFACE</code>. This function can provide a speed increase upon redraws when the text in <code>FONT</code>  remains unchanged between screen updates. </p>
 
 </blockquote>
 
@@ -2028,7 +2036,8 @@
 <p><br>[Generic function]<br><a class=none name='draw-font-at'><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-font">DRAW-FONT</a>.  </p><ul><li><code>POINT</code> is the X/Y position of the the font&#039;s cached surface. <code>POINT</code> is of type <code>POINT</code>. </li>
+<p>See <a href="#draw-font">DRAW-FONT</a>.  </p><h5>Parameters </h5>
+<ul><li><code>POINT</code> is the <code>X</code> and <code>Y</code> coordinates of the the <code>FONT</code>s cached surface, of type <code>POINT</code>. </li>
 </ul>
 
 </blockquote>
@@ -2041,7 +2050,8 @@
 <p><br>[Method]<br><a class=none><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#draw-font">DRAW-FONT</a>.  </p><ul><li><code>POINT</code> is the X/Y position of the the font&#039;s cached surface. <code>POINT</code> is of type <code>POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -2053,7 +2063,8 @@
 <p><br>[Generic function]<br><a class=none name='draw-font-at-*'><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-font">DRAW-FONT</a></p><ul><li><code>X</code> and <code>Y</code> are the position coordinates of the font&#039;s cached surface. <code>X</code> and <code>Y</code> are <code>INTEGERS</code>. </li>
+<p>See <a href="#draw-font">DRAW-FONT</a></p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> are the <code>INTEGER</code> position coordinates of the <code>FONT</code>s cached surface. </li>
 </ul>
 
 </blockquote>
@@ -2066,7 +2077,9 @@
 <p><br>[Method]<br><a class=none><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#draw-font">DRAW-FONT</a>.  </p><h5>Parameters </h5>
+<ul><li><code>POINT</code> is the <code>X</code> and <code>Y</code> coordinates of the the <code>FONT</code>s cached surface, of type <code>POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -2213,10 +2226,11 @@
 
 <!-- Entry for DRAW-STRING-SHADED -->
 
-<p><br>[Function]<br><a class=none name='draw-string-shaded'><b>draw-string-shaded</b> <i>str p1 fg-color bg-color <tt>&amp;key</tt> justify surface font</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-shaded'><b>draw-string-shaded</b> <i>string p1 fg-color bg-color <tt>&amp;key</tt> justify surface font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See DRAW-STRING-SHADED-*. </p><ul><li>P1 is the x and y position to render the text, of type POINT. </li>
+<p>See <a href="#draw-string-shaded-*">DRAW-STRING-SHADED-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the <code>X</code> and <code>Y</code> coordinates to render the text, of type <code>SDL:POINT</code>. </li>
 </ul>
 
 </blockquote>
@@ -2226,18 +2240,20 @@
 
 <!-- Entry for DRAW-STRING-SHADED-* -->
 
-<p><br>[Function]<br><a class=none name='draw-string-shaded-*'><b>draw-string-shaded-*</b> <i>str x y fg-color bg-color <tt>&amp;key</tt> justify surface font</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-shaded-*'><b>draw-string-shaded-*</b> <i>string x y fg-color bg-color <tt>&amp;key</tt> justify surface font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw text STR using font FONT with foreground and background colors FG-COLOR and BG-COLOR color COLOR  onto surface SURFACE, using the SHADED mode.  </p><ul><li><p>STR is the text to render.  </p></li>
-<li><p>X/Y are the x and y position coordinates, as INTEGERS. </p></li>
-<li><p>FG-COLOR color is the foreground color used to render text, of type SDL-COLOR </p></li>
-<li><p>BG-COLOR color is the background color used to render text, of type SDL-COLOR </p></li>
-<li><p>FONT is a FONT object.  Bound to <EM>DEFAULT-FONT</EM> by default.  </p></li>
-<li><p>SURFACE is the surface to render text onto, of type SDL-SURFACE  </p></li>
-<li><p>Returns the surface SURFACE. </p></li>
-</ul><p>For example: </p><ul><li>(DRAW-STRING-SHADED-* &quot;Hello World!&quot; 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE) </li>
-</ul>
+<p>Draw text <code>STRING</code> at location <code>X</code><code>Y</code> using font <code>FONT</code> with text color <code>FG-COLOR</code> and background color <code>BG-COLOR</code> onto surface <code>SURFACE</code>.  The surface background is filled with <code>BG-COLOR</code> so the surface cannot be keyed over other surfaces. </p><ul><li><code>STRING</code> is the text to render.  </li>
+<li><code>X</code> and <code>Y</code> are the <code>X</code> and <code>Y</code> coordinates, as <code>INTEGERS</code>. </li>
+<li><code>FG-COLOR</code> color is the text color, of type <code>SDL-COLOR</code></li>
+<li><code>BG-COLOR</code> color is the background color used to fill the surface <code>SURFACE</code>, of type <code>SDL-COLOR</code></li>
+<li><code>FONT</code> is the font face used to render the text. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the surface <code>SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)
+</code></pre>
 
 </blockquote>
 
@@ -2246,10 +2262,11 @@
 
 <!-- Entry for DRAW-STRING-SOLID -->
 
-<p><br>[Function]<br><a class=none name='draw-string-solid'><b>draw-string-solid</b> <i>str p1 <tt>&amp;key</tt> justify surface font color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-solid'><b>draw-string-solid</b> <i>string p1 <tt>&amp;key</tt> justify surface font color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See DRAW-STRING-SOLID-*. </p><ul><li>P1 is the x and y position to render the text, of type POINT. </li>
+<p>See <a href="#draw-string-solid-*">DRAW-STRING-SOLID-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the <code>X</code> and <code>X</code> coordinates to render the text, of type <code>POINT</code>. </li>
 </ul>
 
 </blockquote>
@@ -2259,17 +2276,20 @@
 
 <!-- Entry for DRAW-STRING-SOLID-* -->
 
-<p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>str x y <tt>&amp;key</tt> justify surface font color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>string x y <tt>&amp;key</tt> justify surface font color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw text STR using font FONT with color COLOR onto surface SURFACE, using the Solid mode.  </p><ul><li><p>STR is the text to render.  </p></li>
-<li><p>X/Y are the x and y position coordinates, as INTEGERS. </p></li>
-<li><p>FONT is a FONT object.  Bound to <EM>DEFAULT-FONT</EM> by default.  </p></li>
-<li><p>SURFACE is the surface to render text onto, of type SDL-SURFACE  </p></li>
-<li><p>COLOR color is the color used to render text, of type SDL-COLOR </p></li>
-<li><p>Returns the surface SURFACE. </p></li>
-</ul><p>For example: </p><ul><li>(DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR) </li>
-</ul>
+<p>Draw text <code>STRING</code> at location <code>X</code><code>Y</code> using font <code>FONT</code> with color <code>COLOR</code> onto surface <code>SURFACE</code>. The text is keyed onto <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>STRING</code> is the text to render.  </li>
+<li><code>X</code> and <code>Y</code> are the <code>X</code> and <code>Y</code> position coordinates, as <code>INTEGERS</code>. </li>
+<li><code>FONT</code> is the font face used to render the string. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> color is the text color, of type <code>SDL-COLOR</code>. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns the surface <code>SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SOLID-* &amp;quot;Hello World!&amp;quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -2359,7 +2379,9 @@
 <p><br>[Function]<br><a class=none name='flood-fill'><b>flood-fill</b> <i>point <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#flood-fill-*">FLOOD-FILL-*</a>. </p><h5>Parameters </h5>
+<ul><li>POINT is the position to state the fill, of type <code>POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -2371,7 +2393,11 @@
 <p><br>[Function]<br><a class=none name='flood-fill-*'><b>flood-fill-*</b> <i>x y <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>A stack based flood fill that does a lot of consing because it uses PUSH/POP as the stack.  This function is fast. </p>
+<p>Performs a flood fill of surface <code>SURFACE</code> with color <code>COLOR</code>. The fill starts at the  position specified by the <code>X</code> and <code>Y</code> coordinates. Uses a stack based flood fill that does a  lot of consing because it uses PUSH/POP as the stack.  This function is fast. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> are <code>INTEGER</code> coordinates. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+</ul>
 
 </blockquote>
 
@@ -2383,7 +2409,9 @@
 <p><br>[Function]<br><a class=none name='flood-fill-stack'><b>flood-fill-stack</b> <i>point <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#flood-fill-stack-*">FLOOD-FILL-STACK-*</a>. </p><h5>Parameters </h5>
+<ul><li>POINT is the position to state the fill, of type <code>POINT</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -2395,7 +2423,7 @@
 <p><br>[Function]<br><a class=none name='flood-fill-stack-*'><b>flood-fill-stack-*</b> <i>x y <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>This function is the same as the one above but has its own custom array-based stack.  It was more of an experiment to see if an array would be faster than a bunch of consing.  The timing of both functions indicates they run at the same speed. With compiler declarations it may have better results.  Another disadvantage to this is it preallocates the stack, chewing up quite a bit of ram. </p>
+<p>See <a href="#flood-fill-*">FLOOD-FILL-*</a>. </p><p><code>FLOOD-FILL-STACK-*</code> is maintains an internal array-based stack. </p><p><EM>Note</EM>: More of an experiment to see if an array would be faster than a bunch of consing.  The timing of both functions indicates they run at the same speed. With compiler declarations it may have better results.  Another disadvantage to this is it preallocates the stack, chewing up quite a bit of ram. </p>
 
 </blockquote>
 
@@ -2420,7 +2448,7 @@
 <p><br>[Method]<br><a class=none><b>fp</b> <i>(rwops sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the cached surface <code>SURFACE</code> in <code>FONT</code>, or <code>NIL</code> if the font does not contain a cached surface. </p>
 
 </blockquote>
 
@@ -2560,7 +2588,7 @@
 <p><br>[Method]<br><a class=none><b>fp-position</b> <i>(sdl-surface sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of the cached surface <code>SURFACE</code> in <code>FONT</code>, as <code>POINT</code>. </p>
 
 </blockquote>
 
@@ -2596,7 +2624,7 @@
 <p><br>[Generic function]<br><a class=none name='free-cached-surface'><b>free-cached-surface</b> <i>font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Frees the cached surface in FONT, if any.  Sets the <code>CACHED-SURFACE</code> slot to NIL. </p>
+<p>Frees resources allocated to the cached surface <code>SURFACE</code> in <code>FONT</code>, if any.  Sets the <code>FONT</code>s <code>CACHED-SURFACE</code> slot to NIL. </p>
 
 </blockquote>
 
@@ -2608,7 +2636,7 @@
 <p><br>[Method]<br><a class=none><b>free-cached-surface</b> <i>(font sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Frees resources allocated to the cached surface <code>SURFACE</code> in <code>FONT</code>, if any.  Sets the <code>FONT</code>s <code>CACHED-SURFACE</code> slot to NIL. </p>
 
 </blockquote>
 
@@ -2620,7 +2648,7 @@
 <p><br>[Generic function]<br><a class=none name='free-color'><b>free-color</b> <i>color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Free&#039;s resources associated with COLOR. Meant specifically for the SDL_Color foreign object.  <code>COLOR</code> and <code>COLOR-A</code> are ignored. </p>
+<p>Free&#039;s resources allocated to COLOR. Meant specifically for the SDL_Color foreign object.  <code>COLOR</code> and <code>COLOR-A</code> are ignored. </p>
 
 </blockquote>
 
@@ -2656,7 +2684,7 @@
 <p><br>[Generic function]<br><a class=none name='free-font'><b>free-font</b> <i>font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Free&#039;s the resources associated with the FONT. </p>
+<p>Free&#039;s the resources allocated to the <code>FONT</code>. </p>
 
 </blockquote>
 
@@ -2668,7 +2696,7 @@
 <p><br>[Method]<br><a class=none><b>free-font</b> <i>(font bitmap-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Free resources associated with the font FONT. </p>
+<p>Free resources associated with the bitmap font <code>FONT</code>. </p>
 
 </blockquote>
 
@@ -2680,7 +2708,7 @@
 <p><br>[Method]<br><a class=none><b>free-font</b> <i>(font sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Free resources associated with the font FONT. </p>
+<p>Free&#039;s the resources allocated to the <code>FONT</code>. </p>
 
 </blockquote>
 
@@ -2692,7 +2720,7 @@
 <p><br>[Generic function]<br><a class=none name='free-rectangle'><b>free-rectangle</b> <i>rectangle</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Free&#039;s the resources associated with RECTANGLE. Specifically free&#039;s the wrapped SDL_Rect foreign object. </p>
+<p>Free&#039;s the resources allocated to <code>RECTANGLE</code>. Specifically free&#039;s the wrapped SDL_Rect foreign object. </p>
 
 </blockquote>
 
@@ -2704,7 +2732,7 @@
 <p><br>[Method]<br><a class=none><b>free-rectangle</b> <i>(rectangle rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Frees the resources allocated to the rectangle <code>RECTANGLE</code>. </p>
 
 </blockquote>
 
@@ -2716,7 +2744,7 @@
 <p><br>[Method]<br><a class=none><b>free-rectangle</b> <i>(rectangle null-rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Does nothing. A <code>NULL-RECTANGLE</code> cannot be freed. </p>
 
 </blockquote>
 
@@ -2728,7 +2756,7 @@
 <p><br>[Generic function]<br><a class=none name='free-rwops'><b>free-rwops</b> <i>rwops</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Free&#039;s the resources associated with RWOPS. Specifically free&#039;s the wrapped SDL_rwops foreign object. </p>
+<p>Free&#039;s the resources allocated to <code>RWOPS</code>. Specifically free&#039;s the wrapped SDL_rwops foreign object. </p>
 
 </blockquote>
 
@@ -2740,7 +2768,7 @@
 <p><br>[Method]<br><a class=none><b>free-rwops</b> <i>(rwops rwops)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Free&#039;s the wrapped foreign SDL_rwops object. </p>
 
 </blockquote>
 
@@ -2752,7 +2780,7 @@
 <p><br>[Generic function]<br><a class=none name='free-surface'><b>free-surface</b> <i>surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Free&#039;s the resources associated with SURFACE. Specifically free&#039;s the wrapped SDL_Surface foreign object. </p>
+<p>Free&#039;s the resources allocated to <code>SURFACE</code>. Specifically free&#039;s the wrapped SDL_Surface foreign object. </p>
 
 </blockquote>
 
@@ -2789,7 +2817,7 @@
 <br><a class=none><tt>(setf (</tt><b>g</b> <i>color</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the green component of color as an <code>INTEGER</code>. </p>
+<p>Returns the green component of color <code>COLOR</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -2835,10 +2863,10 @@
 
 <!-- Entry for GET-POINT -->
 
-<p><br>[Generic function]<br><a class=none name='get-point'><b>get-point</b> <i>point</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='get-point'><b>get-point</b> <i>object</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of object <code>OBJ</code> as a <code>POINT</code>. </p>
 
 </blockquote>
 
@@ -2847,7 +2875,7 @@
 
 <!-- Entry for GET-POINT -->
 
-<p><br>[Method]<br><a class=none><b>get-point</b> <i>(point sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns the <code>X</code> and <code>Y</code> position coordinates of the surface <code>SURFACE</code> as a <code>POINT</code>. </p>
@@ -2859,10 +2887,10 @@
 
 <!-- Entry for GET-POINT -->
 
-<p><br>[Method]<br><a class=none><b>get-point</b> <i>(point rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of rectangle <code>RECTANGLE</code> as a <code>POINT</code>. </p>
 
 </blockquote>
 
@@ -2871,10 +2899,10 @@
 
 <!-- Entry for GET-POINT -->
 
-<p><br>[Method]<br><a class=none><b>get-point</b> <i>(point vector)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the point <code>POINT</code>. </p>
 
 </blockquote>
 
@@ -2883,10 +2911,10 @@
 
 <!-- Entry for GET-POSITION -->
 
-<p><br>[Generic function]<br><a class=none name='get-position'><b>get-position</b> <i>rectangle</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='get-position'><b>get-position</b> <i>object</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#get-POINT">GET-POINT</a></p>
 
 </blockquote>
 
@@ -2895,7 +2923,7 @@
 
 <!-- Entry for GET-POSITION -->
 
-<p><br>[Method]<br><a class=none><b>get-position</b> <i>(rectangle sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>get-position</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#get-point">GET-POINT</a>. </p>
@@ -2907,10 +2935,10 @@
 
 <!-- Entry for GET-POSITION -->
 
-<p><br>[Method]<br><a class=none><b>get-position</b> <i>(rectangle rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>get-position</b> <i>(object rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#get-POINT">GET-POINT</a></p>
 
 </blockquote>
 
@@ -2934,7 +2962,7 @@
 <p><br>[Method]<br><a class=none><b>get-rectangle</b> <i>(rectangle rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the rectangle <code>RECTANGLE</code>. </p>
 
 </blockquote>
 
@@ -2972,7 +3000,7 @@
 <br><a class=none><tt>(setf (</tt><b>height</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>INTEGER</code> height of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
 
 </blockquote>
 
@@ -2998,7 +3026,7 @@
 <br><a class=none><tt>(setf (</tt><b>height</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>INTEGER</code> height of the rectangle <code>RECTANGLE</code>. </p>
 
 </blockquote>
 
@@ -3010,7 +3038,7 @@
 <p><br>[Function]<br><a class=none name='init-sdl'><b>init-sdl</b> <i><tt>&amp;optional</tt> init</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Initalizes the SDL library when the &amp;OPTIONAL parameter <code>INIT</code> is <code>T</code>, or  the value returned by <a href="#sdl-init-on-startup">SDL-INIT-ON-STARTUP</a> is <code>T</code>. </p>
+<p>Initalizes the SDL library when the <code>OPTIONAL</code> parameter <code>INIT</code> is <code>T</code>, or  the value returned by <a href="#sdl-init-on-startup">SDL-INIT-ON-STARTUP</a> is <code>T</code>. </p>
 
 </blockquote>
 
@@ -3034,8 +3062,7 @@
 <p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i><tt>&amp;optional</tt> font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Creates a new FONT object from the font data in SDL-GFX-CFFI:<EM>FONT-DATA</EM>. Binds the symbol <EM>DEFAULT-FONT</EM> to FONT <ul><li>Returns a new FONT, or NIL if unsuccessful. </li>
-</ul>
+<p>Calls <a href="#initialise-font">INITIALISE-FONT</a> to create a new <code>BITMAP-FONT</code> from <code>FONT-DEFINITION</code>.  <code>FONT-DEFINITION</code> is set to &#039;<EM>font-8x8</EM><code> if unspecified. Binds the symbol </code><EM>DEFAULT-FONT</EM><code> to the new font. Reutns the new font, or </code>NIL` if the font cannot be created. </p>
 
 </blockquote>
 
@@ -3047,8 +3074,7 @@ Creates a new FONT object from the font data in SDL-GFX-CFFI:<EM>FONT-DATA</EM>.
 <p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>DEFAULT-FONT</EM> to FONT. <ul><li>Returns a new FONT, or NIL if unsuccessful. </li>
-</ul>
+<p>Creates a new <code>BITMAP-FONT</code> object from the font data in <code>FONT-DEFINITION</code>. Returns the new bitmap font, or <code>NIL</code> if the font cannot be created. </p>
 
 </blockquote>
 
@@ -3145,7 +3171,11 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt> key-color alpha-value image-type force free</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Load a BMP image from a file at location <code>FILENAME</code>. </p><h5>Parameters </h5>
+<ul><li><code>FILENAME</code> is the location of the image file on disk, as a <code>STRING</code>. </li>
+<li><code>KEY-COLOR</code> when not <code>NIL</code> is the color to be used as the transpart pixel. <code>When </code>KEY-COLOR<code> is </code>NIL`, the surface is created without a key color. See <a href="#set-color-key">SET-COLOR-KEY</a> for more detailed information. </li>
+<li><code>ALPHA</code> when between <code>0</code> and <code>255</code> will set the level of alpha transparency for the new surface. When <code>ALPHA</code> is <code>NIL</code>, the new surface is created without alpha transparency. See <a href="#set-alpha">SET-ALPHA</a> for more detailed information. </li>
+</ul>
 
 </blockquote>
 
@@ -3229,7 +3259,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Function]<br><a class=none name='point'><b>point</b> <i><tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Creates a new <code>POINT</code> set to the specified horizontal <code>X</code> and vertical <code>Y</code> coordinate. </p>
 
 </blockquote>
 
@@ -3241,7 +3271,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Generic function]<br><a class=none name='point-*'><b>point-*</b> <i>point</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the <code>X</code> and <code>Y</code> coordinates of the point <code>POINT</code> as as spread.  The <code>RESULT</code> is <code>(VALUES X Y)</code></p>
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of the object as a spread.  The <code>RESULT</code> is <code>(VALUES X Y)</code></p>
 
 </blockquote>
 
@@ -3265,7 +3295,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Method]<br><a class=none><b>point-*</b> <i>(point rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code> as a spread.    The <code>RESULT</code> is <code>(VALUES X Y)</code></p>
 
 </blockquote>
 
@@ -3277,7 +3307,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Method]<br><a class=none><b>point-*</b> <i>(point vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of the point <code>POINT</code> as a spread. </p>
 
 </blockquote>
 
@@ -3313,7 +3343,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Method]<br><a class=none><b>position-*</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#point-*">POINT-*</a></p>
 
 </blockquote>
 
@@ -3325,7 +3355,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Method]<br><a class=none><b>position-*</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#point-*">POINT-*</a>. </p>
 
 </blockquote>
 
@@ -3377,7 +3407,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Function]<br><a class=none name='quit-sdl'><b>quit-sdl</b> <i><tt>&amp;optional</tt> quit</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Uninitalizes the SDL library when the &amp;OPTIONAL parameter <code>QUIT</code> is <code>T</code>, or  the value returned by <a href="#sdl-quit-on-exit">SDL-QUIT-ON-EXIT</a> is <code>T</code>. </p>
+<p>Uninitalizes the SDL library when the <code>OPTIONAL</code> parameter <code>QUIT</code> is <code>T</code>, or  the value returned by <a href="#sdl-quit-on-exit">SDL-QUIT-ON-EXIT</a> is <code>T</code>. </p>
 
 </blockquote>
 
@@ -3402,7 +3432,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <br><a class=none><tt>(setf (</tt><b>r</b> <i>color</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the red component of color as an <code>INTEGER</code>. </p>
+<p>Returns the red component of color <code>COLOR</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -3427,7 +3457,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Function]<br><a class=none name='random+1'><b>random+1</b> <i>rnd</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns a random number in the range 0 &gt; num &lt;= rnd. </p>
 
 </blockquote>
 
@@ -3463,7 +3493,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Standard class]<br><a class=none name='rectangle'><b>rectangle</b></a>
 <blockquote><br>
 
-
+<p>A <code>RECTANGLE</code> object manages the foreign SDL_Rect object. </p>
 
 </blockquote>
 
@@ -3475,7 +3505,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Function]<br><a class=none name='rectangle'><b>rectangle</b> <i><tt>&amp;key</tt> x y w h fp null</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Creates a new <code>RECTANGLE</code> from the specified <code>X</code>, <code>Y</code>, width <code>W</code> and height <code>H</code>. If <code>FP&amp;#039; is </code>NIL<code> then a foreign SDL_Rect is created. If </code>FP<code> is a pointer to a foreign SDL_Rect object then </code>FP<code> is used. If </code>NULL<code> is </code>NIL<code>, then a new </code>RECTANGLE<code> is returned. If </code>NULL<code> not </code>NIL` then a <a href="#null-rectangle">NULL-RECTANGLE</a>` is created. </p>
 
 </blockquote>
 
@@ -3511,7 +3541,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Method]<br><a class=none><b>rectangle-*</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates of the rectangle <code>RECTANGLE</code> as a spread.  The <code>RESULT</code> is <code>(VALUES X Y WIDTH HEIGHT)</code></p>
 
 </blockquote>
 
@@ -3561,18 +3591,21 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 
 <!-- Entry for RENDER-STRING-SHADED -->
 
-<p><br>[Function]<br><a class=none name='render-string-shaded'><b>render-string-shaded</b> <i>str fg-color bg-color <tt>&amp;key</tt> font free cache</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='render-string-shaded'><b>render-string-shaded</b> <i>string fg-color bg-color <tt>&amp;key</tt> font free cache</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Render string STR using font FONT with foreground and background colors FG-COLOR and BG-COLOR  into a new SURFACE, using the Shaded mode.  Unless :FREE T, the caller is responsible for freeing the new SURFACE. Use :CACHE T to cache the newly created surface in the FONT object. </p><ul><li><p>STR is the text to render.  </p></li>
-<li><p>FG-COLOR color is the foreground color used to render text, of type SDL-COLOR </p></li>
-<li><p>BG-COLOR color is the background color used to render text, of type SDL-COLOR </p></li>
-<li><p>FONT is a FONT object.  Bound to <EM>DEFAULT-FONT</EM> by default.  </p></li>
-<li><p>FREE when T will free the old cached SURFACE in FONT. </p></li>
-<li><p>CACHE when T will cache the newly created SURFACE in FONT. </p></li>
-<li><p>Returns the new surface SDL-SURFACE. </p></li>
-</ul><p>For example: </p><ul><li>(RENDER-STRING-SHADED &quot;Hello World!&quot; F-COLOR B-COLOR) </li>
-</ul>
+<p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>FG-COLOR</code> and background color <code>BG-COLOR</code> to a new <code>SURFACE</code>.  The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is filled with <code>BG-COLOR</code> so the surface cannot be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters </h5>
+<ul><li><code>STRING</code> is the text to render.  </li>
+<li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>FG-COLOR</code> color is the text color, of type <code>SDL-COLOR</code></li>
+<li><code>BG-COLOR</code> color is the background color used to fill the surface, of type <code>SDL-COLOR</code></li>
+<li><code>FREE</code> when <code>T</code> will free any exisiting cached surface in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns a new cached surface <code>SDL-SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SHADED &amp;quot;Hello World!&amp;quot; F-COLOR B-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -3581,17 +3614,20 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 
 <!-- Entry for RENDER-STRING-SOLID -->
 
-<p><br>[Function]<br><a class=none name='render-string-solid'><b>render-string-solid</b> <i>str <tt>&amp;key</tt> font color free cache</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='render-string-solid'><b>render-string-solid</b> <i>string <tt>&amp;key</tt> font color free cache</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Render string STR using font FONT with color COLOR into a new SURFACE, using the Solid mode.  Unless :FREE T, the caller is responsible for freeing the new SURFACE. Use :CACHE T to cache the newly created surface in the FONT object. </p><ul><li><p>STR is the text to render.  </p></li>
-<li><p>FONT is a FONT object.  Bound to <EM>DEFAULT-FONT</EM> by default.  </p></li>
-<li><p>COLOR color is the color used to render text, of type SDL-COLOR </p></li>
-<li><p>FREE when T will free the old cached SURFACE in FONT. </p></li>
-<li><p>CACHE when T will cache the newly created SURFACE in FONT. </p></li>
-<li><p>Returns the new surface SDL-SURFACE. </p></li>
-</ul><p>For example: </p><ul><li>(RENDER-STRING-SOLID &quot;Hello World!&quot; :COLOR A-COLOR) </li>
-</ul>
+<p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>COLOR</code> to a new <code>SURFACE</code>.  The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is transparent and therefore can be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters </h5>
+<ul><li><code>STRING</code> is the text to render.  </li>
+<li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>COLOR</code> color is the text color, of type <code>SDL-COLOR</code>. </li>
+<li><code>FREE</code> when <code>T</code> will free any exisitng cached surface in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns a new cached surface <code>SDL-SURFACE</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(DRAW-STRING-SOLID &amp;quot;Hello World!&amp;quot; :COLOR A-COLOR)
+</code></pre>
 
 </blockquote>
 
@@ -3620,7 +3656,13 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Function]<br><a class=none name='rotate-surface'><b>rotate-surface</b> <i>degrees <tt>&amp;key</tt> surface free-p key-color alpha-value</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a new Surface rotated 0, 90, 180, or 270 degrees. When :free-p is T, the source surface SURFACE is freed. </p>
+<p>Returns a new <code>SURFACE</code> rotated <code>0</code>, <code>90</code>, <code>180</code>, or <code>270</code> degrees. </p><h5>Parameters </h5>
+<ul><li><code>DEGREES</code> is the number of degrees to rotate the surface. Must be one of <code>0</code>, <code>90</code>, <code>180</code>, or <code>270</code> degrees. </li>
+<li><code>SURFACE</code> is the surface to rotate, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>FREE-P</code> when not &#039;NIL&#039; will free the surface <code>SURFACE</code>. </li>
+<li><code>KEY-COLOR</code> when not <code>NIL</code> is the color to be used as the transpart pixel. <code>When </code>KEY-COLOR<code> is </code>NIL`, the surface is created without a key color. See <a href="#set-color-key">SET-COLOR-KEY</a> for more detailed information. </li>
+<li><code>ALPHA</code> when between <code>0</code> and <code>255</code> will set the level of alpha transparency for the new surface. When <code>ALPHA</code> is <code>NIL</code>, the new surface is created without alpha transparency. See <a href="#set-alpha">SET-ALPHA</a> for more detailed information. </li>
+</ul>
 
 </blockquote>
 
@@ -3632,7 +3674,7 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Standard class]<br><a class=none name='rwops'><b>rwops</b></a>
 <blockquote><br>
 
-
+<p>A wrapper around a foreign SDL_RWops object. </p>
 
 </blockquote>
 
@@ -3644,11 +3686,35 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Function]<br><a class=none name='save-image'><b>save-image</b> <i>surface filename</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>save the supplied filename, must be a bmp file </p>
+<p>Saves the surface <code>SURFACE</code> as a BMP image to a file at location <code>FILENAME</code>. </p>
 
 </blockquote>
 
 <!-- End of entry for SAVE-IMAGE -->
+
+
+<!-- Entry for SDL-ANY-FORMAT -->
+
+<p><br>[Constant]<br><a class=none name='sdl-any-format'><b>sdl-any-format</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-ANY-FORMAT -->
+
+
+<!-- Entry for SDL-ASYNC-BLIT -->
+
+<p><br>[Constant]<br><a class=none name='sdl-async-blit'><b>sdl-async-blit</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-ASYNC-BLIT -->
 
 
 <!-- Entry for SDL-COLOR -->
@@ -3656,11 +3722,35 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <p><br>[Standard class]<br><a class=none name='sdl-color'><b>sdl-color</b></a>
 <blockquote><br>
 
-<p>Root class defining an SDL color. </p>
+<p>Root class defining an SDL color. All colors in SDL must inherit from this class. </p>
 
 </blockquote>
 
 <!-- End of entry for SDL-COLOR -->
+
+
+<!-- Entry for SDL-DOUBLEBUF -->
+
+<p><br>[Constant]<br><a class=none name='sdl-doublebuf'><b>sdl-doublebuf</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-DOUBLEBUF -->
+
+
+<!-- Entry for SDL-FULLSCREEN -->
+
+<p><br>[Constant]<br><a class=none name='sdl-fullscreen'><b>sdl-fullscreen</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-FULLSCREEN -->
 
 
 <!-- Entry for SDL-GET-TICKS -->
@@ -3685,6 +3775,42 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 </blockquote>
 
 <!-- End of entry for SDL-GL-SWAP-BUFFERS -->
+
+
+<!-- Entry for SDL-HW-ACCEL -->
+
+<p><br>[Constant]<br><a class=none name='sdl-hw-accel'><b>sdl-hw-accel</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-HW-ACCEL -->
+
+
+<!-- Entry for SDL-HW-PALETTE -->
+
+<p><br>[Constant]<br><a class=none name='sdl-hw-palette'><b>sdl-hw-palette</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-HW-PALETTE -->
+
+
+<!-- Entry for SDL-HW-SURFACE -->
+
+<p><br>[Constant]<br><a class=none name='sdl-hw-surface'><b>sdl-hw-surface</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-HW-SURFACE -->
 
 
 <!-- Entry for SDL-INIT-AUDIO -->
@@ -3795,6 +3921,30 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <!-- End of entry for SDL-INIT-VIDEO -->
 
 
+<!-- Entry for SDL-IYUV-OVERLAY -->
+
+<p><br>[Constant]<br><a class=none name='sdl-iyuv-overlay'><b>sdl-iyuv-overlay</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-IYUV-OVERLAY -->
+
+
+<!-- Entry for SDL-NO-FRAME -->
+
+<p><br>[Constant]<br><a class=none name='sdl-no-frame'><b>sdl-no-frame</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-NO-FRAME -->
+
+
 <!-- Entry for SDL-OPENGL -->
 
 <p><br>[Constant]<br><a class=none name='sdl-opengl'><b>sdl-opengl</b></a>
@@ -3807,6 +3957,30 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 <!-- End of entry for SDL-OPENGL -->
 
 
+<!-- Entry for SDL-OPENGL-BLIT -->
+
+<p><br>[Constant]<br><a class=none name='sdl-opengl-blit'><b>sdl-opengl-blit</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-OPENGL-BLIT -->
+
+
+<!-- Entry for SDL-PRE-ALLOC -->
+
+<p><br>[Constant]<br><a class=none name='sdl-pre-alloc'><b>sdl-pre-alloc</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-PRE-ALLOC -->
+
+
 <!-- Entry for SDL-QUIT-ON-EXIT -->
 
 <p><br>[Function]<br><a class=none name='sdl-quit-on-exit'><b>sdl-quit-on-exit</b> <i></i> =&gt; <i>result</i></a>
@@ -3817,6 +3991,66 @@ Creates a new FONT object from the font data in FONT-DATA. Binds the symbol <EM>
 </blockquote>
 
 <!-- End of entry for SDL-QUIT-ON-EXIT -->
+
+
+<!-- Entry for SDL-RESIZABLE -->
+
+<p><br>[Constant]<br><a class=none name='sdl-resizable'><b>sdl-resizable</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-RESIZABLE -->
+
+
+<!-- Entry for SDL-RLE-ACCEL -->
+
+<p><br>[Constant]<br><a class=none name='sdl-rle-accel'><b>sdl-rle-accel</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-RLE-ACCEL -->
+
+
+<!-- Entry for SDL-RLE-ACCEL-OK -->
+
+<p><br>[Constant]<br><a class=none name='sdl-rle-accel-ok'><b>sdl-rle-accel-ok</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-RLE-ACCEL-OK -->
+
+
+<!-- Entry for SDL-SRC-ALPHA -->
+
+<p><br>[Constant]<br><a class=none name='sdl-src-alpha'><b>sdl-src-alpha</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-SRC-ALPHA -->
+
+
+<!-- Entry for SDL-SRC-COLOR-KEY -->
+
+<p><br>[Constant]<br><a class=none name='sdl-src-color-key'><b>sdl-src-color-key</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-SRC-COLOR-KEY -->
 
 
 <!-- Entry for SDL-SURFACE -->
@@ -3832,6 +4066,66 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 </blockquote>
 
 <!-- End of entry for SDL-SURFACE -->
+
+
+<!-- Entry for SDL-SW-SURFACE -->
+
+<p><br>[Constant]<br><a class=none name='sdl-sw-surface'><b>sdl-sw-surface</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-SW-SURFACE -->
+
+
+<!-- Entry for SDL-UYVY-OVERLAY -->
+
+<p><br>[Constant]<br><a class=none name='sdl-uyvy-overlay'><b>sdl-uyvy-overlay</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-UYVY-OVERLAY -->
+
+
+<!-- Entry for SDL-YUY2-OVERLAY -->
+
+<p><br>[Constant]<br><a class=none name='sdl-yuy2-overlay'><b>sdl-yuy2-overlay</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-YUY2-OVERLAY -->
+
+
+<!-- Entry for SDL-YV12-OVERLAY -->
+
+<p><br>[Constant]<br><a class=none name='sdl-yv12-overlay'><b>sdl-yv12-overlay</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-YV12-OVERLAY -->
+
+
+<!-- Entry for SDL-YVYU-OVERLAY -->
+
+<p><br>[Constant]<br><a class=none name='sdl-yvyu-overlay'><b>sdl-yvyu-overlay</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-YVYU-OVERLAY -->
 
 
 <!-- Entry for SET-ALPHA -->
@@ -3896,18 +4190,6 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 
 <!-- Entry for SET-COLOR -->
 
-<p><br>[Method]<br><a class=none><b>set-color</b> <i>(dst rectangle) (src sdl-color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for SET-COLOR -->
-
-
-<!-- Entry for SET-COLOR -->
-
 <p><br>[Method]<br><a class=none><b>set-color</b> <i>(dst sdl-color) (src sdl-color)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
@@ -3924,18 +4206,6 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <blockquote><br>
 
 <p>Sets the red <code>R</code>, green <code>G</code>, blue <code>B</code> and alpha <code>A</code> components of the color <code>COLOR</code>. <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code> are <code>KEY</code>word parameters having default values of <code>0</code> if unspecified. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-COLOR-* -->
-
-
-<!-- Entry for SET-COLOR-* -->
-
-<p><br>[Method]<br><a class=none><b>set-color-*</b> <i>(color rectangle) <tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -3983,7 +4253,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Generic function]<br><a class=none name='set-point'><b>set-point</b> <i>dst src</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Copies the <code>X</code> and <code>Y</code> coordinates to the destination point <code>DST</code> from the source point <code>SRC</code>. </p>
+<p>Copies the <code>X</code> and <code>Y</code> coordinates to the destination <code>DST</code> from the source <code>SRC</code>. </p>
 
 </blockquote>
 
@@ -4007,7 +4277,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst rectangle) (src vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Copies the <code>X</code> and <code>Y</code> coordinates to the destination rectangle <code>RECTANGLE</code> from the source point <code>POSITION</code>. </p>
 
 </blockquote>
 
@@ -4019,7 +4289,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst vector) (src vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the destination point <code>DST</code> to the coordinates in  the source point <code>SRC</code>. Returns the destination point <code>DST</code>. </p>
 
 </blockquote>
 
@@ -4031,7 +4301,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Generic function]<br><a class=none name='set-point-*'><b>set-point-*</b> <i>obj <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the <code>X</code> and <code>Y</code> coordinates of the point <code>POINT</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters having default values of <code>0</code> if unspecified. </p>
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the object <code>OBJ</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
 
 </blockquote>
 
@@ -4055,7 +4325,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj rectangle) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
 
 </blockquote>
 
@@ -4067,7 +4337,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj vector) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the point <code>POINT</code> to <code>X</code> and <code>Y</code>. </p>
 
 </blockquote>
 
@@ -4103,7 +4373,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-position</b> <i>(dst rectangle) (src vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code> from the point <code>POSITION</code>. </p>
 
 </blockquote>
 
@@ -4115,7 +4385,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-position</b> <i>(dst vector) (src vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#set-point">SET-POINT</a>. </p>
 
 </blockquote>
 
@@ -4151,7 +4421,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-position-*</b> <i>(obj rectangle) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
 
 </blockquote>
 
@@ -4163,7 +4433,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-position-*</b> <i>(obj vector) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#set-point-*">SET-POINT-*</a>. </p>
 
 </blockquote>
 
@@ -4187,7 +4457,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-rectangle</b> <i>(dst rectangle) (src rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Copies the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates to the destination rectangle <code>DST</code> from the source rectangle <code>SRC</code>. </p>
 
 </blockquote>
 
@@ -4211,7 +4481,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Method]<br><a class=none><b>set-rectangle-*</b> <i>(rectangle rectangle) <tt>&amp;key</tt> x y w h</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the coordinates of the rectangle RECTANGLE to the specified X, Y , width W and height HEIGHT. X, Y, W and H are &amp;KEYword parameters of type INTEGER.  Returns the rectangle RECTANGLE as RESULT. </p>
+<p>Sets the coordinates of the rectangle <code>RECTANGLE</code> to the specified <code>X</code>, <code>Y</code> , width <code>W</code> and height <code>HEIGHT</code> coordinates. <code>X</code>, <code>Y</code>, <code>W</code> and <code>H</code> are <code>KEY</code>word parameters of type <code>INTEGER</code>.  Returns the rectangle <code>RECTANGLE</code> as RESULT. </p>
 
 </blockquote>
 
@@ -4295,7 +4565,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='to-degree'><b>to-degree</b> <i>radian</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>converts radians to degrees. </p>
+<p>Converts radians to degrees. </p>
 
 </blockquote>
 
@@ -4307,7 +4577,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='to-radian'><b>to-radian</b> <i>degree</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>converts degrees to radians. </p>
+<p>Converts degrees to radians. </p>
 
 </blockquote>
 
@@ -4319,7 +4589,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='update-display'><b>update-display</b> <i><tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Flips the buffers and updates the screen <code>SURFACE</code> if <code>SDL-HW-SURFACE</code> is set in <a href="#window">WINDOW</a>.  If double buffering is not enabled then <code>UPDATE-DISPLAY</code> will perform a  <a href="#sdl-update-rect">SDL-UPDATE-RECT</a> on the entire screen. <code>SURFACE</code> is bound to <code>*DEFAULT-DISPLAY*</code> if unspecified. </p>
 
 </blockquote>
 
@@ -4369,7 +4639,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>width</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>INTEGER</code> width of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
 
 </blockquote>
 
@@ -4395,7 +4665,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>width</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>INTEGER</code> width of the rectangle <code>RECTANGLE</code>. </p>
 
 </blockquote>
 
@@ -4407,7 +4677,30 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='window'><b>window</b> <i>width height <tt>&amp;key</tt> bpp flags title-caption icon-caption</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Will attempt to create a window using software surfaces using SDL<STRONG>SetVideoMode.    Overriding :flags will allow any type of window to be created.    Returns     a new SDL</STRONG>Surface if successful.     NIL if failed. </p>
+<p>Creates a new SDL window of pixel width <code>WIDTH</code> and height <code>HEIGHT</code> using SDL_SetVideoMode. </p><p>Use <code>SDL-SW-SURFACE</code> if you plan on doing per-pixel manipulations, or blit surfaces with alpha channels,  and require a high framerate. When you use hardware surfaces like <code>SDL-HW-SURFACE</code>, SDL copies the surfaces  from video memory to system memory when you lock them, and back when you unlock them. This can cause a major  performance hit. (Be aware that you may request a hardware surface, but receive a software surface.  Many platforms can only provide a hardware surface when using <code>SDL-FULL-SCREEN.)  </code>SDL-HW-SURFACE` is best used when the surfaces you&#039;ll be blitting can also be stored in video memory. </p><p><EM>Note:</EM> To control the position on the screen when creating a windowed surface, set the environment variables  <code>SDL_VIDEO_CENTERED=center</code> or <code>SDL_VIDEO_WINDOW_POS=x,y</code>. These may be set using <a href="#sdl-put-env">SDL-PUT-ENV</a>. </p><h5>Parameters </h5>
+<ul><li><code>WIDTH</code> the pixel width of the window, of type <code>INTEGER</code>. </li>
+<li><code>HEIGHT</code> the pixel height of the window, of type <code>INTEGER</code>. If <code>WIDTH</code> and <code>HEIGHT</code> are both <code>0</code>, then the width and height of the current video mode is used  (or the desktop mode, if no mode has been set). </li>
+<li><code>BPP</code> the number of bits per pixel. Defaults to <code>0</code> which is the current display bits per pixel. <EM>Note:</EM> A <code>BPP</code> of <code>24</code> uses the packed representation of 3 bytes/pixel.  For the more common 4 bytes/pixel mode, use a <code>BPP</code> of 32. </li>
+<li><code>FLAGS</code> is a bitmasked logior of one or more of the following; <code>SDL-SW-SURFACE</code>, <code>SDL-HW-SURFACE</code>, <code>SDL-ASYNC-BLIT</code>, <code>SDL-ANY-FORMAT</code>, <code>SDL-HW-PALETTE</code>, <code>SDL-DOUBLEBUF</code>, <code>SDL-FULLSCREEN</code>, <code>SDL-OPENGL</code>, <code>SDL-OPENGL-BLIT</code>, <code>SDL-RESIZABLE</code>  AND <code>SDL-NO-FRAME</code>. </li>
+<li><code>TITLE-CAPTION</code> is the title that appears in the Window title bar, of type <code>STRING</code>. </li>
+<li><code>ICON-CAPTION</code> is the title that appears when the Window is minimized, of type <code>STRING</code>. </li>
+</ul><h5>Surface Flags </h5>
+<p>The following section descibes the flags that can be passed to <code>WINDOW</code> in <code>FLAGS</code>. </p><ul><li><code>SDL-SW-SURFACE</code>  Create the video surface in system memory. </li>
+<li><code>SDL-HW-SURFACE</code>  Create the video surface in video memory. </li>
+<li><code>SDL-ASYNC-BLIT</code>  Enables the use of asynchronous updates of the display surface. This will usually slow  down blitting on single CPU machines, but may provide a speed increase on SMP systems. </li>
+<li><code>SDL-ANY-FORMAT</code>  Normally, if a video surface of the requested <code>BPP</code> is not available, SDL will emulate  one with a shadow surface. Passing <code>SDL-ANY-FORMAT</code> prevents this and causes SDL to use the video surface,  regardless of its pixel depth. </li>
+<li><code>SDL-HW-PALETTE</code>  Give SDL exclusive palette access. Without this flag you may  not always get the the colors you request with <a href="#sdl-set-colors">SDL-SET-COLORS</a> or <a href="#sdl-set-palette">SDL-SET-PALETTE</a>. </li>
+<li><code>SDL-DOUBLEBUF</code>   Enable hardware double buffering; only valid with <code>SDL-HW-SURFACE</code>.  Calling <a href="#update-display">UPDATE-DISPLAY</a> will flip the buffers and update the screen. All drawing will  take place on the surface that is not displayed at the moment. If double buffering could not be  enabled then <a href="#update-display">UPDATE-DISPLAY</a> will just perform a <a href="#sdl-update-rect">SDL-UPDATE-RECT</a> on  the entire screen. </li>
+<li><code>SDL-FULLSCREEN</code>  SDL will attempt to use a fullscreen mode. If a hardware resolution change  is not possible (for whatever reason), the next higher resolution will be used and the display window  centered on a black background. </li>
+<li><code>SDL-OPENGL</code>	    Create an OpenGL rendering context. You should have previously set OpenGL video attributes with  <a href="#sdl-gl-set-attribute">SDL-GL-SET-ATTRIBUTE</a>. </li>
+<li><code>SDL-RESIZABLE</code>   Create a resizable window. When the window is resized by the user a <code>:VIDEO-RESIZE</code> event is  generated and <code>WINDOW</code> can be called again with the new size. </li>
+<li><code>SDL-NO-FRAME</code>    If possible, <code>SDL-NO-FRAME</code> causes SDL to create a window with no title bar or frame decoration.  Fullscreen modes automatically have this flag set. </li>
+</ul><h5>Return </h5>
+<ul><li>Returns a new <code>DISPLAY-SURFACE</code> if successful, <code>NIL</code> if unsuccessful. Whatever flags SDL_SetVideoMode  could satisfy are set in the flags member of <code>SURFACE</code>. The <code>SURFACE</code> returned is freed by SDL and should never be freed by the caller. This rule includes consecutive calls to <code>WINDOW</code> (i.e. upon resize or resolution change) - any existing surface  will be released automatically by SDL. </li>
+</ul><h5>Example </h5>
+<pre><code>(WINDOW 320 240 :TITLE-CAPTION &amp;quot;Random-Rects&amp;quot; :ICON-CAPTION &amp;quot;Random-Rects&amp;quot;
+                 :FLAGS (SDL-DOUBLEBUF SDL-FULLSCREEN))
+</code></pre>
 
 </blockquote>
 
@@ -4444,7 +4737,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-color'><b>with-color</b> <i>(var <tt>&amp;optional</tt> color free-p) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>A convience macro that binds <code>*DEFAULT-COLOR*</code> to <code>VAR</code> within the scope of <code>WITH-COLOR</code>.  <code>VAR</code> is set to <code>COLOR</code> when <code>COLOR</code> is not <code>NIL</code>.<code>VAR</code> must be of type <code>SDL-COLOR</code>.  <code>VAR</code> is freed using <a href="#free-color">FREE-COLOR</a> when <code>FREE-P</code> is not <code>NIL</code>. </p>
 
 </blockquote>
 
@@ -4481,7 +4774,10 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-default-font'><b>with-default-font</b> <i>(font) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets <code>*DEFAULT-FONT*</code> to the bitmap font in <code>FONT</code> within the scope of <code>WITH-DEFAULT-FONT</code>. </p><h5>Example </h5>
+<pre><code>(WITH-DEFAULT-FONT (new-font)
+    (DRAW-CHARACTER-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 F-COLOR B-COLOR))
+</code></pre>
 
 </blockquote>
 
@@ -4510,7 +4806,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p>When <code>TYPE</code> is <code>:WAIT</code>, <code>WITH-EVENTS</code> will sleep indefinitely for the next available event. If no events are available then the game loop is paused. </p><h5>The :IDLE Event </h5>
 <pre><code> (:IDLE ()
     &amp;amp;BODY BODY)
-</code></pre><p>The <code>:IDLE</code> event is special in that it is not generated by SDL. Rather the forms  in <code>:IDLE</code> are executed once each game loop after event queue is emptied. <code>:IDLE</code> is ignored  when the event mechanism specified by <code>TYPE</code> is <code>:POLL</code>. </p><h5>Active Event </h5>
+</code></pre><p>The <code>:IDLE</code> event is special in that it is not generated by SDL. Rather the forms  in <code>:IDLE</code> are executed once each game loop after event queue is emptied. <code>:IDLE</code> is ignored  when the event mechanism specified by <code>TYPE</code> is <code>:WAIT</code>. </p><h5>Active Event </h5>
 <pre><code>(:ACTIVE-EVENT (:GAIN GAIN :STATE STATE) 
    &amp;amp;BODY BODY)
 </code></pre><p>When the mouse leaves or enters the window area an <code>SDL-APP-MOUSE-FOCUS</code> type activation event is generated.   If the mouse has entered the window then <code>GAIN</code> will be <code>1</code>, otherwise <code>GAIN</code> will be <code>0</code>.  An <code>SDL-APP-INPUT-FOCUS</code> type activation event occurs when the application loses or gains keyboard focus,  usually when a different application is made active.  Finally, an <code>SDL-APP-ACTIVE</code> type event occurs when the application is either minimised/iconified, <code>GAIN</code> is <code>0</code>,  or restored. A single event can have multiple values set in <code>STATE</code>.  <EM>Note:</EM> This event does not occur when an application window is first created. </p><ul><li><code>GAIN</code> is <code>0</code> if the event is a loss or <code>1</code> if it is a gain. </li>
@@ -4639,23 +4935,14 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-font'><b>with-font</b> <i>(font font-definition) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Creates a new bitmap font <code>BITMAP-FONT</code> and sets <code>*DEFAULT-FONT*</code> to the bitmap font in <code>FONT</code> within the scope of <code>WITH-FONT</code>. Frees the bitmap font when <code>WITH-FONT</code> goes out of scope. </p><h5>Example </h5>
+<pre><code>(WITH-FONT (new-font *font-8x8*)
+    (DRAW-CHARACTER-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 F-COLOR B-COLOR))
+</code></pre>
 
 </blockquote>
 
 <!-- End of entry for WITH-FONT -->
-
-
-<!-- Entry for WITH-FOREIGN-COLOR-COPY -->
-
-<p><br>[Macro]<br><a class=none name='with-foreign-color-copy'><b>with-foreign-color-copy</b> <i>(struct color) declaration* statement*</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Creates a new foreign SDL_Color object STRUCT on the stack. Then copies the color components from COLOR into STRUCT. STRUCT is free&#039;d after BODY. </p>
-
-</blockquote>
-
-<!-- End of entry for WITH-FOREIGN-COLOR-COPY -->
 
 
 <!-- Entry for WITH-INIT -->
@@ -4724,7 +5011,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-point'><b>with-point</b> <i>(var <tt>&amp;optional</tt> point) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>A convenience macro that binds <code>*DEFAULT-POINT*</code> to <code>VAR</code> within the scope of <code>WITH-POINT</code>. <code>VAR</code> must be of type <code>POINT</code>. If <code>POINT</code> is not <code>NIL</code>, then <code>VAR is set to </code>POINT`. </p>
 
 </blockquote>
 
@@ -4736,7 +5023,10 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-rectangle'><b>with-rectangle</b> <i>(var <tt>&amp;optional</tt> rectangle free-p) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>A convenience macro that binds <code>*DEFAULT-RECTANGLE*</code> to <code>VAR</code> within the scope of <code>WITH-RECTANGLE</code>.  <code>VAR</code> must be of type <code>RECTANGLE</code>. <code>VAR</code> is set to <code>RECTANGLE</code> when <code>RECTANGLE</code> is not <code>NIL</code>. <code>VAR</code> is freed when <code>FREE-P</code> is <code>T</code>. </p><h5>Example </h5>
+<pre><code>(WITH-RECTANGLE (a-rect (RECTANGLE :x 0 :y 0 :w 100 :h 100))
+    ...)
+</code></pre>
 
 </blockquote>
 
@@ -4748,7 +5038,12 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-rectangles'><b>with-rectangles</b> <i>bindings declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>A convenience macro that binds multiple rectangles as per <a href="#with-rectangle">WITH-RECTANGLE</a>. </p><h5>Example </h5>
+<pre><code>(WITH-RECTANGLES ((a-rect (RECTANGLE :x 0 :y 0 :w 100 :h 100))
+                  ((b-rect (RECTANGLE :x 0 :y 100 :w 100 :h 100))
+                  ((c-rect (RECTANGLE :x 0 :y 200 :w 100 :h 100)))
+    ...)
+</code></pre>
 
 </blockquote>
 
@@ -4820,7 +5115,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='within-range'><b>within-range</b> <i>p1 p2 distance</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns true T, if the distance between the points p1 POINT and p2 POINT is &lt;= DISTANCE </p>
+<p>Returns true <code>T</code>, if the distance between the <code>POINT</code>s <code>P1</code><code>P2</code> is &lt;= the distance <code>DISTANCE</code>. </p>
 
 </blockquote>
 
@@ -4832,7 +5127,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='within-range-*'><b>within-range-*</b> <i>x1 y1 x2 y2 distance</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns true <code>T</code>, if the distance between the coordinates <code>X1</code>, <code>Y1</code> and <code>X2</code>, <code>Y2</code> is &lt;= the distance <code>DISTANCE</code>. </p>
 
 </blockquote>
 
@@ -4858,7 +5153,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code> position of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
 
 </blockquote>
 
@@ -4884,7 +5179,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code> position coordinate of the rectangle <code>RECTANGLE</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -4897,7 +5192,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj vector)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>X</code> coordindate of the point <code>POINT</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -4923,7 +5218,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>x2</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Sets the WIDTH of the rectangle <code>RECTANGLE</code> to <code>(- X2 X)</code></p>
 
 </blockquote>
 
@@ -4949,7 +5244,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>Y</code> position of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
 
 </blockquote>
 
@@ -4975,7 +5270,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>Y</code> position coordinate of the rectangle <code>RECTANGLE</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -4988,7 +5283,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj vector)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns the <code>Y</code> coordindate of the point <code>POINT</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -5014,7 +5309,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <br><a class=none><tt>(setf (</tt><b>y2</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Returns <code>(+ Y HEIGHT)</code> of the rectangle <code>RECTANGLE</code>. </p>
 
 </blockquote>
 
