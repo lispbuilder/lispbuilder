@@ -7,22 +7,20 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defvar *white* (color :r 255 :g 255 :b 255))
-(defvar *black* (color :r 0 :g 0 :b 0))
-
-
 (defun within-range (p1 p2 distance)
-  "Returns true T, if the distance between the points p1 POINT and p2 POINT is <= DISTANCE"
+  "Returns true `T`, if the distance between the `POINT`s `P1` `P2` is <= the distance `DISTANCE`."
   (>= distance (distance p1 p2)))
 
 (defun within-range-* (x1 y1 x2 y2 distance)
+  "Returns true `T`, if the distance between the coordinates `X1`, `Y1` and `X2`, `Y2` is <= the distance `DISTANCE`."
   (>= distance (distance-* x1 y1 x2 y2)))
 
 (defun distance (p1 p2)
-  "Returns the distance between the points p1 POINT and p2 POINT."
+  "Returns the distance between the `POINT`s `P1` and `P2`."
   (distance-* (x p1) (y p1) (x p2) (y p2)))
 
 (defun distance-* (x1 y1 x2 y2)
+  "Returns the distance between the coordinates `X1`, `Y1` and `X2`, `Y2`."
   (sqrt (+ (expt (- x1 x2) 2) 
 	   (expt (- y1 y2) 2))))
 
@@ -30,8 +28,19 @@
 ;;; http://article.gmane.org/gmane.lisp.cl-lispbuilder.general/559
 (defun rotate-surface (degrees &key
 		       (surface *default-surface*) (free-p nil) (key-color nil) (alpha-value nil))
-  "Returns a new Surface rotated 0, 90, 180, or 270 degrees.
-When :free-p is T, the source surface SURFACE is freed."
+  "Returns a new `SURFACE` rotated `0`, `90`, `180`, or `270` degrees.
+
+##### Parameters
+
+* `DEGREES` is the number of degrees to rotate the surface. Must be one of `0`, `90`, `180`, or `270` degrees.
+* `SURFACE` is the surface to rotate, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
+* `FREE-P` when not 'NIL' will free the surface `SURFACE`.
+* `KEY-COLOR` when not `NIL` is the color to be used as the transpart pixel.
+`When `KEY-COLOR` is `NIL`, the surface is created without a key color. See
+[SET-COLOR-KEY](#set-color-key) for more detailed information.
+* `ALPHA` when between `0` and `255` will set the level of alpha transparency for the new surface.
+When `ALPHA` is `NIL`, the new surface is created without alpha transparency. See
+[SET-ALPHA](#set-alpha) for more detailed information."
   (declare (type fixnum degrees)
            (optimize (speed 3)(safety 0)))
   (unless (member degrees '(0 90 180 270))
@@ -121,11 +130,23 @@ When :free-p is T, the source surface SURFACE is freed."
 ;; Code stolen from:
 ;; http://student.kuleuven.be/~m0216922/CG/floodfill.html
 (defun flood-fill (point &key (surface *default-surface*) (color *default-color*))
+  "See [FLOOD-FILL-*](#flood-fill-*).
+
+##### Parameters
+
+* POINT is the position to state the fill, of type `POINT`."
   (flood-fill-* (x point) (y point) :surface surface :color color))
 
 (defun flood-fill-* (x y &key (surface *default-surface*) (color *default-color*))
-  "A stack based flood fill that does a lot of consing
-because it uses PUSH/POP as the stack.  This function is fast."
+  "Performs a flood fill of surface `SURFACE` with color `COLOR`. The fill starts at the 
+position specified by the `X` and `Y` coordinates. Uses a stack based flood fill that does a 
+lot of consing because it uses PUSH/POP as the stack.  This function is fast.
+
+##### Parameters
+
+* `X` and `Y` are `INTEGER` coordinates.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the fill color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
   (sdl-base::with-pixel (pixels (fp surface))
     (let* ((stack nil)
            (w (width surface))
@@ -226,12 +247,19 @@ because it uses PUSH/POP as the stack.  This function is fast."
       (values x y))))
 
 (defun flood-fill-stack (point &key (surface *default-surface*) (color *default-color*))
+  "See [FLOOD-FILL-STACK-*](#flood-fill-stack-*).
+
+##### Parameters
+
+* POINT is the position to state the fill, of type `POINT`."
   (flood-fill-stack-* (x point) (y point) :surface surface :color color))
 
 (defun flood-fill-stack-* (x y &key (surface *default-surface*) (color *default-color*))
-  "This function is the same as the one above
-but has its own custom array-based stack.  It was more of an
-experiment to see if an array would be faster than a bunch of consing.
+  "See [FLOOD-FILL-*](#flood-fill-*).
+
+`FLOOD-FILL-STACK-*` is maintains an internal array-based stack.
+
+*Note*: More of an experiment to see if an array would be faster than a bunch of consing.
  The timing of both functions indicates they run at the same speed.
 With compiler declarations it may have better results.  Another
 disadvantage to this is it preallocates the stack, chewing up quite a

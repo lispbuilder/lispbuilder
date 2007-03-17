@@ -21,8 +21,8 @@
 								      *load-truename*))
 					   :directory (pathname-directory #.(or *compile-file-truename*
 										*load-truename*))))
-(defvar *renderer* nil)
-(defvar *quit* nil)
+;; (defvar *renderer* nil)
+;; (defvar *quit* nil)
 
 (defvar *sdl-initialized* nil)
 (defvar *sdl-init-on-startup* nil)
@@ -31,9 +31,9 @@
 (defvar *quit-on-exit* (logior SDL-INIT-VIDEO))
 
 (defvar *external-init-on-startup* nil
-  "A list of functions that are called in \(INIT-SDL\)")
+  "The list of functions that are called from [INIT-SDL](#init-sdl).")
 (defvar *external-quit-on-exit* nil
-  "A list of functions that are called in \(quit-SDL\)")
+  "The list of functions that are called from [QUIT-SDL](#quit-sdl).")
 
 (defun default-surface ()
   *default-surface*)
@@ -61,9 +61,9 @@
   (setf *default-rectangle* rectangle))
 
 
-(declaim (INLINE renderer))
-(defun renderer ()
-  *renderer*)
-(defsetf renderer set-renderer)
-(defun set-renderer (renderer)
-  (setf *renderer* renderer))
+;; (declaim (INLINE renderer))
+;; (defun renderer ()
+;;   *renderer*)
+;; (defsetf renderer set-renderer)
+;; (defun set-renderer (renderer)
+;;   (setf *renderer* renderer))

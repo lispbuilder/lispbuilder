@@ -197,8 +197,10 @@ uninitialised when `STATUS` is `NIL`."
 Returns `NIL` otherwise."
   *sdl-quit-on-exit*)
 (defun set-sdl-quit-on-exit (val)
-  (setf *sdl-init-on-startup* val
-	*sdl-quit-on-exit* val))
+  (if val
+      (setf *sdl-init-on-startup* val
+	    *sdl-quit-on-exit* val)
+      (setf *sdl-quit-on-exit* val)))
 (defsetf sdl-quit-on-exit set-sdl-quit-on-exit)
 
 (defun initialized-sub-systems-p ()
@@ -206,7 +208,7 @@ Returns `NIL` otherwise."
   (list-sub-systems (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
 
 (defun init-sdl (&optional (init (sdl-init-on-startup)))
-  "Initalizes the SDL library when the &OPTIONAL parameter `INIT` is `T`, or 
+  "Initalizes the SDL library when the `OPTIONAL` parameter `INIT` is `T`, or 
 the value returned by [SDL-INIT-ON-STARTUP](#sdl-init-on-startup) is `T`."
   (let ((initialized? (if (or init
 			      (not *sdl-initialized*))
@@ -219,7 +221,7 @@ the value returned by [SDL-INIT-ON-STARTUP](#sdl-init-on-startup) is `T`."
     initialized?))
 
 (defun quit-sdl (&optional (quit (sdl-quit-on-exit)))
-  "Uninitalizes the SDL library when the &OPTIONAL parameter `QUIT` is `T`, or 
+  "Uninitalizes the SDL library when the `OPTIONAL` parameter `QUIT` is `T`, or 
 the value returned by [SDL-QUIT-ON-EXIT](#sdl-quit-on-exit) is `T`."
   (when quit
     (setf *sdl-initialized* nil)

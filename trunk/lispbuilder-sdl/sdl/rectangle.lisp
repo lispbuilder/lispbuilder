@@ -5,12 +5,17 @@
 
 (defclass rectangle ()
   ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
-   (rectangle-color :accessor rectangle-color :initform (color :r 255 :g 255 :b 255) :initarg :color)))
+   (rectangle-color :accessor rectangle-color :initform (color :r 255 :g 255 :b 255) :initarg :color))
+  (:documentation "A `RECTANGLE` object manages the foreign SDL_Rect object."))
 
-(defclass null-rectangle (rectangle) ())
+(defclass null-rectangle (rectangle) ()
+  (:documentation "Contains a foreign `CFFI:NULL-POINTER` object."))
 
 (defun rectangle (&key (x 0) (y 0) (w 0) (h 0)
 		  (fp nil) (null nil))
+  "Creates a new `RECTANGLE` from the specified `X`, `Y`, width `W` and height `H`.
+If `FP' is `NIL` then a foreign SDL_Rect is created. If `FP` is a pointer to a foreign SDL_Rect object then `FP` is used.
+If `NULL` is `NIL`, then a new `RECTANGLE` is returned. If `NULL` not `NIL` then a [NULL-RECTANGLE](#null-rectangle)` is created."
   (if null
       (make-instance 'null-rectangle :rectangle (cffi:null-pointer))
       (make-instance 'rectangle :rectangle (if (sdl-base::is-valid-ptr fp)
@@ -19,7 +24,16 @@
 
 (defmacro with-rectangle ((var &optional rectangle (free-p t))
 			  &body body)
-  `(let* ((,@(if rectangle
+  "A convenience macro that binds `\*DEFAULT-RECTANGLE\*` to `VAR` within the scope of `WITH-RECTANGLE`. 
+`VAR` must be of type `RECTANGLE`.
+`VAR` is set to `RECTANGLE` when `RECTANGLE` is not `NIL`.
+`VAR` is freed when `FREE-P` is `T`.
+
+##### Example
+
+    \(WITH-RECTANGLE \(a-rect \(RECTANGLE :x 0 :y 0 :w 100 :h 100\)\)
+        ...\)"
+ `(let* ((,@(if rectangle
 		 `(,var ,rectangle)
 		 `(,var ,var)))
 	  (*default-rectangle* ,var))
@@ -32,6 +46,14 @@
 	   (free-rectangle ,var)))))
 
 (defmacro with-rectangles (bindings &body body)
+  "A convenience macro that binds multiple rectangles as per [WITH-RECTANGLE](#with-rectangle).
+
+##### Example
+
+    \(WITH-RECTANGLES \(\(a-rect \(RECTANGLE :x 0 :y 0 :w 100 :h 100\)\)
+                      \(\(b-rect \(RECTANGLE :x 0 :y 100 :w 100 :h 100\)\)
+                      \(\(c-rect \(RECTANGLE :x 0 :y 200 :w 100 :h 100\)\)\)
+        ...\)"
   (if bindings
       (return-with-rectangle bindings body)))
 
@@ -42,98 +64,127 @@
       `(progn ,@body)))
 
 (defmethod x ((rectangle rectangle))
+  "Returns the `X` position coordinate of the rectangle `RECTANGLE` as an `INTEGER`."
   (sdl-base::rect-x (fp rectangle)))
 (defmethod (setf x) (x-val (rectangle rectangle))
+  "Sets the `X` position coordinate of the rectangle `RECTANGLE`."
   (setf (sdl-base::rect-x (fp rectangle)) x-val))
 
 (defmethod y ((rectangle rectangle))
+  "Returns the `Y` position coordinate of the rectangle `RECTANGLE` as an `INTEGER`."
   (sdl-base::rect-y (fp rectangle)))
 (defmethod (setf y) (y-val (rectangle rectangle))
+  "Sets the `Y` position coordinate of the rectangle `RECTANGLE`."
   (setf (sdl-base::rect-y (fp rectangle)) y-val))
 
 (defmethod x2 ((rectangle rectangle))
+  "Sets the WIDTH of the rectangle `RECTANGLE` to `\(- X2 X\)`"
   (+ (sdl-base::rect-x (fp rectangle))
      (sdl-base::rect-w (fp rectangle))))
 (defmethod (setf x2) (h-val (rectangle rectangle))
+  "Returns `\(+ X WIDTH\)` of the rectangle `RECTANGLE`."
   (setf (sdl-base::rect-w (fp rectangle)) (- h-val
 					     (sdl-base::rect-x (fp rectangle)))))
 
 (defmethod y2 ((rectangle rectangle))
+  "Returns `\(+ Y HEIGHT\)` of the rectangle `RECTANGLE`."
   (+ (sdl-base::rect-y (fp rectangle))
      (sdl-base::rect-h (fp rectangle))))
 (defmethod (setf y2) (h-val (rectangle rectangle))
+  "Sets the HEIGHT of rectangle `RECTANGLE` to `\(- Y2 Y\)`"
   (setf (sdl-base::rect-h (fp rectangle)) (- h-val
-					     (sdl-base::rect-y (fp rectangle)))))
+					   (sdl-base::rect-y (fp rectangle)))))
 
 (defmethod width ((rectangle rectangle))
+  "Returns the `INTEGER` width of the rectangle `RECTANGLE`."
   (sdl-base::rect-w (fp rectangle)))
 (defmethod (setf width) (w-val (rectangle rectangle))
+  "Sets the `INTEGER` width of the rectangle `RECTANGLE`."
   (setf (sdl-base::rect-w (fp rectangle)) w-val))
 
 (defmethod height ((rectangle rectangle))
+  "Returns the `INTEGER` height of the rectangle `RECTANGLE`."
   (sdl-base::rect-h (fp rectangle)))
 (defmethod (setf height) (h-val (rectangle rectangle))
+  "Sets the `INTEGER` height of the rectangle `RECTANGLE`."
   (setf (sdl-base::rect-h (fp rectangle)) h-val))
 
-(defmethod free-rectangle ((rectangle null-rectangle)) nil)
+(defmethod free-rectangle ((rectangle null-rectangle))
+  "Does nothing. A `NULL-RECTANGLE` cannot be freed."
+  nil)
 
 (defmethod free-rectangle ((rectangle rectangle))
+  "Frees the resources allocated to the rectangle `RECTANGLE`."
   (cffi:foreign-free (fp rectangle))
   (tg:cancel-finalization rectangle))
 
 (defmethod point-* ((rectangle rectangle))
+  "Returns the `X` and `Y` coordinates of the rectangle `RECTANGLE` as a spread. 
+  The `RESULT` is `\(VALUES X Y\)`"
   (values (x rectangle) (y rectangle)))
 
 (defmethod get-point ((rectangle rectangle))
+  "Returns the `X` and `Y` coordinates of rectangle `RECTANGLE` as a `POINT`."
   (vector (x rectangle) (y rectangle)))
 
 (defmethod set-point ((rectangle rectangle) (position vector))
+  "Copies the `X` and `Y` coordinates to the destination rectangle `RECTANGLE` from the source point `POSITION`."
   (set-rectangle-* rectangle :x (x position) (y position)))
 
 (defmethod set-point-* ((rectangle rectangle) &key x y)
+  "Sets the `X` and `Y` coordinates of the rectangle `RECTANGLE`. `X` and `Y` are `KEY`word parameters."
   (set-rectangle-* rectangle :x x :y y))
 
 (defmethod position-* ((rectangle rectangle))
+  "See [POINT-*](#point-*)"
   (values (x rectangle) (y rectangle)))
 
 (defmethod get-position ((rectangle rectangle))
+  "See [GET-POINT](#get-POINT)"
   (vector (x rectangle) (y rectangle)))
 
 (defmethod set-position ((rectangle rectangle) (position vector))
+  "Sets the `X` and `Y` coordinates of the rectangle `RECTANGLE` from the point `POSITION`."
   (set-rectangle-* rectangle :x (x position) (y position)))
 
 (defmethod set-position-* ((rectangle rectangle) &key x y)
+  "Sets the `X` and `Y` coordinates of the rectangle `RECTANGLE`. `X` and `Y` are `KEY`word parameters."
   (set-rectangle-* rectangle :x x :y y))
 
 (defmethod rectangle-* ((rectangle rectangle))
+  "Returns the `X`, `Y`, `WIDTH` and `HEIGHT` coordinates of the rectangle `RECTANGLE` as a spread. 
+The `RESULT` is `\(VALUES X Y WIDTH HEIGHT\)`"
   (values (x rectangle) (y rectangle) (width rectangle) (height rectangle)))
 
 (defmethod get-rectangle ((rectangle rectangle))
+  "Returns the rectangle `RECTANGLE`."
   rectangle)
 
 (defmethod set-rectangle ((dst rectangle) (src rectangle))
+  "Copies the `X`, `Y`, `WIDTH` and `HEIGHT` coordinates to the destination rectangle `DST` from the source rectangle `SRC`."
   (set-rectangle-* dst :x (x src) :y (y src) :w (width src) :h (height src)))
 
 (defmethod set-rectangle-* ((rectangle rectangle) &key x y w h)
-  "Sets the coordinates of the rectangle RECTANGLE to the specified X, Y , width W and height HEIGHT.
-X, Y, W and H are &KEYword parameters of type INTEGER. 
-Returns the rectangle RECTANGLE as RESULT."
+  "Sets the coordinates of the rectangle `RECTANGLE` to the specified `X`, `Y` , width `W` and height `HEIGHT` coordinates.
+`X`, `Y`, `W` and `H` are `KEY`word parameters of type `INTEGER`. 
+Returns the rectangle `RECTANGLE` as RESULT."
   (when x (setf (x rectangle) x))
   (when y (setf (y rectangle) y))
   (when w (setf (width rectangle) w))
   (when h (setf (height rectangle) h))
   rectangle)
 
-(defmethod color-* ((rectangle rectangle))
-  (color-* (rectangle-color rectangle)))
+;; (defmethod color-* ((rectangle rectangle))
+;;   "Returns the color of the rectangle `RECTANGLE`."
+;;   (color-* (rectangle-color rectangle)))
 
-(defmethod set-color ((rectangle rectangle) (color sdl-color))
-  (set-color-* rectangle :r (r color) :g (g color) :b (b color) :a (a color))
-  rectangle)
+;; (defmethod set-color ((rectangle rectangle) (color sdl-color))
+;;   (set-color-* rectangle :r (r color) :g (g color) :b (b color) :a (a color))
+;;   rectangle)
 
-(defmethod set-color-* ((rectangle rectangle) &key r g b a)
-  (when r (setf (r (rectangle-color rectangle)) r))
-  (when g (setf (g (rectangle-color rectangle)) g))
-  (when b (setf (b (rectangle-color rectangle)) b))
-  (when a (setf (a (rectangle-color rectangle)) a))
-  rectangle)
+;; (defmethod set-color-* ((rectangle rectangle) &key r g b a)
+;;   (when r (setf (r (rectangle-color rectangle)) r))
+;;   (when g (setf (g (rectangle-color rectangle)) g))
+;;   (when b (setf (b (rectangle-color rectangle)) b))
+;;   (when a (setf (a (rectangle-color rectangle)) a))
+;;   rectangle)

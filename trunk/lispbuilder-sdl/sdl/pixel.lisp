@@ -10,5 +10,6 @@
 ;;   (funcall (pixel-reader surface) x y))
 
 (defun bit-depth (surface)
+  "Returns the bit depth (the number of bytes per pixel, or bpp) of the surface `SURFACE` as an `INTEGER`."
   (check-type surface sdl-surface)
   (foreign-slot-value (sdl-base::pixel-format (fp surface)) 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel))

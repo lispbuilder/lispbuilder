@@ -28,6 +28,29 @@
 		lispbuilder-sdl-cffi::sdl-init-joystick
 		lispbuilder-sdl-cffi::sdl-init-eventthread
 		lispbuilder-sdl-cffi::sdl-init-noparachute
+
+		lispbuilder-sdl-cffi::sdl-sw-surface
+		lispbuilder-sdl-cffi::sdl-hw-surface
+		lispbuilder-sdl-cffi::sdl-async-blit
+		lispbuilder-sdl-cffi::sdl-any-format
+		lispbuilder-sdl-cffi::sdl-hw-palette
+		lispbuilder-sdl-cffi::sdl-doublebuf
+		lispbuilder-sdl-cffi::sdl-fullscreen
+		lispbuilder-sdl-cffi::sdl-opengl
+		lispbuilder-sdl-cffi::sdl-opengl-blit
+		lispbuilder-sdl-cffi::sdl-resizable
+		lispbuilder-sdl-cffi::sdl-no-frame
+		lispbuilder-sdl-cffi::sdl-hw-accel
+		lispbuilder-sdl-cffi::sdl-src-color-key
+		lispbuilder-sdl-cffi::sdl-rle-accel-ok
+		lispbuilder-sdl-cffi::sdl-rle-accel
+		lispbuilder-sdl-cffi::sdl-src-alpha
+		lispbuilder-sdl-cffi::sdl-pre-alloc
+		lispbuilder-sdl-cffi::sdl-yv12-overlay
+		lispbuilder-sdl-cffi::sdl-iyuv-overlay
+		lispbuilder-sdl-cffi::sdl-yuy2-overlay
+		lispbuilder-sdl-cffi::sdl-uyvy-overlay
+		lispbuilder-sdl-cffi::sdl-yvyu-overlay
 		)
   (:export
 
@@ -306,6 +329,30 @@
    #:sdl-init-eventthread
    #:sdl-init-noparachute
    
+   #:sdl-sw-surface
+   #:sdl-hw-surface
+   #:sdl-async-blit
+   #:sdl-any-format
+   #:sdl-hw-palette
+   #:sdl-doublebuf
+   #:sdl-fullscreen
+   #:sdl-opengl
+   #:sdl-opengl-blit
+   #:sdl-resizable
+   #:sdl-no-frame
+
+   #:sdl-hw-accel
+   #:sdl-src-color-key
+   #:sdl-rle-accel-ok
+   #:sdl-rle-accel
+   #:sdl-src-alpha
+   #:sdl-pre-alloc
+   #:sdl-yv12-overlay
+   #:sdl-iyuv-overlay
+   #:sdl-yuy2-overlay
+   #:sdl-uyvy-overlay
+   #:sdl-yvyu-overlay
+
    
    ;; Imports from lispbuilder-sdl-base
    #:frame-rate

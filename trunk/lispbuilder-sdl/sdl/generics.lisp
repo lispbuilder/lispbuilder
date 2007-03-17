@@ -14,22 +14,22 @@
   (:documentation "Packs the color components in `COLOR` into a four byte `INTEGER`."))
 
 (defgeneric r (color)
-  (:documentation "Returns the red component of color as an `INTEGER`."))
+  (:documentation "Returns the red component of color `COLOR` as an `INTEGER`."))
 (defgeneric g (color)
-  (:documentation "Returns the green component of color as an `INTEGER`."))
+  (:documentation "Returns the green component of color `COLOR` as an `INTEGER`."))
 (defgeneric b (color)
-  (:documentation "Returns the blue component of color as an `INTEGER`."))
+  (:documentation "Returns the blue component of color `COLOR` as an `INTEGER`."))
 (defgeneric a (color)
-  (:documentation "Returns the alpha component of color as an `INTEGER`."))
+  (:documentation "Returns the alpha component of color `COLOR` as an `INTEGER`."))
 
 (defgeneric (setf r) (value color)
-  (:documentation "Sets the red `R` component of color."))
+  (:documentation "Sets the red `R` component of color `COLOR`."))
 (defgeneric (setf g) (value color)
-  (:documentation "Sets the green `G` component of color."))
+  (:documentation "Sets the green `G` component of color `COLOR`."))
 (defgeneric (setf b) (value color)
-  (:documentation "Sets the blue `B` component of color."))
+  (:documentation "Sets the blue `B` component of color `COLOR`."))
 (defgeneric (setf a) (value color)
-  (:documentation "Sets the alpha `A` component of color."))
+  (:documentation "Sets the alpha `A` component of color `COLOR`."))
 
 (defgeneric map-color (color &optional surface)
   (:documentation "Maps the color `COLOR` to the pixel format of the surface `SURFACE` and returns 
@@ -52,14 +52,15 @@ If `COLOR` contains no alpha component then `RESULT` is `\(VALUES R G B\)`"))
 `R`, `G`, `B` and `A` are `KEY`word parameters having default values of `0` if unspecified."))
 
 (defgeneric point-* (point)
-    (:documentation "Returns the `X` and `Y` coordinates of the point `POINT` as as spread. 
+    (:documentation "Returns the `X` and `Y` coordinates of the object as a spread. 
 The `RESULT` is `\(VALUES X Y\)`"))
 (defgeneric set-point (dst src)
-  (:documentation "Copies the `X` and `Y` coordinates to the destination point `DST` from the source point `SRC`."))
+  (:documentation "Copies the `X` and `Y` coordinates to the destination `DST` from the source `SRC`."))
 (defgeneric set-point-* (obj &key x y)
-  (:documentation "Sets the `X` and `Y` coordinates of the point `POINT`.
-`X` and `Y` are `KEY`word parameters having default values of `0` if unspecified."))
+  (:documentation "Sets the `X` and `Y` coordinates of the object `OBJ`. `X` and `Y` are `KEY`word parameters."))
 
+(defgeneric get-point (object)
+  (:documentation "Returns the `X` and `Y` coordinates of object `OBJ` as a `POINT`."))
 
 (defgeneric position-* (obj)
   (:documentation "See [POINT-*](#point-*)"))
@@ -67,6 +68,9 @@ The `RESULT` is `\(VALUES X Y\)`"))
   (:documentation "See [SET-POINT](#set-point)"))
 (defgeneric set-position-* (obj &key x y)
   (:documentation "See [SET-POINT-*](#set-point-*)"))
+
+(defgeneric get-position (object)
+  (:documentation "See [GET-POINT](#get-POINT)"))
 
 (defgeneric rectangle-* (obj)
   (:documentation "Returns the `X`, `Y`, `WIDTH` and `HEIGHT` coordinates of the object as a spread. 
@@ -124,28 +128,28 @@ where position is of type `POINT`."))
   (:documentation "Sets the HEIGHT of the object to `\(- Y2 Y\)`"))
 
 (defgeneric free-color (color)
-  (:documentation "Free's resources associated with COLOR.
+  (:documentation "Free's resources allocated to COLOR.
 Meant specifically for the SDL_Color foreign object. 
 `COLOR` and `COLOR-A` are ignored."))
 
 (defgeneric free-surface (surface)
-  (:documentation "Free's the resources associated with SURFACE.
+  (:documentation "Free's the resources allocated to `SURFACE`.
 Specifically free's the wrapped SDL_Surface foreign object."))
 
 (defgeneric free-rectangle (rectangle)
-  (:documentation "Free's the resources associated with RECTANGLE.
+  (:documentation "Free's the resources allocated to `RECTANGLE`.
 Specifically free's the wrapped SDL_Rect foreign object."))
 
 (defgeneric free-rwops (rwops)
-  (:documentation "Free's the resources associated with RWOPS.
+  (:documentation "Free's the resources allocated to `RWOPS`.
 Specifically free's the wrapped SDL_rwops foreign object."))
 
 (defgeneric free-font (font)
-  (:documentation "Free's the resources associated with the FONT."))
+  (:documentation "Free's the resources allocated to the `FONT`."))
 
 (defgeneric free-cached-surface (font)
-  (:documentation "Frees the cached surface in FONT, if any. 
-Sets the `CACHED-SURFACE` slot to NIL."))
+  (:documentation "Frees resources allocated to the cached surface `SURFACE` in `FONT`, if any. 
+Sets the `FONT`s `CACHED-SURFACE` slot to NIL."))
 
 (defgeneric draw-font (&key font surface)
   (:documentation "Blit the cached surface in the font `FONT` to 
@@ -157,12 +161,16 @@ remains unchanged between screen updates."))
 (defgeneric draw-font-at (position &key font surface)
   (:documentation "See [DRAW-FONT](#draw-font). 
 
-* `POINT` is the X/Y position of the the font's cached surface. `POINT` is of type `POINT`."))
+##### Parameters
+
+* `POINT` is the `X` and `Y` coordinates of the the `FONT`s cached surface, of type `POINT`."))
 
 (defgeneric draw-font-at-* (x y &key font surface)
   (:documentation "See [DRAW-FONT](#draw-font) 
 
-* `X` and `Y` are the position coordinates of the font's cached surface. `X` and `Y` are `INTEGERS`."))
+##### Parameters
+
+* `X` and `Y` are the `INTEGER` position coordinates of the `FONT`s cached surface."))
 
 (defgeneric color= (color1 color2)
   (:documentation "Returns `T` if colors match, returns `NIL` otherwise."))
