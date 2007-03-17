@@ -4,7 +4,7 @@
 (in-package #:lispbuilder-sdl)
 
 (defclass sdl-color () ()
-  (:documentation "Root class defining an SDL color."))
+  (:documentation "Root class defining an SDL color. All colors in SDL must inherit from this class."))
 
 (defclass color (sdl-color)
   ((color-vector :accessor fp :initform (vector 0 0 0) :initarg :color))
@@ -31,6 +31,9 @@ When `A` is not `NIL`, will return a new `COLOR-A` containing the alpha transpar
 
 (defmacro with-color ((var &optional color (free-p t))
 		      &body body)
+  "A convience macro that binds `\*DEFAULT-COLOR\*` to `VAR` within the scope of `WITH-COLOR`. 
+`VAR` is set to `COLOR` when `COLOR` is not `NIL`.`VAR` must be of type `SDL-COLOR`. 
+`VAR` is freed using [FREE-COLOR](#free-color) when `FREE-P` is not `NIL`."
   `(let* ((,@(if color
 		 `(,var ,color)
 		 `(,var ,var)))
@@ -99,6 +102,7 @@ the red `R`, green `G`, blue `BLUE` or alpha `A` color components."
   (values (r color) (g color) (b color) (a color)))
 
 (defmethod color-* ((color foreign-color))
+  "Not implemented yet. Returns `NIL`"
   nil)
 
 (defmethod map-color ((color color) &optional (surface *default-surface*))
@@ -148,15 +152,15 @@ If the surface color depth is less than 32-bpp then the unused upper bits of the
   (cffi:foreign-free (fp color))
   (tg:cancel-finalization color))
 
-(defmacro with-foreign-color-copy ((struct color) &body body)
-  "Creates a new foreign SDL_Color object STRUCT on the stack. Then copies the color components from COLOR into STRUCT.
-STRUCT is free'd after BODY." 
-  `(cffi:with-foreign-object (,struct 'sdl-cffi::SDL-Color)
-     (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct sdl-cffi::SDL-Color)
-       (setf sdl-cffi::r (r ,color)
-	     sdl-cffi::g (g ,color)
-	     sdl-cffi::b (b ,color)))
-     ,@body))
+;; (defmacro with-foreign-color-copy ((struct color) &body body)
+;;   "Creates a new foreign SDL_Color object `STRUCT on the stack. Then copies the color components from COLOR into STRUCT.
+;; STRUCT is free'd after BODY." 
+;;   `(cffi:with-foreign-object (,struct 'sdl-cffi::SDL-Color)
+;;      (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct sdl-cffi::SDL-Color)
+;;        (setf sdl-cffi::r (r ,color)
+;; 	     sdl-cffi::g (g ,color)
+;; 	     sdl-cffi::b (b ,color)))
+;;      ,@body))
 
 (defmethod color= (color1 color2)
   "Returns `NIL`. This is a catch all when an `RGB` color is compared with an `RGBA` color." 
@@ -177,8 +181,10 @@ STRUCT is free'd after BODY."
        (eq (b color1) (b color2))
        (eq (a color1) (a color2))))
 
-(defmethod any-color-but-this (color1)
-  (color :r (if (> (r color1) 254)
+(defmethod any-color-but-this (color)
+  "Returns a new color that is different to the color `COLOR`."
+  (color :r (if (> (r color) 254)
 		0
 		255)))
+
 

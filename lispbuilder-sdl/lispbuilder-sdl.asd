@@ -43,6 +43,7 @@
 	       (:file "string-shaded")
 	       (:file "sdl-util")
 	       (:file "cffi-finalizers")
+	       (:file "default-colors")
 ;;	       (:static-file "font.bmp")
 	       )
 	      :serial t)

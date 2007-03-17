@@ -1,88 +1,92 @@
 
 (in-package :lispbuilder-sdl)
 
-(defun render-string-shaded (str fg-color bg-color &key
+(defun render-string-shaded (string fg-color bg-color &key
 			    (font *default-font*)
 			    (free nil)
 			    (cache nil))
-  "Render string STR using font FONT with foreground and background colors FG-COLOR and BG-COLOR 
-into a new SURFACE, using the Shaded mode. 
-Unless :FREE T, the caller is responsible for freeing the new SURFACE.
-Use :CACHE T to cache the newly created surface in the FONT object.
+  "Render the string `STRING` using font `FONT` with text color `FG-COLOR` and background color `BG-COLOR`
+to a new `SURFACE`. 
+The dimensions of the new surface are height == `FONT` height, and width == `FONT` width * `STRING` length.
+The surface background is filled with `BG-COLOR` so the surface cannot be keyed over other surfaces.
+Use `:CACHE T` to cache the new surface in the `FONT` object.
+When `:FREE T` any exisiting cached surface in `FONT` is automatically freed.
+When `:FREE NIL` the caller is responsible for freeing any existing cached surface in `FONT`.
 
-  * STR is the text to render. 
+##### Parameters
 
-  * FG-COLOR color is the foreground color used to render text, of type SDL-COLOR
+* `STRING` is the text to render. 
+* `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `FG-COLOR` color is the text color, of type `SDL-COLOR`
+* `BG-COLOR` color is the background color used to fill the surface, of type `SDL-COLOR`
+* `FREE` when `T` will free any exisiting cached surface in `FONT`.
+* `CACHE` when `T` will cache the newly created SURFACE in `FONT`.
 
-  * BG-COLOR color is the background color used to render text, of type SDL-COLOR
+##### Returns
 
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
+* Returns a new cached surface `SDL-SURFACE`.
 
-  * FREE when T will free the old cached SURFACE in FONT.
+##### Example
 
-  * CACHE when T will cache the newly created SURFACE in FONT.
-
-  * Returns the new surface SDL-SURFACE.
-
-For example:
-  * (RENDER-STRING-SHADED \"Hello World!\" F-COLOR B-COLOR)"
+    \(DRAW-STRING-SHADED \"Hello World!\" F-COLOR B-COLOR\)"
   (check-types sdl-color fg-color bg-color)
   (when free
     (free-cached-surface font))
   (let ((surf (convert-surface :surface (create-surface (* (char-width font)
-								   (length str))
+								   (length string))
 								(char-height font))
 				   :free-p t)))
-    (draw-string-shaded-* str 0 0 fg-color bg-color
+    (draw-string-shaded-* string 0 0 fg-color bg-color
 			  :font font
 			  :surface surf)
     (when cache
       (setf (cached-surface font) surf))
     surf))
 
-(defun draw-string-shaded (str p1 fg-color bg-color &key
+(defun draw-string-shaded (string p1 fg-color bg-color &key
 			  (justify :left)
 			  (surface *default-surface*)
 			  (font *default-font*))
-  "See DRAW-STRING-SHADED-*.
+  "See [DRAW-STRING-SHADED-*](#draw-string-shaded-*).
 
-  * P1 is the x and y position to render the text, of type POINT."
+##### Parameters
+
+* `P1` is the `X` and `Y` coordinates to render the text, of type `SDL:POINT`."
   (check-type p1 point)
-  (draw-string-shaded-* str (x p1) (y p1) fg-color bg-color
+  (draw-string-shaded-* string (x p1) (y p1) fg-color bg-color
 			:justify justify
 			:surface surface
 			:font font))
 
-(defun draw-string-shaded-* (str x y fg-color bg-color &key
+(defun draw-string-shaded-* (string x y fg-color bg-color &key
 			    (justify :left)
 			    (surface *default-surface*)
 			    (font *default-font*))
-  "Draw text STR using font FONT with foreground and background colors FG-COLOR and BG-COLOR color COLOR 
-onto surface SURFACE, using the SHADED mode. 
+  "Draw text `STRING` at location `X` `Y` using font `FONT` with text color `FG-COLOR` and background color `BG-COLOR`
+onto surface `SURFACE`. 
+The surface background is filled with `BG-COLOR` so the surface cannot be keyed over other surfaces.
 
-  * STR is the text to render. 
+* `STRING` is the text to render. 
+* `X` and `Y` are the `X` and `Y` coordinates, as `INTEGERS`.
+* `FG-COLOR` color is the text color, of type `SDL-COLOR`
+* `BG-COLOR` color is the background color used to fill the surface `SURFACE`, of type `SDL-COLOR`
+* `FONT` is the font face used to render the text. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 
-  * X/Y are the x and y position coordinates, as INTEGERS.
+##### Returns
 
-  * FG-COLOR color is the foreground color used to render text, of type SDL-COLOR
+* Returns the surface `SURFACE`.
 
-  * BG-COLOR color is the background color used to render text, of type SDL-COLOR
+##### Example
 
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
-
-  * SURFACE is the surface to render text onto, of type SDL-SURFACE 
-
-  * Returns the surface SURFACE.
-
-For example:
-  * (DRAW-STRING-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)"
+    \(DRAW-STRING-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE\)"
   (check-types sdl-color fg-color bg-color)
   (check-type font bitmap-font)
   (unless surface
     (setf surface *default-display*))
   (case justify
-    (:left (draw-string-left-justify-* str x y fg-color bg-color :surface surface :font font))
-    (:right (draw-string-right-justify-* str x y fg-color bg-color :surface surface :font font))
-    (:center (draw-string-centered-* str x y fg-color bg-color :surface surface :font font))
+    (:left (draw-string-left-justify-* string x y fg-color bg-color :surface surface :font font))
+    (:right (draw-string-right-justify-* string x y fg-color bg-color :surface surface :font font))
+    (:center (draw-string-centered-* string x y fg-color bg-color :surface surface :font font))
     (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER")))
   surface)

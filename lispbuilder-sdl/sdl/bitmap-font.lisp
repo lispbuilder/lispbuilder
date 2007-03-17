@@ -10,10 +10,12 @@
    (font-data :reader font-data :initform nil :initarg :data)
    (characters :reader characters :initform (make-hash-table :test 'equal)))
   (:documentation
-   "The FONT object maintains the resources for a bitmap font. This includes the foreign array containing the FONT data, 
-as well as the most recent surface SURFACE created by a call to any of the RENDER-STRING* functions. 
-Use DRAW-FONT, DRAW-FONT-AT or DRAW-FONT-AT-* to draw the cached surface.
-Prior to the first call to a RENDER-STRING* function, the cached surface is NIL."))
+   "The `BITMAP-FONT` object manages the resources for a bitmap font. Resources include 
+the foreign array containing font data, and the most recent cached `SURFACE` created by a call 
+to any of the RENDER-STRING* functions. 
+Use [DRAW-FONT](#draw-font), [DRAW-FONT-AT](#draw-font-at) or [DRAW-FONT-AT-*](#draw-font-at-*) 
+to draw the cached surface. Prior to the first call to a RENDER-STRING* function, 
+the cached surface is `NIL`."))
 
 (defstruct glyph
   surface
@@ -21,9 +23,8 @@ Prior to the first call to a RENDER-STRING* function, the cached surface is NIL.
   bg-color)
 
 (defun initialise-font (font-definition)
-  "Creates a new FONT object from the font data in FONT-DATA.
-Binds the symbol *DEFAULT-FONT* to FONT.
-  * Returns a new FONT, or NIL if unsuccessful."
+  "Creates a new `BITMAP-FONT` object from the font data in `FONT-DEFINITION`.
+Returns the new bitmap font, or `NIL` if the font cannot be created."
   (check-type font-definition font-definition)
   (let ((data (cffi:foreign-alloc :unsigned-char
 				  :initial-contents (loop for i in (font-definition-data font-definition)
@@ -38,14 +39,14 @@ Binds the symbol *DEFAULT-FONT* to FONT.
 		   :data data)))
 
 (defun initialise-default-font (&optional (font-definition *font-8x8*))
-  "Creates a new FONT object from the font data in SDL-GFX-CFFI:*FONT-DATA*.
-Binds the symbol *DEFAULT-FONT* to FONT
-  * Returns a new FONT, or NIL if unsuccessful."
+  "Calls [INITIALISE-FONT](#initialise-font) to create a new `BITMAP-FONT` from `FONT-DEFINITION`. 
+`FONT-DEFINITION` is set to '\*font-8x8\*` if unspecified. Binds the symbol `\*DEFAULT-FONT\*` to the new font.
+Reutns the new font, or `NIL` if the font cannot be created."
   (check-type font-definition font-definition)
   (setf *default-font* (initialise-font font-definition)))
 
 (defmethod free-font ((font bitmap-font))
-  "Free resources associated with the font FONT."
+  "Free resources associated with the bitmap font `FONT`."
   (tg:cancel-finalization font)
   (when (cached-surface font)
     (free-cached-surface font))
@@ -63,6 +64,8 @@ Binds the symbol *DEFAULT-FONT* to FONT
 
 (defun get-character (char fg-color bg-color &key
 		      (font *default-font*))
+  "Returns the `SURFACE` asociated with the character `CHAR`. Creates a new surface if
+`FG-COLOR` or `BG-COLOR` are different."
   (check-type char character)
   (check-type fg-color sdl-color)
   (if bg-color
@@ -120,9 +123,11 @@ Binds the symbol *DEFAULT-FONT* to FONT
 (defun draw-character (c p1 fg-color bg-color &key
 			     (font *default-font*)
 			     (surface *default-surface*))
-  "See DRAW-CHARACTER-SHADED-*.
+  "See [draw-character-shaded-*](#draw-character-shaded-*).
 
-  * P1 is the x and y position to render the text, of type POINT."  
+##### Parameters
+
+* `P1` is the `X` and `Y` coordinates to render the text onto `SURFACE`, of type POINT."  
   (check-type p1 point)
   (draw-character-* c (x p1) (y p1) fg-color bg-color
 		    :font font
@@ -131,27 +136,28 @@ Binds the symbol *DEFAULT-FONT* to FONT
 (defun draw-character-* (c x y fg-color bg-color &key
 			 (font *default-font*)
 			 (surface *default-surface*))
-  "Draw character C using font FONT with foreground and background colors FG-COLOR and BG-COLOR 
-onto surface SURFACE. 
-If BG-COLOR is NIL, then the glyph is rendered using the SOLID mode.
-If BG-COLOR is NOT NIL, then the glyph is rendered using the SHADED mode.
+  "Draw the character `C` at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR` 
+onto surface `SURFACE`. 
 
-  * C is the character to render. 
+If `BG-COLOR` is `NIL`, then the glyph is rendered using the `SOLID` mode.
+If `BG-COLOR` is NOT `NIL`, then the glyph is rendered using the `SHADED` mode.
 
-  * X/Y are the x and y position coordinates, as INTEGERS.
+##### Parameters
 
-  * FG-COLOR color is the foreground color used to render text, of type SDL-COLOR
+* `C` is the character to render. 
+* `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
+* `FG-COLOR` is the foreground color used to render text, of type `SDL-COLOR`
+* `BG-COLOR` is the background color used to render text, of type `SDL-COLOR`
+* `FONT` is the bitmap font used to render the character. Bound to `\*DEFAULT-FONT\*` if unspecified.
+* `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 
-  * BG-COLOR color is the background color used to render text, of type SDL-COLOR
+##### Returns
 
-  * FONT is a FONT object.  Bound to *DEFAULT-FONT* by default. 
+* Returns the surface SURFACE.
 
-  * SURFACE is the surface to render text onto, of type SDL-SURFACE 
+##### For example:
 
-  * Returns the surface SURFACE.
-
-For example:
-  * (DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)"
+    \(DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE\)"
   (check-type c character)
   (check-type fg-color sdl-color)
   (if bg-color
@@ -166,7 +172,21 @@ For example:
 (defun draw-string-left-justify-* (str x y fg-color bg-color &key
 				   (surface *default-surface*)
 				   (font *default-font*))  
-  "draw a string starting at the x y position"
+  "Draw the text in the string `STR` *starting* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR` 
+onto surface `SURFACE`.
+
+##### Parameters
+
+* `STR` is the text to render. 
+* `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
+* `FG-COLOR` is the foreground color used to render text, of type `SDL-COLOR`
+* `BG-COLOR` is the background color used to render text, of type `SDL-COLOR`
+* `FONT` is the bitmap font used to render the character. Bound to `\*DEFAULT-FONT\*` if unspecified.
+* `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
+
+##### Returns
+
+* Returns the surface SURFACE."
   (loop for c across str do
        (draw-character-* c x y fg-color bg-color
 			 :font font
@@ -177,7 +197,21 @@ For example:
 (defun draw-string-right-justify-* (str x y fg-color bg-color &key
 				    (surface *default-surface*)
 				    (font *default-font*))
-  "draw a string ending at the x y position"
+  "Draw the text in the string `STR` *ending* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR` 
+onto surface `SURFACE`.
+
+##### Parameters
+
+* `STR` is the text to render. 
+* `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
+* `FG-COLOR` is the foreground color used to render text, of type `SDL-COLOR`
+* `BG-COLOR` is the background color used to render text, of type `SDL-COLOR`
+* `FONT` is the bitmap font used to render the character. Bound to `\*DEFAULT-FONT\*` if unspecified.
+* `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
+
+##### Returns
+
+* Returns the surface SURFACE."
   (let ((right-x (- x (char-width font)))
 	(rev-str (reverse str)))
     (loop for c across rev-str do
@@ -190,7 +224,21 @@ For example:
 (defun draw-string-centered-* (str x y fg-color bg-color &key
 			       (surface *default-surface*)
 			       (font *default-font*))
-  "draw a string centered at x y"
+  "Draw the text in the string `STR` *with midpoint centered* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR` 
+onto surface `SURFACE`.
+
+##### Parameters
+
+* `STR` is the text to render. 
+* `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
+* `FG-COLOR` is the foreground color used to render text, of type `SDL-COLOR`
+* `BG-COLOR` is the background color used to render text, of type `SDL-COLOR`
+* `FONT` is the bitmap font used to render the character. Bound to `\*DEFAULT-FONT\*` if unspecified.
+* `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
+
+##### Returns
+
+* Returns the surface SURFACE."
   (let* ((width (* (length str) (char-width font)))
 	 (left-x (- x (/ width 2))))
     (loop for c across str do
@@ -222,12 +270,25 @@ For example:
 ;; 	   (free-font *default-font*)))))
 
 (defmacro with-default-font ((font) &body body)
+  "Sets `\*DEFAULT-FONT\*` to the bitmap font in `FONT` within the scope of `WITH-DEFAULT-FONT`.
+
+##### Example
+
+    \(WITH-DEFAULT-FONT \(new-font\)
+        \(DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR\)\)"
   `(let ((*default-font* ,font))
      ,@body))
 
 (defmacro with-font ((font font-definition) &body body)
-  `(let* ((,font (initialise-font ,font-definition))
-	  (*default-font* ,font))
-     ,@body
+  "Creates a new bitmap font `BITMAP-FONT` and sets `\*DEFAULT-FONT\*` to the bitmap font in `FONT` within the scope of `WITH-FONT`.
+Frees the bitmap font when `WITH-FONT` goes out of scope.
+
+##### Example
+
+    \(WITH-FONT \(new-font *font-8x8*\)
+        \(DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR\)\)"
+  `(let ((,font (initialise-font ,font-definition)))
+     (with-default-font (,font)
+       ,@body)
      (free-font ,font)))
 
