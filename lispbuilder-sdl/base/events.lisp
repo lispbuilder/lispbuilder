@@ -34,17 +34,14 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 (defun push-user-event (&key (code 0) (data1 nil) (data2 nil))
   "Pushes a new `SDL_Event` of type `:SDL-USER-EVENT` onto the event queue."
   (let ((event (new-event :SDL-USER-EVENT)))
-    (setf (cffi:foreign-slot-value event
+    (setf (cffi:foreign-slot-value event 'sdl-cffi::SDL-user-event 'sdl-cffi::code) code
+	  (cffi:foreign-slot-value event 'sdl-cffi::SDL-user-event 'sdl-cffi::data1)
+	  (cffi:convert-to-foreign data1 :pointer)
+	  (cffi:foreign-slot-value event
 				   'sdl-cffi::SDL-user-event
-				   'sdl-cffi::code) code
-				   (cffi:foreign-slot-value event
-							    'sdl-cffi::SDL-user-event
-							    'sdl-cffi::data1) (cffi:convert-to-foreign data1 :pointer)
-				   (cffi:foreign-slot-value event
-							    'sdl-cffi::SDL-user-event
-							    'sdl-cffi::data2) (cffi:convert-to-foreign data2 :pointer))
+				   'sdl-cffi::data2)
+	  (cffi:convert-to-foreign data2 :pointer))
     (sdl-cffi::SDL-Push-Event event)))
-
 
 
 
@@ -553,13 +550,13 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::code)))
 				 (:data1
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-pointer ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data1)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data1)))
 				 (:data2
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-pointer ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data2)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data2)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
-
+    
     `((and (>= (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
 	       (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type :SDL-USER-EVENT))
 	   (< (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
