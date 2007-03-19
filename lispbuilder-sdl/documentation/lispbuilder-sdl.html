@@ -337,19 +337,24 @@
       <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
       
       <p>
-	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for the 
-	<a href="http://www.libsdl.org">SDL</a> library. 
-	Core functionality includes window and event management,
-	3D graphics using OpenGL, 2D graphics, and sound support.
+	LISPBUILDER-SDL comprises a set of packages allowing cross-platform game development using Common Lisp. 
+	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for  
+	<a href="http://www.libsdl.org">SDL</a> and other game-related graphics, sound, 
+	physics, character animation and 3D libraries. LISPBUILDER-SDL core functionality includes 
+	window and event management, 2D graphics, 3D graphics using OpenGL and sound support.
+	The goal for the LISPBUILDER-SDL project is to become a useful resource for the development of games in Lisp.
       </p>
+
       <p>
 	<a href="http://www.libsdl.org">SDL</a> provides the low-level 2D rendering support.
-	LISPBUILDER-SDL adds more sophisticated 2D graphical effects such as surface rotation, 
-	rendering circles, polygons, squares, Bezier and Cuttmull-Rom curves as well as bitmap FONT support.
-      </p>
-      <p>
-	Additional libraries provide native C drawing functions, True Type font rendering, 
+	LISPBUILDER-SDL adds more sophisticated 2D graphical effects such as rotation, 
+	rendering circles, polygons, squares, Bezier and Cuttmull-Rom curves as well as bitmap font support.
+	Additional packages provide native C drawing functions, True Type font rendering, 
 	loading of multiple image formats, a sound mixer and networking support.
+	The lispbuilder packages are meant to work together with each package providing a specific core set of 
+	functionality. For example, an image that is loaded by lispbuilder-sdl-image may be rotated using 
+	lispbuilder-sdl-gfx. Text may be rendered to a surface using lispbuilder-sdl-ttf and finally blitted to
+	the display using lispbuilder-sdl.
       </p>
       <ul>
 	<li><a href="lispbuilder-sdl-gfx.html" title="lispbuilder-sdl-gfx">lispbuilder-sdl-gfx</a>: 
@@ -370,25 +375,14 @@
 	  a cross-platform, blocking network library</li>
       </ul>
       <p>
-	LISPBUILDER-SDL is distributed under the 
-	<a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
-      </p>
-      <p>
-	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL is version <a href="#download">0.2</a>.
+	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL is version 
+	<a href="#downloads">0.2</a>.
       </p>
 <!--       <p> -->
 <!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip</a>. -->
 <!--       </p> -->
     </blockquote>
 
-    
-    <br>&nbsp;</br><h2><a class=none name="packageover">Package Overview</a></h2>
-    <p>
-      Functions and symbols exported from the LISPBUILDER-SDL package are 
-      accessible from the <code>LISPBUILDER-SDL:</code> prefix or the 
-      shorter form <code>SDL:</code>.
-    </p>
-    
     <br>&nbsp;</br><h2><a class=none name="examplesimple">Simple Example</a></h2>
     <div class="example">
       <p>
@@ -399,16 +393,16 @@
       </p>
       
       <pre>
-     (sdl:with-init ()
-       (sdl:window 320 240)
-       (sdl:draw-surface (load-image "lisp.bmp"))
-       (sdl:update-display)
-       (sdl:with-events ()
-         (:quit-event () t)
-         (:video-expose-event (sdl:update-display))))
+	(sdl:with-init ()
+	(sdl:window 320 240)
+	(sdl:draw-surface (load-image "lisp.bmp"))
+	(sdl:update-display)
+	(sdl:with-events ()
+        (:quit-event () t)
+        (:video-expose-event (sdl:update-display))))
       </pre>
     </div>
-
+    
     <div class="index">
       <ol>
 	<li><a href="#top">LISPBUILDER-SDL</a></li>
@@ -417,7 +411,7 @@
 	  <li><a href="#packageover">Package Overview</a></li>
 	  <li><a href="#examplesimple">Simple Example</a></li>
 	  <li><a href="#compatibility">Compatibility</a></li>
-	  <li><a href="#download">Download</a></li>
+	  <li><a href="#downloads">Downloads</a></li>
 	  <li><a href="#installation">Installation</a></li>
 	  <li><a href="#usage">Usage</a></li>
 	  <li><a href="#examples">Examples</a></li>
@@ -431,255 +425,7 @@
 	</ol>
       </div>
       
-      <br>&nbsp;</br><h2><a class=none name="dictionary">The LISPBUILDER-SDL dictionary Index</h2>
-	<ol>
-	        <li><a href="#*black*"><code>*black*</code></a>
-	          <li><a href="#*default-color*"><code>*default-color*</code></a>
-	          <li><a href="#*default-display*"><code>*default-display*</code></a>
-	          <li><a href="#*default-font*"><code>*default-font*</code></a>
-	          <li><a href="#*default-font-path*"><code>*default-font-path*</code></a>
-	          <li><a href="#*default-position*"><code>*default-position*</code></a>
-	          <li><a href="#*default-rectangle*"><code>*default-rectangle*</code></a>
-	          <li><a href="#*default-surface*"><code>*default-surface*</code></a>
-	          <li><a href="#*external-init-on-startup*"><code>*external-init-on-startup*</code></a>
-	          <li><a href="#*external-quit-on-exit*"><code>*external-quit-on-exit*</code></a>
-	          <li><a href="#*font-10x20*"><code>*font-10x20*</code></a>
-	          <li><a href="#*font-5x7*"><code>*font-5x7*</code></a>
-	          <li><a href="#*font-5x8*"><code>*font-5x8*</code></a>
-	          <li><a href="#*font-6x10*"><code>*font-6x10*</code></a>
-	          <li><a href="#*font-6x12*"><code>*font-6x12*</code></a>
-	          <li><a href="#*font-6x13*"><code>*font-6x13*</code></a>
-	          <li><a href="#*font-6x13b*"><code>*font-6x13b*</code></a>
-	          <li><a href="#*font-6x13o*"><code>*font-6x13o*</code></a>
-	          <li><a href="#*font-6x9*"><code>*font-6x9*</code></a>
-	          <li><a href="#*font-7x13*"><code>*font-7x13*</code></a>
-	          <li><a href="#*font-7x13b*"><code>*font-7x13b*</code></a>
-	          <li><a href="#*font-7x13o*"><code>*font-7x13o*</code></a>
-	          <li><a href="#*font-7x14*"><code>*font-7x14*</code></a>
-	          <li><a href="#*font-7x14b*"><code>*font-7x14b*</code></a>
-	          <li><a href="#*font-8x13*"><code>*font-8x13*</code></a>
-	          <li><a href="#*font-8x13b*"><code>*font-8x13b*</code></a>
-	          <li><a href="#*font-8x13o*"><code>*font-8x13o*</code></a>
-	          <li><a href="#*font-8x8*"><code>*font-8x8*</code></a>
-	          <li><a href="#*font-9x15*"><code>*font-9x15*</code></a>
-	          <li><a href="#*font-9x15b*"><code>*font-9x15b*</code></a>
-	          <li><a href="#*font-9x18*"><code>*font-9x18*</code></a>
-	          <li><a href="#*font-9x18b*"><code>*font-9x18b*</code></a>
-	          <li><a href="#*sdl-initialized*"><code>*sdl-initialized*</code></a>
-	          <li><a href="#*white*"><code>*white*</code></a>
-	          <li><a href="#a"><code>a</code></a>
-	          <li><a href="#all-integers?"><code>all-integers?</code></a>
-	          <li><a href="#any-color-but-this"><code>any-color-but-this</code></a>
-	          <li><a href="#b"><code>b</code></a>
-	          <li><a href="#bit-depth"><code>bit-depth</code></a>
-	          <li><a href="#blit-surface"><code>blit-surface</code></a>
-	          <li><a href="#cached-surface"><code>cached-surface</code></a>
-	          <li><a href="#calculate-curve"><code>calculate-curve</code></a>
-	          <li><a href="#cast"><code>cast</code></a>
-	          <li><a href="#cast-all-to-int"><code>cast-all-to-int</code></a>
-	          <li><a href="#cast-to-int"><code>cast-to-int</code></a>
-	          <li><a href="#catmull-rom-spline"><code>catmull-rom-spline</code></a>
-	          <li><a href="#char-height"><code>char-height</code></a>
-	          <li><a href="#char-width"><code>char-width</code></a>
-	          <li><a href="#check-types"><code>check-types</code></a>
-	          <li><a href="#clear-cell"><code>clear-cell</code></a>
-	          <li><a href="#clear-color-key"><code>clear-color-key</code></a>
-	          <li><a href="#clear-display"><code>clear-display</code></a>
-	          <li><a href="#color"><code>color</code></a>
-	          <li><a href="#color"><code>color</code></a>
-	          <li><a href="#color-*"><code>color-*</code></a>
-	          <li><a href="#color-a"><code>color-a</code></a>
-	          <li><a href="#color="><code>color=</code></a>
-	          <li><a href="#convert-surface"><code>convert-surface</code></a>
-	          <li><a href="#copy-point"><code>copy-point</code></a>
-	          <li><a href="#copy-surface"><code>copy-surface</code></a>
-	          <li><a href="#create-list-if-not"><code>create-list-if-not</code></a>
-	          <li><a href="#create-path"><code>create-path</code></a>
-	          <li><a href="#create-rwops-from-file"><code>create-rwops-from-file</code></a>
-	          <li><a href="#create-surface"><code>create-surface</code></a>
-	          <li><a href="#default-color"><code>default-color</code></a>
-	          <li><a href="#default-position"><code>default-position</code></a>
-	          <li><a href="#default-rectangle"><code>default-rectangle</code></a>
-	          <li><a href="#default-surface"><code>default-surface</code></a>
-	          <li><a href="#display-cursor"><code>display-cursor</code></a>
-	          <li><a href="#distance"><code>distance</code></a>
-	          <li><a href="#distance-*"><code>distance-*</code></a>
-	          <li><a href="#draw-bezier"><code>draw-bezier</code></a>
-	          <li><a href="#draw-box"><code>draw-box</code></a>
-	          <li><a href="#draw-box-*"><code>draw-box-*</code></a>
-	          <li><a href="#draw-circle"><code>draw-circle</code></a>
-	          <li><a href="#draw-circle-*"><code>draw-circle-*</code></a>
-	          <li><a href="#draw-curve"><code>draw-curve</code></a>
-	          <li><a href="#draw-filled-circle"><code>draw-filled-circle</code></a>
-	          <li><a href="#draw-filled-circle-*"><code>draw-filled-circle-*</code></a>
-	          <li><a href="#draw-font"><code>draw-font</code></a>
-	          <li><a href="#draw-font"><code>draw-font</code></a>
-	          <li><a href="#draw-font-at"><code>draw-font-at</code></a>
-	          <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a>
-	          <li><a href="#draw-hline"><code>draw-hline</code></a>
-	          <li><a href="#draw-line"><code>draw-line</code></a>
-	          <li><a href="#draw-line-*"><code>draw-line-*</code></a>
-	          <li><a href="#draw-point"><code>draw-point</code></a>
-	          <li><a href="#draw-point-*"><code>draw-point-*</code></a>
-	          <li><a href="#draw-rectangle"><code>draw-rectangle</code></a>
-	          <li><a href="#draw-rectangle-*"><code>draw-rectangle-*</code></a>
-	          <li><a href="#draw-shape"><code>draw-shape</code></a>
-	          <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a>
-	          <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a>
-	          <li><a href="#draw-string-solid"><code>draw-string-solid</code></a>
-	          <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a>
-	          <li><a href="#draw-surface"><code>draw-surface</code></a>
-	          <li><a href="#draw-surface-at"><code>draw-surface-at</code></a>
-	          <li><a href="#draw-surface-at-*"><code>draw-surface-at-*</code></a>
-	          <li><a href="#draw-vline"><code>draw-vline</code></a>
-	          <li><a href="#fill-surface"><code>fill-surface</code></a>
-	          <li><a href="#fill-surface-*"><code>fill-surface-*</code></a>
-	          <li><a href="#flood-fill"><code>flood-fill</code></a>
-	          <li><a href="#flood-fill-*"><code>flood-fill-*</code></a>
-	          <li><a href="#flood-fill-stack"><code>flood-fill-stack</code></a>
-	          <li><a href="#flood-fill-stack-*"><code>flood-fill-stack-*</code></a>
-	          <li><a href="#fp"><code>fp</code></a>
-	          <li><a href="#fp-cell"><code>fp-cell</code></a>
-	          <li><a href="#fp-position"><code>fp-position</code></a>
-	          <li><a href="#frame-rate"><code>frame-rate</code></a>
-	          <li><a href="#free-cached-surface"><code>free-cached-surface</code></a>
-	          <li><a href="#free-color"><code>free-color</code></a>
-	          <li><a href="#free-font"><code>free-font</code></a>
-	          <li><a href="#free-rectangle"><code>free-rectangle</code></a>
-	          <li><a href="#free-rwops"><code>free-rwops</code></a>
-	          <li><a href="#free-surface"><code>free-surface</code></a>
-	          <li><a href="#g"><code>g</code></a>
-	          <li><a href="#genbez"><code>genbez</code></a>
-	          <li><a href="#get-clip-rect"><code>get-clip-rect</code></a>
-	          <li><a href="#get-point"><code>get-point</code></a>
-	          <li><a href="#get-position"><code>get-position</code></a>
-	          <li><a href="#get-rectangle"><code>get-rectangle</code></a>
-	          <li><a href="#get-surface-rect"><code>get-surface-rect</code></a>
-	          <li><a href="#height"><code>height</code></a>
-	          <li><a href="#init-sdl"><code>init-sdl</code></a>
-	          <li><a href="#init-sub-systems"><code>init-sub-systems</code></a>
-	          <li><a href="#initialise-default-font"><code>initialise-default-font</code></a>
-	          <li><a href="#initialise-font"><code>initialise-font</code></a>
-	          <li><a href="#initialize-on-startup"><code>initialize-on-startup</code></a>
-	          <li><a href="#initialized-sub-systems-p"><code>initialized-sub-systems-p</code></a>
-	          <li><a href="#is-valid-ptr"><code>is-valid-ptr</code></a>
-	          <li><a href="#key="><code>key=</code></a>
-	          <li><a href="#list-sub-systems"><code>list-sub-systems</code></a>
-	          <li><a href="#load-image"><code>load-image</code></a>
-	          <li><a href="#map-color"><code>map-color</code></a>
-	          <li><a href="#pack-color"><code>pack-color</code></a>
-	          <li><a href="#point"><code>point</code></a>
-	          <li><a href="#point-*"><code>point-*</code></a>
-	          <li><a href="#position-*"><code>position-*</code></a>
-	          <li><a href="#push-quit-event"><code>push-quit-event</code></a>
-	          <li><a href="#push-user-event"><code>push-user-event</code></a>
-	          <li><a href="#quit-on-exit"><code>quit-on-exit</code></a>
-	          <li><a href="#quit-sdl"><code>quit-sdl</code></a>
-	          <li><a href="#quit-sub-systems"><code>quit-sub-systems</code></a>
-	          <li><a href="#r"><code>r</code></a>
-	          <li><a href="#random+1"><code>random+1</code></a>
-	          <li><a href="#random-rectangle"><code>random-rectangle</code></a>
-	          <li><a href="#read-point"><code>read-point</code></a>
-	          <li><a href="#rectangle"><code>rectangle</code></a>
-	          <li><a href="#rectangle"><code>rectangle</code></a>
-	          <li><a href="#rectangle-*"><code>rectangle-*</code></a>
-	          <li><a href="#rectangle-from-edges"><code>rectangle-from-edges</code></a>
-	          <li><a href="#rectangle-from-edges-*"><code>rectangle-from-edges-*</code></a>
-	          <li><a href="#rectangle-from-midpoint-*"><code>rectangle-from-midpoint-*</code></a>
-	          <li><a href="#render-string-shaded"><code>render-string-shaded</code></a>
-	          <li><a href="#render-string-solid"><code>render-string-solid</code></a>
-	          <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a>
-	          <li><a href="#rotate-surface"><code>rotate-surface</code></a>
-	          <li><a href="#rwops"><code>rwops</code></a>
-	          <li><a href="#save-image"><code>save-image</code></a>
-	          <li><a href="#sdl-any-format"><code>sdl-any-format</code></a>
-	          <li><a href="#sdl-async-blit"><code>sdl-async-blit</code></a>
-	          <li><a href="#sdl-color"><code>sdl-color</code></a>
-	          <li><a href="#sdl-doublebuf"><code>sdl-doublebuf</code></a>
-	          <li><a href="#sdl-fullscreen"><code>sdl-fullscreen</code></a>
-	          <li><a href="#sdl-get-ticks"><code>sdl-get-ticks</code></a>
-	          <li><a href="#sdl-gl-swap-buffers"><code>sdl-gl-swap-buffers</code></a>
-	          <li><a href="#sdl-hw-accel"><code>sdl-hw-accel</code></a>
-	          <li><a href="#sdl-hw-palette"><code>sdl-hw-palette</code></a>
-	          <li><a href="#sdl-hw-surface"><code>sdl-hw-surface</code></a>
-	          <li><a href="#sdl-init-audio"><code>sdl-init-audio</code></a>
-	          <li><a href="#sdl-init-cdrom"><code>sdl-init-cdrom</code></a>
-	          <li><a href="#sdl-init-eventthread"><code>sdl-init-eventthread</code></a>
-	          <li><a href="#sdl-init-everything"><code>sdl-init-everything</code></a>
-	          <li><a href="#sdl-init-joystick"><code>sdl-init-joystick</code></a>
-	          <li><a href="#sdl-init-noparachute"><code>sdl-init-noparachute</code></a>
-	          <li><a href="#sdl-init-on-startup"><code>sdl-init-on-startup</code></a>
-	          <li><a href="#sdl-init-timer"><code>sdl-init-timer</code></a>
-	          <li><a href="#sdl-init-video"><code>sdl-init-video</code></a>
-	          <li><a href="#sdl-iyuv-overlay"><code>sdl-iyuv-overlay</code></a>
-	          <li><a href="#sdl-no-frame"><code>sdl-no-frame</code></a>
-	          <li><a href="#sdl-opengl"><code>sdl-opengl</code></a>
-	          <li><a href="#sdl-opengl-blit"><code>sdl-opengl-blit</code></a>
-	          <li><a href="#sdl-pre-alloc"><code>sdl-pre-alloc</code></a>
-	          <li><a href="#sdl-quit-on-exit"><code>sdl-quit-on-exit</code></a>
-	          <li><a href="#sdl-resizable"><code>sdl-resizable</code></a>
-	          <li><a href="#sdl-rle-accel"><code>sdl-rle-accel</code></a>
-	          <li><a href="#sdl-rle-accel-ok"><code>sdl-rle-accel-ok</code></a>
-	          <li><a href="#sdl-src-alpha"><code>sdl-src-alpha</code></a>
-	          <li><a href="#sdl-src-color-key"><code>sdl-src-color-key</code></a>
-	          <li><a href="#sdl-surface"><code>sdl-surface</code></a>
-	          <li><a href="#sdl-sw-surface"><code>sdl-sw-surface</code></a>
-	          <li><a href="#sdl-uyvy-overlay"><code>sdl-uyvy-overlay</code></a>
-	          <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a>
-	          <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a>
-	          <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a>
-	          <li><a href="#set-alpha"><code>set-alpha</code></a>
-	          <li><a href="#set-cell"><code>set-cell</code></a>
-	          <li><a href="#set-cell-*"><code>set-cell-*</code></a>
-	          <li><a href="#set-clip-rect"><code>set-clip-rect</code></a>
-	          <li><a href="#set-color"><code>set-color</code></a>
-	          <li><a href="#set-color-*"><code>set-color-*</code></a>
-	          <li><a href="#set-color-key"><code>set-color-key</code></a>
-	          <li><a href="#set-frame-rate"><code>set-frame-rate</code></a>
-	          <li><a href="#set-point"><code>set-point</code></a>
-	          <li><a href="#set-point-*"><code>set-point-*</code></a>
-	          <li><a href="#set-position"><code>set-position</code></a>
-	          <li><a href="#set-position-*"><code>set-position-*</code></a>
-	          <li><a href="#set-rectangle"><code>set-rectangle</code></a>
-	          <li><a href="#set-rectangle-*"><code>set-rectangle-*</code></a>
-	          <li><a href="#set-surface"><code>set-surface</code></a>
-	          <li><a href="#set-surface-*"><code>set-surface-*</code></a>
-	          <li><a href="#surface"><code>surface</code></a>
-	          <li><a href="#surface"><code>surface</code></a>
-	          <li><a href="#to-degree"><code>to-degree</code></a>
-	          <li><a href="#to-radian"><code>to-radian</code></a>
-	          <li><a href="#update-display"><code>update-display</code></a>
-	          <li><a href="#update-surface"><code>update-surface</code></a>
-	          <li><a href="#update-surface-*"><code>update-surface-*</code></a>
-	          <li><a href="#width"><code>width</code></a>
-	          <li><a href="#window"><code>window</code></a>
-	          <li><a href="#with-bezier"><code>with-bezier</code></a>
-	          <li><a href="#with-color"><code>with-color</code></a>
-	          <li><a href="#with-curve"><code>with-curve</code></a>
-	          <li><a href="#with-default-font"><code>with-default-font</code></a>
-	          <li><a href="#with-events"><code>with-events</code></a>
-	          <li><a href="#with-font"><code>with-font</code></a>
-	          <li><a href="#with-init"><code>with-init</code></a>
-	          <li><a href="#with-locked-surface"><code>with-locked-surface</code></a>
-	          <li><a href="#with-locked-surfaces"><code>with-locked-surfaces</code></a>
-	          <li><a href="#with-point"><code>with-point</code></a>
-	          <li><a href="#with-rectangle"><code>with-rectangle</code></a>
-	          <li><a href="#with-rectangles"><code>with-rectangles</code></a>
-	          <li><a href="#with-shape"><code>with-shape</code></a>
-	          <li><a href="#with-surface"><code>with-surface</code></a>
-	          <li><a href="#with-surface-slots"><code>with-surface-slots</code></a>
-	          <li><a href="#with-surfaces"><code>with-surfaces</code></a>
-	          <li><a href="#within-range"><code>within-range</code></a>
-	          <li><a href="#within-range-*"><code>within-range-*</code></a>
-	          <li><a href="#x"><code>x</code></a>
-	          <li><a href="#x2"><code>x2</code></a>
-	          <li><a href="#y"><code>y</code></a>
-	          <li><a href="#y2"><code>y2</code></a>
-	        
-	  </li>
-	</ol>
-	
-	
+      
       <br>&nbsp;</br><h2><a class=none name="compatibility">Compatibility</h2>
 	<p>
 	  The following table describes the status of LISPBUILDER-SDL on the major Common Lisp
@@ -723,7 +469,7 @@
 	    </th>
 	    <td bgcolor="#ff6060">Unknown</td>
 	    <td bgcolor="#60c060">Working</td>
-	    <td bgcolor="#ff6060">No</td>
+	    <td bgcolor="#ff6060">Unknown</td>
 	    <td></td>
 	  </tr>
 	  <tr>
@@ -747,76 +493,64 @@
 	</table>
 	
 	
-	<br>&nbsp;</br><h2><a class=none name="download">Download</a></h2>
-	<ul>
-	  <li><font color=red>Development:</font> Available via anonymous SVN at:
-	    <pre>
-	      svn co https://lispbuilder.svn.sourceforge.net/svnroot/lispbuilder lispbuilder
-	    </pre>
-	  </li>
-	  <li>
-	    <font color=red>Stable:</font> The latest stable versions are available from the
-	    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">LISPBUILDER-SDL repository on SourceForge.</a>
-	  </li>
-	  <li>
-	    <font color=red>'Lisp Starter Pack':</font> The 
-	    <a href="http://www.balooga.com/lispbuilder/config.lisp">config.lisp</a> file for use 
-	    with the <a href="http://weitz.de/starter-pack/">Lisp Starter Pack</a> 
-	    from Edi Weitz.
-<!-- 	    <font color=red>The Edi Weitz 'Starter Pack' Version:</font> The stable version of Lispbuilder,  -->
-<!-- 	    suitable for the installation of installation LISPBUILDER-SDL using the Lisp Starter Pack from Edi Weitz is can be downloaded from  -->
-<!-- 	    <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip</a>. -->
-	  </li>
-	</ul>
+	<br>&nbsp;</br><h2><a class=none name="downloads">Downloads</a></h2>
+	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#downloads">the LISPBUILDER documentation</a>
+	  for downloads.
+	</p>
 	
+
 	<br>&nbsp;</br><h2><a class=none name="installation">Installation</a></h2>
 	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#installation">the LISPBUILDER documentation</a>
 	  for installation instructions.
 	</p>
 	
 	<br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER-SDL</a></h2>
-	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#usage">the LISPBUILDER documentation</a>
-	  for Usage instructions.
+	<p>
+	  Enter the following at the REPL to compile and load the LISPBUILDER-SDL package:
+	  <pre>(asdf:operate 'asdf:load-op :lispbuilder-sdl)</pre>
+	  
+	  ASDF will take care of loading the CFFI and :LISPBUILDER-SDL dependencies. 
+	  The SDL.dll library will also be loaded into the Lisp image at this time.
 	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="examples">Running Examples in LISPBUILDER-SDL-EXAMPLES</a></h2>
-	<p>Enter the following at the REPL to load the examples included in the 
+	<br>&nbsp;</br><h2><a class=none name="examples">Running the Included Examples</a></h2>
+	<p>Enter the following at the REPL to compile and load the examples included in the 
 	  LISPBUILDER-SDL-EXAMPLES package:</p>
 	<pre>
 	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
 	</pre>
-	<p>Run an example by entering any of the following at the REPL:
+	<p>Run the examples by entering any of the following at the REPL:
 	</p>
-	<ul>
-	  <li>(SDL-GFX-EXAMPLES:BEZIER)</li>
-	  <li>(SDL-GFX-EXAMPLES:BMP-SAMPLE)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-1)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-2)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-3)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-4)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-5)</li>
-	  <li>(SDL-GFX-EXAMPLES:DISTANCE-2D)</li>
-	  <li>(SDL-GFX-EXAMPLES:FLOOD-FILL)</li>
-	  <li>(SDL-GFX-EXAMPLES:INBUILT-FONTS)</li>
-	  <li>(SDL-GFX-EXAMPLES:LINE-DRAWING)</li>
-	  <li>(SDL-GFX-EXAMPLES:MANDELBROT)</li>
-	  <li>(SDL-GFX-EXAMPLES:METABALLS)</li>
-	  <li>(SDL-GFX-EXAMPLES:MOUSE-2D)</li>
-	  <li>(SDL-GFX-EXAMPLES:MOUSE-PAINTER)</li>
-	  <li>(SDL-GFX-EXAMPLES:PIXELS)</li>
-	  <li>(SDL-GFX-EXAMPLES:POINTS-AND-LINES)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-RECTS)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-BOX-1)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-BOX-2)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-BOX-3)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-BOX-4)</li>
-	  <li>(SDL-GFX-EXAMPLES:RECURSIVE-RECTS)</li>
-	  <li>(SDL-GFX-EXAMPLES:SETUP-AND-DRAW)</li>
-	  <li>(SDL-GFX-EXAMPLES:SIMPLE-FONT-DEMO)</li>
-	  <li>(SDL-GFX-EXAMPLES:STROKE)</li>
-	  <li>(SDL-GFX-EXAMPLES:VERTICES)</li>
-	  <li>(SDL-GFX-EXAMPLES:WIDTH-HEIGHT)</li>
-	</ul>
+	<pre>
+	  (SDL-GFX-EXAMPLES:BEZIER)
+	  (SDL-GFX-EXAMPLES:BMP-SAMPLE)
+	  (SDL-GFX-EXAMPLES:CIRCLE-1)
+	  (SDL-GFX-EXAMPLES:CIRCLE-2)
+	  (SDL-GFX-EXAMPLES:CIRCLE-3)
+	  (SDL-GFX-EXAMPLES:CIRCLE-4)
+	  (SDL-GFX-EXAMPLES:CIRCLE-5)
+	  (SDL-GFX-EXAMPLES:DISTANCE-2D)
+	  (SDL-GFX-EXAMPLES:FLOOD-FILL)
+	  (SDL-GFX-EXAMPLES:INBUILT-FONTS)
+	  (SDL-GFX-EXAMPLES:LINE-DRAWING)
+	  (SDL-GFX-EXAMPLES:MANDELBROT)
+	  (SDL-GFX-EXAMPLES:METABALLS)
+	  (SDL-GFX-EXAMPLES:MOUSE-2D)
+	  (SDL-GFX-EXAMPLES:MOUSE-PAINTER)
+	  (SDL-GFX-EXAMPLES:PIXELS)
+	  (SDL-GFX-EXAMPLES:POINTS-AND-LINES)
+	  (SDL-GFX-EXAMPLES:RANDOM-RECTS)
+	  (SDL-GFX-EXAMPLES:RANDOM-BOX-1)
+	  (SDL-GFX-EXAMPLES:RANDOM-BOX-2)
+	  (SDL-GFX-EXAMPLES:RANDOM-BOX-3)
+	  (SDL-GFX-EXAMPLES:RANDOM-BOX-4)
+	  (SDL-GFX-EXAMPLES:RECURSIVE-RECTS)
+	  (SDL-GFX-EXAMPLES:SETUP-AND-DRAW)
+	  (SDL-GFX-EXAMPLES:SIMPLE-FONT-DEMO)
+	  (SDL-GFX-EXAMPLES:STROKE)
+	  (SDL-GFX-EXAMPLES:VERTICES)
+	  (SDL-GFX-EXAMPLES:WIDTH-HEIGHT)
+	</pre>
 	
 
 	<br>&nbsp;</br><h2><a class=none name="dependency">Dependencies</a></h2>
@@ -829,10 +563,305 @@
 	  <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
 	</p>
 	
+	<br>&nbsp;</br><h2><a class=none name="packageover">Package Overview</a></h2>
+	<h3><a class=none name="packageexports">Package Exports</a></h3>
+	<p>
+	  Functions and symbols exported from the LISPBUILDER-SDL package are 
+	  accessible from the <code>LISPBUILDER-SDL:</code> prefix or the 
+	  shorter form <code>SDL:</code> nickname.
+	</p>
 	
+	<h3><a class=none name="packagestruct">Package Structure, a 10,000 Foot View</a></h3>
+	<p>
+	  The <code>cffi/</code> directory contains the raw CFFI bindings. 
+	  These bindings may be automatically generated by <a href="http://www.swig.org">SWIG</a> or created by hand.
+	  CFFI translation functions perform simple low-level conversions for example, 
+	  converting Lisp strings to C strings and back (see <code>cffi-translate.lisp</code>). 
+	  All functions in <code>cffi/</code> accept and return foreign objects only.
+	</p>
+	<p>
+	  The <code>base/</code> directory defines wrappers over the functions in <code>cffi/</code> . 
+	  The functions in <code>base/</code> accept keyword arguments and accept NIL instead
+	  of CFFI:NULL-POINTER where appropriate. Generally functions in <code>base/</code> accept and return foreign
+	  objects. <code>base/</code> may perform some type checks (IS-VALID-PTR SURFACE) but
+	  this layer is meant to be lean. Someone who implements a graphics engine
+	  might use this layer instead of <code>sdl/</code> if speed is a concern.
+	  There are no fancy drawing primitives in this layer.
+	</p>
+	<p>
+	  The <code>sdl/</code> directory defines the abstractions over <code>cffi/</code> and <code>base/</code>. 
+	  Foreign objects are passed around <code>sdl/</code> neatly wrapped in CLOS objects, using TRIVIAL-GARBAGE for
+	  automatic garbage collection (minimize foreign objects being left on the
+	  heap). There are no functions in <code>sdl/</code> that accept or return foreign
+	  objects (with the exception of the functions that create the CLOS
+	  wrapper objects) Functions in <code>sdl/</code> call down into
+	  <code>cffi/</code> and <code>base/</code> as appropriate. All LISPBUILDER-SDL symbols available in
+	  <code>SDL:</code> are exported from <code>sdl/</code>, with symbols imported into <code>sdl/</code> from 
+	  <code>cffi/</code> and <code>base/</code> as appropriate (e.g. WITH-EVENTS). All drawing primitives are
+	  defined in this layer; circles, rectangles, lines, triangles, with-bezier etc. 
+	  Functions in <code>sdl/</code> implement a lot of type checking.
+	</p>
+	<p>
+	  An example of the difference between <code>base/</code> and <code>sdl/</code> is
+	  WITH-RECTANGLE. The WITH-RECTANGLE macro in <code>base/</code> creates and destroys a foreign
+	  SDL_Rect. The WITH-RECTANGLE macro in <code>sdl/</code> will create and destroy
+	  a RECTANGLE object.
+	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="dictionar">The LISPBUILDER-SDL dictionary</a></h2>
-	
+
+	<br>&nbsp;</br><h2><a class=none name="dictionary">The LISPBUILDER-SDL dictionary Index</h2>
+	  <ol>
+	          <li><a href="#*black*"><code>*black*</code></a>
+	            <li><a href="#*default-color*"><code>*default-color*</code></a>
+	            <li><a href="#*default-display*"><code>*default-display*</code></a>
+	            <li><a href="#*default-font*"><code>*default-font*</code></a>
+	            <li><a href="#*default-font-path*"><code>*default-font-path*</code></a>
+	            <li><a href="#*default-position*"><code>*default-position*</code></a>
+	            <li><a href="#*default-rectangle*"><code>*default-rectangle*</code></a>
+	            <li><a href="#*default-surface*"><code>*default-surface*</code></a>
+	            <li><a href="#*external-init-on-startup*"><code>*external-init-on-startup*</code></a>
+	            <li><a href="#*external-quit-on-exit*"><code>*external-quit-on-exit*</code></a>
+	            <li><a href="#*font-10x20*"><code>*font-10x20*</code></a>
+	            <li><a href="#*font-5x7*"><code>*font-5x7*</code></a>
+	            <li><a href="#*font-5x8*"><code>*font-5x8*</code></a>
+	            <li><a href="#*font-6x10*"><code>*font-6x10*</code></a>
+	            <li><a href="#*font-6x12*"><code>*font-6x12*</code></a>
+	            <li><a href="#*font-6x13*"><code>*font-6x13*</code></a>
+	            <li><a href="#*font-6x13b*"><code>*font-6x13b*</code></a>
+	            <li><a href="#*font-6x13o*"><code>*font-6x13o*</code></a>
+	            <li><a href="#*font-6x9*"><code>*font-6x9*</code></a>
+	            <li><a href="#*font-7x13*"><code>*font-7x13*</code></a>
+	            <li><a href="#*font-7x13b*"><code>*font-7x13b*</code></a>
+	            <li><a href="#*font-7x13o*"><code>*font-7x13o*</code></a>
+	            <li><a href="#*font-7x14*"><code>*font-7x14*</code></a>
+	            <li><a href="#*font-7x14b*"><code>*font-7x14b*</code></a>
+	            <li><a href="#*font-8x13*"><code>*font-8x13*</code></a>
+	            <li><a href="#*font-8x13b*"><code>*font-8x13b*</code></a>
+	            <li><a href="#*font-8x13o*"><code>*font-8x13o*</code></a>
+	            <li><a href="#*font-8x8*"><code>*font-8x8*</code></a>
+	            <li><a href="#*font-9x15*"><code>*font-9x15*</code></a>
+	            <li><a href="#*font-9x15b*"><code>*font-9x15b*</code></a>
+	            <li><a href="#*font-9x18*"><code>*font-9x18*</code></a>
+	            <li><a href="#*font-9x18b*"><code>*font-9x18b*</code></a>
+	            <li><a href="#*sdl-initialized*"><code>*sdl-initialized*</code></a>
+	            <li><a href="#*white*"><code>*white*</code></a>
+	            <li><a href="#a"><code>a</code></a>
+	            <li><a href="#all-integers?"><code>all-integers?</code></a>
+	            <li><a href="#any-color-but-this"><code>any-color-but-this</code></a>
+	            <li><a href="#b"><code>b</code></a>
+	            <li><a href="#bit-depth"><code>bit-depth</code></a>
+	            <li><a href="#blit-surface"><code>blit-surface</code></a>
+	            <li><a href="#cached-surface"><code>cached-surface</code></a>
+	            <li><a href="#calculate-curve"><code>calculate-curve</code></a>
+	            <li><a href="#cast"><code>cast</code></a>
+	            <li><a href="#cast-all-to-int"><code>cast-all-to-int</code></a>
+	            <li><a href="#cast-to-int"><code>cast-to-int</code></a>
+	            <li><a href="#catmull-rom-spline"><code>catmull-rom-spline</code></a>
+	            <li><a href="#char-height"><code>char-height</code></a>
+	            <li><a href="#char-width"><code>char-width</code></a>
+	            <li><a href="#check-types"><code>check-types</code></a>
+	            <li><a href="#clear-cell"><code>clear-cell</code></a>
+	            <li><a href="#clear-color-key"><code>clear-color-key</code></a>
+	            <li><a href="#clear-display"><code>clear-display</code></a>
+	            <li><a href="#color"><code>color</code></a>
+	            <li><a href="#color"><code>color</code></a>
+	            <li><a href="#color-*"><code>color-*</code></a>
+	            <li><a href="#color-a"><code>color-a</code></a>
+	            <li><a href="#color="><code>color=</code></a>
+	            <li><a href="#convert-surface"><code>convert-surface</code></a>
+	            <li><a href="#copy-point"><code>copy-point</code></a>
+	            <li><a href="#copy-surface"><code>copy-surface</code></a>
+	            <li><a href="#create-list-if-not"><code>create-list-if-not</code></a>
+	            <li><a href="#create-path"><code>create-path</code></a>
+	            <li><a href="#create-rwops-from-file"><code>create-rwops-from-file</code></a>
+	            <li><a href="#create-surface"><code>create-surface</code></a>
+	            <li><a href="#default-color"><code>default-color</code></a>
+	            <li><a href="#default-position"><code>default-position</code></a>
+	            <li><a href="#default-rectangle"><code>default-rectangle</code></a>
+	            <li><a href="#default-surface"><code>default-surface</code></a>
+	            <li><a href="#display-cursor"><code>display-cursor</code></a>
+	            <li><a href="#distance"><code>distance</code></a>
+	            <li><a href="#distance-*"><code>distance-*</code></a>
+	            <li><a href="#draw-bezier"><code>draw-bezier</code></a>
+	            <li><a href="#draw-box"><code>draw-box</code></a>
+	            <li><a href="#draw-box-*"><code>draw-box-*</code></a>
+	            <li><a href="#draw-circle"><code>draw-circle</code></a>
+	            <li><a href="#draw-circle-*"><code>draw-circle-*</code></a>
+	            <li><a href="#draw-curve"><code>draw-curve</code></a>
+	            <li><a href="#draw-filled-circle"><code>draw-filled-circle</code></a>
+	            <li><a href="#draw-filled-circle-*"><code>draw-filled-circle-*</code></a>
+	            <li><a href="#draw-font"><code>draw-font</code></a>
+	            <li><a href="#draw-font"><code>draw-font</code></a>
+	            <li><a href="#draw-font-at"><code>draw-font-at</code></a>
+	            <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a>
+	            <li><a href="#draw-hline"><code>draw-hline</code></a>
+	            <li><a href="#draw-line"><code>draw-line</code></a>
+	            <li><a href="#draw-line-*"><code>draw-line-*</code></a>
+	            <li><a href="#draw-point"><code>draw-point</code></a>
+	            <li><a href="#draw-point-*"><code>draw-point-*</code></a>
+	            <li><a href="#draw-rectangle"><code>draw-rectangle</code></a>
+	            <li><a href="#draw-rectangle-*"><code>draw-rectangle-*</code></a>
+	            <li><a href="#draw-shape"><code>draw-shape</code></a>
+	            <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a>
+	            <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a>
+	            <li><a href="#draw-string-solid"><code>draw-string-solid</code></a>
+	            <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a>
+	            <li><a href="#draw-surface"><code>draw-surface</code></a>
+	            <li><a href="#draw-surface-at"><code>draw-surface-at</code></a>
+	            <li><a href="#draw-surface-at-*"><code>draw-surface-at-*</code></a>
+	            <li><a href="#draw-vline"><code>draw-vline</code></a>
+	            <li><a href="#fill-surface"><code>fill-surface</code></a>
+	            <li><a href="#fill-surface-*"><code>fill-surface-*</code></a>
+	            <li><a href="#flood-fill"><code>flood-fill</code></a>
+	            <li><a href="#flood-fill-*"><code>flood-fill-*</code></a>
+	            <li><a href="#flood-fill-stack"><code>flood-fill-stack</code></a>
+	            <li><a href="#flood-fill-stack-*"><code>flood-fill-stack-*</code></a>
+	            <li><a href="#fp"><code>fp</code></a>
+	            <li><a href="#fp-cell"><code>fp-cell</code></a>
+	            <li><a href="#fp-position"><code>fp-position</code></a>
+	            <li><a href="#frame-rate"><code>frame-rate</code></a>
+	            <li><a href="#free-cached-surface"><code>free-cached-surface</code></a>
+	            <li><a href="#free-color"><code>free-color</code></a>
+	            <li><a href="#free-font"><code>free-font</code></a>
+	            <li><a href="#free-rectangle"><code>free-rectangle</code></a>
+	            <li><a href="#free-rwops"><code>free-rwops</code></a>
+	            <li><a href="#free-surface"><code>free-surface</code></a>
+	            <li><a href="#g"><code>g</code></a>
+	            <li><a href="#genbez"><code>genbez</code></a>
+	            <li><a href="#get-clip-rect"><code>get-clip-rect</code></a>
+	            <li><a href="#get-point"><code>get-point</code></a>
+	            <li><a href="#get-position"><code>get-position</code></a>
+	            <li><a href="#get-rectangle"><code>get-rectangle</code></a>
+	            <li><a href="#get-surface-rect"><code>get-surface-rect</code></a>
+	            <li><a href="#height"><code>height</code></a>
+	            <li><a href="#init-sdl"><code>init-sdl</code></a>
+	            <li><a href="#init-sub-systems"><code>init-sub-systems</code></a>
+	            <li><a href="#initialise-default-font"><code>initialise-default-font</code></a>
+	            <li><a href="#initialise-font"><code>initialise-font</code></a>
+	            <li><a href="#initialize-on-startup"><code>initialize-on-startup</code></a>
+	            <li><a href="#initialized-sub-systems-p"><code>initialized-sub-systems-p</code></a>
+	            <li><a href="#is-valid-ptr"><code>is-valid-ptr</code></a>
+	            <li><a href="#key="><code>key=</code></a>
+	            <li><a href="#list-sub-systems"><code>list-sub-systems</code></a>
+	            <li><a href="#load-image"><code>load-image</code></a>
+	            <li><a href="#map-color"><code>map-color</code></a>
+	            <li><a href="#pack-color"><code>pack-color</code></a>
+	            <li><a href="#point"><code>point</code></a>
+	            <li><a href="#point-*"><code>point-*</code></a>
+	            <li><a href="#position-*"><code>position-*</code></a>
+	            <li><a href="#push-quit-event"><code>push-quit-event</code></a>
+	            <li><a href="#push-user-event"><code>push-user-event</code></a>
+	            <li><a href="#quit-on-exit"><code>quit-on-exit</code></a>
+	            <li><a href="#quit-sdl"><code>quit-sdl</code></a>
+	            <li><a href="#quit-sub-systems"><code>quit-sub-systems</code></a>
+	            <li><a href="#r"><code>r</code></a>
+	            <li><a href="#random+1"><code>random+1</code></a>
+	            <li><a href="#random-rectangle"><code>random-rectangle</code></a>
+	            <li><a href="#read-point"><code>read-point</code></a>
+	            <li><a href="#rectangle"><code>rectangle</code></a>
+	            <li><a href="#rectangle"><code>rectangle</code></a>
+	            <li><a href="#rectangle-*"><code>rectangle-*</code></a>
+	            <li><a href="#rectangle-from-edges"><code>rectangle-from-edges</code></a>
+	            <li><a href="#rectangle-from-edges-*"><code>rectangle-from-edges-*</code></a>
+	            <li><a href="#rectangle-from-midpoint-*"><code>rectangle-from-midpoint-*</code></a>
+	            <li><a href="#render-string-shaded"><code>render-string-shaded</code></a>
+	            <li><a href="#render-string-solid"><code>render-string-solid</code></a>
+	            <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a>
+	            <li><a href="#rotate-surface"><code>rotate-surface</code></a>
+	            <li><a href="#rwops"><code>rwops</code></a>
+	            <li><a href="#save-image"><code>save-image</code></a>
+	            <li><a href="#sdl-any-format"><code>sdl-any-format</code></a>
+	            <li><a href="#sdl-async-blit"><code>sdl-async-blit</code></a>
+	            <li><a href="#sdl-color"><code>sdl-color</code></a>
+	            <li><a href="#sdl-doublebuf"><code>sdl-doublebuf</code></a>
+	            <li><a href="#sdl-fullscreen"><code>sdl-fullscreen</code></a>
+	            <li><a href="#sdl-get-ticks"><code>sdl-get-ticks</code></a>
+	            <li><a href="#sdl-gl-swap-buffers"><code>sdl-gl-swap-buffers</code></a>
+	            <li><a href="#sdl-hw-accel"><code>sdl-hw-accel</code></a>
+	            <li><a href="#sdl-hw-palette"><code>sdl-hw-palette</code></a>
+	            <li><a href="#sdl-hw-surface"><code>sdl-hw-surface</code></a>
+	            <li><a href="#sdl-init-audio"><code>sdl-init-audio</code></a>
+	            <li><a href="#sdl-init-cdrom"><code>sdl-init-cdrom</code></a>
+	            <li><a href="#sdl-init-eventthread"><code>sdl-init-eventthread</code></a>
+	            <li><a href="#sdl-init-everything"><code>sdl-init-everything</code></a>
+	            <li><a href="#sdl-init-joystick"><code>sdl-init-joystick</code></a>
+	            <li><a href="#sdl-init-noparachute"><code>sdl-init-noparachute</code></a>
+	            <li><a href="#sdl-init-on-startup"><code>sdl-init-on-startup</code></a>
+	            <li><a href="#sdl-init-timer"><code>sdl-init-timer</code></a>
+	            <li><a href="#sdl-init-video"><code>sdl-init-video</code></a>
+	            <li><a href="#sdl-iyuv-overlay"><code>sdl-iyuv-overlay</code></a>
+	            <li><a href="#sdl-no-frame"><code>sdl-no-frame</code></a>
+	            <li><a href="#sdl-opengl"><code>sdl-opengl</code></a>
+	            <li><a href="#sdl-opengl-blit"><code>sdl-opengl-blit</code></a>
+	            <li><a href="#sdl-pre-alloc"><code>sdl-pre-alloc</code></a>
+	            <li><a href="#sdl-quit-on-exit"><code>sdl-quit-on-exit</code></a>
+	            <li><a href="#sdl-resizable"><code>sdl-resizable</code></a>
+	            <li><a href="#sdl-rle-accel"><code>sdl-rle-accel</code></a>
+	            <li><a href="#sdl-rle-accel-ok"><code>sdl-rle-accel-ok</code></a>
+	            <li><a href="#sdl-src-alpha"><code>sdl-src-alpha</code></a>
+	            <li><a href="#sdl-src-color-key"><code>sdl-src-color-key</code></a>
+	            <li><a href="#sdl-surface"><code>sdl-surface</code></a>
+	            <li><a href="#sdl-sw-surface"><code>sdl-sw-surface</code></a>
+	            <li><a href="#sdl-uyvy-overlay"><code>sdl-uyvy-overlay</code></a>
+	            <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a>
+	            <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a>
+	            <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a>
+	            <li><a href="#set-alpha"><code>set-alpha</code></a>
+	            <li><a href="#set-cell"><code>set-cell</code></a>
+	            <li><a href="#set-cell-*"><code>set-cell-*</code></a>
+	            <li><a href="#set-clip-rect"><code>set-clip-rect</code></a>
+	            <li><a href="#set-color"><code>set-color</code></a>
+	            <li><a href="#set-color-*"><code>set-color-*</code></a>
+	            <li><a href="#set-color-key"><code>set-color-key</code></a>
+	            <li><a href="#set-frame-rate"><code>set-frame-rate</code></a>
+	            <li><a href="#set-point"><code>set-point</code></a>
+	            <li><a href="#set-point-*"><code>set-point-*</code></a>
+	            <li><a href="#set-position"><code>set-position</code></a>
+	            <li><a href="#set-position-*"><code>set-position-*</code></a>
+	            <li><a href="#set-rectangle"><code>set-rectangle</code></a>
+	            <li><a href="#set-rectangle-*"><code>set-rectangle-*</code></a>
+	            <li><a href="#set-surface"><code>set-surface</code></a>
+	            <li><a href="#set-surface-*"><code>set-surface-*</code></a>
+	            <li><a href="#surface"><code>surface</code></a>
+	            <li><a href="#surface"><code>surface</code></a>
+	            <li><a href="#to-degree"><code>to-degree</code></a>
+	            <li><a href="#to-radian"><code>to-radian</code></a>
+	            <li><a href="#update-display"><code>update-display</code></a>
+	            <li><a href="#update-surface"><code>update-surface</code></a>
+	            <li><a href="#update-surface-*"><code>update-surface-*</code></a>
+	            <li><a href="#width"><code>width</code></a>
+	            <li><a href="#window"><code>window</code></a>
+	            <li><a href="#with-bezier"><code>with-bezier</code></a>
+	            <li><a href="#with-color"><code>with-color</code></a>
+	            <li><a href="#with-curve"><code>with-curve</code></a>
+	            <li><a href="#with-default-font"><code>with-default-font</code></a>
+	            <li><a href="#with-events"><code>with-events</code></a>
+	            <li><a href="#with-font"><code>with-font</code></a>
+	            <li><a href="#with-init"><code>with-init</code></a>
+	            <li><a href="#with-locked-surface"><code>with-locked-surface</code></a>
+	            <li><a href="#with-locked-surfaces"><code>with-locked-surfaces</code></a>
+	            <li><a href="#with-point"><code>with-point</code></a>
+	            <li><a href="#with-rectangle"><code>with-rectangle</code></a>
+	            <li><a href="#with-rectangles"><code>with-rectangles</code></a>
+	            <li><a href="#with-shape"><code>with-shape</code></a>
+	            <li><a href="#with-surface"><code>with-surface</code></a>
+	            <li><a href="#with-surface-slots"><code>with-surface-slots</code></a>
+	            <li><a href="#with-surfaces"><code>with-surfaces</code></a>
+	            <li><a href="#within-range"><code>within-range</code></a>
+	            <li><a href="#within-range-*"><code>within-range-*</code></a>
+	            <li><a href="#x"><code>x</code></a>
+	            <li><a href="#x2"><code>x2</code></a>
+	            <li><a href="#y"><code>y</code></a>
+	            <li><a href="#y2"><code>y2</code></a>
+	          
+	    </li>
+	  </ol>
+      
+	  
+	  
+	  
+	  <br>&nbsp;</br><h2><a class=none name="dictionar">The NIL dictionary</a></h2>
+	  
 	
 	
 
@@ -854,7 +883,16 @@
 <p><br>[Special variable]<br><a class=none name='*default-color*'><b>*default-color*</b></a>
 <blockquote><br>
 
-
+<p>Functions that accept the <code>KEY</code>word parameter <code>COLOR</code> will most likely bind to the  symbol <code>*DEFAULT-COLOR*</code> if <code>COLOR</code> is not specified, automatically using whatever color is referenced  by <code>*DEFAULT-COLOR*</code>.  </p><p>A color is bound to <code>*DEFAULT-COLOR*</code> by the following macro: <a href="#with-color">WITH-COLOR</a>. </p><h5>Example </h5>
+<pre><code>(draw-box a-box :surface sdl:default-display* :color sdl:*black*)
+(draw-box b-box :surface sdl:default-display* :color sdl:*black*)
+(draw-box c-box :surface sdl:default-display* :color sdl:*black*)
+(with-surface (disp sdl:*default-display*)
+  (with-color (col sdl:*black*)
+    (draw-box a-box)
+    (draw-box b-box)
+    (draw-box c-box)))
+</code></pre>
 
 </blockquote>
 
@@ -866,7 +904,7 @@
 <p><br>[Special variable]<br><a class=none name='*default-display*'><b>*default-display*</b></a>
 <blockquote><br>
 
-
+<p>The symbol <code>*DEFAULT-DISPLAY*</code> is bound to the current display surface  <a href="#display-surface">DISPLAY-SURFACE</a>) by the function <a href="#WINDOW">WINDOW</a>). </p>
 
 </blockquote>
 
@@ -926,7 +964,15 @@
 <p><br>[Special variable]<br><a class=none name='*default-surface*'><b>*default-surface*</b></a>
 <blockquote><br>
 
-
+<p>Functions that accept the <code>KEY</code>word parameter <code>SURFACE</code> will most likely bind to the  symbol <code>*DEFAULT-SURFACE*</code> if <code>SURFACE</code> is not specified, automatically using whatever surface is referenced  by <code>*DEFAULT-SURFACE*</code>.  </p><p>A surface is bound to <code>*DEFAULT-SURFACE*</code> by the following macros: <a href="#with-surface">WITH-SURFACE</a>,  and <a href="#with-surfaces">WITH-SURFACES</a>. </p><h5>Example </h5>
+<pre><code>(draw-surface surf-1 :surface sdl:*default-display*)
+(draw-surface surf-2 :surface sdl:*default-display*)
+(draw-surface surf-2 :surface sdl:*default-display*)
+(with-surface (disp sdl:*default-display*)
+  (draw-surface surf-1)
+  (draw-surface surf-2)
+  (draw-surface surf-2))
+</code></pre>
 
 </blockquote>
 
@@ -3090,7 +3136,9 @@
 <ul><li><code>FLAGS</code> may be one or more of: <code>SDL-INIT-EVERYTHING</code>, <code>SDL-INIT-VIDEO</code>, <code>SDL-INIT-CDROM</code>, <code>SDL-INIT-AUDIO</code>,  <code>SDL-INIT-TIMER</code>, <code>SDL-INIT-JOYSTICK</code>, <code>SDL-INIT-EVENTTHREAD</code> and <code>SDL-INIT-NOPARACHUTE</code>. </li>
 </ul><h5>Returns </h5>
 <ul><li>Returns an INTEGER bitmask of the SDL subsystems in <code>FLAGS</code>. </li>
-</ul>
+</ul><h5>Example </h5>
+<pre><code>(INITIALIZE-ON-STARTUP SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM)
+</code></pre>
 
 </blockquote>
 
@@ -3395,7 +3443,9 @@
 <ul><li><code>FLAGS</code> may be one or more of: <code>SDL-INIT-EVERYTHING</code>, <code>SDL-INIT-VIDEO</code>, <code>SDL-INIT-CDROM</code>, <code>SDL-INIT-AUDIO</code>,  <code>SDL-INIT-TIMER</code>, <code>SDL-INIT-JOYSTICK</code>, <code>SDL-INIT-EVENTTHREAD</code>, <code>SDL-INIT-NOPARACHUTE</code>. </li>
 </ul><h5>Returns </h5>
 <ul><li>Returns an INTEGER bitmask of the SDL subsystems in <code>FLAGS</code>. </li>
-</ul>
+</ul><h5>Example </h5>
+<pre><code>(QUIT-ON-EXIT SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM)
+</code></pre>
 
 </blockquote>
 
@@ -4950,7 +5000,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-init'><b>with-init</b> <i>flags declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p><code>WITH-INIT</code> is a convenience macro that will attempt to initialise the SDL library and SDL subsystems  prior to executing the forms in <code>BODY</code>. Upon exit <code>WITH-INIT</code> will uninitialize the SDL library and SDL subsystems. </p><p>The lispbuilder-sdl initialization routines are somewhat complicated by the fact that  a Lisp development environment will load a foreign library once but then  initialise and uninitialise the library multiple times. A C/C++ development environemnt will open and then close a library  after each execution, freeing all resources left hanging by an incomplete or buggy uninitialise function.  C libraries may therefore frequently core dump in a Lisp environment when resources are not feed properly prior to the library  being reinitialized. </p><p>LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control  of the initialisation/uninitialisation of foreign libraries. The fuctions that provide these capabilities are as follows: </p><ul><li><a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a></li>
+<p><code>WITH-INIT</code> is a convenience macro that will attempt to initialise the SDL library and SDL subsystems  prior to executing the forms in <code>BODY</code>. Upon exit <code>WITH-INIT</code> will uninitialize the SDL library and SDL subsystems. </p><p>The lispbuilder-sdl initialization routines are somewhat complicated by the fact that  a Lisp development environment will load a foreign library once but then  initialise and uninitialise the library multiple times. A C/C++ development environment will open and then  close a library after each execution, freeing all resources left hanging by incomplete  or buggy uninitialise functions. C libraries may therefore frequently core dump in a Lisp environment when  resources are not feed properly prior to the library being reinitialized. </p><p>LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control  of the initialisation/uninitialisation of foreign libraries. The fuctions that provide these capabilities are as follows: </p><ul><li><a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a></li>
 <li><a href="#quit-on-exit">QUIT-ON-EXIT</a></li>
 <li><a href="#list-sub-systems">LIST-SUB-SYSTEMS</a></li>
 <li><a href="#return-sub-systems-of-status">RETURN-SUB-SYSTEMS-OF-STATUS</a></li>
@@ -4975,6 +5025,15 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
    (if (is-init)
      (sdl-ttf-cffi::ttf-quit)))
 (pushnew &amp;#039;quit-ttf sdl:*external-quit-on-exit*)
+</code></pre><h5>Parameters </h5>
+<ul><li><code>FLAGS</code> may be one or more of: <code>SDL-INIT-EVERYTHING</code>, <code>SDL-INIT-VIDEO</code>, <code>SDL-INIT-CDROM</code>, <code>SDL-INIT-AUDIO</code>,  <code>SDL-INIT-TIMER</code>, <code>SDL-INIT-JOYSTICK</code>, <code>SDL-INIT-EVENTTHREAD</code> and <code>SDL-INIT-NOPARACHUTE</code>. <EM>Note</EM>: When <code>FLAGS</code> is set by  <code>WITH-INIT</code>, subsequent calls to <a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a> and  <a href="#quit-on-exit">QUIT-ON-EXIT</a> are ignored. <code>WITH-INIT</code> will only initialize and uninitialize the subsytems  specified in <code>FLAGS</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(with-init (SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
+  ....)
+(with-init ()
+  (INITIALIZE-ON-STARTUP SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
+  (QUIT-ON-EXIT SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
+  ....)
 </code></pre>
 
 </blockquote>
