@@ -99,7 +99,8 @@
 
 
 (defun set-screen (width height
-		   &key (bpp 0) (flags '(sdl-cffi::SDL-HW-SURFACE sdl-cffi::SDL-FULL-SCREEN sdl-cffi::SDL-HW-ACCEL)) title-caption icon-caption)
+		   &key (bpp 0) (flags '(sdl-cffi::SDL-HW-SURFACE sdl-cffi::SDL-FULL-SCREEN sdl-cffi::SDL-HW-ACCEL))
+		   title-caption icon-caption)
   "Will attempt to create a full screen, hardware accelerated window using SDL_SetVideoMode.
    Overriding :flags will allow any type of window to be created.
    Returns

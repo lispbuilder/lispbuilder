@@ -185,7 +185,7 @@ remains unchanged between screen updates."))
 ##### Parameters
 
 * `SOURCE` is the source of the image.
-* `KEY-COLOR` sets the color key to be used for the surface, of type `COLOR', or 'COLOR-A'.
+* `KEY-COLOR` sets the color key to be used for the surface, of type `COLOR`, or 'COLOR-A`.
 * `ALPHA-VALUE` sets the alpha value of the surface, of type INTEGER. Must be in the range 0-255. 
 255 is opaque, 0 is transparent.
 * `IMAGE-TYPE` specifies the type of image to load. 

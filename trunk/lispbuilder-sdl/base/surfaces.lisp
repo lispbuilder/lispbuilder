@@ -211,19 +211,46 @@
   "return the height of the Sdl-Surface." 
   (cffi:foreign-slot-value surface 'sdl-cffi::Sdl-Surface 'sdl-cffi::h))
 
-(defun update-surface (surface &key template number x y w h)
+(defun clip-to-surface (template surface)
+  "Clips the rectangle `TEMPLATE` to the surface `SURFACE`s `X`, `Y`, `WIDTH` and `HEIGHT`.
+*Note*: `TEMPLATE` is modified."
+  (let* ((x (rect-x template)) (y (rect-y template))
+	 (w (rect-w template)) (h (rect-h template))
+	 (x2 (+ x w)) (y2 (+ y h)))
+    (setf (rect-x template) (clamp x 0 (surf-w surface))
+	  (rect-y template) (clamp y 0 (surf-h surface))
+	  (rect-w template) (- (clamp x2 0 (surf-w surface))
+			       (rect-x template))
+	  (rect-h template) (- (clamp y2 0 (surf-h surface))
+			       (rect-y template))))
+  template)
+
+(defun clip-to-coords (x y w h w-coord h-coord)
+  "Clips the rectangle `TEMPLATE` to the `X`, `Y`, `WIDTH` and `HEIGHT` coordinates.
+*Note*: `TEMPLATE` is modified."
+  (let ((x2 (+ x w)) (y2 (+ y h)))
+    (setf x (clamp x 0 w-coord)
+	  y (clamp y 0 h-coord)
+	  w (- (clamp x2 0 w-coord)
+	       x)
+	  h (- (clamp y2 0 h-coord)
+	       y)))
+  (values x y w h))
+
+(defun update-surface (surface &key template x y w h (clipping-p t))
   "Updates the screen using the keyword co-ordinates in the Vector, :template.
    All co-ordinates default to 0, updating the entire screen."
-  (if x
-      (sdl-cffi::SDL-Update-Rect surface x y w h)
-      (if (is-valid-ptr template)
-	  (if number
-	      (sdl-cffi::sdl-Update-Rects surface number template)
-	      (sdl-cffi::SDL-Update-Rect surface 
-					 (rect-x template)
-					 (rect-y template)
-					 (rect-w template)
-					 (rect-h template)))
+  (if template
+      (progn 
+	(when clipping-p
+	  (setf template (clip-to-surface template surface)))
+	(sdl-cffi::SDL-Update-Rect surface (rect-x template) (rect-y template) (rect-w template) (rect-h template)))
+      (if x
+	  (progn
+	    (when clipping-p
+	      (multiple-value-bind (clip-x clip-y clip-w clip-h)
+		  (clip-to-coords x y w h (surf-w surface) (surf-h surface))
+		(sdl-cffi::SDL-Update-Rect surface clip-x clip-y clip-w clip-h))))
 	  (sdl-cffi::SDL-Update-Rect surface 0 0 0 0)))
   surface)
 
@@ -233,30 +260,20 @@
    Use :dst-rect SDL_Rect to position the SRC on the DST surface."
   (sdl-cffi::sdl-Upper-Blit src src-rect dst dst-rect)
   (when update-p
-    (update-surface dst :template dst-rect))
+    (update-surface dst :template dst-rect :clipping-p t))
   dst-rect)
 
-(defun fill-surface (surface color &key template (update-p nil) (clipping-p t))
+(defun fill-surface (surface color &key (template (cffi:null-pointer)) (update-p nil) (clipping-p nil))
   "fill the entire surface with the specified R G B A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
-   'dirty recs' screen update."
-  (if (is-valid-ptr template)
-      (progn
-	(when clipping-p
-	  (let* ((x (rect-x template)) (y (rect-y template))
-		 (w (rect-w template)) (h (rect-h template))
-		 (x2 (+ x w)) (y2 (+ y h)))
-	    (setf (rect-x template) (clamp x 0 (surf-w surface))
-		  (rect-y template) (clamp y 0 (surf-h surface))
-		  (rect-w template) (- (clamp x2 0 (surf-w surface))
-				       (rect-x template))
-		  (rect-h template) (- (clamp y2 0 (surf-h surface))
-				       (rect-y template)))))
-	(sdl-cffi::sdl-Fill-Rect surface template color))
-      (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))
+   'dirty recs' screen update.
+*Note*: `TEMPLATE` is clipped to the surface `SURFACE`, when `CLIPPING-P` is `T`."
+  (when clipping-p
+    (setf template (clip-to-surface template surface)))
+  (sdl-cffi::sdl-Fill-Rect surface template color)
   (when update-p
-    (update-surface surface :template template))
+    (update-surface surface :template template :clipping-p t))
   template)
 
 (defun map-color (surface r g b &optional a)

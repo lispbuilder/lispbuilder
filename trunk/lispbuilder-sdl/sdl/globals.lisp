@@ -9,12 +9,57 @@
 
 ;;;; Globals
 
-(defvar *default-surface* nil)
-(defvar *default-display* nil)
-(defvar *default-color* nil)
+(defvar *default-surface* nil
+  "Functions that accept the `KEY`word parameter `SURFACE` will most likely bind to the 
+symbol `\*DEFAULT-SURFACE*\` if `SURFACE` is not specified, automatically using whatever surface is referenced 
+by `\*DEFAULT-SURFACE*\`. 
+
+A surface is bound to `\*DEFAULT-SURFACE*\` by the following macros: [WITH-SURFACE](#with-surface), 
+and [WITH-SURFACES](#with-surfaces).
+
+##### Example
+
+    \(draw-surface surf-1 :surface sdl:*default-display*\)
+    \(draw-surface surf-2 :surface sdl:*default-display*\)
+    \(draw-surface surf-2 :surface sdl:*default-display*\)
+
+    \(with-surface \(disp sdl:*default-display*\)
+      \(draw-surface surf-1\)
+      \(draw-surface surf-2\)
+      \(draw-surface surf-2\)\)")
+
+(defvar *default-display* nil
+  "The symbol `\*DEFAULT-DISPLAY\*` is bound to the current display surface 
+[DISPLAY-SURFACE](#display-surface)) by the function [WINDOW](#WINDOW)).")
+  
+(defvar *default-color* nil
+    "Functions that accept the `KEY`word parameter `COLOR` will most likely bind to the 
+symbol `\*DEFAULT-COLOR*\` if `COLOR` is not specified, automatically using whatever color is referenced 
+by `\*DEFAULT-COLOR*\`. 
+
+A color is bound to `\*DEFAULT-COLOR*\` by the following macro: [WITH-COLOR](#with-color).
+
+##### Example
+
+    \(draw-box a-box :surface sdl:default-display* :color sdl:*black*\)
+    \(draw-box b-box :surface sdl:default-display* :color sdl:*black*\)
+    \(draw-box c-box :surface sdl:default-display* :color sdl:*black*\)
+
+    \(with-surface \(disp sdl:*default-display*\)
+      \(with-color \(col sdl:*black*\)
+        \(draw-box a-box\)
+        \(draw-box b-box\)
+        \(draw-box c-box\)\)\)")
+
+(defvar *opengl-context* nil
+  "The symbol `\*OPENGL-CONTEXT\*` is `T` when an OpenGL display context is created, and `NIL` otherwise.
+[UPDATE-SURFACE](#update-surface) will call [SDL-GL-SWAP-BUFFERS](#sdl-gl-swap-buffers) when `\*OPENGL-CONTEXT\*` is `T`, 
+and [SDL-FLIP](#sdl-flip) otherwise.")
+
+(defvar *default-font* nil)
 (defvar *default-position* nil)
 (defvar *default-rectangle* nil)
-(defvar *default-font* nil)
+
 
 ;(defvar *font-path* (merge-pathnames "font.bmp" (or *load-truename* *default-pathname-defaults*)))
 (defvar *default-font-path* (make-pathname :host (pathname-host #.(or *compile-file-truename*
@@ -34,32 +79,6 @@
   "The list of functions that are called from [INIT-SDL](#init-sdl).")
 (defvar *external-quit-on-exit* nil
   "The list of functions that are called from [QUIT-SDL](#quit-sdl).")
-
-(defun default-surface ()
-  *default-surface*)
-(defun (setf default-surface) (surface)
-  (setf *default-surface* surface))
-
-(defun default-display ()
-  *default-display*)
-(defun (setf default-display) (surface)
-  (setf *default-display* surface))
-
-(defun default-color ()
-  *default-color*)
-(defun (setf default-color) (color)
-  (setf *default-color* color))
-
-(defun default-position ()
-  *default-position*)
-(defun (setf default-position) (position)
-  (setf *default-position* position))
-
-(defun default-rectangle ()
-  *default-rectangle*)
-(defun (setf default-rectangle) (rectangle)
-  (setf *default-rectangle* rectangle))
-
 
 ;; (declaim (INLINE renderer))
 ;; (defun renderer ()

@@ -9,6 +9,11 @@
 
 ;;;; Functions
 
+(defun opengl-context-p (flags)
+  "Returns `T` if [SDL-OPENGL](#sdl-opengl) is within the bitmask `FLAGS`, or returns `NIL` otherwise."
+  (if (eq 1 (logand flags sdl-opengl))
+      t
+      nil))
 
 (defun window (width height &key (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption)
   "Creates a new SDL window of pixel width `WIDTH` and height `HEIGHT` using SDL_SetVideoMode.
@@ -32,39 +37,14 @@ If `WIDTH` and `HEIGHT` are both `0`, then the width and height of the current v
 * `BPP` the number of bits per pixel. Defaults to `0` which is the current display bits per pixel.
 *Note:* A `BPP` of `24` uses the packed representation of 3 bytes/pixel. 
 For the more common 4 bytes/pixel mode, use a `BPP` of 32.
-* `FLAGS` is a bitmasked logior of one or more of the following; `SDL-SW-SURFACE`, `SDL-HW-SURFACE`, `SDL-ASYNC-BLIT`,
-`SDL-ANY-FORMAT`, `SDL-HW-PALETTE`, `SDL-DOUBLEBUF`, `SDL-FULLSCREEN`, `SDL-OPENGL`, `SDL-OPENGL-BLIT`, `SDL-RESIZABLE` 
-AND `SDL-NO-FRAME`.
+* `FLAGS` is a bitmasked logior of one or more of the following; [SDL-SW-SURFACE](#sdl-sw-surface), 
+[SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
+[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
+[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
+[SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable) and [SDL-NO-FRAME](#SDL-NO-FRAME).
 * `TITLE-CAPTION` is the title that appears in the Window title bar, of type `STRING`.
 * `ICON-CAPTION` is the title that appears when the Window is minimized, of type `STRING`.
 
-##### Surface Flags
-
-The following section descibes the flags that can be passed to `WINDOW` in `FLAGS`.
-
-* `SDL-SW-SURFACE`  Create the video surface in system memory.
-* `SDL-HW-SURFACE`  Create the video surface in video memory.
-* `SDL-ASYNC-BLIT`  Enables the use of asynchronous updates of the display surface. This will usually slow
- down blitting on single CPU machines, but may provide a speed increase on SMP systems.
-* `SDL-ANY-FORMAT`  Normally, if a video surface of the requested `BPP` is not available, SDL will emulate
- one with a shadow surface. Passing `SDL-ANY-FORMAT` prevents this and causes SDL to use the video surface, 
-regardless of its pixel depth.
-* `SDL-HW-PALETTE`  Give SDL exclusive palette access. Without this flag you may
- not always get the the colors you request with [SDL-SET-COLORS](#sdl-set-colors) or [SDL-SET-PALETTE](#sdl-set-palette).
-* `SDL-DOUBLEBUF`   Enable hardware double buffering; only valid with `SDL-HW-SURFACE`. 
-Calling [UPDATE-DISPLAY](#update-display) will flip the buffers and update the screen. All drawing will 
-take place on the surface that is not displayed at the moment. If double buffering could not be 
-enabled then [UPDATE-DISPLAY](#update-display) will just perform a [SDL-UPDATE-RECT](#sdl-update-rect) on 
-the entire screen.
-* `SDL-FULLSCREEN`  SDL will attempt to use a fullscreen mode. If a hardware resolution change 
-is not possible \(for whatever reason\), the next higher resolution will be used and the display window 
-centered on a black background.
-* `SDL-OPENGL`	    Create an OpenGL rendering context. You should have previously set OpenGL video attributes with 
-[SDL-GL-SET-ATTRIBUTE](#sdl-gl-set-attribute).
-* `SDL-RESIZABLE`   Create a resizable window. When the window is resized by the user a `:VIDEO-RESIZE` event is 
-generated and `WINDOW` can be called again with the new size.
-* `SDL-NO-FRAME`    If possible, `SDL-NO-FRAME` causes SDL to create a window with no title bar or frame decoration. 
-Fullscreen modes automatically have this flag set.
 
 ##### Return
 
@@ -77,20 +57,32 @@ will be released automatically by SDL.
 ##### Example
 
     \(WINDOW 320 240 :TITLE-CAPTION \"Random-Rects\" :ICON-CAPTION \"Random-Rects\"
-                     :FLAGS \(SDL-DOUBLEBUF SDL-FULLSCREEN\)\)"
+                     :FLAGS \'(SDL-DOUBLEBUF SDL-FULLSCREEN\)\)"
   (let ((surf (sdl-base::set-screen width height
 				    :bpp bpp
 				    :flags flags
 				    :title-caption title-caption
 				    :icon-caption icon-caption)))
-    (setf *default-display* (surface surf t))))
+    (if surf
+	(setf *default-display* (surface surf t)
+	      *opengl-context* (opengl-context-p (sdl-base::set-flags flags)))
+	(setf *default-display* nil
+	      *opengl-context* nil))
+    surf))
+
 
 (defun update-display (&optional (surface *default-display*))
-  "Flips the buffers and updates the screen `SURFACE` if `SDL-HW-SURFACE` is set in [WINDOW](#window). 
-If double buffering is not enabled then `UPDATE-DISPLAY` will perform a 
-[SDL-UPDATE-RECT](#sdl-update-rect) on the entire screen.
+  "When [OPENGL-CONTEXT](#opengl-context) is `NIL`; `UPDATE-DISPLAY` will flip the SDL video buffers and update 
+the screen `SURFACE` if `SDL-HW-SURFACE` is set in [WINDOW](#window). If double buffering is not enabled then
+ SDL will perform an [SDL-UPDATE-RECT](#sdl-update-rect) on the entire screen.
+
+When [OPENGL-CONTEXT](#opengl-context) is `T`; `UPDATE-DISPLAY` will call 
+[SDL-GL-SWAP-BUFFERS](#sdl-gl-swap-buffers) to update the OpenGL display context.
+
 `SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified."
-  (sdl-cffi::sdl-flip (fp surface)))
+  (if *opengl-context*
+      (sdl-cffi::sdl-gl-swap-buffers)
+      (sdl-cffi::sdl-flip (fp surface))))
 
 (defun clear-display (color &optional (surface *default-display*))
   "Fills the display `SURFACE` using color `COLOR`.
