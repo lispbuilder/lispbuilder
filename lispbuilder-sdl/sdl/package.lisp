@@ -18,7 +18,6 @@
   (:import-from #:lispbuilder-sdl-cffi
 		sdl-cffi::sdl-opengl
 		lispbuilder-sdl-base::sdl-get-ticks
-		lispbuilder-sdl-base::sdl-gl-swap-buffers
 
 		lispbuilder-sdl-cffi::sdl-init-everything
 		lispbuilder-sdl-cffi::sdl-init-video
@@ -64,19 +63,16 @@
    #:*default-font-path*
 
    #:*default-surface*
-   #:default-surface
    #:*default-color*
-   #:default-color
    #:*default-position*
-   #:default-position
    #:*default-rectangle*
-   #:default-rectangle
 
    #:*sdl-initialized*
 
    #:*external-init-on-startup*
    #:*external-quit-on-exit*
 
+   #:*opengl-context*
    ;; init.lisp
    #:with-init
    #:initialize-on-startup
@@ -160,7 +156,6 @@
    #:rectangle-from-edges-*
    #:rectangle-from-edges
    #:rectangle-from-midpoint-*
-   #:genbez
    #:with-bezier
    #:with-curve
    #:with-shape
@@ -187,6 +182,9 @@
    #:draw-circle-*
    #:draw-filled-circle
    #:draw-filled-circle-*
+
+   #:draw-trigon
+   #:draw-polygon
    
    ;; events.lisp
    #:with-events
@@ -319,7 +317,6 @@
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
    #:sdl-opengl
-   #:sdl-gl-swap-buffers
    #:sdl-init-everything
    #:sdl-init-video
    #:sdl-init-cdrom

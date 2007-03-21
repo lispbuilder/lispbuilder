@@ -74,39 +74,148 @@
 	(format-version :unsigned-int)
 	(refcount :int))
 
-(cl:defconstant SDL-SW-SURFACE #x00000000)
+(cl:defconstant SDL-SW-SURFACE #x00000000
+  "Applies to [SURFACE](#surface) and [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window) or [CREATE-SURFACE](#create-surface); 
+Create the [SURFACE](#surface) or [DISPLAY-SURFACE](#display-surface) in system memory.
+* When read from the `FLAGS` field in [SURFACE](#surface) or [DISPLAY-SURFACE](#display-surface); 
+Indicates if the surface is stored in system memory.
 
-(cl:defconstant SDL-HW-SURFACE #x00000001)
+This improves the performance of pixel level access, however you may not be able to take advantage of some types of 
+hardware blitting.")
 
-(cl:defconstant SDL-ASYNC-BLIT #x00000004)
+(cl:defconstant SDL-HW-SURFACE #x00000001
+  "Applies to [SURFACE](#surface) and [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window) or [CREATE-SURFACE](#create-surface); 
+ Create the [SURFACE](#surface) or [DISPLAY-SURFACE](#display-surface) in video memory.
+* When read from the `FLAGS` field in [SURFACE](#surface) or [DISPLAY-SURFACE](#display-surface); 
+Indicates if the surface is stored in video memory.
 
-(cl:defconstant SDL-ANY-FORMAT #x10000000)
+This will allow SDL to take advantage of Video->Video blits (which are often accelerated).")
 
-(cl:defconstant SDL-HW-PALETTE #x20000000)
+(cl:defconstant SDL-ASYNC-BLIT #x00000004
+  "Applies to [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window); 
+Enables the use of asynchronous updates of the [DISPLAY-SURFACE](#display-surface). 
+* When read from the `FLAGS` field in [SURFACE](#surface) or [DISPLAY-SURFACE](#display-surface); 
+Indicates if the surface uses asynchronous blits when possible.
 
-(cl:defconstant SDL-DOUBLEBUF #x40000000)
+Asynchronous blits usually slows down blitting on single CPU machines, but may provide a speed increase on SMP systems.")
 
-(cl:defconstant SDL-FULLSCREEN #x80000000)
+(cl:defconstant SDL-ANY-FORMAT #x10000000
+  "Applies to [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window); 
+ Causes SDL to return a [DISPLAY-SURFACE](#display-surface) of any pixel depth if the requested pixel depth is unavailable.
+* When read from the `FLAGS` field in [DISPLAY-SURFACE](#display-surface); 
+Indicates that the surface was created with `SDL-ANY-FORMAT`.
 
-(cl:defconstant SDL-OPENGL #x00000002)
+Normally, if a [DISPLAY-SURFACE](#display-surface) of the requested bits-per-pixel (bpp) is not available, SDL 
+will emulate one with a shadow surface. Passing `SDL-ANY-FORMAT` prevents this and causes SDL to use the
+[DISPLAY-SURFACE](#display-surface) surface, regardless of its pixel depth.")
 
-(cl:defconstant SDL-OPENGL-BLIT #x0000000A)
+(cl:defconstant SDL-HW-PALETTE #x20000000
+  "Applies to [SURFACE](#surface) and [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window); 
+Gives SDL exclusive palette access to [DISPLAY-SURFACE](#display-surface).
+* When read from the `FLAGS` field in [SURFACE](#surface) or [DISPLAY-SURFACE](#display-surface); 
+Indicates that the surface has an exclusive palette.
 
-(cl:defconstant SDL-RESIZABLE #x00000010)
+Without this flag you may not always get the the colors you request with [SDL-SET-COLORS](#sdl-set-colors) or 
+[SDL-SET-PALETTE](#sdl-set-palette).")
 
-(cl:defconstant SDL-NO-FRAME #x00000020)
+(cl:defconstant SDL-DOUBLEBUF #x40000000
+  "Applies to [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window); 
+Enable hardware double buffering; only valid with [SDL-HW-SURFACE](#sdl-hw-surface). 
+* When read from the `FLAGS` field in [DISPLAY-SURFACE](#display-surface); 
+Indicages that the surface is double buffered.
 
-(cl:defconstant SDL-HW-ACCEL #x00000100)
+Calling [SDL-FLIP](#sdl-flip) will flip the buffers and update the screen. All drawing will take place on the 
+surface that is not displayed at the moment. If double buffering could not be enabled then [SDL-FLIP](#sdl-flip) 
+will just perform a [SDL-UPDATE-RECT](#sdl-update-rect) on the entire screen.")
 
-(cl:defconstant SDL-SRC-COLOR-KEY #x00001000)
+(cl:defconstant SDL-FULLSCREEN #x80000000
+  "Applies to [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window); 
+SDL will attempt to use a fullscreen mode. If a hardware resolution change is not possible (for whatever reason), 
+the next higher resolution will be used and the display window centered on a black background.
+* When read from the `FLAGS` field in [DISPLAY-SURFACE](#display-surface); 
+Indicates that the surface is full-screen.")
 
-(cl:defconstant SDL-RLE-ACCEL-OK #x00002000)
+(cl:defconstant SDL-OPENGL #x00000002
+  "Applies to [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window); 
+Create an OpenGL rendering context. You should have previously set OpenGL video attributes with 
+[SDL-GL-SET-ATTRIBUTE](#sdl-gl-set-attribute).
+* When read from the `FLAGS` field in [DISPLAY-SURFACE](#display-surface); 
+Indicates that the surface has an OpenGL rendering context.")
 
-(cl:defconstant SDL-RLE-ACCEL #x00004000)
+(cl:defconstant SDL-RESIZABLE #x00000010
+  "Applies to [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window); 
+Create a resizable window.
+* When read from the `FLAGS` field in [DISPLAY-SURFACE](#display-surface); 
+Indicates that the surface is resizable.
 
-(cl:defconstant SDL-SRC-ALPHA #x00010000)
+When the window is resized by the user a :VIDEO-RESIZE-EVENT event is generated and [WINDOW](#window) 
+can be called again with the new size.")
 
-(cl:defconstant SDL-PRE-ALLOC #x01000000)
+(cl:defconstant SDL-NO-FRAME #x00000020
+  "Applies to [DISPLAY-SURFACE](#display-surface).
+* When passed as a `FLAG` to [WINDOW](#window); 
+If possible, `SDL-NO-FRAME` causes SDL to create a window with no title bar or frame decoration. 
+* When read from the `FLAGS` field in [DISPLAY-SURFACE](#display-surface); 
+__Note: Per the SDL documentation, this is not stored in `FLAGS`.
+
+Fullscreen modes automatically have this flag set.")
+
+(cl:defconstant SDL-HW-ACCEL #x00000100
+  "Applies to [SURFACE](#surface) and [DISPLAY-SURFACE](#display-surface).
+* When read from the `FLAGS` field in [SURFACE](#surface) and [DISPLAY-SURFACE](#display-surface); 
+Indicates that surface blitting will use hardware acceloration.")
+
+(cl:defconstant SDL-SRC-COLOR-KEY #x00001000
+  "Applies to [SURFACE](#surface).
+* When passed as a `FLAG` to [CREATE-SURFACE](#create-surface) and [SET-COLOR-KEY](#set-color-key); 
+Turns on color keying for blits from this surface. If [SDL-HW-SURFACE](#sdl-hw-surface) is also specified and color 
+keyed blits are hardware-accelerated, then SDL will attempt to place the surface in video memory. If the screen is a 
+hardware surface and color keyed blits are hardware-accelerated then the [SDL-HW-SURFACE](#sdl-hw-surface) flag will be 
+set. Use [SET-COLOR-KEY](#set-color-key) to set or clear this flag after surface creation.
+* When read from the `FLAGS` field in [SURFACE](#surface); 
+Indicates that the surface uses colorkey blitting.")
+
+(cl:defconstant SDL-RLE-ACCEL-OK #x00002000
+  "Applies to [SURFACE](#surface).
+")
+
+(cl:defconstant SDL-RLE-ACCEL #x00004000
+  "Applies to [SURFACE](#surface)
+* When passed as a `FLAG` to [SET-COLOR-KEY](#set-color-key); 
+The surface will be drawn using RLE acceleration when drawn with [BLIT-SURFACE](#blit-surface), and 
+[DRAW-SURFACE](#draw-surface). The surface will actually be encoded for RLE acceleration the first time 
+[BLIT-SURFACE](#blit-surface), [DRAW-SURFACE](#draw-surface) or [CONVERT-SURFACE](#convert-surface)
+ is called on the surface.
+* When read from the `FLAGS` field in [SURFACE](#surface); 
+Indicates that colorkey blitting is accelerated with RLE.
+
+RLE acceleration can substantially speed up blitting of images with large horizontal runs of transparent pixels 
+\(i.e., pixels that match the key color\). The key must be of the same pixel format as the surface,
+[MAP-COLOR](#map-color) is often useful for obtaining an acceptable value.")
+
+(cl:defconstant SDL-SRC-ALPHA #x00010000
+  "Applies to [SURFACE](#surface).
+* When passed as a `FLAG` to [CREATE-SURFACE](#create-surface) and [SET-ALPHA](#set-alpha); 
+Turns on alpha-blending for blits from this surface. If [SDL-HW-SURFACE](#sdl-hw-surface) is also specified and 
+alpha-blending blits are hardware-accelerated, then the surface will be placed in video memory if possible. If the 
+screen is a hardware surface and alpha-blending blits are hardware-accelerated then the [SDL-HW-SURFACE](#sdl-hw-surface)
+ flag will be set. Use [SET-ALPHA](#set-alpha) to set or clear this flag after surface creation.
+* When read from the `FLAGS` field in [SURFACE](#surface); 
+Indicates that surface blitting uses alpha blending.")
+
+(cl:defconstant SDL-PRE-ALLOC #x01000000
+  "Applies to [SURFACE](#surface).
+* When read from the `FLAGS` field in [SURFACE](#surface); 
+Indicates that surface uses preallocated memory.")
 
 (cl:defconstant SDL-YV12-OVERLAY #x32315659)
 

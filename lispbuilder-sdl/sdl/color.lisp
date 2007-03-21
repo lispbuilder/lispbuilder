@@ -18,8 +18,8 @@
   ((foreign-pointer-to-color :accessor fp :initform nil :initarg :color)))
 
 (defun color (&key (r 0) (g 0) (b 0) (a nil))
-  "Returns a new `COLOR` from red `R`, green `G`, and blue `B` color components.
-When `A` is not `NIL`, will return a new `COLOR-A` containing the alpha transparency."
+  "Returns a new [COLOR](#color) from red `R`, green `G`, and blue `B` color components.
+When `A` is not `NIL`, will return a new [COLOR-A](#color-a) containing the alpha transparency."
   (if a
       (make-instance 'color-a :color (vector (cast-to-int r)
 					     (cast-to-int g)

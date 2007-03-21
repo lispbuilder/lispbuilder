@@ -24,7 +24,9 @@ the cached surface is `NIL`."))
 
 (defun initialise-font (font-definition)
   "Creates a new `BITMAP-FONT` object from the font data in `FONT-DEFINITION`.
-Returns the new bitmap font, or `NIL` if the font cannot be created."
+Returns the new bitmap font, or `NIL` if the font cannot be created. `FONT-DEFINITION` must be one of the following
+built-in fonts: 
+`*FONT-10X20*, *FONT-5X7*, *FONT-5X8*, *FONT-6X10*, *FONT-6X12*, *FONT-6X13*, *FONT-6X13B*, *FONT-6X13O*, *FONT-6X9*, *FONT-7X13*, *FONT-7X13B*, *FONT-7X13O*, *FONT-7X14*, *FONT-7X14B*, *FONT-8X13*, *FONT-8X13B*, *FONT-8X13O*, *FONT-8X8*, *FONT-9X15*, *FONT-9X15B*, *FONT-9X18* OR *FONT-9X18B*`."
   (check-type font-definition font-definition)
   (let ((data (cffi:foreign-alloc :unsigned-char
 				  :initial-contents (loop for i in (font-definition-data font-definition)
@@ -40,7 +42,7 @@ Returns the new bitmap font, or `NIL` if the font cannot be created."
 
 (defun initialise-default-font (&optional (font-definition *font-8x8*))
   "Calls [INITIALISE-FONT](#initialise-font) to create a new `BITMAP-FONT` from `FONT-DEFINITION`. 
-`FONT-DEFINITION` is set to '\*font-8x8\*` if unspecified. Binds the symbol `\*DEFAULT-FONT\*` to the new font.
+`FONT-DEFINITION` is set to `\*font-8x8\*` if unspecified. Binds the symbol `\*DEFAULT-FONT\*` to the new font.
 Reutns the new font, or `NIL` if the font cannot be created."
   (check-type font-definition font-definition)
   (setf *default-font* (initialise-font font-definition)))

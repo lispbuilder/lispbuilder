@@ -21,10 +21,10 @@ prior to executing the forms in `BODY`. Upon exit `WITH-INIT` will uninitialize 
 
 The lispbuilder-sdl initialization routines are somewhat complicated by the fact that 
 a Lisp development environment will load a foreign library once but then 
-initialise and uninitialise the library multiple times. A C/C++ development environemnt will open and then close a library 
-after each execution, freeing all resources left hanging by an incomplete or buggy uninitialise function. 
-C libraries may therefore frequently core dump in a Lisp environment when resources are not feed properly prior to the library 
-being reinitialized.
+initialise and uninitialise the library multiple times. A C/C++ development environment will open and then 
+close a library after each execution, freeing all resources left hanging by incomplete 
+or buggy uninitialise functions. C libraries may therefore frequently core dump in a Lisp environment when 
+resources are not feed properly prior to the library being reinitialized.
 
 LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control 
 of the initialisation/uninitialisation of foreign libraries. The
@@ -74,13 +74,34 @@ To uninitialise an external library, push a function that uninitialises the exte
     \(defun quit-ttf \(\)
        \(if \(is-init\)
          \(sdl-ttf-cffi::ttf-quit\)\)\)
-    \(pushnew 'quit-ttf sdl:*external-quit-on-exit*\)"
-  (declare (ignore flags))
+    \(pushnew 'quit-ttf sdl:*external-quit-on-exit*\)
+
+##### Parameters
+
+* `FLAGS` may be one or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD` and `SDL-INIT-NOPARACHUTE`. *Note*: When `FLAGS` is set by 
+`WITH-INIT`, subsequent calls to [INITIALIZE-ON-STARTUP](#initialize-on-startup) and 
+[QUIT-ON-EXIT](#quit-on-exit) are ignored. `WITH-INIT` will only initialize and uninitialize the subsytems 
+specified in `FLAGS`.
+
+##### Example
+
+    \(with-init \(SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO\)
+      ....\)
+
+    \(with-init \(\)
+      \(INITIALIZE-ON-STARTUP SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO\)
+      \(QUIT-ON-EXIT SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO\)
+      ....\)"
   `(block nil
      (unwind-protect
 	  (when (init-sdl)
+	    ,(when flags
+		   `(initialize-on-startup ,@flags))
 	    (init-sub-systems)
 	    ,@body)
+       ,(when flags
+	      `(quit-on-exit ,@flags))
        (quit-sub-systems)
        (quit-sdl))))
 
@@ -95,7 +116,11 @@ subsequent calls to [INIT-SUB-SYSTEMS](#init-sub-systems).
 
 ##### Returns
 
-* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS`."
+* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS`.
+
+##### Example
+
+    \(INITIALIZE-ON-STARTUP SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM\)"
   (setf *initialize-on-startup* (apply #'logior flags)))
 
 (defun quit-on-exit (&rest flags)
@@ -109,7 +134,11 @@ subsequent calls to [QUIT-SUB-SYSTEMS](#quit-sub-systems).
 
 ##### Returns
 
-* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS`."
+* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS`.
+
+##### Example
+
+    \(QUIT-ON-EXIT SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM\)"
   (setf *quit-on-exit* (apply #'logior flags)))
 
 (defun list-sub-systems (flag)

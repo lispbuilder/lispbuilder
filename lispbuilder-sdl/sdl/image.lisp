@@ -9,7 +9,7 @@
 
 * `FILENAME` is the location of the image file on disk, as a `STRING`.
 * `KEY-COLOR` when not `NIL` is the color to be used as the transpart pixel.
-`When `KEY-COLOR` is `NIL`, the surface is created without a key color. See
+When `KEY-COLOR` is `NIL`, the surface is created without a key color. See
 [SET-COLOR-KEY](#set-color-key) for more detailed information.
 * `ALPHA` when between `0` and `255` will set the level of alpha transparency for the new surface.
 When `ALPHA` is `NIL`, the new surface is created without alpha transparency. See

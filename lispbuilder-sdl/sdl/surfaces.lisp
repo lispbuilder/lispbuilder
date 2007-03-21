@@ -223,10 +223,65 @@ values in the surface `SURFACE`."
   (sdl-base::clear-color-key (fp surface) rle-accel))
 
 (defun set-color-key (color &key (surface *default-surface*) (rle-accel t))
+  "Sets the color key (transparent pixel) `COLOR` in a blittable surface `SURFACE`.
+
+##### Paremeters
+
+* `COLOR` the color to be used as the transparent pixel of the surface when blitting, 
+of type [COLOR](#color), or [COLOR-A](#color-a). When 'NIL' will disable color keying.
+* `RLE-ACCEL` when `T` will use RLE information when blitting. See [RLE-CCEL](#rle-accel)."
   (check-type surface sdl-surface)
   (sdl-base::set-color-key (fp surface) (map-color color surface ) rle-accel))
   
 (defun set-alpha (alpha &key (surface *default-surface*) (rle-accel nil))
+  "Adjust the alpha `ALPHA` properties of a surface `SURFACE`. Also enables or disables alpha blending. 
+
+##### Parameters
+
+* `ALPHA` when `NIL` will ignore all alpha information when blitting the surface. `ALPHA` when not `NIL` is an `INTEGER`
+value between `0` and `255` with `0` being transparent and `255` being opaque. *Note*: The per-surface alpha value of 
+128 is considered a special case and is optimised, so it's much faster than other per-surface values. 
+* `RLE-ACCEL` when `T` wil use RLE information when blitting. See [RLE-ACCEL](#rle-accel).
+
+##### Alpha effects
+
+Alpha has the following effect on surface blitting: 
+
+* _RGBA to RGB_ with [SDL-SRC-ALPHA](#sdl-src-alpha): 
+The source is alpha-blended with the destination, using the alpha channel. [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) 
+and the per-surface alpha are ignored.
+* _RGBA to RGB_ without [SDL-SRC-ALPHA](#sdl-src-alpha): 
+The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored. 
+If [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is set, only the pixels not matching the colorkey value are copied.
+* _RGB to RGBA_ with [SDL-SRC-ALPHA](#sdl-src-alpha): 
+The source is alpha-blended with the destination using the per-surface alpha value. If 
+[SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is set, only the pixels not matching the colorkey value are copied. 
+The alpha channel of the copied pixels is set to opaque.
+* _RGB to RGBA_ without [SDL-SRC-ALPHA](#sdl-src-alpha): 
+The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque. 
+If [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is set, only the pixels not matching the colorkey value are copied.
+* _RGBA to RGBA_ with [SDL-SRC-ALPHA](#sdl-src-alpha): 
+The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination 
+surface is left untouched. [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is ignored.
+* _RGBA to RGBA_ without [SDL-SRC-ALPHA](#sdl-src-alpha):	
+The RGBA data is copied to the destination surface. If [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is set, 
+only the pixels not matching the colorkey value are copied.
+* _RGB to RGB_ with [SDL-SRC-ALPHA](#sdl-src-alpha): 
+The source is alpha-blended with the destination using the per-surface alpha value. 
+If [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is set, only the pixels not matching the colorkey value are copied.
+* _RGB to RGB_ without [SDL-SRC-ALPHA](#sdl-src-alpha):
+The RGB data is copied from the source. If [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is set, only the pixels not 
+matching the colorkey value are copied.
+
+*Note*: When blitting, the presence or absence of [SDL-SRC-ALPHA](#sdl-src-alpha) is relevant only on the 
+source surface, not the destination. 
+
+*Note*: Note that _RGBA to RGBA_ blits (with [SDL-SRC-ALPHA](#sdl-src-alpha) set) keep the alpha of the destination 
+surface. This means that you cannot compose two arbitrary _RGBA_ surfaces this way and get the result you would 
+expect from \"overlaying\" them; the destination alpha will work as a mask. 
+
+*Note*: Also note that per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used 
+if available."
   (check-type surface sdl-surface)
   (sdl-base::set-alpha (fp surface) alpha rle-accel))
 
