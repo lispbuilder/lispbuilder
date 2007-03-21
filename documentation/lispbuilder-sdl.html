@@ -337,19 +337,24 @@
       <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
       
       <p>
-	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for the 
-	<a href="http://www.libsdl.org">SDL</a> library. 
-	Core functionality includes window and event management,
-	3D graphics using OpenGL, 2D graphics, and sound support.
+	LISPBUILDER-SDL comprises a set of packages allowing cross-platform game development using Common Lisp. 
+	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for  
+	<a href="http://www.libsdl.org">SDL</a> and other game-related graphics, sound, 
+	physics, character animation and 3D libraries. LISPBUILDER-SDL core functionality includes 
+	window and event management, 2D graphics, 3D graphics using OpenGL and sound support.
+	The goal for the LISPBUILDER-SDL project is to become a useful resource for the development of games in Lisp.
       </p>
+
       <p>
 	<a href="http://www.libsdl.org">SDL</a> provides the low-level 2D rendering support.
-	LISPBUILDER-SDL adds more sophisticated 2D graphical effects such as surface rotation, 
-	rendering circles, polygons, squares, Bezier and Cuttmull-Rom curves as well as bitmap FONT support.
-      </p>
-      <p>
-	Additional libraries provide native C drawing functions, True Type font rendering, 
+	LISPBUILDER-SDL adds more sophisticated 2D graphical effects such as rotation, 
+	rendering circles, polygons, squares, Bezier and Cuttmull-Rom curves as well as bitmap font support.
+	Additional packages provide native C drawing functions, True Type font rendering, 
 	loading of multiple image formats, a sound mixer and networking support.
+	The lispbuilder packages are meant to work together with each package providing a specific core set of 
+	functionality. For example, an image that is loaded by lispbuilder-sdl-image may be rotated using 
+	lispbuilder-sdl-gfx. Text may be rendered to a surface using lispbuilder-sdl-ttf and finally blitted to
+	the display using lispbuilder-sdl.
       </p>
       <ul>
 	<li><a href="lispbuilder-sdl-gfx.html" title="lispbuilder-sdl-gfx">lispbuilder-sdl-gfx</a>: 
@@ -370,25 +375,14 @@
 	  a cross-platform, blocking network library</li>
       </ul>
       <p>
-	LISPBUILDER-SDL is distributed under the 
-	<a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
-      </p>
-      <p>
-	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL is version <a href="#download">0.2</a>.
+	<font color=red>Current Version:</font> The version of LISPBUILDER-SDL to use is the 
+	<a href="#downloads">SVN</a> version.
       </p>
 <!--       <p> -->
 <!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip</a>. -->
 <!--       </p> -->
     </blockquote>
 
-    
-    <br>&nbsp;</br><h2><a class=none name="packageover">Package Overview</a></h2>
-    <p>
-      Functions and symbols exported from the LISPBUILDER-SDL package are 
-      accessible from the <code>LISPBUILDER-SDL:</code> prefix or the 
-      shorter form <code>SDL:</code>.
-    </p>
-    
     <br>&nbsp;</br><h2><a class=none name="examplesimple">Simple Example</a></h2>
     <div class="example">
       <p>
@@ -399,30 +393,64 @@
       </p>
       
       <pre>
-     (sdl:with-init ()
-       (sdl:window 320 240)
-       (sdl:draw-surface (load-image "lisp.bmp"))
-       (sdl:update-display)
-       (sdl:with-events ()
-         (:quit-event () t)
-         (:video-expose-event (sdl:update-display))))
+(sdl:with-init ()
+  (sdl:window 320 240)
+  (sdl:draw-surface (load-image "lisp.bmp"))
+  (sdl:update-display)
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:video-expose-event (sdl:update-display))))
       </pre>
     </div>
-
+    
     <div class="index">
       <ol>
 	<li><a href="#top">LISPBUILDER-SDL</a></li>
 	<ol>
 	  <li><a href="#abstract">Abstract</a></li>
-	  <li><a href="#packageover">Package Overview</a></li>
 	  <li><a href="#examplesimple">Simple Example</a></li>
 	  <li><a href="#compatibility">Compatibility</a></li>
-	  <li><a href="#download">Download</a></li>
+	  <li><a href="#downloads">Downloads</a></li>
 	  <li><a href="#installation">Installation</a></li>
 	  <li><a href="#usage">Usage</a></li>
-	  <li><a href="#examples">Examples</a></li>
+	  <li><a href="#examples">Included Examples</a></li>
 	  <li><a href="#dependency">Dependencies</a></li>
 	  <li><a href="#license">License</a></li>
+
+	  <li><a href="#packageoverview">Package Overview</a></li>
+	  <ol>
+	    <li><a href="#packageexports">Package Exports</a></li>
+	    <li><a href="#packagestruct">Package Structure</a></li>
+	  </ol>
+	  <li><a href="#devintro">Introduction</a></li>
+	  <ol>
+	    <li><a href="#devinit">Initialisation</a></li>
+	    <li><a href="#devwin">Creation of the SDL Window</a></li>
+	    <li><a href="#devloop">Events and the Game Loop</a></li>
+	    <li><a href="#devprim">Primitives</a></li>
+	    <ol>
+	      <li><a href="#devprimrect">Rectangles</a></li>
+	      <li><a href="#devprimcol">Colors</a></li>
+	    </ol>
+	    <li><a href="#devdraw">Drawing</a></li>
+	    <li><a href="#font">Fonts</a></li>
+	    <ol>
+	      <li><a href="#fontinit">Initialisation</a></li>
+	      <li><a href="#fontrend">Rendering Text</a></li>
+	    </ol>
+	    <li><a href="#devsurf">Surfaces</a></li>
+	    <ol>
+	      <li><a href="#devsurfover">Overview</a></li>
+	      <li><a href="#devsurfcreat">Creation</a></li>
+	      <li><a href="#devsurfload">Loading Images</a></li>
+	      <li><a href="#devsurfpos">Positioning</a></li>
+	      <li><a href="#devsurfblit">Blitting and Drawing</a></li>
+	      <li><a href="#devdisp">Updating the Display</a></li>
+	    </ol>
+	    <li><a href="#devex">Simple Example</a></li>
+	    <li><a href="#devgarbage">Garbage Collection</a></li>
+	  </ol>
+	  
 	  <li><a href="#dictionar">LISPBUILDER-SDL dictionary</a></li>
 	  <ol>
 	    <li><a href="#dictionary">INDEX</a></li>
@@ -431,255 +459,7 @@
 	</ol>
       </div>
       
-      <br>&nbsp;</br><h2><a class=none name="dictionary">The LISPBUILDER-SDL dictionary Index</h2>
-	<ol>
-	        <li><a href="#*black*"><code>*black*</code></a>
-	          <li><a href="#*default-color*"><code>*default-color*</code></a>
-	          <li><a href="#*default-display*"><code>*default-display*</code></a>
-	          <li><a href="#*default-font*"><code>*default-font*</code></a>
-	          <li><a href="#*default-font-path*"><code>*default-font-path*</code></a>
-	          <li><a href="#*default-position*"><code>*default-position*</code></a>
-	          <li><a href="#*default-rectangle*"><code>*default-rectangle*</code></a>
-	          <li><a href="#*default-surface*"><code>*default-surface*</code></a>
-	          <li><a href="#*external-init-on-startup*"><code>*external-init-on-startup*</code></a>
-	          <li><a href="#*external-quit-on-exit*"><code>*external-quit-on-exit*</code></a>
-	          <li><a href="#*font-10x20*"><code>*font-10x20*</code></a>
-	          <li><a href="#*font-5x7*"><code>*font-5x7*</code></a>
-	          <li><a href="#*font-5x8*"><code>*font-5x8*</code></a>
-	          <li><a href="#*font-6x10*"><code>*font-6x10*</code></a>
-	          <li><a href="#*font-6x12*"><code>*font-6x12*</code></a>
-	          <li><a href="#*font-6x13*"><code>*font-6x13*</code></a>
-	          <li><a href="#*font-6x13b*"><code>*font-6x13b*</code></a>
-	          <li><a href="#*font-6x13o*"><code>*font-6x13o*</code></a>
-	          <li><a href="#*font-6x9*"><code>*font-6x9*</code></a>
-	          <li><a href="#*font-7x13*"><code>*font-7x13*</code></a>
-	          <li><a href="#*font-7x13b*"><code>*font-7x13b*</code></a>
-	          <li><a href="#*font-7x13o*"><code>*font-7x13o*</code></a>
-	          <li><a href="#*font-7x14*"><code>*font-7x14*</code></a>
-	          <li><a href="#*font-7x14b*"><code>*font-7x14b*</code></a>
-	          <li><a href="#*font-8x13*"><code>*font-8x13*</code></a>
-	          <li><a href="#*font-8x13b*"><code>*font-8x13b*</code></a>
-	          <li><a href="#*font-8x13o*"><code>*font-8x13o*</code></a>
-	          <li><a href="#*font-8x8*"><code>*font-8x8*</code></a>
-	          <li><a href="#*font-9x15*"><code>*font-9x15*</code></a>
-	          <li><a href="#*font-9x15b*"><code>*font-9x15b*</code></a>
-	          <li><a href="#*font-9x18*"><code>*font-9x18*</code></a>
-	          <li><a href="#*font-9x18b*"><code>*font-9x18b*</code></a>
-	          <li><a href="#*sdl-initialized*"><code>*sdl-initialized*</code></a>
-	          <li><a href="#*white*"><code>*white*</code></a>
-	          <li><a href="#a"><code>a</code></a>
-	          <li><a href="#all-integers?"><code>all-integers?</code></a>
-	          <li><a href="#any-color-but-this"><code>any-color-but-this</code></a>
-	          <li><a href="#b"><code>b</code></a>
-	          <li><a href="#bit-depth"><code>bit-depth</code></a>
-	          <li><a href="#blit-surface"><code>blit-surface</code></a>
-	          <li><a href="#cached-surface"><code>cached-surface</code></a>
-	          <li><a href="#calculate-curve"><code>calculate-curve</code></a>
-	          <li><a href="#cast"><code>cast</code></a>
-	          <li><a href="#cast-all-to-int"><code>cast-all-to-int</code></a>
-	          <li><a href="#cast-to-int"><code>cast-to-int</code></a>
-	          <li><a href="#catmull-rom-spline"><code>catmull-rom-spline</code></a>
-	          <li><a href="#char-height"><code>char-height</code></a>
-	          <li><a href="#char-width"><code>char-width</code></a>
-	          <li><a href="#check-types"><code>check-types</code></a>
-	          <li><a href="#clear-cell"><code>clear-cell</code></a>
-	          <li><a href="#clear-color-key"><code>clear-color-key</code></a>
-	          <li><a href="#clear-display"><code>clear-display</code></a>
-	          <li><a href="#color"><code>color</code></a>
-	          <li><a href="#color"><code>color</code></a>
-	          <li><a href="#color-*"><code>color-*</code></a>
-	          <li><a href="#color-a"><code>color-a</code></a>
-	          <li><a href="#color="><code>color=</code></a>
-	          <li><a href="#convert-surface"><code>convert-surface</code></a>
-	          <li><a href="#copy-point"><code>copy-point</code></a>
-	          <li><a href="#copy-surface"><code>copy-surface</code></a>
-	          <li><a href="#create-list-if-not"><code>create-list-if-not</code></a>
-	          <li><a href="#create-path"><code>create-path</code></a>
-	          <li><a href="#create-rwops-from-file"><code>create-rwops-from-file</code></a>
-	          <li><a href="#create-surface"><code>create-surface</code></a>
-	          <li><a href="#default-color"><code>default-color</code></a>
-	          <li><a href="#default-position"><code>default-position</code></a>
-	          <li><a href="#default-rectangle"><code>default-rectangle</code></a>
-	          <li><a href="#default-surface"><code>default-surface</code></a>
-	          <li><a href="#display-cursor"><code>display-cursor</code></a>
-	          <li><a href="#distance"><code>distance</code></a>
-	          <li><a href="#distance-*"><code>distance-*</code></a>
-	          <li><a href="#draw-bezier"><code>draw-bezier</code></a>
-	          <li><a href="#draw-box"><code>draw-box</code></a>
-	          <li><a href="#draw-box-*"><code>draw-box-*</code></a>
-	          <li><a href="#draw-circle"><code>draw-circle</code></a>
-	          <li><a href="#draw-circle-*"><code>draw-circle-*</code></a>
-	          <li><a href="#draw-curve"><code>draw-curve</code></a>
-	          <li><a href="#draw-filled-circle"><code>draw-filled-circle</code></a>
-	          <li><a href="#draw-filled-circle-*"><code>draw-filled-circle-*</code></a>
-	          <li><a href="#draw-font"><code>draw-font</code></a>
-	          <li><a href="#draw-font"><code>draw-font</code></a>
-	          <li><a href="#draw-font-at"><code>draw-font-at</code></a>
-	          <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a>
-	          <li><a href="#draw-hline"><code>draw-hline</code></a>
-	          <li><a href="#draw-line"><code>draw-line</code></a>
-	          <li><a href="#draw-line-*"><code>draw-line-*</code></a>
-	          <li><a href="#draw-point"><code>draw-point</code></a>
-	          <li><a href="#draw-point-*"><code>draw-point-*</code></a>
-	          <li><a href="#draw-rectangle"><code>draw-rectangle</code></a>
-	          <li><a href="#draw-rectangle-*"><code>draw-rectangle-*</code></a>
-	          <li><a href="#draw-shape"><code>draw-shape</code></a>
-	          <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a>
-	          <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a>
-	          <li><a href="#draw-string-solid"><code>draw-string-solid</code></a>
-	          <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a>
-	          <li><a href="#draw-surface"><code>draw-surface</code></a>
-	          <li><a href="#draw-surface-at"><code>draw-surface-at</code></a>
-	          <li><a href="#draw-surface-at-*"><code>draw-surface-at-*</code></a>
-	          <li><a href="#draw-vline"><code>draw-vline</code></a>
-	          <li><a href="#fill-surface"><code>fill-surface</code></a>
-	          <li><a href="#fill-surface-*"><code>fill-surface-*</code></a>
-	          <li><a href="#flood-fill"><code>flood-fill</code></a>
-	          <li><a href="#flood-fill-*"><code>flood-fill-*</code></a>
-	          <li><a href="#flood-fill-stack"><code>flood-fill-stack</code></a>
-	          <li><a href="#flood-fill-stack-*"><code>flood-fill-stack-*</code></a>
-	          <li><a href="#fp"><code>fp</code></a>
-	          <li><a href="#fp-cell"><code>fp-cell</code></a>
-	          <li><a href="#fp-position"><code>fp-position</code></a>
-	          <li><a href="#frame-rate"><code>frame-rate</code></a>
-	          <li><a href="#free-cached-surface"><code>free-cached-surface</code></a>
-	          <li><a href="#free-color"><code>free-color</code></a>
-	          <li><a href="#free-font"><code>free-font</code></a>
-	          <li><a href="#free-rectangle"><code>free-rectangle</code></a>
-	          <li><a href="#free-rwops"><code>free-rwops</code></a>
-	          <li><a href="#free-surface"><code>free-surface</code></a>
-	          <li><a href="#g"><code>g</code></a>
-	          <li><a href="#genbez"><code>genbez</code></a>
-	          <li><a href="#get-clip-rect"><code>get-clip-rect</code></a>
-	          <li><a href="#get-point"><code>get-point</code></a>
-	          <li><a href="#get-position"><code>get-position</code></a>
-	          <li><a href="#get-rectangle"><code>get-rectangle</code></a>
-	          <li><a href="#get-surface-rect"><code>get-surface-rect</code></a>
-	          <li><a href="#height"><code>height</code></a>
-	          <li><a href="#init-sdl"><code>init-sdl</code></a>
-	          <li><a href="#init-sub-systems"><code>init-sub-systems</code></a>
-	          <li><a href="#initialise-default-font"><code>initialise-default-font</code></a>
-	          <li><a href="#initialise-font"><code>initialise-font</code></a>
-	          <li><a href="#initialize-on-startup"><code>initialize-on-startup</code></a>
-	          <li><a href="#initialized-sub-systems-p"><code>initialized-sub-systems-p</code></a>
-	          <li><a href="#is-valid-ptr"><code>is-valid-ptr</code></a>
-	          <li><a href="#key="><code>key=</code></a>
-	          <li><a href="#list-sub-systems"><code>list-sub-systems</code></a>
-	          <li><a href="#load-image"><code>load-image</code></a>
-	          <li><a href="#map-color"><code>map-color</code></a>
-	          <li><a href="#pack-color"><code>pack-color</code></a>
-	          <li><a href="#point"><code>point</code></a>
-	          <li><a href="#point-*"><code>point-*</code></a>
-	          <li><a href="#position-*"><code>position-*</code></a>
-	          <li><a href="#push-quit-event"><code>push-quit-event</code></a>
-	          <li><a href="#push-user-event"><code>push-user-event</code></a>
-	          <li><a href="#quit-on-exit"><code>quit-on-exit</code></a>
-	          <li><a href="#quit-sdl"><code>quit-sdl</code></a>
-	          <li><a href="#quit-sub-systems"><code>quit-sub-systems</code></a>
-	          <li><a href="#r"><code>r</code></a>
-	          <li><a href="#random+1"><code>random+1</code></a>
-	          <li><a href="#random-rectangle"><code>random-rectangle</code></a>
-	          <li><a href="#read-point"><code>read-point</code></a>
-	          <li><a href="#rectangle"><code>rectangle</code></a>
-	          <li><a href="#rectangle"><code>rectangle</code></a>
-	          <li><a href="#rectangle-*"><code>rectangle-*</code></a>
-	          <li><a href="#rectangle-from-edges"><code>rectangle-from-edges</code></a>
-	          <li><a href="#rectangle-from-edges-*"><code>rectangle-from-edges-*</code></a>
-	          <li><a href="#rectangle-from-midpoint-*"><code>rectangle-from-midpoint-*</code></a>
-	          <li><a href="#render-string-shaded"><code>render-string-shaded</code></a>
-	          <li><a href="#render-string-solid"><code>render-string-solid</code></a>
-	          <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a>
-	          <li><a href="#rotate-surface"><code>rotate-surface</code></a>
-	          <li><a href="#rwops"><code>rwops</code></a>
-	          <li><a href="#save-image"><code>save-image</code></a>
-	          <li><a href="#sdl-any-format"><code>sdl-any-format</code></a>
-	          <li><a href="#sdl-async-blit"><code>sdl-async-blit</code></a>
-	          <li><a href="#sdl-color"><code>sdl-color</code></a>
-	          <li><a href="#sdl-doublebuf"><code>sdl-doublebuf</code></a>
-	          <li><a href="#sdl-fullscreen"><code>sdl-fullscreen</code></a>
-	          <li><a href="#sdl-get-ticks"><code>sdl-get-ticks</code></a>
-	          <li><a href="#sdl-gl-swap-buffers"><code>sdl-gl-swap-buffers</code></a>
-	          <li><a href="#sdl-hw-accel"><code>sdl-hw-accel</code></a>
-	          <li><a href="#sdl-hw-palette"><code>sdl-hw-palette</code></a>
-	          <li><a href="#sdl-hw-surface"><code>sdl-hw-surface</code></a>
-	          <li><a href="#sdl-init-audio"><code>sdl-init-audio</code></a>
-	          <li><a href="#sdl-init-cdrom"><code>sdl-init-cdrom</code></a>
-	          <li><a href="#sdl-init-eventthread"><code>sdl-init-eventthread</code></a>
-	          <li><a href="#sdl-init-everything"><code>sdl-init-everything</code></a>
-	          <li><a href="#sdl-init-joystick"><code>sdl-init-joystick</code></a>
-	          <li><a href="#sdl-init-noparachute"><code>sdl-init-noparachute</code></a>
-	          <li><a href="#sdl-init-on-startup"><code>sdl-init-on-startup</code></a>
-	          <li><a href="#sdl-init-timer"><code>sdl-init-timer</code></a>
-	          <li><a href="#sdl-init-video"><code>sdl-init-video</code></a>
-	          <li><a href="#sdl-iyuv-overlay"><code>sdl-iyuv-overlay</code></a>
-	          <li><a href="#sdl-no-frame"><code>sdl-no-frame</code></a>
-	          <li><a href="#sdl-opengl"><code>sdl-opengl</code></a>
-	          <li><a href="#sdl-opengl-blit"><code>sdl-opengl-blit</code></a>
-	          <li><a href="#sdl-pre-alloc"><code>sdl-pre-alloc</code></a>
-	          <li><a href="#sdl-quit-on-exit"><code>sdl-quit-on-exit</code></a>
-	          <li><a href="#sdl-resizable"><code>sdl-resizable</code></a>
-	          <li><a href="#sdl-rle-accel"><code>sdl-rle-accel</code></a>
-	          <li><a href="#sdl-rle-accel-ok"><code>sdl-rle-accel-ok</code></a>
-	          <li><a href="#sdl-src-alpha"><code>sdl-src-alpha</code></a>
-	          <li><a href="#sdl-src-color-key"><code>sdl-src-color-key</code></a>
-	          <li><a href="#sdl-surface"><code>sdl-surface</code></a>
-	          <li><a href="#sdl-sw-surface"><code>sdl-sw-surface</code></a>
-	          <li><a href="#sdl-uyvy-overlay"><code>sdl-uyvy-overlay</code></a>
-	          <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a>
-	          <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a>
-	          <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a>
-	          <li><a href="#set-alpha"><code>set-alpha</code></a>
-	          <li><a href="#set-cell"><code>set-cell</code></a>
-	          <li><a href="#set-cell-*"><code>set-cell-*</code></a>
-	          <li><a href="#set-clip-rect"><code>set-clip-rect</code></a>
-	          <li><a href="#set-color"><code>set-color</code></a>
-	          <li><a href="#set-color-*"><code>set-color-*</code></a>
-	          <li><a href="#set-color-key"><code>set-color-key</code></a>
-	          <li><a href="#set-frame-rate"><code>set-frame-rate</code></a>
-	          <li><a href="#set-point"><code>set-point</code></a>
-	          <li><a href="#set-point-*"><code>set-point-*</code></a>
-	          <li><a href="#set-position"><code>set-position</code></a>
-	          <li><a href="#set-position-*"><code>set-position-*</code></a>
-	          <li><a href="#set-rectangle"><code>set-rectangle</code></a>
-	          <li><a href="#set-rectangle-*"><code>set-rectangle-*</code></a>
-	          <li><a href="#set-surface"><code>set-surface</code></a>
-	          <li><a href="#set-surface-*"><code>set-surface-*</code></a>
-	          <li><a href="#surface"><code>surface</code></a>
-	          <li><a href="#surface"><code>surface</code></a>
-	          <li><a href="#to-degree"><code>to-degree</code></a>
-	          <li><a href="#to-radian"><code>to-radian</code></a>
-	          <li><a href="#update-display"><code>update-display</code></a>
-	          <li><a href="#update-surface"><code>update-surface</code></a>
-	          <li><a href="#update-surface-*"><code>update-surface-*</code></a>
-	          <li><a href="#width"><code>width</code></a>
-	          <li><a href="#window"><code>window</code></a>
-	          <li><a href="#with-bezier"><code>with-bezier</code></a>
-	          <li><a href="#with-color"><code>with-color</code></a>
-	          <li><a href="#with-curve"><code>with-curve</code></a>
-	          <li><a href="#with-default-font"><code>with-default-font</code></a>
-	          <li><a href="#with-events"><code>with-events</code></a>
-	          <li><a href="#with-font"><code>with-font</code></a>
-	          <li><a href="#with-init"><code>with-init</code></a>
-	          <li><a href="#with-locked-surface"><code>with-locked-surface</code></a>
-	          <li><a href="#with-locked-surfaces"><code>with-locked-surfaces</code></a>
-	          <li><a href="#with-point"><code>with-point</code></a>
-	          <li><a href="#with-rectangle"><code>with-rectangle</code></a>
-	          <li><a href="#with-rectangles"><code>with-rectangles</code></a>
-	          <li><a href="#with-shape"><code>with-shape</code></a>
-	          <li><a href="#with-surface"><code>with-surface</code></a>
-	          <li><a href="#with-surface-slots"><code>with-surface-slots</code></a>
-	          <li><a href="#with-surfaces"><code>with-surfaces</code></a>
-	          <li><a href="#within-range"><code>within-range</code></a>
-	          <li><a href="#within-range-*"><code>within-range-*</code></a>
-	          <li><a href="#x"><code>x</code></a>
-	          <li><a href="#x2"><code>x2</code></a>
-	          <li><a href="#y"><code>y</code></a>
-	          <li><a href="#y2"><code>y2</code></a>
-	        
-	  </li>
-	</ol>
-	
-	
+      
       <br>&nbsp;</br><h2><a class=none name="compatibility">Compatibility</h2>
 	<p>
 	  The following table describes the status of LISPBUILDER-SDL on the major Common Lisp
@@ -723,7 +503,7 @@
 	    </th>
 	    <td bgcolor="#ff6060">Unknown</td>
 	    <td bgcolor="#60c060">Working</td>
-	    <td bgcolor="#ff6060">No</td>
+	    <td bgcolor="#ff6060">Unknown</td>
 	    <td></td>
 	  </tr>
 	  <tr>
@@ -747,76 +527,67 @@
 	</table>
 	
 	
-	<br>&nbsp;</br><h2><a class=none name="download">Download</a></h2>
-	<ul>
-	  <li><font color=red>Development:</font> Available via anonymous SVN at:
-	    <pre>
-	      svn co https://lispbuilder.svn.sourceforge.net/svnroot/lispbuilder lispbuilder
-	    </pre>
-	  </li>
-	  <li>
-	    <font color=red>Stable:</font> The latest stable versions are available from the
-	    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">LISPBUILDER-SDL repository on SourceForge.</a>
-	  </li>
-	  <li>
-	    <font color=red>'Lisp Starter Pack':</font> The 
-	    <a href="http://www.balooga.com/lispbuilder/config.lisp">config.lisp</a> file for use 
-	    with the <a href="http://weitz.de/starter-pack/">Lisp Starter Pack</a> 
-	    from Edi Weitz.
-<!-- 	    <font color=red>The Edi Weitz 'Starter Pack' Version:</font> The stable version of Lispbuilder,  -->
-<!-- 	    suitable for the installation of installation LISPBUILDER-SDL using the Lisp Starter Pack from Edi Weitz is can be downloaded from  -->
-<!-- 	    <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip</a>. -->
-	  </li>
-	</ul>
+	<br>&nbsp;</br><h2><a class=none name="downloads">Downloads</a></h2>
+	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#download">the LISPBUILDER documentation</a>
+	  for downloads.
+	</p>
 	
+
 	<br>&nbsp;</br><h2><a class=none name="installation">Installation</a></h2>
 	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#installation">the LISPBUILDER documentation</a>
 	  for installation instructions.
 	</p>
 	
 	<br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER-SDL</a></h2>
-	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#usage">the LISPBUILDER documentation</a>
-	  for Usage instructions.
+	<p>
+	  Enter the following at the REPL to compile and load the LISPBUILDER-SDL package:
+	  <pre>(asdf:operate 'asdf:load-op :lispbuilder-sdl)</pre>
+	  
+	  ASDF will take care of loading the CFFI and :LISPBUILDER-SDL dependencies. 
+	  The SDL.dll library will also be loaded into the Lisp image at this time.
 	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="examples">Running Examples in LISPBUILDER-SDL-EXAMPLES</a></h2>
-	<p>Enter the following at the REPL to load the examples included in the 
+	<br>&nbsp;</br><h2><a class=none name="examples">Running the Included Examples</a></h2>
+	<p>Enter the following at the REPL to compile and load the examples included in the 
 	  LISPBUILDER-SDL-EXAMPLES package:</p>
 	<pre>
 	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
 	</pre>
-	<p>Run an example by entering any of the following at the REPL:
+	<p>Run the examples by entering any of the following at the REPL:
 	</p>
-	<ul>
-	  <li>(SDL-GFX-EXAMPLES:BEZIER)</li>
-	  <li>(SDL-GFX-EXAMPLES:BMP-SAMPLE)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-1)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-2)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-3)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-4)</li>
-	  <li>(SDL-GFX-EXAMPLES:CIRCLE-5)</li>
-	  <li>(SDL-GFX-EXAMPLES:DISTANCE-2D)</li>
-	  <li>(SDL-GFX-EXAMPLES:FLOOD-FILL)</li>
-	  <li>(SDL-GFX-EXAMPLES:INBUILT-FONTS)</li>
-	  <li>(SDL-GFX-EXAMPLES:LINE-DRAWING)</li>
-	  <li>(SDL-GFX-EXAMPLES:MANDELBROT)</li>
-	  <li>(SDL-GFX-EXAMPLES:METABALLS)</li>
-	  <li>(SDL-GFX-EXAMPLES:MOUSE-2D)</li>
-	  <li>(SDL-GFX-EXAMPLES:MOUSE-PAINTER)</li>
-	  <li>(SDL-GFX-EXAMPLES:PIXELS)</li>
-	  <li>(SDL-GFX-EXAMPLES:POINTS-AND-LINES)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-RECTS)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-BOX-1)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-BOX-2)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-BOX-3)</li>
-	  <li>(SDL-GFX-EXAMPLES:RANDOM-BOX-4)</li>
-	  <li>(SDL-GFX-EXAMPLES:RECURSIVE-RECTS)</li>
-	  <li>(SDL-GFX-EXAMPLES:SETUP-AND-DRAW)</li>
-	  <li>(SDL-GFX-EXAMPLES:SIMPLE-FONT-DEMO)</li>
-	  <li>(SDL-GFX-EXAMPLES:STROKE)</li>
-	  <li>(SDL-GFX-EXAMPLES:VERTICES)</li>
-	  <li>(SDL-GFX-EXAMPLES:WIDTH-HEIGHT)</li>
-	</ul>
+	<pre>
+	  (SDL-GFX-EXAMPLES:BEZIER)
+	  (SDL-GFX-EXAMPLES:BMP-SAMPLE)
+	  (SDL-GFX-EXAMPLES:CIRCLE-1)
+	  (SDL-GFX-EXAMPLES:CIRCLE-2)
+	  (SDL-GFX-EXAMPLES:CIRCLE-3)
+	  (SDL-GFX-EXAMPLES:CIRCLE-4)
+	  (SDL-GFX-EXAMPLES:CIRCLE-5)
+	  (SDL-GFX-EXAMPLES:DISTANCE-2D)
+	  (SDL-GFX-EXAMPLES:FLOOD-FILL)
+	  (SDL-GFX-EXAMPLES:INBUILT-FONTS)
+	  (SDL-GFX-EXAMPLES:LINE-DRAWING)
+	  (SDL-GFX-EXAMPLES:MANDELBROT)
+	  (SDL-GFX-EXAMPLES:METABALLS)
+	  (SDL-GFX-EXAMPLES:MOUSE-2D)
+	  (SDL-GFX-EXAMPLES:MOUSE-PAINTER)
+	  (SDL-GFX-EXAMPLES:PIXELS-1)
+	  (SDL-GFX-EXAMPLES:PIXELS-2)
+	  (SDL-GFX-EXAMPLES:PIXELS-3)
+	  (SDL-GFX-EXAMPLES:PIXELS-4)
+	  (SDL-GFX-EXAMPLES:POINTS-AND-LINES)
+	  (SDL-GFX-EXAMPLES:RANDOM-RECTS)
+	  (SDL-GFX-EXAMPLES:RANDOM-BOX-1)
+	  (SDL-GFX-EXAMPLES:RANDOM-BOX-2)
+	  (SDL-GFX-EXAMPLES:RANDOM-BOX-3)
+	  (SDL-GFX-EXAMPLES:RANDOM-BOX-4)
+	  (SDL-GFX-EXAMPLES:RECURSIVE-RECTS)
+	  (SDL-GFX-EXAMPLES:SETUP-AND-DRAW)
+	  (SDL-GFX-EXAMPLES:SIMPLE-FONT-DEMO)
+	  (SDL-GFX-EXAMPLES:STROKE)
+	  (SDL-GFX-EXAMPLES:VERTICES)
+	  (SDL-GFX-EXAMPLES:WIDTH-HEIGHT)
+	</pre>
 	
 
 	<br>&nbsp;</br><h2><a class=none name="dependency">Dependencies</a></h2>
@@ -829,10 +600,633 @@
 	  <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
 	</p>
 	
+	<br>&nbsp;</br><h2><a class=none name="packageoverview">Package Overview</a></h2>
+	<h3><a class=none name="packageexports">Package Exports</a></h3>
+	<p>
+	  Functions and symbols exported from the LISPBUILDER-SDL package are 
+	  accessible from the <code>LISPBUILDER-SDL:</code> prefix or the 
+	  shorter form <code>SDL:</code> nickname.
+	</p>
 	
+	<h3><a class=none name="packagestruct">Package Structure</a></h3>
+	<p>
+	  The <code>cffi/</code> directory contains the raw CFFI bindings. 
+	  These bindings may be automatically generated by <a href="http://www.swig.org">SWIG</a> or created by hand.
+	  CFFI translation functions perform simple low-level conversions for example, 
+	  converting Lisp strings to C strings and back (see <code>cffi-translate.lisp</code>). 
+	  All functions in <code>cffi/</code> accept and return foreign objects only.
+	</p>
+	<p>
+	  The <code>base/</code> directory defines wrappers over the functions in <code>cffi/</code> . 
+	  The functions in <code>base/</code> accept keyword arguments and accept NIL instead
+	  of CFFI:NULL-POINTER where appropriate. Generally functions in <code>base/</code> accept and return foreign
+	  objects. <code>base/</code> may perform some type checks (IS-VALID-PTR SURFACE) but
+	  this layer is meant to be lean. Someone who implements a graphics engine
+	  might use this layer instead of <code>sdl/</code> if speed is a concern.
+	  There are no fancy drawing primitives in this layer.
+	</p>
+	<p>
+	  The <code>sdl/</code> directory defines the abstractions over <code>cffi/</code> and <code>base/</code>. 
+	  Foreign objects are passed around <code>sdl/</code> neatly wrapped in CLOS objects, using TRIVIAL-GARBAGE for
+	  automatic garbage collection (minimize foreign objects being left on the
+	  heap). There are no functions in <code>sdl/</code> that accept or return foreign
+	  objects (with the exception of the functions that create the CLOS
+	  wrapper objects) Functions in <code>sdl/</code> call down into
+	  <code>cffi/</code> and <code>base/</code> as appropriate. All LISPBUILDER-SDL symbols available in
+	  <code>SDL:</code> are exported from <code>sdl/</code>, with symbols imported into <code>sdl/</code> from 
+	  <code>cffi/</code> and <code>base/</code> as appropriate (e.g. WITH-EVENTS). All drawing primitives are
+	  defined in this layer; circles, rectangles, lines, triangles, with-bezier etc. 
+	  Functions in <code>sdl/</code> implement a lot of type checking.
+	</p>
+	<p>
+	  An example of the difference between <code>base/</code> and <code>sdl/</code> is
+	  WITH-RECTANGLE. The WITH-RECTANGLE macro in <code>base/</code> creates and destroys a foreign
+	  SDL_Rect. The WITH-RECTANGLE macro in <code>sdl/</code> will create and destroy
+	  a RECTANGLE object.
+	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="dictionar">The LISPBUILDER-SDL dictionary</a></h2>
+	<br>&nbsp;</br><h2><a class=none name="devintro">Introduction</a></h2>
+	<h3><a class=none name="devinit">Initialisation of SDL</a></h3>
+	<p>	
+	  The SDL library and SDL subsystems must be initialized prior to use. 
+	  This is handled automatically when using the macro <a href="#with-init">WITH-INIT</a>. 
+	  <a href="#with-init">WITH-INIT</a> also uninitialises the SDL library upon exit.
+
+	  More detailed information on the LISPBUILDER-SDL initialisation process can be found in the 
+	  documentation for <a href="#with-init">WITH-INIT</a>.
+	</p>
 	
+	<pre>
+(WITH-INIT (SDL-INIT-VIDEO)
+  ...)
+	</pre>
+	  
+	<h3><a class=none name="devwin">Creation of the SDL Window</a></h3>
+	<p>
+	  A window must be created to display any kind of output. A window of a specific pixel width and height
+	  is created using the function <a href="#window">WINDOW</a>. <a href="#window">WINDOW</a> takes 
+	  additional keyword parameters to set the requested video mode, color bit depth, the window title and 
+	  the icon title.
+	  
+	  More detailed information can be found in in the documentation for <a href="#window">WINDOW</a>.
+	</p>
+
+	<pre>
+(WITH-INIT (SDL-INIT-VIDEO)
+  (WINDOW 320 240))
+	</pre>
+
+	<h3><a class=none name="devloop">Handling Events and the Game Loop</a></h3>
+	<p>
+	  LISPBUILDER-SDL provides the <a href="#with-events">WITH-EVENTS</a> macro that simplifies
+	  the game loop and handling SDL events. Event handlers are defined by specifying the event type a well as an
+	  optional list of fields specific to that event.
+	</p>
+	<p>
+	  More detailed information on all SDL events (Keyboard events, Joystick events, User events etc.) can be 
+	  found in in the documentation for <a href="#with-events">WITH-EVENTS</a>.
+	</p>
+	<p>
+	  For example, to process the current x and y mouse position
+	  when the mouse is moved:
+	</p>
+	<pre>
+(:MOUSE-MOTION-EVENT (:X X-POS :Y Y-POS)
+  ...)
+  	</pre>
+	<p>
+	  Or to process the x and y relative mouse positions when the mouse is moved:
+	</p>
+	<pre>
+(:MOUSE-MOTION-EVENT (:X-REL relative-x :Y-REL relative-y)
+  ...)
+  	</pre>
+	<p>
+	  The only event that must be handled with <a href="#with-events">WITH-EVENTS</a> 
+	  is the :QUIT-EVENT. If :QUIT-EVENT is ignored then it is impossible for the user to close the SDL Window
+	  or exit the game loop.
+	</p>
+
+	<pre>
+(WITH-EVENTS ()
+  (:QUIT-EVENT () T)
+  (:MOUSE-MOTION-EVENT (:X mouse-x :Y mouse-y)
+    ...))
+	</pre>
+
+	<p>
+	  In addition to handling events, <a href="#with-events">WITH-EVENTS</a> also manages the game loop. 
+	  Introducing the :IDLE event. :IDLE, although not technically an actual event, is executed once per game 
+	  loop after all events have been processed in the SDL event queue. :IDLE is where the user can place code 
+	  that needs to be executed once per game loop and that is not 'event' driven. This code may involve
+	  updating world physics, updating the state of game objects and rendering sprites to the display.
+	</p>
+	<pre>
+(WITH-EVENTS ()
+  (:QUIT-EVENT () T)
+  (:MOUSE-MOTION-EVENT (:X mouse-x :Y mouse-y)
+    ...)
+  (:IDLE ()
+    (UPDATE-DISPLAY)))
+	</pre>
+
+	<p>
+	  <a href="#with-events">WITH-EVENTS</a> can also limit execution of the the game loop to a specific number 
+	  of iterations a second using <a href="#frame-rate">FRAME-RATE</a>. This effectively limits the number of 
+	  frames displayed per second. To set the frame rate to 60 frames per second, 
+	  <code>(SETF (SDL:FRAME-RATE) 60)</code>. To unlock the frame rate effectively running the game loop as fast
+	  as the CPU will allow set the FRAME-RATE to NIL, <code>(SETF (SDL:FRAME-RATE) NIL)</code>
+	</p>
+
+	<pre>
+(SETF (FRAME-RATE) 30)
+(WITH-EVENTS ()
+  ...)
+	</pre>
+
+	<h3><a class=none name="devprim">Primitives</a></h3>
+	<p>
+	</p>
+
+	<h4><a class=none name="devprimrect">Rectangles</a></h4>
+	<p>
+	</p>
+
+	<h4><a class=none name="devprimcol">Colors</a></h4>
+	<p>
+	  A new SDL color is created by <a href="#color">COLOR</a>, returning either a new RGB or RGBA color. RGB/A 
+	  color componets can be manipulated using the functions <a href="#r">R</a>, <a href="#g">G</a>, 
+	  <a href="#b">B</a>, <a href="#a">A</a>, <a href="#set-color">SET-COLOR</a> and 
+	  <a href="#set-color-*">SET-COLOR-*</a>. Two colors may be compared using <a href="#color==">COLOR=</a>.
+	  A description of the <a href="#map-color">MAP-COLOR</a> and <a href="#pack-color">PACK-COLOR</a> are provided
+	  in these function definitions.
+	</p>
+	<p>
+	  Functions that accept a color parameter will most likely bind color to 
+	  <a href="#*default-color*">*DEFAULT-COLOR*</a> when unspecified. The macro
+	  <a href="#with-font">WITH-COLOR</a> will bind a color to <a href="#*default-color*">*DEFAULT-COLOR*</a> 
+	  within the scope of this macro. When <a href="#*default-color*">*DEFAULT-COLOR*</a> is bound to a color, 
+	  all subsequent drawing functions will use this implied color while it remains in scope.
+	</p>
+	<p>
+	  LISPBULDER-SDL contains several predefined colors; <a href="#*black*">*BLACK*</a>, 
+	  <a href="#*white*">*WHITE*</a>.
+	</p>
+
+
+	<h3><a class=none name="devdraw">Drawing Primitives</a></h3>
+	<p>
+	  LISPBUILDER-SDL provides low-level drawing support for several primitives. Most primitives can be drawn
+	  with or without alpha transparency. In addition, the filled primitives can be drawn with a single pixel 
+	  outline (or stroke) that is a different color to the fill color.
+	  <ul>
+     	    <li>Blitting Surfaces: <a href="#draw-surface">DRAW-SURFACE</a> and
+	    <a href="#blit-surface">BLIT-SURFACE</a></li>
+	    <li>Bezier and Cutmull-Rom Curves: <a href="#draw-bezier">DRAW-BEZIER</a>, 
+	      <a href="#draw-shape">DRAW-SHAPE</a>, <a href="#with-bezier">WITH-BEZIER</a>, 
+	      <a href="#with-curve">WITH-CURVE</a> and <a href="#draw-curve">DRAW-CURVE</a>.</li>
+	    <li>Boxes and Rectangles: <a href="#draw-box">DRAW-BOX</a>, 
+	      <a href="#draw-rectangle">DRAW-RECTANGLE</a></li>
+	    <li>Circles: <a href="#draw-circle">DRAW-CIRCLE</a> and 
+	      <a href="#draw-filled-circle">DRAW-FILLED-CIRCLE</a></li>
+	    <li>Lines: <a href="#draw-hline">DRAW-HLINE</a>, <a href="#draw-vline">DRAW-VLINE</a> and
+   	      <a href="#draw-line">DRAW-LINE</a></li>
+	    <li>Points: <a href="#draw-point">DRAW-POINT</a></li>
+       	    <li>Polygons and Triangles: <a href="#draw-polygon">DRAW-POLYGON</a>,
+	      <a href="#draw-trigon">DRAW-TRIGON</a> and <a href="#with-shape">WITH-SHAPE</a></li>
+       	    <li>Filling Surfaces with Color: <a href="#fill-surface">FILL-SURFACE</a></li>
+	    <li>Filling Arbitrary Shapes with Color: <a href="#flood-fill">FLOOD-FILL</a></li>
+	  </ul>
+	</p>
+	<p>
+	  Drawing functions require a target surface and color. LISPBUILDER-SDL uses defaults for both 
+	  target surface (<a href="#*default-surface*">*DEFAULT-SURFACE*</a>) and color 
+	  (<a href="#*default-color*">*DEFAULT-COLOR*</a>) unless these are otherwise specified by the user. 
+	  The macros <a href="#with-surface">with-surface</a>, and 
+	  <a href="#with-surfaces">with-surfaces</a> will bind a surface to *DEFAULT-SURFACE* within the scope these
+	  macros. For example, instead of specifying a target surface for each draw-* function a user may bind 
+	  *DEFAULT-SURFACE* to a surface once and subsequent draw-* functions will use this implied surface 
+	  while it remains in scope.
+	</p>
+	  <pre>
+(DRAW-POINT (sdl:point :x x1 :y y1) :surface a-surface :color *white*)
+(DRAW-POINT (sdl:point :x x2 :y y2) :surface a-surface :color *white*)	    
+(DRAW-POINT (sdl:point :x x3 :y y3) :surface a-surface :color *white*)
+(DRAW-POINT (sdl:point :x x4 :y y4) :surface a-surface :color *white*)
+	  </pre>
+
+	<p>Now, we use <a href="#with-surface">WITH-SURFACE</a> to bind a surface to *DEFAULT-SURFACE*.</p>
+
+	  <pre>
+(WITH-SURFACE (a-surface)
+  (DRAW-POINT (sdl:point :x x1 :y y1) :color *white*)
+  (DRAW-POINT (sdl:point :x x2 :y y2) :color *white*)
+  (DRAW-POINT (sdl:point :x x3 :y y3) :color *white*)
+  (DRAW-POINT (sdl:point :x x4 :y y4) :color *white*))
+	  </pre>
+
+	  <p>
+	    We can use <a href="#with-color">WITH-COLOR</a> to bind *DEFAULT-COLOR* to *white*:
+	  </p>
+	  
+	  <pre>
+(WITH-SURFACE (a-surface)
+  (WITH-COLOR (*white*)
+    (DRAW-POINT (sdl:point :x x1 :y y1))
+    (DRAW-POINT (sdl:point :x x2 :y y2))
+    (DRAW-POINT (sdl:point :x x3 :y y3))
+    (DRAW-POINT (sdl:point :x x4 :y y4)))
+	  </pre>
+
+	<p>
+	  Finally, if the target surface is the display then WITH-SURFACE is not required as :SURFACE when NIL 
+	  will be bound to *DEFAULT-DISPLAY* as a default. So the above code can be shortened as follows:
+	</p>
+
+	  <pre>
+(WITH-COLOR (*white*)
+  (DRAW-POINT (sdl:point :x x1 :y y1))
+  (DRAW-POINT (sdl:point :x x2 :y y2))
+  (DRAW-POINT (sdl:point :x x3 :y y3))
+  (DRAW-POINT (sdl:point :x x4 :y y4)))
+	  </pre>
+
+	<h3><a class=none name="font">Fonts</a></h3>
+	<p>
+	  LISPBUILDER-SDL contains several bitmap fonts of different sizes and faces (italics/bolded). See
+	  <a href="#initialise-font">INITIALISE-FONT</a> for the complete list of built-in fonts. 
+	</p>
+	<h4><a class=none name="fontinit">Initialisation and Freeing Fonts</a></h3>
+	<p>
+	  Fonts are initialised using <a href="#initialise-default-font">INITIALISE-DEFAULT-FONT</a>, or 
+	  <a href="#initialise-font">INITIALISE-FONT</a>. The resouces allocated to a font are freed by  
+	  <a href="#free-font">FREE-FONT</a>. A font must be initialised prior to use.
+	</p>
+	<p>
+	  LISPBUILDER-SDL provides the macros <a href="#with-default-font">WITH-DEFAULT-FONT</a> and 
+	  <a href="#with-font">WITH-FONT</a> for the above functions that bind 
+	  <a href=#"*default-font*">*DEFAULT-FONT*</a> to font within the scope of the macro.
+	<p>
+	  
+	<h4><a class=none name="fontrend">Rendering Text</a></h3>
+	<p>
+	  LISPBUILDER-SDL supports the rendering of colored text over a transparent background (Solid rendering), 
+	  and the rendering of colored text over a solid colored background (Shaded rendering). Text may be left, right or 
+	  center justified. Text can be drawn directly to a target surface using 
+	  <a href="#draw-string-solid">DRAW-STRING-SOLID</a> and <a href="#draw-string-shaded">DRAW-STRING-SHADED</a>. 
+	  Text can be rendered to a new surface of character height and string width using 
+	  <a href="#render-string-solid">RENDER-STRING-SOLID</a> and 
+	  <a href="#render-string-shaded">RENDER-STRING-SHADED</a>. This new surface may be optionally cached in the 
+	  font object. A cached surface font can be accessed using <a href="#cached-surface">CACHED-SURFACE</a>) and can 
+	  be blitted to a target surface using <a href="#draw-font">DRAW-FONT</a>.
+	</p>
+	<p>
+	  The font rendering functions accept a font object. This font parameter is bound to
+	  <a href="#*default-font*">*DEFAULT-FONT*</a> when unspecified. The function 
+	  <a href="#initialise-default-font">INITIALISE-DEFAULT-FONT</a> and the macros
+	  <a href="#with-font">WITH-FONT</a> and <a href="#with-default-font">WITH-DEFAULT-FONT</a> will bind a 
+	  font to <a href="#*default-font*">*DEFAULT-FONT*</a> within the scope of these macros. When 
+	  <a href="#*default-font*">*DEFAULT-FONT*</a> is bound to a font, all subsequent font drawing 
+	  or font rendering functions will use this implied font while it remains in scope.
+	</p>
+	<pre>
+(WITH-COLOR (*WHITE*)
+  (WITH-FONT (*FONT-8x8*)
+    (DRAW-STRING-SOLID-* "Font is 8x8." 10 10)
+
+    (WITH-FONT (*FONT-10x20*)
+      (DRAW-STRING-SOLID-* "Font is 10x20." 10 20))
+
+    (DRAW-STRING-SOLID-* "Font is 8x8 again." 10 40)))
+	</pre>
+	
+
+	<h3><a class=none name="devsurf">Surfaces</a></h3>
+	<p>
+	</p>
+
+	<h4><a class=none name="devsurfover">Overview of Surfaces</a></h4>
+	<p>
+	  ...
+	</p>
+
+	<h4><a class=none name="devsurfcreat">Creating Surfaces</a></h4>
+	<p>
+	  ...
+	</p>
+
+	<h4><a class=none name="devsurfload">Loading Images</a></h4>
+	<p>
+	  ...
+	</p>
+
+	<h4><a class=none name="devsurfpos">Positioning Surfaces</a></h4>
+	<p>
+	  ...
+	</p>
+
+	<h4><a class=none name="devsurfblit">Blitting and Drawing Surfaces</a></h4>
+	<p>
+	  The functions <a href="#blit-surface">BLIT-SURFACE</a> and <a href="#draw-surface">DRAW-SURFACE</a> will 
+	  blit a source surface onto a target surface. The composition rules that determine how the source surface
+	  is blitted over the target surface are described in <a href="#blit-surface">BLIT-SURFACE</a>.
+	  <a href="#devprim">Drawing Primitives</a> describes how <a href="#*default-surface*">*DEFAULT-SURFACE*</a> 
+	  is used when calling blitting operations.
+	</p>
+	<pre>
+(DRAW-SURFACE (LOAD-IMAGE "sdl.bmp") 
+              :surface *default-display*)
+	</pre>
+
+	<h4><a class=none name="devdisp">Updating SDL Surfaces and the SDL Display</a></h4>
+	<p>	  
+	  The functions <a href="#update-display">UPDATE-DISPLAY</a> and <a href="#update-surface">UPDATE-SURFACE</a>
+	  update the SDL display surface (or OpenGL context) and SDL general surfaces respectively.
+	</p>
+
+
+	<h3><a class=none name="devex">Simple Example</a></h3>
+	<p>
+	  Putting this all together, we can write short example showing a white rectangle that follows the users mouse 
+	  movements within an SDL Window. Exit the example by closing the window or pressing the Esc key on the keyboard.
+	</p>
+
+<pre>
+;; Initialise SDL and the Video subsystem
+(WITH-INIT (SDL-INIT-VIDEO) 
+  (WINDOW 320 240)          ; Open a window, 320 x 240
+
+  (SETF (FRAME-RATE) 30)    ; Lock the frame rate to 30 fps
+  (WITH-EVENTS ()
+    (:QUIT-EVENT () T)      ; Absolutely have to handle the :QUIT-EVENT
+
+    (:KEY-DOWN-EVENT (:KEY key) (WHEN (KEY= key :SDL-KEY-ESCAPE) (PUSH-QUIT-EVENT)))
+
+    (:MOUSE-MOTION-EVENT (:X mouse-x :Y mouse-y)
+      (CLEAR-DISPLAY *black*)
+      ;; Draw the box with center at the mouse x/y coordinates.
+      (DRAW-BOX-* (- mouse-x (/ 50 2)) (- mouse-y (/ 50 2)) 50 50 :color *white*))
+
+    (:IDLE ()
+      (UPDATE-DISPLAY))))
+</pre>
+
+
+	<h3><a class=none name="devgarbage">Object Lifecycles and Garbage Collection</a></h3>
+	<p>
+	  ...
+	</p>
+
+	  
+	<br>&nbsp;</br><h2><a class=none name="dictionary">The LISPBUILDER-SDL dictionary Index</h2>
+	  <ol>
+	          <li><a href="#*black*"><code>*black*</code></a>
+	            <li><a href="#*default-color*"><code>*default-color*</code></a>
+	            <li><a href="#*default-display*"><code>*default-display*</code></a>
+	            <li><a href="#*default-font*"><code>*default-font*</code></a>
+	            <li><a href="#*default-font-path*"><code>*default-font-path*</code></a>
+	            <li><a href="#*default-position*"><code>*default-position*</code></a>
+	            <li><a href="#*default-rectangle*"><code>*default-rectangle*</code></a>
+	            <li><a href="#*default-surface*"><code>*default-surface*</code></a>
+	            <li><a href="#*external-init-on-startup*"><code>*external-init-on-startup*</code></a>
+	            <li><a href="#*external-quit-on-exit*"><code>*external-quit-on-exit*</code></a>
+	            <li><a href="#*font-10x20*"><code>*font-10x20*</code></a>
+	            <li><a href="#*font-5x7*"><code>*font-5x7*</code></a>
+	            <li><a href="#*font-5x8*"><code>*font-5x8*</code></a>
+	            <li><a href="#*font-6x10*"><code>*font-6x10*</code></a>
+	            <li><a href="#*font-6x12*"><code>*font-6x12*</code></a>
+	            <li><a href="#*font-6x13*"><code>*font-6x13*</code></a>
+	            <li><a href="#*font-6x13b*"><code>*font-6x13b*</code></a>
+	            <li><a href="#*font-6x13o*"><code>*font-6x13o*</code></a>
+	            <li><a href="#*font-6x9*"><code>*font-6x9*</code></a>
+	            <li><a href="#*font-7x13*"><code>*font-7x13*</code></a>
+	            <li><a href="#*font-7x13b*"><code>*font-7x13b*</code></a>
+	            <li><a href="#*font-7x13o*"><code>*font-7x13o*</code></a>
+	            <li><a href="#*font-7x14*"><code>*font-7x14*</code></a>
+	            <li><a href="#*font-7x14b*"><code>*font-7x14b*</code></a>
+	            <li><a href="#*font-8x13*"><code>*font-8x13*</code></a>
+	            <li><a href="#*font-8x13b*"><code>*font-8x13b*</code></a>
+	            <li><a href="#*font-8x13o*"><code>*font-8x13o*</code></a>
+	            <li><a href="#*font-8x8*"><code>*font-8x8*</code></a>
+	            <li><a href="#*font-9x15*"><code>*font-9x15*</code></a>
+	            <li><a href="#*font-9x15b*"><code>*font-9x15b*</code></a>
+	            <li><a href="#*font-9x18*"><code>*font-9x18*</code></a>
+	            <li><a href="#*font-9x18b*"><code>*font-9x18b*</code></a>
+	            <li><a href="#*opengl-context*"><code>*opengl-context*</code></a>
+	            <li><a href="#*sdl-initialized*"><code>*sdl-initialized*</code></a>
+	            <li><a href="#*white*"><code>*white*</code></a>
+	            <li><a href="#a"><code>a</code></a>
+	            <li><a href="#all-integers?"><code>all-integers?</code></a>
+	            <li><a href="#any-color-but-this"><code>any-color-but-this</code></a>
+	            <li><a href="#b"><code>b</code></a>
+	            <li><a href="#bit-depth"><code>bit-depth</code></a>
+	            <li><a href="#blit-surface"><code>blit-surface</code></a>
+	            <li><a href="#cached-surface"><code>cached-surface</code></a>
+	            <li><a href="#calculate-curve"><code>calculate-curve</code></a>
+	            <li><a href="#cast"><code>cast</code></a>
+	            <li><a href="#cast-all-to-int"><code>cast-all-to-int</code></a>
+	            <li><a href="#cast-to-int"><code>cast-to-int</code></a>
+	            <li><a href="#catmull-rom-spline"><code>catmull-rom-spline</code></a>
+	            <li><a href="#char-height"><code>char-height</code></a>
+	            <li><a href="#char-width"><code>char-width</code></a>
+	            <li><a href="#check-types"><code>check-types</code></a>
+	            <li><a href="#clear-cell"><code>clear-cell</code></a>
+	            <li><a href="#clear-color-key"><code>clear-color-key</code></a>
+	            <li><a href="#clear-display"><code>clear-display</code></a>
+	            <li><a href="#color"><code>color</code></a>
+	            <li><a href="#color"><code>color</code></a>
+	            <li><a href="#color-*"><code>color-*</code></a>
+	            <li><a href="#color-a"><code>color-a</code></a>
+	            <li><a href="#color="><code>color=</code></a>
+	            <li><a href="#convert-surface"><code>convert-surface</code></a>
+	            <li><a href="#copy-point"><code>copy-point</code></a>
+	            <li><a href="#copy-surface"><code>copy-surface</code></a>
+	            <li><a href="#create-list-if-not"><code>create-list-if-not</code></a>
+	            <li><a href="#create-path"><code>create-path</code></a>
+	            <li><a href="#create-rwops-from-file"><code>create-rwops-from-file</code></a>
+	            <li><a href="#create-surface"><code>create-surface</code></a>
+	            <li><a href="#display-cursor"><code>display-cursor</code></a>
+	            <li><a href="#distance"><code>distance</code></a>
+	            <li><a href="#distance-*"><code>distance-*</code></a>
+	            <li><a href="#draw-bezier"><code>draw-bezier</code></a>
+	            <li><a href="#draw-box"><code>draw-box</code></a>
+	            <li><a href="#draw-box-*"><code>draw-box-*</code></a>
+	            <li><a href="#draw-circle"><code>draw-circle</code></a>
+	            <li><a href="#draw-circle-*"><code>draw-circle-*</code></a>
+	            <li><a href="#draw-curve"><code>draw-curve</code></a>
+	            <li><a href="#draw-filled-circle"><code>draw-filled-circle</code></a>
+	            <li><a href="#draw-filled-circle-*"><code>draw-filled-circle-*</code></a>
+	            <li><a href="#draw-font"><code>draw-font</code></a>
+	            <li><a href="#draw-font"><code>draw-font</code></a>
+	            <li><a href="#draw-font-at"><code>draw-font-at</code></a>
+	            <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a>
+	            <li><a href="#draw-hline"><code>draw-hline</code></a>
+	            <li><a href="#draw-line"><code>draw-line</code></a>
+	            <li><a href="#draw-line-*"><code>draw-line-*</code></a>
+	            <li><a href="#draw-point"><code>draw-point</code></a>
+	            <li><a href="#draw-point-*"><code>draw-point-*</code></a>
+	            <li><a href="#draw-polygon"><code>draw-polygon</code></a>
+	            <li><a href="#draw-rectangle"><code>draw-rectangle</code></a>
+	            <li><a href="#draw-rectangle-*"><code>draw-rectangle-*</code></a>
+	            <li><a href="#draw-shape"><code>draw-shape</code></a>
+	            <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a>
+	            <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a>
+	            <li><a href="#draw-string-solid"><code>draw-string-solid</code></a>
+	            <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a>
+	            <li><a href="#draw-surface"><code>draw-surface</code></a>
+	            <li><a href="#draw-surface-at"><code>draw-surface-at</code></a>
+	            <li><a href="#draw-surface-at-*"><code>draw-surface-at-*</code></a>
+	            <li><a href="#draw-trigon"><code>draw-trigon</code></a>
+	            <li><a href="#draw-vline"><code>draw-vline</code></a>
+	            <li><a href="#fill-surface"><code>fill-surface</code></a>
+	            <li><a href="#fill-surface-*"><code>fill-surface-*</code></a>
+	            <li><a href="#flood-fill"><code>flood-fill</code></a>
+	            <li><a href="#flood-fill-*"><code>flood-fill-*</code></a>
+	            <li><a href="#flood-fill-stack"><code>flood-fill-stack</code></a>
+	            <li><a href="#flood-fill-stack-*"><code>flood-fill-stack-*</code></a>
+	            <li><a href="#fp"><code>fp</code></a>
+	            <li><a href="#fp-cell"><code>fp-cell</code></a>
+	            <li><a href="#fp-position"><code>fp-position</code></a>
+	            <li><a href="#frame-rate"><code>frame-rate</code></a>
+	            <li><a href="#free-cached-surface"><code>free-cached-surface</code></a>
+	            <li><a href="#free-color"><code>free-color</code></a>
+	            <li><a href="#free-font"><code>free-font</code></a>
+	            <li><a href="#free-rectangle"><code>free-rectangle</code></a>
+	            <li><a href="#free-rwops"><code>free-rwops</code></a>
+	            <li><a href="#free-surface"><code>free-surface</code></a>
+	            <li><a href="#g"><code>g</code></a>
+	            <li><a href="#get-clip-rect"><code>get-clip-rect</code></a>
+	            <li><a href="#get-point"><code>get-point</code></a>
+	            <li><a href="#get-position"><code>get-position</code></a>
+	            <li><a href="#get-rectangle"><code>get-rectangle</code></a>
+	            <li><a href="#get-surface-rect"><code>get-surface-rect</code></a>
+	            <li><a href="#height"><code>height</code></a>
+	            <li><a href="#init-sdl"><code>init-sdl</code></a>
+	            <li><a href="#init-sub-systems"><code>init-sub-systems</code></a>
+	            <li><a href="#initialise-default-font"><code>initialise-default-font</code></a>
+	            <li><a href="#initialise-font"><code>initialise-font</code></a>
+	            <li><a href="#initialize-on-startup"><code>initialize-on-startup</code></a>
+	            <li><a href="#initialized-sub-systems-p"><code>initialized-sub-systems-p</code></a>
+	            <li><a href="#is-valid-ptr"><code>is-valid-ptr</code></a>
+	            <li><a href="#key="><code>key=</code></a>
+	            <li><a href="#list-sub-systems"><code>list-sub-systems</code></a>
+	            <li><a href="#load-image"><code>load-image</code></a>
+	            <li><a href="#map-color"><code>map-color</code></a>
+	            <li><a href="#pack-color"><code>pack-color</code></a>
+	            <li><a href="#point"><code>point</code></a>
+	            <li><a href="#point-*"><code>point-*</code></a>
+	            <li><a href="#position-*"><code>position-*</code></a>
+	            <li><a href="#push-quit-event"><code>push-quit-event</code></a>
+	            <li><a href="#push-user-event"><code>push-user-event</code></a>
+	            <li><a href="#quit-on-exit"><code>quit-on-exit</code></a>
+	            <li><a href="#quit-sdl"><code>quit-sdl</code></a>
+	            <li><a href="#quit-sub-systems"><code>quit-sub-systems</code></a>
+	            <li><a href="#r"><code>r</code></a>
+	            <li><a href="#random+1"><code>random+1</code></a>
+	            <li><a href="#random-rectangle"><code>random-rectangle</code></a>
+	            <li><a href="#read-point"><code>read-point</code></a>
+	            <li><a href="#rectangle"><code>rectangle</code></a>
+	            <li><a href="#rectangle"><code>rectangle</code></a>
+	            <li><a href="#rectangle-*"><code>rectangle-*</code></a>
+	            <li><a href="#rectangle-from-edges"><code>rectangle-from-edges</code></a>
+	            <li><a href="#rectangle-from-edges-*"><code>rectangle-from-edges-*</code></a>
+	            <li><a href="#rectangle-from-midpoint-*"><code>rectangle-from-midpoint-*</code></a>
+	            <li><a href="#render-string-shaded"><code>render-string-shaded</code></a>
+	            <li><a href="#render-string-solid"><code>render-string-solid</code></a>
+	            <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a>
+	            <li><a href="#rotate-surface"><code>rotate-surface</code></a>
+	            <li><a href="#rwops"><code>rwops</code></a>
+	            <li><a href="#save-image"><code>save-image</code></a>
+	            <li><a href="#sdl-any-format"><code>sdl-any-format</code></a>
+	            <li><a href="#sdl-async-blit"><code>sdl-async-blit</code></a>
+	            <li><a href="#sdl-color"><code>sdl-color</code></a>
+	            <li><a href="#sdl-doublebuf"><code>sdl-doublebuf</code></a>
+	            <li><a href="#sdl-fullscreen"><code>sdl-fullscreen</code></a>
+	            <li><a href="#sdl-get-ticks"><code>sdl-get-ticks</code></a>
+	            <li><a href="#sdl-hw-accel"><code>sdl-hw-accel</code></a>
+	            <li><a href="#sdl-hw-palette"><code>sdl-hw-palette</code></a>
+	            <li><a href="#sdl-hw-surface"><code>sdl-hw-surface</code></a>
+	            <li><a href="#sdl-init-audio"><code>sdl-init-audio</code></a>
+	            <li><a href="#sdl-init-cdrom"><code>sdl-init-cdrom</code></a>
+	            <li><a href="#sdl-init-eventthread"><code>sdl-init-eventthread</code></a>
+	            <li><a href="#sdl-init-everything"><code>sdl-init-everything</code></a>
+	            <li><a href="#sdl-init-joystick"><code>sdl-init-joystick</code></a>
+	            <li><a href="#sdl-init-noparachute"><code>sdl-init-noparachute</code></a>
+	            <li><a href="#sdl-init-on-startup"><code>sdl-init-on-startup</code></a>
+	            <li><a href="#sdl-init-timer"><code>sdl-init-timer</code></a>
+	            <li><a href="#sdl-init-video"><code>sdl-init-video</code></a>
+	            <li><a href="#sdl-iyuv-overlay"><code>sdl-iyuv-overlay</code></a>
+	            <li><a href="#sdl-no-frame"><code>sdl-no-frame</code></a>
+	            <li><a href="#sdl-opengl"><code>sdl-opengl</code></a>
+	            <li><a href="#sdl-pre-alloc"><code>sdl-pre-alloc</code></a>
+	            <li><a href="#sdl-quit-on-exit"><code>sdl-quit-on-exit</code></a>
+	            <li><a href="#sdl-resizable"><code>sdl-resizable</code></a>
+	            <li><a href="#sdl-rle-accel"><code>sdl-rle-accel</code></a>
+	            <li><a href="#sdl-rle-accel-ok"><code>sdl-rle-accel-ok</code></a>
+	            <li><a href="#sdl-src-alpha"><code>sdl-src-alpha</code></a>
+	            <li><a href="#sdl-src-color-key"><code>sdl-src-color-key</code></a>
+	            <li><a href="#sdl-surface"><code>sdl-surface</code></a>
+	            <li><a href="#sdl-sw-surface"><code>sdl-sw-surface</code></a>
+	            <li><a href="#sdl-uyvy-overlay"><code>sdl-uyvy-overlay</code></a>
+	            <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a>
+	            <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a>
+	            <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a>
+	            <li><a href="#set-alpha"><code>set-alpha</code></a>
+	            <li><a href="#set-cell"><code>set-cell</code></a>
+	            <li><a href="#set-cell-*"><code>set-cell-*</code></a>
+	            <li><a href="#set-clip-rect"><code>set-clip-rect</code></a>
+	            <li><a href="#set-color"><code>set-color</code></a>
+	            <li><a href="#set-color-*"><code>set-color-*</code></a>
+	            <li><a href="#set-color-key"><code>set-color-key</code></a>
+	            <li><a href="#set-frame-rate"><code>set-frame-rate</code></a>
+	            <li><a href="#set-point"><code>set-point</code></a>
+	            <li><a href="#set-point-*"><code>set-point-*</code></a>
+	            <li><a href="#set-position"><code>set-position</code></a>
+	            <li><a href="#set-position-*"><code>set-position-*</code></a>
+	            <li><a href="#set-rectangle"><code>set-rectangle</code></a>
+	            <li><a href="#set-rectangle-*"><code>set-rectangle-*</code></a>
+	            <li><a href="#set-surface"><code>set-surface</code></a>
+	            <li><a href="#set-surface-*"><code>set-surface-*</code></a>
+	            <li><a href="#surface"><code>surface</code></a>
+	            <li><a href="#surface"><code>surface</code></a>
+	            <li><a href="#to-degree"><code>to-degree</code></a>
+	            <li><a href="#to-radian"><code>to-radian</code></a>
+	            <li><a href="#update-display"><code>update-display</code></a>
+	            <li><a href="#update-surface"><code>update-surface</code></a>
+	            <li><a href="#update-surface-*"><code>update-surface-*</code></a>
+	            <li><a href="#width"><code>width</code></a>
+	            <li><a href="#window"><code>window</code></a>
+	            <li><a href="#with-bezier"><code>with-bezier</code></a>
+	            <li><a href="#with-color"><code>with-color</code></a>
+	            <li><a href="#with-curve"><code>with-curve</code></a>
+	            <li><a href="#with-default-font"><code>with-default-font</code></a>
+	            <li><a href="#with-events"><code>with-events</code></a>
+	            <li><a href="#with-font"><code>with-font</code></a>
+	            <li><a href="#with-init"><code>with-init</code></a>
+	            <li><a href="#with-locked-surface"><code>with-locked-surface</code></a>
+	            <li><a href="#with-locked-surfaces"><code>with-locked-surfaces</code></a>
+	            <li><a href="#with-point"><code>with-point</code></a>
+	            <li><a href="#with-rectangle"><code>with-rectangle</code></a>
+	            <li><a href="#with-rectangles"><code>with-rectangles</code></a>
+	            <li><a href="#with-shape"><code>with-shape</code></a>
+	            <li><a href="#with-surface"><code>with-surface</code></a>
+	            <li><a href="#with-surface-slots"><code>with-surface-slots</code></a>
+	            <li><a href="#with-surfaces"><code>with-surfaces</code></a>
+	            <li><a href="#within-range"><code>within-range</code></a>
+	            <li><a href="#within-range-*"><code>within-range-*</code></a>
+	            <li><a href="#x"><code>x</code></a>
+	            <li><a href="#x2"><code>x2</code></a>
+	            <li><a href="#y"><code>y</code></a>
+	            <li><a href="#y2"><code>y2</code></a>
+	          
+	    </li>
+	  </ol>
+      
+	  
+	  
+	  
+	  <br>&nbsp;</br><h2><a class=none name="dictionar">The NIL dictionary</a></h2>
+	  
 	
 	
 
@@ -854,7 +1248,16 @@
 <p><br>[Special variable]<br><a class=none name='*default-color*'><b>*default-color*</b></a>
 <blockquote><br>
 
-
+<p>Functions that accept the <code>KEY</code>word parameter <code>COLOR</code> will most likely bind to the  symbol <code>*DEFAULT-COLOR*</code> if <code>COLOR</code> is not specified, automatically using whatever color is referenced  by <code>*DEFAULT-COLOR*</code>.  </p><p>A color is bound to <code>*DEFAULT-COLOR*</code> by the following macro: <a href="#with-color">WITH-COLOR</a>. </p><h5>Example </h5>
+<pre><code>(draw-box a-box :surface sdl:default-display* :color sdl:*black*)
+(draw-box b-box :surface sdl:default-display* :color sdl:*black*)
+(draw-box c-box :surface sdl:default-display* :color sdl:*black*)
+(with-surface (disp sdl:*default-display*)
+  (with-color (col sdl:*black*)
+    (draw-box a-box)
+    (draw-box b-box)
+    (draw-box c-box)))
+</code></pre>
 
 </blockquote>
 
@@ -866,7 +1269,7 @@
 <p><br>[Special variable]<br><a class=none name='*default-display*'><b>*default-display*</b></a>
 <blockquote><br>
 
-
+<p>The symbol <code>*DEFAULT-DISPLAY*</code> is bound to the current display surface  <a href="#display-surface">DISPLAY-SURFACE</a>) by the function <a href="#WINDOW">WINDOW</a>). </p>
 
 </blockquote>
 
@@ -926,7 +1329,15 @@
 <p><br>[Special variable]<br><a class=none name='*default-surface*'><b>*default-surface*</b></a>
 <blockquote><br>
 
-
+<p>Functions that accept the <code>KEY</code>word parameter <code>SURFACE</code> will most likely bind to the  symbol <code>*DEFAULT-SURFACE*</code> if <code>SURFACE</code> is not specified, automatically using whatever surface is referenced  by <code>*DEFAULT-SURFACE*</code>.  </p><p>A surface is bound to <code>*DEFAULT-SURFACE*</code> by the following macros: <a href="#with-surface">WITH-SURFACE</a>,  and <a href="#with-surfaces">WITH-SURFACES</a>. </p><h5>Example </h5>
+<pre><code>(draw-surface surf-1 :surface sdl:*default-display*)
+(draw-surface surf-2 :surface sdl:*default-display*)
+(draw-surface surf-2 :surface sdl:*default-display*)
+(with-surface (disp sdl:*default-display*)
+  (draw-surface surf-1)
+  (draw-surface surf-2)
+  (draw-surface surf-2))
+</code></pre>
 
 </blockquote>
 
@@ -1219,6 +1630,18 @@
 </blockquote>
 
 <!-- End of entry for *FONT-9X18B* -->
+
+
+<!-- Entry for *OPENGL-CONTEXT* -->
+
+<p><br>[Special variable]<br><a class=none name='*opengl-context*'><b>*opengl-context*</b></a>
+<blockquote><br>
+
+<p>The symbol <code>*OPENGL-CONTEXT*</code> is <code>T</code> when an OpenGL display context is created, and <code>NIL</code> otherwise. <a href="#update-surface">UPDATE-SURFACE</a> will call <a href="#sdl-gl-swap-buffers">SDL-GL-SWAP-BUFFERS</a> when <code>*OPENGL-CONTEXT*</code> is <code>T</code>,  and <a href="#sdl-flip">SDL-FLIP</a> otherwise. </p>
+
+</blockquote>
+
+<!-- End of entry for *OPENGL-CONTEXT* -->
 
 
 <!-- Entry for *SDL-INITIALIZED* -->
@@ -1568,7 +1991,7 @@
 <p><br>[Function]<br><a class=none name='color'><b>color</b> <i><tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a new <code>COLOR</code> from red <code>R</code>, green <code>G</code>, and blue <code>B</code> color components. When <code>A</code> is not <code>NIL</code>, will return a new <code>COLOR-A</code> containing the alpha transparency. </p>
+<p>Returns a new <a href="#color">COLOR</a> from red <code>R</code>, green <code>G</code>, and blue <code>B</code> color components. When <code>A</code> is not <code>NIL</code>, will return a new <a href="#color-a">COLOR-A</a> containing the alpha transparency. </p>
 
 </blockquote>
 
@@ -1765,58 +2188,6 @@
 </blockquote>
 
 <!-- End of entry for CREATE-SURFACE -->
-
-
-<!-- Entry for DEFAULT-COLOR -->
-
-<p><br>[Accessor]<br><a class=none name='default-color'><b>default-color</b> <i></i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>default-color</b> <i></i><tt>)</tt> <i>color</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for DEFAULT-COLOR -->
-
-
-<!-- Entry for DEFAULT-POSITION -->
-
-<p><br>[Accessor]<br><a class=none name='default-position'><b>default-position</b> <i></i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>default-position</b> <i></i><tt>)</tt> <i>position</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for DEFAULT-POSITION -->
-
-
-<!-- Entry for DEFAULT-RECTANGLE -->
-
-<p><br>[Accessor]<br><a class=none name='default-rectangle'><b>default-rectangle</b> <i></i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>default-rectangle</b> <i></i><tt>)</tt> <i>rectangle</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for DEFAULT-RECTANGLE -->
-
-
-<!-- Entry for DEFAULT-SURFACE -->
-
-<p><br>[Accessor]<br><a class=none name='default-surface'><b>default-surface</b> <i></i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>default-surface</b> <i></i><tt>)</tt> <i>surface</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for DEFAULT-SURFACE -->
 
 
 <!-- Entry for DISPLAY-CURSOR -->
@@ -2167,6 +2538,23 @@
 <!-- End of entry for DRAW-POINT-* -->
 
 
+<!-- Entry for DRAW-POLYGON -->
+
+<p><br>[Function]<br><a class=none name='draw-polygon'><b>draw-polygon</b> <i>vertices <tt>&amp;key</tt> surface color clipping-p</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draw the circumference of a polygon of color <code>COLOR</code> to surface SURFACE using the vertices in <code>POINTS</code>. Use <a href="#draw-filled-polygon-*">DRAW-FILLED-POLYGON-*</a> to draw a filled polygon. </p><h5>Parameters </h5>
+<ul><li><code>POINTS</code> is the list of vertices for the polygon. <code>POINTS</code> is a list of <code>SDL:POINT</code>s. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-POLYGON -->
+
+
 <!-- Entry for DRAW-RECTANGLE -->
 
 <p><br>[Function]<br><a class=none name='draw-rectangle'><b>draw-rectangle</b> <i>rect <tt>&amp;key</tt> clipping-p surface color alpha</i> =&gt; <i>result</i></a>
@@ -2330,6 +2718,23 @@
 </blockquote>
 
 <!-- End of entry for DRAW-SURFACE-AT-* -->
+
+
+<!-- Entry for DRAW-TRIGON -->
+
+<p><br>[Function]<br><a class=none name='draw-trigon'><b>draw-trigon</b> <i>p1 p2 p3 <tt>&amp;key</tt> surface color clipping-p</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draw the outline of a trigon or triangle, of color <code>COLOR</code> to surface <code>SURFACE</code>. Use <a href="#draw-filled-trigon-*">DRAW-FILLED-TRIGON-*</a> to draw a filled trigon. </p><h5>Parameters </h5>
+<ul><li><code>P1</code>, <code>P2</code> and <code>P3</code> specify the vertices of the trigon, of type <code>SDL:POINT</code>. </li>
+<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
+<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
+<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-TRIGON -->
 
 
 <!-- Entry for DRAW-VLINE -->
@@ -2837,18 +3242,6 @@
 <!-- End of entry for G -->
 
 
-<!-- Entry for GENBEZ -->
-
-<p><br>[Function]<br><a class=none name='genbez'><b>genbez</b> <i>x0 y0 x1 y1 x2 y2 x3 y3 <tt>&amp;key</tt> segments</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for GENBEZ -->
-
-
 <!-- Entry for GET-CLIP-RECT -->
 
 <p><br>[Function]<br><a class=none name='get-clip-rect'><b>get-clip-rect</b> <i><tt>&amp;key</tt> surface rectangle</i> =&gt; <i>result</i></a>
@@ -3062,7 +3455,7 @@
 <p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i><tt>&amp;optional</tt> font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Calls <a href="#initialise-font">INITIALISE-FONT</a> to create a new <code>BITMAP-FONT</code> from <code>FONT-DEFINITION</code>.  <code>FONT-DEFINITION</code> is set to &#039;<EM>font-8x8</EM><code> if unspecified. Binds the symbol </code><EM>DEFAULT-FONT</EM><code> to the new font. Reutns the new font, or </code>NIL` if the font cannot be created. </p>
+<p>Calls <a href="#initialise-font">INITIALISE-FONT</a> to create a new <code>BITMAP-FONT</code> from <code>FONT-DEFINITION</code>.  <code>FONT-DEFINITION</code> is set to <code>*font-8x8*</code> if unspecified. Binds the symbol <code>*DEFAULT-FONT*</code> to the new font. Reutns the new font, or <code>NIL</code> if the font cannot be created. </p>
 
 </blockquote>
 
@@ -3074,7 +3467,7 @@
 <p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates a new <code>BITMAP-FONT</code> object from the font data in <code>FONT-DEFINITION</code>. Returns the new bitmap font, or <code>NIL</code> if the font cannot be created. </p>
+<p>Creates a new <code>BITMAP-FONT</code> object from the font data in <code>FONT-DEFINITION</code>. Returns the new bitmap font, or <code>NIL</code> if the font cannot be created. <code>FONT-DEFINITION</code> must be one of the following built-in fonts:  <code>*FONT-10X20*, *FONT-5X7*, *FONT-5X8*, *FONT-6X10*, *FONT-6X12*, *FONT-6X13*, *FONT-6X13B*, *FONT-6X13O*, *FONT-6X9*, *FONT-7X13*, *FONT-7X13B*, *FONT-7X13O*, *FONT-7X14*, *FONT-7X14B*, *FONT-8X13*, *FONT-8X13B*, *FONT-8X13O*, *FONT-8X8*, *FONT-9X15*, *FONT-9X15B*, *FONT-9X18* OR *FONT-9X18B*</code>. </p>
 
 </blockquote>
 
@@ -3090,7 +3483,9 @@
 <ul><li><code>FLAGS</code> may be one or more of: <code>SDL-INIT-EVERYTHING</code>, <code>SDL-INIT-VIDEO</code>, <code>SDL-INIT-CDROM</code>, <code>SDL-INIT-AUDIO</code>,  <code>SDL-INIT-TIMER</code>, <code>SDL-INIT-JOYSTICK</code>, <code>SDL-INIT-EVENTTHREAD</code> and <code>SDL-INIT-NOPARACHUTE</code>. </li>
 </ul><h5>Returns </h5>
 <ul><li>Returns an INTEGER bitmask of the SDL subsystems in <code>FLAGS</code>. </li>
-</ul>
+</ul><h5>Example </h5>
+<pre><code>(INITIALIZE-ON-STARTUP SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM)
+</code></pre>
 
 </blockquote>
 
@@ -3152,7 +3547,7 @@
 
 <p>Creates and returns a new surface from the source <code>SOURCE</code>. </p><h5>Parameters </h5>
 <ul><li><code>SOURCE</code> is the source of the image. </li>
-<li><code>KEY-COLOR</code> sets the color key to be used for the surface, of type `COLOR&#039;, or &#039;COLOR-A&#039;. </li>
+<li><code>KEY-COLOR</code> sets the color key to be used for the surface, of type <code>COLOR</code>, or &#039;COLOR-A`. </li>
 <li><code>ALPHA-VALUE</code> sets the alpha value of the surface, of type INTEGER. Must be in the range 0-255.  255 is opaque, 0 is transparent. </li>
 <li><code>IMAGE-TYPE</code> specifies the type of image to load.  </li>
 <li><code>FORCE</code> forces an image to be loaded as <code>IMAGE-TYPE</code>. </li>
@@ -3173,7 +3568,7 @@
 
 <p>Load a BMP image from a file at location <code>FILENAME</code>. </p><h5>Parameters </h5>
 <ul><li><code>FILENAME</code> is the location of the image file on disk, as a <code>STRING</code>. </li>
-<li><code>KEY-COLOR</code> when not <code>NIL</code> is the color to be used as the transpart pixel. <code>When </code>KEY-COLOR<code> is </code>NIL`, the surface is created without a key color. See <a href="#set-color-key">SET-COLOR-KEY</a> for more detailed information. </li>
+<li><code>KEY-COLOR</code> when not <code>NIL</code> is the color to be used as the transpart pixel. When <code>KEY-COLOR</code> is <code>NIL</code>, the surface is created without a key color. See <a href="#set-color-key">SET-COLOR-KEY</a> for more detailed information. </li>
 <li><code>ALPHA</code> when between <code>0</code> and <code>255</code> will set the level of alpha transparency for the new surface. When <code>ALPHA</code> is <code>NIL</code>, the new surface is created without alpha transparency. See <a href="#set-alpha">SET-ALPHA</a> for more detailed information. </li>
 </ul>
 
@@ -3395,7 +3790,9 @@
 <ul><li><code>FLAGS</code> may be one or more of: <code>SDL-INIT-EVERYTHING</code>, <code>SDL-INIT-VIDEO</code>, <code>SDL-INIT-CDROM</code>, <code>SDL-INIT-AUDIO</code>,  <code>SDL-INIT-TIMER</code>, <code>SDL-INIT-JOYSTICK</code>, <code>SDL-INIT-EVENTTHREAD</code>, <code>SDL-INIT-NOPARACHUTE</code>. </li>
 </ul><h5>Returns </h5>
 <ul><li>Returns an INTEGER bitmask of the SDL subsystems in <code>FLAGS</code>. </li>
-</ul>
+</ul><h5>Example </h5>
+<pre><code>(QUIT-ON-EXIT SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM)
+</code></pre>
 
 </blockquote>
 
@@ -3600,7 +3997,7 @@
 <li><code>FG-COLOR</code> color is the text color, of type <code>SDL-COLOR</code></li>
 <li><code>BG-COLOR</code> color is the background color used to fill the surface, of type <code>SDL-COLOR</code></li>
 <li><code>FREE</code> when <code>T</code> will free any exisiting cached surface in <code>FONT</code>. </li>
-<li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. Any cached surface can be accessed using <a href="#cached-surface">CACHED-SURFACE</a> and can be blitted to a target surface using <a href="#draw-font">DRAW-FONT</a>. </li>
 </ul><h5>Returns </h5>
 <ul><li>Returns a new cached surface <code>SDL-SURFACE</code>. </li>
 </ul><h5>Example </h5>
@@ -3622,7 +4019,7 @@
 <li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
 <li><code>COLOR</code> color is the text color, of type <code>SDL-COLOR</code>. </li>
 <li><code>FREE</code> when <code>T</code> will free any exisitng cached surface in <code>FONT</code>. </li>
-<li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. </li>
+<li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. Any cached surface can be accessed using <a href="#cached-surface">CACHED-SURFACE</a> and can be blitted to a target surface using <a href="#draw-font">DRAW-FONT</a>. </li>
 </ul><h5>Returns </h5>
 <ul><li>Returns a new cached surface <code>SDL-SURFACE</code>. </li>
 </ul><h5>Example </h5>
@@ -3698,7 +4095,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-any-format'><b>sdl-any-format</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a>;   Causes SDL to return a <a href="#display-surface">DISPLAY-SURFACE</a> of any pixel depth if the requested pixel depth is unavailable. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates that the surface was created with <code>SDL-ANY-FORMAT</code>. </li>
+</ul><p>Normally, if a <a href="#display-surface">DISPLAY-SURFACE</a> of the requested bits-per-pixel (bpp) is not available, SDL  will emulate one with a shadow surface. Passing <code>SDL-ANY-FORMAT</code> prevents this and causes SDL to use the <a href="#display-surface">DISPLAY-SURFACE</a> surface, regardless of its pixel depth. </p>
 
 </blockquote>
 
@@ -3710,7 +4109,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-async-blit'><b>sdl-async-blit</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a>;  Enables the use of asynchronous updates of the <a href="#display-surface">DISPLAY-SURFACE</a>.  </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a> or <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates if the surface uses asynchronous blits when possible. </li>
+</ul><p>Asynchronous blits usually slows down blitting on single CPU machines, but may provide a speed increase on SMP systems. </p>
 
 </blockquote>
 
@@ -3734,7 +4135,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-doublebuf'><b>sdl-doublebuf</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a>;  Enable hardware double buffering; only valid with <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>.  </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicages that the surface is double buffered. </li>
+</ul><p>Calling <a href="#sdl-flip">SDL-FLIP</a> will flip the buffers and update the screen. All drawing will take place on the  surface that is not displayed at the moment. If double buffering could not be enabled then <a href="#sdl-flip">SDL-FLIP</a>  will just perform a <a href="#sdl-update-rect">SDL-UPDATE-RECT</a> on the entire screen. </p>
 
 </blockquote>
 
@@ -3746,7 +4149,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-fullscreen'><b>sdl-fullscreen</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a>;  SDL will attempt to use a fullscreen mode. If a hardware resolution change is not possible (for whatever reason),  the next higher resolution will be used and the display window centered on a black background. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates that the surface is full-screen. </li>
+</ul>
 
 </blockquote>
 
@@ -3765,24 +4170,13 @@
 <!-- End of entry for SDL-GET-TICKS -->
 
 
-<!-- Entry for SDL-GL-SWAP-BUFFERS -->
-
-<p><br>[Function]<br><a class=none name='sdl-gl-swap-buffers'><b>sdl-gl-swap-buffers</b> <i></i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for SDL-GL-SWAP-BUFFERS -->
-
-
 <!-- Entry for SDL-HW-ACCEL -->
 
 <p><br>[Constant]<br><a class=none name='sdl-hw-accel'><b>sdl-hw-accel</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates that surface blitting will use hardware acceloration. </li>
+</ul>
 
 </blockquote>
 
@@ -3794,7 +4188,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-hw-palette'><b>sdl-hw-palette</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a>;  Gives SDL exclusive palette access to <a href="#display-surface">DISPLAY-SURFACE</a>. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a> or <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates that the surface has an exclusive palette. </li>
+</ul><p>Without this flag you may not always get the the colors you request with <a href="#sdl-set-colors">SDL-SET-COLORS</a> or  <a href="#sdl-set-palette">SDL-SET-PALETTE</a>. </p>
 
 </blockquote>
 
@@ -3806,7 +4202,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-hw-surface'><b>sdl-hw-surface</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a> or <a href="#create-surface">CREATE-SURFACE</a>;   Create the <a href="#surface">SURFACE</a> or <a href="#display-surface">DISPLAY-SURFACE</a> in video memory. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a> or <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates if the surface is stored in video memory. </li>
+</ul><p>This will allow SDL to take advantage of Video-&gt;Video blits (which are often accelerated). </p>
 
 </blockquote>
 
@@ -3938,7 +4336,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-no-frame'><b>sdl-no-frame</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a>;  If possible, <code>SDL-NO-FRAME</code> causes SDL to create a window with no title bar or frame decoration.  </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#display-surface">DISPLAY-SURFACE</a>;  <STRONG></STRONG>Note: Per the SDL documentation, this is not stored in <code>FLAGS</code>. </li>
+</ul><p>Fullscreen modes automatically have this flag set. </p>
 
 </blockquote>
 
@@ -3950,23 +4350,13 @@
 <p><br>[Constant]<br><a class=none name='sdl-opengl'><b>sdl-opengl</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a>;  Create an OpenGL rendering context. You should have previously set OpenGL video attributes with  <a href="#sdl-gl-set-attribute">SDL-GL-SET-ATTRIBUTE</a>. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates that the surface has an OpenGL rendering context. </li>
+</ul>
 
 </blockquote>
 
 <!-- End of entry for SDL-OPENGL -->
-
-
-<!-- Entry for SDL-OPENGL-BLIT -->
-
-<p><br>[Constant]<br><a class=none name='sdl-opengl-blit'><b>sdl-opengl-blit</b></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for SDL-OPENGL-BLIT -->
 
 
 <!-- Entry for SDL-PRE-ALLOC -->
@@ -3974,7 +4364,8 @@
 <p><br>[Constant]<br><a class=none name='sdl-pre-alloc'><b>sdl-pre-alloc</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#surface">SURFACE</a>. <ul><li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a>;  Indicates that surface uses preallocated memory. </li>
+</ul>
 
 </blockquote>
 
@@ -3998,7 +4389,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-resizable'><b>sdl-resizable</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a>;  Create a resizable window. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates that the surface is resizable. </li>
+</ul><p>When the window is resized by the user a :VIDEO-RESIZE-EVENT event is generated and <a href="#window">WINDOW</a>  can be called again with the new size. </p>
 
 </blockquote>
 
@@ -4010,7 +4403,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-rle-accel'><b>sdl-rle-accel</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#surface">SURFACE</a><ul><li>When passed as a <code>FLAG</code> to <a href="#set-color-key">SET-COLOR-KEY</a>;  The surface will be drawn using RLE acceleration when drawn with <a href="#blit-surface">BLIT-SURFACE</a>, and  <a href="#draw-surface">DRAW-SURFACE</a>. The surface will actually be encoded for RLE acceleration the first time  <a href="#blit-surface">BLIT-SURFACE</a>, <a href="#draw-surface">DRAW-SURFACE</a> or <a href="#convert-surface">CONVERT-SURFACE</a>  is called on the surface. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a>;  Indicates that colorkey blitting is accelerated with RLE. </li>
+</ul><p>RLE acceleration can substantially speed up blitting of images with large horizontal runs of transparent pixels  (i.e., pixels that match the key color). The key must be of the same pixel format as the surface, <a href="#map-color">MAP-COLOR</a> is often useful for obtaining an acceptable value. </p>
 
 </blockquote>
 
@@ -4022,7 +4417,7 @@
 <p><br>[Constant]<br><a class=none name='sdl-rle-accel-ok'><b>sdl-rle-accel-ok</b></a>
 <blockquote><br>
 
-
+<p>Applies to <a href="#surface">SURFACE</a>. </p>
 
 </blockquote>
 
@@ -4034,7 +4429,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-src-alpha'><b>sdl-src-alpha</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#surface">SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#create-surface">CREATE-SURFACE</a> and <a href="#set-alpha">SET-ALPHA</a>;  Turns on alpha-blending for blits from this surface. If <a href="#sdl-hw-surface">SDL-HW-SURFACE</a> is also specified and  alpha-blending blits are hardware-accelerated, then the surface will be placed in video memory if possible. If the  screen is a hardware surface and alpha-blending blits are hardware-accelerated then the <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>  flag will be set. Use <a href="#set-alpha">SET-ALPHA</a> to set or clear this flag after surface creation. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a>;  Indicates that surface blitting uses alpha blending. </li>
+</ul>
 
 </blockquote>
 
@@ -4046,7 +4443,9 @@
 <p><br>[Constant]<br><a class=none name='sdl-src-color-key'><b>sdl-src-color-key</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#surface">SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#create-surface">CREATE-SURFACE</a> and <a href="#set-color-key">SET-COLOR-KEY</a>;  Turns on color keying for blits from this surface. If <a href="#sdl-hw-surface">SDL-HW-SURFACE</a> is also specified and color  keyed blits are hardware-accelerated, then SDL will attempt to place the surface in video memory. If the screen is a  hardware surface and color keyed blits are hardware-accelerated then the <a href="#sdl-hw-surface">SDL-HW-SURFACE</a> flag will be  set. Use <a href="#set-color-key">SET-COLOR-KEY</a> to set or clear this flag after surface creation. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a>;  Indicates that the surface uses colorkey blitting. </li>
+</ul>
 
 </blockquote>
 
@@ -4073,7 +4472,9 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Constant]<br><a class=none name='sdl-sw-surface'><b>sdl-sw-surface</b></a>
 <blockquote><br>
 
-
+Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed as a <code>FLAG</code> to <a href="#window">WINDOW</a> or <a href="#create-surface">CREATE-SURFACE</a>;  Create the <a href="#surface">SURFACE</a> or <a href="#display-surface">DISPLAY-SURFACE</a> in system memory. </li>
+<li>When read from the <code>FLAGS</code> field in <a href="#surface">SURFACE</a> or <a href="#display-surface">DISPLAY-SURFACE</a>;  Indicates if the surface is stored in system memory. </li>
+</ul><p>This improves the performance of pixel level access, however you may not be able to take advantage of some types of  hardware blitting. </p>
 
 </blockquote>
 
@@ -4133,7 +4534,19 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='set-alpha'><b>set-alpha</b> <i>alpha <tt>&amp;key</tt> surface rle-accel</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Adjust the alpha <code>ALPHA</code> properties of a surface <code>SURFACE</code>. Also enables or disables alpha blending.  </p><h5>Parameters </h5>
+<ul><li><code>ALPHA</code> when <code>NIL</code> will ignore all alpha information when blitting the surface. <code>ALPHA</code> when not <code>NIL</code> is an <code>INTEGER</code> value between <code>0</code> and <code>255</code> with <code>0</code> being transparent and <code>255</code> being opaque. <EM>Note</EM>: The per-surface alpha value of  128 is considered a special case and is optimised, so it&#039;s much faster than other per-surface values.  </li>
+<li><code>RLE-ACCEL</code> when <code>T</code> wil use RLE information when blitting. See <a href="#rle-accel">RLE-ACCEL</a>. </li>
+</ul><h5>Alpha effects </h5>
+<p>Alpha has the following effect on surface blitting:  </p><ul><li><STRONG>RGBA to RGB</STRONG> with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The source is alpha-blended with the destination, using the alpha channel. <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a>  and the per-surface alpha are ignored. </li>
+<li><STRONG>RGBA to RGB</STRONG> without <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored.  If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGBA</STRONG> with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The source is alpha-blended with the destination using the per-surface alpha value. If  <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not matching the colorkey value are copied.  The alpha channel of the copied pixels is set to opaque. </li>
+<li><STRONG>RGB to RGBA</STRONG> without <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque.  If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGBA to RGBA</STRONG> with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination  surface is left untouched. <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is ignored. </li>
+<li><STRONG>RGBA to RGBA</STRONG> without <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:	 The RGBA data is copied to the destination surface. If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set,  only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGB</STRONG> with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The source is alpha-blended with the destination using the per-surface alpha value.  If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGB</STRONG> without <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>: The RGB data is copied from the source. If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not  matching the colorkey value are copied. </li>
+</ul><p><EM>Note</EM>: When blitting, the presence or absence of <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a> is relevant only on the  source surface, not the destination.  </p><p><EM>Note</EM>: Note that <STRONG>RGBA to RGBA</STRONG> blits (with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a> set) keep the alpha of the destination  surface. This means that you cannot compose two arbitrary <STRONG>RGBA</STRONG> surfaces this way and get the result you would  expect from &quot;overlaying&quot; them; the destination alpha will work as a mask.  </p><p><EM>Note</EM>: Also note that per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used  if available. </p>
 
 </blockquote>
 
@@ -4229,7 +4642,10 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='set-color-key'><b>set-color-key</b> <i>color <tt>&amp;key</tt> surface rle-accel</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the color key (transparent pixel) <code>COLOR</code> in a blittable surface <code>SURFACE</code>. </p><h5>Paremeters </h5>
+<ul><li><code>COLOR</code> the color to be used as the transparent pixel of the surface when blitting,  of type <a href="#color">COLOR</a>, or <a href="#color-a">COLOR-A</a>. When &#039;NIL&#039; will disable color keying. </li>
+<li><code>RLE-ACCEL</code> when <code>T</code> will use RLE information when blitting. See <a href="#rle-accel">RLE-CCEL</a>. </li>
+</ul>
 
 </blockquote>
 
@@ -4589,7 +5005,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Function]<br><a class=none name='update-display'><b>update-display</b> <i><tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Flips the buffers and updates the screen <code>SURFACE</code> if <code>SDL-HW-SURFACE</code> is set in <a href="#window">WINDOW</a>.  If double buffering is not enabled then <code>UPDATE-DISPLAY</code> will perform a  <a href="#sdl-update-rect">SDL-UPDATE-RECT</a> on the entire screen. <code>SURFACE</code> is bound to <code>*DEFAULT-DISPLAY*</code> if unspecified. </p>
+<p>When <a href="#opengl-context">OPENGL-CONTEXT</a> is <code>NIL</code>; <code>UPDATE-DISPLAY</code> will flip the SDL video buffers and update  the screen <code>SURFACE</code> if <code>SDL-HW-SURFACE</code> is set in <a href="#window">WINDOW</a>. If double buffering is not enabled then  SDL will perform an <a href="#sdl-update-rect">SDL-UPDATE-RECT</a> on the entire screen. </p><p>When <a href="#opengl-context">OPENGL-CONTEXT</a> is <code>T</code>; <code>UPDATE-DISPLAY</code> will call  <a href="#sdl-gl-swap-buffers">SDL-GL-SWAP-BUFFERS</a> to update the OpenGL display context. </p><p><code>SURFACE</code> is bound to <code>*DEFAULT-DISPLAY*</code> if unspecified. </p>
 
 </blockquote>
 
@@ -4681,25 +5097,14 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <ul><li><code>WIDTH</code> the pixel width of the window, of type <code>INTEGER</code>. </li>
 <li><code>HEIGHT</code> the pixel height of the window, of type <code>INTEGER</code>. If <code>WIDTH</code> and <code>HEIGHT</code> are both <code>0</code>, then the width and height of the current video mode is used  (or the desktop mode, if no mode has been set). </li>
 <li><code>BPP</code> the number of bits per pixel. Defaults to <code>0</code> which is the current display bits per pixel. <EM>Note:</EM> A <code>BPP</code> of <code>24</code> uses the packed representation of 3 bytes/pixel.  For the more common 4 bytes/pixel mode, use a <code>BPP</code> of 32. </li>
-<li><code>FLAGS</code> is a bitmasked logior of one or more of the following; <code>SDL-SW-SURFACE</code>, <code>SDL-HW-SURFACE</code>, <code>SDL-ASYNC-BLIT</code>, <code>SDL-ANY-FORMAT</code>, <code>SDL-HW-PALETTE</code>, <code>SDL-DOUBLEBUF</code>, <code>SDL-FULLSCREEN</code>, <code>SDL-OPENGL</code>, <code>SDL-OPENGL-BLIT</code>, <code>SDL-RESIZABLE</code>  AND <code>SDL-NO-FRAME</code>. </li>
+<li><code>FLAGS</code> is a bitmasked logior of one or more of the following; <a href="#sdl-sw-surface">SDL-SW-SURFACE</a>,  <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>, <a href="#sdl-async-blit">SDL-ASYNC-BLIT</a>, <a href="#sdl-any-format">SDL-ANY-FORMAT</a>, <a href="#sdl-hw-palette">SDL-HW-PALETTE</a>,  <a href="#sdl-doublebuf">SDL-DOUBLEBUF</a>, <a href="#sdl-fullscreen">SDL-FULLSCREEN</a>,  <a href="#sdl-opengl">SDL-OPENGL</a>, <a href="#sdl-resizable">SDL-RESIZABLE</a> and <a href="#SDL-NO-FRAME">SDL-NO-FRAME</a>. </li>
 <li><code>TITLE-CAPTION</code> is the title that appears in the Window title bar, of type <code>STRING</code>. </li>
 <li><code>ICON-CAPTION</code> is the title that appears when the Window is minimized, of type <code>STRING</code>. </li>
-</ul><h5>Surface Flags </h5>
-<p>The following section descibes the flags that can be passed to <code>WINDOW</code> in <code>FLAGS</code>. </p><ul><li><code>SDL-SW-SURFACE</code>  Create the video surface in system memory. </li>
-<li><code>SDL-HW-SURFACE</code>  Create the video surface in video memory. </li>
-<li><code>SDL-ASYNC-BLIT</code>  Enables the use of asynchronous updates of the display surface. This will usually slow  down blitting on single CPU machines, but may provide a speed increase on SMP systems. </li>
-<li><code>SDL-ANY-FORMAT</code>  Normally, if a video surface of the requested <code>BPP</code> is not available, SDL will emulate  one with a shadow surface. Passing <code>SDL-ANY-FORMAT</code> prevents this and causes SDL to use the video surface,  regardless of its pixel depth. </li>
-<li><code>SDL-HW-PALETTE</code>  Give SDL exclusive palette access. Without this flag you may  not always get the the colors you request with <a href="#sdl-set-colors">SDL-SET-COLORS</a> or <a href="#sdl-set-palette">SDL-SET-PALETTE</a>. </li>
-<li><code>SDL-DOUBLEBUF</code>   Enable hardware double buffering; only valid with <code>SDL-HW-SURFACE</code>.  Calling <a href="#update-display">UPDATE-DISPLAY</a> will flip the buffers and update the screen. All drawing will  take place on the surface that is not displayed at the moment. If double buffering could not be  enabled then <a href="#update-display">UPDATE-DISPLAY</a> will just perform a <a href="#sdl-update-rect">SDL-UPDATE-RECT</a> on  the entire screen. </li>
-<li><code>SDL-FULLSCREEN</code>  SDL will attempt to use a fullscreen mode. If a hardware resolution change  is not possible (for whatever reason), the next higher resolution will be used and the display window  centered on a black background. </li>
-<li><code>SDL-OPENGL</code>	    Create an OpenGL rendering context. You should have previously set OpenGL video attributes with  <a href="#sdl-gl-set-attribute">SDL-GL-SET-ATTRIBUTE</a>. </li>
-<li><code>SDL-RESIZABLE</code>   Create a resizable window. When the window is resized by the user a <code>:VIDEO-RESIZE</code> event is  generated and <code>WINDOW</code> can be called again with the new size. </li>
-<li><code>SDL-NO-FRAME</code>    If possible, <code>SDL-NO-FRAME</code> causes SDL to create a window with no title bar or frame decoration.  Fullscreen modes automatically have this flag set. </li>
 </ul><h5>Return </h5>
 <ul><li>Returns a new <code>DISPLAY-SURFACE</code> if successful, <code>NIL</code> if unsuccessful. Whatever flags SDL_SetVideoMode  could satisfy are set in the flags member of <code>SURFACE</code>. The <code>SURFACE</code> returned is freed by SDL and should never be freed by the caller. This rule includes consecutive calls to <code>WINDOW</code> (i.e. upon resize or resolution change) - any existing surface  will be released automatically by SDL. </li>
 </ul><h5>Example </h5>
 <pre><code>(WINDOW 320 240 :TITLE-CAPTION &amp;quot;Random-Rects&amp;quot; :ICON-CAPTION &amp;quot;Random-Rects&amp;quot;
-                 :FLAGS (SDL-DOUBLEBUF SDL-FULLSCREEN))
+                 :FLAGS &amp;#039;(SDL-DOUBLEBUF SDL-FULLSCREEN))
 </code></pre>
 
 </blockquote>
@@ -4950,7 +5355,7 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
 <p><br>[Macro]<br><a class=none name='with-init'><b>with-init</b> <i>flags declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p><code>WITH-INIT</code> is a convenience macro that will attempt to initialise the SDL library and SDL subsystems  prior to executing the forms in <code>BODY</code>. Upon exit <code>WITH-INIT</code> will uninitialize the SDL library and SDL subsystems. </p><p>The lispbuilder-sdl initialization routines are somewhat complicated by the fact that  a Lisp development environment will load a foreign library once but then  initialise and uninitialise the library multiple times. A C/C++ development environemnt will open and then close a library  after each execution, freeing all resources left hanging by an incomplete or buggy uninitialise function.  C libraries may therefore frequently core dump in a Lisp environment when resources are not feed properly prior to the library  being reinitialized. </p><p>LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control  of the initialisation/uninitialisation of foreign libraries. The fuctions that provide these capabilities are as follows: </p><ul><li><a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a></li>
+<p><code>WITH-INIT</code> is a convenience macro that will attempt to initialise the SDL library and SDL subsystems  prior to executing the forms in <code>BODY</code>. Upon exit <code>WITH-INIT</code> will uninitialize the SDL library and SDL subsystems. </p><p>The lispbuilder-sdl initialization routines are somewhat complicated by the fact that  a Lisp development environment will load a foreign library once but then  initialise and uninitialise the library multiple times. A C/C++ development environment will open and then  close a library after each execution, freeing all resources left hanging by incomplete  or buggy uninitialise functions. C libraries may therefore frequently core dump in a Lisp environment when  resources are not feed properly prior to the library being reinitialized. </p><p>LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control  of the initialisation/uninitialisation of foreign libraries. The fuctions that provide these capabilities are as follows: </p><ul><li><a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a></li>
 <li><a href="#quit-on-exit">QUIT-ON-EXIT</a></li>
 <li><a href="#list-sub-systems">LIST-SUB-SYSTEMS</a></li>
 <li><a href="#return-sub-systems-of-status">RETURN-SUB-SYSTEMS-OF-STATUS</a></li>
@@ -4975,6 +5380,15 @@ A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> o
    (if (is-init)
      (sdl-ttf-cffi::ttf-quit)))
 (pushnew &amp;#039;quit-ttf sdl:*external-quit-on-exit*)
+</code></pre><h5>Parameters </h5>
+<ul><li><code>FLAGS</code> may be one or more of: <code>SDL-INIT-EVERYTHING</code>, <code>SDL-INIT-VIDEO</code>, <code>SDL-INIT-CDROM</code>, <code>SDL-INIT-AUDIO</code>,  <code>SDL-INIT-TIMER</code>, <code>SDL-INIT-JOYSTICK</code>, <code>SDL-INIT-EVENTTHREAD</code> and <code>SDL-INIT-NOPARACHUTE</code>. <EM>Note</EM>: When <code>FLAGS</code> is set by  <code>WITH-INIT</code>, subsequent calls to <a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a> and  <a href="#quit-on-exit">QUIT-ON-EXIT</a> are ignored. <code>WITH-INIT</code> will only initialize and uninitialize the subsytems  specified in <code>FLAGS</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(with-init (SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
+  ....)
+(with-init ()
+  (INITIALIZE-ON-STARTUP SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
+  (QUIT-ON-EXIT SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
+  ....)
 </code></pre>
 
 </blockquote>

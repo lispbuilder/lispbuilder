@@ -359,7 +359,7 @@
 	    <li><a href="#release">lispbuilder-WINDOWS</a></li>
 	    <li><a href="#release">lispbuilder-YACC</a></li>
 	  </ol>
-	  <li><a href="#download">Download</a></li>
+	  <li><a href="#downloads">Downloads</a></li>
 	  <li><a href="#installation">Installation</a></li>
 	  <ol>
 	    <li><a href="#windows">Windows</a></li>
@@ -598,37 +598,38 @@
     </table>
     
 
-    <br>&nbsp;</br><h2><a class=none name="download">Download</a></h2>
+    <br>&nbsp;</br><h2><a class=none name="downloads">Downloads</a></h2>
     <ul>
-      <li><font color=red>Development:</font> Available via anonymous SVN at:
+      <li>
+	<font color=red>Stable:</font> The latest stable versions of the LISPBUILDER packages for all platforms
+	are available <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">
+	  from the LISPBUILDER repository</a> on SourceForge.
+      </li>
+      <li><font color=red>Development:</font> The latest developement versions are available via anonymous SVN:
 	<pre>
 	  svn co https://lispbuilder.svn.sourceforge.net/svnroot/lispbuilder lispbuilder
 	</pre>
-      </li>
-      <li>
-	<font color=red>Stable:</font> The latest stable versions are available 
-	<a href="http://sourceforge.net/project/showfiles.php?group_id=159740">
-	  from the LISPBUILDER repository on SourceForge.</a>
-      </li>
-      <li>
-	<font color=red>'Lisp Starter Pack':</font> The 
-	<a href="http://www.balooga.com/lispbuilder/config.lisp">config.lisp</a> file for use 
-	with the <a href="http://weitz.de/starter-pack/">Lisp Starter Pack</a> 
-	from Edi Weitz.
+<!-- 	    <font color=red>The Edi Weitz 'Starter Pack' Version:</font> The stable version of Lispbuilder,  -->
+<!-- 	    suitable for the installation of installation ~2:*~A using the Lisp Starter Pack from Edi Weitz is can be downloaded from  -->
+<!-- 	    <a href="http://www.balooga.com/lispbuilder/~2:*~A.zip">http://www.balooga.com/lispbuilder/~:*~A.zip</a>. -->
       </li>
     </ul>
     
     <br>&nbsp;</br><h2><a class=none name="installation">Installation</a></h2>
-    
     <h3><a class=none name="windows">Windows Installation</a></h3>
+    <p>The many Lisp development enviroments for Windows can make the initial choice of a development environment
+      daunting for newbies. If you are new to Lisp or just want to try LISPBUILDER then the fastest way to get started
+      is to follow the installation instructions below:
+    </p>
     <ol>
-      <li>Get <a href="http://www.lispworks.com/downloads/">Lispworks Personal Edition</a>.</li>
-      <li>Get the <a href="http://weitz.de/starter-pack/">Edi Weitz's Lisp Starter Pack</a>.</li>
+      <li>Download and Install <a href="http://www.lispworks.com/downloads/">Lispworks Personal Edition</a>.</li>
+      <li>Download and Install <a href="http://weitz.de/starter-pack/">Edi Weitz's Lisp Starter Pack</a>.</li>
       <li>Download <a href="http://www.balooga.com/lispbuilder/config.lisp">config.lisp</a> and place into
 	the same directory as the Lisp Starter Pack in (2) above.</li>
       <li>Run the Lisp Starter Pack from (2), selecting the
 	LISPBUILDER-* packages to install</li>
-      <li>Start Lispworks. <em>Load</em> (don't Open) the <code>start.lisp</code> file found in the Lisp Starter Pack directory</li>
+      <li>Start Lispworks. <em>Load</em> (don't Open) the <code>start.lisp</code> file found in the 
+	Lisp Starter Pack directory</li>
       <li>Installation is now complete. See <a href="#usage">Using Lispbuilder</a> 
 	on how to use a LISPBUILDER package.
       </li>
