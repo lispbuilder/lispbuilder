@@ -73,6 +73,7 @@
    #:*external-quit-on-exit*
 
    #:*opengl-context*
+
    ;; init.lisp
    #:with-init
    #:initialize-on-startup
@@ -140,9 +141,17 @@
 
    #:free-font
 
-   ;; color.lisp
-   #:*white*
+   ;; default-colors.lisp
    #:*black*
+   #:*white*
+   #:*red*
+   #:*green*
+   #:*blue*
+   #:*yellow*
+   #:*cyan*
+   #:*magenta*
+   
+   ;; color.lisp
    #:sdl-color
    #:color
    #:color-a
