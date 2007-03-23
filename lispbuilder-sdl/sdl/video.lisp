@@ -46,7 +46,7 @@ For the more common 4 bytes/pixel mode, use a `BPP` of 32.
 * `ICON-CAPTION` is the title that appears when the Window is minimized, of type `STRING`.
 
 
-##### Return
+##### Returns
 
 * Returns a new `DISPLAY-SURFACE` if successful, `NIL` if unsuccessful. Whatever flags SDL_SetVideoMode 
 could satisfy are set in the flags member of `SURFACE`.

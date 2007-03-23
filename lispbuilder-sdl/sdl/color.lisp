@@ -18,8 +18,8 @@
   ((foreign-pointer-to-color :accessor fp :initform nil :initarg :color)))
 
 (defun color (&key (r 0) (g 0) (b 0) (a nil))
-  "Returns a new [COLOR](#color) from red `R`, green `G`, and blue `B` color components.
-When `A` is not `NIL`, will return a new [COLOR-A](#color-a) containing the alpha transparency."
+  "Creates and returns a new [COLOR](#color) from the soecified red `R`, green `G`, and blue `B` color components.
+When `A` is an `INTEGER`, will return a new [COLOR-A](#color-a) with the alpha transparency."
   (if a
       (make-instance 'color-a :color (vector (cast-to-int r)
 					     (cast-to-int g)
@@ -163,10 +163,9 @@ If the surface color depth is less than 32-bpp then the unused upper bits of the
 ;;      ,@body))
 
 (defmethod color= (color1 color2)
-  "Returns `NIL`. This is a catch all when an `RGB` color is compared with an `RGBA` color." 
-  (and (eq (r color1) (r color2))
-       (eq (g color1) (g color2))
-       (eq (b color1) (b color2))))
+  "Returns `NIL`. This is a catch all when an `RGB` color is compared with an `RGBA` color."
+  (declare (ignore color1 color2))
+  nil)
 
 (defmethod color= ((color1 color) (color2 color))
   "Returns `T` if the `RGB` colors match, returns `NIL` otherwise."  

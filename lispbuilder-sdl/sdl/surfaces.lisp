@@ -379,16 +379,11 @@ if available."
       (set-alpha alpha-value :surface surf :rle-accel rle-accel))
     surf))
 
-;;; TODO: This needs to be optimized.
 (defun update-surface (surface &optional template)
   (check-type surface sdl-surface)
   (if template
-      (if (typep template 'rectangle-array)
-	  (sdl-base::update-surface (fp surface) :template (fp template) :number (len template))
-	  (progn
-	    (check-type template rectagle)
-	    (sdl-base::update-surface (fp surface) :template (fp template))))
-      (sdl-base::update-surface (fp surface)))
+      (check-type template rectangle))
+  (sdl-base::update-surface (fp surface) :template (fp template))
   surface)
 
 (defun update-surface-* (surface x y w h)
