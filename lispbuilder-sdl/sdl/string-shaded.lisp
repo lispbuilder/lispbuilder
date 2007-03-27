@@ -17,7 +17,7 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 * `STRING` is the text to render. 
 * `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to 
-[*DEFAULT-FONT*](#*default-font*) if unspecified. 
+`*DEFAULT-FONT*` if unspecified. 
 * `FG-COLOR` color is the text color, of type `SDL-COLOR`
 * `BG-COLOR` color is the background color used to fill the surface, of type `SDL-COLOR`
 * `FREE` when `T` will free any exisiting cached surface in `FONT`.

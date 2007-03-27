@@ -33,9 +33,11 @@
       (sdl:set-position-* squash :x 0 :y 0)
       
       (show-score score)
-      (sdl:display-cursor nil)
+      (sdl:show-cursor nil)
       (sdl:with-events ()
 		       (:quit-event () t)
+		       (:key-down-event (:key key)
+					(when (eq key :sdl-key-escape) (sdl:push-quit-event)))
 		       (:mouse-motion-event (:x x :y y)
 					    (sdl:set-position-* racket :x x :y y))
 		       (:mouse-button-down-event (:x x :y y)

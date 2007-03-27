@@ -382,8 +382,10 @@ if available."
 (defun update-surface (surface &optional template)
   (check-type surface sdl-surface)
   (if template
-      (check-type template rectangle))
-  (sdl-base::update-surface (fp surface) :template (fp template))
+    (progn
+      (check-type template rectangle)
+      (sdl-base::update-surface (fp surface) :template (fp template)))
+    (sdl-base::update-surface (fp surface)))
   surface)
 
 (defun update-surface-* (surface x y w h)
@@ -420,7 +422,7 @@ if available."
    'dirty recs' screen update."
   (unless surface
     (setf surface *default-display*))
-  (check-type surface sdl-surface)
+s  (check-type surface sdl-surface)
   (check-type color sdl-color)
   (when template
     (check-type template rectangle))

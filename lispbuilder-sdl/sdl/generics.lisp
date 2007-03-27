@@ -195,3 +195,4 @@ remains unchanged between screen updates."))
 ##### Returns
 
 * Returns a new `SURFACE`, or `NIL` if `SOURCE` does not contain a valid image."))
+
