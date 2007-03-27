@@ -337,17 +337,17 @@
       <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
       
       <p>
-	LISPBUILDER-SDL comprises a set of packages allowing cross-platform game development using Common Lisp. 
+	LISPBUILDER-SDL comprises several of packages that allow game development using Common Lisp. 
 	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for  
-	<a href="http://www.libsdl.org">SDL</a> and other game-related graphics, sound, 
-	physics, character animation and 3D libraries. LISPBUILDER-SDL core functionality includes 
+	<a href="http://www.libsdl.org">SDL</a> and other graphics, sound, physics, character animation 
+	and 3D libraries. LISPBUILDER-SDL core functionality includes 
 	window and event management, 2D graphics, 3D graphics using OpenGL and sound support.
 	The goal for the LISPBUILDER-SDL project is to become a useful resource for the development of games in Lisp.
       </p>
 
       <p>
 	<a href="http://www.libsdl.org">SDL</a> provides the low-level 2D rendering support.
-	LISPBUILDER-SDL adds more sophisticated 2D graphical effects such as rotation, 
+	LISPBUILDER-SDL adds 2D graphical effects such as rotation, 
 	rendering circles, polygons, squares, Bezier and Cuttmull-Rom curves as well as bitmap font support.
 	Additional packages provide native C drawing functions, True Type font rendering, 
 	loading of multiple image formats, a sound mixer and networking support.
@@ -376,7 +376,7 @@
       </ul>
       <p>
 	<font color=red>Current Version:</font> The version of LISPBUILDER-SDL to use is the 
-	<a href="#downloads">SVN</a> version.
+	<a href="#downloads">latest version in SVN</a>.
       </p>
 <!--       <p> -->
 <!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl.zip</a>. -->
@@ -429,8 +429,8 @@
 	    <li><a href="#devloop">Events and the Game Loop</a></li>
 	    <li><a href="#devprim">Primitives</a></li>
 	    <ol>
-	      <li><a href="#devprimrect">Rectangles</a></li>
-	      <li><a href="#devprimcol">Colors</a></li>
+	      <li><a href="#devprimrect">Rectangle</a></li>
+	      <li><a href="#devprimcol">Color</a></li>
 	    </ol>
 	    <li><a href="#devdraw">Drawing</a></li>
 	    <li><a href="#font">Fonts</a></li>
@@ -444,9 +444,10 @@
 	      <li><a href="#devsurfcreat">Creation</a></li>
 	      <li><a href="#devsurfload">Loading Images</a></li>
 	      <li><a href="#devsurfpos">Positioning</a></li>
-	      <li><a href="#devsurfblit">Blitting and Drawing</a></li>
-	      <li><a href="#devdisp">Updating the Display</a></li>
+	      <li><a href="#devsurfblit">Drawing & Blitting</a></li>
 	    </ol>
+	    <li><a href="#devdisp">The SDL Display</a></li>
+	    <li><a href="#devcursor">The Cursor</a></li>
 	    <li><a href="#devex">Simple Example</a></li>
 	    <li><a href="#devgarbage">Garbage Collection</a></li>
 	  </ol>
@@ -721,6 +722,7 @@
 	  that needs to be executed once per game loop and that is not 'event' driven. This code may involve
 	  updating world physics, updating the state of game objects and rendering sprites to the display.
 	</p>
+
 	<pre>
 (WITH-EVENTS ()
   (:QUIT-EVENT () T)
@@ -738,6 +740,10 @@
 	  as the CPU will allow set the FRAME-RATE to NIL, <code>(SETF (SDL:FRAME-RATE) NIL)</code>
 	</p>
 
+	<p>The SDL display surface needs to be updated once per game loop, as described in the section 
+	  <a href="#devdisp">SDL Display</a>.
+	</p>
+
 	<pre>
 (SETF (FRAME-RATE) 30)
 (WITH-EVENTS ()
@@ -746,20 +752,50 @@
 
 	<h3><a class=none name="devprim">Primitives</a></h3>
 	<p>
+	  LISPBUILDER-SDL supports the SDL <a href="#rectangle">RECTANGLE</a> and <a href="#color">COLOR</a> primitives.
+	  These are described below.
 	</p>
 
-	<h4><a class=none name="devprimrect">Rectangles</a></h4>
+	<h4><a class=none name="devprimrect">Rectangle</a></h4>
 	<p>
+	  A new rectangle is created by the function <a href="#rectangle">RECTANGLE</a>. 
+	  The function <a href="#rectangle-from-edges">RECTANGLE-FROM-EDGES</a> will create a new rectangle
+	  from the specified top left and bottom right coordinates. The function 
+	  <a href="#rectangle-from-midpoint">RECTANGLE-FROM-MIDPOINT</a> will create a new rectangle from midpoint.
+	</p>
+	<p>
+	  The macros <a href="#with-rectangle">WITH-RECTANGLE</a> and <a href="#with-rectangle">WITH-RECTANGLEs</a>
+	  will create a new rectangle and free this rectangle when it goes out of scope. 
+	</p>
+	<p>
+	  The rectangle position and width and height can be inspected and modified using the following functions: 
+	  <a href="#x">X</a>, <a href="#y">Y</a>, <a href="#width">WIDTH</a> and <a href="#height">HEIGHT</a>. 
+	  <a href="#x2">X2</a> and <a href="#y2">Y2</a> will return the (+ x width) and (+ y height) of the rectangle respectively.
+	</p>
+	<p>
+	  Additional functions that operate on rectangles are as follows:
+	  <ul>
+	    <li><a href="#point-*">POINT-*</a></li>
+	    <li><a href="#get-point">GET-POINT</a></li>
+	    <li><a href="#set-point">SET-POINT</a></li>
+	    <li><a href="#position">POSITION</a></li>
+	    <li><a href="#get-position">GET-POSITION</a></li>
+	    <li><a href="#rectangle-*">RECTANGLE-*</a></li>
+	    <li><a href="#get-rectangle">GET-RECTANGLE</a></li>
+	    <li><a href="#set-rectangle">SET-RECTANGLE</a></li>
+	    <li><a href="#draw-box">DRAW-BOX</a>, <a href="#draw-rectangle">DRAW-RECTANGLE</a></li>
+	  </ul>
+	  The section <a href="#devdraw">Drawing</a> describes how to render a rectangle to a surface.
 	</p>
 
-	<h4><a class=none name="devprimcol">Colors</a></h4>
+	<h4><a class=none name="devprimcol">Color</a></h4>
 	<p>
-	  A new SDL color is created by <a href="#color">COLOR</a>, returning either a new RGB or RGBA color. RGB/A 
-	  color componets can be manipulated using the functions <a href="#r">R</a>, <a href="#g">G</a>, 
+	  A new SDL color is created by <a href="#color">COLOR</a>, returning either a new RGB or RGBA color. 
+	</p>
+	<p>
+	  RGB/A color componets can be manipulated using the functions <a href="#r">R</a>, <a href="#g">G</a>, 
 	  <a href="#b">B</a>, <a href="#a">A</a>, <a href="#set-color">SET-COLOR</a> and 
 	  <a href="#set-color-*">SET-COLOR-*</a>. Two colors may be compared using <a href="#color==">COLOR=</a>.
-	  A description of the <a href="#map-color">MAP-COLOR</a> and <a href="#pack-color">PACK-COLOR</a> are provided
-	  in these function definitions.
 	</p>
 	<p>
 	  Functions that accept a color parameter will most likely bind color to 
@@ -769,12 +805,21 @@
 	  all subsequent drawing functions will use this implied color while it remains in scope.
 	</p>
 	<p>
+	  Additional functions that operate on colors are as follows:
+	  <ul>
+	    <li><a href="#color-*">COLOR-*</a></li>
+	    <li><a href="#any-color-but-this">ANY-COLOR-BUT-THIS</a></li>
+	    <li><a href="#map-color">MAP-COLOR</a></li>
+	    <li><a href="#pack-color">PACK-COLOR</a></li>
+	  </ul>
+	</p>
+	<p>
 	  LISPBULDER-SDL contains several predefined colors; <a href="#*black*">*BLACK*</a>, 
 	  <a href="#*white*">*WHITE*</a>.
 	</p>
 
 
-	<h3><a class=none name="devdraw">Drawing Primitives</a></h3>
+	<h3><a class=none name="devdraw">Drawing</a></h3>
 	<p>
 	  LISPBUILDER-SDL provides low-level drawing support for several primitives. Most primitives can be drawn
 	  with or without alpha transparency. In addition, the filled primitives can be drawn with a single pixel 
@@ -907,43 +952,135 @@
 
 	<h4><a class=none name="devsurfover">Overview of Surfaces</a></h4>
 	<p>
-	  ...
+	  An SDL surface, <a href="#surface">SURFACE</a>, represents an area of <em>graphical</em> memory 
+	  that can be drawn or rendered to, for example the video framebuffer or an image that is loaded from disk.
 	</p>
 
 	<h4><a class=none name="devsurfcreat">Creating Surfaces</a></h4>
 	<p>
-	  ...
+	  A surface is created:
+	  <ul>
+	    <li>Automatically by the SDL library to represent a framebuffer by 
+	  calling <a href="#window">WINDOW</a>.</li>
+	    <li>When loading an image from disk using <a href="#load-image">LOAD-IMAGE</a>.</li>
+	    <li>Explicitely using <a href="#create-surface">CREATE-SURFACE</a>, or 
+	      <a href="#copy-surface">COPY-SURFACE</a>.</li>
+	    <li>Implicitely using <a href="#convert-surface">CONVERT-SURFACE</a>.</li>
+	  </ul>
+	</p>
+	<p>
+	  Functions that accept a surface parameter will most likely bind surface to 
+	  <a href="#*default-surface*">*DEFAULT-SURFACE*</a> when unspecified. 
+	  The macros <a href="#with-surface">WITH-SURFACE</a> and <a href="#with-surfaces">WITH-SURFACES</a> will bind a 
+	  surface to <a href="#*default-surface*">*DEFAULT-SURFACE*</a> within the scope of these macro. 
+	  When <a href="#*default-surface*">*DEFAULT-SURFACE*</a> is bound to a surface, 
+	  all subsequent drawing functions will use this implied surface while it remains in scope.
+	</p>
+	<p>
+	  A surface can be explicitely freed by calling <a href="#free-surface">FREE-SURFACE</a>.
 	</p>
 
-	<h4><a class=none name="devsurfload">Loading Images</a></h4>
+	<h4><a class=none name="devsurfload">Images</a></h4>
 	<p>
-	  ...
+	  BMP images are loaded from disk using <a href="#load-image">LOAD-IMAGE</a>. Support for additional 
+	  image formats is provided in the <a href="lispbuilder-sdl-image.html">LISPBUILDER-SDL-IMAGE</a> package. 
+	  A surface is saved to disk as a BMP image using <a href="#save-image">SAVE-IMAGE</a>.
 	</p>
 
-	<h4><a class=none name="devsurfpos">Positioning Surfaces</a></h4>
-	<p>
-	  ...
-	</p>
-
-	<h4><a class=none name="devsurfblit">Blitting and Drawing Surfaces</a></h4>
-	<p>
-	  The functions <a href="#blit-surface">BLIT-SURFACE</a> and <a href="#draw-surface">DRAW-SURFACE</a> will 
-	  blit a source surface onto a target surface. The composition rules that determine how the source surface
-	  is blitted over the target surface are described in <a href="#blit-surface">BLIT-SURFACE</a>.
-	  <a href="#devprim">Drawing Primitives</a> describes how <a href="#*default-surface*">*DEFAULT-SURFACE*</a> 
-	  is used when calling blitting operations.
-	</p>
 	<pre>
 (DRAW-SURFACE (LOAD-IMAGE "sdl.bmp") 
               :surface *default-display*)
 	</pre>
 
-	<h4><a class=none name="devdisp">Updating SDL Surfaces and the SDL Display</a></h4>
-	<p>	  
-	  The functions <a href="#update-display">UPDATE-DISPLAY</a> and <a href="#update-surface">UPDATE-SURFACE</a>
-	  update the SDL display surface (or OpenGL context) and SDL general surfaces respectively.
+	<h4><a class=none name="devsurfpos">Positioning Surfaces</a></h4>
+	<p>
+	  A <a href="#surface">SURFACE</a> stores its own position X/Y coordinates. These coordinates 
+	  can be inspected and modified using the following functions: 
+	  <a href="#x">X</a>, <a href="#y">Y</a>, <a href="#width">WIDTH</a> and <a href="#height">HEIGHT</a>. 
+	</p>
+	<p>
+	  Additional functions and macros that manage surface coordinates are as follows: 
+	  <ul>
+	    <li><a href="#point-*">POINT-*</a></li>
+	    <li><a href="#get-point">GET-POINT</a></li>
+	    <li><a href="#set-point">SET-POINT</a></li>
+	    <li><a href="#set-point-*">SET-POINT-*</a></li>
+	    <li><a href="#position-*">POSITION-*</a></li>
+	    <li><a href="#get-position">GET-POSITION</a></li>
+	    <li><a href="#set-position-*">GET-POSITION</a></li>
+	    <li><a href="#set-surface">SET-SURFACE</a></li>
+	    <li><a href="#set-surface-*">SET-SURFACE-*</a></li>
+	    <li><a href="#rectangle-*">RECTANGLE-*</a></li>
+	    <li><a href="#get-rectangle-*">GET-RECTANGLE-*</a></li>
+	    <li><a href="#get-surface-rect">GET-SURFACE-RECT</a></li>
+	    <li><a href="#draw-surface-at">DRAW-SURFACE-AT</a></li>
+	  </ul>
 	</p>
 
+	<h4><a class=none name="devsurfblit">Drawing & Blitting Surfaces</a></h4>
+	<p>The functions <a href="#blit-surface">BLIT-SURFACE</a> and <a href="#draw-surface">DRAW-SURFACE</a> will 
+	  blit or draw a source surface onto a destination surface using the position coordinates stored in the source surface.
+	  <a href="#draw-surface-at">DRAW-SURFACE-AT</a> will draw the source surface at a specified position.
+	</p>
+	<p>
+	  The composition rules that determine how the source surface is composed over the destination surface are 
+	  described in the description of <a href="#blit-surface">BLIT-SURFACE</a>.
+	  <a href="#fill-surface">FILL-SURFACE</a> fill will the target surface with a single color.
+	  <a href="#devprim">Drawing Primitives</a> describes how <a href="#*default-surface*">*DEFAULT-SURFACE*</a> 
+	  is used when calling blitting operations.
+	</p>
+	<p>
+	  Use <a href="#set-color-key">SET-COLOR-KEY</a> and <a href="#clear-color-key">CLEAR-COLOR-KEY</a>  
+	  <a href="#set-alpha">SET-ALPHA</a> to modify the key color and alpha transparency proporties of a surface after the 
+	  surface has been created.
+	</p>
+	<p>
+	  Set a <em>clipping</em> rectangle to limit the draw area on a destination surface. 
+	  The clipping rectangle for a surface is manipulated using <a href="#get-clip-rect">GET-CLIP-RECT</a> and 
+	  <a href="#set-clip-rect">SET-CLIP-RECT</a>. When this surface is the destination of a blit, 
+	  only the area within the <em>clip</em> rectangle will be drawn into.
+	</p>
+	<p>
+	  Set a <em>cell</em> rectangle to limit the surface area on the source surface.
+	  The cell rectangle for a surface is manipulated using <a href="#clear-cell">CLEAR-CELL</a> and 
+	  <a href="#set-cell">SET-CELL</a>. When this surface is the source of a blit, 
+	  only the areas within the <em>cell</em> rectangle will be used. 
+	  The cell is useful when only a small area of the source surface needs to be blitted to the destination surface. 
+	  For example a sequence of images composed into a single sprite sheet and only the current frame of animation
+	  is to be drawn to the display at any one time.
+	</p>
+	<p>
+	  <img src="waddle.png" width="285" height="51" title="Sprite Sheet" alt="Sprite Sheet"/>
+	</p>
+
+	<h4><a class=none name="devupdate">Updating SDL Surfaces and the SDL Display</a></h4>
+	<p>	  
+	  The functions <a href="#update-display">UPDATE-DISPLAY</a> and <a href="#update-surface">UPDATE-SURFACE</a>
+	  update the SDL display surface (or OpenGL context) and general SDL surfaces respectively.
+	</p>
+
+	<h3><a class=none name="devdisp">The SDL Display</a></h3>
+	<p>  
+	  The SDL display surface must be updated at least once each game loop using the function 
+	  <a href="#update-display">UPDATE-DISPLAY</a>. This function will call 
+	  <a href="#sdl-gl-swap-buffers">SDL-GL-SWAP-BUFFERS</a> to update the OpenGL display, 
+	  or <a href="#sdl-flip">SDL-FLIP</a> to update the SDL surface depending on the current 
+	  <a href="#*opengl-context*">*OPENGL-CONTEXT*</a>. The display can be filled with a background
+	  color using <a href="#clear-display">CLEAR-DISPLAY</a>.
+	</p>
+	<p>
+	  The properties of an SDL surface can be queried using <a href="#surface-info">SURFACE-INFO</a>.
+	  The properties of the SDL display and video hardware can be queried using <a href="#video-info">VIDEO-INFO</a>.
+	  The screen resolutions supported by a particular set of video flags can be retrieved using 
+	  <a href="#list-modes">LIST-MODES</a>. A pointer to the native SDL window can be retrieved using
+	  <a href="#get-native-window">GET-NATIVE-WINDOW</a>. The name of the video driver can be retrieved as a STRING 
+	  using <a href="#video-driver-name">VIDEO-DRIVER-NAME</a>.
+
+	<h3><a class=none name="devcursor">The Cursor</a></h3>
+	<p>  
+	  The the current state of the cursor is returned using <a href="#query-cursor">QUERY-CURSOR</a>, and is set using 
+	  <a href="#query-cursor">SHOW-CURSOR</a>.
+	</p>
 
 	<h3><a class=none name="devex">Simple Example</a></h3>
 	<p>
@@ -981,6 +1118,8 @@
 	<br>&nbsp;</br><h2><a class=none name="dictionary">The LISPBUILDER-SDL dictionary Index</h2>
 	  <ol>
 	          <li><a href="#*black*"><code>*black*</code></a>
+	            <li><a href="#*blue*"><code>*blue*</code></a>
+	            <li><a href="#*cyan*"><code>*cyan*</code></a>
 	            <li><a href="#*default-color*"><code>*default-color*</code></a>
 	            <li><a href="#*default-display*"><code>*default-display*</code></a>
 	            <li><a href="#*default-font*"><code>*default-font*</code></a>
@@ -1012,9 +1151,13 @@
 	            <li><a href="#*font-9x15b*"><code>*font-9x15b*</code></a>
 	            <li><a href="#*font-9x18*"><code>*font-9x18*</code></a>
 	            <li><a href="#*font-9x18b*"><code>*font-9x18b*</code></a>
+	            <li><a href="#*green*"><code>*green*</code></a>
+	            <li><a href="#*magenta*"><code>*magenta*</code></a>
 	            <li><a href="#*opengl-context*"><code>*opengl-context*</code></a>
+	            <li><a href="#*red*"><code>*red*</code></a>
 	            <li><a href="#*sdl-initialized*"><code>*sdl-initialized*</code></a>
 	            <li><a href="#*white*"><code>*white*</code></a>
+	            <li><a href="#*yellow*"><code>*yellow*</code></a>
 	            <li><a href="#a"><code>a</code></a>
 	            <li><a href="#all-integers?"><code>all-integers?</code></a>
 	            <li><a href="#any-color-but-this"><code>any-color-but-this</code></a>
@@ -1045,7 +1188,6 @@
 	            <li><a href="#create-path"><code>create-path</code></a>
 	            <li><a href="#create-rwops-from-file"><code>create-rwops-from-file</code></a>
 	            <li><a href="#create-surface"><code>create-surface</code></a>
-	            <li><a href="#display-cursor"><code>display-cursor</code></a>
 	            <li><a href="#distance"><code>distance</code></a>
 	            <li><a href="#distance-*"><code>distance-*</code></a>
 	            <li><a href="#draw-bezier"><code>draw-bezier</code></a>
@@ -1096,6 +1238,7 @@
 	            <li><a href="#free-surface"><code>free-surface</code></a>
 	            <li><a href="#g"><code>g</code></a>
 	            <li><a href="#get-clip-rect"><code>get-clip-rect</code></a>
+	            <li><a href="#get-native-window"><code>get-native-window</code></a>
 	            <li><a href="#get-point"><code>get-point</code></a>
 	            <li><a href="#get-position"><code>get-position</code></a>
 	            <li><a href="#get-rectangle"><code>get-rectangle</code></a>
@@ -1109,6 +1252,7 @@
 	            <li><a href="#initialized-sub-systems-p"><code>initialized-sub-systems-p</code></a>
 	            <li><a href="#is-valid-ptr"><code>is-valid-ptr</code></a>
 	            <li><a href="#key="><code>key=</code></a>
+	            <li><a href="#list-modes"><code>list-modes</code></a>
 	            <li><a href="#list-sub-systems"><code>list-sub-systems</code></a>
 	            <li><a href="#load-image"><code>load-image</code></a>
 	            <li><a href="#map-color"><code>map-color</code></a>
@@ -1118,6 +1262,7 @@
 	            <li><a href="#position-*"><code>position-*</code></a>
 	            <li><a href="#push-quit-event"><code>push-quit-event</code></a>
 	            <li><a href="#push-user-event"><code>push-user-event</code></a>
+	            <li><a href="#query-cursor"><code>query-cursor</code></a>
 	            <li><a href="#quit-on-exit"><code>quit-on-exit</code></a>
 	            <li><a href="#quit-sdl"><code>quit-sdl</code></a>
 	            <li><a href="#quit-sub-systems"><code>quit-sub-systems</code></a>
@@ -1187,13 +1332,17 @@
 	            <li><a href="#set-rectangle-*"><code>set-rectangle-*</code></a>
 	            <li><a href="#set-surface"><code>set-surface</code></a>
 	            <li><a href="#set-surface-*"><code>set-surface-*</code></a>
+	            <li><a href="#show-cursor"><code>show-cursor</code></a>
 	            <li><a href="#surface"><code>surface</code></a>
 	            <li><a href="#surface"><code>surface</code></a>
+	            <li><a href="#surface-info"><code>surface-info</code></a>
 	            <li><a href="#to-degree"><code>to-degree</code></a>
 	            <li><a href="#to-radian"><code>to-radian</code></a>
 	            <li><a href="#update-display"><code>update-display</code></a>
 	            <li><a href="#update-surface"><code>update-surface</code></a>
 	            <li><a href="#update-surface-*"><code>update-surface-*</code></a>
+	            <li><a href="#video-driver-name"><code>video-driver-name</code></a>
+	            <li><a href="#video-info"><code>video-info</code></a>
 	            <li><a href="#width"><code>width</code></a>
 	            <li><a href="#window"><code>window</code></a>
 	            <li><a href="#with-bezier"><code>with-bezier</code></a>
@@ -1241,6 +1390,30 @@
 </blockquote>
 
 <!-- End of entry for *BLACK* -->
+
+
+<!-- Entry for *BLUE* -->
+
+<p><br>[Special variable]<br><a class=none name='*blue*'><b>*blue*</b></a>
+<blockquote><br>
+
+<p>The <code>COLOR</code> blue. </p>
+
+</blockquote>
+
+<!-- End of entry for *BLUE* -->
+
+
+<!-- Entry for *CYAN* -->
+
+<p><br>[Special variable]<br><a class=none name='*cyan*'><b>*cyan*</b></a>
+<blockquote><br>
+
+<p>The <code>COLOR</code> cyan. </p>
+
+</blockquote>
+
+<!-- End of entry for *CYAN* -->
 
 
 <!-- Entry for *DEFAULT-COLOR* -->
@@ -1632,6 +1805,30 @@
 <!-- End of entry for *FONT-9X18B* -->
 
 
+<!-- Entry for *GREEN* -->
+
+<p><br>[Special variable]<br><a class=none name='*green*'><b>*green*</b></a>
+<blockquote><br>
+
+<p>The <code>COLOR</code> green. </p>
+
+</blockquote>
+
+<!-- End of entry for *GREEN* -->
+
+
+<!-- Entry for *MAGENTA* -->
+
+<p><br>[Special variable]<br><a class=none name='*magenta*'><b>*magenta*</b></a>
+<blockquote><br>
+
+<p>The <code>COLOR</code> magenta. </p>
+
+</blockquote>
+
+<!-- End of entry for *MAGENTA* -->
+
+
 <!-- Entry for *OPENGL-CONTEXT* -->
 
 <p><br>[Special variable]<br><a class=none name='*opengl-context*'><b>*opengl-context*</b></a>
@@ -1642,6 +1839,18 @@
 </blockquote>
 
 <!-- End of entry for *OPENGL-CONTEXT* -->
+
+
+<!-- Entry for *RED* -->
+
+<p><br>[Special variable]<br><a class=none name='*red*'><b>*red*</b></a>
+<blockquote><br>
+
+<p>The <code>COLOR</code> red. </p>
+
+</blockquote>
+
+<!-- End of entry for *RED* -->
 
 
 <!-- Entry for *SDL-INITIALIZED* -->
@@ -1666,6 +1875,18 @@
 </blockquote>
 
 <!-- End of entry for *WHITE* -->
+
+
+<!-- Entry for *YELLOW* -->
+
+<p><br>[Special variable]<br><a class=none name='*yellow*'><b>*yellow*</b></a>
+<blockquote><br>
+
+<p>The <code>COLOR</code> yellow. </p>
+
+</blockquote>
+
+<!-- End of entry for *YELLOW* -->
 
 
 <!-- Entry for A -->
@@ -1964,10 +2185,10 @@
 
 <!-- Entry for CLEAR-DISPLAY -->
 
-<p><br>[Function]<br><a class=none name='clear-display'><b>clear-display</b> <i>color <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='clear-display'><b>clear-display</b> <i>color <tt>&amp;key</tt> surface update-p</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Fills the display <code>SURFACE</code> using color <code>COLOR</code>. <code>SURFACE</code> is bound to <code>*DEFAULT-DISPLAY*</code> if unspecified. </p>
+<p>Fills the display <code>SURFACE</code> using color <code>COLOR</code>. <code>SURFACE</code> is bound to <code>*DEFAULT-DISPLAY*</code> if unspecified.  The display is updated when <code>UPDATE-P</code> is <code>T</code>. </p>
 
 </blockquote>
 
@@ -1991,7 +2212,7 @@
 <p><br>[Function]<br><a class=none name='color'><b>color</b> <i><tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a new <a href="#color">COLOR</a> from red <code>R</code>, green <code>G</code>, and blue <code>B</code> color components. When <code>A</code> is not <code>NIL</code>, will return a new <a href="#color-a">COLOR-A</a> containing the alpha transparency. </p>
+<p>Creates and returns a new <a href="#color">COLOR</a> from the soecified red <code>R</code>, green <code>G</code>, and blue <code>B</code> color components. When <code>A</code> is an <code>INTEGER</code>, will return a new <a href="#color-a">COLOR-A</a> with the alpha transparency. </p>
 
 </blockquote>
 
@@ -2188,18 +2409,6 @@
 </blockquote>
 
 <!-- End of entry for CREATE-SURFACE -->
-
-
-<!-- Entry for DISPLAY-CURSOR -->
-
-<p><br>[Function]<br><a class=none name='display-cursor'><b>display-cursor</b> <i>toggle</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for DISPLAY-CURSOR -->
 
 
 <!-- Entry for DISTANCE -->
@@ -2837,7 +3046,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>rwops</i> =&gt; <i>result</i></a>
+<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>object</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>rwops</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2850,7 +3059,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Method]<br><a class=none><b>fp</b> <i>(rwops sdl-font)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>fp</b> <i>(object sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns the cached surface <code>SURFACE</code> in <code>FONT</code>, or <code>NIL</code> if the font does not contain a cached surface. </p>
@@ -2862,7 +3071,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops rwops)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(object rwops)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops rwops)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2875,7 +3084,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops rectangle-array)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(object rectangle-array)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops rectangle-array)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2888,7 +3097,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Method]<br><a class=none><b>fp</b> <i>(rwops sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>fp</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -2900,7 +3109,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(object rectangle)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2913,7 +3122,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops foreign-color)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(object foreign-color)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops foreign-color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2926,7 +3135,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops color-a)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(object color-a)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2939,7 +3148,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops color)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(object color)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2978,7 +3187,7 @@
 
 <!-- Entry for FP-POSITION -->
 
-<p><br>[Generic function]<br><a class=none name='fp-position'><b>fp-position</b> <i>sdl-surface</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='fp-position'><b>fp-position</b> <i>object</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns the default foreign SDL_Rect object for <code>OBJECT</code>. </p>
@@ -2990,7 +3199,7 @@
 
 <!-- Entry for FP-POSITION -->
 
-<p><br>[Method]<br><a class=none><b>fp-position</b> <i>(sdl-surface sdl-font)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>fp-position</b> <i>(object sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns the <code>X</code> and <code>Y</code> coordinates of the cached surface <code>SURFACE</code> in <code>FONT</code>, as <code>POINT</code>. </p>
@@ -3002,7 +3211,7 @@
 
 <!-- Entry for FP-POSITION -->
 
-<p><br>[Method]<br><a class=none><b>fp-position</b> <i>(sdl-surface sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>fp-position</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -3252,6 +3461,18 @@
 </blockquote>
 
 <!-- End of entry for GET-CLIP-RECT -->
+
+
+<!-- Entry for GET-NATIVE-WINDOW -->
+
+<p><br>[Function]<br><a class=none name='get-native-window'><b>get-native-window</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a foreign pointer to the native SDL display window. </p>
+
+</blockquote>
+
+<!-- End of entry for GET-NATIVE-WINDOW -->
 
 
 <!-- Entry for GET-POINT -->
@@ -3528,6 +3749,25 @@
 <!-- End of entry for KEY= -->
 
 
+<!-- Entry for LIST-MODES -->
+
+<p><br>[Function]<br><a class=none name='list-modes'><b>list-modes</b> <i>flags <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a LIST of vectors sorted largest to smallest that contains the width and height  dimensions of the screen that will support the pixel format of the specified  surface <code>SURFACE</code> and video flags <code>FLAGS</code>. <code>LIST-MODES</code> must be called after SDL is  initialised using <a href="#init-sdl">INIT-SDL</a> or <a href="#with-init">WITH-INIT</a>. </p><h5>Parameters </h5>
+<ul><li><code>FLAGS</code> is a bitmasked logior of one or more of the following; <a href="#sdl-sw-surface">SDL-SW-SURFACE</a>,  <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>, <a href="#sdl-async-blit">SDL-ASYNC-BLIT</a>, <a href="#sdl-any-format">SDL-ANY-FORMAT</a>, <a href="#sdl-hw-palette">SDL-HW-PALETTE</a>,  <a href="#sdl-doublebuf">SDL-DOUBLEBUF</a>, <a href="#sdl-fullscreen">SDL-FULLSCREEN</a>,  <a href="#sdl-opengl">SDL-OPENGL</a>, <a href="#sdl-resizable">SDL-RESIZABLE</a> and <a href="#sdl-no-frame">SDL-NO-FRAME</a>. </li>
+<li><code>SURFACE</code> A surface of type <a href="#sdl-surface]">SDL-SURFACE</a>, or <code>NIL</code>. WHEN <code>NIL</code>, the pixel format will be that returned by <a href="#sdl-get-video-info]">SDL-GET-VIDEO-INFO</a>. </li>
+</ul><h5>Returns </h5>
+<ul><li>Returns a list of <code>VECTOR</code>s of display dimensions, sorted largest to smallest, that will support  the pixel format of surface <code>SURFACE</code>; for example <code>(#(1024 768) #(640 480) #(512 384) #(320 240))</code>. Returns <code>NIL</code> if there are no dimensions available for a particular pixel format.  Returns <code>T</code> if any dimension will support the pixel format and video flags. </li>
+</ul><h5>Example </h5>
+<pre><code>(LIST-MODES &amp;#039;(SDL-HW-SURFACE SDL-FULLSCREEN))
+</code></pre>
+
+</blockquote>
+
+<!-- End of entry for LIST-MODES -->
+
+
 <!-- Entry for LIST-SUB-SYSTEMS -->
 
 <p><br>[Function]<br><a class=none name='list-sub-systems'><b>list-sub-systems</b> <i>flag</i> =&gt; <i>result</i></a>
@@ -3781,6 +4021,18 @@
 <!-- End of entry for PUSH-USER-EVENT -->
 
 
+<!-- Entry for QUERY-CURSOR -->
+
+<p><br>[Function]<br><a class=none name='query-cursor'><b>query-cursor</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Queries the current state of the cursor.  Returns <code>T</code> if the cursor is enabled and shown on the display. Returns <code>NIL</code> if the cursor  is disabled and hidden. </p>
+
+</blockquote>
+
+<!-- End of entry for QUERY-CURSOR -->
+
+
 <!-- Entry for QUIT-ON-EXIT -->
 
 <p><br>[Function]<br><a class=none name='quit-on-exit'><b>quit-on-exit</b> <i><tt>&amp;rest</tt> flags</i> =&gt; <i>result</i></a>
@@ -3993,7 +4245,7 @@
 
 <p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>FG-COLOR</code> and background color <code>BG-COLOR</code> to a new <code>SURFACE</code>.  The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is filled with <code>BG-COLOR</code> so the surface cannot be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters </h5>
 <ul><li><code>STRING</code> is the text to render.  </li>
-<li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
+<li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to  <code>*DEFAULT-FONT*</code> if unspecified.  </li>
 <li><code>FG-COLOR</code> color is the text color, of type <code>SDL-COLOR</code></li>
 <li><code>BG-COLOR</code> color is the background color used to fill the surface, of type <code>SDL-COLOR</code></li>
 <li><code>FREE</code> when <code>T</code> will free any exisiting cached surface in <code>FONT</code>. </li>
@@ -4001,7 +4253,7 @@
 </ul><h5>Returns </h5>
 <ul><li>Returns a new cached surface <code>SDL-SURFACE</code>. </li>
 </ul><h5>Example </h5>
-<pre><code>(DRAW-STRING-SHADED &amp;quot;Hello World!&amp;quot; F-COLOR B-COLOR)
+<pre><code>(RENDER-STRING-SHADED &amp;quot;Hello World!&amp;quot; F-COLOR B-COLOR)
 </code></pre>
 
 </blockquote>
@@ -4952,6 +5204,18 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for SET-SURFACE-* -->
 
 
+<!-- Entry for SHOW-CURSOR -->
+
+<p><br>[Function]<br><a class=none name='show-cursor'><b>show-cursor</b> <i>state</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Disables the cursor when state is <code>NIL</code>, otherwise enables the cursor. </p>
+
+</blockquote>
+
+<!-- End of entry for SHOW-CURSOR -->
+
+
 <!-- Entry for SURFACE -->
 
 <p><br>[Standard class]<br><a class=none name='surface'><b>surface</b></a>
@@ -4974,6 +5238,24 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 </blockquote>
 
 <!-- End of entry for SURFACE -->
+
+
+<!-- Entry for SURFACE-INFO -->
+
+<p><br>[Function]<br><a class=none name='surface-info'><b>surface-info</b> <i>surface <tt>&amp;optional</tt> info</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns information about the SDL surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>SURFACE</code> is an SDL surface of type <a href="#sdl-surface">SDL-SURFACE</a>. </li>
+<li><code>INFO</code> must be one of <code>NIL</code>, <a href="#sdl-sw-surface">SDL-SW-SURFACE</a>,  <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>, <a href="#sdl-async-blit">SDL-ASYNC-BLIT</a>, <a href="#sdl-any-format">SDL-ANY-FORMAT</a>, <a href="#sdl-hw-palette">SDL-HW-PALETTE</a>,  <a href="#sdl-doublebuf">SDL-DOUBLEBUF</a>, <a href="#sdl-fullscreen">SDL-FULLSCREEN</a>,  <a href="#sdl-opengl">SDL-OPENGL</a>, <a href="#sdl-resizable">SDL-RESIZABLE</a><a href="#sdl-hw-accel">SDL-HW-ACCEL</a>, <a href="#sdl-src-color-key">SDL-SRC-COLOR-KEY</a>, <a href="#sdl-rle-accel">SDL-RLE-ACCEL</a>, <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>  or <a href="#sdl-pre-alloc">SDL-PRE-ALLOC</a>. </li>
+</ul><h5>Returns </h5>
+<p><code>INFO</code> when <code>NIL</code> will return a list of all enabled surface flags. Otherwise will return the status of <code>INFO</code> as <code>T</code> or <code>NIL</code> if supported by the surface. </p><h5>Example </h5>
+<pre><code>(SURFACE-INFO A-SURFACE &amp;#039;(SDL-HW-SURFACE SDL-HW-PALETTE SDL-HW-ACCELL))
+</code></pre>
+
+</blockquote>
+
+<!-- End of entry for SURFACE-INFO -->
 
 
 <!-- Entry for TO-DEGREE -->
@@ -5034,6 +5316,38 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 </blockquote>
 
 <!-- End of entry for UPDATE-SURFACE-* -->
+
+
+<!-- Entry for VIDEO-DRIVER-NAME -->
+
+<p><br>[Function]<br><a class=none name='video-driver-name'><b>video-driver-name</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the driver name of the initialised video driver. The driver name is a <code>STRING</code> containing a  one-word identifier like &quot;x11&quot; or &quot;windib&quot;. Returns &#039;NIL&#039; if the video driver  is not already initialised with <a href="#init-sdl">INIT-SDL</a> or <a href="#with-init">WITH-INIT</a>. </p><h5>Example </h5>
+<pre><code>(sdl:with-init ()
+  (sdl:video-driver-name))
+&amp;gt;&amp;gt; &amp;quot;windib&amp;quot;
+</code></pre>
+
+</blockquote>
+
+<!-- End of entry for VIDEO-DRIVER-NAME -->
+
+
+<!-- Entry for VIDEO-INFO -->
+
+<p><br>[Function]<br><a class=none name='video-info'><b>video-info</b> <i>info</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns information about the video hardware.  <code>GET-VIDEO-INFO</code> must be called after SDL is initialised using <a href="#init-sdl">INIT-SDL</a> or  <a href="#with-init">WITH-INIT</a>. If <code>GET-VIDEO-INFO</code> is called before <a href="#window">WINDOW</a>, the information returned is of  the <EM>best</EM> video mode. If <code>GET-VIDEO-INFO</code> is called after <a href="#window">WINDOW</a>, the information  returned is of the <EM>current</EM> video mode.  </p><h5>Parameters </h5>
+<ul><li><code>INFO</code> must be one of <code>:HW-AVAILABLE</code>, <code>:WM-AVAILABLE</code>, <code>:BLIT-HW</code>, <code>:BLIT-HW-CC</code>, <code>:BLIT-HW-A</code>, <code>:BLIT-SW</code>, <code>:BLIT-SW-CC</code>, <code>:BLIT-SW-A</code>, <code>:BLIT-FILL</code>, <code>:VIDEO-MEM</code>, <code>:PIXEL-FORMAT</code>,  <code>:CURRENT-W</code> or <code>:CURRENT-H</code>. </li>
+</ul><h5>Example </h5>
+<pre><code>(video-info :video-mem)
+</code></pre>
+
+</blockquote>
+
+<!-- End of entry for VIDEO-INFO -->
 
 
 <!-- Entry for WIDTH -->
@@ -5100,7 +5414,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <li><code>FLAGS</code> is a bitmasked logior of one or more of the following; <a href="#sdl-sw-surface">SDL-SW-SURFACE</a>,  <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>, <a href="#sdl-async-blit">SDL-ASYNC-BLIT</a>, <a href="#sdl-any-format">SDL-ANY-FORMAT</a>, <a href="#sdl-hw-palette">SDL-HW-PALETTE</a>,  <a href="#sdl-doublebuf">SDL-DOUBLEBUF</a>, <a href="#sdl-fullscreen">SDL-FULLSCREEN</a>,  <a href="#sdl-opengl">SDL-OPENGL</a>, <a href="#sdl-resizable">SDL-RESIZABLE</a> and <a href="#SDL-NO-FRAME">SDL-NO-FRAME</a>. </li>
 <li><code>TITLE-CAPTION</code> is the title that appears in the Window title bar, of type <code>STRING</code>. </li>
 <li><code>ICON-CAPTION</code> is the title that appears when the Window is minimized, of type <code>STRING</code>. </li>
-</ul><h5>Return </h5>
+</ul><h5>Returns </h5>
 <ul><li>Returns a new <code>DISPLAY-SURFACE</code> if successful, <code>NIL</code> if unsuccessful. Whatever flags SDL_SetVideoMode  could satisfy are set in the flags member of <code>SURFACE</code>. The <code>SURFACE</code> returned is freed by SDL and should never be freed by the caller. This rule includes consecutive calls to <code>WINDOW</code> (i.e. upon resize or resolution change) - any existing surface  will be released automatically by SDL. </li>
 </ul><h5>Example </h5>
 <pre><code>(WINDOW 320 240 :TITLE-CAPTION &amp;quot;Random-Rects&amp;quot; :ICON-CAPTION &amp;quot;Random-Rects&amp;quot;
