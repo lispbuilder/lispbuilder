@@ -63,13 +63,7 @@
 
    ;; video.lisp
    #:with-display
-   #:display-cursor
-   #:get-native-window
-   #:get-video-info
-   #:list-modes
-   #:query-cursor
    #:set-screen
    #:set-window
    #:update-display
-   #:clear-display
-   #:video-driver-name))
+   #:clear-display))

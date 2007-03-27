@@ -22,6 +22,59 @@ If `NULL` is `NIL`, then a new `RECTANGLE` is returned. If `NULL` not `NIL` then
 					       (sdl-base::rectangle :src fp)
 					       (sdl-base::rectangle :x x :y y :w w :h h)))))
 
+(defun random-rectangle (bound-w bound-h &optional (rectangle (rectangle)))
+  "Creates and return s a new `RECTANGLE` of random x, y width and height within the specified
+bounds of width `BOUND-W` and height `BOUND-H`. `RECTANGLE` if unset will force the creation of a 
+new `RECTANGLE` object. `RECTANGLE` if set will be modified with the coordinates."
+  (check-type rectangle rectangle)
+  (let* ((x (random bound-w))
+	 (y (random bound-h))
+	 (w (random+1 (- bound-w x)))
+	 (h (random+1 (- bound-h y))))
+    (set-rectangle-* rectangle :x x :y y :w w :h h))
+  rectangle)
+
+;; (defun rectangle-from-wh (width height &key (position *default-position*))
+;;   (rectangle :x (x position)
+;; 	     :y (y position)
+;; 	     :w (+ (x position) width)
+;; 	     :h (+ (y position) height)))
+
+(defun rectangle-from-edges (p1 p2 &optional (rectangle (rectangle)))
+  "See [RECTANGLE-FROM-EDGES-*](#rectangle-from-edges-*).
+
+* `P1` and `P2` are `POINTS` that specify the bounds of the `RECTANGLE`. 
+`P1` specifies the top left coordinate. `P2` specifies the lower right coordinate."
+  (rectangle-from-edges-* (x p1) (y p1) (x p2) (y p2) rectangle))
+
+(defun rectangle-from-edges-* (x1 y1 x2 y2 &optional (rectangle (rectangle)))
+  "Returns a new `RECTANGLE` using the bounds specified by the `INTEGERS` `X1`, `X2`, `Y1` and `Y2`. 
+The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT = \(- Y2 Y1\) 
+
+##### Parameters
+
+* `X1`, `Y1` specify the top left coordinate as `INTEGERS`. 
+* `X2`, `Y2` specify the bottom right coordinate as `INTEGERS`. 
+* `RECTANGLE` if unset will force the creation of a new `RECTANGLE` object. 
+`RECTANGLE` if set will be modified with the coordinates."
+  (check-type rectangle rectangle)
+  (set-rectangle-* rectangle
+		   :x x1
+		   :y y1
+		   :w (1+ (abs (- x2 x1)))
+		   :h (1+ (abs (- y2 y1)))))
+
+(defun rectangle-from-midpoint-* (x y w h &optional (rectangle (rectangle)))
+  "Returns a `RECTANGLE` of width `W` and height `H` with the rectangle mid-point at coordinates `X` and `Y`. 
+`RECTANGLE` if unset will force the creation of a new `RECTANGLE` object. 
+`RECTANGLE` if set will be modified with the coordinates."
+  (check-type rectangle rectangle)
+  (set-rectangle-* rectangle
+		   :x (- x (/ w 2))
+		   :y (- y (/ h 2))
+		   :w w
+		   :h h))
+
 (defmacro with-rectangle ((var &optional rectangle (free-p t))
 			  &body body)
   "A convenience macro that binds `\*DEFAULT-RECTANGLE\*` to `VAR` within the scope of `WITH-RECTANGLE`. 
@@ -33,7 +86,7 @@ If `NULL` is `NIL`, then a new `RECTANGLE` is returned. If `NULL` not `NIL` then
 
     \(WITH-RECTANGLE \(a-rect \(RECTANGLE :x 0 :y 0 :w 100 :h 100\)\)
         ...\)"
- `(let* ((,@(if rectangle
+  `(let* ((,@(if rectangle
 		 `(,var ,rectangle)
 		 `(,var ,var)))
 	  (*default-rectangle* ,var))

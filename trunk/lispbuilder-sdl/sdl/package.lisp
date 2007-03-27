@@ -12,12 +12,11 @@
 		lispbuilder-sdl-base::with-events
 		lispbuilder-sdl-base::push-quit-event
 		lispbuilder-sdl-base::key=
-		lispbuilder-sdl-base::display-cursor
+
 		lispbuilder-sdl-base::is-valid-ptr
 		lispbuilder-sdl-base::push-user-event)
   (:import-from #:lispbuilder-sdl-cffi
-		sdl-cffi::sdl-opengl
-		lispbuilder-sdl-base::sdl-get-ticks
+		lispbuilder-sdl-cffi::sdl-get-ticks
 
 		lispbuilder-sdl-cffi::sdl-init-everything
 		lispbuilder-sdl-cffi::sdl-init-video
@@ -162,9 +161,6 @@
    #:add-vertex
    #:add-vertex-*
    #:random-rectangle
-   #:rectangle-from-edges-*
-   #:rectangle-from-edges
-   #:rectangle-from-midpoint-*
    #:with-bezier
    #:with-curve
    #:with-shape
@@ -209,6 +205,9 @@
 
    ;; rectangle.lisp
    #:rectangle
+   #:rectangle-from-edges-*
+   #:rectangle-from-edges
+   #:rectangle-from-midpoint-*
    #:with-rectangle
    #:with-rectangles
 
@@ -270,6 +269,15 @@
    #:window
    #:update-display
    #:clear-display
+
+   #:display-cursor
+   #:video-driver-name
+   #:query-cursor
+   #:show-cursor
+   #:video-info
+   #:surface-info
+   #:get-native-window
+   #:list-modes
 
    ;; rwops.lisp
    #:rwops
@@ -366,7 +374,7 @@
    #:with-events
    #:push-quit-event
    #:key=
-   #:display-cursor
+
    #:is-valid-ptr
    #:push-user-event
    ))

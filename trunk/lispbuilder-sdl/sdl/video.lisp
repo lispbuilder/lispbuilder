@@ -63,12 +63,12 @@ will be released automatically by SDL.
 				    :flags flags
 				    :title-caption title-caption
 				    :icon-caption icon-caption)))
-    (if surf
-	(setf *default-display* (surface surf t)
-	      *opengl-context* (opengl-context-p (sdl-base::set-flags flags)))
-	(setf *default-display* nil
-	      *opengl-context* nil))
-    surf))
+    (setf *default-display* nil
+	  *opengl-context* nil)
+    (when surf
+      (setf *default-display* (surface surf t))
+      (setf *opengl-context* (surface-info *default-display* sdl-opengl)))
+    *default-display*))
 
 
 (defun update-display (&optional (surface *default-display*))
@@ -84,8 +84,191 @@ When [OPENGL-CONTEXT](#opengl-context) is `T`; `UPDATE-DISPLAY` will call
       (sdl-cffi::sdl-gl-swap-buffers)
       (sdl-cffi::sdl-flip (fp surface))))
 
-(defun clear-display (color &optional (surface *default-display*))
+(defun clear-display (color &key (surface *default-display*) (update-p nil))
   "Fills the display `SURFACE` using color `COLOR`.
-`SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified."
+`SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified. 
+The display is updated when `UPDATE-P` is `T`."
   (sdl-base::fill-surface (fp surface)
-			  (map-color color surface)))
+			  (map-color color surface)
+			  :update-p update-p
+			  :clipping-p nil))
+
+(defun show-cursor (state)
+  "Disables the cursor when state is `NIL`, otherwise enables the cursor."
+  (if state
+      (sdl-cffi::SDL-Show-Cursor sdl-cffi::sdl-enable)
+      (sdl-cffi::SDL-Show-Cursor sdl-cffi::sdl-disable)))
+
+(defun get-native-window ()
+  "Returns a foreign pointer to the native SDL display window."
+  (let ((wm-info (cffi:foreign-alloc 'sdl-cffi::SDL-Sys-WM-info)))
+      ;; Set the wm-info structure to the current SDL version.
+      (sdl-cffi::sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
+      (sdl-cffi::SDL-Get-WM-Info wm-info)
+      ;; For Windows
+      #+win32(cffi:foreign-slot-pointer wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
+      ;; For X
+      #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
+											      'sdl-cffi::SDL-Sys-WM-info
+											      'sdl-cffi::info)
+								   'sdl-cffi::SDL-Sys-WM-info-info
+								   'sdl-cffi::x11)
+					'sdl-cffi::SDL-Sys-WM-info-info-x11
+					'sdl-cffi::window)))
+
+
+
+(defun surface-info (surface &optional (info nil))
+  "Returns information about the SDL surface `SURFACE`.
+
+##### Parameters
+
+* `SURFACE` is an SDL surface of type [SDL-SURFACE](#sdl-surface).
+* `INFO` must be one of `NIL`, [SDL-SW-SURFACE](#sdl-sw-surface), 
+[SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
+[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
+[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
+[SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable)
+[SDL-HW-ACCEL](#sdl-hw-accel), [SDL-SRC-COLOR-KEY](#sdl-src-color-key),
+[SDL-RLE-ACCEL](#sdl-rle-accel), [SDL-SRC-ALPHA](#sdl-src-alpha)
+ or [SDL-PRE-ALLOC](#sdl-pre-alloc).
+
+##### Returns
+
+`INFO` when `NIL` will return a list of all enabled surface flags. Otherwise will
+return the status of `INFO` as `T` or `NIL` if supported by the surface.
+
+##### Example
+
+    \(SURFACE-INFO A-SURFACE '\(SDL-HW-SURFACE SDL-HW-PALETTE SDL-HW-ACCELL\)\)"
+  (check-type surface sdl-surface)
+  (if info
+      (let ((property (find info (list SDL-HW-SURFACE SDL-ASYNC-BLIT SDL-ANY-FORMAT
+				       SDL-HW-PALETTE SDL-DOUBLEBUF SDL-FULLSCREEN
+				       SDL-OPENGL SDL-RESIZABLE SDL-HW-ACCEL
+				       SDL-SRC-COLOR-KEY SDL-RLE-ACCEL SDL-SRC-ALPHA
+				       SDL-PRE-ALLOC))))
+	(if property
+	    (if (eq (logand property
+			    (cffi:foreign-slot-value (fp surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags))
+		    property)
+		t
+		nil)))
+      (remove nil (mapcar #'(lambda (query)
+			      (let ((info (first query))
+				    (description (second query)))
+				(let ((result (logand (cffi:foreign-slot-value (fp surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+						      info)))
+				  (unless (eq result 0)
+				    description))))
+			  (list (list SDL-HW-SURFACE 'SDL-HW-SURFACE)
+				(list SDL-ASYNC-BLIT 'SDL-ASYNC-BLIT)
+				(list SDL-ANY-FORMAT 'SDL-ANY-FORMAT)
+				(list SDL-HW-PALETTE 'SDL-HW-PALETTE)
+				(list SDL-DOUBLEBUF 'SDL-DOUBLEBUF)
+				(list SDL-FULLSCREEN 'SDL-FULLSCREEN)
+				(list SDL-OPENGL 'SDL-OPENGL)
+				(list SDL-RESIZABLE 'SDL-RESIZABLE)
+				(list SDL-HW-ACCEL 'SDL-HW-ACCEL)
+				(list SDL-SRC-COLOR-KEY 'SDL-SRC-COLOR-KEY)
+				(list SDL-RLE-ACCEL 'SDL-RLE-ACCEL)
+				(list SDL-SRC-ALPHA 'SDL-SRC-ALPHA)
+				(list SDL-PRE-ALLOC 'SDL-PRE-ALLOC))))))
+
+(defun video-info (info)
+  "Returns information about the video hardware. 
+`GET-VIDEO-INFO` must be called after SDL is initialised using [INIT-SDL](#init-sdl) or 
+[WITH-INIT](#with-init).
+If `GET-VIDEO-INFO` is called before [WINDOW](#window), the information returned is of 
+the *best* video mode. If `GET-VIDEO-INFO` is called after [WINDOW](#window), the information 
+returned is of the *current* video mode. 
+
+##### Parameters
+
+* `INFO` must be one of `:HW-AVAILABLE`, `:WM-AVAILABLE`, `:BLIT-HW`, `:BLIT-HW-CC`, `:BLIT-HW-A`,
+`:BLIT-SW`, `:BLIT-SW-CC`, `:BLIT-SW-A`, `:BLIT-FILL`, `:VIDEO-MEM`, `:PIXEL-FORMAT`, 
+`:CURRENT-W` or `:CURRENT-H`.
+
+##### Example
+
+    \(video-info :video-mem\)"
+  (case info
+  (:current-w
+   (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::current-w))
+  (:current-h
+   (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::current-h))
+  (:video-mem
+   (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::video-mem))
+  (:pixel-format
+   (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::vfmt))
+  (otherwise
+   (find info (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))))
+
+
+(defun list-modes (flags &optional (surface nil))
+  "Returns a LIST of vectors sorted largest to smallest that contains the width and height 
+dimensions of the screen that will support the pixel format of the specified 
+surface `SURFACE` and video flags `FLAGS`. `LIST-MODES` must be called after SDL is 
+initialised using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init).
+
+##### Parameters
+
+* `FLAGS` is a bitmasked logior of one or more of the following; [SDL-SW-SURFACE](#sdl-sw-surface), 
+[SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
+[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
+[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
+[SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable) and [SDL-NO-FRAME](#sdl-no-frame).
+* `SURFACE` A surface of type [SDL-SURFACE](#sdl-surface]), or `NIL`. WHEN `NIL`, the pixel format will be
+that returned by [SDL-GET-VIDEO-INFO](#sdl-get-video-info]).
+
+##### Returns
+
+* Returns a list of `VECTOR`s of display dimensions, sorted largest to smallest, that will support 
+the pixel format of surface `SURFACE`; for example `(#(1024 768) #(640 480) #(512 384) #(320 240))`.
+Returns `NIL` if there are no dimensions available for a particular pixel format. 
+Returns `T` if any dimension will support the pixel format and video flags.
+
+##### Example
+
+    \(LIST-MODES '\(SDL-HW-SURFACE SDL-FULLSCREEN\)\)"
+  (declare (ignore surface))
+  (let ((modes nil)
+        (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (sdl-base::set-flags flags))))
+    (cond
+      ((cffi:null-pointer-p listmodes)
+       nil)
+      ((equal (cffi:pointer-address listmodes) 4294967295)
+       t)
+      (t
+       (do ((i 0 (1+ i)))
+	   ((cffi:null-pointer-p (cffi:mem-ref (cffi:mem-aref listmodes 'sdl-cffi::sdl-rect i) :pointer)) (reverse modes))
+	 (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes 'sdl-cffi::sdl-rect i) :pointer)))
+	   (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w)
+				     (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
+			     modes))))))))
+
+
+(defun query-cursor ()
+  "Queries the current state of the cursor. 
+Returns `T` if the cursor is enabled and shown on the display. Returns `NIL` if the cursor 
+is disabled and hidden."
+  (case (sdl-cffi::SDL-Show-Cursor sdl-cffi::sdl-query)
+    (sdl-cffi::sdl-disable nil)
+    (sdl-cffi::sdl-enable t)))
+
+(defun video-driver-name ()
+  "Returns the driver name of the initialised video driver. The driver name is a `STRING` containing a 
+one-word identifier like \"x11\" or \"windib\". Returns 'NIL' if the video driver 
+is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init).
+
+##### Example
+
+    \(sdl:with-init \(\)
+      \(sdl:video-driver-name\)\)
+    >> \"windib\""
+  (let ((string-return-val (cffi:with-foreign-pointer-as-string (str 100 str-size)
+			     (sdl-cffi::sdl-video-driver-name str str-size))))
+    (if (equal string-return-val "")
+	nil
+	string-return-val)))
+

@@ -337,17 +337,17 @@
       <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
       
       <p>
-	LISPBUILDER-SDL comprises a set of packages allowing cross-platform game development using Common Lisp. 
+	LISPBUILDER-SDL comprises several of packages that allow game development using Common Lisp. 
 	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for  
-	<a href="http://www.libsdl.org">SDL</a> and other game-related graphics, sound, 
-	physics, character animation and 3D libraries. LISPBUILDER-SDL core functionality includes 
+	<a href="http://www.libsdl.org">SDL</a> and other graphics, sound, physics, character animation 
+	and 3D libraries. LISPBUILDER-SDL core functionality includes 
 	window and event management, 2D graphics, 3D graphics using OpenGL and sound support.
 	The goal for the LISPBUILDER-SDL project is to become a useful resource for the development of games in Lisp.
       </p>
 
       <p>
 	<a href="http://www.libsdl.org">SDL</a> provides the low-level 2D rendering support.
-	LISPBUILDER-SDL adds more sophisticated 2D graphical effects such as rotation, 
+	LISPBUILDER-SDL adds 2D graphical effects such as rotation, 
 	rendering circles, polygons, squares, Bezier and Cuttmull-Rom curves as well as bitmap font support.
 	Additional packages provide native C drawing functions, True Type font rendering, 
 	loading of multiple image formats, a sound mixer and networking support.
@@ -376,7 +376,7 @@
       </ul>
       <p>
 	<font color=red>Current Version:</font> The version of LISPBUILDER-SDL to use is the 
-	<a href="#downloads">SVN</a> version.
+	<a href="#downloads">latest version in SVN</a>.
       </p>
 <!--       <p> -->
 <!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/~A.zip">http://www.balooga.com/lispbuilder/~:*~A.zip</a>. -->
@@ -429,8 +429,8 @@
 	    <li><a href="#devloop">Events and the Game Loop</a></li>
 	    <li><a href="#devprim">Primitives</a></li>
 	    <ol>
-	      <li><a href="#devprimrect">Rectangles</a></li>
-	      <li><a href="#devprimcol">Colors</a></li>
+	      <li><a href="#devprimrect">Rectangle</a></li>
+	      <li><a href="#devprimcol">Color</a></li>
 	    </ol>
 	    <li><a href="#devdraw">Drawing</a></li>
 	    <li><a href="#font">Fonts</a></li>
@@ -444,9 +444,10 @@
 	      <li><a href="#devsurfcreat">Creation</a></li>
 	      <li><a href="#devsurfload">Loading Images</a></li>
 	      <li><a href="#devsurfpos">Positioning</a></li>
-	      <li><a href="#devsurfblit">Blitting and Drawing</a></li>
-	      <li><a href="#devdisp">Updating the Display</a></li>
+	      <li><a href="#devsurfblit">Drawing & Blitting</a></li>
 	    </ol>
+	    <li><a href="#devdisp">The SDL Display</a></li>
+	    <li><a href="#devcursor">The Cursor</a></li>
 	    <li><a href="#devex">Simple Example</a></li>
 	    <li><a href="#devgarbage">Garbage Collection</a></li>
 	  </ol>
@@ -721,6 +722,7 @@
 	  that needs to be executed once per game loop and that is not 'event' driven. This code may involve
 	  updating world physics, updating the state of game objects and rendering sprites to the display.
 	</p>
+
 	<pre>
 (WITH-EVENTS ()
   (:QUIT-EVENT () T)
@@ -738,6 +740,10 @@
 	  as the CPU will allow set the FRAME-RATE to NIL, <code>(SETF (SDL:FRAME-RATE) NIL)</code>
 	</p>
 
+	<p>The SDL display surface needs to be updated once per game loop, as described in the section 
+	  <a href="#devdisp">SDL Display</a>.
+	</p>
+
 	<pre>
 (SETF (FRAME-RATE) 30)
 (WITH-EVENTS ()
@@ -746,20 +752,50 @@
 
 	<h3><a class=none name="devprim">Primitives</a></h3>
 	<p>
+	  LISPBUILDER-SDL supports the SDL <a href="#rectangle">RECTANGLE</a> and <a href="#color">COLOR</a> primitives.
+	  These are described below.
 	</p>
 
-	<h4><a class=none name="devprimrect">Rectangles</a></h4>
+	<h4><a class=none name="devprimrect">Rectangle</a></h4>
 	<p>
+	  A new rectangle is created by the function <a href="#rectangle">RECTANGLE</a>. 
+	  The function <a href="#rectangle-from-edges">RECTANGLE-FROM-EDGES</a> will create a new rectangle
+	  from the specified top left and bottom right coordinates. The function 
+	  <a href="#rectangle-from-midpoint">RECTANGLE-FROM-MIDPOINT</a> will create a new rectangle from midpoint.
+	</p>
+	<p>
+	  The macros <a href="#with-rectangle">WITH-RECTANGLE</a> and <a href="#with-rectangle">WITH-RECTANGLEs</a>
+	  will create a new rectangle and free this rectangle when it goes out of scope. 
+	</p>
+	<p>
+	  The rectangle position and width and height can be inspected and modified using the following functions: 
+	  <a href="#x">X</a>, <a href="#y">Y</a>, <a href="#width">WIDTH</a> and <a href="#height">HEIGHT</a>. 
+	  <a href="#x2">X2</a> and <a href="#y2">Y2</a> will return the (+ x width) and (+ y height) of the rectangle respectively.
+	</p>
+	<p>
+	  Additional functions that operate on rectangles are as follows:
+	  <ul>
+	    <li><a href="#point-*">POINT-*</a></li>
+	    <li><a href="#get-point">GET-POINT</a></li>
+	    <li><a href="#set-point">SET-POINT</a></li>
+	    <li><a href="#position">POSITION</a></li>
+	    <li><a href="#get-position">GET-POSITION</a></li>
+	    <li><a href="#rectangle-*">RECTANGLE-*</a></li>
+	    <li><a href="#get-rectangle">GET-RECTANGLE</a></li>
+	    <li><a href="#set-rectangle">SET-RECTANGLE</a></li>
+	    <li><a href="#draw-box">DRAW-BOX</a>, <a href="#draw-rectangle">DRAW-RECTANGLE</a></li>
+	  </ul>
+	  The section <a href="#devdraw">Drawing</a> describes how to render a rectangle to a surface.
 	</p>
 
-	<h4><a class=none name="devprimcol">Colors</a></h4>
+	<h4><a class=none name="devprimcol">Color</a></h4>
 	<p>
-	  A new SDL color is created by <a href="#color">COLOR</a>, returning either a new RGB or RGBA color. RGB/A 
-	  color componets can be manipulated using the functions <a href="#r">R</a>, <a href="#g">G</a>, 
+	  A new SDL color is created by <a href="#color">COLOR</a>, returning either a new RGB or RGBA color. 
+	</p>
+	<p>
+	  RGB/A color componets can be manipulated using the functions <a href="#r">R</a>, <a href="#g">G</a>, 
 	  <a href="#b">B</a>, <a href="#a">A</a>, <a href="#set-color">SET-COLOR</a> and 
 	  <a href="#set-color-*">SET-COLOR-*</a>. Two colors may be compared using <a href="#color==">COLOR=</a>.
-	  A description of the <a href="#map-color">MAP-COLOR</a> and <a href="#pack-color">PACK-COLOR</a> are provided
-	  in these function definitions.
 	</p>
 	<p>
 	  Functions that accept a color parameter will most likely bind color to 
@@ -769,12 +805,21 @@
 	  all subsequent drawing functions will use this implied color while it remains in scope.
 	</p>
 	<p>
+	  Additional functions that operate on colors are as follows:
+	  <ul>
+	    <li><a href="#color-*">COLOR-*</a></li>
+	    <li><a href="#any-color-but-this">ANY-COLOR-BUT-THIS</a></li>
+	    <li><a href="#map-color">MAP-COLOR</a></li>
+	    <li><a href="#pack-color">PACK-COLOR</a></li>
+	  </ul>
+	</p>
+	<p>
 	  LISPBULDER-SDL contains several predefined colors; <a href="#*black*">*BLACK*</a>, 
 	  <a href="#*white*">*WHITE*</a>.
 	</p>
 
 
-	<h3><a class=none name="devdraw">Drawing Primitives</a></h3>
+	<h3><a class=none name="devdraw">Drawing</a></h3>
 	<p>
 	  LISPBUILDER-SDL provides low-level drawing support for several primitives. Most primitives can be drawn
 	  with or without alpha transparency. In addition, the filled primitives can be drawn with a single pixel 
@@ -907,43 +952,135 @@
 
 	<h4><a class=none name="devsurfover">Overview of Surfaces</a></h4>
 	<p>
-	  ...
+	  An SDL surface, <a href="#surface">SURFACE</a>, represents an area of <em>graphical</em> memory 
+	  that can be drawn or rendered to, for example the video framebuffer or an image that is loaded from disk.
 	</p>
 
 	<h4><a class=none name="devsurfcreat">Creating Surfaces</a></h4>
 	<p>
-	  ...
+	  A surface is created:
+	  <ul>
+	    <li>Automatically by the SDL library to represent a framebuffer by 
+	  calling <a href="#window">WINDOW</a>.</li>
+	    <li>When loading an image from disk using <a href="#load-image">LOAD-IMAGE</a>.</li>
+	    <li>Explicitely using <a href="#create-surface">CREATE-SURFACE</a>, or 
+	      <a href="#copy-surface">COPY-SURFACE</a>.</li>
+	    <li>Implicitely using <a href="#convert-surface">CONVERT-SURFACE</a>.</li>
+	  </ul>
+	</p>
+	<p>
+	  Functions that accept a surface parameter will most likely bind surface to 
+	  <a href="#*default-surface*">*DEFAULT-SURFACE*</a> when unspecified. 
+	  The macros <a href="#with-surface">WITH-SURFACE</a> and <a href="#with-surfaces">WITH-SURFACES</a> will bind a 
+	  surface to <a href="#*default-surface*">*DEFAULT-SURFACE*</a> within the scope of these macro. 
+	  When <a href="#*default-surface*">*DEFAULT-SURFACE*</a> is bound to a surface, 
+	  all subsequent drawing functions will use this implied surface while it remains in scope.
+	</p>
+	<p>
+	  A surface can be explicitely freed by calling <a href="#free-surface">FREE-SURFACE</a>.
 	</p>
 
-	<h4><a class=none name="devsurfload">Loading Images</a></h4>
+	<h4><a class=none name="devsurfload">Images</a></h4>
 	<p>
-	  ...
+	  BMP images are loaded from disk using <a href="#load-image">LOAD-IMAGE</a>. Support for additional 
+	  image formats is provided in the <a href="lispbuilder-sdl-image.html">LISPBUILDER-SDL-IMAGE</a> package. 
+	  A surface is saved to disk as a BMP image using <a href="#save-image">SAVE-IMAGE</a>.
 	</p>
 
-	<h4><a class=none name="devsurfpos">Positioning Surfaces</a></h4>
-	<p>
-	  ...
-	</p>
-
-	<h4><a class=none name="devsurfblit">Blitting and Drawing Surfaces</a></h4>
-	<p>
-	  The functions <a href="#blit-surface">BLIT-SURFACE</a> and <a href="#draw-surface">DRAW-SURFACE</a> will 
-	  blit a source surface onto a target surface. The composition rules that determine how the source surface
-	  is blitted over the target surface are described in <a href="#blit-surface">BLIT-SURFACE</a>.
-	  <a href="#devprim">Drawing Primitives</a> describes how <a href="#*default-surface*">*DEFAULT-SURFACE*</a> 
-	  is used when calling blitting operations.
-	</p>
 	<pre>
 (DRAW-SURFACE (LOAD-IMAGE "sdl.bmp") 
               :surface *default-display*)
 	</pre>
 
-	<h4><a class=none name="devdisp">Updating SDL Surfaces and the SDL Display</a></h4>
-	<p>	  
-	  The functions <a href="#update-display">UPDATE-DISPLAY</a> and <a href="#update-surface">UPDATE-SURFACE</a>
-	  update the SDL display surface (or OpenGL context) and SDL general surfaces respectively.
+	<h4><a class=none name="devsurfpos">Positioning Surfaces</a></h4>
+	<p>
+	  A <a href="#surface">SURFACE</a> stores its own position X/Y coordinates. These coordinates 
+	  can be inspected and modified using the following functions: 
+	  <a href="#x">X</a>, <a href="#y">Y</a>, <a href="#width">WIDTH</a> and <a href="#height">HEIGHT</a>. 
+	</p>
+	<p>
+	  Additional functions and macros that manage surface coordinates are as follows: 
+	  <ul>
+	    <li><a href="#point-*">POINT-*</a></li>
+	    <li><a href="#get-point">GET-POINT</a></li>
+	    <li><a href="#set-point">SET-POINT</a></li>
+	    <li><a href="#set-point-*">SET-POINT-*</a></li>
+	    <li><a href="#position-*">POSITION-*</a></li>
+	    <li><a href="#get-position">GET-POSITION</a></li>
+	    <li><a href="#set-position-*">GET-POSITION</a></li>
+	    <li><a href="#set-surface">SET-SURFACE</a></li>
+	    <li><a href="#set-surface-*">SET-SURFACE-*</a></li>
+	    <li><a href="#rectangle-*">RECTANGLE-*</a></li>
+	    <li><a href="#get-rectangle-*">GET-RECTANGLE-*</a></li>
+	    <li><a href="#get-surface-rect">GET-SURFACE-RECT</a></li>
+	    <li><a href="#draw-surface-at">DRAW-SURFACE-AT</a></li>
+	  </ul>
 	</p>
 
+	<h4><a class=none name="devsurfblit">Drawing & Blitting Surfaces</a></h4>
+	<p>The functions <a href="#blit-surface">BLIT-SURFACE</a> and <a href="#draw-surface">DRAW-SURFACE</a> will 
+	  blit or draw a source surface onto a destination surface using the position coordinates stored in the source surface.
+	  <a href="#draw-surface-at">DRAW-SURFACE-AT</a> will draw the source surface at a specified position.
+	</p>
+	<p>
+	  The composition rules that determine how the source surface is composed over the destination surface are 
+	  described in the description of <a href="#blit-surface">BLIT-SURFACE</a>.
+	  <a href="#fill-surface">FILL-SURFACE</a> fill will the target surface with a single color.
+	  <a href="#devprim">Drawing Primitives</a> describes how <a href="#*default-surface*">*DEFAULT-SURFACE*</a> 
+	  is used when calling blitting operations.
+	</p>
+	<p>
+	  Use <a href="#set-color-key">SET-COLOR-KEY</a> and <a href="#clear-color-key">CLEAR-COLOR-KEY</a>  
+	  <a href="#set-alpha">SET-ALPHA</a> to modify the key color and alpha transparency proporties of a surface after the 
+	  surface has been created.
+	</p>
+	<p>
+	  Set a <em>clipping</em> rectangle to limit the draw area on a destination surface. 
+	  The clipping rectangle for a surface is manipulated using <a href="#get-clip-rect">GET-CLIP-RECT</a> and 
+	  <a href="#set-clip-rect">SET-CLIP-RECT</a>. When this surface is the destination of a blit, 
+	  only the area within the <em>clip</em> rectangle will be drawn into.
+	</p>
+	<p>
+	  Set a <em>cell</em> rectangle to limit the surface area on the source surface.
+	  The cell rectangle for a surface is manipulated using <a href="#clear-cell">CLEAR-CELL</a> and 
+	  <a href="#set-cell">SET-CELL</a>. When this surface is the source of a blit, 
+	  only the areas within the <em>cell</em> rectangle will be used. 
+	  The cell is useful when only a small area of the source surface needs to be blitted to the destination surface. 
+	  For example a sequence of images composed into a single sprite sheet and only the current frame of animation
+	  is to be drawn to the display at any one time.
+	</p>
+	<p>
+	  <img src="waddle.png" width="285" height="51" title="Sprite Sheet" alt="Sprite Sheet"/>
+	</p>
+
+	<h4><a class=none name="devupdate">Updating SDL Surfaces and the SDL Display</a></h4>
+	<p>	  
+	  The functions <a href="#update-display">UPDATE-DISPLAY</a> and <a href="#update-surface">UPDATE-SURFACE</a>
+	  update the SDL display surface (or OpenGL context) and general SDL surfaces respectively.
+	</p>
+
+	<h3><a class=none name="devdisp">The SDL Display</a></h3>
+	<p>  
+	  The SDL display surface must be updated at least once each game loop using the function 
+	  <a href="#update-display">UPDATE-DISPLAY</a>. This function will call 
+	  <a href="#sdl-gl-swap-buffers">SDL-GL-SWAP-BUFFERS</a> to update the OpenGL display, 
+	  or <a href="#sdl-flip">SDL-FLIP</a> to update the SDL surface depending on the current 
+	  <a href="#*opengl-context*">*OPENGL-CONTEXT*</a>. The display can be filled with a background
+	  color using <a href="#clear-display">CLEAR-DISPLAY</a>.
+	</p>
+	<p>
+	  The properties of an SDL surface can be queried using <a href="#surface-info">SURFACE-INFO</a>.
+	  The properties of the SDL display and video hardware can be queried using <a href="#video-info">VIDEO-INFO</a>.
+	  The screen resolutions supported by a particular set of video flags can be retrieved using 
+	  <a href="#list-modes">LIST-MODES</a>. A pointer to the native SDL window can be retrieved using
+	  <a href="#get-native-window">GET-NATIVE-WINDOW</a>. The name of the video driver can be retrieved as a STRING 
+	  using <a href="#video-driver-name">VIDEO-DRIVER-NAME</a>.
+
+	<h3><a class=none name="devcursor">The Cursor</a></h3>
+	<p>  
+	  The the current state of the cursor is returned using <a href="#query-cursor">QUERY-CURSOR</a>, and is set using 
+	  <a href="#query-cursor">SHOW-CURSOR</a>.
+	</p>
 
 	<h3><a class=none name="devex">Simple Example</a></h3>
 	<p>

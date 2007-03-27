@@ -161,7 +161,13 @@
       (:sw (push sdl-cffi::SDL-SW-SURFACE flags))
       (:hw (push sdl-cffi::SDL-HW-SURFACE flags)))
     (if (is-valid-ptr surface)
-	(with-foreign-slots ((sdl-cffi::BitsPerPixel sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask) (pixel-format surface) sdl-cffi::SDL-Pixel-Format)
+	(with-foreign-slots ((sdl-cffi::BitsPerPixel
+			      sdl-cffi::Rmask
+			      sdl-cffi::Gmask
+			      sdl-cffi::Bmask
+			      sdl-cffi::Amask)
+			     (pixel-format surface)
+			     sdl-cffi::SDL-Pixel-Format)
 	    (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
 							 width height
 							 sdl-cffi::BitsPerPixel
@@ -172,12 +178,12 @@
 	  #+(or PC386 little-endian)(setf rmask #x000000ff
 					  gmask #x0000ff00
 					  bmask #x00ff0000
-					  amask #xff000000)
+					  amask #x00000000)
 	  ;; Big-endian (Motorola)
 	  #-(or PC386 little-endian)(setf rmask #xff000000
 					  gmask #x00ff0000
 					  bmask #x0000ff00
-					  amask #x000000ff)
+					  amask #x00000000)
 	  (if (and pixels pitch)
 	      ;; Pixels not yet supported.
 	      nil
@@ -263,17 +269,23 @@
     (update-surface dst :template dst-rect :clipping-p t))
   dst-rect)
 
-(defun fill-surface (surface color &key (template (cffi:null-pointer)) (update-p nil) (clipping-p nil))
-  "fill the entire surface with the specified R G B A color.
+(defun fill-surface (surface color &key (template nil) (update-p nil) (clipping-p nil))
+  "fill the entire surface with the specified RGB/A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update.
 *Note*: `TEMPLATE` is clipped to the surface `SURFACE`, when `CLIPPING-P` is `T`."
-  (when clipping-p
-    (setf template (clip-to-surface template surface)))
-  (sdl-cffi::sdl-Fill-Rect surface template color)
+  (if template
+      (progn (if clipping-p
+		 (setf template (clip-to-surface template surface)))
+	     (sdl-cffi::sdl-Fill-Rect surface template color))
+      (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))
   (when update-p
-    (update-surface surface :template template :clipping-p t))
+    (if template
+	(update-surface surface
+			:template template
+			:clipping-p nil)
+	(sdl-cffi::SDL-Update-Rect surface 0 0 0 0)))
   template)
 
 (defun map-color (surface r g b &optional a)
