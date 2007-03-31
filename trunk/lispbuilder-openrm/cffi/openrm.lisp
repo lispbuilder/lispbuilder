@@ -96,8 +96,9 @@
 ;;;; KMOD_LSHIFT	=    :KEY-MOD-LSHIFT
 
 
-
-
+;;;; FLOAT-POINTER is used by the CFFI translation functions
+;;;; see the typemap definition below.
+(defctype float-pointer :pointer)
 
 ;; (defcstruct RMmatrix
 ;; 	(m :float :count 16))
@@ -846,8 +847,8 @@
 	(#.(openrm-lispify "diffuse_color" 'slotname) :pointer)
 	(#.(openrm-lispify "specular_color" 'slotname) :pointer)
 	(#.(openrm-lispify "unlit_color" 'slotname) :pointer)
-	(#.(openrm-lispify "specular_exponent" 'slotname) :pointer)
-	(#.(openrm-lispify "opacity" 'slotname) :pointer))
+	(#.(openrm-lispify "specular_exponent" 'slotname) float-pointer)
+	(#.(openrm-lispify "opacity" 'slotname) float-pointer))
 
 (cffi:defcstruct #.(openrm-lispify "_rendermode_properties" 'classname)
 	(#.(openrm-lispify "shademodel" 'slotname) :pointer)
@@ -855,13 +856,13 @@
 	(#.(openrm-lispify "poly_mode_drawstyle" 'slotname) :pointer)
 	(#.(openrm-lispify "cull_mode" 'slotname) :pointer)
 	(#.(openrm-lispify "front_face" 'slotname) :pointer)
-	(#.(openrm-lispify "pointsize" 'slotname) :pointer)
+	(#.(openrm-lispify "pointsize" 'slotname) float-pointer)
 	(#.(openrm-lispify "linewidth" 'slotname) :pointer)
 	(#.(openrm-lispify "linestyle" 'slotname) :pointer)
 	(#.(openrm-lispify "normalizeNormals" 'slotname) :pointer))
 
 (cffi:defcstruct #.(openrm-lispify "internals_RMsceneParms" 'classname)
-	(#.(openrm-lispify "viewport" 'slotname) :pointer)
+	(#.(openrm-lispify "viewport" 'slotname) float-pointer)
 	(#.(openrm-lispify "camera3d" 'slotname) :pointer)
 	(#.(openrm-lispify "camera2d" 'slotname) :pointer)
 	(#.(openrm-lispify "textures" 'slotname) :pointer)
@@ -880,7 +881,7 @@
 (cffi:defcstruct #.(openrm-lispify "internals_RMfbClear" 'classname)
 	(#.(openrm-lispify "bgColor" 'slotname) :pointer)
 	(#.(openrm-lispify "bgImageTile" 'slotname) :pointer)
-	(#.(openrm-lispify "depthValue" 'slotname) :pointer)
+	(#.(openrm-lispify "depthValue" 'slotname) float-pointer)
 	(#.(openrm-lispify "depthImage" 'slotname) :pointer))
 
 (cffi:defcstruct #.(openrm-lispify "internals_RMtransformationStruct" 'classname)
@@ -1454,11 +1455,11 @@
 
 (cffi:defcfun ("rmPipeSetSceneDepthValue" #.(openrm-lispify "rmPipeSetSceneDepthValue" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
-  (newDepthValue :pointer))
+  (newDepthValue float-pointer))
 
 (cffi:defcfun ("rmPipeGetSceneDepthValue" #.(openrm-lispify "rmPipeGetSceneDepthValue" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (returnDepthValue :pointer))
+  (returnDepthValue float-pointer))
 
 (cffi:defcfun ("rmArrayAdd" #.(openrm-lispify "rmArrayAdd" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -1533,13 +1534,13 @@
 
 (cffi:defcfun ("rmCamera2DResetAspectRatio" #.(openrm-lispify "rmCamera2DResetAspectRatio" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
-  (vp :pointer)
+  (vp float-pointer)
   (windowWidth :int)
   (windowWeight :int))
 
 (cffi:defcfun ("rmCamera2DGetAspectRatio" #.(openrm-lispify "rmCamera2DGetAspectRatio" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (retValue :pointer))
+  (retValue float-pointer))
 
 (cffi:defcfun ("rmCamera2DSetExtents" #.(openrm-lispify "rmCamera2DSetExtents" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -1550,10 +1551,10 @@
 
 (cffi:defcfun ("rmCamera2DGetExtents" #.(openrm-lispify "rmCamera2DGetExtents" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (xmin :pointer)
-  (ymin :pointer)
-  (xmax :pointer)
-  (ymax :pointer))
+  (xmin float-pointer)
+  (ymin float-pointer)
+  (xmax float-pointer)
+  (ymax float-pointer))
 
 (cffi:defcfun ("rmCamera2DComputeViewMatrix" #.(openrm-lispify "rmCamera2DComputeViewMatrix" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (c :pointer)
@@ -1581,7 +1582,7 @@
 
 (cffi:defcfun ("rmCamera3DResetAspectRatio" #.(openrm-lispify "rmCamera3DResetAspectRatio" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
-  (vp :pointer)
+  (vp float-pointer)
   (windowWidth :int)
   (windowHeight :int))
 
@@ -1758,8 +1759,8 @@
 
 (cffi:defcfun ("rmFogGetStartEnd" #.(openrm-lispify "rmFogGetStartEnd" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
-  (startReturn :pointer)
-  (endReturn :pointer))
+  (startReturn float-pointer)
+  (endReturn float-pointer))
 
 (cffi:defcfun ("rmFrame" #.(openrm-lispify "rmFrame" 'function)) :void
   (drawToPipe :pointer)
@@ -1817,8 +1818,8 @@
 
 (cffi:defcfun ("rmImageGetPixelZoom" #.(openrm-lispify "rmImageGetPixelZoom" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (returnXZoom :pointer)
-  (returnYZoom :pointer))
+  (returnXZoom float-pointer)
+  (returnYZoom float-pointer))
 
 (cffi:defcfun ("rmImageSetVismap" #.(openrm-lispify "rmImageSetVismap" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -1844,7 +1845,7 @@
 
 (cffi:defcfun ("rmImageGetScale" #.(openrm-lispify "rmImageGetScale" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (returnScale :pointer))
+  (returnScale float-pointer))
 
 (cffi:defcfun ("rmImageSetBias" #.(openrm-lispify "rmImageSetBias" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -1852,7 +1853,7 @@
 
 (cffi:defcfun ("rmImageGetBias" #.(openrm-lispify "rmImageGetBias" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (returnBias :pointer))
+  (returnBias float-pointer))
 
 (cffi:defcfun ("rmLightNew" #.(openrm-lispify "rmLightNew" 'function)) :pointer)
 
@@ -1894,9 +1895,9 @@
 
 (cffi:defcfun ("rmLightGetAttenuation" #.(openrm-lispify "rmLightGetAttenuation" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (retConstantAttenuation :pointer)
-  (retLinearAttenuation :pointer)
-  (retQuadraticAttenuation :pointer))
+  (retConstantAttenuation float-pointer)
+  (retLinearAttenuation float-pointer)
+  (retQuadraticAttenuation float-pointer))
 
 (cffi:defcfun ("rmLightSetEnable" #.(openrm-lispify "rmLightSetEnable" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -1919,7 +1920,7 @@
 
 (cffi:defcfun ("rmLightGetSpotCutoff" #.(openrm-lispify "rmLightGetSpotCutoff" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (retValue :pointer))
+  (retValue float-pointer))
 
 (cffi:defcfun ("rmLightSetSpotExponent" #.(openrm-lispify "rmLightSetSpotExponent" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -1927,7 +1928,7 @@
 
 (cffi:defcfun ("rmLightGetSpotExponent" #.(openrm-lispify "rmLightGetSpotExponent" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (retValue :pointer))
+  (retValue float-pointer))
 
 (cffi:defcfun ("rmLightModelNew" #.(openrm-lispify "rmLightModelNew" 'function)) :pointer)
 
@@ -1963,7 +1964,7 @@
   (num_floats :int))
 
 (cffi:defcfun ("rmFloatDelete" #.(openrm-lispify "rmFloatDelete" 'function)) :void
-  (f :pointer))
+  (f float-pointer))
 
 (cffi:defcfun ("rmVertex2DNew" #.(openrm-lispify "rmVertex2DNew" 'function)) :pointer
   (n :int))
@@ -2058,9 +2059,9 @@
   (dst :pointer))
 
 (cffi:defcfun ("rmPoint4MatrixTransform" #.(openrm-lispify "rmPoint4MatrixTransform" 'function)) #.(openrm-lispify "RMenum" 'enumname)
-  (src :pointer)
+  (src float-pointer)
   (matrix :pointer)
-  (dst :pointer))
+  (dst float-pointer))
 
 (cffi:defcfun ("rmPointMatrixTransform" #.(openrm-lispify "rmPointMatrixTransform" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (src :pointer)
@@ -2071,21 +2072,21 @@
   (toPrint :pointer))
 
 (cffi:defcfun ("rmPointMin" #.(openrm-lispify "rmPointMin" 'function)) #.(openrm-lispify "RMenum" 'enumname)
-  (input :pointer)
+  (input float-pointer)
   (count :int)
   (vdims :int)
   (stride :int)
   (minReturn :pointer))
 
 (cffi:defcfun ("rmPointMax" #.(openrm-lispify "rmPointMax" 'function)) #.(openrm-lispify "RMenum" 'enumname)
-  (input :pointer)
+  (input float-pointer)
   (count :int)
   (vdims :int)
   (stride :int)
   (maxReturn :pointer))
 
 (cffi:defcfun ("rmPointMinMax" #.(openrm-lispify "rmPointMinMax" 'function)) #.(openrm-lispify "RMenum" 'enumname)
-  (input :pointer)
+  (input float-pointer)
   (count :int)
   (vdims :int)
   (stride :int)
@@ -2287,7 +2288,7 @@
 
 (cffi:defcfun ("rmNodeGetSpecularExponent" #.(openrm-lispify "rmNodeGetSpecularExponent" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (retValue :pointer))
+  (retValue float-pointer))
 
 (cffi:defcfun ("rmNodeSetUnlitColor" #.(openrm-lispify "rmNodeSetUnlitColor" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -2303,7 +2304,7 @@
 
 (cffi:defcfun ("rmNodeGetOpacity" #.(openrm-lispify "rmNodeGetOpacity" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (retValue :pointer))
+  (retValue float-pointer))
 
 (cffi:defcfun ("rmNodeSetNormalizeNormals" #.(openrm-lispify "rmNodeSetNormalizeNormals" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -2335,7 +2336,7 @@
 
 (cffi:defcfun ("rmNodeGetPointSize" #.(openrm-lispify "rmNodeGetPointSize" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (sizeReturn :pointer))
+  (sizeReturn float-pointer))
 
 (cffi:defcfun ("rmNodeSetShader" #.(openrm-lispify "rmNodeSetShader" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -2595,7 +2596,7 @@
 (cffi:defcfun ("rmPrimitiveSetRadii" #.(openrm-lispify "rmPrimitiveSetRadii" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
   (nRadii :int)
-  (radii :pointer)
+  (radii float-pointer)
   (copyEnum #.(openrm-lispify "RMenum" 'enumname))
   (freeFunc :pointer))
 
@@ -2609,7 +2610,7 @@
 (cffi:defcfun ("rmPrimitiveSetTexcoord1D" #.(openrm-lispify "rmPrimitiveSetTexcoord1D" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
   (nTexCoords :int)
-  (texCoordData :pointer)
+  (texCoordData float-pointer)
   (copyEnum #.(openrm-lispify "RMenum" 'enumname))
   (appFreeFunc :pointer))
 
@@ -2630,7 +2631,7 @@
 (cffi:defcfun ("rmPrimitiveSetMultiTexcoord1D" #.(openrm-lispify "rmPrimitiveSetMultiTexcoord1D" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
   (nTexCoords :int)
-  (texCoordData :pointer)
+  (texCoordData float-pointer)
   (copyEnum #.(openrm-lispify "RMenum" 'enumname))
   (appFreeFunc :pointer)
   (textureUnitIndx :int))
@@ -2687,7 +2688,7 @@
 (cffi:defcfun ("rmPrimitiveSetMarkerScale" #.(openrm-lispify "rmPrimitiveSetMarkerScale" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
   (npts :int)
-  (scales :pointer)
+  (scales float-pointer)
   (copyEnum #.(openrm-lispify "RMenum" 'enumname))
   (appFreeFunc :pointer))
 
@@ -2699,7 +2700,7 @@
 (cffi:defcfun ("rmPrimitiveSetEllipse2DRotate" #.(openrm-lispify "rmPrimitiveSetEllipse2DRotate" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
   (nVals :int)
-  (rotationValues :pointer)
+  (rotationValues float-pointer)
   (copyEnum #.(openrm-lispify "RMenum" 'enumname))
   (appFreeFunc :pointer))
 
@@ -2769,7 +2770,7 @@
 
 (cffi:defcfun ("rmStateGetPointSize" #.(openrm-lispify "rmStateGetPointSize" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (sizeReturn :pointer))
+  (sizeReturn float-pointer))
 
 (cffi:defcfun ("rmStateGetFrameNumber" #.(openrm-lispify "rmStateGetFrameNumber" 'function)) :int
   (toQuery :pointer))
@@ -2826,11 +2827,11 @@
 
 (cffi:defcfun ("rmNodeSetSceneDepthValue" #.(openrm-lispify "rmNodeSetSceneDepthValue" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
-  (newDepthValue :pointer))
+  (newDepthValue float-pointer))
 
 (cffi:defcfun ("rmNodeGetSceneDepthValue" #.(openrm-lispify "rmNodeGetSceneDepthValue" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
-  (returnDepthValue :pointer))
+  (returnDepthValue float-pointer))
 
 (cffi:defcfun ("rmNodeSetSceneFog" #.(openrm-lispify "rmNodeSetSceneFog" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
@@ -2891,7 +2892,7 @@
 
 (cffi:defcfun ("rmNodeSetSceneViewport" #.(openrm-lispify "rmNodeSetSceneViewport" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toModify :pointer)
-  (newViewport :pointer))
+  (newViewport float-pointer))
 
 (cffi:defcfun ("rmNodeGetSceneViewport" #.(openrm-lispify "rmNodeGetSceneViewport" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (toQuery :pointer)
@@ -3045,17 +3046,17 @@
   (hue :float)
   (saturation :float)
   (value :float)
-  (redReturn :pointer)
-  (greenReturn :pointer)
-  (blueReturn :pointer))
+  (redReturn float-pointer)
+  (greenReturn float-pointer)
+  (blueReturn float-pointer))
 
 (cffi:defcfun ("rmRGBtoHSV" #.(openrm-lispify "rmRGBtoHSV" 'function)) :void
   (red :float)
   (green :float)
   (blue :float)
-  (hueReturn :pointer)
-  (saturationReturn :pointer)
-  (valueReturn :pointer))
+  (hueReturn float-pointer)
+  (saturationReturn float-pointer)
+  (valueReturn float-pointer))
 
 (cffi:defcfun ("rmUnionBoundingBoxes" #.(openrm-lispify "rmUnionBoundingBoxes" 'function)) #.(openrm-lispify "RMenum" 'enumname)
   (s1min :pointer)
@@ -3328,25 +3329,25 @@
   (ybutton :int))
 
 (cffi:defcfun ("rmauxArcBall" #.(openrm-lispify "rmauxArcBall" 'function)) :void
-  (x1 :pointer)
-  (y1 :pointer)
-  (x2 :pointer)
-  (y2 :pointer)
+  (x1 float-pointer)
+  (y1 float-pointer)
+  (x2 float-pointer)
+  (y2 float-pointer)
   (result :pointer))
 
 (cffi:defcfun ("rmauxDolly" #.(openrm-lispify "rmauxDolly" 'function)) :void
   (toModify :pointer)
-  (x1 :pointer)
-  (y1 :pointer)
-  (x2 :pointer)
-  (y2 :pointer))
+  (x1 float-pointer)
+  (y1 float-pointer)
+  (x2 float-pointer)
+  (y2 float-pointer))
 
 (cffi:defcfun ("rmauxTranslate" #.(openrm-lispify "rmauxTranslate" 'function)) :void
   (toModify :pointer)
-  (x1 :pointer)
-  (y1 :pointer)
-  (x2 :pointer)
-  (y2 :pointer))
+  (x1 float-pointer)
+  (y1 float-pointer)
+  (x2 float-pointer)
+  (y2 float-pointer))
 
 (cl:defconstant #.(openrm-lispify "RMI_PPM_P2" 'constant) 2)
 

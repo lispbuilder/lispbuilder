@@ -97,8 +97,9 @@
 ;;;; KMOD_LSHIFT	=    :KEY-MOD-LSHIFT
 
 
-
-
+;;;; FLOAT-POINTER is used by the CFFI translation functions
+;;;; see the typemap definition below.
+(defctype float-pointer :pointer)
 
 ;; (defcstruct RMmatrix
 ;; 	(m :float :count 16))
@@ -160,6 +161,8 @@
 %module openrm
 
 %feature("intern_function","openrm-lispify");
+
+%typemap(cin) float* "float-pointer";
 
 // "rmdefs.h"
 // TODO: Fix %ignores
