@@ -21,7 +21,7 @@
 	      ((:file "package")
 	       (:file "library" :depends-on ("package"))
  	       (:file "openrm" :depends-on ("package" "library"))
-;; 	       (:file "translate" :depends-on ("openrm"))
+ 	       (:file "translate" :depends-on ("openrm"))
 	       ))
      (:module "build"
 	      :components
