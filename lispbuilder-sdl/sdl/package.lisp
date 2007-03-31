@@ -35,7 +35,6 @@
 		lispbuilder-sdl-cffi::sdl-doublebuf
 		lispbuilder-sdl-cffi::sdl-fullscreen
 		lispbuilder-sdl-cffi::sdl-opengl
-		lispbuilder-sdl-cffi::sdl-opengl-blit
 		lispbuilder-sdl-cffi::sdl-resizable
 		lispbuilder-sdl-cffi::sdl-no-frame
 		lispbuilder-sdl-cffi::sdl-hw-accel

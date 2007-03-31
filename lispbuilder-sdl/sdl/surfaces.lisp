@@ -422,7 +422,7 @@ if available."
    'dirty recs' screen update."
   (unless surface
     (setf surface *default-display*))
-s  (check-type surface sdl-surface)
+  (check-type surface sdl-surface)
   (check-type color sdl-color)
   (when template
     (check-type template rectangle))
