@@ -1,10 +1,10 @@
 ;;; -*- lisp -*-
 
-(defpackage #:lispbuilder-openrm-system
+(defpackage #:lispbuilder-operm-cffi-system
   (:use #:cl #:asdf))
-(in-package #:lispbuilder-openrm-system)
+(in-package #:lispbuilder-operm-cffi-system)
 
-(defsystem lispbuilder-openrm
+(defsystem lispbuilder-openrm-cffi
     :description "lispbuilder-openrm: OpenRM library wrapper and tools"
     :long-description
     "lispbuilder-openrm uses CFFI to be highly compatible across lisp 
@@ -14,19 +14,15 @@
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "BSD"
-    :depends-on (cffi trivial-garbage lispbuilder-openrm-cffi)
+    :depends-on (cffi)
     :components
-    ((:module "openrm"
+    ((:module "cffi"
 	      :components
 	      ((:file "package")
 	       (:file "library" :depends-on ("package"))
-	       (:file "openrm" :depends-on ("package" "library"))
-	       (:file "translate" :depends-on ("openrm"))
-	       (:file "util-rm" :depends-on ("openrm" "translate"))
+ 	       (:file "openrm" :depends-on ("package" "library"))
+;; 	       (:file "translate" :depends-on ("openrm"))
 	       ))
-     (:module "documentation"
+     (:module "build"
 	      :components
-	      ((:html-file "index")
-	       (:doc-file "README")
-	       (:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")))))
+	      ((:static-file "openrmswig.i")))))
