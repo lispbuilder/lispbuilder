@@ -22,7 +22,7 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 * `FREE` when `T` will free the existing cached `SURFACE` in `FONT`.
 * `CACHE` when `T` will cache the newly created `SURFACE` in `FONT`.
 
-##### Return
+##### Returns
 
 * Returns the new surface `SDL:SDL-SURFACE`.
 
@@ -71,9 +71,9 @@ onto surface `SURFACE`, using the Shaded mode.
 * `FONT` is a `FONT` object.  Binds to `\*DEFAULT-FONT\*` by default. 
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. 
 
-##### Return
+##### Returns
 
-* Returns the font `FONT`.
+* Returns the target surface `SURFACE`.
 
 ##### Example
 
@@ -88,4 +88,4 @@ onto surface `SURFACE`, using the Shaded mode.
 				  t)
     (sdl:set-surface-* font-surface :x x :y y)
     (sdl:blit-surface font-surface surface))
-  font)
+  surface)
