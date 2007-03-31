@@ -19,12 +19,12 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 * `STRING` is the text to render. 
 * `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
 * `COLOR` color is the text color, of type `SDL:SDL-COLOR`.
-* `FREE` when `T` will free any exisitng cached surface in `FONT`.
+* `FREE` when `T` will free any exisiting cached surface in `FONT`.
 * `CACHE` when `T` will cache the newly created SURFACE in `FONT`.
 
 ##### Returns
 
-* Returns a new cached surface `SDL:SDL-SURFACE`.
+* Returns a new surface `SDL:SDL-SURFACE`.
 
 ##### Example
 
@@ -52,7 +52,8 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Parameters
 
-* `P1` is the x and y position to render the character, of type `SDL:POINT`."
+* `P1` is the `X` and `Y` coordinates to render the character onto `SURFACE`, 
+of type `SDL:POINT`."
   (check-type p1 sdl:point)
   (draw-character-solid-* c (sdl:x p1) (sdl:y p1)
 			  :font font
@@ -64,19 +65,19 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 			       (surface sdl:*default-surface*)
 			       (color sdl:*default-color*))
   "Draw character `C` at location `X` `Y` using font `FONT` with text color `COLOR` onto surface `SURFACE`.
-The character is keyed onto SURFACE.
+The character is keyed over `SURFACE`.
 
 ##### Parameters
 
 * `C` is the character to render. 
 * `X` and `Y` are the x and y position coordinates, as `INTEGERS`.
-* `FONT` is the font face used to render the character. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `FONT` is the font face used to render the character. Of type `FONT`.  Bound to `\*DEFAULT-FONT\*` if unspecified. 
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` color is the character color, of type `SDL:SDL-COLOR`.
 
 ##### Returns
 
-* Returns the font `FONT`.
+* Returns the surface `SURFACE`.
 
 ##### Example
 
@@ -95,9 +96,10 @@ The character is keyed onto SURFACE.
 				   (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
     (sdl-gfx-cffi::character-RGBA (sdl:fp surface) x y c
-				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color)))
+  surface)
 
-(defun draw-string-solid (c p1 &key
+(defun draw-string-solid (string p1 &key
 			  (font *default-font*)
 			  (surface sdl:*default-surface*)
 			  (color sdl:*default-color*))
@@ -105,31 +107,31 @@ The character is keyed onto SURFACE.
 
 ##### Parameters
 
-* `P1` is the x and y position to render the text, of type `SDL:POINT`."
+* `P1` is the `X` and `X` coordinates to render the text, of type `SDL:POINT`."
   (check-type p1 sdl:point)
-  (draw-string-solid-* c (sdl:x p1) (sdl:y p1)
+  (draw-string-solid-* string (sdl:x p1) (sdl:y p1)
 		       :font font
 		       :surface surface
 		       :color color))
 
-(defun draw-string-solid-* (c x y &key
+(defun draw-string-solid-* (string x y &key
 			    (font *default-font*)
 			    (surface sdl:*default-surface*)
 			    (color sdl:*default-color*))
-  "Draw text `C` at location `X` `Y` using font `FONT` with color `COLOR` onto surface `SURFACE`.
-The text is keyed onto SURFACE.
+  "Draw text `STRING` at location `X` `Y` using font `FONT` with color `COLOR` onto surface `SURFACE`.
+The text is keyed onto `SURFACE`.
 
 ##### Parameters
 
-* `C` is the text to render. 
-* `X` and `Y` are the x and y position coordinates, as `INTEGERS`.
+* `STRING` is the text to render. 
+* `X` and `Y` are the `X` and `Y` position coordinates, as `INTEGERS`.
 * `FONT` is the font face used to render the string. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` color is the text color, of type `SDL:SDL-COLOR`.
 
 ##### Returns
 
-* Returns the font `FONT`.
+* Returns the surface `SURFACE`.
 
 ##### Example
 
@@ -144,8 +146,9 @@ The text is keyed onto SURFACE.
     (set-default-font font))
 
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::string-color (sdl:fp surface) x y c
+    (sdl-gfx-cffi::string-color (sdl:fp surface) x y string
 				(sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::string-RGBA (sdl:fp surface) x y c
-			       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+    (sdl-gfx-cffi::string-RGBA (sdl:fp surface) x y string
+			       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color)))
+  surface)

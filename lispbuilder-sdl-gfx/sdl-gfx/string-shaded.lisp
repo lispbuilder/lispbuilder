@@ -17,14 +17,14 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 * `STRING` is the text to render. 
 * `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
-* `FG-COLOR` color is the text color, of type SDL:SDL-COLOR
-* `BG-COLOR` color is the background color used to fill the surface, of type SDL:SDL-COLOR
-* `FREE` when `T` will free any exisitng cached surface in `FONT`.
+* `FG-COLOR` color is the text color, of type `SDL:SDL-COLOR`
+* `BG-COLOR` color is the background color used to fill the surface, of type `SDL:SDL-COLOR`
+* `FREE` when `T` will free any exisiting cached surface in `FONT`.
 * `CACHE` when `T` will cache the newly created SURFACE in `FONT`.
 
 ##### Returns
 
-* Returns a new cached surface `SDL:SDL-SURFACE`.
+* Returns a new surface `SDL:SDL-SURFACE`.
 
 ##### Example
 
@@ -67,14 +67,14 @@ The surface background is filled with `BG-COLOR` so the surface cannot be keyed 
 
 * `C` is the character to render. 
 * `X` and `Y` are the x and y position coordinates, as `INTEGERS`.
-* `FG-COLOR` color is the character color, of type SDL:SDL-COLOR
-* `BG-COLOR` color is the background color used to fill the surface `SURFACE`, of type SDL:SDL-COLOR
+* `FG-COLOR` color is the character color, of type `SDL:SDL-COLOR`
+* `BG-COLOR` color is the background color used to fill the surface `SURFACE`, of type `SDL:SDL-COLOR`
 * `FONT` is the font face used to render the character. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 
 ##### Returns
 
-* Returns the font `FONT`.
+* Returns the surface `SURFACE`.
 
 ##### Example
 
@@ -99,7 +99,8 @@ The surface background is filled with `BG-COLOR` so the surface cannot be keyed 
 				   (sdl:pack-color fg-color)))
   (when (typep fg-color 'sdl:color-a)
     (sdl-gfx-cffi::character-RGBA (sdl:fp surface) x y c
-				  (sdl:r fg-color) (sdl:g fg-color) (sdl:b fg-color) (sdl:a fg-color))))
+				  (sdl:r fg-color) (sdl:g fg-color) (sdl:b fg-color) (sdl:a fg-color)))
+  surface)
 
 (defun draw-string-shaded (c p1 fg-color bg-color &key
 			   (font *default-font*)
@@ -108,7 +109,7 @@ The surface background is filled with `BG-COLOR` so the surface cannot be keyed 
 
 ##### Parameters
 
-* `P1` is the x and y position to render the text, of type `SDL:POINT`."
+* `P1` is the `X` and `Y` coordinates to render the text, of type `SDL:POINT`."
   (check-type p1 sdl:point)
   (draw-string-shaded-* c (sdl:x p1) (sdl:y p1) fg-color bg-color
 			:font font
@@ -122,15 +123,15 @@ onto surface `SURFACE`.
 The surface background is filled with `BG-COLOR` so the surface cannot be keyed over other surfaces.
 
 * `C` is the text to render. 
-* `X` and `Y` are the x and y position coordinates, as `INTEGERS`.
-* `FG-COLOR` color is the text color, of type SDL:SDL-COLOR
-* `BG-COLOR` color is the background color used to fill the surface `SURFACE`, of type SDL:SDL-COLOR
+* `X` and `Y` are the `X` and `Y` coordinates coordinates, as `INTEGERS`.
+* `FG-COLOR` color is the text color, of type `SDL:SDL-COLOR`
+* `BG-COLOR` color is the background color used to fill the surface `SURFACE`, of type `SDL:SDL-COLOR`
 * `FONT` is the font face used to render the text. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 
 ##### Returns
 
-* Returns the font `FONT`.
+* Returns the surface `SURFACE`.
 
 ##### Example
 
@@ -154,4 +155,5 @@ The surface background is filled with `BG-COLOR` so the surface cannot be keyed 
 				(sdl:pack-color fg-color)))
   (when (typep fg-color 'sdl:color-a)
     (sdl-gfx-cffi::string-RGBA (sdl:fp surface) x y c
-			       (sdl:r fg-color) (sdl:g fg-color) (sdl:b fg-color) (sdl:a fg-color))))
+			       (sdl:r fg-color) (sdl:g fg-color) (sdl:b fg-color) (sdl:a fg-color)))
+  surface)
