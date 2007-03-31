@@ -80,7 +80,7 @@ Automatically initialises the `SDL_TTF` truetype font library if the library is 
 * `FILENAME` is the file name of the `FONT`, of type `STRING`.
 * `SIZE` is the `INTEGER` point size of the new `FONT`.
 
-##### Return
+##### Returns
 
 * Returns a new `FONT`, or `NIL` if unsuccessful."
   (unless (is-init)
@@ -108,7 +108,7 @@ and `\*DEFAULT-FONT\*` is already bound to a `FONT` when `INITIALISE-DEFAULT-FON
 * `FILENAME` is the optional file name of the font, as a STRING. Default value is `Vera.ttf`.
 * `SIZE` is the `INTEGER` point size of the new `FONT`.
 
-##### Return
+##### Returns
 
 * Returns a new `FONT`, or `NIL` if unsuccessful."
   (when (valid-font *default-font*)
@@ -143,7 +143,7 @@ by default.
 `:MAXY`, for the maximum `Y` offset. 
 `:ADVANCE`, for the advance offset. 
 
-##### Return
+##### Returns
 
 * Returns the glyph metric as an `INTEGER`.
 
@@ -192,7 +192,7 @@ actual width. The height returned is the same as returned using [GET-FONT-HEIGHT
 * `SIZE` must be one of; `:W` for the text width or `:H` for the text height.
 * `FONT` is the font used to calculate the size of the `TEXT`. Binds to `\*DEFAULT-FONT\*` by default.
 
-##### Return
+##### Returns
 
 * Returns the width or height of the specified `SDL:SURFACE`, or `NIL` upon error."
   (check-type font font)
@@ -222,7 +222,7 @@ or `NIL` upon error.
 
 * `FONT` is a `FONT` object. Binfs to `\*DEFAULT-FONT\*` by default. 
 
-##### Return
+##### Returns
 
 * Retuns the font style as one or more of: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`"
   (check-type font font)
