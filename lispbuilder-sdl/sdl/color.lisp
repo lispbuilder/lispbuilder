@@ -152,15 +152,15 @@ If the surface color depth is less than 32-bpp then the unused upper bits of the
   (cffi:foreign-free (fp color))
   (tg:cancel-finalization color))
 
-;; (defmacro with-foreign-color-copy ((struct color) &body body)
-;;   "Creates a new foreign SDL_Color object `STRUCT on the stack. Then copies the color components from COLOR into STRUCT.
-;; STRUCT is free'd after BODY." 
-;;   `(cffi:with-foreign-object (,struct 'sdl-cffi::SDL-Color)
-;;      (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct sdl-cffi::SDL-Color)
-;;        (setf sdl-cffi::r (r ,color)
-;; 	     sdl-cffi::g (g ,color)
-;; 	     sdl-cffi::b (b ,color)))
-;;      ,@body))
+(defmacro with-foreign-color-copy ((struct color) &body body)
+  "Creates a new foreign SDL_Color object `STRUCT on the stack. Then copies the color components from COLOR into STRUCT.
+STRUCT is free'd after BODY." 
+  `(cffi:with-foreign-object (,struct 'sdl-cffi::SDL-Color)
+     (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct sdl-cffi::SDL-Color)
+       (setf sdl-cffi::r (r ,color)
+	     sdl-cffi::g (g ,color)
+	     sdl-cffi::b (b ,color)))
+     ,@body))
 
 (defmethod color= (color1 color2)
   "Returns `NIL`. This is a catch all when an `RGB` color is compared with an `RGBA` color."
