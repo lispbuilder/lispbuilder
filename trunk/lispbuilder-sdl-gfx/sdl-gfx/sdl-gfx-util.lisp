@@ -219,12 +219,12 @@ the smoother the spline.
     (sdl-gfx-cffi::pixel-rgba (sdl:fp surface) x y
 			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-hline (x1 x2 y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "Draw a horizontal line of color `COLOR` from `X1` to `X2` through `Y` onto the surface `SURFACE`. 
+(defun draw-hline (x0 x1 y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw a horizontal line of color `COLOR` from `X0` to `X1` through `Y` onto the surface `SURFACE`. 
 
 ##### Parameters
 
-* `X1` and `X2` are the horizontal start and end points of the line, of type `INTEGER`.
+* `X0` and `X1` are the horizontal start and end points of the line, of type `INTEGER`.
 * `Y` is the vertical `INTEGER` coordinate that the horizontal line must intersect.  
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
@@ -233,19 +233,19 @@ the smoother the spline.
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::hline-color (sdl:fp surface) x1 x2 y
+    (sdl-gfx-cffi::hline-color (sdl:fp surface) x0 x1 y
 			       (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::hline-RGBA (sdl:fp surface) x1 x2 y
+    (sdl-gfx-cffi::hline-RGBA (sdl:fp surface) x0 x1 y
 			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-vline (x y1 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "Draw a vertical line of color `COLOR` from `Y1` to `Y2` through `X` onto the surface `SURFACE`. 
+(defun draw-vline (x y0 y1 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw a vertical line of color `COLOR` from `Y0` to `Y1` through `X` onto the surface `SURFACE`. 
 
 ##### Parameters
 
 * `X` is the horizontal `INTEGER` coordinate that the vertical line must intersect.  
-* `Y1` and `Y2` are the vertical start and end points of the line, of type `INTEGER`.
+* `Y0` and `Y1` are the vertical start and end points of the line, of type `INTEGER`.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
   (unless surface
@@ -253,10 +253,10 @@ the smoother the spline.
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::vline-color (sdl:fp surface) x y1 y2
+    (sdl-gfx-cffi::vline-color (sdl:fp surface) x y0 y1
 			       (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::vline-RGBA (sdl:fp surface) x y1 y2
+    (sdl-gfx-cffi::vline-RGBA (sdl:fp surface) x y0 y1
 			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-rectangle (rect &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -279,13 +279,13 @@ the smoother the spline.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
   (draw-rectangle-edges-* x y (+ x w) (+ y h) :surface surface :color color))
 
-(defun draw-rectangle-edges-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-rectangle-edges-* (x0 y0 x1 y1 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw a rectangle outline of color `COLOR` to the surface `SURFACE`.
 
 ##### Parameters
 
-* `X1` and `Y1` are the `INTEGER` coordinates of the top-left corner of the rectangle.
-* `X2` and `Y2` are the `INTEGER` coordinates of the bottom-right corner of the rectangle.
+* `X0` and `Y0` are the `INTEGER` coordinates of the top-left corner of the rectangle.
+* `X1` and `Y1` are the `INTEGER` coordinates of the bottom-right corner of the rectangle.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
   (unless surface
@@ -293,10 +293,10 @@ the smoother the spline.
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::rectangle-color (sdl:fp surface) x1 y1 x2 y2
+    (sdl-gfx-cffi::rectangle-color (sdl:fp surface) x0 y0 x1 y1
 				   (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::rectangle-RGBA (sdl:fp surface) x1 y1 x2 y2
+    (sdl-gfx-cffi::rectangle-RGBA (sdl:fp surface) x0 y0 x1 y1
 				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-box (rect &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -318,13 +318,13 @@ the smoother the spline.
 * `COLOR` is the fill color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
   (draw-box-edges-* x y (+ x w) (+ y h) :surface surface :color color))
 
-(defun draw-box-edges-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-box-edges-* (x0 y0 x1 y1 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draws a filled rectangle of color `COLOR` to the surface `SURFACE`.
 
 ##### Parameters
 
-* `X1` and `Y1` are the `INTEGER` coordinates of the top-left corner of the rectangle.
-* `X2` and `Y2` are the `INTEGER` coordinates of the bottom-right corner of the rectangle.
+* `X0` and `Y0` are the `INTEGER` coordinates of the top-left corner of the rectangle.
+* `X1` and `Y1` are the `INTEGER` coordinates of the bottom-right corner of the rectangle.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the fill color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
   (unless surface
@@ -332,28 +332,28 @@ the smoother the spline.
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::box-color (sdl:fp surface) x1 y1 x2 y2
+    (sdl-gfx-cffi::box-color (sdl:fp surface) x0 y0 x1 y1
 			     (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::box-RGBA (sdl:fp surface) x1 y1 x2 y2
+    (sdl-gfx-cffi::box-RGBA (sdl:fp surface) x0 y0 x1 y1
 			    (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-line (point1 point2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-line (p1 p2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-LINE-*](#draw-line-*).
 
 ##### Parameters
 
-* `POINT1` and `POINT2` are the start and end x/y co-ordinates of the line, of type `SDL:POINT`."
-  (sdl:check-types sdl:point point1 point2)
-  (draw-line-* (sdl:x point1) (sdl:y point1) (sdl:x point2) (sdl:y point2) :surface surface :color color))
+* `P1` and `P2` are the start and end x/y co-ordinates of the line, of type `SDL:POINT`."
+  (sdl:check-types sdl:point p1 p2)
+  (draw-line-* (sdl:x p1) (sdl:y p1) (sdl:x p2) (sdl:y p2) :surface surface :color color))
 
-(defun draw-line-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-line-* (x0 y0 x1 y1 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draws a line of color `COLOR` to the surface `SURFACE`.
 
 ##### Parameters
 
-* `X1` `Y1` are the start X/Y coordinates of the line, of type `INTEGER`.
-* `X2` `Y2` are the end X/Y coordinates of the line, of type `INTEGER`.
+* `X0` `Y0` are the start X/Y coordinates of the line, of type `INTEGER`.
+* `X1` `Y1` are the end X/Y coordinates of the line, of type `INTEGER`.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
   (unless surface
@@ -361,28 +361,28 @@ the smoother the spline.
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::line-color (sdl:fp surface) x1 y1 x2 y2
+    (sdl-gfx-cffi::line-color (sdl:fp surface) x0 y0 x1 y1
 			      (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::line-RGBA (sdl:fp surface) x1 y1 x2 y2
+    (sdl-gfx-cffi::line-RGBA (sdl:fp surface) x0 y0 x1 y1
 			     (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-aa-line (point1 point2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-aa-line (p1 p2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-AA-LINE-*](#draw-aa-line-*)-*
 
 ##### Parameters
 
-* `POINT1` and `POINT2` are the start and end x/y co-ordinates of the line, of type `SDL:POINT`."
-  (sdl:check-types sdl:point point1 point2)
-  (draw-aa-line-* (sdl:x point1) (sdl:y point1) (sdl:x point2) (sdl:y point2) :surface surface :color color))
+* `P1` and `P2` are the start and end x/y co-ordinates of the line, of type `SDL:POINT`."
+  (sdl:check-types sdl:point p1 p2)
+  (draw-aa-line-* (sdl:x p1) (sdl:y p1) (sdl:x p2) (sdl:y p2) :surface surface :color color))
 
-(defun draw-aa-line-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-aa-line-* (x0 y0 x1 y1 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draws an antialiased line of color `COLOR` to the surface `SURFACE`.
 
 ##### Parameters
 
-* `X1` `Y1` are the start X/Y coordinates of the line, of type `INTEGER`.
-* `X2` `Y2` are the end X/Y coordinates of the line, of type `INTEGER`.
+* `X0` `Y0` are the start X/Y coordinates of the line, of type `INTEGER`.
+* `X1` `Y1` are the end X/Y coordinates of the line, of type `INTEGER`.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
   (unless surface
@@ -390,10 +390,10 @@ the smoother the spline.
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::aa-line-color (sdl:fp surface) x1 y1 x2 y2
+    (sdl-gfx-cffi::aa-line-color (sdl:fp surface) x0 y0 x1 y1
 				 (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::aa-line-RGBA (sdl:fp surface) x1 y1 x2 y2
+    (sdl-gfx-cffi::aa-line-RGBA (sdl:fp surface) x0 y0 x1 y1
 				(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
 (defun draw-circle (p1 r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -637,169 +637,169 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
     (sdl-gfx-cffi::filled-pie-RGBA (sdl:fp surface) x y rad start end
 				   (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-trigon (point1 point2 point3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw the outline of a trigon or triangle, of color `COLOR` to surface `SURFACE`.
 Use [DRAW-FILLED-TRIGON-*](#draw-filled-trigon-*) to draw a filled trigon.
 
 ##### Parameters
 
-* `POINT1`, `POINT2` and `POINT3` specify the vertices of the trigon, of type `SDL:POINT`.
+* `P1`, `P2` and `P3` specify the vertices of the trigon, of type `SDL:POINT`.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the circumference color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
-  (sdl:check-types sdl:point point1 point2 point3)
+  (sdl:check-types sdl:point p1 p2 p3)
   (unless surface
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
-				(sdl:x point2) (sdl:y point2)
-				(sdl:x point3) (sdl:y point3)
+    (sdl-gfx-cffi::trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				(sdl:x p2) (sdl:y p2)
+				(sdl:x p3) (sdl:y p3)
 				(sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::trigon-RGBA (sdl:fp surface) (sdl:x point1) (sdl:y point1)
-			       (sdl:x point2) (sdl:y point2)
-			       (sdl:x point3) (sdl:y point3)
+    (sdl-gfx-cffi::trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+			       (sdl:x p2) (sdl:y p2)
+			       (sdl:x p3) (sdl:y p3)
 			       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-aa-trigon (point1 point2 point3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-aa-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw the outline of a trigon or triangle, of color `COLOR` to surface `SURFACE` using anti-aliasing.
 Use [DRAW-FILLED-TRIGON-*](#draw-filled-trigon-*) to draw a filled trigon.
 
 ##### Parameters
 
-* `POINT1`, `POINT2` and `POINT3` specify the vertices of the trigon, of type `SDL:POINT`.
+* `P1`, `P2` and `P3` specify the vertices of the trigon, of type `SDL:POINT`.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the circumference color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
-  (sdl:check-types sdl:point point1 point2 point3)
+  (sdl:check-types sdl:point p1 p2 p3)
   (unless surface
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::aa-trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
-				   (sdl:x point2) (sdl:y point2)
-				   (sdl:x point3) (sdl:y point3)
+    (sdl-gfx-cffi::aa-trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				   (sdl:x p2) (sdl:y p2)
+				   (sdl:x p3) (sdl:y p3)
 				   (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::aa-trigon-RGBA (sdl:fp surface) (sdl:x point1) (sdl:y point1)
-				  (sdl:x point2) (sdl:y point2)
-				  (sdl:x point3) (sdl:y point3)
+    (sdl-gfx-cffi::aa-trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				  (sdl:x p2) (sdl:y p2)
+				  (sdl:x p3) (sdl:y p3)
 				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-filled-trigon (point1 point2 point3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filled-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw a filled trigon, of color `COLOR` to surface `SURFACE`.
 
 ##### Parameters
 
-* `POINT1`, `POINT2` and `POINT3` specify the vertices of the trigon, of type `SDL:POINT`.
+* `P1`, `P2` and `P3` specify the vertices of the trigon, of type `SDL:POINT`.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the fill color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
-  (sdl:check-types sdl:point point1 point2 point3)
+  (sdl:check-types sdl:point p1 p2 p3)
   (unless surface
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
   (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::filled-trigon-color (sdl:fp surface) (sdl:x point1) (sdl:y point1)
-				       (sdl:x point2) (sdl:y point2)
-				       (sdl:x point3) (sdl:y point3)
+    (sdl-gfx-cffi::filled-trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				       (sdl:x p2) (sdl:y p2)
+				       (sdl:x p3) (sdl:y p3)
 				       (sdl:pack-color color)))
   (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::filled-trigon-RGBA (sdl:fp surface) (sdl:x point1) (sdl:y point1)
-				      (sdl:x point2) (sdl:y point2)
-				      (sdl:x point3) (sdl:y point3)
+    (sdl-gfx-cffi::filled-trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				      (sdl:x p2) (sdl:y p2)
+				      (sdl:x p3) (sdl:y p3)
 				      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
 
-(defun draw-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "Draw the circumference of a polygon of color `COLOR` to surface SURFACE using the vertices in `POINTS`.
+(defun draw-polygon (vertices &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw the circumference of a polygon of color `COLOR` to surface SURFACE using the vertices in `VERTICES`.
 Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*) to draw a filled polygon.
 
 ##### Parameters
 
-* `POINTS` is the list of vertices for the polygon. `POINTS` is a list of `SDL:POINT`s.
+* `VERTICES` is the list of vertices for the polygon. `VERTICES` is a list of `SDL:POINT`s.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the circumference color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
-  (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
+  (check-type vertices (and list (not null)) "Vertices must be a LIST of SDL:POINTs")
   (unless surface
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
-	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
+  (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :x)))
+	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :y)))
 	(poly-surface nil))
     (when (typep color 'sdl:color)
-      (setf poly-surface (sdl-gfx-cffi::polygon-color (sdl:fp surface) x-array y-array (length points)
+      (setf poly-surface (sdl-gfx-cffi::polygon-color (sdl:fp surface) x-array y-array (length vertices)
 						      (sdl:pack-color color))))
     (when (typep color 'sdl:color-a)
-      (setf poly-surface (sdl-gfx-cffi::polygon-RGBA (sdl:fp surface) x-array y-array (length points)
+      (setf poly-surface (sdl-gfx-cffi::polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
 						     (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
     (cffi:foreign-free x-array)
     (cffi:foreign-free y-array)
     poly-surface))
 
-(defun draw-aa-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "Draw the circumference of a polygon of color `COLOR` to surface SURFACE using the vertices in `POINTS`.
+(defun draw-aa-polygon (vertices &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+  "Draw the circumference of a polygon of color `COLOR` to surface SURFACE using the vertices in `VERTICES`.
 The polygon is anti-aliased. Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*) to draw a filled polygon.
 
 ##### Parameters
 
-* `POINTS` is the list of vertices of type `SDL:POINT`.
+* `VERTICES` is the list of vertices of type `SDL:POINT`.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the circumference color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
-  (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
+  (check-type vertices (and list (not null)) "Vertices must be a LIST of SDL:POINTs")
   (unless surface
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
-	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
+  (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :x)))
+	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :y)))
 	(poly-surface nil))
     (when (typep color 'sdl:color)
-      (setf poly-surface (sdl-gfx-cffi::aa-polygon-color (sdl:fp surface) x-array y-array (length points)
+      (setf poly-surface (sdl-gfx-cffi::aa-polygon-color (sdl:fp surface) x-array y-array (length vertices)
 							 (sdl:pack-color color))))
     (when (typep color 'sdl:color-a)
-      (setf poly-surface (sdl-gfx-cffi::aa-polygon-RGBA (sdl:fp surface) x-array y-array (length points)
+      (setf poly-surface (sdl-gfx-cffi::aa-polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
 							(sdl:r color) (sdl:g color) (sdl:b color)
 							(sdl:a color))))
     (cffi:foreign-free x-array)
     (cffi:foreign-free y-array)
     poly-surface))
 
-(defun draw-filled-polygon (points &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filled-polygon (vertices &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw a filled polygon, of color `COLOR` to surface `SURFACE`.
 
 ##### Parameters
 
-* `POINTS` is the list of vertices of type `SDL:POINT`.
+* `VERTICES` is the list of vertices of type `SDL:POINT`.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the fill color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified."
-  (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
+  (check-type vertices (and list (not null)) "Vertices must be a LIST of SDL:POINTs")
   (unless surface
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
-	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
+  (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :x)))
+	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :y)))
 	(poly-surface nil))
     (when (typep color 'sdl:color)
-      (setf poly-surface (sdl-gfx-cffi::filled-polygon-color (sdl:fp surface) x-array y-array (length points)
+      (setf poly-surface (sdl-gfx-cffi::filled-polygon-color (sdl:fp surface) x-array y-array (length vertices)
 							     (sdl:pack-color color))))
     (when (typep color 'sdl:color-a)
-      (setf poly-surface (sdl-gfx-cffi::filled-polygon-RGBA (sdl:fp surface) x-array y-array (length points)
+      (setf poly-surface (sdl-gfx-cffi::filled-polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
 							      (sdl:r color) (sdl:g color) (sdl:b color)
 							      (sdl:a color))))
     (cffi:foreign-free x-array)
     (cffi:foreign-free y-array)
     poly-surface))
 
-(defun draw-bezier (points steps &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-bezier (vertices steps &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw a bezier curve of color `COLOR` to the surface `SURFACE`. The shape of the Bezier curve is defined by several control points. 
 A control point is a vertex containing an X and Y coordinate pair.
 
 ##### Parameters
 
-* `POINTS` is the list of control points of type `SDL:POINT`.
+* `VERTICES` is the list of control points of type `SDL:POINT`.
 * `STEPS` is the number of segments used to draw the Bezier curve. The greater the number of segments, the smoother the Bezier curve.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
@@ -811,18 +811,18 @@ A control point is a vertex containing an X and Y coordinate pair.
                          \(SDL:POINT :X 170 :Y 150\)
                          \(SDL:POINT :X 60 :Y 150\)\)
                    10\)"
-  (check-type points (and list (not null)) "POINTs must be a LIST of SDL:POINTs")
+  (check-type vertices (and list (not null)) "Vertices must be a LIST of SDL:POINTs")
   (unless surface
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :x)))
-	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array points :y)))
+  (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :x)))
+	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :y)))
 	(bezier-surface nil))
     (when (typep color 'sdl:color)
-      (setf bezier-surface (sdl-gfx-cffi::bezier-color (sdl:fp surface) x-array y-array (length points) steps (sdl:pack-color color))))
+      (setf bezier-surface (sdl-gfx-cffi::bezier-color (sdl:fp surface) x-array y-array (length vertices) steps (sdl:pack-color color))))
     (when (typep color 'sdl:color-a)
-      (setf bezier-surface (sdl-gfx-cffi::bezier-RGBA (sdl:fp surface) x-array y-array (length points) steps
+      (setf bezier-surface (sdl-gfx-cffi::bezier-RGBA (sdl:fp surface) x-array y-array (length vertices) steps
 						      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
     (cffi:foreign-free x-array)
     (cffi:foreign-free y-array)
