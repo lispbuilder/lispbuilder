@@ -19,14 +19,16 @@ and [WITH-SURFACES](#with-surfaces).
 
 ##### Example
 
-    \(draw-surface surf-1 :surface sdl:*default-display*\)
-    \(draw-surface surf-2 :surface sdl:*default-display*\)
-    \(draw-surface surf-2 :surface sdl:*default-display*\)
+    \(DRAW-SURFACE SURF-1 :SURFACE SDL:*DEFAULT-DISPLAY*\)
+    \(DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*\)
+    \(DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*\)
 
-    \(with-surface \(disp sdl:*default-display*\)
-      \(draw-surface surf-1\)
-      \(draw-surface surf-2\)
-      \(draw-surface surf-2\)\)")
+The above can be shortened using by setting the `\*DEFAULT-SURFACE\*` to the display surface.
+
+    \(WITH-SURFACE \(DISP SDL:*DEFAULT-DISPLAY*\)
+      \(DRAW-SURFACE SURF-1\)
+      \(DRAW-SURFACE SURF-2\)
+      \(DRAW-SURFACE SURF-2\)\)")
 
 (defvar *default-display* nil
   "The symbol `\*DEFAULT-DISPLAY\*` is bound to the current display surface 
@@ -41,15 +43,17 @@ A color is bound to `\*DEFAULT-COLOR*\` by the following macro: [WITH-COLOR](#wi
 
 ##### Example
 
-    \(draw-box a-box :surface sdl:default-display* :color sdl:*black*\)
-    \(draw-box b-box :surface sdl:default-display* :color sdl:*black*\)
-    \(draw-box c-box :surface sdl:default-display* :color sdl:*black*\)
+    \(DRAW-BOX A-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*\)
+    \(DRAW-BOX B-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*\)
+    \(DRAW-BOX C-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*\)
 
-    \(with-surface \(disp sdl:*default-display*\)
-      \(with-color \(col sdl:*black*\)
-        \(draw-box a-box\)
-        \(draw-box b-box\)
-        \(draw-box c-box\)\)\)")
+The above can be shortened by setting `\*DEFAULT-COLOR\*` to `\*BLACK\*`.
+
+    \(WITH-SURFACE \(DISP SDL:*DEFAULT-DISPLAY*\)
+      \(WITH-COLOR \(COL SDL:*BLACK*\)
+        \(DRAW-BOX A-BOX\)
+        \(DRAW-BOX B-BOX\)
+        \(DRAW-BOX C-BOX\)\)\)")
 
 (defvar *opengl-context* nil
   "The symbol `\*OPENGL-CONTEXT\*` is `T` when an OpenGL display context is created, and `NIL` otherwise.

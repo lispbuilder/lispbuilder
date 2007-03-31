@@ -15,14 +15,15 @@
 ;;	SDL.h			SDL.h		 
 ;;	SDL_active.h		SDL_active.h	 
 ;;	SDL_audio.h		SDL_audio.h	     
-;;	SDL_byteorder.h		SDL_byteorder.h	 
+;;	SDL_byteorder.h		SDL_byteorder.h	 // Depreciated. Now in "SDL_stdinc.h"
 ;;	SDL_cdrom.h		SDL_cdrom.h	     
 ;;	SDL_copying.h		SDL_copying.h	 
+;;				SDL_config.h
 ;;	SDL_cpuinfo.h		SDL_cpuinfo.h	 
 ;;	SDL_endian.h		SDL_endian.h	 
 ;;	SDL_error.h		SDL_error.h	 
-;;	SDL_events.h		SDL_events.h	 
-;;	SDL_getenv.h		SDL_getenv.h	 
+;;	SDL_event.h		SDL_events.h	 
+;;	SDL_getenv.h		SDL_getenv.h	 // Depreciated. Now in "SDL_stdinc.h"
 ;;	SDL_joystick.h		SDL_joystick.h	 
 ;;	SDL_keyboard.h		SDL_keyboard.h	 
 ;;	SDL_keysym.h		SDL_keysym.h	 
@@ -39,55 +40,126 @@
 ;;	SDL_syswm.h		SDL_syswm.h	 
 ;;	SDL_thread.h		SDL_thread.h	 
 ;;	SDL_timer.h		SDL_timer.h	 
-;;	SDL_types.h		SDL_types.h	 
+;;	SDL_types.h		SDL_types.h	 // Depreciated. Now in "SDL_stdinc.h"
 ;;	SDL_version.h		SDL_version.h	 
 ;;	SDL_video.h		SDL_video.h	 
 ;;	begin_code.h		begin_code.h	 
 ;;	close_code.h		close_code.h	 
 ;;
 ;; The following #includes are not processed by sdlswig.i
-;;  - "SDL_syswm.h" 	   // Too complicated. Partially defined in sdlswig.i	// Complete for 1.2.11
-;;  - "SDL_platform.h" 	   // Nothing to be done.	   	    		// Complete for 1.2.11
-;;  - "SDL_stdinc.h" 	   // Too complicated. Partially defined in sdlswig.i   // Complete for 1.2.11
-;;  - "SDL_getenv.h"	   // Depreciated. Now in "SDL_stdinc.h"    		// Complete for 1.2.11
-;;  - "SDL_types.h"  	   // Depreciated. Now in "SDL_stdinc.h"		// Complete for 1.2.11
-;;  - "SDL_byteorder.h"	   // Depreciated. Now in "SDL_endian.h"		// Complete for 1.2.11
-;;  - "SDL_endian.h"  	   // Too complicated. Partially defined in sdlswig.i	// Complete for 1.2.11
+;;  - "SDL_config.h" 	   // Not required for bindings.			// Complete for 1.2.11
+;;  - "SDL_syswm.h" 	   // Partially defined in sdlswig.i			// Complete for 1.2.11
+;;  - "SDL_stdinc.h" 	   // Partially defined in sdlswig.i. 	    		// Complete for 1.2.11
+;;     			   // Only the types and putenv/getenv are required.	
+;;  - "SDL_endian.h"  	   // Not required for bindings.       	   		// Complete for 1.2.11
 ;;  - "SDL_thread.h" 	   // Use native Lisp threads instead. 			// Complete for 1.2.11
 ;;  - "SDL_mutex.h" 	   // Use native Lisp threads instead. 			// Complete for 1.2.11
-;;  - "SDL_timer.h" 	   // Necessary functions are defined in sdlswig.i	// Complete for 1.2.11
 ;;  - "SDL_opengl.h" 	   // Use CL-OPENGL instead.  	      	 		// Complete for 1.2.11
 
 (in-package #:lispbuilder-sdl)
 
-;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature)
-;; this handles anonymous enum types differently
-
-(defmacro defenum (&body enums)	
- `(progn ,@(loop for value in enums
-                 for index = 0 then (1+ index)
-                 when (listp value) do (setf index (second value)
-                                             value (first value))
-                 collect `(defconstant ,value ,index))))
-
 ;;; This is to handle a C macro where 1 is shifted left n times
 (defun 1<<(x) (ash 1 x))
 
+(cl:eval-when (:compile-toplevel :load-toplevel)
+  (cl:unless (cl:fboundp 'sdl-lispify)
+(defun sdl-lispify (name flag &optional (package *package*))
+  (labels ((find-sub (src lst)
+	     (when (>= (length lst)
+		       (length src))
+	       (if (equal src (subseq lst 0 (length src)))
+		   t
+		   nil)))
+	   (replace-sub (new old lis)
+	     (append new (nthcdr (length old) lis)))
+	   (next-char (char)
+	     (if char
+		 (cond
+		   ((upper-case-p char)
+		    'upper)
+		   ((lower-case-p char)
+		    'lower)
+		   (t nil))
+		 nil))
+	      (helper (lst last prev-last rest &aux (c (car lst)))
+		(cond
+		  ((null lst)
+		   rest)
+		  ((upper-case-p c)
+		   (let ((new '(#\K #\E #\Y #\_)) (old '(#\S #\D #\L #\K #\_)))
+		     (when (find-sub old lst)
+		       (setf lst (replace-sub new old lst)
+			     c (first new))))
+		   (let ((new '(#\K #\E #\Y #\_ #\M #\O #\D #\_)) (old '(#\K #\M #\O #\D #\_)))
+		     (when (find-sub old lst)
+		       (setf lst (replace-sub new old lst)
+			     c (first new))))		   
+		   (helper (cdr lst) 'upper last
+			   (cond
+			     ((or (equal last 'lower)
+;; 				  (equal last 'digit)
+				  )
+			      (list* c #\- rest))
+			     ((and (equal last 'upper)
+				   (equal (next-char (cadr lst)) 'lower))
+			      (list* c #\- rest))
+			     (t (cons c rest)))))
+		  ((lower-case-p c)
+		   (helper (cdr lst) 'lower last (cons (char-upcase c) rest)))
+		  ((digit-char-p c)
+		   (helper (cdr lst) 'digit last
+			   (case last
+			     ((upper lower) (list* c #\- rest))
+			     (t (cons c rest)))))
+		  ((char-equal c #\_)
+		   (helper (cdr lst) '_ last (cons #\- rest)))
+		  (t
+		   (error "Invalid character: ~A" c)))))
+    (let ((fix (case flag
+		    ((constant variable) "*")
+		    (enumvalue "")
+		    (t ""))))
+      (intern
+       (concatenate
+	'string
+	fix
+	(nreverse (helper (concatenate 'list name) nil nil nil))
+	fix)
+       package))))
+))
 
-;;;; Overrides to C header files follow:
-;;;;
-;;; "SDL_endian.h"
-;;; First, set the byte-order. This is probably not needed.
-(defconstant SDL_LIL_ENDIAN 1234)
-(defconstant SDL_BIG_ENDIAN 4321)
+;;;; Lispifies the following 'C' keywords:
+;;;; scancode 		=    SCANCODE
+;;;; SDL_ALL_HOTKEYS 	=    *SDL-ALL-HOTKEYS*
+;;;; SDLKey 		=    SDL-KEY
+;;;; SDL_GetKeyRepeat	=    SDL-GET-KEY-REPEAT
+;;;; SDL_RWFromFP	=    SDL-RW-FROM-FP
+;;;; SDL_HasSSE 	=    SDL-HAS-SSE
+;;;; SDL_HasSSE2 	=    SDL-HAS-SSE-2
+;;;; SDL_Has3DNow 	=    SDL-HAS-3D-NOW
+;;;; SDL_WriteBE32	=    SDL-WRITE-BE-32
+;;;; SDLK_SLASH		=    :KEY-SLASH
+;;;; SDLK_F1		=    :KEY-F-1
+;;;; KMOD_LSHIFT	=    :KEY-MOD-LSHIFT
 
-;;; Set the byte order for the current CPU
-#-(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_BIG_ENDIAN)
-#+(or little-endian PC386 X86 I386) (defconstant SDL_BYTEORDER SDL_LIL_ENDIAN)
-;;; End "SDL_endian.h"
+
+;;; "SDL_audio.h"
+#-(or little-endian PC386 X86 I386) (defconstant *AUDIO-U16SYS* #x1010)
+#-(or little-endian PC386 X86 I386) (defconstant *AUDIO-U16SYS* #x9010)
+#+(or little-endian PC386 X86 I386) (defconstant *AUDIO-U16SYS* #x0010)
+#+(or little-endian PC386 X86 I386) (defconstant *AUDIO-S16SYS* #x8010)
+
+(defun SDL-Load-WAV (file spec audio-buf audio-len)
+  (SDL-Load-WAV-RW (SDL-RW-FROM-FILE file "rb")
+		  1
+		  spec
+		  audio-buf
+		  audio-len))
+;;; End "SDL_audio.h"
 
 ;;; "SDL_video.h"
-;;; Here we define SDL_VideoInfo as it uses nasty bitfields which SWIG does not yet generate automatic wrappers for.
+;;; Here we define SDL_VideoInfo as it uses icky nasty bitfields 
+;;; that SWIG does not yet generate wrappers for.
 (defbitfield hardware-flags
   (:hw_available #x0000)
   (:wm_available #x0001)
@@ -105,82 +177,142 @@
   (vfmt :pointer)
   (current_w :int)	;; New for SDL-1.2.11
   (current_h :int))	;; New for SDL-1.2.11
-
 ;;; end "SDL_video.h"
 
-;;;; "SDL_stdinc.h"
-;;; Probably do not need this.
-(defcenum SDL_bool
-	(:SDL_FALSE 0)
-	(:SDL_TRUE 1))
 
-;;; Probably do not need this.
-(defcstruct Uint64
-	(hi :unsigned-int)
-	(lo :unsigned-int))
+;;; "SDL_video.h"
+(defun SDL-Load-BMP (file)
+  (SDL-Load-BMP-RW (sdl-RW-From-File file "rb") 1))
 
-;;; Probably do not need this.
-(defcenum SDL_DUMMY_ENUM
-	:DUMMY_ENUM_VALUE)
+(defun SDL-Save-BMP (surface file)
+  (SDL-Save-BMP-RW surface (SDL-RW-FROM-FILE file "wb") 1))
 
-;;; Is this even cross platform between Windows, *nix, OSX?
-;; extern DECLSPEC char * SDLCALL SDL_getenv(const char *name);
-(defcfun ("SDL_getenv" SDL_getenv) :pointer
-  (name :string))
+(defun SDL-Blit-Surface (src srcrect dst dstrect)
+  (SDL-Upper-Blit src srcrect dst dstrect))
+;;; end "SDL_video.h"
 
-;;; Is this even cross platform between Windows, *nix, OSX?
-;; extern DECLSPEC int SDLCALL SDL_putenv(const char *variable);
-(defcfun ("SDL_putenv" SDL_putenv) :int
-  (variable :string))
-;;;; end "SDL_stdinc.h"
+;;; "SDL_version.h"
+(cffi:defcstruct SDL-version
+	(major :unsigned-char)
+	(minor :unsigned-char)
+	(patch :unsigned-char))
 
-;;; "SDL_timer.h"
-;;; These are really the only functions we require from "SDL_timer.h"
-;;/* Get the number of milliseconds since the SDL library initialization.
-;; * Note that this value wraps if the program runs for more than ~49 days.
-;; */ 
-;;extern DECLSPEC Uint32 SDLCALL SDL_GetTicks(void);
-(defcfun ("SDL_GetTicks" SDL_GetTicks) :unsigned-int)
+(defun SDL-VERSION (x)
+  (cffi:with-foreign-slots ((major minor patch) x SDL-version)
+    (setf major SDL-MAJOR-VERSION
+          minor SDL-MINOR-VERSION
+          patch SDL-PATCH-LEVEL)))
 
-;;/* Wait a specified number of milliseconds before returning */
-;;extern DECLSPEC void SDLCALL SDL_Delay(Uint32 ms);
-(defcfun ("SDL_Delay" SDL_Delay) :void
-  (ms :unsigned-int))
-;;;; end "SDL_timer.h"
+(defun SDL-VERSION-NUM (major minor patch)
+        (+  (* major 1000)
+            (* minor 100)
+            patch))
+
+(defun SDL-VERSION-AT-LEAST (x y z)
+  (if (>= (SDL-COMPILED-VERSION) (SDL-VERSION-NUM x y z))
+      1
+      0))
+;;; end "SDL_version.h"
 
 
-;;;;
-;;;; end Overrides
+;;; "SDL_syswm.h"
+;;;
+(cffi:defcstruct HWND__
+	(unused :int))
+
+(cffi:defcstruct HGLRC__
+	(unused :int))
+
+(cffi:defcstruct HDC__
+	(unused :int))
+
+#+win32 (defcstruct SDL-Sys-WM-msg
+	(version SDL-version)
+	(hwnd :pointer)
+	(msg :pointer)
+	(wParam :unsigned-int)
+	(lParam :long))
+
+#+win32 (defcstruct SDL-Sys-WM-info
+	(version SDL-version)
+	(window :pointer)
+	(hglrc :pointer))
+
+#-win32 (defcenum SDL-SYS-WM-TYPE
+	:SDL-SYS-WM-X11)
+
+#-win32 (defcunion SDL-Sys-WM-msg-event
+	(xevent :pointer))
+
+#-win32 (defcstruct SDL-Sys-WM-msg
+	(version SDL-version)
+	(subsystem SDL-SYS-WM-TYPE)
+	(event SDL-Sys-WM-msg-event))
+
+#-win32 (defcstruct SDL-Sys-WM-info-info-x11
+	(display :pointer)
+	(window :unsigned-long)
+	(lock-func :pointer)
+	(unlock-func :pointer)
+	(fswindow :unsigned-long)
+	(wmwindow :unsigned-long))
+
+#-win32 (defcunion SDL-Sys-WM-info-info
+	(x11 SDL-Sys-WM-info-info-x11))
+
+#-win32 (defcstruct SDL-Sys-WM-info
+	(version SDL-version)
+	(subsystem SDL-SYS-WM-TYPE)
+	(info SDL-Sys-WM-info-info))
+
+(defcfun ("SDL_GetWMInfo" SDL-Get-WM-Info) :int
+  (info :pointer))
+;;; end "SDL_syswm.h"
+
+
+;;; "SDL_cdrom.h"
+(defun CD-IN-DRIVE (status)
+  (if (> status 0)
+      t
+    nil))
+
+(defun FRAMES-TO-MSF (f)
+  (values 
+   (mod f CD-FPS)
+   (mod (/ f CD-FPS) 60)
+   (/ (/ f CD-FPS) 60)))
+
+(defun MSF-TO-FRAMES (M S F)
+  (+ 
+   (* M 60 CD-FPS)
+   (* S CD-FPS)
+   F))
+;;; end "SDL_cdrom.h"
+
+;;; "SDL_mouse.h"
+(defun SDL-BUTTON (X)
+  (1<< (- X 1)))
+
+(defun SDL-BUTTON-LMASK ()
+  (SDL-BUTTON SDL-BUTTON-LEFT))
+
+(defun SDL-BUTTON-MMASK ()
+  (SDL-BUTTON SDL-BUTTON-MIDDLE))
+
+(defun SDL-BUTTON-RMASK ()
+  (SDL-BUTTON SDL-BUTTON-RIGHT))
+;;; end "SDL_mouse.h"
+
+
 %}
 
 %module sdl
-%{
-// The following header files are converted by SWIG without errors.
-#include "begin_code.h"	   // Complete for 1.2.11
-#include "SDL_main.h" 	   // Complete for 1.2.11
-#include "SDL_error.h" 	   // Complete for 1.2.11
-#include "SDL_rwops.h" 	   // Complete for 1.2.11
-#include "SDL_audio.h" 	   // Complete for 1.2.11	
-#include "SDL_cdrom.h" 	   // Complete for 1.2.11	
-#include "SDL_joystick.h"  // Complete for 1.2.11
-#include "SDL_active.h"    // Complete for 1.2.11	
-#include "SDL_keysym.h"    // Complete for 1.2.11	
-#include "SDL_keyboard.h"  // Complete for 1.2.11	
-#include "SDL_mouse.h" 	   // Complete for 1.2.11	
-#include "SDL_joystick.h"  // Complete for 1.2.11	
-#include "SDL_quit.h" 	   // Complete for 1.2.11	
-#include "SDL_events.h"    // Complete for 1.2.11	
-#include "SDL_video.h"     // Complete for 1.2.11	
-#include "SDL_version.h"   // Complete for 1.2.11	
-#include "SDL.h"  	   // Complete for 1.2.11	
-%}
 
-//Uncomment %feature to generate :exports
-//%feature("export");
-
-
+%feature("intern_function","sdl-lispify");
 // function args of type void become pointer  (note this does not work yet)
 %typemap(cin) void* ":pointer";
+
+%include "begin_code.h"
 
 // "SDL_stdinc.h"
 //
@@ -190,86 +322,51 @@ typedef unsigned short	Uint16;
 typedef signed short	Sint16;
 typedef unsigned int	Uint32;
 typedef signed int	Sint32;
+
+extern char * SDL_getenv(const char *name);
+extern int SDL_putenv(const char *variable);
 // end "SDL_stdinc.h"
 
-// From "windows.h", I guess. This needs to be here to support "SDL_syswm.h"
-struct HWND__ { int unused; }; 
-typedef struct HWND__ *HWND;
-struct HGLRC__ { int unused; }; 
-typedef struct HGLRC__ *HGLRC;
-struct HDC__ { int unused; }; 
-typedef struct HDC__ *HDC;
+%include "SDL_platform.h"
 
-typedef unsigned int WPARAM;
-typedef long LPARAM;
-// end "windows.h"
+%include "SDL_timer.h"
+%include "SDL_main.h"
+%include "SDL_error.h"
+%include "SDL_rwops.h"
 
-// "SDL_video.h"
-// The following structure is located in sdlswig.i
-%ignore SDL_VideoInfo;
-// end "SDL_video.h"
 
-// "SDL_error.h"
-%ignore SDL_SetError;
-// end "SDL_error.h"
+%ignore AUDIO_U16SYS;
+%ignore AUDIO_S16SYS;
+%include "SDL_audio.h"
 
-// "SDL_joystick.h"
-// The following #define macros are located in "post-swig.lisp"
-%ignore SDL_HAT_RIGHTUP;
-%ignore SDL_HAT_RIGHTDOWN;
-%ignore SDL_HAT_LEFTUP;
-%ignore SDL_HAT_LEFTDOWN;
-// end "SDL_joystick.h"
+%ignore CD_INDRIVE;
+%ignore FRAMES_TO_MSF;
+%ignore MSF_TO_FRAMES;
+%include "SDL_cdrom.h"
+
+%include "SDL_joystick.h"
+
+%include "SDL_active.h"
 
 // "SDL_keysym.h"
-// The following #define macros are located in "post-swig.lisp"
 %ignore KMOD_CTRL;
 %ignore KMOD_SHIFT;
 %ignore KMOD_ALT;
 %ignore KMOD_META;
 // end "SDL_keysym.h"
+%include "SDL_keysym.h"
 
-// "SDL_video.h"
-// The following #define macros are located in "post-swig.lisp"
-%ignore SDL_MUSTLOCK;
-%ignore SDL_LoadBMP;
-%ignore SDL_SaveBMP;
-%ignore SDL_BlitSurface;
-// end "SDL_video.h"
+%include "SDL_keyboard.h"
 
-// "SDL_version.h"
-// The following #define macros are located in "post-swig.lisp"
-%ignore SDL_VERSION;
-%ignore SDL_VERSIONNUM;
-%ignore SDL_COMPILEDVERSION;
-%ignore SDL_VERSION_ATLEAST;
-// end "SDL_version.h"
-
-// "SDL_audio.h"
-// The following #define macros are located in "post-swig.lisp"
-%ignore AUDIO_U16SYS;
-%ignore AUDIO_S16SYS;
-%ignore SDL_LoadWAV;
-// end "SDL_audio.h"
-
-// "SDL_cdrom.h"
-// The following #define is located in "post-swig.lisp"
-%ignore CD_INDRIVE;
-%ignore CD_FPS;
-%ignore FRAMES_TO_MSF;
-%ignore MSF_TO_FRAMES;
-// end "SDL_cdrom.h"
-
-// "SDL_mouse.h"
-// The following #define macros are located in "post-swig.lisp"
 %ignore SDL_BUTTON;
 %ignore SDL_BUTTON_LMASK;
 %ignore SDL_BUTTON_MMASK;
 %ignore SDL_BUTTON_RMASK;
-// end "SDL_mouse.h"
+%include "SDL_mouse.h"
 
-// "SDL_events.h"
-// The following #define macros are located in "post-swig.lisp"
+%include "SDL_joystick.h"
+%include "SDL_quit.h"
+
 %ignore SDL_EventMask;
 %ignore SDL_ACTIVEEVENTMASK;
 %ignore SDL_KEYUPMASK;
@@ -288,33 +385,99 @@ typedef long LPARAM;
 %ignore SDL_VIDEOEXPOSEMASK;
 %ignore SDL_JOYEVENTMASK;
 %ignore SDL_SYSWMEVENTMASK;
-// end "SDL_events.h"
-
-
-%include "begin_code.h"
-
-%include "SDL_main.h"
-%include "SDL_error.h"
-%include "SDL_rwops.h"
-
-%include "SDL_audio.h"
-
-%include "SDL_cdrom.h"
-%include "SDL_joystick.h"
-
-%include "SDL_active.h"
-
-%include "SDL_keysym.h"
-%include "SDL_keyboard.h"
-
-%include "SDL_mouse.h"
-%include "SDL_joystick.h"
-%include "SDL_quit.h"
-
 %include "SDL_events.h"
 
+%ignore SDL_VideoInfo;
+%ignore SDL_MUSTLOCK;
+%ignore SDL_LoadBMP;
+%ignore SDL_SaveBMP;
+%ignore SDL_BlitSurface;
 %include "SDL_video.h"
 
+%ignore SDL_VERSION;
+%ignore SDL_VERSIONNUM;
+%ignore SDL_VERSION_ATLEAST;
 %include "SDL_version.h"
 
 %include "SDL.h"
+
+
+
+%insert("lisphead") %{
+;;; "SDL_keysym"
+(defconstant *KEY-MOD-CTRL*	(logior  (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-LCTRL)
+					 (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-RCTRL)))
+(defconstant *KEY-MOD-SHIFT*	(logior  (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-LSHIFT)
+					 (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-RSHIFT)))
+(defconstant *KEY-MOD-ALT*	(logior  (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-LALT)
+					 (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-RALT)))
+(defconstant *KEY-MOD-META*	(logior  (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-LMETA)
+					 (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-RMETA)))
+;;; end "SDL_keysym.h"
+
+;;; "SDL_events.h"
+(defun SDL-EVENT-MASK (X)
+  (1<< X))
+
+(defun SDL-ACTIVE-EVENT-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-ACTIVEEVENT)))
+
+(defun SDL-KEY-DOWN-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-KEYDOWN)))
+
+(defun SDL-KEY-UP-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-KEYUP)))
+
+(defun SDL-KEY-EVENT-MASK ()
+  (or (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-KEYUP))
+      (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-KEYDOWN))))
+
+(defun SDL-MOUSE-MOTION-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-MOUSE-MOTION)))
+
+(defun SDL-MOUSE-BUTTON-DOWN-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-MOUSEBUTTONDOWN)))
+
+(defun SDL-MOUSE-BUTTON-UP-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-MOUSEBUTTONUP)))
+
+(defun SDL-MOUSE-EVENT-MASK ()
+  (logior (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-MOUSEMOTION))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-MOUSEBUTTONDOWN))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-MOUSEBUTTONUP))))
+
+(defun SDL-JOY-AXIS-MOTION-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYAXISMOTION)))
+
+(defun SDL-JOY-BALL-MOTION-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYBALLMOTION)))
+
+(defun SDL-JOY-HAT-MOTION-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYHATMOTION)))
+
+(defun SDL-JOY-BUTTON-DOWN-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYBUTTONDOWN)))
+
+(defun SDL-JOY-BUTTON-UP-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYBUTTONUP)))
+
+(defun SDL-JOY-EVENT-MASK ()
+  (logior (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYMOTION))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYBALLMOTION))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYHATMOTION))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYBUTTONDOWN))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOYBUTTONUP))))
+
+(defun SDL-VIDEO-RESIZE-MASK () 
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-VIDEORESIZE)))
+
+(defun SDL-VIDEO-EXPOSE-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-VIDEOEXPOSE)))
+
+(defun SDL-QUIT-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-QUIT)))
+
+(defun SDL-SYS-WM-EVENT-MASK ()
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-SYSWMEVENT)))
+;;; end "SDL_events.h"
+%}
