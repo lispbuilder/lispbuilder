@@ -104,6 +104,8 @@
    #:free-font
    #:color=
    #:any-color-but-this
+   #:w
+   #:h
 
    #:pack-color
    #:color-*

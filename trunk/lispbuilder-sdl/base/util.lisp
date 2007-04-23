@@ -7,7 +7,7 @@
 
 (in-package #:lispbuilder-sdl-base)
 
-
+(declaim (inline check-bounds))
 (defmacro check-bounds (min below &rest vars)
   "Clamps the values in VARS to MIN <= VARS <= BELOW. Returns as a list the values in VARS."
   (let (result)
@@ -22,19 +22,24 @@
   "Returns V clamped to L <= V <= U."
   (min (max v l) u))
 
+(declaim (inline clamp-to-sbyte))
 (defun clamp-to-sbyte (v)
   (min (max v -127) 127))
 
+(declaim (inline clamp-to-ubyte))
 (defun clamp-to-ubyte (v)
   (min (max v 0) 255))
 
+(declaim (inline clamp-to-sshort))
 (defun clamp-to-sshort (v)
   (min (max v -32767) 32767))
 
+(declaim (inline clamp-to-ushort))
 (defun clamp-to-ushort (v)
   (min (max v 0) 65535))
 
 ;; cl-sdl "util.lisp"
+(declaim (inline delta-clamp))
 (defun delta-clamp (v d l u)
   (let ((sum (+ v d)))
     (cond ((< sum l)
@@ -43,9 +48,11 @@
            (- d (- sum u)))
           (t d))))
 
+(declaim (inline is-valid-ptr))
 (defun is-valid-ptr (pointer)
   "Returns T if pointer is not NULL and is a valid CFFI pointer to a foreign object."
-  (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
+  (and (cffi:pointerp pointer)
+       (not (cffi:null-pointer-p pointer))))
 
 (declaim (inline to-int))
 (defun to-int (num)

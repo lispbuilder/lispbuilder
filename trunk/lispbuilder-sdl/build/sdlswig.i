@@ -148,13 +148,6 @@
 #-(or little-endian PC386 X86 I386) (defconstant *AUDIO-U16SYS* #x9010)
 #+(or little-endian PC386 X86 I386) (defconstant *AUDIO-U16SYS* #x0010)
 #+(or little-endian PC386 X86 I386) (defconstant *AUDIO-S16SYS* #x8010)
-
-(defun SDL-Load-WAV (file spec audio-buf audio-len)
-  (SDL-Load-WAV-RW (SDL-RW-FROM-FILE file "rb")
-		  1
-		  spec
-		  audio-buf
-		  audio-len))
 ;;; End "SDL_audio.h"
 
 ;;; "SDL_video.h"
@@ -179,44 +172,15 @@
   (current_h :int))	;; New for SDL-1.2.11
 ;;; end "SDL_video.h"
 
-
-;;; "SDL_video.h"
-(defun SDL-Load-BMP (file)
-  (SDL-Load-BMP-RW (sdl-RW-From-File file "rb") 1))
-
-(defun SDL-Save-BMP (surface file)
-  (SDL-Save-BMP-RW surface (SDL-RW-FROM-FILE file "wb") 1))
-
-(defun SDL-Blit-Surface (src srcrect dst dstrect)
-  (SDL-Upper-Blit src srcrect dst dstrect))
-;;; end "SDL_video.h"
-
 ;;; "SDL_version.h"
-(cffi:defcstruct SDL-version
+(cffi:defcstruct SDL-VERSION
 	(major :unsigned-char)
 	(minor :unsigned-char)
 	(patch :unsigned-char))
-
-(defun SDL-VERSION (x)
-  (cffi:with-foreign-slots ((major minor patch) x SDL-version)
-    (setf major SDL-MAJOR-VERSION
-          minor SDL-MINOR-VERSION
-          patch SDL-PATCH-LEVEL)))
-
-(defun SDL-VERSION-NUM (major minor patch)
-        (+  (* major 1000)
-            (* minor 100)
-            patch))
-
-(defun SDL-VERSION-AT-LEAST (x y z)
-  (if (>= (SDL-COMPILED-VERSION) (SDL-VERSION-NUM x y z))
-      1
-      0))
 ;;; end "SDL_version.h"
 
 
 ;;; "SDL_syswm.h"
-;;;
 (cffi:defcstruct HWND__
 	(unused :int))
 
@@ -264,14 +228,157 @@
 	(version SDL-version)
 	(subsystem SDL-SYS-WM-TYPE)
 	(info SDL-Sys-WM-info-info))
+;;; end "SDL_syswm.h"
+%}
 
+%module sdl
+
+%feature("intern_function","sdl-lispify");
+
+// function args of type void become pointer  (note this does not work yet)
+%typemap(cin) void* ":pointer";
+
+
+// %includes begin from here.
+%include "begin_code.h"
+
+// "SDL_stdinc.h"
+//
+typedef unsigned char	Uint8;
+typedef signed char	Sint8;
+typedef unsigned short	Uint16;
+typedef signed short	Sint16;
+typedef unsigned int	Uint32;
+typedef signed int	Sint32;
+
+extern char * SDL_getenv(const char *name);
+extern int SDL_putenv(const char *variable);
+// end "SDL_stdinc.h"
+
+%include "SDL_platform.h"
+%include "SDL_timer.h"
+%include "SDL_main.h"
+%include "SDL_error.h"
+%include "SDL_rwops.h"
+
+%ignore AUDIO_U16SYS;	// *AUDIO-U16SYS*. In "lisphead".
+%ignore AUDIO_S16SYS;	// *AUDIO-U16SYS*. In "lisphead".
+%ignore SDL_LoadWAV;	// SDL-LOAD-WAV. In "lisphead".
+%include "SDL_audio.h"
+
+%ignore CD_INDRIVE;	// CD-IN-DRIVE. In "swiglisp".
+%ignore FRAMES_TO_MSF;	// FRAMES-TO-MSF. In "swiglisp".
+%ignore MSF_TO_FRAMES;	// MSF-TO-FRAMES. In "swiglisp".
+%include "SDL_cdrom.h"
+
+%include "SDL_joystick.h"
+%include "SDL_active.h"
+
+%ignore KMOD_CTRL;	// *KEY-MOD-CTRL*. In "swiglisp".
+%ignore KMOD_SHIFT;	// *KEY-MOD-SHIFT*. In "swiglisp".
+%ignore KMOD_ALT;	// *KEY-MOD-ALT*. In "swiglisp".
+%ignore KMOD_META;	// *KEY-MOD-META*. In "swiglisp".
+%include "SDL_keysym.h"
+
+%include "SDL_keyboard.h"
+
+%ignore SDL_BUTTON;	  // SDL-BUTTON. In "swiglisp".
+%ignore SDL_BUTTON_LMASK; // SDL-BUTTON-LMASK. In "swiglisp".
+%ignore SDL_BUTTON_MMASK; // SDL-BUTTON-MMASK. In "swiglisp".
+%ignore SDL_BUTTON_RMASK; // SDL-BUTTON-RMASK. In "swiglisp".
+%include "SDL_mouse.h"
+
+%include "SDL_joystick.h"
+%include "SDL_quit.h"
+
+%ignore SDL_EVENTMASK;		  // SDL-EVENT-MASK. In "swiglisp".
+%ignore SDL_ACTIVEEVENTMASK;	  // SDL-ACTIVE-EVENT-MASK. In "swiglisp".
+%ignore SDL_KEYUPMASK;		  // SDL-KEY-UP-MASK. In "swiglisp".
+%ignore SDL_KEYDOWNMASK;	  // SDL-KEY-DOWN-MASK. In "swiglisp".
+%ignore SDL_KEYEVENTMASK;	  // SDL-KEY-EVENT-MASK. In "swiglisp".
+%ignore SDL_MOUSEMOTIONMASK;	  // SDL-MOUSE-MOTION-MASK. In "swiglisp".
+%ignore SDL_MOUSEBUTTONDOWNMASK;  // SDL-MOUSE-BUTTON-DOWN-MASK. In "swiglisp".
+%ignore SDL_MOUSEBUTTONUPMASK;	  // SDL-MOUSE-BUTTON-UP-MASK. In "swiglisp".
+%ignore SDL_MOUSEEVENTMASK;	  // SDL-MOUSE-EVENT-MASK. In "swiglisp".
+%ignore SDL_JOYAXISMOTIONMASK; 	  // SDL-JOY-AXIS-MOTION-MASK. In "swiglisp".
+%ignore SDL_JOYBALLMOTIONMASK;	  // SDL-JOY-BALL-MOTION-MASK. In "swiglisp".
+%ignore SDL_JOYHATMOTIONMASK;	  // SDL-JOY-HAT-MOTION-MASK. In "swiglisp".
+%ignore SDL_JOYBUTTONDOWNMASK;	  // SDL-JOY-BUTTON-DOWN-MASK. In "swiglisp".
+%ignore SDL_JOYBUTTONUPMASK;	  // SDL-JOY-BUTTON-UP-MASK. In "swiglisp".
+%ignore SDL_JOYEVENTMASK;	  // SDL-JOY-EVENT-MASK. In "swiglisp".
+%ignore SDL_JOYEVENTMASK;	  // SDL-JOY-EVENT-MASK. In "swiglisp".
+%ignore SDL_VIDEORESIZEMASK;	  // SDL-VIDEO-RESIZE-MASK. In "swiglisp".
+%ignore SDL_VIDEOEXPOSEMASK;	  // SDL-VIDEO-EXPOSE-MASK. In "swiglisp".
+%ignore SDL_QUITMASK;		  // SDL-QUIT-MASK. In "swiglisp".
+%ignore SDL_SYSWMEVENTMASK;	  // SDL-SYS-WM-EVENT-MASK. In "swiglisp".
+%include "SDL_events.h"
+
+%ignore SDL_VideoInfo;	 // In "lisphead".
+%ignore SDL_MUSTLOCK;	 // Not defined.
+%ignore SDL_LoadBMP;	 // SDL-LOAD-BMP. In "swig.lisp".
+%ignore SDL_SaveBMP;	 // SDL-SAVE-BMP. In "swig.lisp".
+%ignore SDL_BlitSurface; // SDL-BLIT-SURFACE. In "swig.lisp".
+%include "SDL_video.h"	 // SDL-LOAD-BMP. In "swig.lisp". 
+
+%ignore SDL_VERSION;	     // In "lisphead".
+%ignore SDL_VERSIONNUM;	     // SDL-VERSION-NUM. In "swiglisp".
+%ignore SDL_VERSION_ATLEAST; // SDL-VERSION-AT-LEAST. In "swiglisp".
+%include "SDL_version.h"
+
+%include "SDL.h"
+
+
+
+%insert("swiglisp") %{
+;;;;; Here we place functions and macros that depend on 
+;;;;; the bindings generated by SWIG.
+;;;;;
+
+;;; "SDL_audio.h"
+(defun SDL-LOAD-WAV (file spec audio-buf audio-len)
+  (SDL-LOAD-WAV-RW (SDL-RW-FROM-FILE file "rb")
+		  1
+		  spec
+		  audio-buf
+		  audio-len))
+;;; end "SDL_audio.h"
+
+;;; "SDL_video.h"
+(defun SDL-Load-BMP (file)
+  (SDL-Load-BMP-RW (SDL-RW-FROM-FILE file "rb") 1))
+
+(defun SDL-Save-BMP (surface file)
+  (SDL-Save-BMP-RW surface (SDL-RW-FROM-FILE file "wb") 1))
+
+(defun SDL-Blit-Surface (src srcrect dst dstrect)
+  (SDL-Upper-Blit src srcrect dst dstrect))
+;;; end "SDL_video.h"
+
+;;; "SDL_version.h"
+(defun SDL-VERSION (x)
+  (cffi:with-foreign-slots ((major minor patch) x SDL-version)
+    (setf major SDL-MAJOR-VERSION
+          minor SDL-MINOR-VERSION
+          patch SDL-PATCH-LEVEL)))
+
+(defun SDL-VERSION-NUM (major minor patch)
+        (+  (* major 1000)
+            (* minor 100)
+            patch))
+
+(defun SDL-VERSION-AT-LEAST (x y z)
+  (if (>= *SDL-COMPILEDVERSION*	 (SDL-VERSION-NUM x y z))
+      1
+      0))
+;;; end "SDL_version.h"
+
+;;; "SDL_syswm.h"
 (defcfun ("SDL_GetWMInfo" SDL-Get-WM-Info) :int
   (info :pointer))
 ;;; end "SDL_syswm.h"
 
-
 ;;; "SDL_cdrom.h"
-(defun CD-IN-DRIVE (status)
+(defun CD-IN-DRIVE	 (status)
   (if (> status 0)
       t
     nil))
@@ -303,107 +410,6 @@
   (SDL-BUTTON SDL-BUTTON-RIGHT))
 ;;; end "SDL_mouse.h"
 
-
-%}
-
-%module sdl
-
-%feature("intern_function","sdl-lispify");
-// function args of type void become pointer  (note this does not work yet)
-%typemap(cin) void* ":pointer";
-
-%include "begin_code.h"
-
-// "SDL_stdinc.h"
-//
-typedef unsigned char	Uint8;
-typedef signed char	Sint8;
-typedef unsigned short	Uint16;
-typedef signed short	Sint16;
-typedef unsigned int	Uint32;
-typedef signed int	Sint32;
-
-extern char * SDL_getenv(const char *name);
-extern int SDL_putenv(const char *variable);
-// end "SDL_stdinc.h"
-
-%include "SDL_platform.h"
-
-%include "SDL_timer.h"
-%include "SDL_main.h"
-%include "SDL_error.h"
-%include "SDL_rwops.h"
-
-
-%ignore AUDIO_U16SYS;
-%ignore AUDIO_S16SYS;
-%include "SDL_audio.h"
-
-%ignore CD_INDRIVE;
-%ignore FRAMES_TO_MSF;
-%ignore MSF_TO_FRAMES;
-%include "SDL_cdrom.h"
-
-%include "SDL_joystick.h"
-
-%include "SDL_active.h"
-
-// "SDL_keysym.h"
-%ignore KMOD_CTRL;
-%ignore KMOD_SHIFT;
-%ignore KMOD_ALT;
-%ignore KMOD_META;
-// end "SDL_keysym.h"
-%include "SDL_keysym.h"
-
-%include "SDL_keyboard.h"
-
-%ignore SDL_BUTTON;
-%ignore SDL_BUTTON_LMASK;
-%ignore SDL_BUTTON_MMASK;
-%ignore SDL_BUTTON_RMASK;
-%include "SDL_mouse.h"
-
-%include "SDL_joystick.h"
-%include "SDL_quit.h"
-
-%ignore SDL_EventMask;
-%ignore SDL_ACTIVEEVENTMASK;
-%ignore SDL_KEYUPMASK;
-%ignore SDL_KEYEVENTMASK;
-%ignore SDL_MOUSEMOTIONMASK;
-%ignore SDL_MOUSEBUTTONDOWNMASK;
-%ignore SDL_MOUSEBUTTONUPMASK;
-%ignore SDL_MOUSEEVENTMASK;
-%ignore SDL_JOYAXISMOTIONMASK;
-%ignore SDL_JOYBALLMOTIONMASK;
-%ignore SDL_JOYHATMOTIONMASK;
-%ignore SDL_JOYBUTTONDOWNMASK;
-%ignore SDL_JOYBUTTONUPMASK;
-%ignore SDL_JOYEVENTMASK;
-%ignore SDL_VIDEORESIZEMASK;
-%ignore SDL_VIDEOEXPOSEMASK;
-%ignore SDL_JOYEVENTMASK;
-%ignore SDL_SYSWMEVENTMASK;
-%include "SDL_events.h"
-
-%ignore SDL_VideoInfo;
-%ignore SDL_MUSTLOCK;
-%ignore SDL_LoadBMP;
-%ignore SDL_SaveBMP;
-%ignore SDL_BlitSurface;
-%include "SDL_video.h"
-
-%ignore SDL_VERSION;
-%ignore SDL_VERSIONNUM;
-%ignore SDL_VERSION_ATLEAST;
-%include "SDL_version.h"
-
-%include "SDL.h"
-
-
-
-%insert("lisphead") %{
 ;;; "SDL_keysym"
 (defconstant *KEY-MOD-CTRL*	(logior  (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-LCTRL)
 					 (cffi:foreign-enum-value 'Sdl-Mod :KEY-MOD-RCTRL)))
