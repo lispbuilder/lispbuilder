@@ -1,7 +1,9 @@
-(in-package :common-lisp-user)
+(in-package #:cl-user)
 
 (defpackage :lispbuilder-windows
-  (:use :common-lisp :cffi)
+  (:use #:cl #:cffi)
+  (:nicknames #:win)
+  (:documentation "The main package of `lispbuilder-windows'.")
   (:export
    #:WM_CTLCOLORLISTBOX
    #:CREATEDIBSECTION
@@ -953,11 +955,5 @@
    #:CS_GLOBALCLASS
    #:SETBKCOLOR
    #:SYSTEM_FONT
-   #:SM_CXBORDER)
-  (:documentation "The main package of `lispbuilder-windows'."))
+   #:SM_CXBORDER))
 
-(in-package :lispbuilder-windows) 
-
-(eval-when (:compile-toplevel :load-toplevel :execute)
-  (load-foreign-library "user32.dll")
-  (load-foreign-library "gdi32.dll"))
