@@ -1,8 +1,8 @@
 ;;; -*-Lisp-*-
 
-(defpackage lispbuilder-windows
-  (:use :common-lisp :asdf :cffi))
-(in-package :lispbuilder-windows)
+(defpackage lispbuilder-windows-system
+  (:use :common-lisp :asdf))
+(in-package :lispbuilder-windows-system)
 
 (defsystem lispbuilder-windows
   :description "lispbuilder-windows: Windows library wrapper and tools"
@@ -13,6 +13,8 @@
   :depends-on (cffi)
   :components
   ((:module "windows"
-    :components
-    ((:file "package")
-     (:file "windows" :depends-on ("package"))))))
+	    :components
+	    ((:file "package")
+	     (:file "library")
+	     (:file "windows"))
+	    :serial t)))
