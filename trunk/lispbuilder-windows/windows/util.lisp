@@ -9,3 +9,4 @@
   (let ((i (gensym)))
     `(loop for ,i from 0 below (foreign-type-size (quote ,type)) do
            (setf (mem-aref ,object :char ,i) 0))))
+
