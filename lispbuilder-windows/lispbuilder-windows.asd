@@ -16,5 +16,8 @@
 	    :components
 	    ((:file "package")
 	     (:file "library")
-	     (:file "windows"))
+	     (:file "windows")
+	     (:file "user32")
+	     (:file "winuser")
+	     (:file "wingdi"))
 	    :serial t)))
