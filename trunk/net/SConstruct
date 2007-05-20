@@ -1,0 +1,81 @@
+import os
+
+sources = Split('''net-common.c''')
+
+# default system: win32
+# use "scons system=macosx" or "scons system=linux" for the other systems
+system = ARGUMENTS.get('system', 'win32')
+
+if system == 'win32':
+	# build DLL
+	env = Environment()
+	env.Platform('win32')
+	env.Append(CCFLAGS = Split('''-D BUILD_DLL'''))
+	env.Append(LIBS = Split('''kernel32 user32 gdi32 ws2_32'''))
+	sources.append(Split('''net-windows.c'''))
+	lib = env.SharedLibrary('net', sources)
+	
+	# build test programs	
+	env = Environment()
+	env.Platform('win32')
+	env.Append(LIBS = Split('''net'''))
+
+	# build server test
+	prg = env.Program('server', 'server.c')
+	env.Depends(prg, lib)
+
+	# build client test
+	prg = env.Program('client', 'client.c')
+	env.Depends(prg, lib)
+
+elif system == 'macosx':
+	# build universal binary shared library
+	env = Environment()
+	env.Platform('darwin')
+	env.Append(CCFLAGS = Split('''-DMAC -O -arch i386 -arch ppc -fpascal-strings -Wall -g2'''))
+	env.Append(LINKFLAGS = Split('''-arch i386 -arch ppc -Wl,-install_name,@executable_path/./libnet.dylib'''))
+	sources.append(Split('''net-mac.c net-unix.c'''))
+	lib = env.SharedLibrary('net', sources)
+
+	# build test programs	
+	env = Environment()
+	env.Platform('darwin')
+	env.Append(CCFLAGS = Split('''-DMAC -O -arch i386 -arch ppc -fpascal-strings -Wall -g2'''))
+	env.Append(LINKFLAGS = Split('''-arch i386 -arch ppc -L.'''))
+	env.Append(LIBS = Split('''net'''))
+
+	# build server test
+	prg = env.Program('server', 'server.c')  
+	env.Depends(prg, lib)
+
+	# build client test
+	prg = env.Program('client', 'client.c')
+	env.Depends(prg, lib)
+
+elif system == 'linux':
+	# build shared library
+	env = Environment()
+	env.Platform('posix')
+	env.Append(CCFLAGS = Split('''-Wall -g2'''))
+	sources.append(Split('''net-linux.c net-unix.c'''))
+	lib = env.SharedLibrary('net', sources)
+
+	# build test programs	
+	env = Environment()
+	env.Platform('posix')
+	env.Append(CCFLAGS = Split('''-Wall -g2'''))
+	env.Append(LINKFLAGS = Split('''-Wl,-rpath ./ -L.'''))
+	env.Append(LIBS = Split('''net'''))
+
+	# build server test
+	prg = env.Program('server', 'server.c')
+	env.Depends(prg, lib)
+
+	# build client test
+	prg = env.Program('client', 'client.c')
+	env.Depends(prg, lib)
+
+else:
+	print 'unknown system'
+	Exit(-1)
+
