@@ -55,7 +55,7 @@
       (:idle ()
 	     (sdl:draw-filled-circle-* (random 640) (random 480) (random 100)
 				       :color (sdl:color :r (random 255) :g (random 255) :b (random 255) :a (random 255))
-				       :alpha 50)
+				       :alpha 255)
 	     (display-fps 10 200 sdl:*default-display*)
 	     (sdl:update-display)))))
 

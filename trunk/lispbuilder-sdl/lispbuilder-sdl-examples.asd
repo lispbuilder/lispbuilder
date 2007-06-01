@@ -13,6 +13,7 @@
 	      :components
 	      ((:file "package")
 	       (:file "globals" :depends-on ("package"))
+	       (:file "utils" :depends-on ("package"))
 	       (:file "simple-font-demo" :depends-on ("package"))
 	       (:file "bmp-sample" :depends-on ("package"))
 	       (:file "flood-fill" :depends-on ("package"))
@@ -29,7 +30,7 @@
 	       (:file "objects" :depends-on ("package"))
 	       (:file "points-and-lines" :depends-on ("package"))
 	       (:file "distance-2D" :depends-on ("package"))
-	       (:file "metaballs" :depends-on ("package"))
+	       #-sbcl(:file "metaballs" :depends-on ("package"))
 	       (:file "inbuilt-fonts" :depends-on ("package"))
 	       (:file "circle" :depends-on ("package"))
 	       (:file "stroke" :depends-on ("package"))
