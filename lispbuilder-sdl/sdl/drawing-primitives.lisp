@@ -112,6 +112,7 @@ the smoother the curve.
 		  (setf ,point-list (append ,point-list (list point))))
 		(add-vertex-* (x y)
 		  (add-vertex (point :x x :y y))))
+	 (declare (ignorable #'add-vertex #'add-vertex-*))
 	 ,@body)
        (draw-bezier ,point-list ,shape-type :segments ,segments))))
 
@@ -150,6 +151,7 @@ the smoother the spline.
 		  (setf ,point-list (append ,point-list (list point))))
 		(add-vertex-* (x y)
 		  (add-vertex (point :x x :y y))))
+	 (declare (ignorable #'add-vertex #'add-vertex-*))
 	 ,@body)
        (draw-curve ,point-list ,shape-type :segments ,segments))))
 
@@ -183,6 +185,7 @@ ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE.
 		  (setf ,point-list (append ,point-list (list point))))
 		(add-vertex-* (x y)
 		  (add-vertex (point :x x :y y))))
+	 (declare (ignorable #'add-vertex #'add-vertex-*))
 	 ,@body)
        (draw-shape ,point-list ,shape-type))))
 
