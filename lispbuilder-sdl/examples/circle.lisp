@@ -43,7 +43,7 @@
 (defun circle-3 ()
   (sdl:with-init ()
     (setf (sdl:frame-rate) 0)
-    (sdl:window 640 480 :title-caption "Circle-2: Alpha Filled Circles" :icon-caption "Circle-3: Alpha Filled Circles")
+    (sdl:window 640 480 :title-caption "Circle-3: Alpha Filled Circles" :icon-caption "Circle-3: Alpha Filled Circles")
 
     (fps-init)
     (sdl:initialise-default-font sdl:*font-5x7*)
@@ -55,7 +55,7 @@
       (:idle ()
 	     (sdl:draw-filled-circle-* (random 640) (random 480) (random 100)
 				       :color (sdl:color :r (random 255) :g (random 255) :b (random 255) :a (random 255))
-				       :alpha 255)
+				       :alpha 50)
 	     (display-fps 10 200 sdl:*default-display*)
 	     (sdl:update-display)))))
 

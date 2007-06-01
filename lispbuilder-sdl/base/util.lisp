@@ -7,7 +7,6 @@
 
 (in-package #:lispbuilder-sdl-base)
 
-(declaim (inline check-bounds))
 (defmacro check-bounds (min below &rest vars)
   "Clamps the values in VARS to MIN <= VARS <= BELOW. Returns as a list the values in VARS."
   (let (result)

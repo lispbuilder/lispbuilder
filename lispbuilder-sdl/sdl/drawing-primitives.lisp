@@ -673,25 +673,32 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 is blitted to `SURFACE`.
 * `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
 SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`."
+  (declare (type fixnum x0 y0 r)
+           (optimize (speed 3)(safety 0)))
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
   (check-type color sdl-color)
   (if stroke-color
       (check-type stroke-color sdl-color))
-
-  (let ((surf (if alpha (create-surface (1+ (* r 2)) (1+ (* r 2)) :alpha-value alpha) surface)))
+  
+  (let ((surf (if alpha (create-surface (the fixnum (1+ (the fixnum (* r 2))))
+					(the fixnum (1+ (the fixnum (* r 2))))
+					:alpha-value alpha)
+		  surface)))
     (let ((x0 (if alpha r x0))
 	  (y0 (if alpha r y0)))
-      
+      (declare (type fixnum x0 y0))
       (let ((f (- 1 r))
 	    (ddf-x 0)
-	    (ddf-y (* -2 r)))
-	(draw-vline x0 (+ y0 r) (- y0 r) :color color :surface surf :clipping-p nil)
-	(draw-hline (+ x0 r) (- x0 r) y0 :color color :surface surf :clipping-p nil)
+	    (ddf-y (the fixnum (* -2 r))))
+	(declare (type fixnum f ddf-x ddf-y))
+	(draw-vline x0 (the fixnum (+ y0 r)) (the fixnum (- y0 r)) :color color :surface surf :clipping-p nil)
+	(draw-hline (the fixnum (+ x0 r)) (the fixnum (- x0 r)) y0 :color color :surface surf :clipping-p nil)
 	(do ((x 0)
 	     (y r))
 	    ((<= y x))
+	  (declare (type fixnum x y))
 	  (when (>= f 0)
 	    (decf y)
 	    (incf ddf-y 2)
@@ -699,17 +706,17 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 	  (incf x)
 	  (incf ddf-x 2)
 	  (incf f (1+ ddf-x))
-	  (draw-hline (+ x0 x) (- x0 x) (+ y0 y) :color color :surface surf :clipping-p nil)
-	  (draw-hline (+ x0 x) (- x0 x) (- y0 y) :color color :surface surf :clipping-p nil)
-	  (draw-hline (+ x0 y) (- x0 y) (+ y0 x) :color color :surface surf :clipping-p nil)
-	  (draw-hline (+ x0 y) (- x0 y) (- y0 x) :color color :surface surf :clipping-p nil))
+	  (draw-hline (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (+ y0 y)) :color color :surface surf :clipping-p nil)
+	  (draw-hline (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (- y0 y)) :color color :surface surf :clipping-p nil)
+	  (draw-hline (the fixnum (+ x0 y)) (the fixnum (- x0 y)) (the fixnum (+ y0 x)) :color color :surface surf :clipping-p nil)
+	  (draw-hline (the fixnum (+ x0 y)) (the fixnum(- x0 y))  (the fixnum (- y0 x)) :color color :surface surf :clipping-p nil))
 
 	;; Draw the circle outline when a color is specified.
 	(when stroke-color
 	  (draw-circle-* x0 y0 r :surface surf :color stroke-color))))
 
     (when alpha
-      (draw-surface-at-* surf (- x0 r) (- y0 r) :surface surface)
+      (draw-surface-at-* surf (the fixnum (- x0 r)) (the fixnum (- y0 r)) :surface surface)
       (free-surface surf)))
   surface)
 

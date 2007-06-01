@@ -182,7 +182,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 
 (defmethod set-point ((rectangle rectangle) (position vector))
   "Copies the `X` and `Y` coordinates to the destination rectangle `RECTANGLE` from the source point `POSITION`."
-  (set-rectangle-* rectangle :x (x position) (y position)))
+  (set-rectangle-* rectangle :x (x position) :y (y position)))
 
 (defmethod set-point-* ((rectangle rectangle) &key x y)
   "Sets the `X` and `Y` coordinates of the rectangle `RECTANGLE`. `X` and `Y` are `KEY`word parameters."

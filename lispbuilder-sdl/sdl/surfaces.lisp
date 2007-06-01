@@ -38,15 +38,15 @@ This object will be garbage collected and the surface freed when out of scope.")
 (defun surface (surface-fp &optional (display nil))
   "Creates a new `SURFACE` or a new `DISPLAY-SURFACE` when `DISPLAY` is `T`. 
 `SURFACE-FP` must be a pointer to a valid SDL_Surface foreign object."
-  (if (sdl-base::is-valid-ptr surface-fp)
-      (let ((surface (if display
-			 (make-instance 'display-surface :surface surface-fp)
-			 (make-instance 'surface :surface surface-fp ))))
- 	(set-surface-* surface :x 0 :y 0)
-	(setf (width surface) (sdl-base::surf-w (fp surface))
-	      (height surface) (sdl-base::surf-h (fp surface)))
-	surface)
-      (error "SURFACE: SURFACE-FP must be a foreign pointer.")))
+  (unless (is-valid-ptr surface-fp)
+    (error "SURFACE: SURFACE-FP must be a foreign pointer."))
+  (let ((surface (if display
+		     (make-instance 'display-surface :surface surface-fp)
+		     (make-instance 'surface :surface surface-fp ))))
+    (set-surface-* surface :x 0 :y 0)
+    (setf (width surface) (sdl-base::surf-w (fp surface))
+	  (height surface) (sdl-base::surf-h (fp surface)))
+    surface))
 
 (defmacro with-surface ((var &optional surface (free-p t))
 			&body body)
@@ -62,10 +62,10 @@ This object will be garbage collected and the surface freed when out of scope.")
 			 (x (x ,var))
 			 (y (y ,var)))
 	 (sdl-base::with-surface (,surface-ptr (fp ,var) nil)
-	   (setf ,body-value (progn ,@body))
-	   (if ,free-p
-	       (free-surface ,var)))
-	 ,body-value))))
+	   (setf ,body-value (progn ,@body))))
+       (when ,free-p
+	 (free-surface ,var))
+       ,body-value)))
 
 (defmacro with-surface-slots ((var &optional surface)
 			      &body body)
@@ -444,3 +444,5 @@ if available."
 		  :clipping-p clipping-p
 		  :update-p update-p))
   surface)
+
+

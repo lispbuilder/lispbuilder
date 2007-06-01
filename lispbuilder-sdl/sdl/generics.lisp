@@ -81,6 +81,8 @@ The `RESULT` is `\(VALUES X Y WIDTH HEIGHT\)`"))
   (:documentation "Sets the `X`, `Y`, `WIDTH` and `HEIGHT` coordinates of the rectangle `RECTANGLE`.
 `X`, `Y`, `WIDTH` and `HEIGHT` are `KEY`word parameters having default values of `0` if unspecified."))
 
+(defgeneric get-rectangle (obj)
+  (:documentation "Returns the rectangle `RECTANGLE`."))
 (defgeneric get-rectangle-* (obj)
   (:documentation "Creates and returns a `RECTANGLE` object from the `X`, `Y`, `WIDTH` and `HEIGHT` values in obj."))
 

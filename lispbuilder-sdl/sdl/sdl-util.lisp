@@ -42,7 +42,8 @@
 When `ALPHA` is `NIL`, the new surface is created without alpha transparency. See
 [SET-ALPHA](#set-alpha) for more detailed information."
   (declare (type fixnum degrees)
-           (optimize (speed 3)(safety 0)))
+;; 	   (optimize (speed 3)(safety 0))
+	   )
   (unless (member degrees '(0 90 180 270))
     (error "ERROR, ROTATE-SURFACE: degrees ~A is not one of 0, 90, 180 or 270" degrees))
   (if (= 0 degrees)
@@ -57,29 +58,37 @@ When `ALPHA` is `NIL`, the new surface is created without alpha transparency. Se
 	     (h (height surface))
 	     (new-w (if even w h))
 	     (new-h (if even h w)))
+	(declare (type fixnum w h new-w new-h))
 	(with-surfaces ((src surface free-p)
 			(dst (create-surface new-w new-h :surface surface
 					     :key-color key-color :alpha-value alpha-value) nil))
 	  (let ((new-x (case degrees
 			 (90  #'(lambda (x y)
 				  (declare (ignore x)(type fixnum x y))
-				  (+ (1- new-w) (- 0 y))))
+				  (+ (the fixnum (1- new-w)) (the fixnum (- 0 y)))))
 			 (180 #'(lambda (x y)
 				  (declare (ignore y)(type fixnum x y))
-				  (+ (1- new-w) (- 0 x))))
+				  (+ (the fixnum (1- new-w)) (the fixnum (- 0 x)))))
 			 (270 #'(lambda (x y)
 				  (declare (ignore x)(type fixnum x y))
-				  y))))
+				  y))
+			 (otherwise #'(lambda (x y)
+					(declare (ignore y)(type fixnum x y))
+					x))))
 		(new-y (case degrees
 			 (90  #'(lambda (x y)
 				  (declare (ignore y)(type fixnum x y))
 				  x))
 			 (180 #'(lambda (x y)
 				  (declare (ignore x)(type fixnum x y))
-				  (+ (1- new-h) (- 0 y))))
+				  (+ (the fixnum (1- new-h)) (the fixnum(- 0 y)))))
 			 (270 #'(lambda (x y)
 				  (declare (ignore y)(type fixnum x y))
-				  (+ (1- new-h) (- 0 x)))))))
+				  (+ (the fixnum (1- new-h)) (the fixnum (- 0 x)))))
+			 (otherwise  #'(lambda (x y)
+					 (declare (ignore x)(type fixnum x y))
+					 y)))))
+ 	    (declare (type fixnum w h))
 	    (sdl-base::with-pixels ((src (fp src))
 				    (dst (fp dst)))
 	      (loop :for x :from 0 :to (1- w)
@@ -209,16 +218,19 @@ lot of consing because it uses PUSH/POP as the stack.  This function is fast.
 ;; Code stolen from:
 ;; http://student.kuleuven.be/~m0216922/CG/floodfill.html
 
-(defparameter *ff-stack-size* 16777215)
+(declaim (fixnum *ff-stack-size*))
+(defvar *ff-stack-size* 16777215)
 
 ;; This variable is used for efficient storage of (x,y) coordinates in
 ;; the stack.  See FF-PUSH and FF-POP code.
-(defparameter *ff-max-height* 1600)
+(declaim (fixnum *ff-max-height*))
+(defvar *ff-max-height* 1600)
 
 ;; We don't preallocate the stack because it increases the size of the
 ;; initial Lisp image
 (defparameter *ff-stack* nil)
 
+(declaim (fixnum *ff-stack-pointer*))
 (defparameter *ff-stack-pointer* -1)
 
 (defun ff-empty-stack()
@@ -236,13 +248,15 @@ lot of consing because it uses PUSH/POP as the stack.  This function is fast.
            (optimize (speed 3)(safety 0)))
   (when (< (1- *ff-stack-pointer*))
     (incf *ff-stack-pointer*)
-    (setf (aref *ff-stack* *ff-stack-pointer*)
-          (+ (* x *ff-max-height*) y))))
+    (setf (svref *ff-stack* *ff-stack-pointer*)
+          (the fixnum (+ (the fixnum (* x *ff-max-height*)) y)))))
 
 (defun ff-pop()
+  (declare (optimize (speed 3)(safety 0)))
   (when (>= *ff-stack-pointer* 0)
-    (let ((x (truncate (/ (aref *ff-stack* *ff-stack-pointer*) *ff-max-height*)))
-          (y (mod (aref *ff-stack* *ff-stack-pointer*) *ff-max-height*)))
+    (let ((x (truncate (the fixnum (/ (the fixnum (svref *ff-stack* *ff-stack-pointer*)) *ff-max-height*))))
+          (y (mod (the fixnum (svref *ff-stack* *ff-stack-pointer*)) *ff-max-height*)))
+      (declare (type fixnum x y))
       (decf *ff-stack-pointer*)
       (values x y))))
 
@@ -329,3 +343,4 @@ bit of ram."
 ;;   (setf (rect-x rectangle) (pos-x position)
 ;; 	(rect-y rectangle) (pos-y position))
 ;;   rectangle)
+
