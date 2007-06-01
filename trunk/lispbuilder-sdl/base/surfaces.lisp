@@ -48,7 +48,7 @@
        (with-surface (,var ,surface ,nil)
 	 (unwind-protect 
 	      (progn (when (must-lock? ,var)
-		       (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
+		       (when (/= (the fixnum (sdl-cffi::sdl-Lock-Surface ,var)) 0)
 			 (error "Cannot lock surface")))
 		     (setf ,body-value (progn ,@body))
 		     (when (must-lock? ,var)
@@ -168,22 +168,22 @@
 			      sdl-cffi::Amask)
 			     (pixel-format surface)
 			     sdl-cffi::SDL-Pixel-Format)
-	    (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
-							 width height
-							 sdl-cffi::BitsPerPixel
-							 sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
+	  (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
+						       width height
+						       sdl-cffi::BitsPerPixel
+						       sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
 	(let ((Rmask 0) (Gmask 0) (Bmask 0) (Amask 0))
 	  ;; Set masks according to endianess of machine
 	  ;; Little-endian (X86)
-	  #+(or PC386 little-endian)(setf rmask #x000000ff
-					  gmask #x0000ff00
-					  bmask #x00ff0000
-					  amask #x00000000)
+	  #+(or X86 PC386 little-endian)(setf rmask #x000000ff
+					      gmask #x0000ff00
+					      bmask #x00ff0000
+					      amask #xff000000)
 	  ;; Big-endian (Motorola)
-	  #-(or PC386 little-endian)(setf rmask #xff000000
-					  gmask #x00ff0000
-					  bmask #x0000ff00
-					  amask #x00000000)
+	  #-(or X86 PC386 little-endian)(setf rmask #xff000000
+					      gmask #x00ff0000
+					      bmask #x0000ff00
+					      amask #x000000ff)
 	  (if (and pixels pitch)
 	      ;; Pixels not yet supported.
 	      nil
@@ -292,3 +292,5 @@
   (if a
       (sdl-cffi::SDL-Map-RGBA (pixel-format surface) r g b a)
       (sdl-cffi::SDL-Map-RGB (pixel-format surface) r g b)))
+
+

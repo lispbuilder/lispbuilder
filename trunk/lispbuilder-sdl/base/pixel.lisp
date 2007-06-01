@@ -29,6 +29,7 @@
 		      (funcall (pixels-fp-writer pixels) x y color))
 		    (read-pixel (pixels x y)
 		      (funcall (pixels-fp-reader pixels) x y)))
+	     (declare (ignorable #'read-pixel #'write-pixel))
 	     ,@body))))))
 
 (defmacro with-pixels (bindings &rest body)

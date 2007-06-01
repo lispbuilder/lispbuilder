@@ -31,12 +31,10 @@
     a new SDL_Surface if successful.
     NIL if failed."
   (let ((surface (sdl-cffi::SDL-Set-Video-Mode width height bpp (set-flags flags))))
-    (if (is-valid-ptr surface)
-	(progn
-	  (if (or title-caption icon-caption) 
-	      (sdl-cffi::sdl-WM-Set-Caption title-caption icon-caption))
-	  surface)
-	nil)))
+    (when (is-valid-ptr surface)
+      (when (or title-caption icon-caption) 
+	(sdl-cffi::sdl-WM-Set-Caption title-caption icon-caption))
+      surface)))
 
 (defun set-window (width height &key (bpp 0) (flags sdl-cffi::SDL-SW-SURFACE) title-caption icon-caption)
   "Will attempt to create a window using software surfaces using SDL_SetVideoMode.

@@ -120,7 +120,7 @@ color depth is less than 32-bpp then the unused upper bits of the return value c
   "Maps the RBGA color `COLOR` to the pixel format of the surface `SURFACE` and returns 
 the pixel value that best approximates the color value of the 
 surface `SURFACE`. If the surface has a palette \(8-bit\) the index of the 
-closest matching color in the palette will be returned. If thesurface 
+closest matching color in the palette will be returned. If the surface 
  has no alpha component the alpha value will be ignored \(as it will be in formats with a palette\). 
 If the surface color depth is less than 32-bpp then the unused upper bits of the return value can safely be ignored 
 \(e.g., with a 16-bpp format the return value can be assigned to a Uint16, and similarly a Uint8 for an 8-bpp format\)."
