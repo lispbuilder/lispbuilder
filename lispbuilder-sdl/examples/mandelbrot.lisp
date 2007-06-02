@@ -21,18 +21,24 @@
 
 (defun update-mandelbrot-draw (width height sx sy sw sh x0 y0 x1 y1)
   "draw mandelbrot from screen position sx,sy to the extent by sw,sh (width height)"
-  (sdl-base::with-pixel (pix (sdl:fp sdl:*default-display*))
-    (sdl:with-color (col (sdl:color))
-      (loop for y from sy below (+ sy sh) do
-	   (loop for x from sx below (+ sx sw) do
-		(loop with a = (complex (float (+ (* (/ (- x1 x0) width) x) x0))
-					(float (+ (* (/ (- y1 y0) height) y) y0)))
-		   for z = a then (+ (* z z) a)
-		   while (< (abs z) 2)
-		   for c from 60 above 0
-		   finally (progn
-			     (sdl:set-color-* col :r (mod (* 13 c) 256) :g (mod (* 7 c) 256) :b (mod (* 2 c) 256))
-			     (sdl-base::write-pixel pix x y (sdl:map-color col sdl:*default-display*)))))))))
+  (declare (type single-float x0 y0 x1 y1)
+	   (type fixnum width height sx sy sw sh)
+	   (optimize (safety 3) (speed 1)))
+  (let ((surface-fp (sdl:fp sdl:*default-display*)))
+    (sdl-base::with-pixel (pix surface-fp)
+      (sdl:with-color (col (sdl:color))
+	(loop for y from sy below (+ sy sh) do
+	     (loop for x from sx below (+ sx sw) do
+		  (loop with a = (complex (float (+ (* (/ (- x1 x0) width) x) x0))
+					  (float (+ (* (/ (- y1 y0) height) y) y0)))
+		     for z = a then (+ (* z z) a)
+		     while (< (abs z) 2)
+		     for c from 60 above 0
+		     finally (sdl-base::write-pixel pix x y
+						    (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format surface-fp)
+									   (mod (* 13 (the fixnum c)) 256)
+									   (mod (* 7 (the fixnum c)) 256)
+									   (mod (* 2 (the fixnum c)) 256))))))))))
 
 (defun mandelbrot 
     (&optional (width *mandelbrot-width*) (height *mandelbrot-height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
