@@ -20,16 +20,19 @@
 (defvar *r3* (make-instance 'm-rect :w 2 :xpos 58.0 :h 0.332 :ypos (* 0.4482 *objects-height*) :d 10.0 :tt 35.0))
 (defvar *r4* (make-instance 'm-rect :w 1 :xpos 120.0 :h 0.0498 :ypos (* 0.913 *objects-height*) :d 15.0 :tt 60.0))
 
+(defgeneric move-to-y (rect posy damping))
 (defmethod move-to-y ((rect m-rect) posy damping)
   (let ((dif (- (ypos rect) posy)))
     (if (> (abs dif) 1)
 	(decf (ypos rect) (/ dif damping)))))
 
+(defgeneric move-to-x (rect posx damping))
 (defmethod move-to-x ((rect m-rect) posx damping)
   (let ((dif (- (xpos rect) posx)))
     (if (> (abs dif) 1)
 	(decf (xpos rect) (/ dif damping)))))
 
+(defgeneric display (rect &key surface))
 (defmethod display ((rect m-rect) &key (surface sdl:*default-display*))
   (sdl:with-color (col (sdl:color :r 255 :g 255 :b 255))
     (dotimes (i (tt rect))
