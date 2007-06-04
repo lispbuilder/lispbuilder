@@ -4,7 +4,7 @@
   (:use #:cl #:asdf))
 (in-package #:lispbuilder-sdl-cocoahelper-system)
 
-(defsystem lispbuilder-sdl-cocoahelper
+(defsystem cocoahelper;; lispbuilder-sdl-cocoahelper
     :description "cocoahelper system for SDL"
     :version "0.1"
     :author "Brad Beveridge"
