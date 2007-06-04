@@ -1,4 +1,4 @@
-(require 'cffi)
+;;(require 'cffi)
 
 (defpackage :lispbuilder-sdl-cocoahelper
  (:use :common-lisp :cffi))
