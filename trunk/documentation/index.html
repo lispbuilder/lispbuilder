@@ -427,6 +427,7 @@
     <br>&nbsp;</br><h2><a class=none name="news">News</a></h2>
     <p>
       <ul>
+	<li><code>[2007/06/27]</code>: Minor documentation updates.</li>
 	<li><code>[2007/03/27]</code>: Updated the documentation for the <code>LISPBUILDER-SDL</code> package.</li>
 	<li><code>[2007/03/16]</code>: Added documentation for the <code>LISPBUILDER-SDL</code> package.</li>
 	<li><code>[2007/03/04]</code>: Added documentation for the <code>LISPBUILDER-SDL-IMAGE</code> package.</li>
@@ -653,16 +654,26 @@
       and Cocoa, similiar to that used by the Python project Pygame. If this is
       successful, you should see the icon for a generic OS-X ap appear in your dock.
     </p>
+    <p>Many of the LISPBUILDER packages rely on one or more external 
+      dynamic linked libraries that are not included in the lispbuilder packages. 
+      These libraries must be installed prior to loading any of the LISPBUILDER packages. 
+      Additional information on the dependencies for a package can be found in the in the 
+      documentation for that package.
+    </p>
       
     <h3><a class=none name="linux">Linux Installation</a></h3>
     
     <p>The LISPBUILDER-SDL-* libraries are ASDF-INSTALL compatible. 
-      For example the following will install LISPBUILDER-SDL on 
+      For example the following will install a local copy of LISPBUILDER-SDL on 
       systems that are configured for ASDF-INSTALL.
     </p>
     <pre>
       (asdf-install:install "lispbuilder-sdl-gfx_7.1.tgz")
     </pre>
+    <p>
+      Note that the LISPBUILDER-SDL-* libraries are not yet available on the 
+      CLiki.
+    </p>
     <ul>
       <li><u>ASDF</u>: For users of SBCL, OpenMCL, ECL or ACL, ASDF is already installed. Otherwise, Linux users 
 	please refer to the official
@@ -670,9 +681,12 @@
       <li><u>CFFI</u>: It's always best to use the latest development tarball for CFFI 
 	<a href="http://common-lisp.net/project/cffi/tarballs/?M=D">available here</a>.</li>
     </ul>
-    <p>Several LISPBUILDER packages rely on external 
-      dynamic linked libraries (.so or DLL's). 
-      Use your distro's package manager to download and install these libraries.
+    <p>Many of the LISPBUILDER packages rely on one or more external 
+      dynamic linked libraries (.so) that are not included in the lispbuilder packages. 
+      These libraries must be installed prior to loading any of the LISPBUILDER packages. 
+      Use the package manager for your distro to download and install these libraries. 
+      Additional information on the dependencies for a package can be found in the in the 
+      documentation for that package.
     </p>
     <p>
       <font color=red>NOTE:</font> CFFI will attempt to 
@@ -743,7 +757,8 @@
     <pre>
       (asdf:operate 'asdf:load-op :lispbuilder-sdl)
     </pre>
-    <p>ASDF will take care of loading the CFFI and :lispbuilder-sdl dependencies. The SDL.dll library will also be loaded
+    <p>ASDF will take care of loading the CFFI and :lispbuilder-sdl dependencies. 
+      All dependencies (for example, external DLL or .SO libraries) will also be loaded
       into the Lisp image at this time.</p>
     <p>Replace <code>:lispbulder-sdl</code> above to load the 
       other LISPBUILDER packages. For example:
@@ -800,18 +815,18 @@
     
     <br>&nbsp;</br><h2><a class=none name="contrib">Contributors</a></h2>
     <ul>
-      <li><font color=green>Application Project Leader:</font>  - Frank Buss</li>
-      <li><font color=green>SDL Wrappers:</font>               	- Justin Heyes-Jones, Luke J Crook</li>
-      <li><font color=green>Additional SDL work:</font>		- Justin Heyes-Jones, Jeremy Smith, Luke Crook</li>
-      <li><font color=green>SDL_gfx Wrappers:</font>	        - Luke Crook</li>
-      <li><font color=green>Additional SDL_gfx work:</font>     - Luke Crook</li>
-      <li><font color=green>SDL_ttf Wrappers:</font>		- Luke Crook, Rune Nesheim</li>
-      <li><font color=green>SDL_image Wrappers:</font>		- Luke Crook</li>
+      <li><font color=green>Project Leader:</font>              - Frank Buss</li>
+      <li><font color=green>LISPBUILDER-SDL:</font>           	- Justin Heyes-Jones, Luke J Crook, Anthony Fairchild</li>
+      <li><font color=green>LISPBUILDER-SDL-GFX:</font>	        - Luke Crook</li>
+      <li><font color=green>LISPBUILDER-SDL-TTF:</font>		- Luke Crook, Rune Nesheim</li>
+      <li><font color=green>LISPBUILDER-SDL-IMAGE:</font>	- Luke Crook</li>
       <li><font color=green>SWIG and CFFI:</font>               - Surendra Singh</li>
+      <li><font color=green>Cross-platform Support:</font>      - Brad Beveridge (OS X), Anthony Fairchild (OS X)</li>
     </ul>
     <p>Bug reports, patches:</p>
     <ul>
-      <li>Anthony Fairchild, Samium Gromoff, John Fred Connors, Jonathan Heusser, Brad Beveridge</li>
+      <li>Anthony Fairchild, Samium Gromoff, John Fred Connors, Jonathan Heusser, 
+	Brad Beveridge, Andreas Davour, Jeremy Smith.</li>
     </ul>
     <p>Credits for source code appropriations from other projects:</p>
     <ul>
