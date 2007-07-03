@@ -56,7 +56,7 @@
 ;;  - "SDL_mutex.h" 	   // Use native Lisp threads instead. 			// Complete for 1.2.11
 ;;  - "SDL_opengl.h" 	   // Use CL-OPENGL instead.  	      	 		// Complete for 1.2.11
 
-(in-package #:lispbuilder-sdl)
+(in-package #:lispbuilder-sdl-cffi)
 
 ;;; This is to handle a C macro where 1 is shifted left n times
 (defun 1<<(x) (ash 1 x))
@@ -290,6 +290,12 @@ extern int SDL_putenv(const char *variable);
 
 %include "SDL_joystick.h"
 %include "SDL_quit.h"
+
+// Add the other ignored events.
+%ignore SDL_EventType;		  // SDL-EVENT-TYPE. In "swiglisp"
+%ignore SDL_NOEVENT;		  // SDL-NO-EVENT. In "swiglisp"
+%ignore SDL_EventType;		  // SDL-EVENT-TYPE. In "swiglisp"
+
 
 %ignore SDL_EVENTMASK;		  // SDL-EVENT-MASK. In "swiglisp".
 %ignore SDL_ACTIVEEVENTMASK;	  // SDL-ACTIVE-EVENT-MASK. In "swiglisp".
