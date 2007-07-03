@@ -525,11 +525,20 @@
 	    <td bgcolor="#ff6060">Unknown</td>
 	    <td></td>
 	  </tr>
+	  <tr>
+	    <th class="spec" scope="row">
+	      <a href="http://www.cons.org/cmucl">CMUCL</a>
+	    </th>
+	    <td bgcolor="#60c060">Not Working</td>
+	    <td bgcolor="#60c060">Not Working</td>
+	    <td bgcolor="#ff6060">Not Working</td>
+	    <td></td>
+	  </tr>
 	</table>
 	
 	
 	<br>&nbsp;</br><h2><a class=none name="downloads">Downloads</a></h2>
-	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#download">the LISPBUILDER documentation</a>
+	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#downloads">the LISPBUILDER documentation</a>
 	  for downloads.
 	</p>
 	
@@ -761,7 +770,7 @@
 	  A new rectangle is created by the function <a href="#rectangle">RECTANGLE</a>. 
 	  The function <a href="#rectangle-from-edges">RECTANGLE-FROM-EDGES</a> will create a new rectangle
 	  from the specified top left and bottom right coordinates. The function 
-	  <a href="#rectangle-from-midpoint">RECTANGLE-FROM-MIDPOINT</a> will create a new rectangle from midpoint.
+	  <a href="#rectangle-from-midpoint-*">RECTANGLE-FROM-MIDPOINT-*</a> will create a new rectangle from midpoint.
 	</p>
 	<p>
 	  The macros <a href="#with-rectangle">WITH-RECTANGLE</a> and <a href="#with-rectangle">WITH-RECTANGLEs</a>
@@ -795,7 +804,7 @@
 	<p>
 	  RGB/A color componets can be manipulated using the functions <a href="#r">R</a>, <a href="#g">G</a>, 
 	  <a href="#b">B</a>, <a href="#a">A</a>, <a href="#set-color">SET-COLOR</a> and 
-	  <a href="#set-color-*">SET-COLOR-*</a>. Two colors may be compared using <a href="#color==">COLOR=</a>.
+	  <a href="#set-color-*">SET-COLOR-*</a>. Two colors may be compared using <a href="#color=">COLOR=</a>.
 	</p>
 	<p>
 	  Functions that accept a color parameter will most likely bind color to 
@@ -815,7 +824,9 @@
 	</p>
 	<p>
 	  LISPBULDER-SDL contains several predefined colors; <a href="#*black*">*BLACK*</a>, 
-	  <a href="#*white*">*WHITE*</a>.
+	  <a href="#*white*">*WHITE*</a>, <a href="#*red*">*RED*</a>, <a href="#*green*">*GREEN*</a>,
+	  <a href="#*blue*">*BLUE*</a>, <a href="#*yellow*">*YELLOW*</a>, <a href="#*cyan*">*CYAN*</a>,
+	  <a href="#*magenta*">*MAGENTA*</a>.
 	</p>
 
 
@@ -848,9 +859,9 @@
 	  target surface (<a href="#*default-surface*">*DEFAULT-SURFACE*</a>) and color 
 	  (<a href="#*default-color*">*DEFAULT-COLOR*</a>) unless these are otherwise specified by the user. 
 	  The macros <a href="#with-surface">with-surface</a>, and 
-	  <a href="#with-surfaces">with-surfaces</a> will bind a surface to *DEFAULT-SURFACE* within the scope these
+	  <a href="#with-surfaces">with-surfaces</a> will bind a surface to <A HREF="#*DEFAULT-SURFACE*">*DEFAULT-SURFACE*</A> within the scope these
 	  macros. For example, instead of specifying a target surface for each draw-* function a user may bind 
-	  *DEFAULT-SURFACE* to a surface once and subsequent draw-* functions will use this implied surface 
+	  <A HREF="#*DEFAULT-SURFACE*">*DEFAULT-SURFACE*</A> to a surface once and subsequent draw-* functions will use this implied surface 
 	  while it remains in scope.
 	</p>
 	  <pre>
@@ -860,7 +871,7 @@
 (DRAW-POINT (sdl:point :x x4 :y y4) :surface a-surface :color *white*)
 	  </pre>
 
-	<p>Now, we use <a href="#with-surface">WITH-SURFACE</a> to bind a surface to *DEFAULT-SURFACE*.</p>
+	<p>Now, we use <a href="#with-surface">WITH-SURFACE</a> to bind a surface to <A HREF="#*DEFAULT-SURFACE*">*DEFAULT-SURFACE*</A>.</p>
 
 	  <pre>
 (WITH-SURFACE (a-surface)
@@ -871,7 +882,8 @@
 	  </pre>
 
 	  <p>
-	    We can use <a href="#with-color">WITH-COLOR</a> to bind *DEFAULT-COLOR* to *white*:
+	    We can use <a href="#with-color">WITH-COLOR</a> to bind <A HREF="#*DEFAULT-COLOR*">*DEFAULT-COLOR*</A> to 
+	    <a href="#*white*">*WHITE*</a>:
 	  </p>
 	  
 	  <pre>
@@ -884,8 +896,8 @@
 	  </pre>
 
 	<p>
-	  Finally, if the target surface is the display then WITH-SURFACE is not required as :SURFACE when NIL 
-	  will be bound to *DEFAULT-DISPLAY* as a default. So the above code can be shortened as follows:
+	  Finally, if the target surface is the display then <A HREF="#WITH-SURFACE">*WITH-SURFACE*</A> is not required as :SURFACE when NIL 
+	  will be bound to <A HREF="#*DEFAULT-DISPLAY*">*DEFAULT-DISPLAY*</A> as a default. So the above code can be shortened as follows:
 	</p>
 
 	  <pre>
@@ -901,7 +913,7 @@
 	  LISPBUILDER-SDL contains several bitmap fonts of different sizes and faces (italics/bolded). See
 	  <a href="#initialise-font">INITIALISE-FONT</a> for the complete list of built-in fonts. 
 	</p>
-	<h4><a class=none name="fontinit">Initialisation and Freeing Fonts</a></h3>
+	<h4><a class=none name="fontinit">Initialisation</a></h3>
 	<p>
 	  Fonts are initialised using <a href="#initialise-default-font">INITIALISE-DEFAULT-FONT</a>, or 
 	  <a href="#initialise-font">INITIALISE-FONT</a>. The resouces allocated to a font are freed by  
@@ -910,7 +922,7 @@
 	<p>
 	  LISPBUILDER-SDL provides the macros <a href="#with-default-font">WITH-DEFAULT-FONT</a> and 
 	  <a href="#with-font">WITH-FONT</a> for the above functions that bind 
-	  <a href=#"*default-font*">*DEFAULT-FONT*</a> to font within the scope of the macro.
+	  <a href="#*default-font*">*DEFAULT-FONT*</a> to font within the scope of the macro.
 	<p>
 	  
 	<h4><a class=none name="fontrend">Rendering Text</a></h3>
@@ -1030,8 +1042,8 @@
 	  is used when calling blitting operations.
 	</p>
 	<p>
-	  Use <a href="#set-color-key">SET-COLOR-KEY</a> and <a href="#clear-color-key">CLEAR-COLOR-KEY</a>  
-	  <a href="#set-alpha">SET-ALPHA</a> to modify the key color and alpha transparency proporties of a surface after the 
+	  Use <a href="#set-color-key">SET-COLOR-KEY</a>, <a href="#clear-color-key">CLEAR-COLOR-KEY</a> and 
+	  <a href="#set-alpha">SET-ALPHA</a> to modify the key color and alpha transparency properties of a surface after the 
 	  surface has been created.
 	</p>
 	<p>
@@ -1422,14 +1434,14 @@
 <blockquote><br>
 
 <p>Functions that accept the <code>KEY</code>word parameter <code>COLOR</code> will most likely bind to the  symbol <code>*DEFAULT-COLOR*</code> if <code>COLOR</code> is not specified, automatically using whatever color is referenced  by <code>*DEFAULT-COLOR*</code>.  </p><p>A color is bound to <code>*DEFAULT-COLOR*</code> by the following macro: <a href="#with-color">WITH-COLOR</a>. </p><h5>Example </h5>
-<pre><code>(draw-box a-box :surface sdl:default-display* :color sdl:*black*)
-(draw-box b-box :surface sdl:default-display* :color sdl:*black*)
-(draw-box c-box :surface sdl:default-display* :color sdl:*black*)
-(with-surface (disp sdl:*default-display*)
-  (with-color (col sdl:*black*)
-    (draw-box a-box)
-    (draw-box b-box)
-    (draw-box c-box)))
+<pre><code>(DRAW-BOX A-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)
+(DRAW-BOX B-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)
+(DRAW-BOX C-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)
+</code></pre><p>The above can be shortened by setting <code>*DEFAULT-COLOR*</code> to <code>*BLACK*</code>. </p><pre><code>(WITH-SURFACE (DISP SDL:*DEFAULT-DISPLAY*)
+  (WITH-COLOR (COL SDL:*BLACK*)
+    (DRAW-BOX A-BOX)
+    (DRAW-BOX B-BOX)
+    (DRAW-BOX C-BOX)))
 </code></pre>
 
 </blockquote>
@@ -1503,13 +1515,13 @@
 <blockquote><br>
 
 <p>Functions that accept the <code>KEY</code>word parameter <code>SURFACE</code> will most likely bind to the  symbol <code>*DEFAULT-SURFACE*</code> if <code>SURFACE</code> is not specified, automatically using whatever surface is referenced  by <code>*DEFAULT-SURFACE*</code>.  </p><p>A surface is bound to <code>*DEFAULT-SURFACE*</code> by the following macros: <a href="#with-surface">WITH-SURFACE</a>,  and <a href="#with-surfaces">WITH-SURFACES</a>. </p><h5>Example </h5>
-<pre><code>(draw-surface surf-1 :surface sdl:*default-display*)
-(draw-surface surf-2 :surface sdl:*default-display*)
-(draw-surface surf-2 :surface sdl:*default-display*)
-(with-surface (disp sdl:*default-display*)
-  (draw-surface surf-1)
-  (draw-surface surf-2)
-  (draw-surface surf-2))
+<pre><code>(DRAW-SURFACE SURF-1 :SURFACE SDL:*DEFAULT-DISPLAY*)
+(DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*)
+(DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*)
+</code></pre><p>The above can be shortened using by setting the <code>*DEFAULT-SURFACE*</code> to the display surface. </p><pre><code>(WITH-SURFACE (DISP SDL:*DEFAULT-DISPLAY*)
+  (DRAW-SURFACE SURF-1)
+  (DRAW-SURFACE SURF-2)
+  (DRAW-SURFACE SURF-2))
 </code></pre>
 
 </blockquote>
