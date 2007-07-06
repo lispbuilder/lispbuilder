@@ -2,18 +2,17 @@
 
 (in-package #:lispbuilder-sdl-image-cffi)
 
-(cffi:defctype sdl-version :pointer)
-(cffi:defctype image-return-val-0-1 :int)
-(cffi:defctype image-return-val-0+1 :int)
-(cffi:defctype image-type :string)
-(cffi:defctype free-src :int)
+(defctype sdl-version :pointer)
+(defctype image-return-val-0+1 (:wrapper :int :from-c return-val-0+1))
+(defctype image-type (:wrapper :string :to-c convert-image-type))
+(defctype free-src :boolean)
 
 (defconstant SDL-IMAGE-MAJOR-VERSION 1)
 (defconstant SDL-IMAGE-MINOR-VERSION 2)
 (defconstant SDL-IMAGE-PATCH-LEVEL 5)
 
 (defun VERSION (x)
-  (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::SDL-version)
+  (with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::SDL-version)
     (setf sdl-cffi::major SDL-IMAGE-MAJOR-VERSION
 	  sdl-cffi::minor SDL-IMAGE-MINOR-VERSION
 	  sdl-cffi::patch SDL-IMAGE-PATCH-LEVEL))
