@@ -7,7 +7,7 @@
 
 (defctype sdl-surface :pointer)
 (defctype sdl-rectangle :pointer)
-(defctype sdl-string :string)
+(defctype sdl-string (:wrapper :string :to-c to-sdl-string))
 ;(defctype SDL-RWops :pointer)
 
 ;; (defmethod translate-to-foreign (value (type (eql 'sdl-surface)))
@@ -38,9 +38,9 @@
 ;; 	(values rect t))
 ;;       (values (cffi:null-pointer) nil)))
 
-(defmethod translate-to-foreign (value (type (eql 'sdl-string)))
-  (if (null value)
-      (setf value ""))
+(defun to-sdl-string (value)
+  (unless value
+    (setf value ""))
   (values (cffi:foreign-string-alloc value) t))
 
 ;; (defmethod free-translated-object (ptr (name (eql 'sdl-rectangle)) free-p)
