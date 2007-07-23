@@ -1,4 +1,4 @@
-;;;; SDL_image v1.2.5 CFFI lisp wrapper
+;;;; SDL_image v1.2.6 CFFI lisp wrapper
 
 (in-package #:lispbuilder-sdl-image-cffi)
 
@@ -9,7 +9,7 @@
 
 (defconstant SDL-IMAGE-MAJOR-VERSION 1)
 (defconstant SDL-IMAGE-MINOR-VERSION 2)
-(defconstant SDL-IMAGE-PATCH-LEVEL 5)
+(defconstant SDL-IMAGE-PATCH-LEVEL 6)
 
 (defun VERSION (x)
   (with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::SDL-version)
