@@ -3,27 +3,29 @@
 (in-package #:lispbuilder-sdl-ttf-cffi)
 
 
-(defmethod translate-to-foreign (value (type (eql 'ttf-font)))
-  (unless (sdl:is-valid-ptr value)
+(defun pass-font (value)
+  (unless (and (cffi:pointerp value)
+	       (not (cffi:null-pointer-p value)))
     (error "Error: ttf-font nust not be a NULL pointer."))
   value)
 
-(defmethod translate-from-foreign (value (type (eql 'ttf-font)))
-  (if (sdl:is-valid-ptr value)
+(defun return-font (value)
+  (if (and (cffi:pointerp value)
+	   (not (cffi:null-pointer-p value)))
       value
       nil))
 
-(defmethod translate-from-foreign (value (type (eql 'ttf-return-val-0-1)))
+(defun return-val-0-1 (value)
   (if (= value 0)
       t
       nil))
 
-(defmethod translate-from-foreign (value (type (eql 'ttf-return-val-0+1)))
+(defun return-val-0+1 (value)
   (if (= value 0)
       nil
       t))
 
-(defmethod translate-from-foreign (value (type (eql 'ttf-font-style)))
+(defun return-font-style (value)
   (let ((font-style 0))
     (if (equal TTF-STYLE-NORMAL (logand value TTF-STYLE-NORMAL))
 	(push :STYLE-NORMAL font-style))
@@ -35,7 +37,7 @@
 	(push :STYLE-UNDERLINE font-style))
     font-style))
 
-(defmethod translate-to-foreign (value (type (eql 'ttf-font-style)))
+(defun pass-font-style (value)
   (let ((font-style 0))
     (dolist (style value)
       (case style
@@ -62,7 +64,7 @@
 ;;   (if free-p
 ;;       (cffi:foreign-free ptr)))
 
-(defmethod translate-to-foreign (value (type (eql 'ttf-swapped-unicode)))
+(defun pass-swapped-unicode (value)
   (case value
     (:bom-native UNICODE-BOM-NATIVE)
     (:bom-swapped UNICODE-BOM-SWAPPED)
