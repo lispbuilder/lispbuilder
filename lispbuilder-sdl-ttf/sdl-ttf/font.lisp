@@ -4,8 +4,7 @@
 (defclass font (sdl::sdl-font)
   ((foreign-pointer-to-font :accessor fp-font :initform nil :initarg :font)
    (font-style :accessor font-style :initform nil :initarg :style)
-   (font-encoding :accessor font-encoding :initform nil :initarg :encoding)
-   (generation :accessor generation :initform *generation* :initarg :generation))
+   (font-encoding :accessor font-encoding :initform nil :initarg :encoding))
   (:documentation
    "A `FONT` object is wrapper around a foreign `TTF_Font` object. 
 
@@ -23,12 +22,9 @@ Returns `NIL` otherwise."
 
 (defmethod free-font ((font font))
   "Free the resources used by the font `FONT`. 
-Free's any cached surface. Closes the `TTF_Font` object only when the `FONT` was created within the 
-current [INIT-TTF](#init-ttf)/[QUIT-TTF](#quit-ttf) sequence. 
-In other words, when `\(EQ \(GENERATION FONT\) *GENERATION\)`. Otherwise it is assumed that the `TTF_Font` 
-was closed in a previous call to `QUIT-TTF`."
+Free's any cached surface. Closes the `TTF_Font` object."
   (tg:cancel-finalization font)
-  (if (eq (generation font) *generation*)
-      (sdl-ttf-cffi::ttf-close-font (fp-font font)))
+  (when (is-init)
+    (sdl-ttf-cffi::ttf-close-font (fp-font font)))
   (when (sdl:cached-surface font)
     (sdl:free-cached-surface font)))

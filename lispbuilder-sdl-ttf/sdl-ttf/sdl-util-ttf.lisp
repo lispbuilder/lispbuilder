@@ -59,15 +59,12 @@ Binds `FONT` to a shadowed instance of `\*DEFAULT-FONT\*` valid within the scope
 (defun init-ttf ()
   "Initializes the `SDL_TTF` font library if uninitialized. Returns `T` if the library was uninitialized and 
 is successfully initialized, or else returns `NIL` if uninitialized."
-  (unless *generation*
-    (setf *generation* 0))
   (if (is-init)
       t
       (sdl-ttf-cffi::ttf-init)))
 
 (defun quit-ttf ()
-  "Uninitializes the `SDL_TTF` font library if already initialized. Increments the `\*generation\*` count. Returns `NIL`."
-  (incf *generation*)
+  "Uninitializes the `SDL_TTF` font library if already initialized."
   (if (is-init)
       (sdl-ttf-cffi::ttf-quit)))
 
@@ -87,15 +84,6 @@ Automatically initialises the `SDL_TTF` truetype font library if the library is 
     (init-ttf))
   (open-font filename size))
 
-(defun valid-font (font)
-  "Returns `T` if the font `FONT` was created in the current `\*GENERATION\*`; meaning that its resources can still be 
-free'd using [CLOSE-FONT](#close-font)."
-  (when (typep font 'font)
-    (when (is-init)
-      (when (typep *default-font* 'font)
-	(when (eq *generation* (generation font))
-	  t)))))
-
 (defun initialise-default-font (&optional (free t) (filename (create-path "Vera.ttf")) (size 32))
   "Creates a new `FONT` object that is loaded from the file at location `FILENAME`, and binds this to the symbol 
 `\*DEFAULT-FONT\*`. Although several truetype fonts may used within a single SDL application, only a single 
@@ -111,7 +99,7 @@ and `\*DEFAULT-FONT\*` is already bound to a `FONT` when `INITIALISE-DEFAULT-FON
 ##### Returns
 
 * Returns a new `FONT`, or `NIL` if unsuccessful."
-  (when (valid-font *default-font*)
+  (when *default-font*
     (if free
 	(close-font :font *default-font*)
 	(error "INITIALISE-DEFAULT-FONT; *default-font* is already bound to a FONT.")))
@@ -364,7 +352,7 @@ truetype library if the library is uninitialised.
 ##### Returns
 
 * Returns new `FONT` object if successful, returns `NIL` if unsuccessful."
-  (new-font (sdl-ttf-cffi::ttf-Open-Font (namestring filename)size)))
+  (new-font (sdl-ttf-cffi::ttf-Open-Font (namestring filename) size)))
 
 ;;; s
 
