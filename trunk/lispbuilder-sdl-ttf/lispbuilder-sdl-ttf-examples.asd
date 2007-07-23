@@ -6,8 +6,8 @@
 
 (defsystem lispbuilder-sdl-ttf-examples
     :description "Examples describing the use of lispbuilder-sdl-ttf."
-    :version "0.1"
-    :author "Rune Nesheim <rune.nesheim@gmail.com>"
+    :version "0.2"
+    :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
     :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-ttf)
