@@ -10,8 +10,19 @@
 	(hidden :pointer))
 
 (cffi:defcunion SDL_RWops_hidden
-	(unknown :pointer)
-	(mem :pointer))
+	(win32io :pointer)
+	(mem :pointer)
+	(unknown :pointer))
+
+(cffi:defcstruct SDL_RWops_win32io
+	(append :int)
+	(h :pointer)
+	(buffer :pointer))
+
+(cffi:defcstruct SDL_RWops_buffer
+	(data :pointer)
+	(size :int)
+	(left :int))
 
 (cffi:defcstruct SDL_RWops_hidden_unknown
 	(data1 :pointer))

@@ -39,7 +39,8 @@
 	(lock-func :pointer)
 	(unlock-func :pointer)
 	(fswindow :unsigned-long)
-	(wmwindow :unsigned-long))
+	(wmwindow :unsigned-long)
+	(gfxdisplay :pointer))
 
 #-win32 (defcunion SDL-Sys-WM-info-info
 	(x11 SDL-Sys-WM-info-info-x11))
