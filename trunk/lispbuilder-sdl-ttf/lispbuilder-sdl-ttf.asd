@@ -6,14 +6,14 @@
 (in-package #:lispbuilder-sdl-ttf-system)
 
 (defsystem lispbuilder-sdl-ttf
-    :description "lispbuilder-sdl-ttf: SDL_ttf 2.0.8 library wrapper and tools"
+    :description "lispbuilder-sdl-ttf: SDL_ttf 2.0.9 library wrapper and tools"
     :long-description
-    "lispbuilder-sdl-ttf is a wrapper for the SDL_ttf 2.0.8 library."
+    "lispbuilder-sdl-ttf is a wrapper for the SDL_ttf 2.0.9 library."
     :version "0.1"
     :author "Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl-ttf-cffi lispbuilder-sdl)
+    :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-ttf-cffi)
     :components
     ((:module "sdl-ttf"
 	      :components

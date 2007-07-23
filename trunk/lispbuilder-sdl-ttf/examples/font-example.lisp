@@ -9,7 +9,8 @@
   (sdl:with-init ()
     (sdl:window 320 300 :title-caption "SDL-TTF Font Example" :icon-caption "SDL-TTF Font Example")
     (setf (sdl:frame-rate) 5)
-    (sdl-ttf:initialise-default-font)
+    (unless (sdl-ttf:initialise-default-font)
+      (error "FONT-EXAMPLE: Cannot initialize the default font."))
     (sdl-ttf:draw-string-solid-* "Text UTF8 - Solid" 0 50
 				 :color (sdl:color :r 255 :g 0 :b 255))
     (sdl-ttf:draw-string-shaded-* "Text UTF8 - Shaded" 0 150

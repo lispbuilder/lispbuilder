@@ -3,12 +3,12 @@
 (in-package #:lispbuilder-sdl-ttf-cffi)
 
 (defctype sdl-version :pointer)
-(defctype ttf-font :pointer)
-(defctype ttf-return-val-0-1 :int)
-(defctype ttf-return-val-0+1 :int)
-(defctype ttf-font-style :int)
+(defctype ttf-font (:wrapper :pointer :from-c return-font :from-c pass-font))
+(defctype ttf-return-val-0-1 (:wrapper :int :from-c return-val-0-1))
+(defctype ttf-return-val-0+1 (:wrapper :int :from-c return-val-0+1))
+(defctype ttf-font-style (:wrapper :int :from-c return-font-style :to-c pass-font-style))
 (defctype sdl-color sdl-cffi::sdl-color)
-(defctype ttf-swapped-unicode :int)
+(defctype ttf-swapped-unicode (:wrapper :int :to-c pass-swapped-unicode))
 
 ;; #define SDL_TTF_MAJOR_VERSION	2
 (defconstant TTF-MAJOR-VERSION 2)
@@ -16,8 +16,8 @@
 ;; #define SDL_TTF_MINOR_VERSION	0
 (defconstant TTF-MINOR-VERSION 0)
 
-;; #define SDL_TTF_PATCHLEVEL	8
-(defconstant TTF-PATCH-LEVEL 0)
+;; #define SDL_TTF_PATCHLEVEL	9
+(defconstant TTF-PATCH-LEVEL 9)
 
 (defun VERSION (x)
   (setf (cffi:foreign-slot-value x 'sdl-cffi::sdl-version 'sdl-cffi::major) TTF-MAJOR-VERSION
