@@ -7,14 +7,15 @@
   (:nicknames #:sdl)
   (:documentation "The main package of `lispbuilder-sdl'.")
   (:import-from #:lispbuilder-sdl-base
-		lispbuilder-sdl-base::frame-rate
-		lispbuilder-sdl-base::set-frame-rate
 		lispbuilder-sdl-base::with-events
 		lispbuilder-sdl-base::push-quit-event
 		lispbuilder-sdl-base::key=
 
 		lispbuilder-sdl-base::is-valid-ptr
-		lispbuilder-sdl-base::push-user-event)
+		lispbuilder-sdl-base::push-user-event
+
+		lispbuilder-sdl-base::*default-fpsmanager*
+)
   (:import-from #:lispbuilder-sdl-cffi
 		lispbuilder-sdl-cffi::sdl-get-ticks
 
@@ -368,10 +369,11 @@
    #:sdl-uyvy-overlay
    #:sdl-yvyu-overlay
 
-   
-   ;; Imports from lispbuilder-sdl-base
+   ;; fps.lisp
    #:frame-rate
-   #:set-frame-rate
+   #:average-fps
+   
+   ;; Imports from lispbuilder-sdl-base  
    #:with-events
    #:push-quit-event
    #:key=

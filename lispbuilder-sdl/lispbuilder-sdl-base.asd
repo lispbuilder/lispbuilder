@@ -17,7 +17,9 @@
     ((:module "base"
 	      :components
 	      ((:file "package")
+	       (:file "globals")
 	       (:file "util")
+	       (:file "fps")
 	       (:file "events")
 	       (:file "pixel")
 	       (:file "rectangle")
