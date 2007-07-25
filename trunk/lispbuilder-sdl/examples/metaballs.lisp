@@ -327,24 +327,24 @@
 	 (meta-balls (setup))
 	 (manager (new-mmanager :y-res res-width :x-res res-height :iso-value 16.0 
 				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
-				:x-squares horizontal-res :y-squares vertical-res)))
+				:x-squares horizontal-res :y-squares vertical-res))
+	 (100-frames-p (every-n-frames 100)))
+
     (sdl:initialise-default-font sdl:*font-5x7*)
     (sdl:with-init ()
       (sdl:window (mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
       (setf (sdl:frame-rate) 0)
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
-      (fps-init)
+
+      (sdl:initialise-default-font sdl:*font-5x7*)
+      (draw-fps "Calculating FPS....." 10 10 sdl:*default-font* sdl:*default-surface* t)
+
       (sdl:with-surface (grid (sdl:create-surface (sdl:width sdl:*default-display*)
 						  (sdl:height sdl:*default-display*)
 						  :surface sdl:*default-display*) t)
 	(draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)
-
-	(sdl:render-string-solid "Calculating FPS....."
-				 :color sdl:*white*
-				 :cache t
-				 :free t)
 	
 	(sdl:with-events ()
 	  (:quit-event () t)
@@ -363,5 +363,10 @@
 		 (when *draw-meta-centerp* ()
 		       (draw-meta-center manager meta-balls meta-center-color sdl:*default-display*))
 		 (render-loop manager meta-balls meta-color sdl:*default-display*)
-		 (display-fps 10 260 sdl:*default-display*)
+
+		 ;; Optimization; Draw the font each frame,
+		 ;; but only render the font once every 100 frames.
+		 (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
+			   10 10 sdl:*default-font* sdl:*default-display*
+			   (funcall 100-frames-p))
 		 (sdl:update-display)))))))
