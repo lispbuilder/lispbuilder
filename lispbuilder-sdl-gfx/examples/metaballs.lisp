@@ -9,41 +9,6 @@
 (defvar *draw-gridp* nil)
 (defvar *draw-meta-centerp* nil)
 
-(let* ((frame-values 60)
-       (frame-times (make-array frame-values :initial-element 0 :element-type 'fixnum))
-       (frame-time-last 0)
-       (frame-count 0))
-  (declare (type fixnum frame-values frame-time-last frame-count))
-
-  (defun fps-init ()
-    (dotimes (i frame-values)
-      (setf (aref frame-times i) 0))
-    (setf frame-count 0
-	  frame-time-last (sdl-cffi::SDL-get-ticks)))
-
-  (defun display-fps (x y surface)
-    (declare (optimize (safety 0) (speed 3) (space 1)))
-    (let ((get-ticks (sdl-cffi::SDL-get-ticks))
-          (frames-per-second 0.0))
-      (declare (type fixnum get-ticks)
-	       (type float frames-per-second))
-      (setf (aref frame-times frame-count) (- get-ticks frame-time-last))
-      (setf frame-time-last get-ticks)
-      (incf frame-count)
-      (when (>= frame-count frame-values)
-	(setf frame-count 0)
-	(dotimes (i frame-values)
-	  (incf frames-per-second (aref frame-times i)))
-	(setf frames-per-second (sdl:cast float (/ 1000 (/ frames-per-second frame-values))))
-	(sdl-gfx:render-string-shaded (format nil "fps : ~d" (coerce frames-per-second 'float))
-				      sdl:*white*
-				      sdl:*black*
-				      :free t
-				      :cache t))
-      (sdl-gfx:draw-font-at-* x y
-			      :font sdl-gfx:*default-font*
-			      :surface surface))))
-
 (defstruct mmanager
   (screen-width 0 :type fixnum)
   (screen-height 0 :type fixnum)
@@ -362,25 +327,22 @@
 	 (meta-balls (setup))
 	 (manager (new-mmanager :y-res res-width :x-res res-height :iso-value 16.0 
 				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
-				:x-squares horizontal-res :y-squares vertical-res)))
+				:x-squares horizontal-res :y-squares vertical-res))
+	 (100-frames-p (every-n-frames 100)))
     (sdl:with-init ()
       (sdl:window (mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
       (setf (sdl:frame-rate) 0)
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
+      
       (sdl-gfx:initialise-default-font)
-      (fps-init)
+      (draw-fps "Calculating FPS....." 10 50 sdl-gfx:*default-font* sdl:*default-display* t)
+      
       (sdl:with-surface (grid (sdl:create-surface (sdl:width sdl:*default-display*)
 						  (sdl:height sdl:*default-display*)
 						  :surface sdl:*default-display*) t)
 	(draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)
-
-	(sdl-gfx:render-string-shaded "Calculating FPS....."
-				      sdl:*white*
-				      sdl:*black*
-				      :free t
-				      :cache t)
 	
 	(sdl:with-events ()
 	  (:quit-event () t)
@@ -399,5 +361,9 @@
 		 (when *draw-meta-centerp* ()
 		       (draw-meta-center manager meta-balls meta-center-color sdl:*default-display*))
 		 (render-loop manager meta-balls meta-color sdl:*default-display*)
-		 (display-fps 10 260 sdl:*default-display*)
+
+		 (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
+			   10 50 sdl-gfx:*default-font* sdl:*default-display*
+			   (funcall 100-frames-p))
+		 
 		 (sdl:update-display)))))))

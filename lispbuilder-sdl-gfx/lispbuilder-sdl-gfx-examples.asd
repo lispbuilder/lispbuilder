@@ -6,7 +6,7 @@
 
 (defsystem lispbuilder-sdl-gfx-examples
     :description "Examples describing the use of lispbuilder-sdl-gfx."
-    :version "0.5.0"
+    :version "0.6.0"
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
@@ -16,16 +16,17 @@
 	      :components
 	      ((:file "package")
 	       (:file "font" :depends-on ("package"))
+	       (:file "utils" :depends-on ("package"))
 	       (:file "random-circles" :depends-on ("package"))
 	       (:file "setup-and-draw" :depends-on ("package"))
 	       (:file "width-height" :depends-on ("package"))
 	       (:file "recursion" :depends-on ("package"))
 	       (:file "functions" :depends-on ("package"))
-;	       (:file "objects" :depends-on ("package"))
+	       (:file "objects" :depends-on ("package"))
 	       (:file "points-and-lines" :depends-on ("package"))
 	       (:file "shape-primitives" :depends-on ("package"))
 	       (:file "bezier" :depends-on ("package"))
 	       (:file "distance-2D" :depends-on ("package"))
 	       (:file "vertices" :depends-on ("package"))
-	       (:file "metaballs" :depends-on ("package"))
+	       #-sbcl(:file "metaballs" :depends-on ("package"))
 	       ))))
