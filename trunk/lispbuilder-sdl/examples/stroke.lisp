@@ -7,7 +7,7 @@
 (defun stroke ()
   (let ((prev-mouse-x 0) (prev-mouse-y 0))
     (sdl:with-init ()
-      (sdl:window 200 200 :title-caption "Pattern, from Processing." :icon-caption "Pattern, from Processing.")
+      (sdl:window 200 200 :title-caption "Stroke, from Processing." :icon-caption "Stroke, from Processing.")
       (setf (sdl:frame-rate) 60)
       (sdl:clear-display (sdl:color :r 102 :g 102 :b 102))
       (sdl:with-events ()

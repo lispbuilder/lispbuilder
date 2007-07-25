@@ -18,10 +18,6 @@
    ;; events.lisp
    #:new-event
    #:push-quitevent
-   #:get-timescale
-   #:set-timescale
-   #:set-framerate
-   #:get-framerate
    #:with-events
 
    ;; rectangle.lisp

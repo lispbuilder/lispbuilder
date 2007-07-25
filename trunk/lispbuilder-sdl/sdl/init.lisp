@@ -247,6 +247,7 @@ the value returned by [SDL-INIT-ON-STARTUP](#sdl-init-on-startup) is `T`."
 			  t)))
     (dolist (fn *external-init-on-startup*)
       (funcall fn))
+    (setf sdl-base::*default-fpsmanager* (make-instance 'sdl-base::fps-fixed))
     initialized?))
 
 (defun quit-sdl (&optional (quit (sdl-quit-on-exit)))

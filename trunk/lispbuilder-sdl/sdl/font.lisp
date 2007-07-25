@@ -69,12 +69,12 @@ remains unchanged between screen updates."
   (draw-surface-at (cached-surface font) position :surface surface))
 
 (defmethod draw-font-at-* (x y &key (font *default-font*) (surface *default-surface*))
-"See [DRAW-FONT](#draw-font). 
+  "See [DRAW-FONT](#draw-font). 
 
 ##### Parameters
 
 * `POINT` is the `X` and `Y` coordinates of the the `FONT`s cached surface, of type `POINT`."
-(check-type font sdl-font)
+  (check-type font sdl-font)
   (check-type (cached-surface font) sdl-surface)
   (draw-surface-at-* (cached-surface font) x y :surface surface))
 

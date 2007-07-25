@@ -45,64 +45,8 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 
 
 
-;;; Event Handling & Timing routine from here   -----------------------
+;;; Event Handling from here   -----------------------
 
-
-(let ((timescale nil))
-    (defun set-timescale (tscale)
-        (setf timescale tscale))
-    (defun get-timescale ()
-        timescale))
-
-(let ((ticks nil))
-    (defun set-ticks (tcks)
-        (setf ticks tcks))
-    (defun get-ticks ()
-        ticks))
-
-(let ((worldtime 100))
-    (defun set-worldtime (wtime)
-        (setf worldtime wtime))
-    (defun get-worldtime ()
-        worldtime))
-
-(defstruct fpsmanager
-  (framecount 0 :type fixnum)
-  (rate 30 :type fixnum)
-  (rateticks (/ 1000.0 30.0) :type float)
-  (lastticks 0 :type fixnum))
-
-(let ((fpsmngr (make-fpsmanager)) (fps-upper-limit 200) (fps-lower-limit 1)
-      (current-ticks 0) (target-ticks 0))
-;  (declare (type fixnum fps-upper-limit fps-lower-limit current-ticks target-ticks))
-  (defun init-framerate-manager()
-    (setf fpsmngr (make-fpsmanager)))
-  (defun set-frame-rate (rate)
-    (if (> rate 0)
-        (if (and (>= rate fps-lower-limit) (<= rate fps-upper-limit))
-            (progn
-              (setf (fpsmanager-framecount fpsmngr) 0)
-              (setf (fpsmanager-rate fpsmngr) rate)
-              (setf (fpsmanager-rateticks fpsmngr) (/ 1000.0 rate))
-              t)
-	    nil)
-	(setf (fpsmanager-rate fpsmngr) rate)))
-  (defun frame-rate ()
-    "Returns the specified frame rate, not the actual frame rate."
-    (fpsmanager-rate fpsmngr))
-  (defsetf frame-rate set-frame-rate)
-  
-  (defun frame-rate-delay ()
-    (when (> (fpsmanager-rate fpsmngr) 0)
-      (setf current-ticks (sdl-cffi::sdl-get-ticks))
-      (incf (fpsmanager-framecount fpsmngr))
-      (setf target-ticks (+ (fpsmanager-lastticks fpsmngr) 
-			    (* (fpsmanager-framecount fpsmngr) (fpsmanager-rateticks fpsmngr))))
-      (if (<= current-ticks target-ticks)
-	  (sdl-cffi::sdl-delay (round (- target-ticks current-ticks)))
-	  (progn
-	    (setf (fpsmanager-framecount fpsmngr) 0)
-	    (setf (fpsmanager-lastticks fpsmngr) (sdl-cffi::sdl-get-ticks)))))))
 
 (defun expand-activeevent (sdl-event params forms)
     (let ((keyword-list nil)
@@ -891,12 +835,19 @@ The contents of the event are completely up to the programmer.
      \(:IDLE \(\)
         ... \)\)"
   (let ((quit (gensym "quit")) (sdl-event (gensym "sdl-event")) (event-status (gensym "event-status"))
-        (previous-ticks (gensym "previous-ticks")) (current-ticks (gensym "current-ticks")))
+	(idle-func (gensym "idle-func")))
     `(let ((,sdl-event (new-event))
            (,quit nil)
-           (,previous-ticks nil)
-           (,current-ticks nil))
-       ;; (init-framerate-manager)
+	   (,idle-func nil))
+
+       (setf ,idle-func (lambda ()
+			  ,@(remove nil 
+				    (mapcar #'(lambda (event)
+						(cond
+						  ((eql :idle (first event))
+						   (expand-idle (rest event)))))
+					    events))))
+       
        (do ()
 	   ((eql ,quit t))
 	 (do ((,event-status ,(case type
@@ -986,18 +937,5 @@ The contents of the event are completely up to the programmer.
 :JOY-AXIS-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :JOY-HAT-MOTION-EVENT, :JOY-BALL-MOTION-EVENT, 
 :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :SYS-WM-EVENT, :QUIT-EVENT, :USER-EVENT or :IDLE." (first event)))))
 			       events))))
-	 (if (null ,previous-ticks)
-	     (setf ,previous-ticks (sdl-cffi::SDL-Get-Ticks))
-	     (setf ,previous-ticks ,current-ticks))
-	 (setf ,current-ticks (sdl-cffi::SDL-Get-Ticks))
-	 (set-timescale (/ 
-			 (set-ticks (- ,current-ticks ,previous-ticks)) 
-			 (get-worldtime)))
-	 ,@(remove nil 
-		   (mapcar #'(lambda (event)
-			       (cond
-				 ((eql :idle (first event))
-				  (expand-idle (rest event)))))
-			   events))
-	 (frame-rate-delay))
+	 (process-timestep *default-fpsmanager* ,idle-func))
        (cffi:foreign-free ,sdl-event))))

@@ -25,6 +25,7 @@
 	       (:file "util")
 	       (:file "bitmap-font-data")
 	       (:file "init")
+	       (:file "fps")
 	       (:file "events")
 	       (:file "primitives")
 	       (:file "color")
