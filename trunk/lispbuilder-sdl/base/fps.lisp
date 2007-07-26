@@ -7,10 +7,20 @@
    (average-last-ticks :accessor average-last-ticks :initform 0)
    (average-p :accessor average-p :initform nil)))
 
-(defgeneric (setf target-frame-rate) (rate fpsmngr))
+(defgeneric (setf target-frame-rate) (rate fpsmngr)
+  (:documentation "Set the target frame rate for the game loop.
+RATE > 0 will lock the game loop to the specified frame rate, and
+calculate the average frame rate over a number of frames.
+RATE = 0 will unlock the frame rate, and calculate the average
+frame rate over a number fo frames.
+RATE < 0 will unlock the frame rate. The average frane rate is 
+not calculated"))
+
 (defgeneric init-fps-manager (fps-manager))
-(defgeneric process-timestep (fpsmngr &optional fn))
-(defgeneric calculate-average-fps (fpsmngr))
+(defgeneric process-timestep (fpsmngr &optional fn)
+  (:documentation "Manages the timestep. Called once per game loop."))
+(defgeneric calculate-average-fps (fpsmngr)
+  (:documentation "Calculates the average frame rate."))
 
 (defmethod (setf target-frame-rate) (rate fpsmngr)
   (error "FPSMNGR cannot be NIL."))
@@ -63,32 +73,33 @@
     (when fn
       (funcall fn))
 
-    (setf current-ticks (sdl-cffi::sdl-get-ticks))
-
-    ;; Track ticks over FRAME-AVERAGE-COUNT frames.
-    (setf (aref (frame-averages fpsmngr) (frame-index fpsmngr))
-	  (the fixnum (- current-ticks (average-last-ticks fpsmngr))))
-    (incf (frame-index fpsmngr))
-    (when (>= (frame-index fpsmngr) (length (frame-averages fpsmngr)))
-      (setf (frame-index fpsmngr) 0
-	    (average-p fpsmngr) nil))
-
-    (setf (average-last-ticks fpsmngr) current-ticks)
-
-    ;; Delay game loop, if necessary
-    (when (> (target-frame-rate fpsmngr) 0)
-      (setf (time-scale fpsmngr) (/ (setf (delta-ticks fpsmngr) (- current-ticks
-								   (last-ticks fpsmngr)))
-				    (world-time fpsmngr)))
-      (incf (frame-count fpsmngr))
-      (setf target-ticks (+ (last-ticks fpsmngr)
-			    (* (frame-count fpsmngr)
+    (when (> (target-frame-rate fpsmngr) -1)
+      (setf current-ticks (sdl-cffi::sdl-get-ticks))
+      
+      ;; Track ticks over FRAME-AVERAGE-COUNT frames.
+      (setf (aref (frame-averages fpsmngr) (frame-index fpsmngr))
+	    (the fixnum (- current-ticks (average-last-ticks fpsmngr))))
+      (incf (frame-index fpsmngr))
+      (when (>= (frame-index fpsmngr) (length (frame-averages fpsmngr)))
+	(setf (frame-index fpsmngr) 0
+	      (average-p fpsmngr) nil))
+      
+      (setf (average-last-ticks fpsmngr) current-ticks)
+      
+      ;; Delay game loop, if necessary
+      (when (> (target-frame-rate fpsmngr) 0)
+	(setf (time-scale fpsmngr) (/ (setf (delta-ticks fpsmngr) (- current-ticks
+								     (last-ticks fpsmngr)))
+				      (world-time fpsmngr)))
+	(incf (frame-count fpsmngr))
+	(setf target-ticks (+ (last-ticks fpsmngr)
+			      (* (frame-count fpsmngr)
 			       (rate-ticks fpsmngr))))
-      (if (<= current-ticks target-ticks)
-	  (sdl-cffi::sdl-delay (round (- target-ticks current-ticks)))
-	  (progn
-	    (setf (frame-count fpsmngr) 0
-		  (last-ticks fpsmngr) current-ticks))))))
+	(if (<= current-ticks target-ticks)
+	    (sdl-cffi::sdl-delay (round (- target-ticks current-ticks)))
+	    (progn
+	      (setf (frame-count fpsmngr) 0
+		    (last-ticks fpsmngr) current-ticks)))))))
     
 
 ;;;; --------------------------
