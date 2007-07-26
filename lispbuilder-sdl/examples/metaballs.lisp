@@ -333,7 +333,7 @@
     (sdl:initialise-default-font sdl:*font-5x7*)
     (sdl:with-init ()
       (sdl:window (mmanager-screen-width manager) (mmanager-screen-height manager) :title-caption "Metaballs")
-      (setf (sdl:frame-rate) 0)
+      (setf (sdl:frame-rate) -1)
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
 
       (sdl:initialise-default-font sdl:*font-5x7*)
