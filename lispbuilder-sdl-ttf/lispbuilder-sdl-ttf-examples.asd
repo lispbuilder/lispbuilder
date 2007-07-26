@@ -6,7 +6,7 @@
 
 (defsystem lispbuilder-sdl-ttf-examples
     :description "Examples describing the use of lispbuilder-sdl-ttf."
-    :version "0.2"
+    :version "0.2.1"
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
