@@ -19,7 +19,7 @@
   (let ((width 200) (height 200))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Functions, from Processing.org")
-      (setf (sdl-base::frame-rate) 5)
+      (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 51 :g 51 :b 51))
       (draw-target 68 34 100 10)
       (draw-target 152 16 50 3)

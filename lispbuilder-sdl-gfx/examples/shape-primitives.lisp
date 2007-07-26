@@ -9,7 +9,7 @@
   (let ((width 200) (height 200))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Shape Primitives, from Processing.org")
-      (setf (sdl-base::frame-rate) 5)
+      (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color))
       (sdl:with-surface (disp sdl:*default-display*)
 	(sdl:with-color (col (sdl:color :r 226 :g 226 :b 226))

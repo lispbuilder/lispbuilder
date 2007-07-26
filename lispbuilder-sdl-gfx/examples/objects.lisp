@@ -20,6 +20,28 @@
 (defvar *r3* (make-instance 'm-rect :w 2 :xpos 58.0 :h 0.332 :ypos (* 0.4482 *height*) :d 10.0 :tt 35))
 (defvar *r4* (make-instance 'm-rect :w 1 :xpos 120.0 :h 0.0498 :ypos (* 0.913 *height*) :d 15.0 :tt 60))
 
+(defmethod move-to-y ((rect m-rect) posy damping)
+  (let ((dif (- (ypos rect) posy)))
+    (if (> (abs dif) 1)
+	(decf (ypos rect) (/ dif damping)))))
+
+(defmethod move-to-x ((rect m-rect) posx damping)
+  (let ((dif (- (xpos rect) posx)))
+    (if (> (abs dif) 1)
+	(decf (xpos rect) (/ dif damping)))))
+
+(defmethod display ((rect m-rect) &key (surface sdl:*default-display*))
+  (sdl:with-color (col (sdl:color :r 255 :g 255 :b 255))
+    (dotimes (i (tt rect))
+      (sdl-gfx:draw-box (sdl:rectangle :x (sdl-base::clamp-to-sshort (+ (xpos rect)
+									(* i (+ (d rect)
+										(w rect)))))
+				       :y (sdl-base::clamp-to-sshort (ypos rect))
+				       :w (sdl-base::clamp-to-sshort (w rect))
+				       :h (sdl-base::clamp-to-sshort (* (h rect)
+							       (sdl:height surface))))
+			:surface surface))))
+
 (defun objects ()
   (let ((mouse-x 0) (mouse-y 0)
 	(100-frames-p (every-n-frames 100)))
@@ -60,24 +82,4 @@
 		 
 	       (sdl:update-display))))))
 
-(defmethod move-to-y ((rect m-rect) posy damping)
-  (let ((dif (- (ypos rect) posy)))
-    (if (> (abs dif) 1)
-	(decf (ypos rect) (/ dif damping)))))
 
-(defmethod move-to-x ((rect m-rect) posx damping)
-  (let ((dif (- (xpos rect) posx)))
-    (if (> (abs dif) 1)
-	(decf (xpos rect) (/ dif damping)))))
-
-(defmethod display ((rect m-rect) &key (surface sdl:*default-display*))
-  (sdl:with-color (col (sdl:color :r 255 :g 255 :b 255))
-    (dotimes (i (tt rect))
-      (sdl-gfx:draw-box (sdl:rectangle :x (sdl-base::clamp-to-sshort (+ (xpos rect)
-									(* i (+ (d rect)
-										(w rect)))))
-				       :y (sdl-base::clamp-to-sshort (ypos rect))
-				       :w (sdl-base::clamp-to-sshort (w rect))
-				       :h (sdl-base::clamp-to-sshort (* (h rect)
-							       (sdl:height surface))))
-			:surface surface))))
