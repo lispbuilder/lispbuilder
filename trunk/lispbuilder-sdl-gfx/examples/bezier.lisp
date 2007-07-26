@@ -9,7 +9,7 @@
   (let ((width 200) (height 200))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Bezier, from Processing.org")
-      (setf (sdl-base::frame-rate) 5)
+      (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
       (sdl:with-surface (disp sdl:*default-display*)
 	(sdl:with-color (col (sdl:color :r 255 :g 255 :b 255))

@@ -9,7 +9,7 @@
   (let ((width 200) (height 200))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Points and Lines, from Processing.org")
-      (setf (sdl-base::frame-rate) 5)
+      (setf (sdl:frame-rate) 5)
 
       (sdl:clear-display (sdl:color :r 51 :g 51 :b 51))
       (let* ((d 40) (p1 d) (p2 (+ p1 d)) (p3 (+ p2 d)) (p4 (+ p3 d)))
