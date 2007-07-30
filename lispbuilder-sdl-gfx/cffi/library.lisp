@@ -8,7 +8,7 @@
 	   :test #'equal))
 
 (cffi:define-foreign-library sdl-gfx
-  (:darwin (:framework "libSDL_gfx"))
+  (:darwin (:framework "SDL_gfx"))
   (:windows "SDL_gfx.dll")
   (:unix (:or "libSDL_gfx"
 	      "libSDL_gfx.so"
