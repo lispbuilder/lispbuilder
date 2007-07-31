@@ -1,4 +1,4 @@
-\;;; -*- lisp -*-
+;;; -*- lisp -*-
 
 (defpackage #:lispbuilder-sdl-gfx-cffi-system
   (:use #:cl #:asdf))
