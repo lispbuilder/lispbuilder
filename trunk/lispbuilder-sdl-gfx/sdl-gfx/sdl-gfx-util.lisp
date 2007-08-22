@@ -178,7 +178,7 @@ the smoother the spline.
 	   (p2 (cdr p1) (cdr p1)))
 	  ((or (null p2)
 	       (null p1)))
-       (draw-line (first p1) (first p2))))
+       (draw-line (first p1) (first p2) :surface surface :color color)))
     (:lines
      (do* ((p1 points (if (cdr p1)
 			  (cddr p1)
@@ -186,7 +186,7 @@ the smoother the spline.
 	   (p2 (cdr p1) (cdr p1)))
 	  ((or (null p2)
 	       (null p1)))
-       (draw-line (first p1) (first p2))))
+       (draw-line (first p1) (first p2) :surface surface :color color)))
     (:points
      (loop for point in points
 	do (draw-pixel point :surface surface :color color)))))
