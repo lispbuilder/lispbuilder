@@ -7,10 +7,10 @@
 	   cffi:*foreign-library-directories*
 	   :test #'equal))
 
-#+win32(cffi:define-foreign-library zlib1
-	 (:windows "zlib1.dll"))
-#+win32(cffi:define-foreign-library libfreetype-6
-	 (:windows "libfreetype-6.dll"))
+(cffi:define-foreign-library zlib1
+    (:windows "zlib1.dll"))
+(cffi:define-foreign-library libfreetype-6
+    (:windows "libfreetype-6.dll"))
 
 (cffi:define-foreign-library sdl-ttf
   (:darwin (:framework "libSDL_ttf-2.0"))
@@ -21,7 +21,10 @@
   (:windows "lispbuilder-sdl-ttf-glue.dll")
   (:unix "lispbuilder-sdl-ttf-glue.so"))
 
+;; Load the win32 dependencies.
 (cffi:use-foreign-library zlib1)
 (cffi:use-foreign-library libfreetype-6)
+
+;; Load the general sdl libraries.
 (cffi:use-foreign-library sdl-ttf)
 (cffi:use-foreign-library sdl-ttf-glue)
