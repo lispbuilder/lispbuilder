@@ -13,11 +13,13 @@
     (:windows "libfreetype-6.dll"))
 
 (cffi:define-foreign-library sdl-ttf
-  (:darwin (:framework "libSDL_ttf-2.0"))
+  (:darwin (:or (:framework "SDL_ttf")
+		(:framework "libSDL_ttf-2.0")))
   (:windows (:or "SDL_ttf.dll"))
   (:unix (:or "libSDL_ttf2.0" "libSDL_ttf-2.0.so.0")))
 
 (cffi:define-foreign-library sdl-ttf-glue
+  (:darwin "lispbuilder-sdl-ttf-glue.dylib")
   (:windows "lispbuilder-sdl-ttf-glue.dll")
   (:unix "lispbuilder-sdl-ttf-glue.so"))
 
