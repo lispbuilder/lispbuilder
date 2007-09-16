@@ -95,6 +95,7 @@
    #:b
    #:a
    #:map-color
+   #:map-color-*
    #:width
    #:height
    #:x

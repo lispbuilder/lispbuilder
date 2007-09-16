@@ -105,6 +105,22 @@ the red `R`, green `G`, blue `BLUE` or alpha `A` color components."
   "Not implemented yet. Returns `NIL`"
   nil)
 
+(defun map-color-* (r g b a &optional (surface *default-surface*))
+  "Maps the RBG color r g b a to the pixel format of the surface `SURFACE` and returns 
+the pixel value that best approximates the color value of the 
+surface `SURFACE`. If the surface has a palette \(8-bit\) the index of the 
+closest matching color in the palette will be returned. If the surface has an 
+alpha component it will be returned as all `1` bits \(fully opaque\). If the surface 
+color depth is less than 32-bpp then the unused upper bits of the return value can 
+safely be ignored \(e.g., with a 16-bpp format the return value can be assigned to a 
+Uint16, and similarly a Uint8 for an 8-bpp format\).
+If A is not NIL then the color is assumed to contain an alpha component."
+  (if a
+      (sdl-cffi::sdl-map-rgba (sdl-base::pixel-format (fp surface))
+			      r g b a)
+      (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format (fp surface))
+			     r g b)))
+  
 (defmethod map-color ((color color) &optional (surface *default-surface*))
   "Maps the RBG color `COLOR` to the pixel format of the surface `SURFACE` and returns 
 the pixel value that best approximates the color value of the 
@@ -113,8 +129,7 @@ closest matching color in the palette will be returned. If the surface has an
 alpha component it will be returned as all `1` bits \(fully opaque\). If the surface 
 color depth is less than 32-bpp then the unused upper bits of the return value can safely be ignored 
 \(e.g., with a 16-bpp format the return value can be assigned to a Uint16, and similarly a Uint8 for an 8-bpp format\)."
-  (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format (fp surface))
-			 (r color) (g color) (b color)))
+  (map-color-* (r color) (g color) (b color) nil surface))
 
 (defmethod map-color ((color color-a) &optional (surface *default-surface*))
   "Maps the RBGA color `COLOR` to the pixel format of the surface `SURFACE` and returns 
@@ -124,27 +139,27 @@ closest matching color in the palette will be returned. If the surface
  has no alpha component the alpha value will be ignored \(as it will be in formats with a palette\). 
 If the surface color depth is less than 32-bpp then the unused upper bits of the return value can safely be ignored 
 \(e.g., with a 16-bpp format the return value can be assigned to a Uint16, and similarly a Uint8 for an 8-bpp format\)."
-  (sdl-cffi::sdl-map-rgba (sdl-base::pixel-format (fp surface))
-			  (r color) (g color) (b color) (a color)))
+  (map-color-* (r color) (g color) (b color) (a color) surface))
+
+(defun pack-color-* (r g b &optional (a nil))
+  "Packs the RGB and A color components in color into a four byte `INTEGER`.
+Assumes an alpha component when A is not NIL."
+  (let ((col #x00000000))
+    (setf col (logior (ash r 24)
+		      (ash g 16)
+		      (ash b 8)
+		      (if a
+			  a
+			  #xFF)))
+    col))
 
 (defmethod pack-color ((color color))
   "Packs the RGB color components in color into a four byte `INTEGER`."
-  (let ((col #x00000000))
-    (setf col (logior (ash (r color) 24)
-		      (ash (g color) 16)
-		      (ash (b color) 8)
-		      #xFF))
-    col))
+  (pack-color-* (r color) (g color) (b color)))
 
 (defmethod pack-color ((color color-a))
   "Packs the RGBA color components in color into a four byte `INTEGER`."
-  (let ((col #x00000000))
-    (setf col (logior (ash (r color) 24)
-		      (ash (g color) 16)
-		      (ash (b color) 8)
-		      (a color)))
-    col))
-
+  (pack-color-* (r color) (g color) (b color) (a color)))
 
 (defmethod free-color ((color sdl-color)) nil)
 
