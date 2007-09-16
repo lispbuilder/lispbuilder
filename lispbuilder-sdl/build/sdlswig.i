@@ -6,7 +6,11 @@
 ;;;; (C)2006 Justin Heyes-Jones, Luke J Crook
 ;;;; See COPYING for license
 ;;;;
-;;;; This .i file has been tested with SDL version 1.2.11
+;;;; This .i file has been tested with SDL version 1.2.12
+;;;;
+;;;; Run SWIG using something like:
+;;;;
+;;;; 
 
 ;; include/*.h changes from SDL-1.2.9 to SDL-1.2.11
 ;;
@@ -292,31 +296,29 @@ extern int SDL_putenv(const char *variable);
 %include "SDL_quit.h"
 
 // Add the other ignored events.
-%ignore SDL_EventType;		  // SDL-EVENT-TYPE. In "swiglisp"
-%ignore SDL_NOEVENT;		  // SDL-NO-EVENT. In "swiglisp"
-%ignore SDL_EventType;		  // SDL-EVENT-TYPE. In "swiglisp"
+// %ignore SDL_EventType;		  // SDL-EVENT-TYPE. In "swiglisp"
 
-
+%ignore SDL_EventMask;		  // SDL-EVENT-MASK. In "swiglisp".
 %ignore SDL_EVENTMASK;		  // SDL-EVENT-MASK. In "swiglisp".
-%ignore SDL_ACTIVEEVENTMASK;	  // SDL-ACTIVE-EVENT-MASK. In "swiglisp".
-%ignore SDL_KEYUPMASK;		  // SDL-KEY-UP-MASK. In "swiglisp".
-%ignore SDL_KEYDOWNMASK;	  // SDL-KEY-DOWN-MASK. In "swiglisp".
-%ignore SDL_KEYEVENTMASK;	  // SDL-KEY-EVENT-MASK. In "swiglisp".
-%ignore SDL_MOUSEMOTIONMASK;	  // SDL-MOUSE-MOTION-MASK. In "swiglisp".
-%ignore SDL_MOUSEBUTTONDOWNMASK;  // SDL-MOUSE-BUTTON-DOWN-MASK. In "swiglisp".
-%ignore SDL_MOUSEBUTTONUPMASK;	  // SDL-MOUSE-BUTTON-UP-MASK. In "swiglisp".
-%ignore SDL_MOUSEEVENTMASK;	  // SDL-MOUSE-EVENT-MASK. In "swiglisp".
-%ignore SDL_JOYAXISMOTIONMASK; 	  // SDL-JOY-AXIS-MOTION-MASK. In "swiglisp".
-%ignore SDL_JOYBALLMOTIONMASK;	  // SDL-JOY-BALL-MOTION-MASK. In "swiglisp".
-%ignore SDL_JOYHATMOTIONMASK;	  // SDL-JOY-HAT-MOTION-MASK. In "swiglisp".
-%ignore SDL_JOYBUTTONDOWNMASK;	  // SDL-JOY-BUTTON-DOWN-MASK. In "swiglisp".
-%ignore SDL_JOYBUTTONUPMASK;	  // SDL-JOY-BUTTON-UP-MASK. In "swiglisp".
-%ignore SDL_JOYEVENTMASK;	  // SDL-JOY-EVENT-MASK. In "swiglisp".
-%ignore SDL_JOYEVENTMASK;	  // SDL-JOY-EVENT-MASK. In "swiglisp".
-%ignore SDL_VIDEORESIZEMASK;	  // SDL-VIDEO-RESIZE-MASK. In "swiglisp".
-%ignore SDL_VIDEOEXPOSEMASK;	  // SDL-VIDEO-EXPOSE-MASK. In "swiglisp".
-%ignore SDL_QUITMASK;		  // SDL-QUIT-MASK. In "swiglisp".
-%ignore SDL_SYSWMEVENTMASK;	  // SDL-SYS-WM-EVENT-MASK. In "swiglisp".
+				  // SDL-ACTIVE-EVENT-MASK. In "swiglisp".
+				  // SDL-KEY-UP-MASK. In "swiglisp".
+				  // SDL-KEY-DOWN-MASK. In "swiglisp".
+				  // SDL-KEY-EVENT-MASK. In "swiglisp".
+				  // SDL-MOUSE-MOTION-MASK. In "swiglisp".
+				  // SDL-MOUSE-BUTTON-DOWN-MASK. In "swiglisp".
+				  // SDL-MOUSE-BUTTON-UP-MASK. In "swiglisp".
+				  // SDL-MOUSE-EVENT-MASK. In "swiglisp".
+				  // SDL-JOY-AXIS-MOTION-MASK. In "swiglisp".
+				  // SDL-JOY-BALL-MOTION-MASK. In "swiglisp".
+				  // SDL-JOY-HAT-MOTION-MASK. In "swiglisp".
+				  // SDL-JOY-BUTTON-DOWN-MASK. In "swiglisp".
+				  // SDL-JOY-BUTTON-UP-MASK. In "swiglisp".
+				  // SDL-JOY-EVENT-MASK. In "swiglisp".
+				  // SDL-JOY-EVENT-MASK. In "swiglisp".
+				  // SDL-VIDEO-RESIZE-MASK. In "swiglisp".
+				  // SDL-VIDEO-EXPOSE-MASK. In "swiglisp".
+				  // SDL-QUIT-MASK. In "swiglisp".
+				  // SDL-SYS-WM-EVENT-MASK. In "swiglisp".
 %include "SDL_events.h"
 
 %ignore SDL_VideoInfo;	 // In "lisphead".

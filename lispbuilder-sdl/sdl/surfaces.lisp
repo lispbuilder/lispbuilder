@@ -415,34 +415,34 @@ if available."
   (set-surface src point)
   (draw-surface src :surface surface))
 
-(defun fill-surface (color &key (template nil) (surface *default-surface*) (update-p nil) (clipping-p nil))
-  "fill the entire surface with the specified R G B A color.
+(defun fill-surface (color &key
+		     (template nil)
+		     (surface *default-surface*) (update-p nil) (clipping-p nil))
+  "Fill the surface with the specified color COLOR.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
+   'dirty recs' screen update."
+  (check-type color sdl-color)
+  (fill-surface-* (r color) (g color) (b color) :a (a color)
+		  :template template :surface surface :update-p update-p :clipping-p clipping-p)
+  surface)
+
+(defun fill-surface-* (r g b &key (a nil) (template nil)
+		       (surface *default-surface*) (update-p nil) (clipping-p t))
+  "Fill the surface with the specified color R G B :A A.
+   Use :TEMPLATE to specify the SDL_Rectangle to be used as the fill template.
+   Use :UPDATE-P to call SDL_UpdateRect, using :TEMPLATE if provided. This allows for a 
    'dirty recs' screen update."
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
-  (check-type color sdl-color)
   (when template
     (check-type template rectangle))
   (sdl-base::fill-surface (fp surface)
-			  (map-color color surface)
+			  (map-color-* r g b a surface)
 			  :template (if template
 					(fp template)
-					(cffi::null-pointer))
+					(cffi:null-pointer))
 			  :clipping-p clipping-p
 			  :update-p update-p)
   surface)
-    
-
-(defun fill-surface-* (color x y w h &key (surface *default-surface*) (update-p nil) (clipping-p t))
-  (with-rectangle (template (rectangle :x x :y y :w w :h h))
-    (fill-surface color
-		  :template template
-		  :surface surface
-		  :clipping-p clipping-p
-		  :update-p update-p))
-  surface)
-
-

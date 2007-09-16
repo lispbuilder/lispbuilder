@@ -8,19 +8,25 @@
 (defun random-rects ()
   (let ((width 640) (height 480))
     (sdl:with-init ()
-      (let ((100-frames-p (every-n-frames 100)))
+      (let ((100-frames-p (every-n-frames 100))
+	    (rect (sdl:rectangle)))
 	    
 	(setf (sdl:frame-rate) -1)
-	(sdl:window width height :title-caption "random-rects" :icon-caption "random-rects")
+	(sdl:window width height
+		    :title-caption "random-rects"
+		    :icon-caption "random-rects")
 
 	(sdl:initialise-default-font sdl:*font-5x7*)
-	(draw-fps "Calculating FPS....." 10 200 sdl:*default-font* sdl:*default-surface* t)
+	(draw-fps "Calculating FPS....." 10 200
+		  sdl:*default-font* sdl:*default-surface* t)
 
 	(sdl:with-events ()
 	  (:quit-event () t)
-	  (:key-down-event (:key key) (if (sdl:key= key :SDL-KEY-ESCAPE) (sdl:push-quit-event)))
+	  (:key-down-event (:key key)
+			   (if (sdl:key= key :SDL-KEY-ESCAPE)
+			       (sdl:push-quit-event)))
 	  (:idle ()
-		 (sdl:draw-rectangle (sdl:random-rectangle width height (sdl:rectangle))
+		 (sdl:draw-rectangle (sdl:random-rectangle width height rect)
 				     :color (sdl:color :r (random 255)
 						       :g (random 255)
 						       :b (random 255))
@@ -31,28 +37,29 @@
 		 (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
 			   10 200 sdl:*default-font* sdl:*default-surface*
 			   (funcall 100-frames-p))
-
 		 (sdl:update-display)))))))
 
 (defun random-box-1 ()
   (let ((width 320) (height 240))
     (sdl:with-init ()
-      (setf (sdl:frame-rate) -1)
-      (sdl:window width height :title-caption "Random solid box" :icon-caption "Random solid box with outline")
-      (sdl:with-events (:poll)
-	(:quit-event () t)
-	(:key-down-event (:key key) (if (sdl:key= key :SDL-KEY-ESCAPE) (sdl:push-quit-event)))
-	(:idle ()
-	       (sdl:fill-surface (sdl:color :r (random 255)
-					    :g (random 255)
-					    :b (random 255))
-				 :template (sdl:random-rectangle width height)
-				 :update-p t))))))
+      (let ((rect (sdl:rectangle)))
+	(setf (sdl:frame-rate) -1)
+	(sdl:window width height
+		    :title-caption "Random solid box"
+		    :icon-caption "Random solid box")
+	(sdl:with-events (:poll)
+	  (:quit-event () t)
+	  (:key-down-event (:key key) (if (sdl:key= key :SDL-KEY-ESCAPE)
+					  (sdl:push-quit-event)))
+	  (:idle ()
+		 (sdl:fill-surface-* (random 255) (random 255) (random 255)
+				     :template (sdl:random-rectangle width height rect)
+				     :update-p t)))))))
 
 (defun random-box-2 ()
   (let ((width 320) (height 240))
     (sdl:with-init ()
-      ;; Use the :WAIT event model so me may as well unlock the frame rate.
+      ;; Using the :WAIT event model so me may as well unlock the frame rate.
       (setf (sdl:frame-rate) -1)
       (sdl:window width height :title-caption "Random solid box with outline" :icon-caption "Random solid box with outline")
 
@@ -78,20 +85,28 @@
 (defun random-box-3 ()
   (let ((width 320) (height 240))
     (sdl:with-init ()
-      (let ((500-frames-p (every-n-frames 500)))
-	      
+      (let ((500-frames-p (every-n-frames 500))
+	    (rect (sdl:rectangle)))
+	
 	(setf (sdl:frame-rate) -1)
-	(sdl:window width height :title-caption "Random alpha Box" :icon-caption "Random alpha Box")
+	(sdl:window width height
+		    :title-caption "Random alpha Box"
+		    :icon-caption "Random alpha Box")
 
       	(sdl:initialise-default-font sdl:*font-5x7*)
-	(draw-fps "Calculating FPS....." 10 200 sdl:*default-font* sdl:*default-surface* t)
+	(draw-fps "Calculating FPS....." 10 200
+		  sdl:*default-font* sdl:*default-surface* t)
 
 	(sdl:with-events ()
 	  (:quit-event () t)
-	  (:key-down-event (:key key) (if (sdl:key= key :SDL-KEY-ESCAPE) (sdl:push-quit-event)))
+	  (:key-down-event (:key key) (if (sdl:key= key :SDL-KEY-ESCAPE)
+					  (sdl:push-quit-event)))
 	  (:idle ()
-		 (sdl:draw-box (sdl:random-rectangle width height)
-			       :color (sdl:color :r (random 255) :g (random 255) :b (random 255) :a (random 255))
+		 (sdl:draw-box (sdl:random-rectangle width height rect)
+			       :color (sdl:color :r (random 255)
+						 :g (random 255)
+						 :b (random 255)
+						 :a (random 255))
 			       :alpha 255)
 
 		 ;; Optimization; Draw the font each frame,

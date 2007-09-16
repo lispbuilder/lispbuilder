@@ -477,7 +477,9 @@ The default is `NIL` as the SDL library will perform the necessary clipping auto
 		  :template template
 		  :clipping-p clipping-p)))
   
-(defun draw-box (rect &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
+(defun draw-box (rect &key
+		 (clipping-p nil) (surface *default-surface*)
+		 (color *default-color*) (stroke-color nil) (alpha nil))
   "See [DRAW-BOX-*](#draw-box-*).
 
 ##### Parameters
@@ -489,19 +491,19 @@ The default is `NIL` as the SDL library will perform the necessary clipping auto
   (when stroke-color
     (check-type stroke-color sdl-color))
   (check-type rect rectangle)
-    (let* ((width  (width rect))
-	   (height (height rect))
-	   (x (x rect))
-	   (y (y rect))
-	   (surf (if alpha (create-surface width height :alpha-value alpha) surface)))
-      (fill-surface color :surface surf :template (if alpha nil rect) :clipping-p clipping-p)
-      (when stroke-color
-	(draw-rectangle-* (if alpha 0 x) (if alpha 0 y) width height
-			  :surface surf :clipping-p clipping-p :color stroke-color :alpha nil))
-      (when alpha
-	(draw-surface-at-* surf x y :surface surface)
-	(free-surface surf)))
-    rect)
+  (let* ((width  (width rect))
+	 (height (height rect))
+	 (x (x rect))
+	 (y (y rect))
+	 (surf (if alpha (create-surface width height :alpha-value alpha) surface)))
+    (fill-surface color :surface surf :template (if alpha nil rect) :clipping-p clipping-p)
+    (when stroke-color
+      (draw-rectangle-* (if alpha 0 x) (if alpha 0 y) width height
+			:surface surf :clipping-p clipping-p :color stroke-color :alpha nil))
+    (when alpha
+      (draw-surface-at-* surf x y :surface surface)
+      (free-surface surf)))
+  rect)
 
 (defun draw-box-* (x y w h &key (clipping-p nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
   "Draws a filled rectangle of color `COLOR` to surface `SURFACE`.
