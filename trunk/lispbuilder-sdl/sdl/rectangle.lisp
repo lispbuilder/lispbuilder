@@ -223,10 +223,11 @@ The `RESULT` is `\(VALUES X Y WIDTH HEIGHT\)`"
   "Sets the coordinates of the rectangle `RECTANGLE` to the specified `X`, `Y` , width `W` and height `HEIGHT` coordinates.
 `X`, `Y`, `W` and `H` are `KEY`word parameters of type `INTEGER`. 
 Returns the rectangle `RECTANGLE` as RESULT."
-  (when x (setf (x rectangle) x))
-  (when y (setf (y rectangle) y))
-  (when w (setf (width rectangle) w))
-  (when h (setf (height rectangle) h))
+  (sdl-base::with-rectangle (rect (fp rectangle) nil)
+    (when x (setf rect.x (sdl-base:to-int x)))
+    (when y (setf rect.y (sdl-base:to-int y)))
+    (when w (setf rect.w (sdl-base:to-int w)))
+    (when h (setf rect.h (sdl-base:to-int h))))
   rectangle)
 
 ;; (defmethod color-* ((rectangle rectangle))

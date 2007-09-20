@@ -23,20 +23,20 @@ or the contents of rectangle SRC if specified."
 (defmacro with-rectangle ((var &optional rectangle (free-p t)) &body body)
   (let ((mbody (gensym "mbody-")))
     `(let ((,mbody nil))
-       ,(if (or rectangle (atom var))
-	    `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (rect-x ,var))
-			       (,(intern (string-upcase (format nil "~A.y" var))) (rect-y ,var))
-			       (,(intern (string-upcase (format nil "~A.w" var))) (rect-w ,var))
-			       (,(intern (string-upcase (format nil "~A.h" var))) (rect-h ,var)))
-	       ,(if rectangle
-		    `(let ((,var ,rectangle))
-		       (setf ,mbody (progn ,@body))
-		       (when ,free-p
-			 (cffi:foreign-free ,var)))
-		    `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
-		       (setf ,mbody (progn ,@body))))
-	       ,mbody)
-	    (error "VAR must be a symbol or variable, not a function.")))))
+      ,(if (or rectangle (atom var))
+	   `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (rect-x ,var))
+			      (,(intern (string-upcase (format nil "~A.y" var))) (rect-y ,var))
+			      (,(intern (string-upcase (format nil "~A.w" var))) (rect-w ,var))
+			      (,(intern (string-upcase (format nil "~A.h" var))) (rect-h ,var)))
+	     ,(if rectangle
+		  `(let ((,var ,rectangle))
+		    (setf ,mbody (progn ,@body))
+		    (when ,free-p
+		      (cffi:foreign-free ,var)))
+		  `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
+		    (setf ,mbody (progn ,@body))))
+	     ,mbody)
+	   (error "VAR must be a symbol or variable, not a function.")))))
 
 (defmacro with-rectangles (bindings &body body)
   (if bindings
@@ -48,14 +48,14 @@ or the contents of rectangle SRC if specified."
 	 ,(return-with-rectangle (cdr bindings) body))
       `(progn ,@body)))
 
-(declaim (inline rectangle-from-edges-*))
+;(declaim (inline rectangle-from-edges-*))
 (defun rectangle-from-edges-* (x1 y1 x2 y2 rectangle)
   (declare (type fixnum x1 y1 x2 y2))
   (with-rectangle (rect rectangle nil)
     (setf rect.x x1
 	  rect.y y1
-	  rect.w (the fixnum (1+ (abs (- x2 x1))))
-	  rect.h (the fixnum (1+ (abs (- y2 y1))))))
+	  rect.w (1+ (abs (- x2 x1)))
+	  rect.h (1+ (abs (- y2 y1)))))
   rectangle)
 
 (declaim (inline rect-x))

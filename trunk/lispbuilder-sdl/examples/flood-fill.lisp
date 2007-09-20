@@ -16,7 +16,7 @@
 			      ;; Draw a triangle
 			      (sdl:with-surface (disp sdl:*default-display*)
 				(sdl:with-color (white (sdl:color :r 255 :g 255 :b 255))
-				  (sdl:with-shape (:line-strip)
+				  (sdl:with-shape (:solid)
 				    (sdl:add-vertex-* 100 50)
 				    (sdl:add-vertex-* 25  150)
 				    (sdl:add-vertex-* 175 150)
@@ -34,7 +34,7 @@
       ;; Draw a triangle
       (sdl:with-surface (disp sdl:*default-display*)
 	(sdl:with-color (white (sdl:color :r 255 :g 255 :b 255))
-	  (sdl:with-shape (:line-strip)
+	  (sdl:with-shape (:solid)
 	    (sdl:add-vertex-* 100 50)
 	    (sdl:add-vertex-* 25  150)
 	    (sdl:add-vertex-* 175 150)
@@ -63,7 +63,7 @@
 			      ;; Draw a triangle
 			      (sdl:with-surface (disp sdl:*default-display*)
 				(sdl:with-color (white (sdl:color :r 255 :g 255 :b 255))
-				  (sdl:with-shape (:line-strip)
+				  (sdl:with-shape (:solid)
 				    (sdl:add-vertex (sdl:point :x 100 :y 50))
 				    (sdl:add-vertex (sdl:point :x 25 :y 150))
 				    (sdl:add-vertex (sdl:point :x 175 :y 150))
@@ -81,7 +81,7 @@
       ;; Draw a triangle
       (sdl:with-surface (disp sdl:*default-display*)
 	(sdl:with-color (white (sdl:color :r 255 :g 255 :b 255))
-	  (sdl:with-shape (:line-strip)
+	  (sdl:with-shape (:solid)
 	    (sdl:add-vertex (sdl:point :x 100 :y 50))
 	    (sdl:add-vertex (sdl:point :x 25 :y 150))
 	    (sdl:add-vertex (sdl:point :x 175 :y 150))
