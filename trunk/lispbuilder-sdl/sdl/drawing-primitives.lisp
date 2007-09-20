@@ -39,7 +39,7 @@
 ;; 	    (setf collision? t))))
 ;;     collision?))
 
-(defun genbez (x0 y0 x1 y1 x2 y2 x3 y3 &key (segments 20))
+(defun generate-bezier (x0 y0 x1 y1 x2 y2 x3 y3 &key (segments 20))
   (let ((gx0 x0) (gy0 y0)
 	(gx1 x1) (gy1 y1)
 	(gx3 x3) (gy3 y3)
@@ -59,19 +59,65 @@
 		     (u^2 (* u u))
 		     (u^3 (expt u 3)))
 		(push (point :x (+ (* ax u^3)
-				(* bx u^2)
-				(* cx u)
-				gx0)
+				   (* bx u^2)
+				   (* cx u)
+				   gx0)
 			     :y (+ (* ay u^3)
-				(* by u^2)
-				(* cy u)
-				gy0))
+				   (* by u^2)
+				   (* cy u)
+				   gy0))
 		      point-list)))
 	(push (point :x gx3
 		     :y gy3)
 	      point-list)))))
 
-(defmacro with-bezier ((shape-type &optional (segments 20)) &body body)
+(defun catmull-rom-spline (val v0 v1 v2 v3)
+  (let ((c1 0) (c2 0) (c3 0) (c4 0))
+    (setf c1                 (* *M12* v1)
+	  c2 (+ (* *M21* v0)              (* *M23* v2))
+	  c3 (+ (* *M31* v0) (* *M32* v1) (* *M33* v2) (* *M34* v3))
+	  c4 (+ (* *M41* v0) (* *M42* v1) (* *M43* v2) (* *M44* v3)))
+    (+ c1 (* val (+ c2 (* val (+ c3 (* c4 val))))))))
+
+(defun draw-bezier (points type
+		    &key (clipping-p t) (surface *default-surface*) (color *default-color*) (segments 20))
+  "Draw a bezier curve of color `COLOR` to the surface `SURFACE`. The shape of the Bezier curve is defined by several control points. 
+A control point is a vertex containing an X and Y coordinate pair.
+
+##### Parameters
+
+* `VERTICES` is the list of control points of type `SDL:POINT`.
+* `TYPE` describes the line style used to draw the curve and may be one of 
+`:SOLID`, `:DASH`, or `:POINTS`. Use `:SOLID` to draw a single continuous line through the specified waypoints. Use `:DASH` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+* `SEGMENTS` is the number of segments used to draw the curve.
+Default is 10 segments if unspecified. The greater the number of segments, 
+the smoother the curve.
+* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
+* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
+* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`.
+
+##### Example
+
+    \(DRAW-BEZIER \(LIST \(SDL:POINT :X 60  :Y 40\)
+                         \(SDL:POINT :X 160 :Y 10\)
+                         \(SDL:POINT :X 170 :Y 150\)
+                         \(SDL:POINT :X 60 :Y 150\)\)
+                   :SOLID\)"
+  ;; Create the curve between each successive group of four control points in the list.
+  (loop
+     for p1 in points
+     for p2 in (cdr points)
+     for p3 in (cddr points)
+     for p4 in (cdddr points)
+     do (draw-shape (generate-bezier (x p1) (y p1)
+				     (x p2) (y p2)
+				     (x p3) (y p3)
+				     (x p4) (y p4)
+				     :segments segments)
+		    type :clipping-p clipping-p :surface surface :color color)))
+
+(defmacro with-bezier ((line-type &optional (segments 20)) &body body)
   "Draw a bezier curve of color `\*DEFAULT-COLOR\*` to the surface `\*DEFAULT-SURFACE\*`.
 The shape of the Bezier curve is defined by control points. 
 A control point is a vertex containing an X and Y coordinate pair.
@@ -89,11 +135,11 @@ A vertex may be added using:
 
 ##### Parameters
 
-* `SHAPE-TYPE` is one of `:LINE-STRIP`, `:LINES`, or `:POINTS`. 
-When `SHAPE-TYPE` is `:LINE-STRIP`, a single continuous line is drawn through the 
+* `LINE-TYPE` is one of `:SOLID`, `:DASH`, or `:POINTS`. 
+When `LINE-TYPE` is `:SOLID`, a single continuous line is drawn through the 
 specified waypoints.
-When `SHAPE-TYPE` is `:LINES`, a line is drawn to alternate waypoint pairs.
-When `SHAPE-TYPE` is `:POINTS`, a single point is drawn at each waypoint.
+When `LINE-TYPE` is `:DASH`, a line is drawn to alternate waypoint pairs.
+When `LINE-TYPE` is `:POINTS`, a single point is drawn at each waypoint.
 * `SEGMENTS` is the number of segments used to draw the Bezier curve.  
 Default is 10 segments if unspecified. The greater the number of segments, 
 the smoother the curve.
@@ -114,9 +160,9 @@ the smoother the curve.
 		  (add-vertex (point :x x :y y))))
 	 (declare (ignorable #'add-vertex #'add-vertex-*))
 	 ,@body)
-       (draw-bezier ,point-list ,shape-type :segments ,segments))))
+       (draw-bezier ,point-list ,line-type :segments ,segments))))
 
-(defmacro with-curve ((shape-type &optional (segments 10)) &body body)
+(defmacro with-curve ((line-type &optional (segments 10)) &body body)
   "Draw a Cattmul-Rom spline of color `\*DEFAULT-COLOR\*` to the surface `\*DEFAULT-SURFACE\*`.
 The shape of the curve is defined by waypoints. 
 A waypoint is a vertex containing an X and Y coordinate pair.
@@ -131,8 +177,8 @@ A vertex may be added using:
 
 ##### Parameters
 
-* `SHAPE-TYPE` describes the line style used to draw the curve and may be one of 
-`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+* `LINE-TYPE` describes the line style used to draw the curve and may be one of 
+`:SOLID`, `:DASH`, or `:POINTS`. Use `:SOLID` to draw a single continuous line through the specified waypoints. Use `:DASH` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
 * `SEGMENTS` is the number of segments used to draw the Catmull-Rom spline.  
 Default is 10 segments if unspecified. The greater the number of segments, 
 the smoother the spline.
@@ -140,7 +186,7 @@ the smoother the spline.
 ##### Example
 
     \(SDL:WITH-COLOR \(COL \(SDL:COLOR\)\)
-       \(WITH-CURVE \(:LINE-STRIP 30\)
+       \(WITH-CURVE \(:SOLID 30\)
          \(ADD-VERTEX-* 60  40\)
          \(ADD-VERTEX-* 160 10\)
          \(ADD-VERTEX-* 170 150\)
@@ -150,12 +196,13 @@ the smoother the spline.
        (labels ((add-vertex (point)
 		  (setf ,point-list (append ,point-list (list point))))
 		(add-vertex-* (x y)
+		  (declare (type fixnum x y))
 		  (add-vertex (point :x x :y y))))
 	 (declare (ignorable #'add-vertex #'add-vertex-*))
 	 ,@body)
-       (draw-curve ,point-list ,shape-type :segments ,segments))))
+       (draw-curve ,point-list ,line-type :segments ,segments))))
 
-(defmacro with-shape ((shape-type) &body body)
+(defmacro with-shape ((line-type) &body body)
   "Draw a polygon of color `\*DEFAULT-COLOR\*` to the surface `\*DEFAULT-SURFACE\*`.
 
 ##### Local Methods
@@ -168,8 +215,8 @@ ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE.
 
 ##### Parameters
 
-* `SHAPE-TYPE` describes the line style used to draw the shape and may be one of 
-`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+* `LINE-TYPE` describes the line style used to draw the shape and may be one of 
+`:SOLID`, `:DASH`, or `:POINTS`. Use `:SOLID` to draw a single continuous line through the specified waypoints. Use `:DASH` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
 
 ##### Example
 
@@ -184,12 +231,13 @@ ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE.
        (labels ((add-vertex (point)
 		  (setf ,point-list (append ,point-list (list point))))
 		(add-vertex-* (x y)
+		  (declare (type fixnum x y))
 		  (add-vertex (point :x x :y y))))
 	 (declare (ignorable #'add-vertex #'add-vertex-*))
 	 ,@body)
-       (draw-shape ,point-list ,shape-type))))
+       (draw-shape ,point-list ,line-type))))
 
-(defun calculate-curve (p1 p2 p3 p4 segments)
+(defun generate-curve (p1 p2 p3 p4 segments)
   (let ((step-size 0)
 	(points nil))
     (when (or (null segments) (= segments 0))
@@ -203,51 +251,6 @@ ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE.
     ;; NOTE: There must be a more efficient way to add the first and last points to the point list.
     (push p2 points)
     (nconc points (list p3))))
-
-(defun catmull-rom-spline (val v0 v1 v2 v3)
-  (let ((c1 0) (c2 0) (c3 0) (c4 0))
-    (setf c1                 (* *M12* v1)
-	  c2 (+ (* *M21* v0)              (* *M23* v2))
-	  c3 (+ (* *M31* v0) (* *M32* v1) (* *M33* v2) (* *M34* v3))
-	  c4 (+ (* *M41* v0) (* *M42* v1) (* *M43* v2) (* *M44* v3)))
-    (+ c1 (* val (+ c2 (* val (+ c3 (* c4 val))))))))
-
-(defun draw-bezier (points type
-		    &key (clipping-p t) (surface *default-surface*) (color *default-color*) (segments 20))
-  "Draw a bezier curve of color `COLOR` to the surface `SURFACE`. The shape of the Bezier curve is defined by several control points. 
-A control point is a vertex containing an X and Y coordinate pair.
-
-##### Parameters
-
-* `VERTICES` is the list of control points of type `SDL:POINT`.
-* `TYPE` describes the line style used to draw the curve and may be one of 
-`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
-* `SEGMENTS` is the number of segments used to draw the curve.
-Default is 10 segments if unspecified. The greater the number of segments, 
-the smoother the curve.
-* `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
-* `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
-* `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
-SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`.
-
-##### Example
-
-    \(DRAW-BEZIER \(LIST \(SDL:POINT :X 60  :Y 40\)
-                         \(SDL:POINT :X 160 :Y 10\)
-                         \(SDL:POINT :X 170 :Y 150\)
-                         \(SDL:POINT :X 60 :Y 150\)\)
-                   :LINE-STRIP\)"
-  (do* ((p1 points (cdr p1))
-	(p2 (cdr p1) (cdr p1))
-	(p3 (cdr p2) (cdr p2))
-	(p4 (cdr p3) (cdr p3)))
-       ((or (null p4) (null p3) (null p2) (null p1)))
-    (draw-shape (genbez (x (first p1)) (y (first p1))
-			(x (first p2)) (y (first p2))
-			(x (first p3)) (y (first p3))
-			(x (first p4)) (y (first p4))
-			:segments segments)
-		type :clipping-p clipping-p :surface surface :color color)))
   
 (defun draw-curve (points type &key (clipping-p t) (surface *default-surface*) (color *default-color*)
 		   (segments 10))
@@ -258,7 +261,7 @@ A waypoint is a vertex containing an X and Y coordinate pair.
 
 * `POINTS` is a list of waypoints or vetices for the spline, of type `SDL:POINT`
 * `TYPE` describes the line style used to draw the curve and may be one of 
-`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+`:SOLID`, `:DASH`, or `:POINTS`. Use `:SOLID` to draw a single continuous line through the specified waypoints. Use `:DASH` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
 * `SEGMENTS` is the number of segments used to draw the Catmull-Rom spline.  
 Default is 10 segments if unspecified. The greater the number of segments, 
 the smoother the spline.
@@ -273,15 +276,16 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 	    	  \(SDL:POINT :X 160 :Y 10\)
 		  \(SDL:POINT :X 170 :Y 150\)
 		  \(SDL:POINT :X 60  :Y 150\)\)
-	    :LINE-STRIP
+	    :SOLID
 	    10\)"
-  (do* ((p1 points (cdr p1))
-	(p2 (cdr p1) (cdr p1))
-	(p3 (cdr p2) (cdr p2))
-	(p4 (cdr p3) (cdr p3)))
-       ((or (null p4) (null p3) (null p2) (null p1)))
-    (draw-shape (calculate-curve (first p1) (first p2) (first p3) (first p4) segments) type
-		:clipping-p clipping-p :surface surface :color color)))
+  ;; Create the curve between each successive group of four control points in the list.
+  (loop
+     for p1 in points
+     for p2 in (cdr points)
+     for p3 in (cddr points)
+     for p4 in (cdddr points)
+     do (draw-shape (generate-curve p1 p2 p3 p4 segments) type
+		    :clipping-p clipping-p :surface surface :color color)))
 
 (defun draw-shape (points type &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   "Draw a polygon of color `COLOR` to the surface `SURFACE` using the vertices in `POINTS`.
@@ -290,7 +294,7 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 
 * `POINTS` is a list of vertices, of type `SDL:POINT`
 * `TYPE` describes the line style used to draw the polygon and may be one of 
-`:LINE-STRIP`, `:LINES`, or `:POINTS`. Use `:LINE-STRIP` to draw a single continuous line through the specified waypoints. Use `:LINES` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
+`:SOLID`, `:DASH`, or `:POINTS`. Use `:SOLID` to draw a single continuous line through the specified waypoints. Use `:DASH` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
 * `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
@@ -302,21 +306,20 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 		    \(SDL:POINT :X 160 :Y 10\)
 		    \(SDL:POINT :X 170 :Y 150\)
    		    \(SDL:POINT :X 60  :Y 150\)\)
-	    :LINE-STRIP\)"
+	    :SOLID\)"
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
   (check-type color sdl-color)
   (case type
-    (:line-strip
-     (do* ((p1 points (cdr p1))
-	   (p2 (cdr p1) (cdr p1)))
-	  ((or (null p2)
-	       (null p1)))
-       (draw-line (first p1) (first p2)
-		  :clipping-p clipping-p
-		  :surface surface :color color)))
-    (:lines
+    (:solid
+     (loop
+	for p1 in points
+	for p2 in (cdr points)
+	do (draw-line p1 p2
+		      :clipping-p clipping-p
+		      :surface surface :color color)))
+    (:dash
      (do* ((p1 points (if (cdr p1)
 			  (cddr p1)
 			  nil))
@@ -344,80 +347,76 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
 * `CLIPPING-P` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
 SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave `CLIPPING-P` as `T`."
+  (declare (type fixnum x0 y0 x1 y1))
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
   (check-type color sdl-color)
-  (let ((x0 (sdl-base::to-int x0))
-	(y0 (sdl-base::to-int y0))
-	(x1 (sdl-base::to-int x1))
-	(y1 (sdl-base::to-int y1)))
-    (declare (type fixnum x0 y0 x1 y1))
-    (cond
-      ((eq x0 x1)
-       ;; Optimization. If (eq x0 x1) then draw using vline.
-       (draw-vline x0 y0 y1 :surface surface :color color :clipping-p nil))
-      ((eq y0 y1)
-       ;; Optimization. If (eq y0 y1) then draw using hline.
-       (draw-hline x0 x1 y0 :surface surface :color color :clipping-p nil))
-      (t
-       (when clipping-p
-	 ;; simple clipping, should be improved with Cohen-Sutherland line clipping
-	 (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
-	 (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
+  (cond
+    ((eq x0 x1)
+     ;; Optimization. If (eq x0 x1) then draw using vline.
+     (draw-vline x0 y0 y1 :surface surface :color color :clipping-p nil))
+    ((eq y0 y1)
+     ;; Optimization. If (eq y0 y1) then draw using hline.
+     (draw-hline x0 x1 y0 :surface surface :color color :clipping-p nil))
+    (t
+     (when clipping-p
+       ;; simple clipping, should be improved with Cohen-Sutherland line clipping
+       (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
+       (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
        
-       ;; draw line with Bresenham algorithm
-       (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
-	     (color (map-color color surface)))
-	 (declare (type fixnum x y dx dy)
-		  (type (unsigned-byte 32) color))
-	 (when (> x0 x1)
-	   (rotatef x0 x1)
-	   (rotatef y0 y1))
-	 (setf e 0)
-	 (setf x x0)
-	 (setf y y0)
-	 (setf dx (- x1 x0))
-	 (setf dy (- y1 y0))
+     ;; draw line with Bresenham algorithm
+     (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
+	   (color (map-color color surface)))
+       (declare (type fixnum x y dx dy)
+		(type (unsigned-byte 32) color))
+       (when (> x0 x1)
+	 (rotatef x0 x1)
+	 (rotatef y0 y1))
+       (setf e 0)
+       (setf x x0)
+       (setf y y0)
+       (setf dx (- x1 x0))
+       (setf dy (- y1 y0))
 
-	 (sdl-base::with-pixel (pix (fp surface))
-	   (if (>= dy 0)
-	       (if (>= dx dy)
-		   (loop for x from x0 to x1 do
-			(sdl-base::write-pixel pix x y color)
-			(if (< (* 2 (+ e dy)) dx)
-			    (incf e dy)
-			    (progn
-			      (incf y)
-			      (incf e (- dy dx)))))
+       (sdl-base::with-pixel (pix (fp surface))
+	 (if (>= dy 0)
+	     (if (>= dx dy)
+		 (loop for x from x0 to x1 do
+		      (sdl-base::write-pixel pix x y color)
+		      (if (< (* 2 (+ e dy)) dx)
+			  (incf e dy)
+			  (progn
+			    (incf y)
+			    (incf e (- dy dx)))))
+		 (loop for y from y0 to y1 do
+		      (sdl-base::write-pixel pix x y color)
+		      (if (< (* 2 (+ e dx)) dy)
+			  (incf e dx)
+			  (progn
+			    (incf x)
+			    (incf e (- dx dy))))))
+	     (if (>= dx (- dy))
+		 (loop for x from x0 to x1 do
+		      (sdl-base::write-pixel pix x y color)
+		      (if (> (* 2 (+ e dy)) (- dx))
+			  (incf e dy)
+			  (progn
+			    (decf y)
+			    (incf e (+ dy dx)))))
+		 (progn
+		   (rotatef x0 x1)
+		   (rotatef y0 y1)
+		   (setf x x0)
+		   (setf dx (- x1 x0))
+		   (setf dy (- y1 y0))
 		   (loop for y from y0 to y1 do
 			(sdl-base::write-pixel pix x y color)
-			(if (< (* 2 (+ e dx)) dy)
+			(if (> (* 2 (+ e dx)) (- dy))
 			    (incf e dx)
 			    (progn
-			      (incf x)
-			      (incf e (- dx dy))))))
-	       (if (>= dx (- dy))
-		   (loop for x from x0 to x1 do
-			(sdl-base::write-pixel pix x y color)
-			(if (> (* 2 (+ e dy)) (- dx))
-			    (incf e dy)
-			    (progn
-			      (decf y)
-			      (incf e (+ dy dx)))))
-		   (progn
-		     (rotatef x0 x1)
-		     (rotatef y0 y1)
-		     (setf x x0)
-		     (setf dx (- x1 x0))
-		     (setf dy (- y1 y0))
-		     (loop for y from y0 to y1 do
-			  (sdl-base::write-pixel pix x y color)
-			  (if (> (* 2 (+ e dx)) (- dy))
-			      (incf e dx)
-			      (progn
-				(decf x)
-				(incf e (+ dx dy))))))))))))))
+			      (decf x)
+			      (incf e (+ dx dy)))))))))))))
 
 (defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   "See [DRAW-LINE-*](#draw-line-*).
@@ -431,7 +430,7 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 		 :clipping-p clipping-p :color color :surface surface))
 
 
-(defun draw-vline (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p nil))
+(defun draw-vline (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping-p nil) (template nil))
   "Draw a vertical line of color `COLOR` from `Y0` to `Y1` through `X` onto the surface `SURFACE`. 
 
 ##### Parameters
@@ -441,20 +440,29 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
 * `CLIPPING-P` when `T` will clip the shape to the dimensions of `SURFACE`. 
+* `TEMPLATE` will use this rectangle to fill the surface when set. Will not free TEMPLATE.
 The default is `NIL` as the SDL library will perform the necessary clipping automatically."
+  (declare (type fixnum x y0 y1))
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
   (check-type color sdl-color)
   (when (> y0 y1)
     (rotatef y0 y1))
-  (with-rectangle (template (rectangle-from-edges-* x y0 x y1))
-    (fill-surface color
-		  :surface surface
-		  :template template
-		  :clipping-p clipping-p)))
+  (if template
+      (sdl-base::fill-surface (fp surface)
+			      (map-color-* (r color) (g color) (b color) (a color) surface)
+			      :template (sdl-base::rectangle-from-edges-* x y0 x y1 (fp template))
+			      :clipping-p clipping-p
+			      :update-p nil)
+      (sdl-base::with-rectangle (template)
+	(sdl-base::fill-surface (fp surface)
+				(map-color-* (r color) (g color) (b color) (a color) surface)
+				:template (sdl-base::rectangle-from-edges-* x y0 x y1 template)
+				:clipping-p clipping-p
+				:update-p nil))))
   
-(defun draw-hline (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p nil))
+(defun draw-hline (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping-p nil) (template nil))
   "Draw a horizontal line of color `COLOR` from `X0` to `X1` through `Y` onto the surface `SURFACE`. 
 
 ##### Parameters
@@ -464,18 +472,27 @@ The default is `NIL` as the SDL library will perform the necessary clipping auto
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` is the line color, of type `SDL:COLOR` or `SDL:COLOR-A`. Bound to `SDL:\*DEFAULT-COLOR\*` if unspecified.
 * `CLIPPING-P` when `T` will clip the shape to the dimensions of `SURFACE`. 
+* `TEMPLATE` will use this rectangle to fill the surface when set. Will not free TEMPLATE.
 The default is `NIL` as the SDL library will perform the necessary clipping automatically."
+  (declare (type fixnum x0 x1 y))
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
   (check-type color sdl-color)
   (when (> x0 x1)
     (rotatef x0 x1))
-  (with-rectangle (template (rectangle-from-edges-* x0 y x1 y))
-    (fill-surface color
-		  :surface surface
-		  :template template
-		  :clipping-p clipping-p)))
+  (if template
+      (sdl-base::fill-surface (fp surface)
+			      (map-color-* (r color) (g color) (b color) (a color) surface)
+			      :template (sdl-base::rectangle-from-edges-* x0 y x1 y (fp template))
+			      :clipping-p clipping-p
+			      :update-p nil)
+      (sdl-base::with-rectangle (template)
+	(sdl-base::fill-surface (fp surface)
+				(map-color-* (r color) (g color) (b color) (a color) surface)
+				:template (sdl-base::rectangle-from-edges-* x0 y x1 y template)
+				:clipping-p clipping-p
+				:update-p nil))))
   
 (defun draw-box (rect &key
 		 (clipping-p nil) (surface *default-surface*)
@@ -578,10 +595,11 @@ The default is `NIL` as the SDL library will perform the necessary clipping auto
     (let ((surf (if alpha (create-surface w h :alpha-value alpha) surface))
 	  (x (if alpha 0 x))
 	  (y (if alpha 0 y)))
-      (draw-hline x x+width y :surface surf :color color :clipping-p clipping-p)
-      (draw-hline x x+width y+height :surface surf :color color :clipping-p clipping-p)
-      (draw-vline x y y+height :surface surf :color color :clipping-p clipping-p)
-      (draw-vline x+width y y+height :surface surf :color color :clipping-p clipping-p)
+      (with-rectangle (template (rectangle))
+	(draw-hline x x+width y :surface surf :color color :clipping-p clipping-p :template template)
+	(draw-hline x x+width y+height :surface surf :color color :clipping-p clipping-p :template template)
+	(draw-vline x y y+height :surface surf :color color :clipping-p clipping-p :template template)
+	(draw-vline x+width y y+height :surface surf :color color :clipping-p clipping-p :template template))
       (when alpha
 	(draw-surface-at-* surf x y :surface surface)
 	(free-surface surf))))
@@ -698,8 +716,9 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 	    (ddf-x 0)
 	    (ddf-y (the fixnum (* -2 r))))
 	(declare (type fixnum f ddf-x ddf-y))
-	(draw-vline x0 (the fixnum (+ y0 r)) (the fixnum (- y0 r)) :color color :surface surf :clipping-p nil)
-	(draw-hline (the fixnum (+ x0 r)) (the fixnum (- x0 r)) y0 :color color :surface surf :clipping-p nil)
+	(with-rectangle (template (rectangle))
+	  (draw-vline x0 (the fixnum (+ y0 r)) (the fixnum (- y0 r)) :color color :surface surf :clipping-p nil :template template)
+	  (draw-hline (the fixnum (+ x0 r)) (the fixnum (- x0 r)) y0 :color color :surface surf :clipping-p nil :template template))
 	(do ((x 0)
 	     (y r))
 	    ((<= y x))
@@ -711,10 +730,15 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 	  (incf x)
 	  (incf ddf-x 2)
 	  (incf f (1+ ddf-x))
-	  (draw-hline (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (+ y0 y)) :color color :surface surf :clipping-p nil)
-	  (draw-hline (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (- y0 y)) :color color :surface surf :clipping-p nil)
-	  (draw-hline (the fixnum (+ x0 y)) (the fixnum (- x0 y)) (the fixnum (+ y0 x)) :color color :surface surf :clipping-p nil)
-	  (draw-hline (the fixnum (+ x0 y)) (the fixnum(- x0 y))  (the fixnum (- y0 x)) :color color :surface surf :clipping-p nil))
+	  (with-rectangle (template (rectangle))
+	    (draw-hline (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (+ y0 y)) :color color :surface surf :clipping-p nil
+			:template template)
+	    (draw-hline (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (- y0 y)) :color color :surface surf :clipping-p nil
+			:template template)
+	    (draw-hline (the fixnum (+ x0 y)) (the fixnum (- x0 y)) (the fixnum (+ y0 x)) :color color :surface surf :clipping-p nil
+			:template template)
+	    (draw-hline (the fixnum (+ x0 y)) (the fixnum(- x0 y))  (the fixnum (- y0 x)) :color color :surface surf :clipping-p nil
+			:template template)))
 
 	;; Draw the circle outline when a color is specified.
 	(when stroke-color
@@ -860,10 +884,11 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
    (unless surface
     (setf surface *default-display*))
  (check-type color sdl-color)
- (draw-line p1 p2 :surface surface :color color :clipping-p clipping-p)
- (draw-line p2 p3 :surface surface :color color :clipping-p clipping-p)
- (draw-line p3 p1 :surface surface :color color :clipping-p clipping-p))
-
+ (with-rectangle (template (rectangle))
+   (draw-line p1 p2 :surface surface :color color :clipping-p clipping-p :template template)
+   (draw-line p2 p3 :surface surface :color color :clipping-p clipping-p :template template)
+   (draw-line p3 p1 :surface surface :color color :clipping-p clipping-p :template template)))
+ 
 (defun draw-polygon (vertices &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   "Draw the circumference of a polygon of color `COLOR` to surface SURFACE using the vertices in `POINTS`.
 Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*) to draw a filled polygon.
@@ -879,4 +904,4 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
   (unless surface
     (setf surface *default-display*))
   (check-type color sdl-color)
-  (draw-shape vertices :line-strip :clipping-p clipping-p :surface surface :color color))
+  (draw-shape vertices :solid :clipping-p clipping-p :surface surface :color color))

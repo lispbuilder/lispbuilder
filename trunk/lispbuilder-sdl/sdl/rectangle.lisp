@@ -16,6 +16,7 @@
   "Creates a new `RECTANGLE` from the specified `X`, `Y`, width `W` and height `H`.
 If `FP' is `NIL` then a foreign SDL_Rect is created. If `FP` is a pointer to a foreign SDL_Rect object then `FP` is used.
 If `NULL` is `NIL`, then a new `RECTANGLE` is returned. If `NULL` not `NIL` then a [NULL-RECTANGLE](#null-rectangle)` is created."
+  (declare (type fixnum x y w h))
   (if null
       (make-instance 'null-rectangle :rectangle (cffi:null-pointer))
       (make-instance 'rectangle :rectangle (if (sdl-base::is-valid-ptr fp)
@@ -26,6 +27,7 @@ If `NULL` is `NIL`, then a new `RECTANGLE` is returned. If `NULL` not `NIL` then
   "Creates and return s a new `RECTANGLE` of random x, y width and height within the specified
 bounds of width `BOUND-W` and height `BOUND-H`. `RECTANGLE` if unset will force the creation of a 
 new `RECTANGLE` object. `RECTANGLE` if set will be modified with the coordinates."
+  (declare (type fixnum bound-w bound-h))
   (check-type rectangle rectangle)
   (let* ((x (random bound-w))
 	 (y (random bound-h))
@@ -90,10 +92,10 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 		 `(,var ,rectangle)
 		 `(,var ,var)))
 	  (*default-rectangle* ,var))
-     (symbol-macrolet ((x (x ,var))
-		       (y (y ,var))
-		       (w (width ,var))
-		       (h (height ,var)))
+     (symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
+		       (,(intern (string-upcase (format nil "~A.y" var))) (y ,var))
+		       (,(intern (string-upcase (format nil "~A.w" var))) (width ,var))
+		       (,(intern (string-upcase (format nil "~A.h" var))) (height ,var)))
        ,@body
        (if ,free-p
 	   (free-rectangle ,var)))))

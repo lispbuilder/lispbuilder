@@ -15,8 +15,8 @@ If `POINT` is not `NIL`, then `VAR is set to `POINT`."
 		 `(,var ,point)
 		 `(,var ,var)))
 	  (*default-point* ,var))
-     (symbol-macrolet ((x (x ,var))
-		       (y (y ,var)))
+     (symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
+		       (,(intern (string-upcase (format nil "~A.y" var))) (y ,var)))
        ,@body)))
 
 (deftype point ()
