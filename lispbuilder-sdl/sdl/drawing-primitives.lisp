@@ -884,10 +884,9 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
    (unless surface
     (setf surface *default-display*))
  (check-type color sdl-color)
- (with-rectangle (template (rectangle))
-   (draw-line p1 p2 :surface surface :color color :clipping-p clipping-p :template template)
-   (draw-line p2 p3 :surface surface :color color :clipping-p clipping-p :template template)
-   (draw-line p3 p1 :surface surface :color color :clipping-p clipping-p :template template)))
+ (draw-line p1 p2 :surface surface :color color :clipping-p clipping-p)
+ (draw-line p2 p3 :surface surface :color color :clipping-p clipping-p)
+ (draw-line p3 p1 :surface surface :color color :clipping-p clipping-p))
  
 (defun draw-polygon (vertices &key (surface *default-surface*) (color *default-color*) (clipping-p t))
   "Draw the circumference of a polygon of color `COLOR` to surface SURFACE using the vertices in `POINTS`.
