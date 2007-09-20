@@ -38,10 +38,10 @@ When `A` is an `INTEGER`, will return a new [COLOR-A](#color-a) with the alpha t
 		 `(,var ,color)
 		 `(,var ,var)))
 	  (*default-color* ,var))
-     (symbol-macrolet ((r (r ,var))
-		       (g (g ,var))
-		       (b (b ,var))
-		       (a (a ,var)))
+     (symbol-macrolet ((,(intern (string-upcase (format nil "~A.r" var))) (r ,var))
+		       (,(intern (string-upcase (format nil "~A.g" var))) (g ,var))
+		       (,(intern (string-upcase (format nil "~A.b" var))) (b ,var))
+		       (,(intern (string-upcase (format nil "~A.a" var))) (a ,var)))
        ,@body
        (if ,free-p
 	   (free-color ,var)))))

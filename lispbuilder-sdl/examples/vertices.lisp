@@ -14,7 +14,7 @@
       (sdl:with-color (a-col (sdl:color :r 102 :g 102 :b 102))
 	;; We can use a point or an x/y spread as the vertex parameter
 	;; Here we use x/y spread as the vertex parameters
-	(sdl:with-curve (:line-strip 10)
+	(sdl:with-curve (:solid 10)
 	  (sdl:add-vertex-* 168 182)
 	  (sdl:add-vertex-* 168 182)
 	  (sdl:add-vertex-* 136 38)
@@ -23,7 +23,7 @@
 	  (sdl:add-vertex-* 64  200)))
       (sdl:with-color (a-col (sdl:color :r 51 :g 51 :b 51))
 	;; Here we use a point as the vertex parameter
-	(sdl:with-shape (:lines)
+	(sdl:with-shape (:dash)
 	  (sdl:add-vertex (sdl:point :x 60 :y 40))
 	  (sdl:add-vertex (sdl:point :x 160 :y 10))
 	  (sdl:add-vertex (sdl:point :x 170 :y 150))
@@ -37,7 +37,7 @@
 	  (sdl:add-vertex-* 170 150)))
       (sdl:with-color (a-col (sdl:color :r 126 :g 126 :b 126))
 	;; Here we use a point as the vertex parameter
-	(sdl:with-bezier (:line-strip)
+	(sdl:with-bezier (:solid)
 	  (sdl:add-vertex (sdl:point :x 60 :y 40))
 	  (sdl:add-vertex (sdl:point :x 160 :y 10))
 	  (sdl:add-vertex (sdl:point :x 170 :y 150))

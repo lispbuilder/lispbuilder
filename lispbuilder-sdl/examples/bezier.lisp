@@ -17,7 +17,7 @@
 				     (sdl:point :x 210 :y 10)
 				     (sdl:point :x 220 :y 150)
 				     (sdl:point :x (- 120 (/ i 8.0)) :y (+ 150 (/ i 4.0))))
-			       :line-strip)))
+			       :solid)))
       (sdl:update-display)
       (sdl:with-events ()
 	(:quit-event () t)

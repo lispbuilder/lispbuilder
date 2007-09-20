@@ -6,12 +6,12 @@
 (in-package #:sdl-examples) 
 
 (defun random-rects ()
-  (let ((width 640) (height 480))
+  (let ((width 320) (height 240))
     (sdl:with-init ()
       (let ((100-frames-p (every-n-frames 100))
 	    (rect (sdl:rectangle)))
 	    
-	(setf (sdl:frame-rate) -1)
+	(setf (sdl:frame-rate) 0)
 	(sdl:window width height
 		    :title-caption "random-rects"
 		    :icon-caption "random-rects")
@@ -39,11 +39,42 @@
 			   (funcall 100-frames-p))
 		 (sdl:update-display)))))))
 
+(defun random-rect ()
+  (let ((width 320) (height 240))
+    (sdl:with-init () 
+	(setf (sdl:frame-rate) 5)
+	(sdl:window width height
+		    :title-caption "random-rect"
+		    :icon-caption "random-rect")
+	(sdl:with-events ()
+	  (:quit-event () t)
+	  (:key-down-event (:key key)
+			   (if (sdl:key= key :SDL-KEY-ESCAPE)
+			       (sdl:push-quit-event)))
+	  (:idle ()
+		 (sdl:draw-hline 10 100 10 :color (sdl:color :r 255 :g 255 :b 255))
+		 (sdl:draw-hline 10 100 100 :color (sdl:color :r 255 :g 255 :b 255))
+		 (sdl:draw-vline 10 10 100 :color (sdl:color :r 255 :g 255 :b 255))
+		 (sdl:draw-vline 100 10 100 :color (sdl:color :r 255 :g 255 :b 255))
+		 (sdl:with-rectangle (template (sdl:rectangle))
+		   (sdl:draw-hline 210 300 10 :color (sdl:color :r 255 :g 255 :b 255) :template template)
+		   (sdl:draw-hline 210 300 100 :color (sdl:color :r 255 :g 255 :b 255) :template template)
+		   (sdl:draw-vline 210 10 100 :color (sdl:color :r 255 :g 255 :b 255) :template template)
+		   (sdl:draw-vline 300 10 100 :color (sdl:color :r 255 :g 255 :b 255) :template template)
+		   )
+		 (sdl:draw-rectangle-* 10 110 90 90 :color (sdl:color :r 255 :g 255 :b 255))
+		 ;; (sdl:draw-rectangle (sdl:random-rectangle width height (sdl:rectangle))
+;; 				     :color (sdl:color :r (random 255)
+;; 						       :g (random 255)
+;; 						       :b (random 255))
+;; 				     :clipping-p nil)
+		 (sdl:update-display))))))
+
 (defun random-box-1 ()
   (let ((width 320) (height 240))
     (sdl:with-init ()
       (let ((rect (sdl:rectangle)))
-	(setf (sdl:frame-rate) -1)
+	(setf (sdl:frame-rate) 0)
 	(sdl:window width height
 		    :title-caption "Random solid box"
 		    :icon-caption "Random solid box")
@@ -60,7 +91,7 @@
   (let ((width 320) (height 240))
     (sdl:with-init ()
       ;; Using the :WAIT event model so me may as well unlock the frame rate.
-      (setf (sdl:frame-rate) -1)
+      (setf (sdl:frame-rate) 0)
       (sdl:window width height :title-caption "Random solid box with outline" :icon-caption "Random solid box with outline")
 
       (sdl:initialise-default-font sdl:*font-10x20*)
@@ -88,7 +119,7 @@
       (let ((500-frames-p (every-n-frames 500))
 	    (rect (sdl:rectangle)))
 	
-	(setf (sdl:frame-rate) -1)
+	(setf (sdl:frame-rate) 0)
 	(sdl:window width height
 		    :title-caption "Random alpha Box"
 		    :icon-caption "Random alpha Box")
@@ -123,7 +154,7 @@
     (sdl:with-init ()
       (let ((500-frames-p (every-n-frames 500)))
 	      
-	(setf (sdl:frame-rate) -1)
+	(setf (sdl:frame-rate) 0)
 	(sdl:window width height :title-caption "Random alpha box with outline" :icon-caption "Random alpha Box with outline")
 
       	(sdl:initialise-default-font sdl:*font-5x7*)
