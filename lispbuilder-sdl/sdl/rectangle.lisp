@@ -148,7 +148,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 (defmethod (setf y2) (h-val (rectangle rectangle))
   "Sets the HEIGHT of rectangle `RECTANGLE` to `\(- Y2 Y\)`"
   (setf (sdl-base::rect-h (fp rectangle)) (- h-val
-					   (sdl-base::rect-y (fp rectangle)))))
+					     (sdl-base::rect-y (fp rectangle)))))
 
 (defmethod width ((rectangle rectangle))
   "Returns the `INTEGER` width of the rectangle `RECTANGLE`."
