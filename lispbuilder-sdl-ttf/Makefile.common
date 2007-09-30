@@ -4,5 +4,8 @@
 
 #### Modified by: Luke Crook <luke@balooga.com>
 
-STUBS=  lispbuilder-sdl-ttf-glue.$(SHLIB_SUFFIX)
+LIB_NAME=lispbuilder-sdl-ttf-glue
+SO_LIB_NAME=lib$(LIB_NAME)
+
+STUBS=  $(SO_LIB_NAME).$(SHLIB_SUFFIX)
 

@@ -11,7 +11,7 @@ include ../Makefile.common
 all: $(STUBS)
 	mv $(STUBS) ../build
 
-lispbuilder-sdl-ttf-glue.$(SHLIB_SUFFIX): lispbuilder-sdl-ttf-glue.c
+$(SO_LIB_NAME).$(SHLIB_SUFFIX): $(LIB_NAME).c
 	$(CC) $(SDL_TTF_CFLAGS) -o $@ $< $(SDL_TTF_LDFLAGS)
 
 clean:
