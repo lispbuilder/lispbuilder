@@ -4,7 +4,7 @@
 
 #### Modified by: Luke Crook <luke@balooga.com>
 
-DESTDIR=/usr/local
+DESTDIR=/usr
 
 all: Makefile.opts
 	(cd glue; ${MAKE})
