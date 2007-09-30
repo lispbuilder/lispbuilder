@@ -8,7 +8,8 @@
 	   :test #'equal))
 
 (cffi:define-foreign-library zlib1
-  (:windows "zlib1.dll"))
+  (:windows "zlib1.dll")
+  (:unix "libz.so"))
 
 (cffi:define-foreign-library libfreetype-6
   (:windows "libfreetype-6.dll")
@@ -23,7 +24,7 @@
   (:windows "lispbuilder-sdl-ttf-glue.dll")
   (:unix "liblispbuilder-sdl-ttf-glue.so"))
 
-#+win32(cffi:use-foreign-library zlib1)
+(cffi:use-foreign-library zlib1)
 (cffi:use-foreign-library libfreetype-6)
 (cffi:use-foreign-library sdl-ttf)
 (cffi:use-foreign-library sdl-ttf-glue)
