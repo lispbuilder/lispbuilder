@@ -77,7 +77,7 @@
       (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
 
-      (zpb-ttf:with-font-loader (loader sdl:*default-ttf-font*)
+      (zpb-ttf:with-font-loader (loader sdl:*default-ttf*)
 	(aa:cells-sweep (vectors:update-state (aa:make-state)
 					      (paths-ttf:paths-from-glyph (zpb-ttf:find-glyph #\A loader)
 									  :offset (paths:make-point 50 160)
