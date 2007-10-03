@@ -26,10 +26,8 @@
 	   (setf (pixels-fp-writer ,var) (generate-write-pixel ,surface-fp)
 		 (pixels-fp-reader ,var) (generate-read-pixel ,surface-fp))
 	   (labels ((write-pixel (pixels x y color)
-		      (declare (type fixnum x y))
 		      (funcall (pixels-fp-writer pixels) x y color))
 		    (read-pixel (pixels x y)
-		      (declare (type fixnum x y))
 		      (funcall (pixels-fp-reader pixels) x y)))
 	     (declare (ignorable #'read-pixel #'write-pixel))
 	     ,@body))))))
@@ -133,12 +131,16 @@
 	    (declare (type fixnum x y))
 	    (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char)
 					(a :unsigned-char))
-	      (sdl-cffi::SDL-Get-RGBA (funcall read-pixel-fn x y) format r g b a)
-	      (sdl-cffi::SDL-Map-RGBA format
-				      (mem-aref r :unsigned-char)
-				      (mem-aref g :unsigned-char)
-				      (mem-aref b :unsigned-char)
-				      (mem-aref a :unsigned-char))))))))
+	      (let ((fr (mem-aref r :unsigned-char)) (fg (mem-aref g :unsigned-char))
+		    (fb (mem-aref b :unsigned-char)) (fa (mem-aref a :unsigned-char)))
+		(declare (type fixnum fr fg fb fa))
+		(sdl-cffi::SDL-Get-RGBA (funcall read-pixel-fn x y) format r g b a)
+		(values (sdl-cffi::SDL-Map-RGBA format
+						(mem-aref r :unsigned-char)
+						(mem-aref g :unsigned-char)
+						(mem-aref b :unsigned-char)
+						(mem-aref a :unsigned-char))
+			fr fg fb fa))))))))
 
 (defun draw-pixel (surface x y color)
   "Set the pixel at (x, y) to the given value 
@@ -195,8 +197,12 @@
 				 (mem-aref pixel-address :unsigned-int (/ offset 4))))
 			      format
 			      r g b a)
-      (sdl-cffi::SDL-Map-RGBA format 
-			      (mem-aref r :unsigned-char)
-			      (mem-aref g :unsigned-char)
-			      (mem-aref b :unsigned-char)
-			      (mem-aref a :unsigned-char)))))
+      (let ((fr (mem-aref r :unsigned-char)) (fg (mem-aref g :unsigned-char))
+	    (fb (mem-aref b :unsigned-char)) (fa (mem-aref a :unsigned-char)))
+	(declare (type fixnum fr fg fb fa))
+	(values (sdl-cffi::SDL-Map-RGBA format 
+					(mem-aref r :unsigned-char)
+					(mem-aref g :unsigned-char)
+					(mem-aref b :unsigned-char)
+					(mem-aref a :unsigned-char))
+	      fr fg fb fa)))))

@@ -85,4 +85,13 @@
    #:mouse-2d
    
    ;; squashed.lisp
-   #:squashed))
+   #:squashed
+
+   ;; The following are only defined in the
+   ;; LISPBUILDER-SDL-CL-VECTORS-EXAMPLES package.
+   ;; cl-vectors.lisp
+   #:cl-vectors-1
+   #:cl-vectors-2
+   #:cl-vectors-3
+   #:cl-vectors-4
+   ))
