@@ -40,7 +40,7 @@
 	(aa:line-f state 175 100 75 25)
 	(let ((put-pixel (sdl:image-put-pixel sdl:*default-display* #(0 0 0))))
 	  (aa:cells-sweep state put-pixel) ; render it
-
+	  
 	  (sdl:with-events ()
 	    (:quit-event () t)
 	    (:video-expose-event () (sdl:update-display))
@@ -77,7 +77,7 @@
       (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
 
-      (zpb-ttf:with-font-loader (loader *default-font-path*)
+      (zpb-ttf:with-font-loader (loader sdl:*default-font*)
 	(aa:cells-sweep (vectors:update-state (aa:make-state)
 					      (paths-ttf:paths-from-glyph (zpb-ttf:find-glyph #\A loader)
 									  :offset (paths:make-point 50 160)
