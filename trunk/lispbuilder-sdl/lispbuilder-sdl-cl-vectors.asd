@@ -7,7 +7,7 @@
 (defsystem lispbuilder-sdl-cl-vectors
     :description "CL-VECTORS v0.1.3 glue for LISPBUILDER-SDL"
     :version "0.0.1"
-    :depends-on (cffi lispbuilder-sdl cl-aa-misc cl-vectors cl-paths-ttf)
+    :depends-on (cl-aa-misc cl-paths-ttf cl-vectors lispbuilder-sdl cffi)
     :components
     ((:module "cl-vectors"
 	      :components
