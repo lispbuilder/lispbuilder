@@ -5,6 +5,6 @@
 (export
  ;; cl-vectors.lisp
  '(*default-font-path*
-   *default-font*))
+   *default-ttf-font*))
 
 
