@@ -77,7 +77,7 @@
       (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
 
-      (zpb-ttf:with-font-loader (loader "c:\\home\\bin\\clisp\\asdf\\lispbuilder-sdl-ttf\\sdl-ttf\\vera.ttf")
+      (zpb-ttf:with-font-loader (loader *default-font-path*)
 	(aa:cells-sweep (vectors:update-state (aa:make-state)
 					      (paths-ttf:paths-from-glyph (zpb-ttf:find-glyph #\A loader)
 									  :offset (paths:make-point 50 160)

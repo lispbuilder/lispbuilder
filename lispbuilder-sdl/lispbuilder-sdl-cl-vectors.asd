@@ -12,4 +12,10 @@
     ((:module "cl-vectors"
 	      :components
 	      ((:file "package" :depends-on ("cl-vectors"))
-	       (:file "cl-vectors")))))
+	       (:file "cl-vectors")))
+     (:module "assets"
+	      :components
+	      ((:file "package" :depends-on ("globals"))
+	       (:file "globals")
+	       (:static-file "bitstream-vera-copyright")
+	       (:static-file "Vera.ttf")))))
