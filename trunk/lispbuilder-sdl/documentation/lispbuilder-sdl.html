@@ -535,8 +535,221 @@
 	    <td></td>
 	  </tr>
 	</table>
+
+    <br>&nbsp;</br><h2><a class=none name="shots">Screenshots</a></h2>
+    <img src="sdl-gfx-examples_distance-2d.png" align=left width="206" height="232" title="(sdl-examples:distance-2D)" alt="(sdl-examples:distance-2)" />
+    <img src="openrm1.jpg" align=right width="320" height="253" title="OpenRM Example" alt="OpenRM Example" />
+    <BR CLEAR=ALL>
+    <p><a href="shots.html">More Screenshots</a>.</p>
+
 	
-	
+    <br>&nbsp;</br><h2><a class=none name="downloads">Download & Installation</a></h2>
+    <ul>
+      <li>
+	<font color=red>Stable:</font> The latest stable versions of the LISPBUILDER packages for all platforms
+	are available <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">
+	  from the LISPBUILDER repository</a> on SourceForge.
+      </li>
+      <li><font color=red>Development:</font> The latest developement versions are available via anonymous SVN:
+	<pre>
+	  svn co https://lispbuilder.svn.sourceforge.net/svnroot/lispbuilder lispbuilder
+	</pre>
+<!-- 	    <font color=red>The Edi Weitz 'Starter Pack' Version:</font> The stable version of Lispbuilder,  -->
+<!-- 	    suitable for the installation of installation ~2:*~A using the Lisp Starter Pack from Edi Weitz is can be downloaded from  -->
+<!-- 	    <a href="http://www.balooga.com/lispbuilder/~2:*~A.zip">http://www.balooga.com/lispbuilder/~:*~A.zip</a>. -->
+      </li>
+    </ul>
+    
+    <br>&nbsp;</br><h2><a class=none name="installation">Installation</a></h2>
+    <h3><a class=none name="windows">Windows Installation</a></h3>
+    <p>The many Lisp development enviroments for Windows can make the initial choice of a development environment
+      daunting for newbies. If you are new to Lisp or just want to try LISPBUILDER then the fastest way to get started
+      is to follow the installation instructions below:
+    </p>
+    <ol>
+      <li>Download and Install <a href="http://www.lispworks.com/downloads/">Lispworks Personal Edition</a>.</li>
+      <li>Download and Install <a href="http://weitz.de/starter-pack/">Edi Weitz's Lisp Starter Pack</a>.</li>
+      <li>Download <a href="http://www.balooga.com/lispbuilder/config.lisp">config.lisp</a> and place into
+	the same directory as the Lisp Starter Pack in (2) above.</li>
+      <li>Run the Lisp Starter Pack from (2), selecting the
+	LISPBUILDER-* packages to install</li>
+      <li>Start Lispworks. <em>Load</em> (don't Open) the <code>start.lisp</code> file found in the 
+	Lisp Starter Pack directory</li>
+      <li>Installation is now complete. See <a href="#usage">Using Lispbuilder</a> 
+	on how to use a LISPBUILDER package.
+      </li>
+    </ol>
+
+    <h3><a class=none name="macosx">Mac OS-X Installation</a></h3>
+    <p> In addition to downloading LISPBUILDER you need to install the SDL framework 
+      <a href="http://www.libsdl.org/">available here.</a>
+    </p>
+    <p>
+      To use SDL you first need to compile the OS-X specific helper library located
+      in lispbuilder-sdl/cocoahelper, just cd to this directory and type "make".
+      Then before trying to run any SDL programs you need to load the cocoahelper
+      package:
+    </p>
+    <pre>(asdf:operate 'asdf:load-op :cocoahelper)
+    </pre>
+    <p>
+      This creates an instance of NSApplication that serves as a bridge between SDL 
+      and Cocoa, similiar to that used by the Python project Pygame. If this is
+      successful, you should see the icon for a generic OS-X ap appear in your dock.
+    </p>
+    <p>Many of the LISPBUILDER packages rely on one or more external 
+      dynamic linked libraries that are not included in the lispbuilder packages. 
+      These libraries must be installed prior to loading any of the LISPBUILDER packages. 
+      Additional information on the dependencies for a package can be found in the in the 
+      documentation for that package.
+    </p>
+      
+    <h3><a class=none name="linux">Linux Installation</a></h3>
+    
+    <p>The LISPBUILDER-SDL-* libraries are ASDF-INSTALL compatible. 
+      For example the following will install a local copy of LISPBUILDER-SDL on 
+      systems that are configured for ASDF-INSTALL.
+    </p>
+    <pre>
+      (asdf-install:install "lispbuilder-sdl-gfx_7.1.tgz")
+    </pre>
+    <p>
+      Note that the LISPBUILDER-SDL-* libraries are not yet available on the 
+      CLiki.
+    </p>
+    <ul>
+      <li><u>ASDF</u>: For users of SBCL, OpenMCL, ECL or ACL, ASDF is already installed. Otherwise, Linux users 
+	please refer to the official
+	<a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/README?rev=HEAD&content-type=text/plain">ASDF README</a> for installation instructions.</li>
+      <li><u>CFFI</u>: It's always best to use the latest development tarball for CFFI 
+	<a href="http://common-lisp.net/project/cffi/tarballs/?M=D">available here</a>.</li>
+    </ul>
+    <p>Many of the LISPBUILDER packages rely on one or more external 
+      dynamic linked libraries (.so) that are not included in the lispbuilder packages. 
+      These libraries must be installed prior to loading any of the LISPBUILDER packages. 
+      Use the package manager for your distro to download and install these libraries. 
+      Additional information on the dependencies for a package can be found in the in the 
+      documentation for that package.
+    </p>
+    <p>
+      <font color=red>NOTE:</font> CFFI will attempt to 
+      load the .so libraries from the standard Linux .so library search path.
+    </p>
+    
+    <h3><a class=none name="winalt">Windows Alternate Installation</a></h3>
+    <p>This section describes a more detailed process of installing and 
+      configuring LISPBUILDER. For example, 
+      when the user has an existing Lisp environment installed.
+    </p>
+    <h4><a class=none name="prereq">Prerequisites and Dependencies</a></h4>
+    <p>Some LISPBUILDER packages (LISPBUILDER-SDL) require that 
+      the <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
+      and <a href="http://common-lisp.net/project/cffi">CFFI</a> are installed. 
+      The installation of these packages is descibed in <a href="#Win32: ASDF and CFFI">following section</a>.
+    </p>
+
+    <h4><a class=none name="asdfcffi">Configuring ASDF and CFFI</a></h4>
+    <p>
+      This section describes the installation of the ASDF and CFFI 
+      packages for CLISP in Windows.</p>
+    <ul>
+      <li>install <a href="http://clisp.cons.org/">CLISP</a> to, e.g.  
+	<pre>c:\programme\clisp-2.38\</pre></li>
+      <li>create a directory asdf in the clisp-2.38 directory</li>
+      <pre>c:\programme\clisp-2.38\asdf\</pre>
+      <li>save <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">asdf.lisp</a> 
+	in the asdf directory
+	<pre>c:\programme\clisp-2.38\asdf\asdf.lisp</pre></li>
+      <li> download <a href="http://common-lisp.net/project/cffi/tarballs/cffi-060225.tar.gz">CFFI</a> 
+	and unpack it (use <a href="http://www.7-zip.org/">7-Zip</a> or another program 
+	to unpack .tgz files) in the asdf directory, rename the directory to &quot;cffi&quot;. So you should have 
+	a file like:
+	<pre>c:\programme\clisp-2.38\asdf\cffi\cffi.asd</pre>
+      </li>
+    </ul>
+
+    <h4><a class=none name="packinstall">Package Installation</a></h4>
+    <p>This section describes the installation of the LISPBUILDER-SDL package.</p>
+    <ul>
+      <li> download the latest version of the 
+	<a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=181396">lispbuilder-sdl</a> 
+	package from sourceforge and unpack it to the asdf directory, e.g.
+	<pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl_0.7.1\lispbuilder-sdl.asd</pre>
+      </li>
+    </ul>
+
+    <h4><a class=none name="dllinstall">Binary Installation</a></h4>
+    <p>This section describes the installation of the SDL binaries.</p>
+    <ul>
+      <li> install the SDL dynamic library by doing <u>one</u> of the following: </li>
+	<ul>
+	  <li> download <a href="http://www.libsdl.org/release/SDL-1.2.11-win32.zip">SDL</a> and 
+	    copy the SDL.dll to following system folder:
+	    <pre>c:\windows\system32</pre>
+	  </li>
+	  <li> download the <a href="http://sourceforge.net/project/showfiles.php?group_id=159740&package_id=182505">lispbuilder-sdl-binaries</a> package from sourceforge and unpack it into the asdf directory, e.g.
+	    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\lispbuilder-sdl-binaries.asd</pre>
+	    <pre>c:\programme\clisp-2.38\asdf\lispbuilder-sdl\bin\SDL.dll</pre>
+	  </li>
+	</ul>
+    </ul>
+
+    
+    <br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER</a></h2>
+    <p>Enter the following at the REPL to load the LISPBUILDER-SDL package:</p>
+    <pre>
+      (asdf:operate 'asdf:load-op :lispbuilder-sdl)
+    </pre>
+    <p>ASDF will take care of loading the CFFI and :lispbuilder-sdl dependencies. 
+      All dependencies (for example, external DLL or .SO libraries) will also be loaded
+      into the Lisp image at this time.</p>
+    <p>Replace <code>:lispbulder-sdl</code> above to load the 
+      other LISPBUILDER packages. For example:
+      <ul>
+	<li><code>(asdf:operate 'asdf:load-op :lispbuilder-sdl-image)</code> will load the LISPBUILDER-SDL-IMAGE package.</li>
+	<li><code>(asdf:operate 'asdf:load-op :lispbuilder-windows)</code> will load the LISPBUILDER-WINDOWS package.</li>
+      </ul>
+    </p>
+      
+    <p>Now run <a href="#examples">one of the examples</a>.</p>
+      
+    
+    <br>&nbsp;</br><h2><a class=none name="examples">Running examples from LISPBUILDER-SDL-EXAMPLES</a></h2>
+    <p>Enter the following at the REPL to load the examples in the LISPBUILDER-SDL-EXAMPLES package:</p>
+    <pre>
+      (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+    </pre>
+    
+    <div class="example">
+      <pre>
+	(sdl-examples:recursive-rects)
+      </pre>     
+      <p>You should see a window like this:</p>
+      <img src="sdl1.png" width="320" height="253" title="(sdl-examples:recursive-rects)" alt="recursive-rects" />
+    </div>
+    
+    <div class="example">
+      <p>After closing the window, you can try the painter demo where you can draw with the mouse:</p>
+      <pre>
+	(sdl-examples:mouse-painter)
+      </pre>
+      
+      <p>Groovy. You should see a window like this:</p>
+      <img src="groovy1.png" width="320" height="253" title="(sdl-examples:mouse-painter)" alt="mouse-painter" />
+    </div>
+
+    <br>&nbsp;</br><h2><a class=none name="swig">Generating the Initial SWIG CFFI Wrappers</a></h2>
+    <p><a href="http://www.swig.org">SWIG</a> is used to create the low level CFFI bindings for most of the LISPBUILDER-*
+      packages. SWIG generates CFFI wrappers from C header files using the translation and substitution rules 
+      specified in an interface (.i) file. If a LISPBUILDER package uses SWIG then the corresponding interface file 
+      will be found in the <code>/build</code> directory. For example, <code>LISPBUILDER-SDL/build/sdlswig.i</code>.
+    </p>
+    <p>
+      A <code>post-swig.lisp</code> file contains additional C header file overrides. These overrides cannot be included 
+      in the main SWIG interface file as SWIG places all manual overrides in the .(i) interface file prior to 
+      the CFFI generated bindings. The overrides in the post-swig.lisp file must be located post- SWIG generated bindings.
+    </p>
+        
 	<br>&nbsp;</br><h2><a class=none name="downloads">Downloads</a></h2>
 	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#downloads">the LISPBUILDER documentation</a>
 	  for downloads.
