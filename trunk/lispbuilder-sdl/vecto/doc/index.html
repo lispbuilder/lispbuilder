@@ -1,0 +1,855 @@
+<html>
+<head>
+<title>Vecto - Simple Vector Drawing with Common Lisp</title>
+<style type="text/css">
+  a, a:visited { text-decoration: none }
+  a[href]:hover { text-decoration: underline }
+  pre { background: #DDD; padding: 0.25em }
+  p.download { color: red }
+  .transparent { background-image: url(background.gif) }
+</style>
+</head>
+
+<body>
+
+<h2>Vecto - Simple Vector Drawing with Common Lisp</h2>
+
+<blockquote class='abstract'>
+<h3>Abstract</h3>
+
+<p>Vecto is a simplified interface to the
+powerful <a href="http://projects.tuxee.net/cl-vectors/">CL-VECTORS</a>
+vector rasterization library. It presents a function-oriented
+interface similar to <a href="http://www.cliki.net/CL-PDF">CL-PDF</a>,
+but the results can be saved to a PNG instead of a PDF file. Since
+Vecto and all supporting libraries are written completely in Common
+Lisp, without depending on external non-Lisp libraries, it should work
+in any Common Lisp environment. Vecto is available under a BSD-like
+license. The current version is 1.0.2, released on October 1st,
+2007.
+
+<p>Vecto is used by <a href="http://wigflip.com/easystreet/">Easystreet</a>.
+
+<p>The canonical location for Vecto
+is <a href="http://www.xach.com/lisp/vecto/">http://www.xach.com/lisp/vecto/</a>.
+
+<p class='download'>Download shortcut:</p>
+
+<p><a href="http://www.xach.com/lisp/vecto.tgz">http://www.xach.com/lisp/vecto.tgz</a>
+
+</blockquote>
+
+<h3>Contents</h3>
+
+<ol>
+<li> <a href='#sect-overview-and-limitations'>Overview and Limitations</a>
+<li> <a href='#sect-examples'>Examples</a>
+<li> <a href='#sect-dictionary'>Dictionary</a>
+
+<ul>
+  <li> <a href='#sect-canvases'>Canvases</a>
+    <ul>
+      <li> <a href='#with-canvas'><tt>with-canvas</tt></a>
+      <li> <a href='#clear-canvas'><tt>clear-canvas</tt></a>
+      <li> <a href='#save-png'><tt>save-png</tt></a>
+      <li> <a href='#save-png-stream'><tt>save-png-stream</tt></a>
+    </ul>
+
+  <li> <a href='#sect-graphics-state'>Graphics State</a>
+    <ul>
+      <li> <a href='#with-graphics-state'><tt>with-graphics-state</tt></a>
+      <li> <a href='#set-rgba-fill'><tt>set-rgba-fill</tt></a>
+      <li> <a href='#set-rgba-fill'><tt>set-rgb-fill</tt></a>
+      <li> <a href='#set-rgba-stroke'><tt>set-rgba-stroke</tt></a>
+      <li> <a href='#set-rgba-stroke'><tt>set-rgb-stroke</tt></a>
+      <li> <a href='#set-line-cap'><tt>set-line-cap</tt></a>
+      <li> <a href='#set-line-join'><tt>set-line-join</tt></a>
+      <li> <a href='#set-line-width'><tt>set-line-width</tt></a>
+      <li> <a href='#set-dash-pattern'><tt>set-dash-pattern</tt></a>
+      <li> <a href='#translate'><tt>translate</tt></a>
+      <li> <a href='#rotate'><tt>rotate</tt></a>
+      <li> <a href='#scale'><tt>scale</tt></a>
+      <li> <a href='#skew'><tt>skew</tt></a>
+      <li> <a href='#clip-path'><tt>clip-path</tt></a>
+      <li> <a href='#even-odd-clip-path'><tt>even-odd-clip-path</tt></a>
+    </ul>
+
+  <li> <a href='#sect-paths'>Paths</a>
+    <ul>
+      <li> <a href='#move-to'><tt>move-to</tt></a>
+      <li> <a href='#line-to'><tt>line-to</tt></a>
+      <li> <a href='#curve-to'><tt>curve-to</tt></a>
+      <li> <a href='#quadratic-to'><tt>quadratic-to</tt></a>
+      <li> <a href='#close-subpath'><tt>close-subpath</tt></a>
+      <li> <a href='#rectangle'><tt>rectangle</tt></a>
+      <li> <a href='#centered-ellipse-path'><tt>centered-ellipse-path</tt></a>
+      <li> <a href='#centered-circle-path'><tt>centered-circle-path</tt></a>
+    </ul>
+
+  <li> <a href='#sect-painting'>Painting</a>
+    <ul>
+      <li> <a href='#fill-path'><tt>fill-path</tt></a>
+      <li> <a href='#even-odd-fill'><tt>even-odd-fill</tt></a>
+      <li> <a href='#stroke'><tt>stroke</tt></a>
+      <li> <a href='#fill-and-stroke'><tt>fill-and-stroke</tt></a>
+      <li> <a href='#even-odd-fill-and-stroke'><tt>even-odd-fill-and-stroke</tt></a>
+      <li> <a href='#end-path-no-op'><tt>end-path-no-op</tt></a>
+    </ul>
+
+  <li> <a href='#sect-text'>Text</a>
+    <ul>
+      <li> <a href='#get-font'><tt>get-font</tt></a>
+      <li> <a href='#set-font'><tt>set-font</tt></a>
+      <li> <a href='#draw-string'><tt>draw-string</tt></a>
+      <li> <a href='#draw-centered-string'><tt>draw-centered-string</tt></a>
+      <li> <a href='#string-bounding-box'><tt>string-bounding-box</tt></a>
+    </ul>
+
+  <li> <a href='#sect-miscellaneous'>Miscellaneous</a>
+    <ul>
+      <li> <a href='#const-kappa'><tt>+kappa+</tt></a>
+    </ul>
+
+</ul>
+
+<li> <a href='#sect-references'>References</a>
+<li> <a href='#sect-feedback'>Feedback</a>
+
+</ol>
+
+<a name='sect-overview-and-limitations'><h3>Overview and Limitations</h3></a>
+
+<p>Vecto is a library that provides a simple interface to the
+the <a href="http://projects.tuxee.net/cl-vectors/">CL-VECTORS</a>
+vector drawing library. It supports drawing on a canvas and saving the
+results to a PNG file. 
+
+<p>Vecto depends on the following libraries:
+
+<ul>
+<li> <a href="http://projects.tuxee.net/cl-vectors/">CL-VECTORS</a>
+<li> <a href="http://www.xach.com/lisp/zpb-ttf/">ZPB-TTF</a>
+<li> <a href="http://www.cliki.net/salza">Salza</a>
+<li> <a href="http://www.cliki.net/salza-png">Salza-PNG</a>
+</ul>
+
+<p>The easiest way to install Vecto and all its dependencies is
+with <a href="http://www.cliki.net/asdf-install">ASDF-Install</a>.
+
+<p>Vecto's function interface is similar to the
+PDF vector description and painting interface: you create images by
+describing vector paths, then using stroke or fill operations to paint
+to the canvas.
+
+<p>Vecto's color system uses red, green, blue, and alpha color
+components for drawing. The results can be be saved to a PNG with an
+alpha channel.
+
+<p>Vecto's coordinate system starts at the lower-left corner of the
+image, and increases rightwards along the X axis and upwards along the
+Y axis.
+
+<p>All measurements are in pixels.
+
+<p>PDF is a feature-rich system. Vecto supports a small subset of
+PDF-style operations. In particular, it does not support:
+
+<ul>
+<li> sampled images
+<li> pattern, gradient, or functional fill
+<li> complex layout of text
+<li> PostScript fonts
+<li> non-RGB color spaces
+</ul>
+
+<p>Other limitations:
+
+<ul>
+<li> No output formats other than 8-bit, truecolor-alpha PNGs
+<li> No access to underlying pixel data
+</ul>
+
+<p>Related libraries:
+
+<ul>
+  <li> <a href="http://common-lisp.net/project/imago/">Imago</a>
+    
+  <li> <a href="http://cyrusharmon.org/projects?project=ch-image">ch-image</a>
+
+  <li> <a href="http://ygingras.net/poly-pen">Poly-pen</a>
+</ul>
+
+
+<a name='sect-examples'><h3>Examples</h3></a>
+
+<p>All examples are available in <tt>doc/examples.lisp</tt> in the Vecto
+distribution. That file starts with:
+
+<pre>
+(defpackage #:vecto-examples
+  (:use #:cl #:vecto))
+
+(in-package #:vecto-examples)
+</pre>
+
+
+<pre>
+<img border=0 align=right src='lambda-example.png'
+>(defun radiant-lambda (file)
+  (<a href='#with-canvas'>with-canvas</a> (:width 90 :height 90)
+    (let ((font (<a href='#get-font'>get-font</a> "times.ttf"))
+          (step (/ pi 7)))
+      (<a href='#set-font'>set-font</a> font 40)
+      (<a href='#translate'>translate</a> 45 45)
+      (<a href='#draw-centered-string'>draw-centered-string</a> 0 -10 #(#x3BB))
+      (<a href='#set-rgb-stroke'>set-rgb-stroke</a> 1 0 0)
+      (<a href='#centered-circle-path'>centered-circle-path</a> 0 0 35)
+      (<a href='#stroke'>stroke</a>)
+      (<a href='#set-rgba-stroke'>set-rgba-stroke</a> 0 0 1.0 0.5)
+      (<a href='#set-line-width'>set-line-width</a> 4)
+      (dotimes (i 14)
+        (<a href='#with-graphics-state'>with-graphics-state</a>
+          (<a href='#rotate'>rotate</a> (* i step))
+          (<a href='#move-to'>move-to</a> 30 0)
+          (<a href='#line-to'>line-to</a> 40 0)
+          (stroke)))
+      (<a href='#save-png'>save-png</a> file))))
+</pre>
+
+<pre>
+<img align=right src='feedlike-icon.png'
+>(defun feedlike-icon (file)
+  (with-canvas (:width 100 :height 100)
+    (set-rgb-fill 1.0 0.65 0.3)
+    (<a href='#rounded-rectangle'>rounded-rectangle</a> 0 0 100 100 10 10)
+    (<a href='#fill-path'>fill-path</a>)
+    (set-rgb-fill 1.0 1.0 1.0)
+    (centered-circle-path 20 20 10)
+    (fill-path)
+    (flet ((quarter-circle (x y radius)
+             (let ((kappa (* <a href='#const-kappa'>+kappa+</a> radius)))
+               (move-to (+ x radius) y)
+               (curve-to (+ x radius) (+ y kappa)
+                         (+ x kappa) (+ y radius)
+                         x (+ y radius)))))
+      (set-rgb-stroke 1.0 1.0 1.0)
+      (set-line-width 15)
+      (quarter-circle 20 20 30)
+      (stroke)
+      (quarter-circle 20 20 60)
+      (stroke))
+    (save-png file)))
+</pre>
+
+<pre><div style='float: right' class='transparent'><img src='star-clipping.png'
+></div>(defun star-clipping (file)
+  (with-canvas (:width 200 :height 200)
+    (let ((size 100)
+          (angle 0)
+          (step (* 2 (/ (* pi 2) 5))))
+      (translate size size)
+      (move-to 0 size)
+      (dotimes (i 5)
+        (setf angle (+ angle step))
+        (line-to (* (sin angle) size)
+                 (* (cos angle) size)))
+      (<a href='#even-odd-clip-path'><tt>even-odd-clip-path</tt></a>)
+      (<a href='#end-path-no-op'><tt>end-path-no-op</tt></a>)
+      (flet ((circle (distance)
+               (<a href='#set-rgba-fill'><tt>set-rgba-fill</tt></a> distance 0 0
+                              (- 1.0 distance))
+               (centered-circle-path 0 0 (* size distance))
+               (fill-path)))
+        (loop for i downfrom 1.0 by 0.05
+              repeat 20 do
+              (circle i)))
+      (save-png file))))
+</pre>
+
+<a name='sect-dictionary'><h3>Dictionary</h3></a>
+
+<p>The following symbols are exported from the <tt>VECTO</tt> package.
+
+<a name='sect-canvases'><h4>Canvases</h4></a>
+
+<p><a name='with-canvas'>[Macro]</a><br>
+<b>with-canvas</b> (<tt>&amp;key</tt> <i>width</i> <i>height</i>)
+<tt>&amp;body</tt> <i>body</i>
+
+<blockquote>
+Evaluates <i>body</i> with a canvas established with the specified
+dimensions as the target for drawing commands. The canvas is initially
+completely clear (all pixels have 0 alpha).
+</blockquote>
+
+
+<p><a name='clear-canvas'>[Function]</a><br>
+<b>clear-canvas</b> => |
+
+<blockquote>
+Completely fills the canvas with the current fill color. Any marks on
+the canvas are cleared.
+</blockquote>
+
+
+<p><a name='save-png'>[Function]</a><br>
+<b>save-png</b> <i>file</i> => <i>truename</i>
+
+<blockquote>
+Writes the contents of the canvas as the PNG <i>file</i>, and returns
+the truename of <i>file</i>.
+</blockquote>
+
+
+<p><a name='save-png-stream'>[Function]</a><br>
+<b>save-png-stream</b> <i>stream</i> => |
+
+<blockquote>
+Writes the contents of the canvas as a PNG to <i>stream</i>, which
+must accept <tt>(unsigned-byte&nbsp;8)</tt> data.
+</blockquote>
+
+
+<a name='sect-graphics-state'><h4>Graphics State</h4></a>
+
+<p>The graphics state stores several parameters used for graphic
+operations.
+
+<p><a name='with-graphics-state'>[Macro]</a><br>
+<b>with-graphics-state</b> <tt>&amp;body</tt> <i>body</i> 
+
+<blockquote>
+Evaluates the forms of <i>body</i> with a copy of the current graphics
+state. Any modifications to the state are undone at the end of the
+form.
+</blockquote>
+
+
+<p><a name='set-rgba-fill'>[Functions]</a><br>
+<b>set-rgba-fill</b> <i>r</i> <i>g</i> <i>b</i> <i>alpha</i> => |<br>
+<b>set-rgb-fill</b> <i>r</i> <i>g</i> <i>b</i> => |
+
+<blockquote>
+Sets the fill color. <i>r</i>, <i>g</i>, <i>b</i>, and <i>alpha</i>
+should be in the range of 0.0 to 1.0.
+
+<p><tt>set-rgb-fill</tt> is the same as <tt>set-rgba-fill</tt> with an
+implicit alpha value of 1.0.
+
+<p>The fill color is used
+for <a
+href='#clear-canvas'><tt>CLEAR-CANVAS</tt></a>, <a
+href='#fill-path'><tt>FILL-PATH</tt></a>, <a
+href='#even-odd-fill'><tt>EVEN-ODD-FILL</tt></a>, <a
+href='#fill-and-stroke'><tt>FILL-AND-STROKE</tt></a>, <a
+href='#even-odd-fill-and-stroke'><tt>EVEN-ODD-FILL-AND-STROKE</tt></a>,
+and <a href='#draw-string'><tt>DRAW-STRING</tt></a>.
+
+</blockquote>
+
+<p><a name='set-rgba-stroke'>[Functions]</a><br>
+<b>set-rgba-stroke</b> <i>r</i> <i>g</i> <i>b</i> <i>alpha</i> => |<br>
+<b>set-rgb-stroke</b> <i>r</i> <i>g</i> <i>b</i> => |
+
+<blockquote>
+Sets the stroke color. <i>r</i>, <i>g</i>, <i>b</i>, and <i>alpha</i>
+should be in the range of 0.0 to 1.0.
+
+<p><tt>set-rgb-stroke</tt> is the same as <tt>set-rgba-stroke</tt>
+with an implicit alpha value of 1.0.
+
+<p>The stroke color is used for <a href='#stroke'><tt>STROKE</tt></a>,
+<a href='#fill-and-stroke'><tt>FILL-AND-STROKE</tt></a>,
+and <a href='#even-odd-fill-and-stroke'><tt>EVEN-ODD-FILL-AND-STROKE</tt></a>.
+</blockquote>
+
+
+<p><a name='set-line-cap'>[Function]</a><br>
+<b>set-line-cap</b> <i>style</i> => |
+
+<blockquote>
+Sets the line cap style to <i>style</i>, which must be one
+of <tt>:BUTT</tt>, <tt>:SQUARE</tt>, or <tt>:ROUND</tt>. The initial
+value is <tt>:BUTT</tt>.
+
+<p><table cellspacing=5 id="line-cap">
+<tr>
+ <td align=center><img src="cap-style-butt.png"></td>
+ <td align=center><img src="cap-style-square.png"></td>
+ <td align=center><img src="cap-style-round.png"></td>
+</tr>
+<tr>
+ <td align=center><tt>:BUTT</tt></td>
+ <td align=center><tt>:SQUARE</tt></td>
+ <td align=center><tt>:ROUND</tt></td>
+</tr>
+</table>
+
+</blockquote>
+
+
+<p><a name='set-line-join'>[Function]</a><br>
+<b>set-line-join</b> <i>style</i> => |
+
+<blockquote>
+Sets the line join style to <i>style</i>, which must be one
+of <tt>:MITER</tt>, <tt>:BEVEL</tt>, or <tt>:ROUND</tt>. The initial
+value is <tt>:MITER</tt>.
+
+<p><table cellspacing=5 id="line-join">
+<tr>
+ <td align=center><img src="join-style-miter.png"></td>
+ <td align=center><img src="join-style-bevel.png"></td>
+ <td align=center><img src="join-style-round.png"></td>
+</tr>
+<tr>
+ <td align=center><tt>:MITER</tt></td>
+ <td align=center><tt>:BEVEL</tt></td>
+ <td align=center><tt>:ROUND</tt></td>
+</tr>
+</table>
+
+</blockquote>
+
+
+<p><a name='set-line-width'>[Function]</a><br>
+<b>set-line-width</b> <i>width</i> => |
+
+<blockquote>
+Sets the line width for strokes to <i>width</i>.
+</blockquote>
+
+
+
+<p><a name='set-dash-pattern'>[Function]</a><br>
+<b>set-dash-pattern</b> <i>dash-vector</i> <i>phase</i> => |
+
+<blockquote>
+Sets the dash pattern according to <i>dash-vector</i> and <i>phase</i>.
+
+<p><i>dash-vector</i> should be a vector of numbers denoting on and
+off patterns for a stroke. An empty <i>dash-vector</i> is the same as
+having no dash pattern at all.
+
+<p><i>phase</i> is how far along the dash pattern to proceed before
+applying the pattern to the current stroke.
+
+<p>
+<table>
+  <tr>
+    <th>Appearance</th>
+    <th>Dash Vector and Phase</th>
+  </tr>
+  <tr>
+    <td align=center><img src="dash-pattern-none.png"></td>
+    <td align=left><tt>#() 0</tt></td>
+  </tr>
+  <tr>
+    <td align=center><img src="dash-pattern-a.png"></td>
+    <td align=left><tt>#(30 30) 0</tt></td>
+  </tr>
+  <tr>
+    <td align=center><img src="dash-pattern-b.png"></td>
+    <td align=left><tt>#(30 30) 15</tt></td>
+  </tr>
+  <tr>
+    <td align=center><img src="dash-pattern-c.png"></td>
+    <td align=left><tt>#(10 20 10 40) 0</tt></td>
+  </tr>
+  <tr>
+    <td align=center><img src="dash-pattern-d.png"></td>
+    <td align=left><tt>#(10 20 10 40) 13</tt></td>
+  </tr>
+  <tr>
+    <td align=center><img src="dash-pattern-e.png"></td>
+    <td align=left><tt>#(30 30) 0</tt>, <tt>:ROUND</tt> line caps</td>
+  </tr>
+</table>
+</blockquote>
+
+
+<p><a name='translate'>[Function]</a><br>
+<b>translate</b> <i>x</i> <i>y</i> => |
+
+<blockquote>
+Offsets the coordinate system by <i>x</i> units horizontally
+and <i>y</i> units vertically.
+</blockquote>
+
+
+<p><a name='rotate'>[Function]</a><br>
+<b>rotate</b> <i>radians</i> => |
+
+<blockquote>
+Rotates the coordinate system by <i>radians</i>.
+</blockquote>
+
+
+<p><a name='scale'>[Function]</a><br>
+<b>scale</b> <i>sx</i> <i>sy</i> => |
+
+<blockquote>
+Scales the coordinate system by <i>sx</i> horizontally
+and <i>sy</i> vertically.
+</blockquote>
+
+
+<p><a name='skew'>[Function]</a><br>
+<b>skew</b> <i>ax</i> <i>ay</i> => |
+
+<blockquote>
+Skews the X axis of the coordinate system by <i>ax</i> radians and the
+Y axis by <i>ay</i> radians.
+</blockquote>
+
+
+<p><a name='clip-path'>[Function]</a><br>
+<b>clip-path</b> => |
+
+<blockquote>
+Defines a clipping path based on the current path. It is not applied
+immediately, but is created after after the painting is done in the
+next call to one
+of <a
+href='#fill-path'><tt>FILL-PATH</tt></a>, <a
+href='#even-odd-fill'><tt>EVEN-ODD-FILL</tt></a>, <a
+href='#fill-and-stroke'><tt>FILL-AND-STROKE</tt></a>, <a
+href='#even-odd-fill-and-stroke'><tt>EVEN-ODD-FILL-AND-STROKE</tt></a>,
+or <a href='#end-path-no-op'><tt>END-PATH-NO-OP</tt></a>.
+
+<p>The clipping path initially covers the entire canvas; no clipping
+is done. Subsequent calls to <tt>CLIP-PATH</tt> set the clipping path
+to the intersection of the established clipping path and the new
+clipping path, and all drawing will be done within the outline of the
+clipping path.
+
+<p>The outline of the clipping path is defined with the nonzero
+winding rule, as with <a href='#fill-path'><tt>FILL-PATH</tt></a>.
+
+<p>There is no way to enlarge the clipping path. However, the clipping
+path is part of the graphics state, so changes may be localized by
+using <a href='#with-graphics-state'><tt>WITH-GRAPHICS-STATE</tt></a>.
+
+
+<p><table>
+<tr>
+ <td><img src="clip-unclipped.png"></td>
+ <td>A filled red rectangle, not clipped</td>
+</tr>
+<tr>
+ <td><img src="clip-to-circle.png"></td>
+ <td>The same rectangle drawn with a circle clipping path in effect</td>
+</tr>
+<tr>
+ <td><img src="clip-to-rectangle.png"></td>
+ <td>Clipped to a rounded rectangle clipping path</td>
+</tr>
+<tr>
+ <td><img src="clip-to-both.png"></td>
+ <td>Clipped to the intersection of the circle and rounded rectangle clipping paths</td>
+</tr>
+</table>
+
+
+
+</blockquote>
+
+
+<p><a name='even-odd-clip-path'>[Function]</a><br>
+<b>even-odd-clip-path</b> => |
+
+<blockquote>
+Like <a href='#clip-path'><tt>CLIP-PATH</tt></a>, but uses the
+even/odd fill rule to determine the outline of the clipping path.
+</blockquote>
+
+
+<a name='sect-paths'><h4>Paths</h4></a>
+
+<p>Paths are used to create lines for stroking or outlines for
+filling. Paths consist of straight lines and curves. Paths consist of
+one or more subpaths.
+
+<p><a name='move-to'>[Function]</a><br>
+<b>move-to</b> <i>x</i> <i>y</i> => |
+
+<blockquote>
+Starts a new subpath at (<i>x</i>,<i>y</i>). <tt>move-to</tt> must be the
+first step of constructing a subpath.
+</blockquote>
+
+
+<p><a name='line-to'>[Function]</a><br>
+<b>line-to</b> <i>x</i> <i>y</i> => |
+
+<blockquote>
+Appends a straight line ending at (<i>x</i>,<i>y</i>) to the
+current subpath.
+</blockquote>
+
+
+<p><a name='curve-to'>[Function]</a><br>
+<b>curve-to</b>
+<i>cx1</i> <i>cy1</i>
+<i>cx2</i> <i>cy2</i>
+<i>x</i> <i>y</i> => |
+
+<blockquote>
+Appends a
+cubic <a href="http://en.wikipedia.org/wiki/B%C3%A9zier_curve">B&eacute;zier
+curve</a> ending at (<i>x</i>,<i>y</i>) and with control
+points (<i>cx1</i>,<i>cy1</i>) and (<i>cx2</i>,<i>cy2</i>) to the current
+subpath.
+</blockquote>
+
+
+<p><a name='quadratic-to'>[Function]</a><br>
+<b>quadratic-to</b>
+<i>cx</i> <i>cy</i>
+<i>x</i> <i>y</i> => |
+
+<blockquote>
+Appends a quadratic B&eacute;zier curve ending at (<i>x</i>,<i>y</i>)
+and with the control point (<i>cx</i>,<i>cy</i>) to the current
+subpath.
+</blockquote>
+
+
+<p><a name='close-subpath'>[Function]</a><br>
+<b>close-subpath</b> => |
+
+<blockquote>
+Closes the current subpath. If the current point is not the same as the
+starting point for the subpath, appends a straight line from the
+current point to the starting point of the current subpath.
+
+<p>Subpaths with start and end points that coincidentally overlap are
+not the same as closed subpaths. The distinction is important when
+stroking:
+
+<p><table cellpadding=5>
+ <tr>
+   <td align=center><img src="open-subpath.png"></td>
+   <td align=center><img src="closed-subpath.png"></td>
+ </tr>
+ <tr>
+   <td align=center>Open subpath</td>
+   <td align=center>Closed subpath</td>
+ </tr>
+</table>
+
+<p>If the subpath is not closed, the start and points of the subpath
+  will be drawn with the current line cap style. If the path is
+  closed, the start and endpoints will be treated as joined and drawn
+  with the line join style.
+</blockquote>
+
+
+<p><a name='rectangle'>[Function]</a><br>
+<b>rectangle</b> <i>x</i> <i>y</i> <i>width</i> <i>height</i>
+
+<blockquote>
+Creates a rectangular subpath with the given <i>width</i>
+and <i>height</i> that has its lower-left corner at
+(<i>x</i>,<i>y</i>). It is effectively the same as:
+
+<pre>
+(move-to x y)
+(line-to (+ x width) y)
+(line-to (+ x width) (+ y height))
+(line-to x (+ y height))
+(close-subpath)
+</pre>
+</blockquote>
+
+<p><a name='centered-ellipse-path'>[Function]</a><br>
+<b>centered-ellipse-path</b> 
+<i>x</i> <i>y</i>
+<i>rx</i> <i>ry</i>
+
+<blockquote>
+Adds a closed subpath that outlines an ellipse centered at
+(<i>x</i>,<i>y</i>) with an X radius of <i>rx</i> and a Y radius
+of <i>ry</i>.
+</blockquote>
+
+<p><a name='centered-circle-path'>[Function]</a><br>
+<b>centered-circle-path</b> <i>x</i> <i>y</i> <i>radius</i> => |
+
+<blockquote>
+Adds a closed subpath that outlines a circle centered at
+(<i>x</i>,<i>y</i>) with a radius of <i>radius</i>. It is effectively
+the same as:
+
+<pre>
+(centered-ellipse-path x y radius radius)
+</pre>
+</blockquote>
+
+
+
+<a name='sect-painting'><h4>Painting</h4></a>
+
+<p>After a path is defined, filling, stroking, or both will use the
+path to apply color to the canvas. After a path has been filled or
+stroked, it is no longer active; it effectively disappears.
+
+
+<p><a name='fill-path'>[Function]</a><br>
+<b>fill-path</b> => |
+
+<blockquote>
+Fills the current path with the fill color. If the path has not been
+explicitly closed
+with <a href='#close-subpath'><tt>CLOSE-SUBPATH</tt></a>, it is
+implicitly closed before filling.  The non-zero winding rule is used
+to determine what areas are considered inside the path.
+</blockquote>
+
+
+<p><a name='even-odd-fill'>[Function]</a><br>
+<b>even-odd-fill</b> => |
+
+<blockquote>
+The same as <a href='#fill-path'><tt>FILL-PATH</tt></a>, but uses the
+even/odd rule to determine what areas are considered inside the path.
+</blockquote>
+
+
+<p><a name='stroke'>[Function]</a><br>
+<b>stroke</b> => |
+
+<blockquote>
+Strokes the current path. The line width, stroke color, line join
+style, line cap style, and dash pattern and phase determine how the
+stroked path will appear on the canvas.
+</blockquote>
+
+
+<p><a name='fill-and-stroke'>[Function]</a><br>
+<b>fill-and-stroke</b> => |
+
+<blockquote>
+Fills the current path, then strokes it.
+</blockquote>
+
+
+<p><a name='even-odd-fill-and-stroke'>[Function]</a><br>
+<b>even-odd-fill-and-stroke</b> => |
+
+<blockquote>
+Fills the current path using the even/odd rule, then strokes it.
+</blockquote>
+
+
+<p><a name='end-path-no-op'>[Function]</a><br>
+<b>end-path-no-op</b> => |
+
+<blockquote>
+Ends the current path without painting anything. If a clipping path
+has been specified with <a href='#clip-path'><tt>CLIP-PATH</tt></a>
+or <a href='#even-odd-clip-path'><tt>EVEN-ODD-CLIP-PATH</tt></a>, it
+will be created by <tt>end-path-no-op</tt>.
+</blockquote>
+
+
+
+<a name='sect-text'><h4>Text</h4></a>
+
+<p>Vecto can draw text to a canvas. It loads glyph shapes from
+  TrueType font files
+  with <a href="http://www.xach.com/lisp/zpb-ttf/">ZPB-TTF</a>. 
+
+<p><a name='get-font'>[Function]</a><br>
+<b>get-font</b> <i>font-file</i> => <i>font-loader</i>
+
+<blockquote>
+Creates and returns a ZPB-TTF font loader object
+from <i>font-file</i>. Any font loader created this way will
+automatically be closed at the end of its
+enclosing <a href='#with-canvas'><tt>WITH-CANVAS</tt></a> form.
+</blockquote>
+
+
+<p><a name='set-font'>[Function]</a><br>
+<b>set-font</b> <i>font-loader</i> <i>size</i> => |
+
+<blockquote>
+Sets the active font to the font associated
+with <i>font-loader</i>, scaled to <i>size</i> units per line.
+
+<p>The first argument can be any ZPB-TTF font loader; it need not be
+created via <a href='#get-font'><tt>GET-FONT</tt></a>. However, only
+font loaders created via <tt>GET-FONT</tt> will be automatically
+closed at the end of <a href='#with-canvas'><tt>WITH-CANVAS</tt></a>.
+</blockquote>
+
+
+<p><a name='draw-string'>[Function]</a><br>
+<b>draw-string</b> <i>x</i> <i>y</i> <i>string</i> => |
+
+<blockquote>
+Draws <i>string</i> on the canvas with the active font. The glyph
+origin of the first character in the string is positioned at <i>x</i>
+and the baseline of the string is positioned at <i>y</i>. The text is
+filled with the current <a href='#set-rgba-fill'>fill color</a>.
+
+<p>The string may be a specialized vector of characters (a true CL
+string) or a vector containing characters, Unicode code-points, or both. For
+example, <tt>#(#\L #\a #\m #\b #\d #\a #\= #x3BB)</tt> is a valid
+argument for <tt>DRAW-STRING</tt>.
+</blockquote>
+
+
+<p><a name='draw-centered-string'>[Function]</a><br>
+<b>draw-centered-string</b> <i>x</i> <i>y</i> <i>string</i> => |
+
+<blockquote>
+Draws <i>string</i> on the canvas with the active font. The horizontal
+center of the string is positioned at <i>x</i> and the baseline of the
+string is positioned at <i>y</i>.
+</blockquote>
+
+
+<p><a name='string-bounding-box'>[Function]</a><br>
+<b>string-bounding-box</b> <i>string</i> <i>size</i> <i>loader</i> 
+=> <i>#(xmin ymin xmax ymax)</i>
+
+<blockquote>
+Calculates the bounding box of <i>string</i> for <i>font-loader</i>
+at <i>size</i>.
+</blockquote>
+
+
+<a name='sect-miscellaneous'><h3>Miscellaneous</h3></a>
+
+<p><a name='const-kappa'>[Constant]</a><br>
+<b>+kappa+</b> => 0.5522847498307936d0.
+
+<blockquote>
+This constant is useful to draw portions of a circle.
+</blockquote>              
+
+
+<a name='sect-references'><h2>References</h2></a>
+
+<ul>
+  <li> Adobe Systems Inc., <a href="http://www.adobe.com/devnet/pdf/pdf_reference.html">PDF Reference, Sixth Edition, Version 1.7</a>
+  <li> Lawrence Kesteloot, <a href="http://www.teamten.com/lawrence/graphics/premultiplication/">Alpha Premultiplication</a>
+  <li> Dr. Thomas Sederberg, <a href="http://www.tsplines.com/resources/class_notes/Bezier_curves.pdf">B&eacute;zier curves</a>
+  <li> Alvy Ray Smith, <a href="http://alvyray.com/Memos/MemosMicrosoft.htm#ImageCompositing">Image Compositing Fundamentals</a>
+  <li> G. Adam Stanislav, <a href="http://www.whizkidtech.redprince.net/bezier/circle/">Drawing a circle with B&eacute;zier curves</a>
+  <li> Wikipedia, <a href="http://en.wikipedia.org/wiki/B%C3%A9zier_curve">B&eacute;zier curve</a>
+
+</ul>
+
+
+<a name='sect-feedback'><h2>Feedback</h2></a>
+
+<p>If you have any questions, comments, bug reports, or other feedback
+regarding Vecto, please email <a href="mailto:xach@xach.com">Zach
+Beane</a>.
+
+<p><hr>
+<tt>$Id: index.html,v 1.27 2007/10/01 20:03:18 xach Exp $</tt>
+

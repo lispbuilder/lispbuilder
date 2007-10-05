@@ -7,7 +7,7 @@
 (defsystem lispbuilder-sdl-cl-vectors-examples
     :description "Examples for the LISPBUILDER-SDL-CL-VECTORS package."
     :version "0.0.1"
-    :depends-on (cffi lispbuilder-sdl-cl-vectors)
+    :depends-on (lispbuilder-sdl-cl-vectors)
     :components
     ((:module "examples"
 	      :components
