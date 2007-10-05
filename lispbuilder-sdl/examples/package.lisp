@@ -94,4 +94,12 @@
    #:cl-vectors-2
    #:cl-vectors-3
    #:cl-vectors-4
+
+   ;; The following are only defined in the
+   ;; LISPBUILDER-SDL-VECTO-EXAMPLES package.
+   ;; vecto.lisp
+   #:vecto-test
+   #:radiant-lambda
+   #:feedlike-icon
+   #:star-clipping
    ))
