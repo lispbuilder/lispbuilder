@@ -18,7 +18,7 @@
 						   (vecto::height src-image)))
     (let ((fp-to-surf (fp temp-surf)))
       (sdl-base::with-pixel (px fp-to-surf)
-	(let ((image-data (vecto::image-data src-image)))
+	(let ((image-data (vecto::image src-image)))
 	  (let ((ix 0) (iy 0)
 		(w (vecto::width src-image)))
 	    (do ((h 0 (+ h 4))
