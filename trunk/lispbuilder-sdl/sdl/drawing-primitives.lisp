@@ -662,14 +662,18 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
     (sdl-base::write-pixel pix x y (map-color color surface)))
   surface)
 
-
 (defun read-point (point &key (clipping-p t) (surface *default-surface*))
-  (let ((x (x point)) (y (y point)))
-    (when clipping-p
-      (sdl-base::check-bounds 0 (width surface) x)
-      (sdl-base::check-bounds 0 (height surface) y))
-    (sdl-base::with-pixel (surf (fp surface))
-      (sdl-base::read-pixel surf x y))))
+  (check-type point point)
+  (read-point-* (x point) (y point) :clipping-p clipping-p :surface surface))
+
+(defun read-point-* (x y &key (clipping-p t) (surface *default-surface*))
+  (when clipping-p
+    (sdl-base::check-bounds 0 (width surface) x)
+    (sdl-base::check-bounds 0 (height surface) y))
+  (sdl-base::with-pixel (surf (fp surface))
+    (multiple-value-bind (rgba r g b a)
+	(sdl-base::read-pixel surf x y)
+      (color :r r :g g :b b :a a))))
 
 (defun draw-filled-circle (p1 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
   "See [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*).

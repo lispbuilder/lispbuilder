@@ -185,6 +185,7 @@
    #:draw-point
    #:draw-point-*
    #:read-point
+   #:read-point-*
 
    #:draw-circle
    #:draw-circle-*
