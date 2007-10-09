@@ -24,11 +24,20 @@
        (with-locked-surface (,surface-fp)
 	 (let ((,var (make-pixels)))
 	   (setf (pixels-fp-writer ,var) (generate-write-pixel ,surface-fp)
-		 (pixels-fp-reader ,var) (generate-read-pixel ,surface-fp))
+		 (pixels-fp-reader ,var) (generate-read-pixel ,surface-fp)
+		 (pixels-fp-data ,var) (foreign-slot-value ,surface-fp 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels)
+		 (pixels-bpp ,var) (foreign-slot-value (pixel-format ,surface-fp) 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel)
+		 (pixels-pitch ,var) (foreign-slot-value ,surface-fp 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch))
 	   (labels ((write-pixel (pixels x y color)
 		      (funcall (pixels-fp-writer pixels) x y color))
 		    (read-pixel (pixels x y)
-		      (funcall (pixels-fp-reader pixels) x y)))
+		      (funcall (pixels-fp-reader pixels) x y))
+		    (pixel-data (pixels)
+		      (pixels-fp-data pixels))
+		    (pixel-bpp (pixels)
+		      (pixels-bpp pixels))
+		    (pixel-pitch (pixels)
+		      (pixels-pitch pixels)))
 	     (declare (ignorable #'read-pixel #'write-pixel))
 	     ,@body))))))
 
@@ -43,7 +52,8 @@
       `(progn ,@body)))
 
 (defstruct pixels
-  fp-reader fp-writer)
+  fp-reader fp-writer fp-data
+  bpp pitch)
 
 (defun read-pixel (pixels x y)
   (declare (ignore pixels x y))
@@ -52,6 +62,18 @@
 (defun write-pixel (pixels x y color)
   (declare (ignore pixels x y color))
   (error "WRITE-PIXEL only valid within WITH-PIXEL/S."))
+
+(defun pixel-data (pixels)
+  (declare (ignore pixels))
+  (error "PIXEL-DATA only valid within WITH-PIXEL/S."))
+
+(defun pixel-bpp (pixels)
+  (declare (ignore pixels))
+  (error "PIXEL-BPP only valid within WITH-PIXEL/S."))
+
+(defun pixel-pitch (pixels)
+  (declare (ignore pixels))
+  (error "PIXEL-PITCH only valid within WITH-PIXEL/S."))
 
 (defun generate-write-pixel (surface)
   (let* ((format (pixel-format surface))
