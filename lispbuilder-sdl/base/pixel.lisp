@@ -153,18 +153,15 @@
 	    (declare (type fixnum x y))
 	    (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char)
 					(a :unsigned-char))
-	      (let ((fr (mem-aref r :unsigned-char)) (fg (mem-aref g :unsigned-char))
-		    (fb (mem-aref b :unsigned-char)) (fa (mem-aref a :unsigned-char)))
-		(declare (type fixnum fr fg fb fa))
-		(sdl-cffi::SDL-Get-RGBA (funcall read-pixel-fn x y) format r g b a)
-		(values (sdl-cffi::SDL-Map-RGBA format
-						(mem-aref r :unsigned-char)
-						(mem-aref g :unsigned-char)
-						(mem-aref b :unsigned-char)
-						(mem-aref a :unsigned-char))
-			fr fg fb fa))))))))
+	      (let ((px (funcall read-pixel-fn x y)))
+		(sdl-cffi::SDL-Get-RGBA px format r g b a)
+		(values px
+			(mem-aref r :unsigned-char)
+			(mem-aref g :unsigned-char)
+			(mem-aref b :unsigned-char)
+			(mem-aref a :unsigned-char)))))))))
 
-(defun draw-pixel (surface x y color)
+(defun set-pixel (surface x y color)
   "Set the pixel at (x, y) to the given value 
    NOTE: The surface must be locked before calling this.
    Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
@@ -219,12 +216,8 @@
 				 (mem-aref pixel-address :unsigned-int (/ offset 4))))
 			      format
 			      r g b a)
-      (let ((fr (mem-aref r :unsigned-char)) (fg (mem-aref g :unsigned-char))
-	    (fb (mem-aref b :unsigned-char)) (fa (mem-aref a :unsigned-char)))
-	(declare (type fixnum fr fg fb fa))
-	(values (sdl-cffi::SDL-Map-RGBA format 
-					(mem-aref r :unsigned-char)
-					(mem-aref g :unsigned-char)
-					(mem-aref b :unsigned-char)
-					(mem-aref a :unsigned-char))
-	      fr fg fb fa)))))
+      (values format 
+	      (mem-aref r :unsigned-char)
+	      (mem-aref g :unsigned-char)
+	      (mem-aref b :unsigned-char)
+	      (mem-aref a :unsigned-char)))))

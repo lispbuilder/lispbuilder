@@ -182,10 +182,10 @@
    #:draw-rectangle
    #:draw-rectangle-*
   
-   #:draw-point
-   #:draw-point-*
-   #:read-point
-   #:read-point-*
+   #:draw-pixel
+   #:draw-pixel-*
+   #:read-pixel
+   #:read-pixel-*
 
    #:draw-circle
    #:draw-circle-*
