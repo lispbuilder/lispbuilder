@@ -331,7 +331,7 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 		  :surface surface :color color)))
     (:points
      (loop for point in points
-	do (draw-point point
+	do (draw-pixel point
 		       :clipping-p clipping-p
 		       :surface surface
 		       :color color)))))
@@ -632,16 +632,16 @@ The default is `NIL` as the SDL library will perform the necessary clipping auto
     (draw-rectangle template :surface surface :clipping-p clipping-p :color color :alpha alpha))
   surface)
 
-(defun draw-point (point &key (clipping-p t) (surface *default-surface*) (color *default-color*))
-  "See [DRAW-POINT-*](#draw-point-*).
+(defun draw-pixel (point &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+  "See [DRAW-PIXEL-*](#draw-pixel-*).
 
 ##### Parameters
 
 * `POSITION` is the `X`/`Y` coordinates of the pixel, of type `POINT`."
   (check-type point point)
-  (draw-point-* (x point) (y point) :clipping-p clipping-p :surface surface :color color))
+  (draw-pixel-* (x point) (y point) :clipping-p clipping-p :surface surface :color color))
 
-(defun draw-point-* (x y &key (clipping-p t) (surface *default-surface*) (color *default-color*))
+(defun draw-pixel-* (x y &key (clipping-p t) (surface *default-surface*) (color *default-color*))
   "Draw a single pixel of color `COLOR` to the surface `SURFACE` at the specified `X` and `Y` coordiates. 
 
 ##### Parameters
@@ -662,11 +662,11 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
     (sdl-base::write-pixel pix x y (map-color color surface)))
   surface)
 
-(defun read-point (point &key (clipping-p t) (surface *default-surface*))
+(defun read-pixel (point &key (clipping-p t) (surface *default-surface*))
   (check-type point point)
-  (read-point-* (x point) (y point) :clipping-p clipping-p :surface surface))
+  (read-pixel-* (x point) (y point) :clipping-p clipping-p :surface surface))
 
-(defun read-point-* (x y &key (clipping-p t) (surface *default-surface*))
+(defun read-pixel-* (x y &key (clipping-p t) (surface *default-surface*))
   (when clipping-p
     (sdl-base::check-bounds 0 (width surface) x)
     (sdl-base::check-bounds 0 (height surface) y))

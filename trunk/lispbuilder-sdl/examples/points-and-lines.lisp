@@ -17,7 +17,7 @@
 	
 	(sdl:with-color (col (sdl:color :r 255 :g 255 :b 255))
 	  (mapcar #'(lambda (point)
-		      (sdl:draw-point point))
+		      (sdl:draw-pixel point))
 		  (list (sdl:point :x p1 :y p1) (sdl:point :x p1 :y p3) (sdl:point :x p2 :y p4)
 			(sdl:point :x p3 :y p1) (sdl:point :x p4 :y p2) (sdl:point :x p4 :y p4)))))
 

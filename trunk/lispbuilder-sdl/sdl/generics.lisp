@@ -180,7 +180,7 @@ remains unchanged between screen updates."))
 (defgeneric any-color-but-this (color)
   (:documentation "Returns a new color that is different to the color `COLOR`."))
 
-(defgeneric load-image (source &key key-color alpha-value image-type force free)
+(defgeneric load-image (source &key key-color alpha-value image-type force free key-color-at)
   (:documentation
    "Creates and returns a new surface from the source `SOURCE`.
 
@@ -188,6 +188,7 @@ remains unchanged between screen updates."))
 
 * `SOURCE` is the source of the image.
 * `KEY-COLOR` sets the color key to be used for the surface, of type `COLOR`, or 'COLOR-A`.
+* 'KEY-COLOR-AT' sets the color key to be the color at the specifed xy coordinates. Of type `POINT`.
 * `ALPHA-VALUE` sets the alpha value of the surface, of type INTEGER. Must be in the range 0-255. 
 255 is opaque, 0 is transparent.
 * `IMAGE-TYPE` specifies the type of image to load. 

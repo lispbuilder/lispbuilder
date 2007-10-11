@@ -12,7 +12,7 @@
     (sdl:with-events ()
       (:quit-event () t)
       (:idle ()
-	     (sdl:draw-point-* (random 640) (random 480)
+	     (sdl:draw-pixel-* (random 640) (random 480)
 			       :color (sdl:color :r (random 255)
 						 :g (random 255)
 						 :b (random 255))
@@ -75,3 +75,25 @@
 				   :update-p t
 				   :surface sdl:*default-display*)))))))
 
+
+(defun pixels-5 ()
+  (sdl:with-init ()
+    (sdl:window 200 100)
+    (setf (sdl:frame-rate) 0)
+
+    ;; Read the pixel at 0,0 and print the rgba value
+    (let ((col (sdl:read-pixel (sdl:point :x 0 :y 0) :surface sdl:*default-display*)))
+      (format t "READ: ~A, ~A, ~A, ~A~%" (sdl:r col) (sdl:g col) (sdl:b col) (sdl:a col)))
+
+    ;; Write r,g,b to 0,0 and then read and print the rgba value
+
+    (sdl:draw-pixel (sdl:point)
+		    :surface sdl:*default-display*
+		    :color (sdl:color :r 255 :g 255 :b 255))
+    
+    (let ((col (sdl:read-pixel (sdl:point :x 0 :y 0) :surface sdl:*default-display*)))
+      (format t "READ: ~A, ~A, ~A, ~A~%" (sdl:r col) (sdl:g col) (sdl:b col) (sdl:a col)))
+    
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:idle () (sdl:update-display)))))

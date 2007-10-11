@@ -10,7 +10,10 @@
 (defclass sdl-surface ()
   ((foreign-pointer-to-surface :reader fp :initform nil :initarg :surface)
    (foreign-pointer-to-position-rect :reader fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)
-   (foreign-pointer-to-cell-rect :accessor fp-cell :initform (cffi:null-pointer) :initarg cell))
+   (foreign-pointer-to-cell-rect :accessor fp-cell :initform (cffi:null-pointer) :initarg cell)
+   (key-color-mask)
+   (alpha-mask)
+   (mask))
   (:documentation
    "A wrapper for a foreign object of type SDL_Surface. A `SDL-SURFACE` object contains:
 * a foreign SDL_Surface, 
@@ -446,3 +449,39 @@ if available."
 			  :clipping-p clipping-p
 			  :update-p update-p)
   surface)
+
+;; (defun set-mask-alpha (surface threshold)
+;;   (check-type surface sdl-surface)
+;;   (let ((mask (make-array (* (width surface) (height surface))
+;; 			  :element-type 'bit
+;; 			  :initial-contents nil)))
+;;     (sdl-base::with-pixels (px (fp surface)))
+;;     ))
+
+;; (defun get-mask-alpha (surface))
+
+;; (defun set-mask-color-key (surface color-key)
+;;   (check-type surface sdl-surface)
+;;   (let ((mask (make-array (* (width surface) (height surface))
+;; 			  :element-type 'bit
+;; 			  :initial-contents nil))
+;; 	(mask-color (map-color color-key surface)))
+;;     (sdl-base::with-pixels (px (fp surface))
+;;       (dotimes (y (height surface))
+;; 	(dotimes (x (width surface))
+;; 	  (let ((col (sdl-base::read-pixel px x y)))
+;; 	    (if (eql col mask-color)
+;; 		(setf (sbit mask (* x y)) t))))))
+;;     (setf (slot-value surface 'color-key-mask) mask)))
+
+;; (defun get-mask-key-color ())
+
+;; (defun set-mask-colors (surface &rest colors)
+;;   (let ((mask-colors (mapcar #'(lambda (color)
+;; 				 (map-color color surface))))
+;; 	(mask (make-array (* (width surface) (height surface))
+;; 			  :element-type 'bit
+;; 			  :initial-contents nil)))
+;;     (sdl-base::with-pixels (px (fp surface))
+;;       ())
+;;     ))
