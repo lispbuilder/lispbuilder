@@ -321,12 +321,12 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
 				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which)))
-				 (:axis
+				 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::axis)))
-				 (:value
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::button)))
+				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::value)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::state)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -351,12 +351,12 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
 				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which)))
-				 (:axis
+				 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::axis)))
-				 (:value
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::button)))
+				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::value)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::state)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
