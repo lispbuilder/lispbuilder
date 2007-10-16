@@ -126,7 +126,7 @@
 	  surface)))))
 
 
-(defmethod load-image :around ((source string) &key key-color alpha-value (image-type nil) (force nil) (free nil))
+(defmethod load-image :around ((source string) &key key-color alpha-value (image-type nil) (force nil) (free nil) (key-color-at nil))
   "Creates and returns a new surface from the image in the file at the location `SOURCE`. 
 
 ##### Parameters
@@ -154,6 +154,7 @@
     (when rwops
       (let ((surface (load-image rwops
 				 :key-color key-color
+				 :key-color-at key-color-at
 				 :alpha-value alpha-value
 				 :free t
 				 :image-type image-type
