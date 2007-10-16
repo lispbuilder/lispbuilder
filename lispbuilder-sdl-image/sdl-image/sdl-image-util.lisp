@@ -88,7 +88,7 @@
 	result))))
 
 
-(defmethod load-image ((source rwops) &key key-color alpha-value (image-type nil) (force nil) (free t))
+(defmethod load-image ((source rwops) &key key-color alpha-value (image-type nil) (force nil) (free t) (key-color-at nil))
   "Creates and returns a new surface from the image contained in the `RWOPS` structure in the source `SOURCE`.
 
 ##### Parameters
@@ -121,7 +121,9 @@
     (when (sdl-base::is-valid-ptr image)
       (let ((surface (surface image)))
 	(when surface
-	  (when key-color (set-color-key key-color :surface surface))
+	  (if key-color-at
+	      (set-color-key (read-pixel key-color-at :surface surface) :surface surface)
+	      (when key-color (set-color-key key-color :surface surface)))
 	  (when alpha-value (set-alpha alpha-value :surface surface))
 	  surface)))))
 
