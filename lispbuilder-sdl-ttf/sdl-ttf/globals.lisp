@@ -19,3 +19,4 @@ These will bind `\*DEFAULT-FONT\*` to a Truetype font `FONT`.")
 										*load-truename*)))
   "The path to the default Truetype font, `\"Bitstream Vera\"`")
 
+(defvar *generation* 0)

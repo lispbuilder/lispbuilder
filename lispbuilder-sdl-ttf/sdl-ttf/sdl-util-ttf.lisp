@@ -15,8 +15,10 @@
 
 (defun is-init ()
   "Queries the initialization status of the `SDL_TTF` truetype library. 
-Returns `T` if this library is already initialized and `NIL` if uninitialized."
-  (sdl-ttf-cffi::ttf-was-init))
+Returns the current *GENERATION* if this library is already initialized and `NIL` if uninitialized."
+  (if (sdl-ttf-cffi::ttf-was-init)
+      *generation*
+      nil))
 
 ;; (defmacro with-init (() &body body)
 ;;   "Initialises the truetype font library. Will exit if the libary cannot be initialised. 
@@ -57,11 +59,14 @@ Binds `FONT` to a shadowed instance of `\*DEFAULT-FONT\*` valid within the scope
 ;;; Functions
 
 (defun init-ttf ()
-  "Initializes the `SDL_TTF` font library if uninitialized. Returns `T` if the library was uninitialized and 
-is successfully initialized, or else returns `NIL` if uninitialized."
+  "Initializes the `SDL_TTF` font library if uninitialized. Increments and returns *GENERATION* if the library 
+was uninitialized and is successfully initialized, or else returns `NIL` if uninitialized."
   (if (is-init)
-      t
-      (sdl-ttf-cffi::ttf-init)))
+      *generation*
+      (progn
+	(if (sdl-ttf-cffi::ttf-init)
+	    (incf *generation*)
+	    nil))))
 
 (defun quit-ttf ()
   "Uninitializes the `SDL_TTF` font library if already initialized."
