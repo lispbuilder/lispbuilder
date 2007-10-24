@@ -15,6 +15,7 @@
    ;; globals.lisp
    #:*default-font*
    #:*default-font-path*
+   #:*generation*
    
    ;; font.lisp
    #:font
