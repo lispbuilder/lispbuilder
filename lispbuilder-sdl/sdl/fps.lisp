@@ -8,5 +8,9 @@
 (defun frame-rate ()
   (sdl-base::target-frame-rate sdl-base::*default-fpsmanager*))
 
+(defun time-scale ()
+  (sdl-base::time-scale-tscale sdl-base::*time-scale*))
+
 (defun average-fps ()
-  (sdl-base::calculate-average-fps sdl-base::*default-fpsmanager*))
+  (sdl-base::average-fps sdl-base::*fps-average*))
+
