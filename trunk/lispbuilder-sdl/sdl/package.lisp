@@ -13,9 +13,9 @@
 
 		lispbuilder-sdl-base::is-valid-ptr
 		lispbuilder-sdl-base::push-user-event
-
+		
 		lispbuilder-sdl-base::*default-fpsmanager*
-)
+		lispbuilder-sdl-base::*fps-average*)
   (:import-from #:lispbuilder-sdl-cffi
 		lispbuilder-sdl-cffi::sdl-get-ticks
 
@@ -48,8 +48,7 @@
 		lispbuilder-sdl-cffi::sdl-iyuv-overlay
 		lispbuilder-sdl-cffi::sdl-yuy2-overlay
 		lispbuilder-sdl-cffi::sdl-uyvy-overlay
-		lispbuilder-sdl-cffi::sdl-yvyu-overlay
-		)
+		lispbuilder-sdl-cffi::sdl-yvyu-overlay)
   (:export
 
    ;; globals.lisp
@@ -374,11 +373,13 @@
    ;; fps.lisp
    #:frame-rate
    #:average-fps
+   #:time-scale
    
    ;; Imports from lispbuilder-sdl-base  
    #:with-events
    #:push-quit-event
    #:key=
+   #:average-fps
 
    #:is-valid-ptr
    #:push-user-event

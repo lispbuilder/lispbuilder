@@ -10,3 +10,5 @@
 ;;;; Globals
 
 (defvar *default-fpsmanager* nil)
+(defvar *fps-average* nil)
+(defvar *time-scale* nil)
