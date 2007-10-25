@@ -89,7 +89,7 @@ Automatically initialises the `SDL_TTF` truetype font library if the library is 
     (init-ttf))
   (open-font filename size))
 
-(defun initialise-default-font (&optional (free t) (filename (create-path "Vera.ttf")) (size 32))
+(defun initialise-default-font (&key (free t) (filename (create-path "Vera.ttf")) (size 32))
   "Creates a new `FONT` object that is loaded from the file at location `FILENAME`, and binds this to the symbol 
 `\*DEFAULT-FONT\*`. Although several truetype fonts may used within a single SDL application, only a single 
 `FONT` may be bound to the symbol `*\DEFAULT-FONT\*` at any one time. Generates an `ERROR` if `FREE` is `NIL` 
