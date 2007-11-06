@@ -10,10 +10,10 @@
 (cffi:define-foreign-library sdl
   (:darwin (:framework "SDL"))
   (:windows "SDL.dll")
-  (:unix (:or "libSDL"
-	      "libSDL.so"
-	      "libSDL-1.2.so"
+  (:unix (:or "libSDL-1.2.so.0.7.2"
 	      "libSDL-1.2.so.0"
-	      "libSDL-1.2.so.0.7.2")))
+	      "libSDL-1.2.so"
+	      "libSDL.so"
+	      "libSDL")))
 
 (cffi:use-foreign-library sdl)
