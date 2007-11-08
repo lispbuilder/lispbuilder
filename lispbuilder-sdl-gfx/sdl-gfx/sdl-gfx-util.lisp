@@ -830,13 +830,13 @@ A control point is a vertex containing an X and Y coordinate pair.
 
 ;;; r
 
-(defun roto-zoom-surfaze (angle zoom smooth &key (surface sdl:*default-surface*))
+(defun roto-zoom-surface (angle zoom smooth &key (surface sdl:*default-surface*))
   (check-type surface sdl:surface)
-  (sdl-gfx-cffi::rotozoomSurface (sdl:fp surface) angle zoom smooth))
+  (sdl:surface (sdl-gfx-cffi::rotozoomSurface (sdl:fp surface) angle zoom smooth)))
 
 (defun roto-zoom-xy (angle zoomx zoomy smooth &key (surface sdl:*default-surface*))
   (check-type surface sdl:surface)
-  (sdl-gfx-cffi::rotozoomSurfacexy (sdl:fp surface) angle zoomx zoomy smooth))
+  (sdl:surface (sdl-gfx-cffi::rotozoomSurfacexy (sdl:fp surface) angle zoomx zoomy smooth)))
 
 (defun roto-zoom-size (width height angle zoom)
   (cffi:with-foreign-objects ((dstwidth :int) (dstheight :int))
@@ -852,7 +852,7 @@ A control point is a vertex containing an X and Y coordinate pair.
 
 (defun zoom-surface (zoomx zoomy smooth &key (surface sdl:*default-surface*))
   (check-type surface sdl:surface)
-  (sdl-gfx-cffi::zoomSurface (sdl:fp surface) zoomx zoomy smooth))
+  (sdl:surface (sdl-gfx-cffi::zoomSurface (sdl:fp surface) zoomx zoomy smooth)))
 
 (defun zoom-surface-size (width height zoomx zoomy)
   (cffi:with-foreign-objects ((dstwidth :int) (dstheight :int))
