@@ -9,7 +9,8 @@
     (sdl:window rotozoom-window-width rotozoom-window-height
 		:title-caption "Rotozoom" :icon-caption "Rotozoom")
 
-    ;; Unlock the frame rate.
+    ;; Lock the frame rate to 60 fps.
+    ;; Don't want the image to rotate too fast.
     (setf (sdl:frame-rate) 60)
 
     ;; Load the image to be rotated.
