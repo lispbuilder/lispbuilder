@@ -10,7 +10,7 @@
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-gfx)
+    :depends-on (lispbuilder-sdl-gfx)
     :components
     ((:module "examples"
 	      :components
