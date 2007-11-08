@@ -15,6 +15,7 @@
     ((:module "examples"
 	      :components
 	      ((:file "package")
+	       (:file "globals" :depends-on ("package"))
 	       (:file "font" :depends-on ("package"))
 	       (:file "utils" :depends-on ("package"))
 	       (:file "random-circles" :depends-on ("package"))
@@ -28,5 +29,6 @@
 	       (:file "bezier" :depends-on ("package"))
 	       (:file "distance-2D" :depends-on ("package"))
 	       (:file "vertices" :depends-on ("package"))
+	       (:file "rotozoom" :depends-on ("package" "globals"))
 	       #-sbcl(:file "metaballs" :depends-on ("package"))
 	       ))))

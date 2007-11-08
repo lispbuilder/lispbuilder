@@ -5,6 +5,8 @@
 (defpackage #:lispbuilder-sdl-gfx-examples
   (:use #:cl #:cffi)
   (:nicknames #:sdl-gfx-examples)
-  (:export #:inbuilt-font #:random-circles
+  (:export #:*bmp-path*
+           #:inbuilt-font #:random-circles
            #:setup-and-draw #:width-height #:recursion #:functions #:objects #:points-and-lines
-           #:shape-primitives #:bezier #:distance-2d #:vertices #:metaballs))
+           #:shape-primitives #:bezier #:distance-2d #:vertices #:metaballs
+           #:rotozoom))
