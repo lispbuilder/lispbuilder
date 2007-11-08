@@ -937,5 +937,6 @@ The contents of the event are completely up to the programmer.
 :JOY-AXIS-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :JOY-HAT-MOTION-EVENT, :JOY-BALL-MOTION-EVENT, 
 :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :SYS-WM-EVENT, :QUIT-EVENT, :USER-EVENT or :IDLE." (first event)))))
 			       events))))
-	 (process-timestep *default-fpsmanager* ,idle-func))
+	 (unless ,quit
+	   (process-timestep *default-fpsmanager* ,idle-func)))
        (cffi:foreign-free ,sdl-event))))
