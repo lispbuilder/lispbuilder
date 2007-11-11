@@ -18,7 +18,6 @@
 (defun incf-line (&optional (lines 1) (font sdl:*default-font*))
   (* lines (+ 2 (sdl:char-height font))))
 
-
 (defun new-axis-motion-event (which axis value)
   (lambda (x y &optional (surface sdl:*default-display*))
     (sdl:draw-string-solid-* (format nil "Axis-Motion: Which: ~A, Axis: ~A, Value: ~A" which axis value)
@@ -71,7 +70,7 @@
     (sdl-cffi::sdl-joystick-close (joystick-fp joystick))))
 
 (defun print-status (status &optional (surface sdl:*default-display*))
-  (let ((x 20) (y 10))
+  (let ((x 20) (y 30))
     (sdl:draw-string-solid-* (if (eq status 'JOYSTICK-NOT-FOUND)
 				 (format nil "No Joystick Found.")
 				 (format nil "Joystick Open Error."))
@@ -80,7 +79,7 @@
 			     :surface surface)))
 
 (defun print-joystick (joystick &optional (surface sdl:*default-display*))
-  (let ((x 20) (y 10))
+  (let ((x 20) (y 30))
     (sdl:draw-string-solid-* (format nil "Index: ~d \(~d of ~d\)" (joystick-index joystick) (1+ (joystick-index joystick)) *num-joysticks*)
 			     x y
 			     :color sdl:*white*
@@ -132,19 +131,20 @@
 		   (close-joystick *joystick*)
 		   t)
       (:key-down-event (:key key)
-		       (when (sdl:key= key :sdl-key-escape)
-			 (sdl:push-quit-event))
-		       (when (sdl:key= key :sdl-key-space)
-			 (when (or (eq *status* 'JOYSTICK-FOUND)
-				   (eq *status* 'JOYSTICK-OPEN-OK))
-			   (close-joystick *joystick*)
-			   (incf *current-joystick-index*)
-			   (when (>= *current-joystick-index* *num-joysticks*)
-			     (setf *current-joystick-index* 0))
-			   (setf *joystick* (new-joystick *current-joystick-index*))
-			   (if *joystick*
-			       (setf *status* 'JOYSTICK-OPEN-OK)
-			       (setf *status* 'JOYSTICK-OPEN-ERROR)))))
+		       (cond
+			 ((sdl:key= key :sdl-key-escape)
+			  (sdl:push-quit-event))
+			 ((sdl:key= key :sdl-key-space)
+			  (when (or (eq *status* 'JOYSTICK-FOUND)
+				    (eq *status* 'JOYSTICK-OPEN-OK))
+			    (close-joystick *joystick*)
+			    (incf *current-joystick-index*)
+			    (when (>= *current-joystick-index* *num-joysticks*)
+			      (setf *current-joystick-index* 0))
+			    (setf *joystick* (new-joystick *current-joystick-index*))
+			    (if *joystick*
+				(setf *status* 'JOYSTICK-OPEN-OK)
+				(setf *status* 'JOYSTICK-OPEN-ERROR))))))
       (:joy-axis-motion-event (:WHICH WHICH :AXIS AXIS :VALUE VALUE)
 			      (setf (joystick-axis-motion *joystick*) (new-axis-motion-event which axis value)))
       (:joy-button-down-event (:WHICH WHICH :BUTTON BUTTON :STATE STATE)
@@ -159,8 +159,16 @@
 			   (sdl:update-display))
       (:idle ()
 	     (sdl:clear-display sdl:*black*)
+	     (sdl:draw-string-solid-* (format nil "Joystick Test")
+				      300 5
+				      :color sdl:*white*
+				      :justify :center)
+	     (sdl:draw-string-solid-* (format nil "SPACE to test next joystick. ESC to exit.")
+				      300 15
+				      :color sdl:*white*
+				      :justify :center)	     
 	     (if (eq *status* 'JOYSTICK-OPEN-OK)
 		 (print-joystick *joystick*)
-		 (print-status *status*))
+		 (print-status *status*))	     
 	     (sdl:update-display)))))
 
