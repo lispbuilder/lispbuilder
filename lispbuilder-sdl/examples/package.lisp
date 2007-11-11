@@ -87,6 +87,9 @@
    ;; squashed.lisp
    #:squashed
 
+   ;; joystick.lisp
+   #:joystick.lisp
+
    ;; The following are only defined in the
    ;; LISPBUILDER-SDL-CL-VECTORS-EXAMPLES package.
    ;; cl-vectors.lisp

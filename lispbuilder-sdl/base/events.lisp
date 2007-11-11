@@ -383,7 +383,7 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::which)))
 				 (:axis
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::axis)))
+				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::hat)))
 				 (:value
 				  `(,(intern (format nil "~A" (second key)) :keyword)
 				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::value)))
