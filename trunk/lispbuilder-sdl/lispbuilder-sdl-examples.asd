@@ -35,7 +35,8 @@
 	       (:file "circle" :depends-on ("package"))
 	       (:file "stroke" :depends-on ("package"))
 	       (:file "mouse-2d" :depends-on ("package"))
-
+	       (:file "joystick" :depends-on ("package"))
+	       
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
  	       (:module "squashed"
