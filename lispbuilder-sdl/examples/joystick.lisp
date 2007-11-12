@@ -71,7 +71,7 @@
     (sdl-cffi::sdl-joystick-close (joystick-fp joystick))))
 
 (defun print-status (&optional (surface sdl:*default-display*))
-  (let ((x 20) (y 600))
+  (let ((x 300) (y 30))
     (sdl:draw-string-solid-* "No Joystick Found / Joystick Open Error"
 			     x y
 			     :color sdl:*white*
