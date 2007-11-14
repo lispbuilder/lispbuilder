@@ -48,7 +48,11 @@
 		lispbuilder-sdl-cffi::sdl-iyuv-overlay
 		lispbuilder-sdl-cffi::sdl-yuy2-overlay
 		lispbuilder-sdl-cffi::sdl-uyvy-overlay
-		lispbuilder-sdl-cffi::sdl-yvyu-overlay)
+		lispbuilder-sdl-cffi::sdl-yvyu-overlay
+
+		lispbuilder-sdl-cffi::Num-Joysticks
+		lispbuilder-sdl-cffi::Joystick-Name
+		)
   (:export
 
    ;; globals.lisp
@@ -370,6 +374,10 @@
    #:sdl-uyvy-overlay
    #:sdl-yvyu-overlay
 
+   #:Num-Joysticks
+   #:Joystick-Name
+
+   
    ;; fps.lisp
    #:frame-rate
    #:average-fps
