@@ -51,7 +51,7 @@
 		lispbuilder-sdl-cffi::sdl-yvyu-overlay
 
 		lispbuilder-sdl-cffi::Num-Joysticks
-		lispbuilder-sdl-cffi::Joystick-Name
+		lispbuilder-sdl-cffi::SDL-Joystick-Name
 		)
   (:export
 
@@ -375,7 +375,7 @@
    #:sdl-yvyu-overlay
 
    #:Num-Joysticks
-   #:Joystick-Name
+   #:SDL-Joystick-Name
 
    
    ;; fps.lisp

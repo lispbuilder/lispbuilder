@@ -114,7 +114,7 @@
 
     (sdl-cffi::sdl-joystick-event-state sdl-cffi::sdl-enable)
     
-    (setf *num-joysticks* (sdl-cffi::sdl-num-joysticks)
+    (setf *num-joysticks* (sdl:num-joysticks)
 	  *current-joystick-index* 0)
 
     (when (> *num-joysticks* 0)
