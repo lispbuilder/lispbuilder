@@ -32,7 +32,9 @@
     (let ((100-frames-p (every-n-frames 100)))
       
       (setf (sdl:frame-rate) 0)
-      (sdl:window 320 240 :title-caption "Circle-2: Filled Circles with circumference" :icon-caption "Circle-2: Filled Circles with circumference")
+      (sdl:window 320 240
+		  :title-caption "Circle-2: Filled Circles with circumference"
+		  :icon-caption "Circle-2: Filled Circles with circumference")
       
       (sdl:initialise-default-font sdl:*font-5x7*)
       (draw-fps "Calculating FPS....." 10 200 sdl:*default-font* sdl:*default-surface* t)

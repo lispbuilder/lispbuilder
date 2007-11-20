@@ -3,7 +3,7 @@
 
 (cffi:defcfun ("SDL_NumJoysticks" Num-Joysticks) :int)
 
-(cffi:defcfun ("SDL_JoystickName" Joystick-Name) :string
+(cffi:defcfun ("SDL_JoystickName" SDL-Joystick-Name) :string
   (device-index :int))
 
 (cffi:defcfun ("SDL_JoystickOpen" SDL-Joystick-Open) :pointer
