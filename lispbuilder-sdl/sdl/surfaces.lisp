@@ -407,8 +407,12 @@ if available."
   (unless surface
     (setf surface *default-display*))
   (check-types sdl-surface src surface)
-  (sdl-base::blit-surface (fp src) (fp surface) (fp-cell src) (fp-position src))
-  src)
+
+  (cffi:with-foreign-object (temp-dest 'sdl-cffi::sdl-rect)
+    (setf (sdl-base:rect-x temp-dest) (x src)
+	  (sdl-base:rect-y temp-dest) (y src))  
+    (sdl-base::blit-surface (fp src) (fp surface) (fp-cell src) temp-dest))
+    src)
 
 (defun draw-surface-at-* (src x y &key (surface *default-surface*))
   (set-surface-* src :x x :y y)

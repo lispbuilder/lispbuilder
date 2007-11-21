@@ -83,6 +83,7 @@
 
    ;; mouse-2d.lisp
    #:mouse-2d
+   #:mouse-surface-2d
    
    ;; squashed.lisp
    #:squashed

@@ -264,9 +264,10 @@
   "Blits the entire SRC Sdl-Surface to the DST Sdl-Surface using SDL_BlitSurface.
    use :src-rect SDL_Rect to blit only a portion of the SRC to the DST surface
    Use :dst-rect SDL_Rect to position the SRC on the DST surface."
-  (sdl-cffi::sdl-Upper-Blit src src-rect dst dst-rect)
-  (when update-p
-    (update-surface dst :template dst-rect :clipping-p t))
+    (sdl-cffi::sdl-upper-Blit src src-rect
+			      dst dst-rect)
+    (when update-p
+      (update-surface dst :template dst-rect :clipping-p t))
   dst-rect)
 
 (defun fill-surface (surface color &key (template nil) (update-p nil) (clipping-p nil))

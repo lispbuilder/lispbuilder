@@ -20,3 +20,30 @@
 					     :alpha 255)))
 	(:idle () (sdl:update-display))))))
 
+(defun mouse-surface-2d ()
+  (let ((width 200) (height 200))
+    (sdl:with-init ()
+      (setf (sdl:frame-rate) 60)
+      (sdl:window width height :title-caption "Move a SURFACE using the Mouse.")
+
+      (sdl:with-surface (movable-surface (sdl:create-surface 20 20))
+	(sdl:fill-surface sdl:*white*)
+
+	(sdl:with-events ()
+	  (:quit-event () t)
+	  (:mouse-motion-event (:x x :y y)
+			       ;; Set the texture position with center at the mouse x/y coordinates.
+			       (sdl:set-surface-* movable-surface
+						  :x (- x (/ (sdl:width movable-surface) 2))
+						  :y (- y (/ (sdl:height movable-surface) 2))))
+	  (:key-down-event (:key key)
+			   (when (sdl:key= key :sdl-key-escape)
+			     (sdl:push-quit-event)))
+	  (:video-expose-event ()
+			       (sdl:update-display))
+	  (:idle () 
+		 (sdl:clear-display sdl:*black*)
+		 (sdl:draw-surface movable-surface :surface sdl:*default-display*)
+		 (sdl:update-display)))))))
+
+
