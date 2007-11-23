@@ -36,15 +36,18 @@
 	       (:file "stroke" :depends-on ("package"))
 	       (:file "mouse-2d" :depends-on ("package"))
 	       (:file "joystick" :depends-on ("package"))
+	       (:file "particles" :depends-on ("package"))
 	       
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
+	       (:static-file "particle.bmp")
+
  	       (:module "squashed"
- 			:components
-			((:file "squashed")
-			 (:static-file "blood.bmp")
-			 (:static-file "bug.bmp")
-			 (:static-file "racket.bmp")
-			 (:static-file "squash.bmp"))))
+		:components
+		((:file "squashed")
+		 (:static-file "blood.bmp")
+		 (:static-file "bug.bmp")
+		 (:static-file "racket.bmp")
+		 (:static-file "squash.bmp"))))
 	      :serial t ;; Make sure we load "examples" before "squashed"
 	      )))
