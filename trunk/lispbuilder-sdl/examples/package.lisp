@@ -91,6 +91,9 @@
    ;; joystick.lisp
    #:joystick
 
+   ;; particles.lisp
+   #:particles
+
    ;; The following are only defined in the
    ;; LISPBUILDER-SDL-CL-VECTORS-EXAMPLES package.
    ;; cl-vectors.lisp
