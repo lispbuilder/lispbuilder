@@ -169,10 +169,10 @@
 						:alpha-value 255))
 
       ;; Replace the alpha channel of *particle-img* with the alpha map in particle-alpha.bmp
-      (sdl::copy-channel-to-alpha :surface *particle-img*
-				  :color-surface (sdl:load-image (sdl:create-path "particle-alpha.bmp"
-										  *bmp-path*))
-				  :src-channel :r)
+      (sdl:copy-channel-to-alpha *particle-img*
+				 (sdl:load-image (sdl:create-path "particle-alpha.bmp"
+								  *bmp-path*))
+				 :channel :r)
 
       ;; Load the bitmap fonts
       (setf *font-large* (sdl:initialise-font sdl:*font-8x13*))
