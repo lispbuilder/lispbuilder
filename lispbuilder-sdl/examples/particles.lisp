@@ -168,7 +168,8 @@
       (setf *particle-img* (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "particle.bmp"
 											  *bmp-path*))
 						:alpha-value 255))
-         
+
+      ;; Replace the alpha channel of *particle-img* with the alpha map in particle-alpha.bmp
       (sdl::copy-channel-to-alpha :surface *particle-img*
 				  :color-surface (sdl:load-image (sdl:create-path "particle-alpha.bmp"
 										  *bmp-path*))
