@@ -258,6 +258,7 @@
    #:clear-cell
    #:set-cell
    #:set-cell-*
+   #:copy-channel-to-alpha
 
    ;; util.lisp
    #:random+1

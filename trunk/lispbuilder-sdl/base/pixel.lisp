@@ -38,7 +38,8 @@
 		      (pixels-bpp pixels))
 		    (pixel-pitch (pixels)
 		      (pixels-pitch pixels)))
-	     (declare (ignorable #'read-pixel #'write-pixel))
+	     (declare (ignorable #'read-pixel #'write-pixel
+				 #'pixel-data #'pixel-bpp #'pixel-pitch))
 	     ,@body))))))
 
 (defmacro with-pixels (bindings &rest body)
