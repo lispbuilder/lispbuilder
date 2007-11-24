@@ -32,6 +32,7 @@
 ;;;  Global variables.
 ;;; ----------------------------------------------------------------------
 (defvar *particle-img* nil)
+(defvar *particle-img-alpha* nil)
 (defvar *particles* nil)
 
 (defvar *ftime* 0.1)
@@ -162,10 +163,16 @@
 				       sdl-cffi::sdl-default-repeat-interval)
 
       ;; Load images
-      (setf *particle-img* (sdl:load-image (sdl:create-path "particle.bmp"
-							    *bmp-path*)))
-      (unless *particle-img*
-	(error "~&Unable to load ~A.~%" (sdl:create-path "particle.bmp" *bmp-path*)))
+      ;; Convert the 32-bit particle surface into a surface with an
+      ;; alpha component
+      (setf *particle-img* (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "particle.bmp"
+											  *bmp-path*))
+						:alpha-value 255))
+         
+      (sdl::copy-channel-to-alpha :surface *particle-img*
+				  :color-surface (sdl:load-image (sdl:create-path "particle-alpha.bmp"
+										  *bmp-path*))
+				  :src-channel :r)
 
       ;; Load the bitmap fonts
       (setf *font-large* (sdl:initialise-font sdl:*font-8x13*))
