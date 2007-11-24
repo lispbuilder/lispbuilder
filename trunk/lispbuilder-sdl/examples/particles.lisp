@@ -32,7 +32,6 @@
 ;;;  Global variables.
 ;;; ----------------------------------------------------------------------
 (defvar *particle-img* nil)
-(defvar *particle-img-alpha* nil)
 (defvar *particles* nil)
 
 (defvar *ftime* 0.1)
