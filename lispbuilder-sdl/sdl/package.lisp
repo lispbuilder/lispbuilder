@@ -330,6 +330,7 @@
    #:render-string-solid
    #:draw-string-solid
    #:draw-string-solid-*
+   #:draw-string-centered-*
 
    ;; string-shaded.lisp
    #:render-string-shaded
