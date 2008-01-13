@@ -298,6 +298,8 @@
    #:char-height
    #:with-default-font
    #:with-font
+   #:draw-string-centered-*
+
 ;;    #:with-load-font   
    #:initialise-default-font
    #:initialise-font
