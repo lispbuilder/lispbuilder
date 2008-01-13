@@ -20,6 +20,7 @@ is `NIL`, the surface is created without a key color. See
 When `ALPHA` is `NIL`, the new surface is created without alpha transparency. See
 [SET-ALPHA](#set-alpha) for more detailed information."
   (declare (ignore image-type force free))
+;  (format t "load-image~%")
   (let ((surf (surface (sdl-base::load-image filename))))
     (if surf
 	(progn

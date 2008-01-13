@@ -53,6 +53,7 @@
 
 (defun load-image (filename)
   "load in the supplied filename, must be a bmp file"
+;  (format t "loading ~a~%" filename)
   (let ((file (namestring filename)))
     (if (and (stringp file) (probe-file file)) ; LJC: Make sure filename is a string and the filename exists.
 	(sdl-cffi::SDL-Load-BMP-RW (sdl-cffi::sdl-RW-From-File file "rb") 1)
