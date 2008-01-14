@@ -42,6 +42,7 @@
 	       (:file "bitmap-font")	       
 	       (:file "string-solid")
 	       (:file "string-shaded")
+	       (:file "keys")
 	       (:file "sdl-util")
 	       (:file "cffi-finalizers")
 	       (:file "default-colors")

@@ -386,6 +386,15 @@
    #:frame-rate
    #:average-fps
    #:time-scale
+
+   ;; keys.lisp
+   #:enable-unicode-p
+   #:enable-unicode
+   #:enable-key-repeat
+   #:disable-key-repeat
+   #:enable-key-repeat-p
+   #:key-repeat-delay
+   #:key-repeat-interval
    
    ;; Imports from lispbuilder-sdl-base  
    #:with-events
