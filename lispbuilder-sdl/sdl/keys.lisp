@@ -63,7 +63,8 @@ Note: Use SDL_PumpEvents to update the state array.
 Note: This function gives you the current state after all events have been processed, 
 so if a key or button has been pressed and released before you process events, 
 then the pressed state will never show up in the getstate calls.
-Note: This function doesn't take into account whether shift has been pressed or not."
+Note: This function doesn't take into account whether shift has been pressed or not.
+For example: \(GET-KEY-STATE :SDL-KEY-F1\)"
   (cffi:with-foreign-object (num-keys :int)
       (let ((key-states (sdl-cffi::SDL-Get-Key-state num-keys)))
 	(if (equal (mem-aref key-states :uint8 (foreign-enum-value 'sdl-cffi::sdl-key key)) 
