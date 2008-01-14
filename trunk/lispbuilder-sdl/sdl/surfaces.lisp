@@ -8,10 +8,18 @@
 (in-package #:lispbuilder-sdl)
 
 (defclass sdl-surface ()
-  ((foreign-pointer-to-surface :reader fp :initform nil :initarg :surface)
-   (foreign-pointer-to-position-rect :reader fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle)
-				     :initarg :position)
-   (foreign-pointer-to-cell-rect :accessor fp-cell :initform (cffi:null-pointer) :initarg cell)
+  ((foreign-pointer-to-surface
+    :reader fp
+    :initform nil
+    :initarg :surface)
+   (foreign-pointer-to-position-rect
+    :reader fp-position
+    :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle)
+    :initarg :position)
+   (foreign-pointer-to-cell-rect
+    :accessor fp-cell
+    :initform (cffi:null-pointer)
+    :initarg cell)
    (key-color-mask)
    (alpha-mask)
    (mask))
@@ -46,10 +54,10 @@ This object will be garbage collected and the surface freed when out of scope.")
 	(height surface) (sdl-base::surf-h (fp surface))))
 
 (defmethod initialize-instance :after ((surface surface)
-				      &key (x 0) (y 0) (bpp 32)
-				      (key-color nil) (alpha-value nil)
-				      (type :sw) (rle-accel t)
-				      (width nil) (height nil))
+				       &key (x 0) (y 0) (bpp 32)
+				       (key-color nil) (alpha-value nil)
+				       (type :sw) (rle-accel t)
+				       (width nil) (height nil))
   (cond
     ((is-valid-ptr (fp surface))
      ;; SDL_Surface specified.
