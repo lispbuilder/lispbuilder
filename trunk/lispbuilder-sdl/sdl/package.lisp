@@ -395,6 +395,7 @@
    #:enable-key-repeat-p
    #:key-repeat-delay
    #:key-repeat-interval
+   #:get-key-state
    
    ;; Imports from lispbuilder-sdl-base  
    #:with-events
