@@ -19,10 +19,7 @@
    (foreign-pointer-to-cell-rect
     :accessor fp-cell
     :initform (cffi:null-pointer)
-    :initarg cell)
-   (key-color-mask)
-   (alpha-mask)
-   (mask))
+    :initarg cell))
   (:documentation
    "A wrapper for a foreign object of type SDL_Surface. A `SDL-SURFACE` object contains:
 * a foreign SDL_Surface, 
