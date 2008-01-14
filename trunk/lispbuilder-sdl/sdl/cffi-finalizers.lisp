@@ -4,7 +4,7 @@
 (in-package #:lispbuilder-sdl)
 
 ;;; Finalize the Surface, freeing SDL_Surface.
-(defmethod initialize-instance :after ((self surface) &key)
+(defmethod initialize-instance :after ((self gc-surface) &key)
   "Free the foreign SDL_Surface and the SDL_Rect used for position.
 Cannot free the SDL_Rect used as the cell mask as this is set
 after the SURFACE is created."
