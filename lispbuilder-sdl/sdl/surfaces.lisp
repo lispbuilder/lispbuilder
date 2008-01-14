@@ -35,10 +35,14 @@ This object will never be garbage collected."))
 
 ;;; An object of type is finalized by CFFI
 ;;; at time of garbage collection.
-(defclass surface (sdl-surface) ()
+(defclass gc-surface (sdl-surface) ()
   (:documentation
    "A subclass of 'SDL-SURFACE' that holds a standard SDL_Surface object.
 This object will be garbage collected and the surface freed when out of scope."))
+
+(defclass surface (gc-surface) ()
+  (:documentation
+   "A subclass of 'gc-SURFACE' that holds a standard SDL_Surface object."))
 
 (defclass rectangle-array ()
   ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
@@ -54,7 +58,8 @@ This object will be garbage collected and the surface freed when out of scope.")
 				       &key (x 0) (y 0) (bpp 32)
 				       (key-color nil) (alpha-value nil)
 				       (type :sw) (rle-accel t)
-				       (width nil) (height nil))
+				       (width nil) (height nil)
+				       &allow-other-keys)
   (cond
     ((is-valid-ptr (fp surface))
      ;; SDL_Surface specified.
