@@ -399,7 +399,7 @@ if available."
     surf))
 
 (defun create-surface (width height &key
-		       (bpp 32) key-color alpha-value (type :sw) (rle-accel t))
+		       (surface nil) (bpp 32) key-color alpha-value (type :sw) (rle-accel t))
   
   (when key-color
     (check-type key-color sdl-color))
