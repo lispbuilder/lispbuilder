@@ -9,7 +9,8 @@
 
 (defclass sdl-surface ()
   ((foreign-pointer-to-surface :reader fp :initform nil :initarg :surface)
-   (foreign-pointer-to-position-rect :reader fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle) :initarg :position)
+   (foreign-pointer-to-position-rect :reader fp-position :initform (cffi:foreign-alloc 'sdl-cffi::sdl-rectangle)
+				     :initarg :position)
    (foreign-pointer-to-cell-rect :accessor fp-cell :initform (cffi:null-pointer) :initarg cell)
    (key-color-mask)
    (alpha-mask)
@@ -38,18 +39,48 @@ This object will be garbage collected and the surface freed when out of scope.")
   ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
    (length :reader len :initform nil :initarg :length)))
 
+(defmethod initialize-instance :after ((surface display-surface) &key)
+  (unless (is-valid-ptr (fp surface))
+    (error "SURFACE must be a foreign pointer."))
+  (setf (width surface) (sdl-base::surf-w (fp surface))
+	(height surface) (sdl-base::surf-h (fp surface))))
+
+(defmethod initialize-instance :after ((surface surface)
+				      &key (x 0) (y 0) (bpp 32)
+				      (key-color nil) (alpha-value nil)
+				      (type :sw) (rle-accel t)
+				      (width nil) (height nil))
+  (cond
+    ((is-valid-ptr (fp surface))
+     ;; SDL_Surface specified.
+     (setf (width surface) (sdl-base::surf-w (fp surface))
+	   (height surface) (sdl-base::surf-h (fp surface))
+	   (x surface) x
+	   (y surface) y))
+    ((and (integerp width) (integerp height))
+     ;; No SDL_Surface.
+     ;; But WIDTH and HEIGHT are specified, so create a new surface.
+     (setf (fp surface) (sdl-base::create-surface width height
+						  :bpp bpp
+						  :color-key key-color
+						  :alpha alpha-value
+						  :type type
+						  :rle-accel rle-accel))
+     (unless (is-valid-ptr (fp surface))
+       (error "Cannot create a new surface.")))
+    (t (error ":SURFACE must be a foreign pointer to an SDL_Surface, or
+:WIDTH and :HEIGHT must specified.")))
+  (when key-color
+    (set-color-key key-color :surface surface :rle-accel rle-accel))
+  (when alpha-value
+    (set-alpha alpha-value :surface surface :rle-accel rle-accel)))
+
 (defun surface (surface-fp &optional (display nil))
   "Creates a new `SURFACE` or a new `DISPLAY-SURFACE` when `DISPLAY` is `T`. 
 `SURFACE-FP` must be a pointer to a valid SDL_Surface foreign object."
-  (unless (is-valid-ptr surface-fp)
-    (error "SURFACE: SURFACE-FP must be a foreign pointer."))
-  (let ((surface (if display
-		     (make-instance 'display-surface :surface surface-fp)
-		     (make-instance 'surface :surface surface-fp ))))
-    (set-surface-* surface :x 0 :y 0)
-    (setf (width surface) (sdl-base::surf-w (fp surface))
-	  (height surface) (sdl-base::surf-h (fp surface)))
-    surface))
+  (if display
+      (make-instance 'display-surface :surface surface-fp)
+      (make-instance 'surface :surface surface-fp)))
 
 (defmacro with-surface ((var &optional surface (free-p t))
 			&body body)
@@ -234,6 +265,7 @@ values in the surface `SURFACE`."
 of type [COLOR](#color), or [COLOR-A](#color-a). When 'NIL' will disable color keying.
 * `RLE-ACCEL` when `T` will use RLE information when blitting. See [RLE-CCEL](#rle-accel)."
   (check-type surface sdl-surface)
+  (check-type color sdl-color)
   (sdl-base::set-color-key (fp surface) (map-color color surface ) rle-accel))
   
 (defun set-alpha (alpha &key (surface *default-surface*) (rle-accel nil))
@@ -286,6 +318,7 @@ expect from \"overlaying\" them; the destination alpha will work as a mask.
 *Note*: Also note that per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used 
 if available."
   (check-type surface sdl-surface)
+  (check-type alpha integer)
   (sdl-base::set-alpha (fp surface) alpha rle-accel))
 
 (defun get-clip-rect (&key (surface *default-surface*) (rectangle (rectangle)))
@@ -361,9 +394,8 @@ if available."
     surf))
 
 (defun create-surface (width height &key
-		       (bpp 32) surface key-color alpha-value (type :sw) (rle-accel t))
-  (when surface
-    (check-type surface sdl-surface))
+		       (bpp 32) key-color alpha-value (type :sw) (rle-accel t))
+  
   (when key-color
     (check-type key-color sdl-color))
   (let ((surf (sdl-base::create-surface width height
@@ -375,7 +407,8 @@ if available."
 					:rle-accel rle-accel)))
     (unless (sdl-base::is-valid-ptr surf)
       (error "ERROR, CREATE-SURFACE: Cannot create a new surface."))
-    (setf surf (surface surf))
+    ;; (setf surf (surface surf))
+    (setf surf (make-instance 'surface :surface surf))
     (when key-color
       (set-color-key key-color :surface surf :rle-accel rle-accel))
     (when alpha-value
