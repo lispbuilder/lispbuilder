@@ -656,8 +656,8 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
   (check-type surface sdl-surface)
   (check-type color sdl-color)
   (when clipping-p
-    (sdl-base::check-bounds 0 (width surface) x)
-    (sdl-base::check-bounds 0 (height surface) y))
+    (sdl-base::check-bounds 0 (- (width surface) 1) x)
+    (sdl-base::check-bounds 0 (- (height surface) 1) y))
   (sdl-base::with-pixel (pix (fp surface))
     (sdl-base::write-pixel pix x y (map-color color surface)))
   surface)
@@ -668,8 +668,8 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
 
 (defun read-pixel-* (x y &key (clipping-p t) (surface *default-surface*))
   (when clipping-p
-    (sdl-base::check-bounds 0 (width surface) x)
-    (sdl-base::check-bounds 0 (height surface) y))
+    (sdl-base::check-bounds 0 (- (width surface) 1) x)
+    (sdl-base::check-bounds 0 (- (height surface) 1) y))
   (sdl-base::with-pixel (surf (fp surface))
     (multiple-value-bind (rgba r g b a)
 	(sdl-base::read-pixel surf x y)
