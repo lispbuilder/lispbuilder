@@ -19,13 +19,15 @@ Returns the previous unicode translation state."
       t
       nil))
 
-(defun enable-key-repeat (delay interval &optional (defaults nil))
+(defun enable-key-repeat (delay interval)
   "Enables the keyboard repeat rate. DELAY specifies how long the key must be pressed before it begins repeating, 
 it then repeats at the speed specified by INTERVAL. Both DELAY and INTERVAL are expressed in milliseconds.
-Setting :DEFAULTS to T will set delay and interval to the default values of SDL-DEFAULT-REPEAT-DELAY and SDL-DEFAULT-REPEAT-INTERVAL."
-  (when defaults
-    (setf delay sdl-cffi::SDL-DEFAULT-REPEAT-DELAY
-	  interval sdl-cffi::SDL-DEFAULT-REPEAT-INTERVAL))
+Setting DELAY or INTERVAL to NIL will set the default values of 
+SDL-DEFAULT-REPEAT-DELAY and SDL-DEFAULT-REPEAT-INTERVAL respectively."
+  (unless delay
+    (setf delay sdl-cffi::SDL-DEFAULT-REPEAT-DELAY))
+  (unless interval
+    (setf interval sdl-cffi::SDL-DEFAULT-REPEAT-INTERVAL))
   (if (equal (sdl-cffi::SDL-Enable-Key-Repeat delay interval) 0)
       t
       nil))
