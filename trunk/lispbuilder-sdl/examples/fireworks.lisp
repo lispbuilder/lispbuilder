@@ -1,5 +1,7 @@
 ;;;;; From Schaf5 at http://schaf5.wordpress.com/2007/12/31/gesegnetes-neues-jahr/
 
+(in-package #:sdl-examples)
+
 (defparameter *width* 640)
 (defparameter *height* 480)
 
