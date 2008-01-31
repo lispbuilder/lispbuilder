@@ -94,6 +94,9 @@
    ;; particles.lisp
    #:particles
 
+   ;; fireworks.lisp
+   #:fireworks
+
    ;; The following are only defined in the
    ;; LISPBUILDER-SDL-CL-VECTORS-EXAMPLES package.
    ;; cl-vectors.lisp

@@ -37,6 +37,7 @@
 	       (:file "mouse-2d" :depends-on ("package"))
 	       (:file "joystick" :depends-on ("package"))
 	       (:file "particles" :depends-on ("package"))
+	       (:file "fireworks" :depends-on ("package"))
 	       
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
