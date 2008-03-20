@@ -42,7 +42,8 @@
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
 	       (:static-file "particle.bmp")
-
+	       (:static-file "particle-alpha.bmp")
+	       
  	       (:module "squashed"
 		:components
 		((:file "squashed")

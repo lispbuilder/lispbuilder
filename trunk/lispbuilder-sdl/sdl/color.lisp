@@ -42,6 +42,10 @@ When `A` is an `INTEGER`, will return a new [COLOR-A](#color-a) with the alpha t
 		       (,(intern (string-upcase (format nil "~A.g" var))) (g ,var))
 		       (,(intern (string-upcase (format nil "~A.b" var))) (b ,var))
 		       (,(intern (string-upcase (format nil "~A.a" var))) (a ,var)))
+       (declare (ignorable ,(intern (string-upcase (format nil "~A.r" var)))
+                           ,(intern (string-upcase (format nil "~A.g" var)))
+                           ,(intern (string-upcase (format nil "~A.b" var)))
+                           ,(intern (string-upcase (format nil "~A.a" var)))))
        ,@body
        (if ,free-p
 	   (free-color ,var)))))

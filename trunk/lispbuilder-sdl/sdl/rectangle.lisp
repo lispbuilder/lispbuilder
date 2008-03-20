@@ -96,6 +96,10 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 		       (,(intern (string-upcase (format nil "~A.y" var))) (y ,var))
 		       (,(intern (string-upcase (format nil "~A.w" var))) (width ,var))
 		       (,(intern (string-upcase (format nil "~A.h" var))) (height ,var)))
+       (declare (ignorable ,(intern (string-upcase (format nil "~A.x" var)))
+                           ,(intern (string-upcase (format nil "~A.y" var)))
+                           ,(intern (string-upcase (format nil "~A.w" var)))
+                           ,(intern (string-upcase (format nil "~A.h" var)))))
        ,@body
        (if ,free-p
 	   (free-rectangle ,var)))))

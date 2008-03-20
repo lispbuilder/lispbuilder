@@ -106,7 +106,7 @@ The display is updated when `UPDATE-P` is `T`."
       (sdl-cffi::sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
       (sdl-cffi::SDL-Get-WM-Info wm-info)
       ;; For Windows
-      #+win32(cffi:foreign-slot-pointer wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
+      #+win32(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
       ;; For X
       #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
 											      'sdl-cffi::SDL-Sys-WM-info
@@ -115,8 +115,6 @@ The display is updated when `UPDATE-P` is `T`."
 								   'sdl-cffi::x11)
 					'sdl-cffi::SDL-Sys-WM-info-info-x11
 					'sdl-cffi::window)))
-
-
 
 (defun surface-info (surface &optional (info nil))
   "Returns information about the SDL surface `SURFACE`.
