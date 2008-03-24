@@ -10,7 +10,8 @@
 	(hidden :pointer))
 
 (cffi:defcunion SDL_RWops_hidden
-	(win32io :pointer)
+	#+win32(win32io :pointer)
+	#-win32 (have-stdio-h :pointer)
 	(mem :pointer)
 	(unknown :pointer))
 
@@ -23,6 +24,10 @@
 	(data :pointer)
 	(size :int)
 	(left :int))
+
+(cffi:defcstruct SDL_RWops_have_stdio_h
+	(autoclose :int)
+	(file :pointer))
 
 (cffi:defcstruct SDL_RWops_hidden_unknown
 	(data1 :pointer))
