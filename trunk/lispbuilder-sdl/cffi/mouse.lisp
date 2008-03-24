@@ -38,20 +38,17 @@
   (toggle :int))
 
 (cl:defconstant SDL-BUTTON-LEFT 1)
-
 (cl:defconstant SDL-BUTTON-MIDDLE 2)
-
 (cl:defconstant SDL-BUTTON-RIGHT 3)
-
 (cl:defconstant SDL-BUTTON-WHEEL-UP 4)
-
 (cl:defconstant SDL-BUTTON-WHEEL-DOWN 5)
+(cl:defconstant SDL-BUTTON-X1 6)
+(cl:defconstant SDL-BUTTON-X2 7)
+;; (cl:defconstant SDL-BUTTON-WHEEL-LEFT 6)
+;; (cl:defconstant SDL-BUTTON-WHEEL-RIGHT 7)
 
 (cl:defconstant SDL-RELEASED 0)
-
 (cl:defconstant SDL-PRESSED 1)
-
-
 
 (cffi:defcfun ("SDL_WarpMouse" sdl-Warp-Mouse) :void
   (x :unsigned-short)
@@ -68,3 +65,9 @@
 
 (defun SDL-BUTTON-RMASK ()
   (SDL-BUTTON SDL-BUTTON-RIGHT))
+
+(defun SDL-BUTTON-X1MASK ()
+  (SDL-BUTTON SDL-BUTTON-X1))
+
+(defun SDL-BUTTON-X2MASK ()
+  (SDL-BUTTON SDL-BUTTON-X2))
