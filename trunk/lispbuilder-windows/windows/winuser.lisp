@@ -23,3 +23,14 @@
   (lpszClassName :string)
   (lpszClass :pointer))
   
+
+(cffi:defcfun ("PeekMessageA" PeekMessage) :int
+  (lpMsg :pointer)
+  (hWnd :pointer)
+  (wMsgFilterMin :unsigned-int)
+  (wMsgFilterMax :unsigned-int)
+  (wRemoveMsg :unsigned-int))
+
+(cl:defconstant PM_NOREMOVE #x0000)
+(cl:defconstant PM_REMOVE   #x0001)
+(cl:defconstant PM_NOYEiLD  #x0002)
