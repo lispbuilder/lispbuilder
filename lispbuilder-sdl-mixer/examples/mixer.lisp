@@ -58,11 +58,11 @@
 				  (:key-down-event (:key key)
 						   (handle-key key))
 				  (:idle ()
-					 (sdl:draw-point (sdl:point :x (random 200) :y (random 50))
-							 :color (sdl:color :r (random 255)
-									   :g (random 255)
-									   :b (random 255))
-							 :surface sdl:*default-display*)
+					 (sdl:draw-pixel-* (random 200) (random 200)
+							   :color (sdl:color :r (random 255)
+									     :g (random 255)
+									     :b (random 255))
+							   :surface sdl:*default-display*)
 					 (sdl:update-display)))))
 
 
