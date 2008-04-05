@@ -38,6 +38,7 @@
 	       (:file "joystick" :depends-on ("package"))
 	       (:file "particles" :depends-on ("package"))
 	       (:file "fireworks" :depends-on ("package"))
+	       (:file "raw-audio-test" :depends-on ("package"))
 	       
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
