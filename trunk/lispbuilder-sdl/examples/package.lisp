@@ -97,6 +97,9 @@
    ;; fireworks.lisp
    #:fireworks
 
+   ;; raw-audio-test
+   #:raw-audio-test
+
    ;; The following are only defined in the
    ;; LISPBUILDER-SDL-CL-VECTORS-EXAMPLES package.
    ;; cl-vectors.lisp
