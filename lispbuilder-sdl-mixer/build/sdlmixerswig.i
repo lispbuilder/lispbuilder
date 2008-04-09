@@ -154,15 +154,15 @@ typedef signed int	Sint32;
 
 (defun SDL-MIXER-VERSION (x)
   (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::sdl-version)
-    (setf sdl-cffi::major SDL-MIXER-MAJOR-VERSION
-          sdl-cffi::minor SDL-MIXER-MINOR-VERSION
-          sdl-cffi::patch SDL-MIXER-PATCH-LEVEL)))
+    (setf sdl-cffi::major +SDL-MIXER-MAJOR-VERSION+
+          sdl-cffi::minor +SDL-MIXER-MINOR-VERSION+
+          sdl-cffi::patch +SDL-MIXER-PATCHLEVEL+)))
 
 (defun MIX-VERSION (x)
   (SDL-MIXER-VERSION x))
 
-#-(or little-endian PC386 X86 I386) (defconstant MIX-DEFAULT-FORMAT sdl-cffi::AUDIO-S16MSB) ;; Big Endian
-#+(or little-endian PC386 X86 I386) (defconstant MIX-DEFAULT-FORMAT sdl-cffi::AUDIO-S16LSB) ;; Little Endian
+#-(or little-endian PC386 X86 I386) (defconstant +MIX-DEFAULT-FORMAT+ sdl-cffi::AUDIO-S16MSB) ;; Big Endian
+#+(or little-endian PC386 X86 I386) (defconstant +MIX-DEFAULT-FORMAT+ sdl-cffi::AUDIO-S16LSB) ;; Little Endian
 
 (defun Mix-Load-WAV (file)
   (Mix-Load-WAV-RW (sdl-cffi::SDL-RW-FROM-FILE file "rb") 1))
