@@ -11,7 +11,7 @@
 ;;;; SWIG command line:
 ;;;; swig -cffi -I<path_to_SDL_mixer_includes> -I<path_to_SDL_includes> -Ilib -Ilib\cffi <location_of_openrmswig.i>
 
-(in-package #:lispbuilder-sdl-mixer)
+(in-package #:lispbuilder-sdl-mixer-cffi)
 
 ;;; This is to handle a C macro where 1 is shifted left n times
 (defun 1<<(x) (ash 1 x))
@@ -134,6 +134,7 @@ typedef signed int	Sint32;
 %ignore SDL_MIXER_VERSION;
 %ignore MIX_VERSION;
 %ignore MIX_DEFAULT_FORMAT;
+%ignore MIX_EFFECTSMAXSPEED;
 %ignore Mix_LoadWAV;
 %ignore Mix_PlayChannel;
 %ignore Mix_FadeInChannel;
