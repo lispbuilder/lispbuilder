@@ -1,4 +1,3 @@
-
 ;;; -*- lisp -*-
 
 (defpackage #:lispbuilder-sdl-mixer-system
@@ -11,17 +10,17 @@
     "lispbuilder-sdl-mixer uses CFFI to be highly compatible across lisp 
     implementations. It includes a selection of utilities to assist  
     game programming in Common Lisp."
-    :version "0.1"
+    :version "0.2"
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl)
+    :depends-on (cffi lispbuilder-sdl-mixer-cffi)
     :components
     ((:module "sdl-mixer"
 	      :components
 	      ((:file "package")
-	       (:file "library" :depends-on ("package"))
-	       (:file "mixer" :depends-on ("package" "library"))))
+	     ;;(:file "mixer" :depends-on ("package" "library"))
+))
      (:module "documentation"
 	      :components
 	      ((:doc-file "README")
