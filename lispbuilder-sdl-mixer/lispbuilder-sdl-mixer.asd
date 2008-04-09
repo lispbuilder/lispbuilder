@@ -18,9 +18,7 @@
     :components
     ((:module "sdl-mixer"
 	      :components
-	      ((:file "package")
-	     ;;(:file "mixer" :depends-on ("package" "library"))
-))
+	      ((:file "package")))
      (:module "documentation"
 	      :components
 	      ((:doc-file "README")

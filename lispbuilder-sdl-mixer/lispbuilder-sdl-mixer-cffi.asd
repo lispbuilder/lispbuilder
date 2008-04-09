@@ -18,6 +18,4 @@
 	      :components
 	      ((:file "package")
 	       (:file "library" :depends-on ("package"))
-	       (:file "sdl-mixer" :depends-on ("package" "library"))
-	       ;; (:file "translate" :depends-on ("mixer"))
-	       ))))
+	       (:file "sdl-mixer" :depends-on ("package" "library"))))))
