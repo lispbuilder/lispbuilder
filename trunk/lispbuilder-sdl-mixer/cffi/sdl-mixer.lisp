@@ -10,7 +10,7 @@
 ;;;; SWIG command line:
 ;;;; swig -cffi -I<path_to_SDL_mixer_includes> -I<path_to_SDL_includes> -Ilib -Ilib\cffi <location_of_openrmswig.i>
 
-(in-package #:lispbuilder-sdl-mixer)
+(in-package #:lispbuilder-sdl-mixer-cffi)
 
 ;;; This is to handle a C macro where 1 is shifted left n times
 (defun 1<<(x) (ash 1 x))
@@ -113,15 +113,15 @@
 
 (defun SDL-MIXER-VERSION (x)
   (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::sdl-version)
-    (setf sdl-cffi::major SDL-MIXER-MAJOR-VERSION
-          sdl-cffi::minor SDL-MIXER-MINOR-VERSION
-          sdl-cffi::patch SDL-MIXER-PATCH-LEVEL)))
+    (setf sdl-cffi::major +SDL-MIXER-MAJOR-VERSION+
+          sdl-cffi::minor +SDL-MIXER-MINOR-VERSION+
+          sdl-cffi::patch +SDL-MIXER-PATCHLEVEL+)))
 
 (defun MIX-VERSION (x)
   (SDL-MIXER-VERSION x))
 
-#-(or little-endian PC386 X86 I386) (defconstant MIX-DEFAULT-FORMAT sdl-cffi::AUDIO-S16MSB) ;; Big Endian
-#+(or little-endian PC386 X86 I386) (defconstant MIX-DEFAULT-FORMAT sdl-cffi::AUDIO-S16LSB) ;; Little Endian
+#-(or little-endian PC386 X86 I386) (defconstant +MIX-DEFAULT-FORMAT+ sdl-cffi::AUDIO-S16MSB) ;; Big Endian
+#+(or little-endian PC386 X86 I386) (defconstant +MIX-DEFAULT-FORMAT+ sdl-cffi::AUDIO-S16LSB) ;; Little Endian
 
 (defun Mix-Load-WAV (file)
   (Mix-Load-WAV-RW (sdl-cffi::SDL-RW-FROM-FILE file "rb") 1))

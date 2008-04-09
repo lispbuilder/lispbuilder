@@ -10,10 +10,10 @@
 
 		 lispbuilder-sdl-cffi::+SDL-MIXER-MAJOR-VERSION+
 		 lispbuilder-sdl-cffi::+SDL-MIXER-MINOR-VERSION+
-		 lispbuilder-sdl-cffi::+SDL-MIXER-PATCH-LEVEL+
+		 lispbuilder-sdl-cffi::+SDL-MIXER-PATCHLEVEL+
 		 lispbuilder-sdl-cffi::+MIX-MAJOR-VERSION+
 		 lispbuilder-sdl-cffi::+MIX-MINOR-VERSION+
-		 lispbuilder-sdl-cffi::+MIX-PATCH-LEVEL+
+		 lispbuilder-sdl-cffi::+MIX-PATCHLEVEL+
 		 lispbuilder-sdl-cffi::Mix-Linked-Version
 		 lispbuilder-sdl-cffi::+MIX-CHANNELS+
 		 lispbuilder-sdl-cffi::+MIX-DEFAULT-FREQUENCY+
@@ -93,7 +93,7 @@
 
 		 lispbuilder-sdl-cffi::SDL-MIXER-VERSION
 		 lispbuilder-sdl-cffi::MIX-VERSION
-		 lispbuilder-sdl-cffi::+MIX-DEFAULTFORMAT+
+		 lispbuilder-sdl-cffi::+MIX-DEFAULT-FORMAT+
 		 lispbuilder-sdl-cffi::Mix-Load-WAV
 
 		 lispbuilder-sdl-cffi::Mix-Play-Channel
@@ -104,10 +104,10 @@
 
    #:+SDL-MIXER-MAJOR-VERSION+
    #:+SDL-MIXER-MINOR-VERSION+
-   #:+SDL-MIXER-PATCH-LEVEL+
+   #:+SDL-MIXER-PATCHLEVEL+
    #:+MIX-MAJOR-VERSION+
    #:+MIX-MINOR-VERSION+
-   #:+MIX-PATCH-LEVEL+
+   #:+MIX-PATCHLEVEL+
    #:Mix-Linked-Version
    #:+MIX-CHANNELS+
    #:+MIX-DEFAULT-FREQUENCY+
@@ -187,7 +187,7 @@
 
    #:SDL-MIXER-VERSION
    #:MIX-VERSION
-   #:+MIX-DEFAULTFORMAT+
+   #:+MIX-DEFAULT-FORMAT+
    #:Mix-Load-WAV
    #:Mix-Play-Channel
    #:Mix-Fade-In-Channel
