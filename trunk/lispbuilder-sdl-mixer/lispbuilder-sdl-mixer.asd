@@ -5,7 +5,7 @@
 (in-package #:lispbuilder-sdl-mixer-system)
 
 (defsystem lispbuilder-sdl-mixer
-    :description "lispbuilder-sdl-mixer: SDL_mixer v1.2.7 library wrapper and tools"
+    :description "lispbuilder-sdl-mixer: SDL_mixer v1.2.8 library wrapper and tools"
     :long-description
     "lispbuilder-sdl-mixer uses CFFI to be highly compatible across lisp 
     implementations. It includes a selection of utilities to assist  

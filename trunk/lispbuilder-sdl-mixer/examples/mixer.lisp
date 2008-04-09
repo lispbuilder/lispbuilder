@@ -40,8 +40,8 @@
 
 (defun mixer()
   "Demonstrates music file basic playback"
-  (setf (sdl:sdl-quit-on-exit) t)
-  (sdl:with-init ()
+  (sdl:with-init (sdl:sdl-init-video sdl:sdl-init-audio)
+    (setf (sdl:sdl-quit-on-exit) t)
     (unless mixer-loaded
       (if (= 0 (lispbuilder-sdl-mixer:MIX-OPEN-AUDIO 22050 sdl-cffi::AUDIO-S16 2 4096))
 	  (setf mixer-loaded t)
