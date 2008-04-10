@@ -15,12 +15,12 @@
 (defun play-music()
   (if (null music)
       (progn
-	(setf music (sdl-mixer:mix-load-mus music-file *audio-path*))
-	(sdl-mixer:Mix-Play-Music music 0)
+	(setf music (sdl-mixer:load-mus music-file *audio-path*))
+	(sdl-mixer:Play-Music music 0)
 	(sdl:render-string-shaded (format nil "Music \"~A\" is currently playing..." music-file)
 				  sdl:*white* sdl:*black* :free t :cache t))
       (progn
-	(sdl-mixer:Mix-Halt-Music)
+	(sdl-mixer:Halt-Music)
 	(sdl-mixer:Free music)
 	(sdl:render-string-shaded (format nil "Music \"~A\" is stopped..." music-file)
 				  sdl:*white* sdl:*black* :free t :cache t)
@@ -45,7 +45,7 @@
     (sdl:initialise-default-font)
     
     (unless mixer-loaded
-      (if (= 0 (sdl-mixer:MIX-OPEN-AUDIO 22050 sdl-mixer:+MIX-DEFAULT-FORMAT+ 2 4096))
+      (if (= 0 (sdl-mixer:OPEN-AUDIO 22050 sdl-mixer:+DEFAULT-FORMAT+ 2 4096))
 	  (setf mixer-loaded t)
 	  (sdl:render-string-shaded "Unable to open audio mixer"
 				    sdl:*white* sdl:*black* :free t :cache t)))
@@ -55,11 +55,11 @@
     (sdl:with-events ()
       (:quit-event ()
 		   (when music
-		     (sdl-mixer:Mix-Halt-Music)
+		     (sdl-mixer:Halt-Music)
 		     (sdl-mixer:Free music)
 		     (setf music nil))
 		   (when mixer-loaded
-		     (sdl-mixer:Mix-Close-Audio)
+		     (sdl-mixer:Close-Audio)
 		     (setf mixer-loaded nil))
 		   t)
       (:key-down-event (:key key)

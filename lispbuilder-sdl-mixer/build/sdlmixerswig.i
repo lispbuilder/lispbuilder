@@ -17,73 +17,74 @@
 (defun 1<<(x) (ash 1 x))
 
 (cl:eval-when (:compile-toplevel :load-toplevel)
-  (cl:unless (cl:fboundp 'openrm-lispify)
-(defun openrm-lispify (name flag &optional (package *package*))
-  (labels ((find-sub (src lst)
-	     (when (>= (length lst)
-		       (length src))
-	       (if (and (equal src (subseq lst 0 (length src)))
-			(not (equal (nth (length src)
-					 lst) #\_))
-		        (not (null (nth (length src)
-			     	        lst))))
-		   t
-		   nil)))
-	   (replace-sub (new old lis)
-	     (append new (nthcdr (length old) lis)))
-	   (next-char (char)
-	     (if char
+  (cl:unless (cl:fboundp 'sdlmixer-lispify)
+    (defun sdlmixer-lispify (name flag &optional (package *package*))
+      (labels ((find-sub (src lst)
+		 (when (>= (length lst)
+			   (length src))
+		   (if (and (equal src (subseq lst 0 (length src)))
+			    (not (equal (nth (length src)
+					     lst) #\_))
+			    (not (null (nth (length src)
+					    lst))))
+		       t
+		       nil)))
+	       (replace-sub (new old lis)
+		 (append new (nthcdr (length old) lis)))
+	       (remove-sub (old lis)
+		 (nthcdr (length old) lis))
+	       (next-char (char)
+		 (if char
+		     (cond
+		       ((upper-case-p char)
+			'upper)
+		       ((lower-case-p char)
+			'lower)
+		       (t nil))
+		     nil))
+	       (helper (lst last prev-last rest &aux (c (car lst)))
+		 (declare (ignore prev-last))
 		 (cond
-		   ((upper-case-p char)
-		    'upper)
-		   ((lower-case-p char)
-		    'lower)
-		   (t nil))
-		 nil))
-	      (helper (lst last prev-last rest &aux (c (car lst)))
-	        (declare (ignore prev-last))
-		(cond
-		  ((null lst)
-		   rest)
-		  ((upper-case-p c)
-		   (let ((new '(#\R #\M #\_)) (old '(#\R #\M)))
-		     (when (and (not (find-sub '(#\R #\M #\I #\_) lst))
-				(find-sub old lst))
-		       (setf lst (replace-sub new old lst)
-			     c (first new))))		   
-		   (helper (cdr lst) 'upper last
-			   (cond
-			     ((or (equal last 'lower)
-;; 				  (equal last 'digit)
-				  )
-			      (list* c #\- rest))
-			     ((and (equal last 'upper)
-				   (equal (next-char (cadr lst)) 'lower))
-			      (list* c #\- rest))
-			     (t (cons c rest)))))
-		  ((lower-case-p c)
-		   (helper (cdr lst) 'lower last (cons (char-upcase c) rest)))
-		  ((digit-char-p c)
-		   (helper (cdr lst) 'digit last
-			   (case last
-			     ((upper lower) (list* c #\- rest))
-			     (t (cons c rest)))))
-		  ((char-equal c #\_)
-		   (helper (cdr lst) '_ last (cons #\- rest)))
-		  (t
-		   (error "Invalid character: ~A" c)))))
-    (let ((fix (case flag
-		    ((constant variable) "+")
-		    (enumvalue "")
-		    (t ""))))
-      (intern
-       (concatenate
-	'string
-	fix
-	(nreverse (helper (concatenate 'list name) nil nil nil))
-	fix)
-       package))))
-))
+		   ((null lst)
+		    rest)
+		   ((upper-case-p c)
+		    (let ((old '((#\M #\i #\x #\_) (#\M #\I #\X #\_))))
+		      (dolist (str old)
+			(when (find-sub str lst)
+      			(setf lst (remove-sub str lst)
+			      c (first lst)))))
+		    (helper (cdr lst) 'upper last
+			    (cond
+			      ((or (equal last 'lower)
+				   ;; (equal last 'digit)
+				   )
+			       (list* c #\- rest))
+			      ((and (equal last 'upper)
+				    (equal (next-char (cadr lst)) 'lower))
+			       (list* c #\- rest))
+			      (t (cons c rest)))))
+		   ((lower-case-p c)
+		    (helper (cdr lst) 'lower last (cons (char-upcase c) rest)))
+		   ((digit-char-p c)
+		    (helper (cdr lst) 'digit last
+			    (case last
+			      ((upper lower) (list* c #\- rest))
+			      (t (cons c rest)))))
+		   ((char-equal c #\_)
+		    (helper (cdr lst) '_ last (cons #\- rest)))
+		   (t
+		    (error "Invalid character: ~A" c)))))
+	(let ((fix (case flag
+		     ((constant variable) "+")
+		     (enumvalue "")
+		     (t ""))))
+	  (intern
+	   (concatenate
+	    'string
+	    fix
+	    (nreverse (helper (concatenate 'list name) nil nil nil))
+	    fix)
+	   package))))))
 
 ;;;; Lispifies the following 'C' keywords:
 ;;;; scancode 		=    SCANCODE
@@ -118,7 +119,7 @@
 %}
 
 %module sdl_mixer
-%feature("intern_function","openrm-lispify");
+%feature("intern_function","sdlmixer-lispify");
 %typemap(cin) Mix_Chunk* "mix-chunk-fp";
 %typemap(cin) Mix_Music* "mix-music-fp";
 
@@ -169,10 +170,10 @@ typedef signed int	Sint32;
 %insert("lisphead") %{
 ;;;; "SDL_mixer.h"
 
-(cffi:defcfun ("Mix_FreeChunk" MIX-FREE-CHUNK) :void
+(cffi:defcfun ("Mix_FreeChunk" FREE-CHUNK) :void
   (chunk :pointer))
 
-(cffi:defcfun ("Mix_FreeMusic" MIX-FREE-MUSIC) :void
+(cffi:defcfun ("Mix_FreeMusic" FREE-MUSIC) :void
   (music :pointer))
 
 (defun SDL-MIXER-VERSION (x)
@@ -181,22 +182,22 @@ typedef signed int	Sint32;
           sdl-cffi::minor +SDL-MIXER-MINOR-VERSION+
           sdl-cffi::patch +SDL-MIXER-PATCHLEVEL+)))
 
-(defun MIX-VERSION (x)
+(defun VERSION (x)
   (SDL-MIXER-VERSION x))
 
-#-(or little-endian PC386 X86 I386) (defconstant +MIX-DEFAULT-FORMAT+ sdl-cffi::AUDIO-S16MSB) ;; Big Endian
-#+(or little-endian PC386 X86 I386) (defconstant +MIX-DEFAULT-FORMAT+ sdl-cffi::AUDIO-S16LSB) ;; Little Endian
+#-(or little-endian PC386 X86 I386) (defconstant +DEFAULT-FORMAT+ sdl-cffi::AUDIO-S16MSB) ;; Big Endian
+#+(or little-endian PC386 X86 I386) (defconstant +DEFAULT-FORMAT+ sdl-cffi::AUDIO-S16LSB) ;; Little Endian
 
-(defun Mix-Load-WAV (file)
-  (Mix-Load-WAV-RW (sdl-cffi::SDL-RW-FROM-FILE file "rb") 1))
+(defun Load-WAV (file)
+  (Load-WAV-RW (sdl-cffi::SDL-RW-FROM-FILE file "rb") 1))
 
-(defun Mix-Play-Channel (channel chunk loops)
-  (Mix-Play-Channel-Timed channel chunk loops -1))
+(defun Play-Channel (channel chunk loops)
+  (Play-Channel-Timed channel chunk loops -1))
 
-(defun Mix-Fade-In-Channel (channel chunk loops ms)
-  (Mix-Fade-In-Channel-Timed channel chunk loops ms -1))
+(defun Fade-In-Channel (channel chunk loops ms)
+  (Fade-In-Channel-Timed channel chunk loops ms -1))
 
-(defun Mix-Get-Error ()
+(defun Get-Error ()
   (sdl-cffi::SDL-Get-Error))
 
 %}
