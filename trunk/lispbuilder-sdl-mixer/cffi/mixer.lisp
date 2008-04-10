@@ -1,13 +1,13 @@
 
 (in-package #:sdl-mixer-cffi)
 
-(defclass mix-chunk (foreign-object) ()
+(defclass chunk (foreign-object) ()
   (:default-initargs
    :gc t
-    :free (simple-free 'sdl-mixer-cffi::mix-free-chunk 'mix-chunk)))
+    :free (simple-free 'sdl-mixer-cffi::free-chunk 'chunk)))
 
-(defclass mix-music (foreign-object) ()
+(defclass music (foreign-object) ()
   (:default-initargs
    :gc t
-    :free (simple-free 'sdl-mixer-cffi::mix-free-music 'mix-music)))
+    :free (simple-free 'sdl-mixer-cffi::free-music 'music)))
 

@@ -2,10 +2,10 @@
 (in-package #:sdl-mixer-cffi)
 
 
-(defmethod cffi:translate-to-foreign (value (type (eql 'sdl-mixer-cffi::mix-chunk)))
+(defmethod cffi:translate-to-foreign (value (type (eql 'sdl-mixer-cffi::chunk)))
   (fp value))
 
-(defmethod cffi:translate-to-foreign (value (type (eql 'sdl-mixer-cffi::mix-music)))
+(defmethod cffi:translate-to-foreign (value (type (eql 'sdl-mixer-cffi::music)))
   (fp value))
 
 (defun to-mix-chunk (value)
