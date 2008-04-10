@@ -30,7 +30,6 @@
 		 lispbuilder-sdl-cffi::Mix-Allocate-Channels
 		 lispbuilder-sdl-cffi::Mix-Query-Spec
 		 lispbuilder-sdl-cffi::Mix-Load-WAV-RW
-		 lispbuilder-sdl-cffi::Mix-Load-MUS
 		 lispbuilder-sdl-cffi::Mix-Load-MUS-RW
 		 lispbuilder-sdl-cffi::Mix-Quick-Load-WAV
 		 lispbuilder-sdl-cffi::Mix-Quick-Load-RAW
@@ -98,7 +97,12 @@
 
 		 lispbuilder-sdl-cffi::Mix-Play-Channel
 		 lispbuilder-sdl-cffi::Mix-Fade-In-Channel
-		 lispbuilder-sdl-cffi::Mix-Get-Error)
+		 lispbuilder-sdl-cffi::Mix-Get-Error
+
+		 lispbuilder-sdl-cffi::free
+		 lispbuilder-sdl-cffi::this-fp
+		 lispbuilder-sdl-cffi::gc-p
+		 lispbuilder-sdl-cffi::simple-free)
 
   (:export
 
@@ -191,4 +195,9 @@
    #:Mix-Load-WAV
    #:Mix-Play-Channel
    #:Mix-Fade-In-Channel
-   #:Mix-Get-Error))
+   #:Mix-Get-Error
+
+   #:free
+   #:this-fp
+   #:gc-p
+   #:simple-free))

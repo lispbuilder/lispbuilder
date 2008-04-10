@@ -101,6 +101,13 @@
 ;;;; SDLK_F1		=    :KEY-F-1
 ;;;; KMOD_LSHIFT	=    :KEY-MOD-LSHIFT
 
+;;;; These defctypes are used by the CFFI translation functions
+;;;; see the typemap definition below.
+(cffi:defctype mix-chunk-fp (:wrapper :pointer 
+				      :to-c to-mix-chunk))
+(cffi:defctype mix-music-fp (:wrapper :pointer 
+				      :to-c to-mix-music))
+
 
 
 ;;;; Overrides to C header files follow:
@@ -112,6 +119,9 @@
 
 %module sdl_mixer
 %feature("intern_function","openrm-lispify");
+%typemap(cin) Mix_Chunk* "mix-chunk-fp";
+%typemap(cin) Mix_Music* "mix-music-fp";
+
 
 %{
 // The following header files are converted by SWIG without errors.
@@ -140,6 +150,13 @@ typedef signed int	Sint32;
 %ignore Mix_FadeInChannel;
 %ignore Mix_SetError;
 %ignore Mix_GetError;
+
+// The following functions are defined below.
+// The finalize method for TRIVIAL-GARBAGE passes the foreign pointer to 
+// the free functions.
+%ignore Mix_FreeChunk;
+%ignore Mix_FreeMusic;
+
 // end "SDL_mixer.h"
 
 //Uncomment %feature to generate :exports
@@ -151,6 +168,12 @@ typedef signed int	Sint32;
 
 %insert("lisphead") %{
 ;;;; "SDL_mixer.h"
+
+(cffi:defcfun ("Mix_FreeChunk" MIX-FREE-CHUNK) :void
+  (chunk :pointer))
+
+(cffi:defcfun ("Mix_FreeMusic" MIX-FREE-MUSIC) :void
+  (music :pointer))
 
 (defun SDL-MIXER-VERSION (x)
   (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::sdl-version)

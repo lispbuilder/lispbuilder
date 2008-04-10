@@ -100,6 +100,13 @@
 ;;;; SDLK_F1		=    :KEY-F-1
 ;;;; KMOD_LSHIFT	=    :KEY-MOD-LSHIFT
 
+;;;; These defctypes are used by the CFFI translation functions
+;;;; see the typemap definition below.
+(cffi:defctype mix-chunk-fp (:wrapper :pointer 
+				      :to-c to-mix-chunk))
+(cffi:defctype mix-music-fp (:wrapper :pointer 
+				      :to-c to-mix-music))
+
 
 
 ;;;; Overrides to C header files follow:
@@ -110,6 +117,12 @@
 
 
 ;;;; "SDL_mixer.h"
+
+(cffi:defcfun ("Mix_FreeChunk" MIX-FREE-CHUNK) :void
+  (chunk :pointer))
+
+(cffi:defcfun ("Mix_FreeMusic" MIX-FREE-MUSIC) :void
+  (music :pointer))
 
 (defun SDL-MIXER-VERSION (x)
   (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::sdl-version)
@@ -261,14 +274,8 @@
   (mem :pointer)
   (len :unsigned-int))
 
-(cffi:defcfun ("Mix_FreeChunk" #.(openrm-lispify "Mix_FreeChunk" 'function)) :void
-  (chunk :pointer))
-
-(cffi:defcfun ("Mix_FreeMusic" #.(openrm-lispify "Mix_FreeMusic" 'function)) :void
-  (music :pointer))
-
 (cffi:defcfun ("Mix_GetMusicType" #.(openrm-lispify "Mix_GetMusicType" 'function)) #.(openrm-lispify "Mix_MusicType" 'enumname)
-  (music :pointer))
+  (music mix-music-fp))
 
 (cffi:defcfun ("Mix_SetPostMix" #.(openrm-lispify "Mix_SetPostMix" 'function)) :void
   (mix_func :pointer)
@@ -345,28 +352,28 @@
 
 (cffi:defcfun ("Mix_PlayChannelTimed" #.(openrm-lispify "Mix_PlayChannelTimed" 'function)) :int
   (channel :int)
-  (chunk :pointer)
+  (chunk mix-chunk-fp)
   (loops :int)
   (ticks :int))
 
 (cffi:defcfun ("Mix_PlayMusic" #.(openrm-lispify "Mix_PlayMusic" 'function)) :int
-  (music :pointer)
+  (music mix-music-fp)
   (loops :int))
 
 (cffi:defcfun ("Mix_FadeInMusic" #.(openrm-lispify "Mix_FadeInMusic" 'function)) :int
-  (music :pointer)
+  (music mix-music-fp)
   (loops :int)
   (ms :int))
 
 (cffi:defcfun ("Mix_FadeInMusicPos" #.(openrm-lispify "Mix_FadeInMusicPos" 'function)) :int
-  (music :pointer)
+  (music mix-music-fp)
   (loops :int)
   (ms :int)
   (position :double))
 
 (cffi:defcfun ("Mix_FadeInChannelTimed" #.(openrm-lispify "Mix_FadeInChannelTimed" 'function)) :int
   (channel :int)
-  (chunk :pointer)
+  (chunk mix-chunk-fp)
   (loops :int)
   (ms :int)
   (ticks :int))
@@ -376,7 +383,7 @@
   (volume :int))
 
 (cffi:defcfun ("Mix_VolumeChunk" #.(openrm-lispify "Mix_VolumeChunk" 'function)) :int
-  (chunk :pointer)
+  (chunk mix-chunk-fp)
   (volume :int))
 
 (cffi:defcfun ("Mix_VolumeMusic" #.(openrm-lispify "Mix_VolumeMusic" 'function)) :int
