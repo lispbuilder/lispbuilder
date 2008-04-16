@@ -19,7 +19,8 @@
     ((:module "sdl-mixer"
 	      :components
 	      ((:file "package")
-	       (:file "mixer" :depends-on ("package"))))
+	       (:file "globals" :depends-on ("package"))
+	       (:file "mixer" :depends-on ("globals"))))
      (:module "documentation"
 	      :components
 	      ((:doc-file "README")

@@ -19,7 +19,7 @@
 	       (:file "mixer" :depends-on ("globals" "package"))
 	       (:static-file "music.mp3")
 	       (:static-file "music.ogg")
-	       (:static-file "music.wav")))))
+	       (:static-file "phaser.wav")))))
 	       
 
 

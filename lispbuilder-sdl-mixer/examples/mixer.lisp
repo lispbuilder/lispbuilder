@@ -6,64 +6,87 @@
 
 (in-package #:sdl-mixer-examples)
 
-(defvar music nil)
-(defvar mixer-loaded nil)
-(defvar music-file "music.mp3")
+(defvar *music* nil)
+(defvar *sample* nil)
+(defvar *mixer-opened* nil)
+(defvar *music-file* "music.mp3")
+(defvar *sample-file* "phaser.wav")
+
 (defvar *status* "")
+(defvar *music-status* "")
+(defvar *sample-status* "")
 
 ; play music
 (defun play-music()
-  (if (null music)
-      (progn
-	(setf music (sdl-mixer:load-mus music-file *audio-path*))
-	(sdl-mixer:Play-Music music 0)
-	(sdl:render-string-shaded (format nil "Music \"~A\" is currently playing..." music-file)
-				  sdl:*white* sdl:*black* :free t :cache t))
+  (if (sdl-mixer:music-playing-p)
       (progn
 	(sdl-mixer:Halt-Music)
-	(sdl-mixer:Free music)
-	(sdl:render-string-shaded (format nil "Music \"~A\" is stopped..." music-file)
-				  sdl:*white* sdl:*black* :free t :cache t)
-	(setf music nil))))
+	(setf *music-status* (format nil "Music \"~A\": Stopped..." *music-file*)))
+      (progn
+	(sdl-mixer:Play-Music *music*)
+	(setf *music-status* (format nil "Music \"~A\": Playing..." *music-file*)))))
+
+(defun play-sample()
+  (sdl-mixer:Play-sample *sample*)
+  (setf *sample-status* (format nil "Samples playing: ~A..." (sdl-mixer:sample-playing-p nil))))
     
 (defun handle-key(key)
   "handle key presses"
-  (when (sdl:key= key :SDL-KEY-ESCAPE)
-    (sdl:push-quit-event))
-  (if (sdl:key= key :SDL-KEY-M)
-      (play-music)
-      (sdl:render-string-shaded (format nil "Press M to play music (not ~a)" key)
-				sdl:*white* sdl:*black* :free t :cache t)))
+  (cond
+    ((sdl:key= key :SDL-KEY-ESCAPE)
+     (sdl:push-quit-event))
+    ((sdl:key= key :SDL-KEY-M)
+     (play-music))
+    ((sdl:key= key :SDL-KEY-S)
+     (play-sample))))
+
+(defun clean-up ()
+  (when *music*
+    (sdl-mixer:Halt-Music)
+    (sdl-mixer:Free *music*)
+    (setf *music* nil))
+  (when *sample*
+    (sdl-mixer:Halt-sample t)
+    (sdl-mixer:Free *sample*)
+    (setf *sample* nil))
+  (when *mixer-opened*
+    (sdl-mixer:Close-Audio t)
+    (setf *mixer-opened* nil)))
+
+(sdl-mixer:register-sample-finished
+ (lambda (channel)
+   (declare (ignore channel))
+   (setf *sample-status* (format nil "Samples playing: ~A..." (sdl-mixer:sample-playing-p nil)))
+   (sdl:clear-display sdl:*black*)))
 
 (defun mixer()
   "Demonstrates music file basic playback"
   (sdl:with-init (sdl:sdl-init-video sdl:sdl-init-audio)
     (setf (sdl:sdl-quit-on-exit) t)
 
-    (sdl:window 400 50 :title-caption "Mp3 playback" :icon-caption "Mp3 playback")
-    (setf (sdl:frame-rate) 30)
+    (sdl:window 400 50
+		:title-caption "Sample & Music playback"
+		:icon-caption "Sample and Music playback")
+    (setf (sdl:frame-rate) 10)
     (sdl:initialise-default-font)
+
+    (setf *status* "Unable to open Audio Mixer.")
     
-    (unless mixer-loaded
-      (if (= 0 (sdl-mixer:OPEN-AUDIO 22050 sdl-mixer:+DEFAULT-FORMAT+ 2 4096))
-	  (setf mixer-loaded t)
-	  (sdl:render-string-shaded "Unable to open audio mixer"
-				    sdl:*white* sdl:*black* :free t :cache t)))
-    (when mixer-loaded
-      (play-music))
+    (setf *mixer-opened* (sdl-mixer:OPEN-AUDIO))
+    (when *mixer-opened*
+      (setf *status* "Opened Audio Mixer.")
+      (setf *music* (sdl-mixer:load-music (sdl:create-path *music-file* *audio-path*)))
+      (setf *sample* (sdl-mixer:load-sample (sdl:create-path *sample-file* *audio-path*)))      
+      (play-music)
+      (play-sample))
 
     (sdl:with-events ()
       (:quit-event ()
-		   (when music
-		     (sdl-mixer:Halt-Music)
-		     (sdl-mixer:Free music)
-		     (setf music nil))
-		   (when mixer-loaded
-		     (sdl-mixer:Close-Audio)
-		     (setf mixer-loaded nil))
+		   (clean-up)
 		   t)
       (:key-down-event (:key key)
-		       (handle-key key)
+		       (when *mixer-opened*
+			 (handle-key key))
 		       (sdl:clear-display sdl:*black*))
       (:idle ()
 	     (sdl:draw-pixel-* (random 400) (random 50)
@@ -71,5 +94,8 @@
 						 :g (random 255)
 						 :b (random 255))
 			       :surface sdl:*default-display*)
-	     (sdl:draw-font-at-* 0 0 :surface sdl:*default-display*)
+	     (sdl:draw-string-solid-* *status* 1 1 :surface sdl:*default-display* :color sdl:*white*)
+	     (sdl:draw-string-solid-* *music-status* 1 11 :surface sdl:*default-display* :color sdl:*white*)
+	     (sdl:draw-string-solid-* *sample-status* 1 21 :surface sdl:*default-display* :color sdl:*white*)
+	     (sdl:draw-string-solid-* "<M> Toggle Music. <S> Play Samples." 1 40 :surface sdl:*default-display* :color sdl:*white*)
 	     (sdl:update-display)))))

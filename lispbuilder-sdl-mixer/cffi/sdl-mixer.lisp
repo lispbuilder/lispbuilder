@@ -125,8 +125,8 @@
 (cffi:defcfun ("Mix_FreeMusic" FREE-MUSIC) :void
   (music :pointer))
 
-(defun SDL-MIXER-VERSION (x)
-  (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::sdl-version)
+(defun SDL-MIXER-VERSION (sdl-version)
+  (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) sdl-version sdl-cffi::sdl-version)
     (setf sdl-cffi::major +SDL-MIXER-MAJOR-VERSION+
           sdl-cffi::minor +SDL-MIXER-MINOR-VERSION+
           sdl-cffi::patch +SDL-MIXER-PATCHLEVEL+)))

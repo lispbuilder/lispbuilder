@@ -8,194 +8,165 @@
   (:documentation "The main package of `lispbuilder-sdl-mixer'.")
   (:import-from #:lispbuilder-sdl-mixer-cffi
 
-		 lispbuilder-sdl-cffi::+SDL-MIXER-MAJOR-VERSION+
-		 lispbuilder-sdl-cffi::+SDL-MIXER-MINOR-VERSION+
-		 lispbuilder-sdl-cffi::+SDL-MIXER-PATCHLEVEL+
-		 lispbuilder-sdl-cffi::+MAJOR-VERSION+
-		 lispbuilder-sdl-cffi::+MINOR-VERSION+
-		 lispbuilder-sdl-cffi::+PATCHLEVEL+
-		 lispbuilder-sdl-cffi::Linked-Version
 		 lispbuilder-sdl-cffi::+CHANNELS+
 		 lispbuilder-sdl-cffi::+DEFAULT-FREQUENCY+
 		 lispbuilder-sdl-cffi::+DEFAULT-CHANNELS+
 		 lispbuilder-sdl-cffi::+MAX-VOLUME+
-		 lispbuilder-sdl-cffi::Chunk
-		 lispbuilder-sdl-cffi::allocated
-		 lispbuilder-sdl-cffi::abuf
-		 lispbuilder-sdl-cffi::alen
-		 lispbuilder-sdl-cffi::volume
-		 lispbuilder-sdl-cffi::Fading
-		 lispbuilder-sdl-cffi::Music-Type
-		 lispbuilder-sdl-cffi::Open-Audio
-		 lispbuilder-sdl-cffi::Allocate-Channels
-		 lispbuilder-sdl-cffi::Query-Spec
-		 lispbuilder-sdl-cffi::Load-WAV-RW
-		 lispbuilder-sdl-cffi::Load-MUS-RW
-		 lispbuilder-sdl-cffi::Quick-Load-WAV
-		 lispbuilder-sdl-cffi::Quick-Load-RAW
-		 lispbuilder-sdl-cffi::Free-Chunk
-		 lispbuilder-sdl-cffi::Free-Music
-		 lispbuilder-sdl-cffi::Get-Music-Type
-		 lispbuilder-sdl-cffi::Set-Post-Mix
-		 lispbuilder-sdl-cffi::Hook-Music
-		 lispbuilder-sdl-cffi::Hook-Music-Finished
-		 lispbuilder-sdl-cffi::Get-Music-Hook-Data
-		 lispbuilder-sdl-cffi::Channel-Finished
 		 lispbuilder-sdl-cffi::+CHANNEL-POST+
-		 lispbuilder-sdl-cffi::Register-Effect
-		 lispbuilder-sdl-cffi::Unregister-Effect
-		 lispbuilder-sdl-cffi::Unregister-All-Effects
-		 lispbuilder-sdl-cffi::Set-Panning
-		 lispbuilder-sdl-cffi::Set-Position
-		 lispbuilder-sdl-cffi::Set-Distance
-		 lispbuilder-sdl-cffi::Set-Reverse-Stereo
-		 lispbuilder-sdl-cffi::Reserve-Channels
-		 lispbuilder-sdl-cffi::Group-Channel
-		 lispbuilder-sdl-cffi::Group-Channels
-		 lispbuilder-sdl-cffi::Group-Available
-		 lispbuilder-sdl-cffi::Group-Count
-		 lispbuilder-sdl-cffi::Group-Oldest
-		 lispbuilder-sdl-cffi::Group-Newer
-		 lispbuilder-sdl-cffi::Play-Channel-Timed
-		 lispbuilder-sdl-cffi::Play-Music
-		 lispbuilder-sdl-cffi::Fade-In-Music
-		 lispbuilder-sdl-cffi::Fade-In-Music-Pos
-		 lispbuilder-sdl-cffi::Fade-In-Channel-Timed
-		 lispbuilder-sdl-cffi::Volume
-		 lispbuilder-sdl-cffi::Volume-Chunk
-		 lispbuilder-sdl-cffi::Volume-Music
-		 lispbuilder-sdl-cffi::Halt-Channel
-		 lispbuilder-sdl-cffi::Halt-Group
-		 lispbuilder-sdl-cffi::Halt-Music
-		 lispbuilder-sdl-cffi::Expire-Channel
-		 lispbuilder-sdl-cffi::Fade-Out-Channel
-		 lispbuilder-sdl-cffi::Fade-Out-Group
-		 lispbuilder-sdl-cffi::Fade-Out-Music
-		 lispbuilder-sdl-cffi::Fading-Music
-		 lispbuilder-sdl-cffi::Fading-Channel
-		 lispbuilder-sdl-cffi::Pause
-		 lispbuilder-sdl-cffi::Resume
-		 lispbuilder-sdl-cffi::Paused
-		 lispbuilder-sdl-cffi::Pause-Music
-		 lispbuilder-sdl-cffi::Resume-Music
-		 lispbuilder-sdl-cffi::Rewind-Music
-		 lispbuilder-sdl-cffi::Paused-Music
-		 lispbuilder-sdl-cffi::Set-Music-Position
-		 lispbuilder-sdl-cffi::Playing
-		 lispbuilder-sdl-cffi::Playing-Music
-		 lispbuilder-sdl-cffi::Set-Music-CMD
-		 lispbuilder-sdl-cffi::Set-Synchro-Value
-		 lispbuilder-sdl-cffi::Get-Synchro-Value
-		 lispbuilder-sdl-cffi::Close-Audio
-   
-
 		 lispbuilder-sdl-cffi::SDL-MIXER-VERSION
-		 lispbuilder-sdl-cffi::VERSION
+;;		 lispbuilder-sdl-cffi::VERSION
 		 lispbuilder-sdl-cffi::+DEFAULT-FORMAT+
 
-		 lispbuilder-sdl-cffi::Play-Channel
-		 lispbuilder-sdl-cffi::Fade-In-Channel
-		 lispbuilder-sdl-cffi::Get-Error
-
-		 lispbuilder-sdl-cffi::free
 		 lispbuilder-sdl-cffi::this-fp
 		 lispbuilder-sdl-cffi::gc-p
 		 lispbuilder-sdl-cffi::simple-free)
 
   (:export
 
-   #:+SDL-MIXER-MAJOR-VERSION+
-   #:+SDL-MIXER-MINOR-VERSION+
-   #:+SDL-MIXER-PATCHLEVEL+
-   #:+MAJOR-VERSION+
-   #:+MINOR-VERSION+
-   #:+PATCHLEVEL+
+   ;; 4.1 General 
+   ;; 4.1.1 Mix_Linked_Version
    #:Linked-Version
+   ;; 4.1.2 Mix_OpenAudio
+   #:Open-Audio
+   ;; 4.1.3 Mix_CloseAudio
+   #:Close-Audio
+   ;; 4.1.4 Mix_SetError 
+   ;; 4.1.5 Mix_GetError 
+   ;; 4.1.6 Mix_QuerySpec
+   #:audio-frequency-p
+   #:audio-format-p
+   #:audio-channels-p
+   #:audio-opened-p
+
+   ;; 4.2 Samples 
+   ;; 4.2.1 Mix_LoadWAV
+   #:Load-sample
+   ;; 4.2.2 Mix_LoadWAV_RW 
+   ;; 4.2.3 Mix_QuickLoad_WAV 
+   ;; 4.2.4 Mix_QuickLoad_RAW 
+   ;; 4.2.5 Mix_VolumeChunk
+   #:SAMPLE-VOLUME
+   ;; 4.2.6 Mix_FreeChunk
+   #:FREE
+
+   ;; 4.3 Channels 
+   ;; 4.3.1 Mix_AllocateChannels
+   #:ALLOCATE-CHANNELS
+   ;; 4.3.2 Mix_Volume 
+   #:CHANNEL-VOLUME
+   ;; 4.3.3 Mix_PlayChannel
+   #:PLAY-SAMPLE
+   ;; 4.3.4 Mix_PlayChannelTimed
+   ;; PLAY-SAMPLE
+   ;; 4.3.5 Mix_FadeInChannel
+   ;; PLAY-SAMPLE
+   ;; 4.3.6 Mix_FadeInChannelTimed
+   ;; PLAY-SAMPLE
+   ;; 4.3.7 Mix_Pause
+   #:PAUSE-CHANNEL
+   ;; 4.3.8 Mix_Resume
+   #:RESUME-CHANNEL
+   ;; 4.3.9 Mix_HaltChannel
+   #:HALT-SAMPLE
+   ;; 4.3.10 Mix_ExpireChannel
+   ;; #:HALT-SAMPLE
+   ;; 4.3.11 Mix_FadeOutChannel
+   ;; #:HALT-SAMPLE
+   ;; 4.3.12 Mix_ChannelFinished
+   #:REGISTER-SAMPLE-FINISHED
+   #:UNREGISTER-SAMPLE-FINISHED
+   ;; 4.3.13 Mix_Playing
+   #:SAMPLE-PLAYING-P
+   #:CHANEL-HALTED-P
+   ;; 4.3.14 Mix_Paused
+   #:SAMPLE-PAUSED-P
+   ;; 4.3.15 Mix_FadingChannel
+   #:SAMPLE-FADING-P
+   ;; 4.3.16 Mix_GetChunk
+   #:SAMPLE-FROM-CHANNEL
+
+   ;; 4.4 Groups 
+   ;; 4.4.1 Mix_ReserveChannels 
+   ;; 4.4.2 Mix_GroupChannel 
+   ;; 4.4.3 Mix_GroupChannels 
+   ;; 4.4.4 Mix_GroupCount 
+   ;; 4.4.5 Mix_GroupAvailable 
+   ;; 4.4.6 Mix_GroupOldest 
+   ;; 4.4.7 Mix_GroupNewer 
+   ;; 4.4.8 Mix_FadeOutGroup 
+   ;; 4.4.9 Mix_HaltGroup 
+
+   ;; 4.5 Music 
+   ;; 4.5.1 Mix_LoadMUS
+   #:Load-MUSIC
+   ;; 4.5.2 Mix_FreeMusic
+   ;; #:FREE
+   ;; 4.5.3 Mix_PlayMusic
+   #:PLAY-MUSIC
+   ;; 4.5.4 Mix_FadeInMusic
+   ;; #:PLAY-MUSIC
+   ;; 4.5.5 Mix_FadeInMusicPos
+   ;; #:PLAY-MUSIC
+   ;; 4.5.6 Mix_HookMusic
+   #:REGISTER-MUSIC-MIXER
+   #:UNREGISTER-MUSIC-MIXER
+   ;; 4.5.7 Mix_VolumeMusic
+   #:MUSIC-VOLUME
+   ;; 4.5.8 Mix_PauseMusic
+   #:PAUSE-MUSIC
+   ;; 4.5.9 Mix_ResumeMusic
+   #:RESUME-CHANNEL
+   ;; 4.5.10 Mix_RewindMusic
+   #:REWIND-MUSIC
+   ;; 4.5.11 Mix_SetMusicPosition
+   #:MUSIC-POSITION
+   ;; 4.5.12 Mix_SetMusicCMD
+   #:MUSIC-CMD
+   ;; 4.5.13 Mix_HaltMusic
+   #:HALT-MUSIC
+   ;; 4.5.14 Mix_FadeOutMusic
+   ;; #:HALT-MUSIC
+   ;; 4.5.15 Mix_HookMusicFinished
+   #:REGISTER-MUSIC-FINISHED
+   #:UNREGISTER-MUSIC-FINISHED
+   ;; 4.5.16 Mix_GetMusicType
+   #:MUSIC-TYPE-P
+   #:MUSIC-TYPE-OF
+   ;; 4.5.17 Mix_PlayingMusic
+   #:MUSIC-PLAYING-P
+   ;; 4.5.18 Mix_PausedMusic
+   #:MUSIC-PAUSED-P
+   ;; 4.5.19 Mix_FadingMusic
+   #:MUSIC-FADING-P
+   ;; 4.5.20 Mix_GetMusicHookData 
+
+   ;; 4.6 Effects 
+   ;; 4.6.1 Mix_RegisterEffect 
+   ;; 4.6.2 Mix_UnregisterEffect 
+   ;; 4.6.3 Mix_UnregisterAllEffects 
+   ;; 4.6.4 Mix_SetPostMix 
+   ;; 4.6.5 Mix_SetPanning 
+   ;; 4.6.6 Mix_SetDistance 
+   ;; 4.6.7 Mix_SetPosition 
+   ;; 4.6.8 Mix_SetReverseStereo
+
+
    #:+CHANNELS+
    #:+DEFAULT-FREQUENCY+
    #:+DEFAULT-CHANNELS+
    #:+MAX-VOLUME+
-   #:Chunk
-   #:allocated
-   #:abuf
-   #:alen
-   #:volume
-   #:Fading
-   #:Music-Type
-   #:Open-Audio
-   #:Allocate-Channels
-   #:Query-Spec
-   #:Load-WAV-RW
-   #:Load-MUS
-   #:Load-MUS-RW
-   #:Quick-Load-WAV
-   #:Quick-Load-RAW
-   #:Free-Chunk
-   #:Free-Music
-   #:Get-Music-Type
-   #:Set-Post-Mix
-   #:Hook-Music
-   #:Hook-Music-Finished
-   #:Get-Music-Hook-Data
-   #:Channel-Finished
-   #:+CHANNEL-POST+
-   #:Register-Effect
-   #:Unregister-Effect
-   #:Unregister-All-Effects
-   #:Set-Panning
-   #:Set-Position
-   #:Set-Distance
-   #:Set-Reverse-Stereo
-   #:Reserve-Channels
-   #:Group-Channel
-   #:Group-Channels
-   #:Group-Available
-   #:Group-Count
-   #:Group-Oldest
-   #:Group-Newer
-   #:Play-Channel-Timed
-   #:Play-Music
-   #:Fade-In-Music
-   #:Fade-In-Music-Pos
-   #:Fade-In-Channel-Timed
-   #:Volume
-   #:Volume-Chunk
-   #:Volume-Music
-   #:Halt-Channel
-   #:Halt-Group
-   #:Halt-Music
-   #:Expire-Channel
-   #:Fade-Out-Channel
-   #:Fade-Out-Group
-   #:Fade-Out-Music
-   #:Fading-Music
-   #:Fading-Channel
-   #:Pause
-   #:Resume
-   #:Paused
-   #:Pause-Music
-   #:Resume-Music
-   #:Rewind-Music
-   #:Paused-Music
-   #:Set-Music-Position
-   #:Playing
-   #:Playing-Music
-   #:Set-Music-CMD
-   #:Set-Synchro-Value
-   #:Get-Synchro-Value
-   #:Get-Chunk
-   #:Close-Audio
-   
-
-   #:SDL-MIXER-VERSION
-   #:VERSION
    #:+DEFAULT-FORMAT+
-   #:Load-WAV
-   #:Play-Channel
-   #:Fade-In-Channel
-   #:Get-Error
+   #:+DEFAULT-SAMPLE-BUFFER+
 
-   #:free
+   #:+CHANNEL-POST+
+   #:SDL-MIXER-VERSION
+;;   #:VERSION
+
    #:this-fp
    #:gc-p
-   #:simple-free))
+   #:simple-free
+
+;;   #:*DEFAULT-MUSIC*
+;;   #:*DEFAULT-CHUNK*
+
+   ))
