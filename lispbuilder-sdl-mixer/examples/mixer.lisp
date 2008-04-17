@@ -99,3 +99,4 @@
 	     (sdl:draw-string-solid-* *sample-status* 1 21 :surface sdl:*default-display* :color sdl:*white*)
 	     (sdl:draw-string-solid-* "<M> Toggle Music. <S> Play Samples." 1 40 :surface sdl:*default-display* :color sdl:*white*)
 	     (sdl:update-display)))))
+
