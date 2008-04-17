@@ -25,7 +25,10 @@
 	      :components
 	      ((:doc-file "README")
 	       (:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")))
+	       (:doc-file "CONTRIBUTORS")
+	       (:html-file "lispbuilder-sdl-mixer")
+	       (:html-file "footer")
+	       (:html-file "header")))
      (:module "build"
 	      :components
 	      ((:static-file "sdlmixerswig.i")))))

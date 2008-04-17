@@ -63,7 +63,7 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
 
 (defun sample-from-channel (channel)
       "Returns currently playing or most recently played sample on `CHANNEL` as a new [CHUNK](#chunk) object, 
-or NIL if `CHANNEL` is not allocated or `CHANNEL` has not yet played out any samples.
+or `NIL` if `CHANNEL` is not allocated or `CHANNEL` has not yet played out any samples.
 NOTE: The sample may already have been freed and therefore the pointer to the foreign object in [CHUNK](#chunk) may not be valid."
   (let ((chunk-fp (sdl-mixer-cffi::get-chunk channel)))
     (if (sdl-base:is-valid-ptr chunk-fp)
@@ -75,27 +75,27 @@ NOTE: The sample may already have been freed and therefore the pointer to the fo
 		   (format +DEFAULT-FORMAT+)
 		   (channels +DEFAULT-CHANNELS+)
 		   (chunksize +DEFAULT-SAMPLE-BUFFER+))
-  "Initializes the mixer.
+  "Initializes the mixer. SDL must be initialized with [SDL-INIT-AUDIO](#sdl-init-audio) prior to this call. 
+[OPEN-AUDIO](#open-audio) can be called multiple times, however `FORMAT` is set on the first call and will not changed on subsequent calls. 
+The audio device must be closed and re-opened for any change to `FORMAT` to take effect.
+[CLOSE-AUDIO](#close-audio) must be called the same number of time to close the audio device.
+Use [ALLOCATE-CHANNELS](#allocate-channels) to set the number of mixing channels. [OPEN-AUDIO](#open-audio) will allocate [+MIX-CHANNELS+](#+channels+) by default. 
 
 ##### Parameters
 
 * `FREQUENCY` is the output sampling frequency in samples per second (Hz). Default is [+DEFAULT-FREQUENCY+](#+default-frequency+).
+Most games use a `FREQUENCY` of [+DEFAULT-FREQUENCY+](#+default-frequency+). The higher the `FREQUENCY` the greater the CPU resource requirements. 
+\(A value of 44100 is the CD audio rate\).
 * `FORMAT` is the output sample format. Default is [+DEFAULT-FORMAT+](#+default-format+).
-* `CHANNELS` sets the number of sound channels in the output. Set to 2 for stereo, 1 for mono. Default is [+DEFAULT-CHANNELS+](#+default-channels+). 
-This is not the same Default is [ALLOCATE-CHANNELS](#allocate-channels) which sets the number if mixing channels.
-* `CHUNKSIZE` is the bytes used per output sample. Default is [+DEFAULT-SAMPLE-BUFFER+](#+default-sample-buffer+) bytes.
+* `CHANNELS` sets the number of sound channels in the output. Default is [+DEFAULT-CHANNELS+](#+default-channels+). 
+This is not the same as [ALLOCATE-CHANNELS](#allocate-channels) which sets the number of mixing channels.
+* `CHUNKSIZE` is the size in bytes of each mixed sample buffer. Default is [+DEFAULT-SAMPLE-BUFFER+](#+default-sample-buffer+) bytes.
+The smaller the `CHUNKSIZE`, the more frequenctly the mixer hooks are called. 
+Increase `CHUNKSIZE` to decrease CPU resources, if sound skips or if playing music. Decrease `CHUNKSIZE` to decrease sound lag.
 
 ##### Returns
 
-* T on success and NIL on failure.
-
-SDL must be initialized with [SDL-INIT-AUDIO](#sdl-init-audio) prior to this call. 
-Most games use a `FREQUENCY` of 22050 [+DEFAULT-FREQUENCY+](#+default-frequency+). A value of 44100 is 44.1KHz is the CD audio rate.
-`CHUNKSIZE` is the size of each mixed sample. The smaller the `CHUNKSIZE`, the more frequenctly the mixer hooks are called. 
-Increase `CHUNKSIZE` if sound skips or if plaing music. Decrease `CHUNKSIZE` to decrease sound lag.
-[+MIX-CHANNELS+](#+channels+) (8) mixing channels are allocated by default. This can be changed by calling [ALLOCATE-CHANNELS](#allocate-channels).
-[OPEN-AUDIO](#open-audio) can be called multiple times, however `FORMAT` will not changed on subsequent calls. The device must be closed and re-opened for any change to `FORMAT`.
-[CLOSE-AUDIO](#close-audio) must be called the same number of time to close the audio device. "
+* `T` on success and `NIL` on failure."
   ;; Make sure that SDL is initialized with SDL:SDL-INIT-AUDIO
   (when (= 0 (sdl:return-sub-systems-of-status SDL:SDL-INIT-AUDIO t))
     (error "OPEN-AUDIO: SDL must be initialized with SDL:SDL-INIT-AUDIO prior to calling OPEN-AUDIO."))
@@ -511,6 +511,6 @@ to fill the music audio buffer."
     (setf *audio-buffer* func)
     (sdl-mixer-cffi::hook-music (cffi:callback fill-audio-buffer) (cffi:null-pointer)))
 (defun unregister-music-mixer ()
-    "Removes any callback function that whould have been called to fill the music audio buffer."
+    "Removes any callback function set by [REGISTER-MUSIC-MIXER](#register-music-mixer)."
     (setf *audio-buffer* nil)
     (sdl-mixer-cffi::hook-music (cffi:null-pointer) (cffi:null-pointer)))

@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+<html> 
+
+  <head>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
+      <title>~A - ~A</title>
+      <style type=\"text/css\">
+	pre { padding:5px; background-color:#e0e0e0 }
+	h3, h4 { text-decoration: underline; }
+	a { text-decoration: none; padding: 1px 2px 1px 2px; }
+	a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
+	a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+	a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
+	a.none { text-decoration: none; padding: 0; }
+	a.none:visited { text-decoration: none; padding: 0; } 
+	a.none:hover { text-decoration: none; border: none; padding: 0; } 
+	a.none:focus { text-decoration: none; border: none; padding: 0; } 
+	a.noborder { text-decoration: none; padding: 0; } 
+	a.noborder:visited { text-decoration: none; padding: 0; } 
+	a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
+	a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+	pre.none { padding:5px; background-color:#ffffff }
+	/* code for examples, code and pathnames*/
+      
+	div.code, div.path {
+	color: black;
+	}
+
+	div.repl {
+	color: Green;
+	}      
+
+      </style>
+    </head>
+    
+    <body bgcolor=white>
+      
+      <h2> ~2:*~A - ~A</h2>
+      
+      <blockquote>
+	<br>&nbsp;</br><h3><a name=abstract class=none>Abstract</a></h3>
+	
+	<p>
+	  LISPBUILDER-SDL-MIXER provides a Common Lisp binding to the
+	  <a href="http://www.libsdl.org/projects/SDL_mixer/">SDL_mixer</a> library. 
+	  The library mixes multiple samples into one or more audio output channels.
+	  Lisp callbacks provide the capability to implement custom mixing algorithms and  
+	  custom audio effects over and above the distance attenuation, panning and 
+	  reverse stereo effects provided by the SDL_mixer library. 
+	  WAVE, MOD, MIDI, OGG, AIFF, RIFF and VOC formats are supported.
+	</p>
+
+	<p>
+	  LISPBUILDER-SDL-MIXER has a dependency on <a href="http://lispbuilder.sourceforge.net/lispbuilder-sdl.html">LISPBUILDER-SDL</a>.
+	</p>
+	
+	<p>
+	  The code comes with
+	  a <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a> so you can basically 
+	  do with it whatever you want.
+	</p>
+	
+	<p>
+	  <font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/~A.tgz">http://www.balooga.com/lispbuilder/~:*~A.tgz</a>.
+	</p>
+		
+      </blockquote>
+      
+      <br>&nbsp;</br><h3><a class=none name="exampleUsage">Example of Usage</a></h3>
+      <div class="code">
+	<pre>
+;; Load an mp3 music file and play the file continuously.
+(sdl:with-init (sdl:sdl-init-video sdl:sdl-init-audio)
+  (sdl:window 50 10)
+
+  (sdl-mixer:OPEN-AUDIO)
+  (let ((music (sdl-mixer:load-music "sample.mp3")))
+    (sdl-mixer:play-music music :loop t)
+
+    (sdl:with-events ()
+      (:quit-event ()
+		   (sdl-mixer:Halt-Music)
+		   (sdl-mixer:free music)
+		   t)
+      (:idle () (sdl:update-display)))))
+	</pre>
+      </div>
+      
+      <br>&nbsp;</br><h3><a class=none name="contents">Contents</a></h3>
+      <ol>
+	<li><a href="#download">Download</a></li>
+	<li><a href="#support">Support</a></li>
+	<li><a href="#license">License</a></li>
+	<li><a href="#installation">Installation</a></li>
+	<li><a href="#usage">Usage</a></li>
+	<li><a href="#examples">Examples</a></li>
+	<li><a href="#dictionary">The ~A dictionary</a></li>
+	<ol>
+	  ~{      <li><a href="#~A"><code>~:*~A</code></a></li>
+	  ~}    </ol>
+	<li><a href="#ack">Acknowledgements</a></li>
+      </ol>
+	      
+      <br>&nbsp;</br><h3><a class=none name="download">Download</a></h3>
+
+      <p>
+	<font color=red>Current Version:</font> The latest stable version of ~2:*~A, together with this documentation can be downloaded from 
+	<a href="http://www.balooga.com.com/lispbuilder/~2:*~A.tgz">http://www.balooga.com/lispbiulder/~:*~A.tgz</a>. The
+	current version is 0.2.0.
+      </p>
+
+      <p>
+	<font color="red">Development:</font> The latest developement version is available via anonymous SVN: 
+	<div class="repl">
+	  <pre>svn co https://lispbuilder.svn.sourceforge.net/svnroot/lispbuilder lispbuilder-sdl-mixer</pre>
+	</div>
+      </p>
+
+      <br>&nbsp;</br><h3><a class=none name="support">Documentation, Support & Mailing Lists</a></h3>
+      
+      Questions answered and help given on the <a href="http://www.lispniks.com/mailman/listinfo/application-builder">lispbuilder discussion list</a>.
+      Documentation for LISPBUILDER-SDL and related packages is available on the <a href="http://lispbuilder.sourceforge.net">LISPBUILDER project page on Sourceforge</a>. 
+      For additional information, look at the <a href="http://wiki.alu.org/Gardeners_Projects">Lisp Gardeners page</a>, and 
+      <a href="http://wiki.alu.org/Application_Builder">Application Builder page</a> 
+      on the ALU's (Association of Lisp Users) wiki.
+
+      <br>&nbsp;</br><h3><a class=none name="license">License</a></h3>
+
+      LISPBUILDER-SDL-MIXER is distributed under the 
+      <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
+	
+      <br>&nbsp;</br><h3><a class=none name="installation">Installation</a></h3>
+      
+      See <a href="http://lispbuilder.sourceforge.net/index.html#installation">the LISPBUILDER documentation</a>
+      for general installation instructions.
+
+      <br>&nbsp;</br><h3><a class=none name="usage">Using LISPBUILDER-SDL-MIXER</a></h3>
+
+      Enter the following at the REPL to compile and load the LISPBUILDER-SDL-MIXER package:
+      <div class="repl">
+	<pre>(asdf:operate 'asdf:load-op :lispbuilder-sdl-mixer)</pre>
+      </div>
+      
+      ASDF will automatically load and compile the CFFI and :LISPBUILDER-SDL dependencies. 
+	
+      <br>&nbsp;</br><h3><a class=none name="examples">Included Examples</a></h3>
+
+      Enter the following at the REPL to compile and load the examples included in the 
+      LISPBUILDER-SDL-MIXER-EXAMPLES package:
+
+      <div class="repl">
+	<pre>(asdf:operate 'asdf:load-op :lispbuilder-sdl-mixer-examples)</pre>
+      </div>
+
+      Run the examples by entering any of the following at the REPL:
+
+      <div class="repl">
+	<pre>(SDL-MIXER-EXAMPLES:MIXER)</pre>
+      </div>
+
+      <br>&nbsp;</br><h3><a class=none name="dictionary">The ~A dictionary</a></h3>
