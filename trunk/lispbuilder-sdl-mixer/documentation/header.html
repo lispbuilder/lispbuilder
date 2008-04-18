@@ -81,6 +81,7 @@
       (:quit-event ()
 		   (sdl-mixer:Halt-Music)
 		   (sdl-mixer:free music)
+		   (sdl-mixer:close-audio)
 		   t)
       (:idle () (sdl:update-display)))))
 	</pre>
@@ -89,11 +90,11 @@
       <br>&nbsp;</br><h3><a class=none name="contents">Contents</a></h3>
       <ol>
 	<li><a href="#download">Download</a></li>
-	<li><a href="#support">Support</a></li>
-	<li><a href="#license">License</a></li>
 	<li><a href="#installation">Installation</a></li>
 	<li><a href="#usage">Usage</a></li>
 	<li><a href="#examples">Examples</a></li>
+	<li><a href="#support">Support</a></li>
+	<li><a href="#license">License</a></li>
 	<li><a href="#dictionary">The ~A dictionary</a></li>
 	<ol>
 	  ~{      <li><a href="#~A"><code>~:*~A</code></a></li>

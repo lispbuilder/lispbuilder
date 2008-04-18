@@ -7,37 +7,51 @@
 #+lispworks(system:setup-for-alien-threads)
 
 ;;;; Add documentation strings for defconstants in cffi/sdl-mixer.lisp
-(setf (documentation 'sdl-mixer:+default-format+ 'variable)
-      "Default SDL audio format; little-endian is `AUDIO-S16LSB`, big-endian is `AUDIO-S16MSB`.
+(setf (documentation '+default-format+ 'variable)
+      "Default SDL audio format; little-endian is `SDL:AUDIO-S16LSB`, big-endian is `SDL:AUDIO-S16MSB`.
 Audio formats are defined in `SDL_audio.h`;
 
-* `AUDIO_U8` : Unsigned 8-bit samples
-* `AUDIO_S8` : Signed 8-bit samples
-* `AUDIO_U16LSB` : Unsigned 16-bit samples, in little-endian byte order
-* `AUDIO_S16LSB` : Signed 16-bit samples, in little-endian byte order
-* `AUDIO_U16MSB` : Unsigned 16-bit samples, in big-endian byte order
-* `AUDIO_S16MSB` : Signed 16-bit samples, in big-endian byte order
-* `AUDIO_U16` : same as `AUDIO_U16LSB` (for backwards compatability probably)
-* `AUDIO_S16` : same as `AUDIO_S16LSB` (for backwards compatability probably)
-* `AUDIO_U16SYS` : Unsigned 16-bit samples, in system byte order
-* `AUDIO_S16SYS` : Signed 16-bit samples, in system byte order")
+* `SDL:AUDIO-U8`     : Unsigned 8-bit samples
+* `SDL:AUDIO-S8`     : Signed 8-bit samples
+* `SDL:AUDIO-U16LSB` : Unsigned 16-bit samples, in little-endian byte order
+* `SDL:AUDIO-S16LSB` : Signed 16-bit samples, in little-endian byte order
+* `SDL:AUDIO-U16MSB` : Unsigned 16-bit samples, in big-endian byte order
+* `SDL:AUDIO-S16MSB` : Signed 16-bit samples, in big-endian byte order
+* `SDL:AUDIO-U16`    : same as `SDL:AUDIO-U16LSB` (for backwards compatability probably)
+* `SDL:AUDIO-S16`    : same as `SDL:AUDIO-S16LSB` (for backwards compatability probably)
+* `SDL:AUDIO-U16SYS` : Unsigned 16-bit samples, in system byte order
+* `SDL:AUDIO-S16SYS` : Signed 16-bit samples, in system byte order")
 
 
-(setf (documentation 'sdl-mixer:sdl-mixer-version 'function)
+(setf (documentation 'sdl-mixer-version 'function)
       "Sets the `SDL-VERSION` structure with the version of the library..")
-(setf (documentation 'sdl-mixer:+channels+ 'variable)
+(setf (documentation '+channels+ 'variable)
       "Default number of `8` mixer channels.")
-(setf (documentation 'sdl-mixer:+default-frequency+ 'variable)
+(setf (documentation '+default-frequency+ 'variable)
       "Default sampling frequency of `22,050hz`")
-(setf (documentation 'sdl-mixer:+default-channels+ 'variable)
+(setf (documentation '+default-channels+ 'variable)
       "Default number of `2` sound channels for Stereo output.")
-(setf (documentation 'sdl-mixer:+max-volume+ 'variable)
-      "Default volume of `128` for samples, output channels and mix channels.")
-(setf (documentation 'sdl-mixer:+channel-post+ 'variable)
+(setf (documentation '+max-volume+ 'variable)
+      "Default volume of `128` for [CHUNK](#chunk), output channels and mix channels.")
+(setf (documentation '+channel-post+ 'variable)
       "Default channel of `-2` used for post-processing.")
 
+(setf (documentation 'chunk 'standard-class)
+      "A new `CHUNK` object is returned by [LOAD-SAMPLE](#load-sample) and [sample-FROM-CHANNEL](#sample-from-channel).
+A `CHUNK` object wraps a reference to the foreign buffer containing the `SAMPLE` data.
+The sample referenced by the `CHUNK` can be freed by calling [FREE](#free). 
+Do not free a `CHUNK` while the `SAMPLE` is playing.
+Do not attempt to use a `CHUNK` after it is freed.")
+
+(setf (documentation 'music 'standard-class)
+      "A new `MUSIC` object is returned by [LOAD-MUSIC](#load-music).
+A `MUSIC` object wraps a reference to the foreign buffer containing the `MUSIC` data.
+The sample referenced by `MUSIC` can be freed by calling [FREE](#free). 
+Do not free `MUSIC` when playing.
+Do not attempt to use `MUSIC` after it is freed.")
+
 (defconstant +default-sample-buffer+ 4096
-  "Default size of the sample output buffer is 4906 bytes")
+  "Default size of the sample output buffer is `4096` bytes")
 
 (defun load-music (filepath)
   "Loads the music file at location `FILEPATH`. Must be a `WAVE`, `MOD`, `MIDI`, `OGG` or `MP3` file.
@@ -116,7 +130,7 @@ Optionally `ALL` when `T` will forcibly close the audio device, no matter how ma
 		   (loop nil)
 		   (fade nil)
 		   (position 0))
-  "Starts playing `MUSIC` from `POSITION`. The music can be faded-in over the number of milliseconds in `FADE`.
+  "Starts playing [MUSIC](#music) from `POSITION`. The music can be faded-in over the number of milliseconds in `FADE`.
 Automatically repeats the music when finished the number of time specified in `LOOP`. 
 Any previous music will be halted. Will block until any current fade effect completes.
 
@@ -148,7 +162,7 @@ Any previous music will be halted. Will block until any current fade effect comp
 		    (loop nil)
 		    (fade nil)
 		    (ticks t))
-  "Plays the sample in `CHUNK` for `TICKS` milliseconds, repeated `LOOP` times.
+  "Plays the sample in [CHUNK](#chunk) for `TICKS` milliseconds, repeated `LOOP` times.
 The sample is repeated the number of times specified in `LOOP`, or until `TICKS`. 
 The sample will fade-in over `FADE` milliseconds. 
 The callback set by [REGISTER-SAMPLE-FINISHED](#register-sample-finished) is called when the sample stops playing.
@@ -280,13 +294,13 @@ Does not return the number of mixing channels allocated."
     opened?))
 
 (defun sample-volume (chunk)
-  "Returns the volume of the sample in `CHUNK`, as an `INTEGER` from 0 to [+MAX-VOLUME+](#+max-volume+)."
+  "Returns the volume of the sample in [CHUNK](#chunk), as an `INTEGER` from 0 to [+MAX-VOLUME+](#+max-volume+)."
   (sdl-mixer-cffi::volume-chunk chunk -1))
 (defun (setf sample-volume) (volume chunk)
-  "Sets the `VOLUME` of the sample in `CHUNK`. 
+  "Sets the `VOLUME` of the sample in [CHUNK](#chunk). 
 `VOLUME` can be from 0 to [+MAX-VOLUME+](#+max-volume+).
-The `VOLUME` will take effect when `CHUNK` is mixed into the output.
-Returns the previous `VOLUME` for `CHUNK`."
+The `VOLUME` will take effect when [CHUNK](#chunk) is mixed into the output.
+Returns the previous `VOLUME` for [CHUNK](#chunk)."
   (sdl-mixer-cffi::volume-chunk chunk volume))
 
 (defun channel-volume (channel)
@@ -312,13 +326,13 @@ Returns the previous music `VOLUME` as an `INTEGER` from 0 to [+MAX-VOLUME+](#+m
   (sdl-mixer-cffi::volume-music volume))
 
 (defmethod free ((chunk sdl-mixer-cffi::chunk))
-  "Frees the sample in `CHUNK`. Do not reuse `CHUNK` once freed. Do not attempt to free `CHUNK` that is still being played."
+  "Frees the sample in [CHUNK](#chunk). Do not reuse a [CHUNK](#chunk) once freed. Do not attempt to free a [CHUNK](#chunk) that is still being played."
   (sdl-mixer-cffi::free chunk))
 
 (defmethod free ((music sdl-mixer-cffi::music))
-  "Frees the music in `MUSIC`. Stops `MUSIC` if currently playing. 
+  "Frees the music in [MUSIC](#music). Stops [MUSIC](#music) if currently playing. 
 Will block until any current fade effect completes. 
- Do not reuse `MUSIC` once freed."
+ Do not reuse [MUSIC](#music) once freed."
   (sdl-mixer-cffi::free music))
 
 (defun sample-playing-p (channel)
@@ -426,8 +440,8 @@ To rewind, use [REWIND-MUSIC](#rewind-music) to jump to the start of the song, t
       nil))
 
 (defun music-type-p (music)
-  "Returns the format type of `MUSIC` as one of `WAV`, `MOD`, `MID`, `OGG`, `MP3`, `MP3-MAD`, `FLAC` or `CMD`.
-Returns the format type of the currently playing music when `MUSIC` is `NIL`.
+  "Returns the format type of [MUSIC](#music) as one of `WAV`, `MOD`, `MID`, `OGG`, `MP3`, `MP3-MAD`, `FLAC` or `CMD`.
+Returns the format type of the currently playing music when [MUSIC](#music) is `NIL`.
 Returns `NIL` is no music is playing."
   (let ((ret (sdl-mixer-cffi::get-music-type (if music music (cffi:null-pointer)))))
     (if ret
@@ -437,9 +451,9 @@ Returns `NIL` is no music is playing."
 	      type?)))))
 
 (defun music-type-of (music type)
-  "Returns `T` if `MUSIC` is of `TYPE`, returns `NIL` otherwise. 
+  "Returns `T` if [MUSIC](#music) is of `TYPE`, returns `NIL` otherwise. 
 `TYPE` may be one of `WAV`, `MOD`, `MID`, `OGG`, `MP3`, `MP3-MAD`, `FLAC` or `CMD`.
-If `MUSIC` is `NIL` returns the type of the currently playing music. Returns `NIL` is no music is playing."
+If [MUSIC](#music) is `NIL` returns the type of the currently playing music. Returns `NIL` is no music is playing."
   (if (eq (music-type-p music) type)
       t
       nil))
@@ -470,8 +484,14 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   (cffi:null-pointer))
 
 (defun register-sample-finished (func)
-  "Sets the function that is called when a sample finishes playback or is halted.
-`FUNC` is of the format #\(lambda \(channel\)\)."
+  "Sets the callback that is executed when a sample [CHUNK](#chunk) finishes playback or is halted.
+`FUNC` is of the format `#\(lambda \(channel\)\)`
+
+##### Example
+
+    \(REGISTER-SAMPLE-FINISHED 
+        \(lambda \(channel\)
+          \(FORMAT T \"SAMPLE FINISHED ON CHANNEL: ~A\" channel\)\)\)"
   (setf *channel-finished* func)
   (sdl-mixer-cffi::channel-finished (cffi:callback channel-finished-proc)))
 (defun unregister-sample-finished ()
@@ -488,8 +508,14 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   (cffi:null-pointer))
 
 (defun register-music-finished (func)
-  "Sets the function that is called when music finishes playback or is halted.
-`FUNC` is of the format #\(lambda \(\)\)."
+  "Sets the callback that is executed when [MUSIC](#music) finishes playback or is halted.
+`FUNC` is of the format `#\(lambda \(\)\)`
+
+##### Example
+
+    \(REGISTER-MUSIC-FINISHED 
+        \(lambda \(\)
+          \(FORMAT T \"MUSIC FINISHED\"\)\)\)"
   (setf *music-finished* func)
   (sdl-mixer-cffi::hook-music-finished (cffi:callback music-finished-proc)))
 (defun unregister-music-finished ()
@@ -506,8 +532,14 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   (cffi:null-pointer))
 
 (defun register-music-mixer (func)
-    "Takes a function of the format #\(lambda \(user-data stream len\)\) that is called 
-to fill the music audio buffer."
+    "Sets the callback that is executed to fill the music audio output buffer.
+`FUNC` is of the format `#\(lambda \(user-data stream len\)\)`
+
+##### Example
+
+    \(REGISTER-MUSIC-MIXER 
+        \(lambda \(user stream len\)
+          'FILL-THE-AUDIO-OUTPUT-BUFFER\)\)"
     (setf *audio-buffer* func)
     (sdl-mixer-cffi::hook-music (cffi:callback fill-audio-buffer) (cffi:null-pointer)))
 (defun unregister-music-mixer ()
