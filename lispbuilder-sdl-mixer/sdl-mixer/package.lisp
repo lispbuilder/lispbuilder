@@ -17,9 +17,13 @@
 ;;		 lispbuilder-sdl-cffi::VERSION
 		 lispbuilder-sdl-cffi::+DEFAULT-FORMAT+
 
-		 lispbuilder-sdl-cffi::this-fp
-		 lispbuilder-sdl-cffi::gc-p
-		 lispbuilder-sdl-cffi::simple-free)
+		 lispbuilder-sdl-cffi::CHUNK
+		 lispbuilder-sdl-cffi::MUSIC
+		 
+		 ;; lispbuilder-sdl-cffi::this-fp
+;; 		 lispbuilder-sdl-cffi::gc-p
+;; 		 lispbuilder-sdl-cffi::simple-free
+		 )
 
   (:export
 
@@ -162,10 +166,13 @@
    #:SDL-MIXER-VERSION
 ;;   #:VERSION
 
-   #:this-fp
-   #:gc-p
-   #:simple-free
+;;    #:this-fp
+;;    #:gc-p
+;;    #:simple-free
 
+   #:CHUNK
+   #:MUSIC
+   
 ;;   #:*DEFAULT-MUSIC*
 ;;   #:*DEFAULT-CHUNK*
 

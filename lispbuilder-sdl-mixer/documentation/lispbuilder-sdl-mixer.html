@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
-      <title>LISPBUILDER-SDL-MIXER - Use SDL_Mixer from Common Lisp</title>
+      <title>LISPBUILDER-SDL-MIXER - Use SDL_mixer from Common Lisp</title>
       <style type=\"text/css\">
 	pre { padding:5px; background-color:#e0e0e0 }
 	h3, h4 { text-decoration: underline; }
@@ -35,7 +35,7 @@
     
     <body bgcolor=white>
       
-      <h2> LISPBUILDER-SDL-MIXER - Use SDL_Mixer from Common Lisp</h2>
+      <h2> LISPBUILDER-SDL-MIXER - Use SDL_mixer from Common Lisp</h2>
       
       <blockquote>
 	<br>&nbsp;</br><h3><a name=abstract class=none>Abstract</a></h3>
@@ -81,6 +81,7 @@
       (:quit-event ()
 		   (sdl-mixer:Halt-Music)
 		   (sdl-mixer:free music)
+		   (sdl-mixer:close-audio)
 		   t)
       (:idle () (sdl:update-display)))))
 	</pre>
@@ -109,14 +110,15 @@
 	        <li><a href="#audio-frequency-p"><code>audio-frequency-p</code></a></li>
 	        <li><a href="#audio-opened-p"><code>audio-opened-p</code></a></li>
 	        <li><a href="#channel-volume"><code>channel-volume</code></a></li>
+	        <li><a href="#chunk"><code>chunk</code></a></li>
 	        <li><a href="#close-audio"><code>close-audio</code></a></li>
 	        <li><a href="#free"><code>free</code></a></li>
-	        <li><a href="#gc-p"><code>gc-p</code></a></li>
 	        <li><a href="#halt-music"><code>halt-music</code></a></li>
 	        <li><a href="#halt-sample"><code>halt-sample</code></a></li>
 	        <li><a href="#linked-version"><code>linked-version</code></a></li>
 	        <li><a href="#load-music"><code>load-music</code></a></li>
 	        <li><a href="#load-sample"><code>load-sample</code></a></li>
+	        <li><a href="#music"><code>music</code></a></li>
 	        <li><a href="#music-fading-p"><code>music-fading-p</code></a></li>
 	        <li><a href="#music-paused-p"><code>music-paused-p</code></a></li>
 	        <li><a href="#music-playing-p"><code>music-playing-p</code></a></li>
@@ -138,8 +140,6 @@
 	        <li><a href="#sample-playing-p"><code>sample-playing-p</code></a></li>
 	        <li><a href="#sample-volume"><code>sample-volume</code></a></li>
 	        <li><a href="#sdl-mixer-version"><code>sdl-mixer-version</code></a></li>
-	        <li><a href="#simple-free"><code>simple-free</code></a></li>
-	        <li><a href="#this-fp"><code>this-fp</code></a></li>
 	        <li><a href="#unregister-music-finished"><code>unregister-music-finished</code></a></li>
 	        <li><a href="#unregister-music-mixer"><code>unregister-music-mixer</code></a></li>
 	        <li><a href="#unregister-sample-finished"><code>unregister-sample-finished</code></a></li>
@@ -248,16 +248,16 @@
 <p><br>[Constant]<br><a class=none name='+default-format+'><b>+default-format+</b></a>
 <blockquote><br>
 
-<p>Default SDL audio format; little-endian is <code>AUDIO-S16LSB</code>, big-endian is <code>AUDIO-S16MSB</code>. Audio formats are defined in <code>SDL_audio.h</code>; </p><ul><li><code>AUDIO_U8</code> : Unsigned 8-bit samples </li>
-<li><code>AUDIO_S8</code> : Signed 8-bit samples </li>
-<li><code>AUDIO_U16LSB</code> : Unsigned 16-bit samples, in little-endian byte order </li>
-<li><code>AUDIO_S16LSB</code> : Signed 16-bit samples, in little-endian byte order </li>
-<li><code>AUDIO_U16MSB</code> : Unsigned 16-bit samples, in big-endian byte order </li>
-<li><code>AUDIO_S16MSB</code> : Signed 16-bit samples, in big-endian byte order </li>
-<li><code>AUDIO_U16</code> : same as <code>AUDIO_U16LSB</code> (for backwards compatability probably) </li>
-<li><code>AUDIO_S16</code> : same as <code>AUDIO_S16LSB</code> (for backwards compatability probably) </li>
-<li><code>AUDIO_U16SYS</code> : Unsigned 16-bit samples, in system byte order </li>
-<li><code>AUDIO_S16SYS</code> : Signed 16-bit samples, in system byte order </li>
+<p>Default SDL audio format; little-endian is <code>SDL:AUDIO-S16LSB</code>, big-endian is <code>SDL:AUDIO-S16MSB</code>. Audio formats are defined in <code>SDL_audio.h</code>; </p><ul><li><code>SDL:AUDIO-U8</code>     : Unsigned 8-bit samples </li>
+<li><code>SDL:AUDIO-S8</code>     : Signed 8-bit samples </li>
+<li><code>SDL:AUDIO-U16LSB</code> : Unsigned 16-bit samples, in little-endian byte order </li>
+<li><code>SDL:AUDIO-S16LSB</code> : Signed 16-bit samples, in little-endian byte order </li>
+<li><code>SDL:AUDIO-U16MSB</code> : Unsigned 16-bit samples, in big-endian byte order </li>
+<li><code>SDL:AUDIO-S16MSB</code> : Signed 16-bit samples, in big-endian byte order </li>
+<li><code>SDL:AUDIO-U16</code>    : same as <code>SDL:AUDIO-U16LSB</code> (for backwards compatability probably) </li>
+<li><code>SDL:AUDIO-S16</code>    : same as <code>SDL:AUDIO-S16LSB</code> (for backwards compatability probably) </li>
+<li><code>SDL:AUDIO-U16SYS</code> : Unsigned 16-bit samples, in system byte order </li>
+<li><code>SDL:AUDIO-S16SYS</code> : Signed 16-bit samples, in system byte order </li>
 </ul>
 
 </blockquote>
@@ -282,7 +282,7 @@
 <p><br>[Constant]<br><a class=none name='+default-sample-buffer+'><b>+default-sample-buffer+</b></a>
 <blockquote><br>
 
-<p>Default size of the sample output buffer is 4906 bytes </p>
+<p>Default size of the sample output buffer is <code>4096</code> bytes </p>
 
 </blockquote>
 
@@ -294,7 +294,7 @@
 <p><br>[Constant]<br><a class=none name='+max-volume+'><b>+max-volume+</b></a>
 <blockquote><br>
 
-<p>Default volume of <code>128</code> for samples, output channels and mix channels. </p>
+<p>Default volume of <code>128</code> for <a href="#chunk">CHUNK</a>, output channels and mix channels. </p>
 
 </blockquote>
 
@@ -374,6 +374,18 @@
 <!-- End of entry for CHANNEL-VOLUME -->
 
 
+<!-- Entry for CHUNK -->
+
+<p><br>[Standard class]<br><a class=none name='chunk'><b>chunk</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for CHUNK -->
+
+
 <!-- Entry for CLOSE-AUDIO -->
 
 <p><br>[Function]<br><a class=none name='close-audio'><b>close-audio</b> <i><tt>&amp;optional</tt> all</i> =&gt; <i>result</i></a>
@@ -403,7 +415,7 @@
 <p><br>[Method]<br><a class=none><b>free</b> <i>(chunk music)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Frees the music in <code>MUSIC</code>. Stops <code>MUSIC</code> if currently playing.  Will block until any current fade effect completes.   Do not reuse <code>MUSIC</code> once freed. </p>
+<p>Frees the music in <a href="#music">MUSIC</a>. Stops <a href="#music">MUSIC</a> if currently playing.  Will block until any current fade effect completes.   Do not reuse <a href="#music">MUSIC</a> once freed. </p>
 
 </blockquote>
 
@@ -415,37 +427,11 @@
 <p><br>[Method]<br><a class=none><b>free</b> <i>(chunk chunk)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Frees the sample in <code>CHUNK</code>. Do not reuse <code>CHUNK</code> once freed. Do not attempt to free <code>CHUNK</code> that is still being played. </p>
+<p>Frees the sample in <a href="#chunk">CHUNK</a>. Do not reuse <a href="#chunk">CHUNK</a> once freed. Do not attempt to free <a href="#chunk">CHUNK</a> that is still being played. </p>
 
 </blockquote>
 
 <!-- End of entry for FREE -->
-
-
-<!-- Entry for GC-P -->
-
-<p><br>[Generic accessor]<br><a class=none name='gc-p'><b>gc-p</b> <i>foreign-object</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>gc-p</b> <i>foreign-object</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for GC-P -->
-
-
-<!-- Entry for GC-P -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>gc-p</b> <i>(foreign-object foreign-object)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>gc-p</b> <i>(foreign-object foreign-object)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for GC-P -->
 
 
 <!-- Entry for HALT-MUSIC -->
@@ -520,6 +506,18 @@
 <!-- End of entry for LOAD-SAMPLE -->
 
 
+<!-- Entry for MUSIC -->
+
+<p><br>[Standard class]<br><a class=none name='music'><b>music</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for MUSIC -->
+
+
 <!-- Entry for MUSIC-FADING-P -->
 
 <p><br>[Function]<br><a class=none name='music-fading-p'><b>music-fading-p</b> <i></i> =&gt; <i>result</i></a>
@@ -576,7 +574,7 @@
 <p><br>[Function]<br><a class=none name='music-type-of'><b>music-type-of</b> <i>music type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>T</code> if <code>MUSIC</code> is of <code>TYPE</code>, returns <code>NIL</code> otherwise.  <code>TYPE</code> may be one of <code>WAV</code>, <code>MOD</code>, <code>MID</code>, <code>OGG</code>, <code>MP3</code>, <code>MP3-MAD</code>, <code>FLAC</code> or <code>CMD</code>. If <code>MUSIC</code> is <code>NIL</code> returns the type of the currently playing music. Returns <code>NIL</code> is no music is playing. </p>
+<p>Returns <code>T</code> if <a href="#music">MUSIC</a> is of <code>TYPE</code>, returns <code>NIL</code> otherwise.  <code>TYPE</code> may be one of <code>WAV</code>, <code>MOD</code>, <code>MID</code>, <code>OGG</code>, <code>MP3</code>, <code>MP3-MAD</code>, <code>FLAC</code> or <code>CMD</code>. If <a href="#music">MUSIC</a> is <code>NIL</code> returns the type of the currently playing music. Returns <code>NIL</code> is no music is playing. </p>
 
 </blockquote>
 
@@ -588,7 +586,7 @@
 <p><br>[Function]<br><a class=none name='music-type-p'><b>music-type-p</b> <i>music</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the format type of <code>MUSIC</code> as one of <code>WAV</code>, <code>MOD</code>, <code>MID</code>, <code>OGG</code>, <code>MP3</code>, <code>MP3-MAD</code>, <code>FLAC</code> or <code>CMD</code>. Returns the format type of the currently playing music when <code>MUSIC</code> is <code>NIL</code>. Returns <code>NIL</code> is no music is playing. </p>
+<p>Returns the format type of <a href="#music">MUSIC</a> as one of <code>WAV</code>, <code>MOD</code>, <code>MID</code>, <code>OGG</code>, <code>MP3</code>, <code>MP3-MAD</code>, <code>FLAC</code> or <code>CMD</code>. Returns the format type of the currently playing music when <a href="#music">MUSIC</a> is <code>NIL</code>. Returns <code>NIL</code> is no music is playing. </p>
 
 </blockquote>
 
@@ -644,7 +642,7 @@
 <p><br>[Function]<br><a class=none name='play-music'><b>play-music</b> <i>music <tt>&amp;key</tt> loop fade position</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Starts playing <code>MUSIC</code> from <code>POSITION</code>. The music can be faded-in over the number of milliseconds in <code>FADE</code>. Automatically repeats the music when finished the number of time specified in <code>LOOP</code>.  Any previous music will be halted. Will block until any current fade effect completes. </p><h5>Parameters </h5>
+<p>Starts playing <a href="#music">MUSIC</a> from <code>POSITION</code>. The music can be faded-in over the number of milliseconds in <code>FADE</code>. Automatically repeats the music when finished the number of time specified in <code>LOOP</code>.  Any previous music will be halted. Will block until any current fade effect completes. </p><h5>Parameters </h5>
 <ul><li><code>MUSIC</code> is the <a href="#music">MUSIC</a> to play. </li>
 <li><code>LOOP</code> is the number of times to play the music. T continuously loops the music. Plays once when <code>NIL</code>, or <code>0</code>. Default is <code>NIL</code>. </li>
 <li><code>FADE</code> is the number of milliseconds to perform the fade-in effect. Default is <code>NIL</code>, no fade effect. Only applies to the first loop. </li>
@@ -663,7 +661,7 @@
 <p><br>[Function]<br><a class=none name='play-sample'><b>play-sample</b> <i>chunk <tt>&amp;key</tt> channel loop fade ticks</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Plays the sample in <code>CHUNK</code> for <code>TICKS</code> milliseconds, repeated <code>LOOP</code> times. The sample is repeated the number of times specified in <code>LOOP</code>, or until <code>TICKS</code>.  The sample will fade-in over <code>FADE</code> milliseconds.  The callback set by <a href="#register-sample-finished">REGISTER-SAMPLE-FINISHED</a> is called when the sample stops playing. </p><h5>Parameters </h5>
+<p>Plays the sample in <a href="#chunk">CHUNK</a> for <code>TICKS</code> milliseconds, repeated <code>LOOP</code> times. The sample is repeated the number of times specified in <code>LOOP</code>, or until <code>TICKS</code>.  The sample will fade-in over <code>FADE</code> milliseconds.  The callback set by <a href="#register-sample-finished">REGISTER-SAMPLE-FINISHED</a> is called when the sample stops playing. </p><h5>Parameters </h5>
 <ul><li><code>CHUNK</code> is the sample <a href="#chunk">CHUNK</a>. </li>
 <li><code>CHANNEL</code> specifies the channel to play the sample. When <code>NIL</code>, will play on the first free unreserved channel. Default is <code>NIL</code>. </li>
 <li><code>LOOP</code> is the number of times to loop the sample. Loops continuously when <code>T</code>. Plays once when <code>NIL</code>, or <code>0</code>. Default in <code>NIL</code>. </li>
@@ -683,7 +681,11 @@
 <p><br>[Function]<br><a class=none name='register-music-finished'><b>register-music-finished</b> <i>func</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the function that is called when music finishes playback or is halted. <code>FUNC</code> is of the format #(lambda ()). </p>
+<p>Sets the callback that is executed when <a href="#music">MUSIC</a> finishes playback or is halted. <code>FUNC</code> is of the format <code>#(lambda ())</code></p><h5>Example </h5>
+<pre><code>(REGISTER-MUSIC-FINISHED 
+    (lambda ()
+      (FORMAT T &amp;quot;MUSIC FINISHED&amp;quot;)))
+</code></pre>
 
 </blockquote>
 
@@ -695,7 +697,11 @@
 <p><br>[Function]<br><a class=none name='register-music-mixer'><b>register-music-mixer</b> <i>func</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Takes a function of the format #(lambda (user-data stream len)) that is called  to fill the music audio buffer. </p>
+<p>Sets the callback that is executed to fill the music audio output buffer. <code>FUNC</code> is of the format <code>#(lambda (user-data stream len))</code></p><h5>Example </h5>
+<pre><code>(REGISTER-MUSIC-MIXER 
+    (lambda (user stream len)
+      &amp;#039;FILL-THE-AUDIO-OUTPUT-BUFFER))
+</code></pre>
 
 </blockquote>
 
@@ -707,7 +713,11 @@
 <p><br>[Function]<br><a class=none name='register-sample-finished'><b>register-sample-finished</b> <i>func</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the function that is called when a sample finishes playback or is halted. <code>FUNC</code> is of the format #(lambda (channel)). </p>
+<p>Sets the callback that is executed when a sample <a href="#chunk">CHUNK</a> finishes playback or is halted. <code>FUNC</code> is of the format <code>#(lambda (channel))</code></p><h5>Example </h5>
+<pre><code>(REGISTER-SAMPLE-FINISHED 
+    (lambda (channel)
+      (FORMAT T &amp;quot;SAMPLE FINISHED ON CHANNEL: ~A&amp;quot; channel)))
+</code></pre>
 
 </blockquote>
 
@@ -780,7 +790,7 @@
 <br><a class=none><tt>(setf (</tt><b>sample-volume</b> <i>chunk</i><tt>)</tt> <i>volume</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the volume of the sample in <code>CHUNK</code>, as an <code>INTEGER</code> from 0 to <a href="#+max-volume+">+MAX-VOLUME+</a>. </p>
+<p>Returns the volume of the sample in <a href="#chunk">CHUNK</a>, as an <code>INTEGER</code> from 0 to <a href="#+max-volume+">+MAX-VOLUME+</a>. </p>
 
 </blockquote>
 
@@ -797,42 +807,6 @@
 </blockquote>
 
 <!-- End of entry for SDL-MIXER-VERSION -->
-
-
-<!-- Entry for SIMPLE-FREE -->
-
-<p><br>[Function]<br><a class=none name='simple-free'><b>simple-free</b> <i>func-fp type</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for SIMPLE-FREE -->
-
-
-<!-- Entry for THIS-FP -->
-
-<p><br>[Generic function]<br><a class=none name='this-fp'><b>this-fp</b> <i>foreign-object</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the foreign pointer to FOREIGN-OBJECT </p>
-
-</blockquote>
-
-<!-- End of entry for THIS-FP -->
-
-
-<!-- Entry for THIS-FP -->
-
-<p><br>[Method]<br><a class=none><b>this-fp</b> <i>(foreign-object foreign-object)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the reference to the foreign object for this FOREIGN-OBJECT. The difference between FP and THIS-FP, is that FP can be overriden, for example to refer to the TARGET-NODE of a META-NODE. </p>
-
-</blockquote>
-
-<!-- End of entry for THIS-FP -->
 
 
 <!-- Entry for UNREGISTER-MUSIC-FINISHED -->
