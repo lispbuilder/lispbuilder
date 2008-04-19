@@ -89,6 +89,8 @@
       
       <br>&nbsp;</br><h3><a class=none name="contents">Contents</a></h3>
       <ol>
+	<li><a href="#abstract">Abstract</a></li>
+	<li><a href="#dependencies">Dependencies</a></li>
 	<li><a href="#download">Download</a></li>
 	<li><a href="#installation">Installation</a></li>
 	<li><a href="#usage">Usage</a></li>
@@ -96,17 +98,37 @@
 	<li><a href="#support">Support</a></li>
 	<li><a href="#license">License</a></li>
 	<li><a href="#dictionary">The ~A dictionary</a></li>
-	<ol>
+	<ul>
 	  ~{      <li><a href="#~A"><code>~:*~A</code></a></li>
-	  ~}    </ol>
+	  ~}    </ul>
 	<li><a href="#ack">Acknowledgements</a></li>
       </ol>
+
+      <br>&nbsp;</br><h3><a class=none name="dependencies">Dependencies</a></h3>
+
+      <ul>
+	<li><a href="http://lispbuilder.sourceforge.net/lispbuilder-sdl.html">LISPBUILDER-SDL</a>:
+	  Automatically installed if using <a href="http://www.cliki.net/ASDF-Install">ASDF-INSTALL</a>, or Edi Weitz's Starter Pack. Otherwise,
+	  please refer to the official <a href="http://lispbuilder.sourceforge.net/lispbuilder-sdl.html" title="http://lispbuilder.sourceforge.net/lispbuilder-sdl.html">LISPBUILDER-SDL installation instructions</a>.</li>
+	<li><a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92" title="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">ASDF:</a> 
+	  ASDF is already installed for users of SBCL, OpenMCL, ECL or ACL, or Lispworks and Edi Weitz's Lisp Starter Pack. 
+	  Otherwise, please refer to the official <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/README?rev=HEAD&content-type=text/plain">ASDF README</a> for installation instructions.</li>
+	<li><a href="http://common-lisp.net/project/cffi" title="http://common-lisp.net/project/cffi">CFFI</a>: 
+	  Automatically installed if using <a href="http://www.cliki.net/ASDF-Install">ASDF-INSTALL</a>, or Edi Weitz's Starter Pack. Otherwise,
+	  please refer to the official <a href="http://common-lisp.net/project/cffi" title="http://common-lisp.net/project/cffi">installation instructions</a>.</li>
+	<li><a href="http://www.libsdl.org" title="http://www.libsdl.org">SDL</a>: 
+	  Automatically installed by Edi Weitz's Lisp Starter Pack. Otherwise, Windows/Mac users should download the binaries from <a href="http://www.libsdl.org" title="http://www.libsdl.org">www.libsdl.org</a>, while
+	  Linux users should use their package managers to install the RPM's or DEBs.</li>
+	<li><a href="http://www.libsdl.org/projects/SDL_mixer/" title="http://www.libsdl.org/projects/SDL_mixer/">SDL_mixer</a>:
+	  Automatically installed by Edi Weitz's Lisp Starter Pack. Otherwise, Windows/Mac users should download the binaries from <a href="http://www.libsdl.org/projects/SDL_mixer/" title="http://www.libsdl.org/projects/SDL_mixer/">www.libsdl.org/projects/SDL_mixer/</a>, while
+	  Linux users should use their package managers to install the RPM's or DEBs.</li>
+      </ul>
 	      
       <br>&nbsp;</br><h3><a class=none name="download">Download</a></h3>
 
       <p>
 	<font color=red>Current Version:</font> The latest stable version of ~2:*~A, together with this documentation can be downloaded from 
-	<a href="http://www.balooga.com.com/lispbuilder/~2:*~A.tgz">http://www.balooga.com/lispbiulder/~:*~A.tgz</a>. The
+	<a href="http://www.balooga.com.com/lispbuilder/~2:*~A.tgz">http://www.balooga.com/lispbuilder/~:*~A.tgz</a>. The
 	current version is 0.2.0.
       </p>
 
@@ -116,24 +138,13 @@
 	  <pre>svn co https://lispbuilder.svn.sourceforge.net/svnroot/lispbuilder lispbuilder-sdl-mixer</pre>
 	</div>
       </p>
-
-      <br>&nbsp;</br><h3><a class=none name="support">Documentation, Support & Mailing Lists</a></h3>
-      
-      Questions answered and help given on the <a href="http://www.lispniks.com/mailman/listinfo/application-builder">lispbuilder discussion list</a>.
-      Documentation for LISPBUILDER-SDL and related packages is available on the <a href="http://lispbuilder.sourceforge.net">LISPBUILDER project page on Sourceforge</a>. 
-      For additional information, look at the <a href="http://wiki.alu.org/Gardeners_Projects">Lisp Gardeners page</a>, and 
-      <a href="http://wiki.alu.org/Application_Builder">Application Builder page</a> 
-      on the ALU's (Association of Lisp Users) wiki.
-
-      <br>&nbsp;</br><h3><a class=none name="license">License</a></h3>
-
-      LISPBUILDER-SDL-MIXER is distributed under the 
-      <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
 	
       <br>&nbsp;</br><h3><a class=none name="installation">Installation</a></h3>
       
-      See <a href="http://lispbuilder.sourceforge.net/index.html#installation">the LISPBUILDER documentation</a>
-      for general installation instructions.
+      See <a href="http://lispbuilder.sourceforge.net/index.html">the LISPBUILDER documentation</a>
+      for installation instructions for <a href="http://lispbuilder.sourceforge.net/index.html#windows">Windows</a>, 
+      <a href="http://lispbuilder.sourceforge.net/index.html#mac">Mac OS-X</a> and 
+      <a href="http://lispbuilder.sourceforge.net/index.html#linux">Linux</a>.
 
       <br>&nbsp;</br><h3><a class=none name="usage">Using LISPBUILDER-SDL-MIXER</a></h3>
 
@@ -158,5 +169,18 @@
       <div class="repl">
 	<pre>(SDL-MIXER-EXAMPLES:MIXER)</pre>
       </div>
+
+      <br>&nbsp;</br><h3><a class=none name="support">Documentation, Support & Mailing Lists</a></h3>
+      
+      Questions answered and help given on the <a href="http://www.lispniks.com/mailman/listinfo/application-builder">lispbuilder discussion list</a>.
+      Documentation for LISPBUILDER-SDL and related packages is available on the <a href="http://lispbuilder.sourceforge.net">LISPBUILDER project page on Sourceforge</a>. 
+      For additional information, look at the <a href="http://wiki.alu.org/Gardeners_Projects">Lisp Gardeners page</a>, and 
+      <a href="http://wiki.alu.org/Application_Builder">Application Builder page</a> 
+      on the ALU's (Association of Lisp Users) wiki.
+
+      <br>&nbsp;</br><h3><a class=none name="license">License</a></h3>
+
+      LISPBUILDER-SDL-MIXER is distributed under the 
+      <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
 
       <br>&nbsp;</br><h3><a class=none name="dictionary">The ~A dictionary</a></h3>
