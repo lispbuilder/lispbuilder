@@ -1,340 +1,44 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  
-  <head>
-    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
-    <title>~A - ~A</title>
-    <style type="text/css">
-      
-      body {
-      margin: 10px 20px 20px 220px;
-      padding: 0px;
-      font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-      font-size: small;
-      text-align: justify;
-      max-width: 50em;
-      background-color: white;
-      }
-      
-      a, a:visited {
-      text-decoration: none;
-      color: maroon;
-      }
-      
-      /* index */
-      
-      div.index {
-      position: fixed;
-      top: 0px;
-      left: 0px;
-      width: 180px;
-      height: 100%;
-      margin: 0px;
-      padding: 5px;
-      font-size: 12px;
-      background-color: #DCDCDC;
-      border-right: thin black solid;
-      }
-      
-      div.index ol {
-      color: navy;
-      margin: 0px;
-      padding-left: 0px;
-      }
-      
-      div.index ol li {
-      list-style: none;
-      }
-      
-      div.index ol li:before {
-      display: marker;
-      content: counter(heading1) ". ";
-      counter-increment: heading1;
-      }
-      
-      div.index ol ol {
-      padding-left: 10px;
-      font-size: 10px;
-      list-style: none;
-      counter-reset: heading2;
-      }
-      
-      div.index ol ol li:before {
-      display: marker;
-      content: counter(heading1)"." counter(heading2)" ";
-      counter-increment: heading2;
-      }
-      
-      /* heading styles */
-      
-      body > h1 {
-      margin-top: 0px;
-      }
-      
-      h1 {
-      margin-top: 40px;
-      margin-bottom: 0px;
-      color: #4682B4;
-      }
-      
-      h1:before {
-      display: marker;
-      content: counter(chapter) ". ";
-      counter-increment: chapter;
-      counter-reset: section1;
-      }
-      
-      h1 + p {
-      margin-top: 5px;
-      }
-      
-      h2 {
-      margin-top: 20px;
-      color: #000000;
-      margin-bottom: 0px;
-      }
-      
-      h2:before {
-      display: marker;
-      content: counter(chapter) "." counter(section1) "  ";
-      counter-increment: section1;
-      }
-      
-      h2 + p {
-      margin-top: 0px;
-      }
-      
-      h3 {
-      margin-top: 20px;
-      color: #000000;
-      margin-bottom: 0px;
-      }
-      
-      h3:before {
-      display: marker;
-      content: counter(chapter) "." counter(section1) "." counter(section2) "  ";
-      counter-increment: section2;
-      }
-      
-      h3 + p {
-      margin-top: 0px;
-      }
-      
-      h4 {
-      margin-top: 20px;
-      color: #000000;
-      margin-bottom: 0px;
-      }
-      
-      h4:before {
-      display: marker;
-      content: counter(chapter) "." counter(section1) "." counter(section2) "." counter(section3) "  ";
-      counter-increment: section3;
-      }
-      
-      h4 + p {
-      margin-top: 0px;
-      }
-      
-      /* generated content for images and tables */
-      
-      img:after {
-      content: "[" counter(image) "] " attr(title);
-      counter-increment: image;
-      display: block;
-      font-size: 10px;
-      font-weight: bold;
-      margin-top: 5px;
-      margin-bottom: 20px;
-      color: black;
-      }
-      
-      table:after {
-      content: "Table " counter(table) ": " attr(summary);
-      counter-increment: table;
-      display: table-caption;
-      caption-side: bottom;
-      font-size: 10px;
-      font-weight: bold;
-      margin-top: 5px;
-      margin-bottom: 20px;
-      white-space: nowrap;
-      color: black;
-      }
-      
-      /* code for examples, code and pathnames*/
-      
-      div.example table {
-      color: black;
-      }
-      
-      div.example, div.code, div.path, div.sequence {
-      margin: 10px 0px;
-      border: 1px black solid;
-      padding: 10px;
-      background-color: #F4F4F4;
-      counter-reset: image;
-      color: maroon;
-      }
-      
-      div.example:before {
-      content: "Example " counter(example);
-      counter-increment: example;
-      display: block;
-      }
-      
-      div.example + p {
-      margin-bottom: 0px;
-      }
-      
-      div.code:before {
-      content: "Code";
-      }
-      
-      div.path:before {
-      content: "Path";
-      }
-      
-      div.sequence:before {
-      content: "Sequence";
-      }
-      
-      p.reference:before {
-      display: marker;
-      content: "[" counter(reference) "]";
-      counter-increment: reference;
-      font-weight: bold;
-      margin-right: 5px;
-      }
-      
-      div.code:before, div.example:before, div.path:before, div.sequence:before {
-      font-weight: bold;
-      font-size: 15px;
-      margin-bottom: 20px;
-      color: black;
-      }
-      
-      pre {
-      color: Green;
-      margin: 0px;
-      padding: 0px;
-      }
-      
-      
-      /* equation counter */
-      
-      e:after {
-      content: "[" counter(equation) "]";
-      counter-increment: equation;
-      display: block;
-      float: right;
-      margin-right: 10px;
-      }
-      
-      /* to prevent the CC image from being numbered */
-      
-      img[alt="Creative Commons License"] {
-      display: inline;
-      }
-      
-      img[alt="Creative Commons License"]:after {
-      display: none;
-      }
-      
-      div#cc {
-      background-color: #DCDCDC;
-      border: thin black solid;
-      padding: 10px;
-      font-size: 10px;
-      }
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+<html> 
 
-      /* Table Design */
-      /* http://www.duoh.com/csstutorials/csstables/ */
-      #mytable {
-      width: 700px;
-      padding: 0;
-      margin: 0;
-      }
+  <head>
+    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
+      <title>~A - ~A</title>
+      <style type=\"text/css\">
+	pre { padding:5px; background-color:#e0e0e0 }
+	h3, h4 { text-decoration: underline; }
+	a { text-decoration: none; padding: 1px 2px 1px 2px; }
+	a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
+	a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+	a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
+	a.none { text-decoration: none; padding: 0; }
+	a.none:visited { text-decoration: none; padding: 0; } 
+	a.none:hover { text-decoration: none; border: none; padding: 0; } 
+	a.none:focus { text-decoration: none; border: none; padding: 0; } 
+	a.noborder { text-decoration: none; padding: 0; } 
+	a.noborder:visited { text-decoration: none; padding: 0; } 
+	a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
+	a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+	pre.none { padding:5px; background-color:#ffffff }
+	/* code for examples, code and pathnames*/
       
-      caption {
-      padding: 0 0 5px 0;
-      width: 700px;	 
-      font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-      text-align: right;
-      }
-      
-      th {
-      font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-      color: #4f6b72;
-      border-right: 1px solid #C1DAD7;
-      border-bottom: 1px solid #C1DAD7;
-      border-top: 1px solid #C1DAD7;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-align: left;
-      padding: 6px 6px 6px 12px;
-      background: #CAE8EA url(images/bg_header.jpg) no-repeat;
-      }
-      
-      th.nobg {
-      border-top: 0;
-      border-left: 0;
-      border-right: 1px solid #C1DAD7;
-      background: none;
-      }
-      
-      td {
-      border-right: 1px solid #C1DAD7;
-      border-bottom: 1px solid #C1DAD7;
-      background: #fff;
-      padding: 6px 6px 6px 12px;
-      color: #4f6b72;
-      }
-      
-      
-      td.alt {
-      background: #F5FAFA;
-      color: #797268;
-      }
-      
-      th.spec {
-      border-left: 1px solid #C1DAD7;
-      border-top: 0;
-      background: #fff url(images/bullet1.gif) no-repeat;
-      font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-      }
-      
-      th.specalt {
-      border-left: 1px solid #C1DAD7;
-      border-top: 0;
-      background: #f5fafa url(images/bullet2.gif) no-repeat;
-      font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
-      color: #797268;
-      }
-      
-    </style>
-  </head>
-  
-  <!--
-      (CC) 2003 Luke Crook. Some Rights Reserved.
-      http://creativecommons.org/licenses/by/1.0
-      This page is licensed under a Creative Commons License.
-      
-      Maintained by the Common Lisp Application Builder project at www.lispbuilder.org
-      
-      The entire styleguide was copied wholesale from http://www.markschenk.com/cssexp/publication/article.xml
-      
-      (CC) 2003 Mark Schenk. Some Rights Reserved.
-      http://creativecommons.org/licenses/by/1.0
-      This page is licensed under a Creative Commons License.
-    -->
-  
-  <BODY BGCOLOR=#FFFFFF >
+	div.code, div.path {
+	color: black;
+	}
+
+	div.repl {
+	color: Green;
+	}      
+
+      </style>
+    </head>
     
-    <h1><a name="top" class=none> ~2:*~A - ~A</a></h1>
+    <body bgcolor=white>
+      
+      <h3> ~2:*~A - ~A</h3>
     
-    <blockquote>
-      <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
+      <blockquote>
+	<br>&nbsp;</br><h3><a name=abstract class=none>Abstract</a></h3>
       
       <p>
 	LISPBUILDER-SDL comprises several of packages that allow game development using Common Lisp. 
@@ -374,25 +78,23 @@
 	  <a href="http://www.libsdl.org" title="http://www.libsdl.org"  rel="nofollow">SDL_net</a> 
 	  a cross-platform, blocking network library</li>
       </ul>
-      <p>
-	<font color=red>Current Version:</font> The version of LISPBUILDER-SDL to use is the 
-	<a href="#downloads">latest version in SVN</a>.
-      </p>
-<!--       <p> -->
-<!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/~A.zip">http://www.balooga.com/lispbuilder/~:*~A.zip</a>. -->
-<!--       </p> -->
+
+	<p>
+	  The code comes with
+	  a <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a> so you can basically 
+	  do with it whatever you want.
+	</p>
+	
+	<p>
+	  <font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/~A.tgz">http://www.balooga.com/lispbuilder/~:*~A.tgz</a>.
+	</p>
+
     </blockquote>
 
-    <br>&nbsp;</br><h2><a class=none name="examplesimple">Simple Example</a></h2>
+    <br>&nbsp;</br><h3><a class=none name="examplesimple">Simple Example</a></h3>
     <div class="example">
-      <p>
-	This example was created with the following code:
-      </p>
-      <p>
-	<img src="sdl-alien.png" width="200" height="167" title="Alien Technology" alt="Alien Technology"/>
-      </p>
-      
       <pre>
+	<img src="sdl-alien.png" width="200" height="167" title="Alien Technology" alt="Alien Technology" align=right border=0 vspace=10 hspace=10/>
 (sdl:with-init ()
   (sdl:window 320 240)
   (sdl:draw-surface (load-image "lisp.bmp"))
@@ -400,21 +102,25 @@
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event (sdl:update-display))))
+
+
+
+
       </pre>
     </div>
     
-    <div class="index">
+    <br>&nbsp;</br><h3><a class=none name="contents">Contents</a></h3>
       <ol>
 	<li><a href="#top">LISPBUILDER-SDL</a></li>
 	<ol>
 	  <li><a href="#abstract">Abstract</a></li>
-	  <li><a href="#examplesimple">Simple Example</a></li>
 	  <li><a href="#compatibility">Compatibility</a></li>
-	  <li><a href="#downloads">Downloads</a></li>
+	  <li><a href="#dependencies">Dependencies</a></li>
+	  <li><a href="#download">Download</a></li>
 	  <li><a href="#installation">Installation</a></li>
 	  <li><a href="#usage">Usage</a></li>
 	  <li><a href="#examples">Included Examples</a></li>
-	  <li><a href="#dependency">Dependencies</a></li>
+	  <li><a href="#support">Support</a></li>
 	  <li><a href="#license">License</a></li>
 
 	  <li><a href="#packageoverview">Package Overview</a></li>
@@ -452,16 +158,15 @@
 	    <li><a href="#devgarbage">Garbage Collection</a></li>
 	  </ol>
 	  
-	  <li><a href="#dictionar">LISPBUILDER-SDL dictionary</a></li>
-	  <ol>
-	    <li><a href="#dictionary">INDEX</a></li>
-	  </ol>
+	  <li><a href="#dictionary">The ~A dictionary</a></li>
+	  <ul>
+	    ~{      <li><a href="#~A"><code>~:*~A</code></a></li>
+	    ~}    </ul>
 	  <li><a href="#ack">Acknowledgements</a></li>
 	</ol>
-      </div>
+      </div>      
       
-      
-      <br>&nbsp;</br><h2><a class=none name="compatibility">Compatibility</h2>
+      <br>&nbsp;</br><h3><a class=none name="compatibility">Compatibility</h3>
 	<p>
 	  The following table describes the status of LISPBUILDER-SDL on the major Common Lisp
 	  implementations:
@@ -536,36 +241,59 @@
 	  </tr>
 	</table>
 	
-	
-	<br>&nbsp;</br><h2><a class=none name="downloads">Downloads</a></h2>
-	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#downloads">the LISPBUILDER documentation</a>
-	  for downloads.
-	</p>
-	
+      <br>&nbsp;</br><h3><a class=none name="dependencies">Dependencies</a></h3>
 
-	<br>&nbsp;</br><h2><a class=none name="installation">Installation</a></h2>
-	<p>See <a href="http://lispbuilder.sourceforge.net/index.html#installation">the LISPBUILDER documentation</a>
-	  for installation instructions.
+      <ul>
+	<li><a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92" title="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/asdf.lisp?rev=1.92">ASDF:</a> 
+	  ASDF is already installed for users of SBCL, OpenMCL, ECL or ACL, or Lispworks and Edi Weitz's Lisp Starter Pack. 
+	  Otherwise, please refer to the official <a href="http://cvs.sourceforge.net/viewcvs.py/*checkout*/cclan/asdf/README?rev=HEAD&content-type=text/plain">ASDF README</a> for installation instructions.</li>
+	<li><a href="http://common-lisp.net/project/cffi" title="http://common-lisp.net/project/cffi">CFFI</a>: 
+	  Automatically installed if using <a href="http://www.cliki.net/ASDF-Install">ASDF-INSTALL</a>, or Edi Weitz's Starter Pack. Otherwise,
+	  please refer to the official <a href="http://common-lisp.net/project/cffi" title="http://common-lisp.net/project/cffi">installation instructions</a>.</li>
+	<li><a href="http://www.libsdl.org" title="http://www.libsdl.org">SDL</a>: 
+	  Automatically installed by Edi Weitz's Lisp Starter Pack. Otherwise, Windows/Mac users should download the binaries from <a href="http://www.libsdl.org" title="http://www.libsdl.org">www.libsdl.org</a>, while
+	  Linux users should use their package managers to install the RPM's or DEBs.</li>
+      </ul>
+
+
+      <br>&nbsp;</br><h3><a class=none name="download">Download</a></h3>
+
+	<p>
+	  <font color=red>Current Version:</font> The latest stable version of ~2:*~A, together with this documentation can be downloaded from 
+	  <a href="http://www.balooga.com.com/lispbuilder/~2:*~A.tgz">http://www.balooga.com/lispbuilder/~:*~A.tgz</a>. The
+	  current version is 0.9.5.
 	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="usage">Using LISPBUILDER-SDL</a></h2>
+	<br>&nbsp;</br><h3><a class=none name="installation">Installation</a></h3>
+	
+	See <a href="http://lispbuilder.sourceforge.net/index.html">the LISPBUILDER documentation</a>
+	for installation instructions for <a href="http://lispbuilder.sourceforge.net/index.html#windows">Windows</a>, 
+	<a href="http://lispbuilder.sourceforge.net/index.html#mac">Mac OS-X</a> and 
+	<a href="http://lispbuilder.sourceforge.net/index.html#linux">Linux</a>.
+	
+	<br>&nbsp;</br><h3><a class=none name="usage">Using LISPBUILDER-SDL</a></h3>
 	<p>
 	  Enter the following at the REPL to compile and load the LISPBUILDER-SDL package:
-	  <pre>(asdf:operate 'asdf:load-op :lispbuilder-sdl)</pre>
+	  <div class="repl">
+	    <pre>(asdf:operate 'asdf:load-op :lispbuilder-sdl)</pre>
+	  </div>
 	  
 	  ASDF will take care of loading the CFFI and :LISPBUILDER-SDL dependencies. 
 	  The SDL.dll library will also be loaded into the Lisp image at this time.
 	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="examples">Running the Included Examples</a></h2>
+	<br>&nbsp;</br><h3><a class=none name="examples">Running the Included Examples</a></h3>
 	<p>Enter the following at the REPL to compile and load the examples included in the 
 	  LISPBUILDER-SDL-EXAMPLES package:</p>
-	<pre>
-	  (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
-	</pre>
+	  <div class="repl">
+	    <pre>
+	      (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+	    </pre>
+	  </div>
 	<p>Run the examples by entering any of the following at the REPL:
 	</p>
-	<pre>
+	<div class="repl">
+	  <pre>
 	  (SDL-EXAMPLES:BEZIER)
 	  (SDL-EXAMPLES:BMP-SAMPLE)
 	  (SDL-EXAMPLES:CIRCLE-1)
@@ -597,20 +325,24 @@
 	  (SDL-EXAMPLES:STROKE)
 	  (SDL-EXAMPLES:VERTICES)
 	  (SDL-EXAMPLES:WIDTH-HEIGHT)
-	</pre>
-	
+	  </pre>
+	</div>
 
-	<br>&nbsp;</br><h2><a class=none name="dependency">Dependencies</a></h2>
-	<p>None.</p>
+	<br>&nbsp;</br><h3><a class=none name="support">Documentation, Support & Mailing Lists</a></h3>
 	
-	
-	<br>&nbsp;</br><h2><a class=none name="license">License</a></h2>
+	Questions answered and help given on the <a href="http://www.lispniks.com/mailman/listinfo/application-builder">lispbuilder discussion list</a>.
+	Documentation for LISPBUILDER-SDL and related packages is available on the <a href="http://lispbuilder.sourceforge.net">LISPBUILDER project page on Sourceforge</a>. 
+	For additional information, look at the <a href="http://wiki.alu.org/Gardeners_Projects">Lisp Gardeners page</a>, and 
+	<a href="http://wiki.alu.org/Application_Builder">Application Builder page</a> 
+	on the ALU's (Association of Lisp Users) wiki.
+
+	<br>&nbsp;</br><h3><a class=none name="license">License</a></h3>
 	<p>
 	  LISPBUILDER-SDL is distributed under the 
 	  <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
 	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="packageoverview">Package Overview</a></h2>
+	<br>&nbsp;</br><h3><a class=none name="packageoverview">Package Overview</a></h3>
 	<h3><a class=none name="packageexports">Package Exports</a></h3>
 	<p>
 	  Functions and symbols exported from the LISPBUILDER-SDL package are 
@@ -655,7 +387,7 @@
 	  a RECTANGLE object.
 	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="devintro">Introduction</a></h2>
+	<br>&nbsp;</br><h3><a class=none name="devintro">Introduction</a></h3>
 	<h3><a class=none name="devinit">Initialisation of SDL</a></h3>
 	<p>	
 	  The SDL library and SDL subsystems must be initialized prior to use. 
@@ -1125,19 +857,9 @@
 	<p>
 	  ...
 	</p>
-
+	  	  
 	  
-	<br>&nbsp;</br><h2><a class=none name="dictionary">The ~A dictionary Index</h2>
-	  <ol>
-	    ~{      <li><a href="#~A"><code>~:*~A</code></a>
-	      ~}    
-	    </li>
-	  </ol>
-      
-	  
-	  
-	  
-	  <br>&nbsp;</br><h2><a class=none name="dictionar">The ~A dictionary</a></h2>
+      <br>&nbsp;</br><h3><a class=none name="dictionary">The ~A dictionary</a></h3>
 	  
 	
 	
