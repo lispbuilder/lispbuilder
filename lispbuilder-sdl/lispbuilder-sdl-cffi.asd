@@ -36,7 +36,8 @@
 	       (:file "events")
 	       (:file "syswm")
 	       (:file "video")
-	       (:file "sdl"))
+	       (:file "sdl")
+	       (:file "documentation"))
 	      :serial t)
      (:module "build"
 	      :components
