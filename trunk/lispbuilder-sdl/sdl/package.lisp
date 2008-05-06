@@ -52,6 +52,7 @@
 
 		lispbuilder-sdl-cffi::Num-Joysticks
 		lispbuilder-sdl-cffi::SDL-Joystick-Name
+		lispbuilder-sdl-cffi::SDL-WM-GRAB-INPUT
 		)
   (:export
 
@@ -381,6 +382,7 @@
    #:Num-Joysticks
    #:SDL-Joystick-Name
 
+   #:SDL-WM-GRAB-INPUT
    
    ;; fps.lisp
    #:frame-rate

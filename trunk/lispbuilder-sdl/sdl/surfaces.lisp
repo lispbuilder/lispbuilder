@@ -33,6 +33,11 @@
    "A subclass of `SDL-SURFACE` that holds the surface for the current *display*. 
 This object will never be garbage collected."))
 
+(defmethod initialize-instance :around ((surface sdl-surface) &key)
+  (unless (initialized-sub-systems-p)
+    (error "ERROR: The SDL library must be initialized prior to use."))
+  (call-next-method))
+
 ;;; An object of type is finalized by CFFI
 ;;; at time of garbage collection.
 (defclass surface (sdl-surface) ()
