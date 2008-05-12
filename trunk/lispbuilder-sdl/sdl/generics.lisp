@@ -186,7 +186,7 @@ remains unchanged between screen updates."))
 
 ##### Parameters
 
-* `SOURCE` is the source of the image.
+* `SOURCE` can be an `RWOPS` object, or a file path to the image.
 * `KEY-COLOR` sets the color key to be used for the surface, of type `COLOR`, or 'COLOR-A`.
 * 'KEY-COLOR-AT' sets the color key to be the color at the specifed xy coordinates. Of type `POINT`.
 * `ALPHA-VALUE` sets the alpha value of the surface, of type INTEGER. Must be in the range 0-255. 

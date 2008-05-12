@@ -12,7 +12,7 @@
 
 (defun create-RWops-from-file (filename)
   "Creates and returns a new `RWOPS` object from the file at location `FILENAME`."
-  (let ((rwops (sdl-base::create-RWops-from-file filename)))
+  (let ((rwops (sdl-base::create-RWops-from-file (namestring filename))))
     (if (sdl-base::is-valid-ptr rwops)
 	(make-instance 'rwops :rwops rwops)
 	nil)))
