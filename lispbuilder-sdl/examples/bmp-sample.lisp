@@ -44,3 +44,4 @@
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl:update-display)))))
+
