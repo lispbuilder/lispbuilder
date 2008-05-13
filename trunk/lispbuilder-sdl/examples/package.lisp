@@ -115,4 +115,5 @@
    #:radiant-lambda
    #:feedlike-icon
    #:star-clipping
+   #:roots
    ))
