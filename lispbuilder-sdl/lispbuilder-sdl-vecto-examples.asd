@@ -11,4 +11,5 @@
     ((:module "examples"
 	      :components
 	      ((:file "package")
-	       (:file "vecto" :depends-on ("package"))))))
+	       (:file "vecto" :depends-on ("package"))
+	       (:file "roots" :depends-on ("package"))))))
