@@ -91,6 +91,13 @@
   (dstwidth :pointer)
   (dstheight :pointer))
 
+;; SDL_gfx 2.0.16
+;; (defcfun ("shrinkSurface" shrinkSurface) :pointer
+;;   (src sdl-cffi::sdl-surface)
+;;   (factorx :int)
+;;   (factory :int))
+
+
 (defcfun ("SDL_imageFilterMMXdetect" SDL-image-Filter-MMX-detect) :int)
 
 (defcfun ("SDL_imageFilterMMXoff" SDL-image-Filter-MMX-off) :void)
@@ -351,6 +358,8 @@
 (defconstant SDL-GFX-PRIMITIVES-MINOR 0)
 
 (defconstant SDL-GFX-PRIMITIVES-MICRO 13)
+;; SDL_gfx 2.0.16
+;; (defconstant SDL-GFX-PRIMITIVES-MICRO 16)
 
 
 (defcfun ("pixelColor" pixel-Color) :int
@@ -748,6 +757,16 @@
   (b :uint8)
   (a :uint8))
 
+;; SDL_gfx 2.0.16
+;; (defcfun ("texturedPolygon" textured-Polygon) :int
+;;   (dst sdl-cffi::sdl-surface)
+;;   (vx :pointer)
+;;   (vy :pointer)
+;;   (n :int)
+;;   (texture sdl-cffi::sdl-surface)
+;;   (texture-dx int)
+;;   (texture-dy int))
+
 (defcfun ("bezierColor" bezier-Color) :int
   (dst sdl-cffi::sdl-surface)
   (vx :pointer)
@@ -808,6 +827,9 @@ No function exists to free the font data."
   (fontdata sdl-gfx-font-data)
   (cw :int)
   (ch :int))
+
+;; SDL_gfx 2.0.16
+
 
 
 ;; (defmethod translate-to-foreign (value (type (eql 'sdl-gfx-font-data)))

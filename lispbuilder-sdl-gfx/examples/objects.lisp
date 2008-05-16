@@ -31,16 +31,16 @@
 	(decf (xpos rect) (/ dif damping)))))
 
 (defmethod display ((rect m-rect) &key (surface sdl:*default-display*))
-  (sdl:with-color (col (sdl:color :r 255 :g 255 :b 255))
-    (dotimes (i (tt rect))
-      (sdl-gfx:draw-box (sdl:rectangle :x (sdl-base::clamp-to-sshort (+ (xpos rect)
-									(* i (+ (d rect)
-										(w rect)))))
-				       :y (sdl-base::clamp-to-sshort (ypos rect))
-				       :w (sdl-base::clamp-to-sshort (w rect))
-				       :h (sdl-base::clamp-to-sshort (* (h rect)
-							       (sdl:height surface))))
-			:surface surface))))
+  (dotimes (i (tt rect))
+    (sdl-gfx:draw-box-* (sdl-base:to-int (sdl-base::clamp-to-sshort (+ (xpos rect)
+								       (* i (+ (d rect)
+									       (w rect))))))
+			(sdl-base:to-int (sdl-base::clamp-to-sshort (ypos rect)))
+			(sdl-base:to-int (sdl-base::clamp-to-sshort (w rect)))
+			(sdl-base:to-int (sdl-base::clamp-to-sshort (* (h rect)
+								       (sdl:height surface))))
+			:surface surface
+			:color sdl:*white*)))
 
 (defun objects ()
   (let ((mouse-x 0) (mouse-y 0)
@@ -81,5 +81,3 @@
 			 (funcall 100-frames-p))
 		 
 	       (sdl:update-display))))))
-
-

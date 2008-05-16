@@ -30,5 +30,6 @@
 	       (:file "distance-2D" :depends-on ("package"))
 	       (:file "vertices" :depends-on ("package"))
 	       (:file "rotozoom" :depends-on ("package" "globals"))
+	       (:file "fireworks" :depends-on ("package" "globals"))
 	       #-sbcl(:file "metaballs" :depends-on ("package"))
 	       ))))
