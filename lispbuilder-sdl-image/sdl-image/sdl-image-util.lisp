@@ -88,7 +88,7 @@
 	result))))
 
 
-(defmethod load-image ((source sdl:rwops) &key key-color alpha-value (image-type nil) (force nil) (free t) (key-color-at nil))
+(defmethod load-image ((source sdl:rwops) &key key-color surface-alpha (image-type nil) (force nil) (free t) (key-color-at nil))
   "Creates and returns a new surface from the image contained in the `RWOPS` structure in the source `SOURCE`.
 
 ##### Parameters
@@ -115,18 +115,15 @@
 			  (:XV  (sdl-image-cffi::img-Load-XV-RW  (sdl:fp source))))
 			(sdl-image-cffi::img-load-typed-rw (sdl:fp source) nil image-type))
 		    (sdl-image-cffi::img-Load-RW (sdl:fp source) nil)))
-    (if free
-	(sdl:free-rwops source))
+    (when free
+      (sdl:free-rwops source))
     (when (sdl-base::is-valid-ptr image)
-      (let ((surface (sdl:surface image)))
-	(when surface
-	  (if key-color-at
-	      (sdl:set-color-key (sdl:read-pixel key-color-at :surface surface) :surface surface)
-	      (when key-color (sdl:set-color-key key-color :surface surface)))
-	  (when alpha-value (sdl:set-alpha alpha-value :surface surface))
-	  surface)))))
+      (let ((surface (make-instance 'sdl:surface :surface image :key-color key-color :surface-alpha surface-alpha)))
+	(when key-color-at
+	  (sdl:set-color-key (sdl:read-pixel key-color-at :surface surface) :surface surface))
+	surface))))
 
-(defmethod load-image (source &key key-color alpha-value (image-type nil) (force nil) (free nil) (key-color-at nil))
+(defmethod load-image (source &key key-color surface-alpha (image-type nil) (force nil) (free nil) (key-color-at nil))
   "Creates and returns a new surface from the image in the file at the location `SOURCE`. 
 
 ##### Parameters
@@ -155,7 +152,7 @@
       (let ((surface (load-image rwops
 				 :key-color key-color
 				 :key-color-at key-color-at
-				 :alpha-value alpha-value
+				 :surface-alpha surface-alpha
 				 :free t
 				 :image-type image-type
 				 :force force)))
