@@ -6,7 +6,18 @@
   (:use #:cl #:cffi)
   (:nicknames #:sdl-gfx-examples)
   (:export #:*bmp-path*
-           #:inbuilt-font #:random-circles
-           #:setup-and-draw #:width-height #:recursion #:functions #:objects #:points-and-lines
-           #:shape-primitives #:bezier #:distance-2d #:vertices #:metaballs
-           #:rotozoom))
+           #:inbuilt-font
+           #:random-circles
+           #:setup-and-draw
+           #:width-height
+           #:recursion
+           #:functions
+           #:objects
+           #:points-and-lines
+           #:shape-primitives
+           #:bezier
+           #:distance-2d
+           #:vertices
+           #:metaballs
+           #:rotozoom
+           #:fireworks))

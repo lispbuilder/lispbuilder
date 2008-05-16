@@ -151,7 +151,7 @@ the smoother the spline.
 	(p3 (cdr p2) (cdr p2))
 	(p4 (cdr p3) (cdr p3)))
        ((or (null p4) (null p3) (null p2) (null p1)))
-    (draw-shape (sdl:calculate-curve (first p1) (first p2) (first p3) (first p4) segments)
+    (draw-shape (sdl::generate-curve (first p1) (first p2) (first p3) (first p4) segments)
 		type :surface surface :color color)))
 
 (defun draw-shape (points type &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -858,4 +858,16 @@ A control point is a vertex containing an X and Y coordinate pair.
   (cffi:with-foreign-objects ((dstwidth :int) (dstheight :int))
     (sdl-gfx-cffi::zoomSurfaceSize width height zoomx zoomy dstwidth dstheight)
     (vector (cffi:mem-ref dstwidth :int) (cffi:mem-ref dstheight :int))))
+
+;;; s
+
+;; SDL_gfx 2.0.16
+;; (defun shrink-surface (factor-x factor-y &key (surface sdl:*default-surface*))
+;;   "Returns a new 32bit or 8bit SDl:SURFACE from the SDL:SURFACE :SURFACE.
+;;     FACTOR-X and FACTOR-Y are the shrinking ratios \(i.e. 2=1/2 the size,
+;;     3=1/3 the size, etc.\) The destination surface is antialiased by averaging
+;;     the source box RGBA or Y information. If the surface is not 8bit
+;;     or 32bit RGBA/ABGR it will be converted into a 32bit RGBA format on the fly."
+;;   (check-type surface sdl:surface)
+;;   (sdl:surface (sdl-gfx-cffi::shrinkSurface (sdl:fp surface) factor-x factor-y)))
 
