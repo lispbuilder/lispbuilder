@@ -34,8 +34,8 @@
                           0.8
                           (- 0.8 v))))
         (setf alpha (max 0.0 (- alpha (* i decay))))
-;;; CL will start to use exponential notation when alpha gets
-;;; very small, and SVG hates this.
+	;; CL will start to use exponential notation when alpha gets
+	;; very small, and SVG hates this.
         (when (> alpha 0.00001)
           (setf angle (+ angle (random-range -60 60)))
           (let ((dx (+ x (* (cos (radians angle)) w)))
@@ -69,7 +69,7 @@
 
 (defun roots (&key (depth 7))
   (sdl:with-init ()
-    (sdl:window 400 400 :title-caption "Roots" :icon-caption "Roots")
+    (sdl:window 400 400 :title-caption "Roots: Please be patient - this takes a while." :icon-caption "Roots: Please be patient - this takes a while.")
     (vecto:with-canvas (:width 400 :height 400)
       (vecto:set-rgb-fill 0 0 0)
       (vecto:clear-canvas)

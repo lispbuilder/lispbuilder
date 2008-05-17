@@ -1,14 +1,12 @@
 
 (in-package #:lispbuilder-sdl)
-
-(defmethod load-image (filename
-		       &key key-color alpha-value (image-type nil) (force nil) (free nil)
-		       key-color-at)
+                         
+(defmethod load-image (filename &key key-color surface-alpha image-type force free key-color-at)
   (declare (ignore image-type force free))
   (let ((surf (make-instance 'surface
 			     :surface (sdl-base::load-image (namestring filename))
 			     :key-color key-color
-			     :alpha-value alpha-value)))
+			     :surface-alpha surface-alpha)))
     (when key-color-at
       (set-color-key (read-pixel key-color-at :surface surf) :surface surf))
     surf))

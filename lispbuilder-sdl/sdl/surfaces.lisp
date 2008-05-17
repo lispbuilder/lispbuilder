@@ -57,7 +57,10 @@ This object will be garbage collected and the surface freed when out of scope.")
 
 (defmethod initialize-instance :after ((surface surface)
 				       &key (x 0) (y 0) (bpp 32)
-				       (key-color nil) (alpha-value nil)
+				       (key-color nil)
+				       (alpha nil)
+				       (channel-alpha nil)
+				       (surface-alpha nil)
 				       (type :sw) (rle-accel t)
 				       (width nil) (height nil)
 				       &allow-other-keys)
@@ -67,24 +70,27 @@ This object will be garbage collected and the surface freed when out of scope.")
      (setf (width surface) (sdl-base::surf-w (fp surface))
 	   (height surface) (sdl-base::surf-h (fp surface))
 	   (x surface) x
-	   (y surface) y))
+	   (y surface) y)
+     (when key-color
+       (set-color-key key-color :surface surface :rle-accel rle-accel))
+     (set-alpha surface-alpha :surface surface :rle-accel rle-accel))
     ((and (integerp width) (integerp height))
+     (when alpha
+       (setf channel-alpha alpha
+	     surface-alpha alpha))
      ;; No SDL_Surface.
      ;; But WIDTH and HEIGHT are specified, so create a new surface.
      (setf (fp surface) (sdl-base::create-surface width height
 						  :bpp bpp
 						  :color-key key-color
-						  :alpha alpha-value
+						  :channel-alpha channel-alpha
+						  :surface-alpha surface-alpha
 						  :type type
 						  :rle-accel rle-accel))
      (unless (is-valid-ptr (fp surface))
        (error "Cannot create a new surface.")))
     (t (error ":SURFACE must be a foreign pointer to an SDL_Surface, or
-:WIDTH and :HEIGHT must specified.")))
-  (when key-color
-    (set-color-key key-color :surface surface :rle-accel rle-accel))
-  (when alpha-value
-    (set-alpha alpha-value :surface surface :rle-accel rle-accel)))
+:WIDTH and :HEIGHT must specified."))))
 
 (defun surface (surface-fp &optional (display nil))
   "Creates a new `SURFACE` or a new `DISPLAY-SURFACE` when `DISPLAY` is `T`. 
@@ -333,7 +339,6 @@ expect from \"overlaying\" them; the destination alpha will work as a mask.
 *Note*: Also note that per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used 
 if available."
   (check-type surface sdl-surface)
-  (check-type alpha integer)
   (sdl-base::set-alpha (fp surface) alpha rle-accel))
 
 (defun get-clip-rect (&key (surface *default-surface*) (rectangle (rectangle)))
@@ -376,27 +381,33 @@ if available."
   (sdl-base::get-surface-rect (fp surface) (fp rectangle))
   rectangle)
 
-(defun convert-surface (&key (surface *default-surface*) key-color alpha-value (free-p nil))
+(defun convert-surface (&key (surface *default-surface*) key-color alpha surface-alpha (free-p nil))
   (check-type surface sdl-surface)
   (when key-color
     (check-type key-color sdl-color))
+  (when alpha
+    (setf surface-alpha alpha))
   (let ((surf (sdl-base::convert-surface-to-display-format (fp surface)
 							   :key-color (when key-color (map-color key-color surface))
-							   :alpha-value (when alpha-value alpha-value)
+							   :surface-alpha surface-alpha
 							   :free-p nil)))
     (unless (sdl-base::is-valid-ptr surf)
       (error "ERROR, CONVERT-SURFACE: Cannot convert the surface."))
     (when free-p
       (free-surface surface))
-    (surface surf)))
+    (make-instance 'surface :surface surf :alpha alpha :surface-alpha surface-alpha)))
 
-(defun copy-surface (&key (surface *default-surface*) key-color alpha-value (type :sw) rle-accel)
+(defun copy-surface (&key (surface *default-surface*) key-color alpha channel-alpha surface-alpha (type :sw) rle-accel)
   (check-type surface sdl-surface)
   (when key-color
     (check-type key-color sdl-color))
+  (when alpha
+    (setf channel-alpha alpha
+	  surface-alpha alpha))
   (let ((surf (sdl-base::copy-surface (fp surface)
 				      :color-key (when key-color (map-color key-color surface))
-				      :alpha alpha-value
+				      :channel-alpha channel-alpha
+				      :surface-alpha surface-alpha
 				      :type type
 				      :rle-accel rle-accel)))
     (unless (sdl-base::is-valid-ptr surf)
@@ -404,20 +415,25 @@ if available."
     (setf surf (surface surf))
     (when key-color
       (set-color-key key-color :surface surf :rle-accel rle-accel))
-    (when alpha-value
-      (set-alpha alpha-value :surface surf :rle-accel rle-accel))
+    (set-alpha surface-alpha :surface surf :rle-accel rle-accel)
     surf))
 
 (defun create-surface (width height &key
-		       (surface nil) (bpp 32) key-color alpha-value (type :sw) (rle-accel t))
+		       (surface nil) (bpp 32) key-color channel-alpha surface-alpha alpha (type :sw) (rle-accel t))
   
   (when key-color
     (check-type key-color sdl-color))
+  ;; ALPHA is deprecated, and should not be used anymore.
+  ;; Use SURFACE-ALPHA and CHANNEL-ALPHA instead.
+  (when alpha
+    (setf channel-alpha alpha
+	  surface-alpha alpha))
   (let ((surf (sdl-base::create-surface width height
 					:bpp bpp
 					:surface (when surface (fp surface))
 					:color-key key-color
-					:alpha alpha-value
+					:channel-alpha channel-alpha
+					:surface-alpha surface-alpha
 					:type type
 					:rle-accel rle-accel)))
     (unless (sdl-base::is-valid-ptr surf)
@@ -426,8 +442,7 @@ if available."
     (setf surf (make-instance 'surface :surface surf))
     (when key-color
       (set-color-key key-color :surface surf :rle-accel rle-accel))
-    (when alpha-value
-      (set-alpha alpha-value :surface surf :rle-accel rle-accel))
+    (set-alpha surface-alpha :surface surf :rle-accel rle-accel)
     surf))
 
 (defun update-surface (surface &optional template)
