@@ -78,30 +78,45 @@
 (defun set-color-key (surface &optional (color nil) (rle-accel nil))
   "Sets the key color for the given surface. The key color is made transparent."
   (when (is-valid-ptr surface)
-    (let ((SRC-COLOR-KEY nil))
-      (if rle-accel
-	  (setf rle-accel sdl-cffi::SDL-RLE-ACCEL)
-	  (setf rle-accel 0))
-      (if color
-	  (setf SRC-COLOR-KEY sdl-cffi::SDL-SRC-COLOR-KEY)
-	  (setf color 0
-		SRC-COLOR-KEY 0))
-      (sdl-cffi::SDL-Set-Color-Key surface (logior SRC-COLOR-KEY rle-accel) color))
+    (let ((flags nil))
+      (when rle-accel
+	(push sdl-cffi::SDL-RLE-ACCEL flags))
+      (when color
+	(push sdl-cffi::SDL-SRC-COLOR-KEY flags))
+
+      (with-foreign-slots ((sdl-cffi::colorkey)
+			   (pixel-format surface)
+			   sdl-cffi::SDL-Pixel-Format)
+	;; Unless color is an INTEGER, set it to the
+	;; current colorkey.
+	(unless (integerp color)
+	  (setf color sdl-cffi::colorkey)))
+      
+      (sdl-cffi::SDL-Set-Color-Key surface (set-flags flags) color))
     surface))
 
 (defun clear-color-key (surface rle-accel)
   "Removes the key color from the given surface."
   (set-color-key surface nil rle-accel))
 
-(defun set-alpha (surface alpha-value &optional (accel nil))
+(defun set-alpha (surface alpha &optional (accel nil))
   "Sets the alpha value for the given surface."
   (when (is-valid-ptr surface)
-    (if accel
-	(setf accel sdl-cffi::SDL-RLE-ACCEL)
-	(setf accel 0))
-    (if (null alpha-value)
-	(sdl-cffi::SDL-Set-Alpha surface accel 0)
-	(sdl-cffi::SDL-Set-Alpha surface (logior sdl-cffi::SDL-SRC-ALPHA accel) (clamp (to-int alpha-value) 0 255)))
+    (let ((flags nil))
+      (when accel
+	(push sdl-cffi::SDL-RLE-ACCEL flags))
+      (when alpha
+	  (push sdl-cffi::SDL-SRC-ALPHA flags))
+      
+      (with-foreign-slots ((sdl-cffi::alpha)
+			   (pixel-format surface)
+			   sdl-cffi::SDL-Pixel-Format)
+	;; Unless alpha is an INTEGER, set it to the
+	;; current surface alpha.
+	(unless (integerp alpha)
+	  (setf alpha sdl-cffi::alpha)))
+
+      (sdl-cffi::SDL-Set-Alpha surface (set-flags flags) (clamp (to-int alpha) 0 255)))
     surface))
 
 (defun get-surface-rect (surface rectangle)
@@ -119,18 +134,17 @@
   (sdl-cffi::sdl-set-clip-rect surface rectangle)
   rectangle)
 
-(defun convert-surface-to-display-format (surface &key key-color alpha-value (free-p nil))
+(defun convert-surface-to-display-format (surface &key key-color surface-alpha (free-p nil))
   "converts a surface to display format and free's the source surface
-    :alpha t will convert the surface and add an alpha channel.
+    :surface-alpha t will convert the surface and add an alpha channel.
     :free nil will not free surface.
    returns NIL if the surface cannot be converted."
   ;; LJC: Added support for converting to an alpha surface.
   ;; LJC: Freeing surface is now optional.
   (if key-color
       (set-color-key surface key-color))
-  (if alpha-value
-      (set-alpha surface alpha-value))
-  (let ((display-surface (if alpha-value
+  ;;(set-alpha surface surface-alpha)
+  (let ((display-surface (if surface-alpha
 			     (sdl-cffi::SDL-Display-Format-Alpha surface)
 			     (sdl-cffi::SDL-Display-Format surface))))
     (unless (is-valid-ptr display-surface)
@@ -139,24 +153,25 @@
       (sdl-cffi::sdl-Free-Surface surface))
     display-surface))
 
-(defun copy-surface (surface &key (type :sw) rle-accel color-key alpha)
+(defun copy-surface (surface &key (type :sw) rle-accel color-key channel-alpha surface-alpha)
   "create a surface compatible with the supplied surface"
   (create-surface (surf-w surface) (surf-h surface)
 		  :surface surface
 		  :color-key color-key
-		  :alpha alpha
+		  :channel-alpha channel-alpha
+		  :surface-alpha surface-alpha
 		  :type type
 		  :rle-accel rle-accel))
 
-(defun create-surface (width height &key (bpp 32) surface color-key alpha pixels pitch (type :sw) (rle-accel nil))
+(defun create-surface (width height &key (bpp 32) surface color-key channel-alpha surface-alpha pixels pitch (type :sw) (rle-accel nil))
   "create a surface compatible with the supplied :surface, if provided."
   (let ((surf nil) (flags nil))
-    (if color-key
-	(push sdl-cffi::SDL-SRC-COLOR-KEY flags))
-    (if alpha
-	(push sdl-cffi::SDL-SRC-ALPHA flags))
-    (if rle-accel
-	(push sdl-cffi::SDL-RLE-ACCEL flags))
+    (when color-key
+      (push sdl-cffi::SDL-SRC-COLOR-KEY flags))
+    (when surface-alpha
+      (push sdl-cffi::SDL-SRC-ALPHA flags))
+    (when rle-accel
+      (push sdl-cffi::SDL-RLE-ACCEL flags))
     (case type
       (:sw (push sdl-cffi::SDL-SW-SURFACE flags))
       (:hw (push sdl-cffi::SDL-HW-SURFACE flags)))
@@ -175,15 +190,21 @@
 	(let ((Rmask 0) (Gmask 0) (Bmask 0) (Amask 0))
 	  ;; Set masks according to endianess of machine
 	  ;; Little-endian (X86)
-	  #+(or X86 PC386 little-endian)(setf rmask #x000000ff
-					      gmask #x0000ff00
-					      bmask #x00ff0000
-					      amask #xff000000)
+	  #+(or X86 PC386 little-endian)
+	  (progn
+	    (setf rmask #x000000ff
+		  gmask #x0000ff00
+		  bmask #x00ff0000)
+	    (when channel-alpha
+	      (setf amask #xff000000)))
 	  ;; Big-endian (Motorola)
-	  #-(or X86 PC386 little-endian)(setf rmask #xff000000
-					      gmask #x00ff0000
-					      bmask #x0000ff00
-					      amask #x000000ff)
+	  #-(or X86 PC386 little-endian)
+	  (progn
+	    (setf rmask #xff000000
+		  gmask #x00ff0000
+		  bmask #x0000ff00)
+	    (when channel-alpha
+	      (setf amask #x000000ff)))
 	  (if (and pixels pitch)
 	      ;; Pixels not yet supported.
 	      nil

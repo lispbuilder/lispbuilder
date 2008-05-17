@@ -27,7 +27,7 @@
 ;;; Anthony Fairchild.
 ;;; http://article.gmane.org/gmane.lisp.cl-lispbuilder.general/559
 (defun rotate-surface (degrees &key
-		       (surface *default-surface*) (free-p nil) (key-color nil) (alpha-value nil))
+		       (surface *default-surface*) (free-p nil) (key-color nil) (alpha nil))
   "Returns a new `SURFACE` rotated `0`, `90`, `180`, or `270` degrees.
 
 ##### Parameters
@@ -61,7 +61,7 @@ When `ALPHA` is `NIL`, the new surface is created without alpha transparency. Se
 	(declare (type fixnum w h new-w new-h))
 	(with-surfaces ((src surface free-p)
 			(dst (create-surface new-w new-h :surface surface
-					     :key-color key-color :alpha-value alpha-value) nil))
+					     :key-color key-color :alpha alpha) nil))
 	  (let ((new-x (case degrees
 			 (90  #'(lambda (x y)
 				  (declare (ignore x)(type fixnum x y))

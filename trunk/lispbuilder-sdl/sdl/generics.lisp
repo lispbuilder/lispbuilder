@@ -180,7 +180,7 @@ remains unchanged between screen updates."))
 (defgeneric any-color-but-this (color)
   (:documentation "Returns a new color that is different to the color `COLOR`."))
 
-(defgeneric load-image (source &key key-color alpha-value image-type force free key-color-at)
+(defgeneric load-image (source &key key-color surface-alpha image-type force free key-color-at)
   (:documentation
    "Creates and returns a new surface from the source `SOURCE`.
 

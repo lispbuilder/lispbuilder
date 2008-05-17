@@ -43,10 +43,11 @@
 (defun mandelbrot 
     (&optional (width *mandelbrot-width*) (height *mandelbrot-height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
   "main program to draw navigate mandelbrot set"
-  (let ((cx 0) (cy 0) (step 10))
+  (let ((cx 0) (cy 0) (step 30)
+	(frames-p (every-n-frames 5)))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Mandelbrot" :icon-caption "Mandelbrot")
-      (setf (sdl:frame-rate) 0)
+      (setf (sdl:frame-rate) -1)
       (sdl:with-events ()
 	(:idle ()
 	       (if (>= cx width)
@@ -54,7 +55,8 @@
 	       (if (< cy height)
 		   (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1))
 	       (incf cx step)
-	       (sdl:update-display))
+	       (when (funcall frames-p)
+		 (sdl:update-display)))
 	(:quit-event () t)
 	(:mouse-button-down-event (:x x :y y)
 					; set the new center point
