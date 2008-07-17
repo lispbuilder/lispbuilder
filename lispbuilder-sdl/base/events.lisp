@@ -849,11 +849,10 @@ The contents of the event are completely up to the programmer.
 					    events))))
        
        (loop until ,quit do
-	    (loop until (or ,quit (eq ,(case type
-					     (:poll `(sdl-cffi::SDL-Poll-Event ,sdl-event))
-					     (:wait `(sdl-cffi::SDL-Wait-Event ,sdl-event))
-					     (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type)))
-				      0)) do
+	    (loop until ,(case type
+			       (:poll `(= 0 (sdl-cffi::SDL-Poll-Event ,sdl-event)))
+			       (:wait `(or ,quit (= 0 (sdl-cffi::SDL-Wait-Event ,sdl-event))))
+			       (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type))) do
 		 (cond
 		   ,@(remove nil 
 			     (mapcar #'(lambda (event)
