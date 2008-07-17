@@ -88,21 +88,24 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 
     \(WITH-RECTANGLE \(a-rect \(RECTANGLE :x 0 :y 0 :w 100 :h 100\)\)
         ...\)"
-  `(let* ((,@(if rectangle
-		 `(,var ,rectangle)
-		 `(,var ,var)))
-	  (*default-rectangle* ,var))
-     (symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
-		       (,(intern (string-upcase (format nil "~A.y" var))) (y ,var))
-		       (,(intern (string-upcase (format nil "~A.w" var))) (width ,var))
-		       (,(intern (string-upcase (format nil "~A.h" var))) (height ,var)))
-       (declare (ignorable ,(intern (string-upcase (format nil "~A.x" var)))
-                           ,(intern (string-upcase (format nil "~A.y" var)))
-                           ,(intern (string-upcase (format nil "~A.w" var)))
-                           ,(intern (string-upcase (format nil "~A.h" var)))))
-       ,@body
-       (if ,free-p
-	   (free-rectangle ,var)))))
+  (let ((body-value (gensym "body-value-")))
+    `(let* ((,body-value nil)
+	    (,@(if rectangle
+		   `(,var ,rectangle)
+		   `(,var ,var)))
+	    (*default-rectangle* ,var))
+       (symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
+			 (,(intern (string-upcase (format nil "~A.y" var))) (y ,var))
+			 (,(intern (string-upcase (format nil "~A.w" var))) (width ,var))
+			 (,(intern (string-upcase (format nil "~A.h" var))) (height ,var)))
+	 (declare (ignorable ,(intern (string-upcase (format nil "~A.x" var)))
+			     ,(intern (string-upcase (format nil "~A.y" var)))
+			     ,(intern (string-upcase (format nil "~A.w" var)))
+			     ,(intern (string-upcase (format nil "~A.h" var)))))
+	 (setf ,body-value (progn ,@body))
+	 (when ,free-p
+	   (free-rectangle ,var))
+	 ,body-value))))
 
 (defmacro with-rectangles (bindings &body body)
   "A convenience macro that binds multiple rectangles as per [WITH-RECTANGLE](#with-rectangle).

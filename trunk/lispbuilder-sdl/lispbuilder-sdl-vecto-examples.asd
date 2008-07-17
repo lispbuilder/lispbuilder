@@ -1,3 +1,4 @@
+;;; -*- lisp -*-
 
 (defpackage #:lispbuilder-sdl-vecto-examples-system
   (:use #:cl #:asdf))
