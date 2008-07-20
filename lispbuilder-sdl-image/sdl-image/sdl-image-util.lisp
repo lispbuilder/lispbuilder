@@ -123,6 +123,19 @@
 	  (sdl:set-color-key (sdl:read-pixel key-color-at :surface surface) :surface surface))
 	surface))))
 
+(defmethod load-image ((source VECTOR) &key key-color surface-alpha (image-type nil) (force nil) (free t) (key-color-at nil))
+  "Creates and returns a new surface from the image contained in the byte VECTOR in `SOURCE`.
+
+##### Parameters
+
+* `SOURCE` is of type `VECTOR`.
+* `IMAGE-TYPE` when specified type may be one of `NIL`, `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TGA`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
+* `FORCE` when `T` will force an image to be loaded as `IMAGE-TYPE`, ignoring any *magic number* when present in `SOURCE`."
+  (declare (ignore free))
+  (load-image (sdl::create-RWops-from-byte-array source)
+	      :key-color key-color :surface-alpha surface-alpha :image-type image-type
+	      :force force :free t :key-color-at key-color-at))
+
 (defmethod load-image (source &key key-color surface-alpha (image-type nil) (force nil) (free nil) (key-color-at nil))
   "Creates and returns a new surface from the image in the file at the location `SOURCE`. 
 

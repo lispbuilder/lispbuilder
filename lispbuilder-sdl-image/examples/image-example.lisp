@@ -1,6 +1,6 @@
 ;;;; Demonstration/Test of using SDL (Simple Media Layer) library
 ;;;; using CFFI for foreign function interfacing...
-;;;; (C)2006 Justin Heyes-Jones
+;;;; (C)2006 Justin Heyes-Jones, Luke J Crook.
 ;;;; see COPYING for license
 
 (in-package #:sdl-image-examples) 
