@@ -349,9 +349,15 @@ if available."
 
 (defun set-clip-rect (rectangle &key (surface *default-surface*))
   (check-type surface sdl-surface)
-  (check-type rectangle rectangle)
-  (sdl-base::set-clip-rect (fp surface) (fp rectangle))
-  rectangle)
+  (when rectangle (check-type rectangle rectangle))
+  (if rectangle
+      (sdl-base::set-clip-rect (fp surface) (fp rectangle))
+      (sdl-base::set-clip-rect (fp surface) (cffi:null-pointer))))
+
+(defun clear-clip-rect (&optional (surface *default-surface*))
+  (check-type surface sdl-surface)
+  (set-clip-rect NIL :surface surface)
+  t)
 
 (defun clear-cell (&key (surface *default-surface*))
   (check-type surface sdl-surface)
