@@ -1,7 +1,7 @@
 
 (in-package #:lispbuilder-sdl)
                          
-(defmethod load-image (filename &key key-color surface-alpha image-type force free (key-color-at nil))
+(defmethod load-image ((filename string) &key key-color surface-alpha image-type force free (key-color-at nil))
   (declare (ignore image-type force free))
   (let ((surf (make-instance 'surface
 			     :surface (sdl-base::load-image (namestring filename))
