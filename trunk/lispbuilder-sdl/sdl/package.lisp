@@ -243,6 +243,7 @@
    #:set-alpha
    #:get-clip-rect
    #:set-clip-rect
+   #:clear-clip-rect
    #:get-surface-rect
    #:convert-surface
    #:copy-surface
