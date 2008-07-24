@@ -84,7 +84,7 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
 	  (if (sdl-base:is-valid-ptr chunk-fp)
 	      (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
 	      (error "Cannot load ~A." file)))
-	(error "Music file ~A does not exist." file))))
+	(error "Sample file ~A does not exist." file))))
 
 (defun sample-from-channel (channel)
       "Returns currently playing or most recently played sample on `CHANNEL` as a new [CHUNK](#chunk) object, 
