@@ -53,6 +53,17 @@ Do not attempt to use `MUSIC` after it is freed.")
 (defconstant +default-sample-buffer+ 4096
   "Default size of the sample output buffer is `4096` bytes")
 
+(defun reserve-channels (channels)
+  "Reserves, or excludes, the number of `CHANNELS` from default mixing. 
+The number of channels to reserve is from 0 to `\(- CHANNELS 1\)`.
+Default mixing is performed when when a sample is played on an unreserved channel, 
+when using [PLAY-SAMPLE](#play-sample) with `:CHANNEL` `NIL`.
+`CHANNEL` when `NIL` or `0` will remove all reservations.
+Channels are unreserved unless explicitly reserved by [RESERVE-CHANNELS](#reserve-channels).
+Returns the number of channels reserved. May return less channels than requested, depending on the 
+number of channels previously allocated using [ALLOCATE-CHANNELS](#allocate-channels)."
+  (sdl-mixer-cffi::reserve-channels (if (integerp channels) channels 0)))
+
 (defun load-music (filepath)
   "Loads the music file at location `FILEPATH`. Must be a `WAVE`, `MOD`, `MIDI`, `OGG` or `MP3` file.
 Returns music as a new [MUSIC](#music) object, or NIL on error."
@@ -158,7 +169,8 @@ Any previous music will be halted. Will block until any current fade effect comp
 	  nil)))
 
 (defun play-sample (chunk &key
-		    (channel nil)
+		    (channel t)
+		    (group nil)
 		    (loop nil)
 		    (fade nil)
 		    (ticks t))
@@ -170,7 +182,13 @@ The callback set by [REGISTER-SAMPLE-FINISHED](#register-sample-finished) is cal
 ##### Parameters
 
 * `CHUNK` is the sample [CHUNK](#chunk).
-* `CHANNEL` specifies the channel to play the sample. When `NIL`, will play on the first free unreserved channel. Default is `NIL`.
+* `CHANNEL` specifies the channel to play the sample. When `T`, will perform default mixing and mix the 
+sample on the first free unreserved channel.
+* `GROUP` Attempts to play the sample on the first available \(not playing\) reserved channel in `GROUP`. 
+When `T`, will search for the first available \(not playing\) reserved channel in all groups. 
+If there are no available reserved channels then [PLAY-SAMPLE](#play-sample) will fail.
+If however `CHANNEL` is also `T` then the default action is to play the sample on the first unreserved channel.
+Use [RESERVE-CHANNELS](#reserve-channels) to reserve, or exclude, a channel from default mixing.
 * `LOOP` is the number of times to loop the sample. Loops continuously when `T`. Plays once when `NIL`, or `0`. Default in `NIL`.
 * `FADE` is the number of milliseconds to perform the fade-in effect. Default is `NIL`, no fade effect. Only applies to the first loop.
 * `TICKS` is the number of milliseconds to play the sample. When `T` will play the sample from start to finish. Default is `T`.
@@ -188,6 +206,12 @@ The callback set by [REGISTER-SAMPLE-FINISHED](#register-sample-finished) is cal
      (setf ticks -1))
     ((eq ticks nil)
      (setf ticks 0)))
+
+  (if group
+      (let ((channel-available (group-available group)))
+	(if channel-available
+	    (setf channel channel-available))))
+
   (if (integerp fade)
       (let ((chan (sdl-mixer-cffi::fade-in-channel-timed (if (integerp channel) channel -1) chunk loop fade ticks)))
 	(if (= -1 chan)
@@ -218,33 +242,47 @@ The default is NIL.
 	(sdl-mixer-cffi::halt-music)
 	t)))
 
-(defun halt-sample (channel &key
+(defun halt-sample (&key
+		    (channel t)
+		    (group nil)
 		    (fade nil)
 		    (ticks nil))
-  "Stops playing the sample on `CHANNEL`. 
+  "Stops playing the sample on `CHANNEL`, or stops playback on the reserved channels in `GROUP`. 
 The callback set by [REGISTER-SAMPLE-FINISHED](#register-sample-finished) is called when the channel stops.
 
 ##### Parameters
 
-* `CHANNEL` specifies the channel to stop playing. When `T`, will stop playback samples on all channels. Ignores channels not currently playing out samples.
-* `FADE` is the number of milliseconds to perform the fade-out effect. The sample is stopped when fade effect completes.
-When `FADE` is `NIL` or `0` the sample is stopped immediately. Default is `NIL`.
+* `CHANNEL` specifies the channel to stop playing. When `T`, will stop playback samples on all channels. 
+Ignores channels not currently playing out samples.
+* `GROUP` specifies the group of reserved channels to stop playing. Use [RESERVE-CHANNELS](#reserve-channels) to create a group of 
+reserved channels. 
+* `FADE` is the number of milliseconds to perform the fade-out effect. 
+When `CHANNEL` is set, will fade out the sample on the specified channel.
+When `GROUP` is set, will fade out the samples on the reserved channels in `GROUP`. The sample is stopped when fade effect completes.
+When `FADE` is `NIL` or `0` the fade effect is immediate. Default is `NIL`.
 * `TICKS` is the number of milliseconds until the sample is stopped. When `NIL` or `0`, the sample is stopped immediately. Default is `NIL`.
 
 ##### Returns
 
-* Returns the number of samples fading out, when `FADE` is set.
-* Returns the number of samples halted, when `TICKS` is set.
+* The number of samples fading out, when `FADE` is set.
+* The number of samples halted, when `TICKS` is set.
 * Otherwise, returns T on success and NIL on failure."
-  (if (or (eq channel t) (null channel))
-      (setf channel -1))
-  (if (and (null fade) (null ticks))
-      (progn
-	(sdl-mixer-cffi::halt-channel channel)
-	t)
-      (if (integerp fade)
-	  (sdl-mixer-cffi::fade-out-channel channel (if fade fade 0))
-	  (sdl-mixer-cffi::expire-channel channel (if ticks ticks 0)))))
+  (if (and (integerp fade) (integerp group))
+      (sdl-mixer-cffi::fade-out-group group fade)
+      (if (integerp group)
+	  (progn
+	    (sdl-mixer-cffi::halt-group group)
+	    t)
+	  (progn
+	    (if (or (eq channel t) (null channel))
+		(setf channel -1))
+	    (if (and (null fade) (null ticks))
+		(progn
+		  (sdl-mixer-cffi::halt-channel channel)
+		  t)
+		(if (integerp fade)
+		    (sdl-mixer-cffi::fade-out-channel channel (if fade fade 0))
+		    (sdl-mixer-cffi::expire-channel channel (if ticks ticks 0))))))))
 
 (defun linked-version ()
     "Returns the version number of the SDL_mixer dynamic library in use as #\(`MAJOR` `MINOR` `PATCH`\)."
@@ -546,3 +584,80 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
     "Removes any callback function set by [REGISTER-MUSIC-MIXER](#register-music-mixer)."
     (setf *audio-buffer* nil)
     (sdl-mixer-cffi::hook-music (cffi:null-pointer) (cffi:null-pointer)))
+
+(defun group-channels (tag &key (channel 0) (end-channel nil))
+  "Assigns the group `TAG` to `:CHANNEL`, or the range of channels from `:CHANNEL` to `:END-CHANNEL`.
+`TAG` when `NIL` will remove the `TAG` from the channels specified  and reassign these channels to the default group.
+Returns the number of channels grouped on success, or `NIL` on failure when an invalid or unallocated `CHANNEL` 
+or range of channels is specified.
+Use [ALLOCATE-CHANNELS](#allocate-channels) to allocate one or more channels."
+  (let ((ret (if end-channel
+		 (sdl-mixer-cffi::group-channels channel end-channel (if tag tag -1))
+		 (sdl-mixer-cffi::group-channel channel tag))))
+    (if (= 0 ret)
+	nil
+	ret)))
+
+(defun group-channel-p (tag)
+  "Returns the number of reserved channels in the group identified by `TAG`. 
+Returns the total number of reserved channels in all groups when `NIL`."
+  (sdl-mixer-cffi::group-count (if (integerp tag) tag -1)))
+
+(defun group-available (tag)
+  "Returns the first available reserved channel in the group identified by `TAG`. 
+Returns the first available reserved channel in any group when `T`.
+Returns a channel, or `NIL` when no reserved channels in the specified group are available."
+  (let ((ret (sdl-mixer-cffi::group-available (if (integerp tag) tag -1))))
+    (if (= ret -1)
+	nil
+	ret)))
+
+(defun group-oldest (tag)
+  "Returns the oldest actively playing reserved channel in the group identified by `TAG`. 
+When `T` will return the oldest actively playing reserved channel in any group.
+Returns a channel, or `NIL` if no channels are actively playing or the group is empty."
+  (let ((ret (sdl-mixer-cffi::group-oldest (if (integerp tag) tag -1))))
+    (if (= -1 ret)
+	nil
+	ret)))
+
+(defun group-recent (tag)
+  "Returns the most recent actively playing reserved channel in the group identifed by `TAG`.
+When 'T' will return the most recent actively playing reserved channel in any group.
+Returns a channel, or `NIL` if no channels are actively playing or the group is empty."
+  (let ((ret (sdl-mixer-cffi::group-newer (if (integerp tag) tag -1))))
+    (if (= -1 ret)
+	nil
+	ret)))
+
+;; (defun register-panning-effect (channel left right &optional post)
+;;   "Registers a panning effect for the `CHANNEL`. The volume for the left and right sound output channels 
+;; are specified by `LEFT` and `RIGHT` respectively."
+
+;;   channel 
+;; Channel number to register this effect on.
+;; Use MIX_CHANNEL_POST to process the postmix stream. 
+;; left 
+;; Volume for the left channel, range is 0(silence) to 255(loud) 
+;; right 
+;; Volume for the left channel, range is 0(silence) to 255(loud) 
+
+;; This effect will only work on stereo audio. Meaning you called Mix_OpenAudio with 2 channels (MIX_DEFAULT_CHANNELS). The easiest way to do true panning is to call Mix_SetPanning(channel, left, 254 - left); so that the total volume is correct, if you consider the maximum volume to be 127 per channel for center, or 254 max for left, this works, but about halves the effective volume.
+;; This Function registers the effect for you, so don't try to Mix_RegisterEffect it yourself.
+;; NOTE: Setting both left and right to 255 will unregister the effect from channel. You cannot unregister it any other way, unless you use Mix_UnregisterAllEffects on the channel.
+;; NOTE: Using this function on a mono audio device will not register the effect, nor will it return an error status. 
+
+;; Returns: Zero on errors, such as bad channel, or if Mix_RegisterEffect failed.
+;;   (if (= 0 (sdl-mixer-cffi::set-panning (if post
+;; 					    lispbuilder-sdl-cffi::+CHANNEL-POST+
+;; 					    channel)
+;; 					left right))
+;;       nil
+;;       t))
+
+;; (defun unregister-panning-effect (channel &optional post)
+;;   ""
+;;   (if (= 0 (sdl-mixer-cffi::set-panning (if post
+;; 					    lispbuilder-sdl-cffi::+CHANNEL-POST+
+;; 					    channel)
+;; 					255 255))))

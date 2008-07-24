@@ -97,6 +97,7 @@
 	<li><a href="#examples">Examples</a></li>
 	<li><a href="#support">Support</a></li>
 	<li><a href="#license">License</a></li>
+	<li><a href="#overview">API Overview</a></li>
 	<li><a href="#dictionary">The LISPBUILDER-SDL-MIXER dictionary</a></li>
 	<ul>
 	        <li><a href="#+channel-post+"><code>+channel-post+</code></a></li>
@@ -115,6 +116,10 @@
 	        <li><a href="#chunk"><code>chunk</code></a></li>
 	        <li><a href="#close-audio"><code>close-audio</code></a></li>
 	        <li><a href="#free"><code>free</code></a></li>
+	        <li><a href="#group-channel-p"><code>group-channel-p</code></a></li>
+	        <li><a href="#group-channels"><code>group-channels</code></a></li>
+	        <li><a href="#group-oldest"><code>group-oldest</code></a></li>
+	        <li><a href="#group-recent"><code>group-recent</code></a></li>
 	        <li><a href="#halt-music"><code>halt-music</code></a></li>
 	        <li><a href="#halt-sample"><code>halt-sample</code></a></li>
 	        <li><a href="#linked-version"><code>linked-version</code></a></li>
@@ -135,6 +140,7 @@
 	        <li><a href="#register-music-finished"><code>register-music-finished</code></a></li>
 	        <li><a href="#register-music-mixer"><code>register-music-mixer</code></a></li>
 	        <li><a href="#register-sample-finished"><code>register-sample-finished</code></a></li>
+	        <li><a href="#reserve-channels"><code>reserve-channels</code></a></li>
 	        <li><a href="#rewind-music"><code>rewind-music</code></a></li>
 	        <li><a href="#sample-fading-p"><code>sample-fading-p</code></a></li>
 	        <li><a href="#sample-from-channel"><code>sample-from-channel</code></a></li>
@@ -227,6 +233,8 @@
 
       LISPBUILDER-SDL-MIXER is distributed under the 
       <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
+
+      <br>&nbsp;</br><h3><a class=none name="overview">API Overview</a></h3>
 
       <br>&nbsp;</br><h3><a class=none name="dictionary">The LISPBUILDER-SDL-MIXER dictionary</a></h3>
 
@@ -458,6 +466,54 @@
 <!-- End of entry for FREE -->
 
 
+<!-- Entry for GROUP-CHANNEL-P -->
+
+<p><br>[Function]<br><a class=none name='group-channel-p'><b>group-channel-p</b> <i>tag</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the number of reserved channels in the group identified by <code>TAG</code>.  Returns the total number of reserved channels in all groups when <code>NIL</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for GROUP-CHANNEL-P -->
+
+
+<!-- Entry for GROUP-CHANNELS -->
+
+<p><br>[Function]<br><a class=none name='group-channels'><b>group-channels</b> <i>tag <tt>&amp;key</tt> channel end-channel</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Assigns the group <code>TAG</code> to <code>:CHANNEL</code>, or the range of channels from <code>:CHANNEL</code> to <code>:END-CHANNEL</code>. <code>TAG</code> when <code>NIL</code> will remove the <code>TAG</code> from the channels specified  and reassign these channels to the default group. Returns the number of channels grouped on success, or <code>NIL</code> on failure when an invalid or unallocated <code>CHANNEL</code>  or range of channels is specified. Use <a href="#allocate-channels">ALLOCATE-CHANNELS</a> to allocate one or more channels. </p>
+
+</blockquote>
+
+<!-- End of entry for GROUP-CHANNELS -->
+
+
+<!-- Entry for GROUP-OLDEST -->
+
+<p><br>[Function]<br><a class=none name='group-oldest'><b>group-oldest</b> <i>tag</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the oldest actively playing reserved channel in the group identified by <code>TAG</code>.  When <code>T</code> will return the oldest actively playing reserved channel in any group. Returns a channel, or <code>NIL</code> if no channels are actively playing or the group is empty. </p>
+
+</blockquote>
+
+<!-- End of entry for GROUP-OLDEST -->
+
+
+<!-- Entry for GROUP-RECENT -->
+
+<p><br>[Function]<br><a class=none name='group-recent'><b>group-recent</b> <i>tag</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the most recent actively playing reserved channel in the group identifed by <code>TAG</code>. When &#039;T&#039; will return the most recent actively playing reserved channel in any group. Returns a channel, or <code>NIL</code> if no channels are actively playing or the group is empty. </p>
+
+</blockquote>
+
+<!-- End of entry for GROUP-RECENT -->
+
+
 <!-- Entry for HALT-MUSIC -->
 
 <p><br>[Function]<br><a class=none name='halt-music'><b>halt-music</b> <i><tt>&amp;optional</tt> fade</i> =&gt; <i>result</i></a>
@@ -476,16 +532,17 @@
 
 <!-- Entry for HALT-SAMPLE -->
 
-<p><br>[Function]<br><a class=none name='halt-sample'><b>halt-sample</b> <i>channel <tt>&amp;key</tt> fade ticks</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='halt-sample'><b>halt-sample</b> <i><tt>&amp;key</tt> channel group fade ticks</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Stops playing the sample on <code>CHANNEL</code>.  The callback set by <a href="#register-sample-finished">REGISTER-SAMPLE-FINISHED</a> is called when the channel stops. </p><h5>Parameters </h5>
-<ul><li><code>CHANNEL</code> specifies the channel to stop playing. When <code>T</code>, will stop playback samples on all channels. Ignores channels not currently playing out samples. </li>
-<li><code>FADE</code> is the number of milliseconds to perform the fade-out effect. The sample is stopped when fade effect completes. When <code>FADE</code> is <code>NIL</code> or <code>0</code> the sample is stopped immediately. Default is <code>NIL</code>. </li>
+<p>Stops playing the sample on <code>CHANNEL</code>, or stops playback on the reserved channels in <code>GROUP</code>.  The callback set by <a href="#register-sample-finished">REGISTER-SAMPLE-FINISHED</a> is called when the channel stops. </p><h5>Parameters </h5>
+<ul><li><code>CHANNEL</code> specifies the channel to stop playing. When <code>T</code>, will stop playback samples on all channels.  Ignores channels not currently playing out samples. </li>
+<li><code>GROUP</code> specifies the group of reserved channels to stop playing. Use <a href="#reserve-channels">RESERVE-CHANNELS</a> to create a group of  reserved channels.  </li>
+<li><code>FADE</code> is the number of milliseconds to perform the fade-out effect.  When <code>CHANNEL</code> is set, will fade out the sample on the specified channel. When <code>GROUP</code> is set, will fade out the samples on the reserved channels in <code>GROUP</code>. The sample is stopped when fade effect completes. When <code>FADE</code> is <code>NIL</code> or <code>0</code> the fade effect is immediate. Default is <code>NIL</code>. </li>
 <li><code>TICKS</code> is the number of milliseconds until the sample is stopped. When <code>NIL</code> or <code>0</code>, the sample is stopped immediately. Default is <code>NIL</code>. </li>
 </ul><h5>Returns </h5>
-<ul><li>Returns the number of samples fading out, when <code>FADE</code> is set. </li>
-<li>Returns the number of samples halted, when <code>TICKS</code> is set. </li>
+<ul><li>The number of samples fading out, when <code>FADE</code> is set. </li>
+<li>The number of samples halted, when <code>TICKS</code> is set. </li>
 <li>Otherwise, returns T on success and NIL on failure. </li>
 </ul>
 
@@ -682,12 +739,13 @@
 
 <!-- Entry for PLAY-SAMPLE -->
 
-<p><br>[Function]<br><a class=none name='play-sample'><b>play-sample</b> <i>chunk <tt>&amp;key</tt> channel loop fade ticks</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='play-sample'><b>play-sample</b> <i>chunk <tt>&amp;key</tt> channel group loop fade ticks</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Plays the sample in <a href="#chunk">CHUNK</a> for <code>TICKS</code> milliseconds, repeated <code>LOOP</code> times. The sample is repeated the number of times specified in <code>LOOP</code>, or until <code>TICKS</code>.  The sample will fade-in over <code>FADE</code> milliseconds.  The callback set by <a href="#register-sample-finished">REGISTER-SAMPLE-FINISHED</a> is called when the sample stops playing. </p><h5>Parameters </h5>
 <ul><li><code>CHUNK</code> is the sample <a href="#chunk">CHUNK</a>. </li>
-<li><code>CHANNEL</code> specifies the channel to play the sample. When <code>NIL</code>, will play on the first free unreserved channel. Default is <code>NIL</code>. </li>
+<li><code>CHANNEL</code> specifies the channel to play the sample. When <code>T</code>, will perform default mixing and mix the  sample on the first free unreserved channel. </li>
+<li><code>GROUP</code> Attempts to play the sample on the first available (not playing) reserved channel in <code>GROUP</code>.  When <code>T</code>, will search for the first available (not playing) reserved channel in all groups.  If there are no available reserved channels then <a href="#play-sample">PLAY-SAMPLE</a> will fail. If however <code>CHANNEL</code> is also <code>T</code> then the default action is to play the sample on the first unreserved channel. Use <a href="#reserve-channels">RESERVE-CHANNELS</a> to reserve, or exclude, a channel from default mixing. </li>
 <li><code>LOOP</code> is the number of times to loop the sample. Loops continuously when <code>T</code>. Plays once when <code>NIL</code>, or <code>0</code>. Default in <code>NIL</code>. </li>
 <li><code>FADE</code> is the number of milliseconds to perform the fade-in effect. Default is <code>NIL</code>, no fade effect. Only applies to the first loop. </li>
 <li><code>TICKS</code> is the number of milliseconds to play the sample. When <code>T</code> will play the sample from start to finish. Default is <code>T</code>. </li>
@@ -746,6 +804,18 @@
 </blockquote>
 
 <!-- End of entry for REGISTER-SAMPLE-FINISHED -->
+
+
+<!-- Entry for RESERVE-CHANNELS -->
+
+<p><br>[Function]<br><a class=none name='reserve-channels'><b>reserve-channels</b> <i>channels</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Reserves, or excludes, the number of <code>CHANNELS</code> from default mixing.  The number of channels to reserve is from 0 to <code>(- CHANNELS 1)</code>. Default mixing is performed when when a sample is played on an unreserved channel,  when using <a href="#play-sample">PLAY-SAMPLE</a> with <code>:CHANNEL</code><code>NIL</code>. <code>CHANNEL</code> when <code>NIL</code> or <code>0</code> will remove all reservations. Channels are unreserved unless explicitly reserved by <a href="#reserve-channels">RESERVE-CHANNELS</a>. Returns the number of channels reserved. May return less channels than requested, depending on the  number of channels previously allocated using <a href="#allocate-channels">ALLOCATE-CHANNELS</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for RESERVE-CHANNELS -->
 
 
 <!-- Entry for REWIND-MUSIC -->

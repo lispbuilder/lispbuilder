@@ -46,7 +46,7 @@
     (sdl-mixer:Free *music*)
     (setf *music* nil))
   (when *sample*
-    (sdl-mixer:Halt-sample t)
+    (sdl-mixer:Halt-sample :channel t)
     (sdl-mixer:Free *sample*)
     (setf *sample* nil))
   (when *mixer-opened*
@@ -67,12 +67,12 @@
     (sdl:window 400 50
 		:title-caption "Sample & Music playback"
 		:icon-caption "Sample and Music playback")
-    (setf (sdl:frame-rate) 10)
+    (setf (sdl:frame-rate) 60)
     (sdl:initialise-default-font)
 
     (setf *status* "Unable to open Audio Mixer.")
     
-    (setf *mixer-opened* (sdl-mixer:OPEN-AUDIO))
+    (setf *mixer-opened* (sdl-mixer:OPEN-AUDIO :chunksize 1024))
     (when *mixer-opened*
       (setf *status* "Opened Audio Mixer.")
       (setf *music* (sdl-mixer:load-music (sdl:create-path *music-file* *audio-path*)))
@@ -99,6 +99,3 @@
 	     (sdl:draw-string-solid-* *sample-status* 1 21 :surface sdl:*default-display* :color sdl:*white*)
 	     (sdl:draw-string-solid-* "<M> Toggle Music. <S> Play Samples." 1 40 :surface sdl:*default-display* :color sdl:*white*)
 	     (sdl:update-display)))))
-
-
-

@@ -90,15 +90,24 @@
    #:SAMPLE-FROM-CHANNEL
 
    ;; 4.4 Groups 
-   ;; 4.4.1 Mix_ReserveChannels 
-   ;; 4.4.2 Mix_GroupChannel 
-   ;; 4.4.3 Mix_GroupChannels 
-   ;; 4.4.4 Mix_GroupCount 
-   ;; 4.4.5 Mix_GroupAvailable 
-   ;; 4.4.6 Mix_GroupOldest 
-   ;; 4.4.7 Mix_GroupNewer 
-   ;; 4.4.8 Mix_FadeOutGroup 
-   ;; 4.4.9 Mix_HaltGroup 
+   ;; 4.4.1 Mix_ReserveChannels
+   #:RESERVE-CHANNELS
+   ;; 4.4.2 Mix_GroupChannel
+   #:GROUP-CHANNELS
+   ;; 4.4.3 Mix_GroupChannels
+   #:GROUP-CHANNELS
+   ;; 4.4.4 Mix_GroupCount
+   #:GROUP-CHANNEL-P
+   ;; 4.4.5 Mix_GroupAvailable
+   #:GROUP-AVAILABLE-P
+   ;; 4.4.6 Mix_GroupOldest
+   #:GROUP-OLDEST
+   ;; 4.4.7 Mix_GroupNewer
+   #:GROUP-RECENT
+   ;; 4.4.8 Mix_FadeOutGroup
+   ;; #:HALT-SAMPLE
+   ;; 4.4.9 Mix_HaltGroup
+   ;; #:HALT-SAMPLE
 
    ;; 4.5 Music 
    ;; 4.5.1 Mix_LoadMUS
@@ -172,6 +181,7 @@
 
    #:CHUNK
    #:MUSIC
+   #:FREE
    
 ;;   #:*DEFAULT-MUSIC*
 ;;   #:*DEFAULT-CHUNK*
