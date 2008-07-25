@@ -64,7 +64,7 @@ Returns the number of channels reserved. May return less channels than requested
 number of channels previously allocated using [ALLOCATE-CHANNELS](#allocate-channels)."
   (sdl-mixer-cffi::reserve-channels (if (integerp channels) channels 0)))
 
-(defun load-music (filepath)
+(defmethod load-music ((filepath STRING))
   "Loads the music file at location `FILEPATH`. Must be a `WAVE`, `MOD`, `MIDI`, `OGG` or `MP3` file.
 Returns music as a new [MUSIC](#music) object, or NIL on error."
   (let ((file (namestring filepath)))
@@ -75,7 +75,23 @@ Returns music as a new [MUSIC](#music) object, or NIL on error."
 	      (error "Cannot load ~A." file)))
 	(error "Music file ~A does not exist." file))))
 
-(defun load-sample (filepath)
+(defmethod load-music ((rwops SDL:RWOPS))
+  "Loads the music file from `RWOPS`. Must be a `WAVE`, `MOD`, `MIDI`, `OGG` or `MP3` file.
+Returns music as a new [MUSIC](#music) object, or NIL on error."
+  (let ((music-fp (sdl-mixer-cffi::LOAD-MUS-RW rwops)))
+    (if (sdl-base:is-valid-ptr music-fp)
+	(make-instance 'sdl-mixer-cffi::music :fp music-fp)
+	(error "Cannot load music from rwops ~A." rwops))))
+
+(defmethod load-music ((array VECTOR))
+  "Loads the music file from the byte `ARRAY`. Must be a `WAVE`, `MOD`, `MIDI`, `OGG` or `MP3` file.
+Returns music as a new [MUSIC](#music) object and a new `RWOPS` object.
+Maintain references to both of these objects until the music can be freed."
+  (let ((rwops (sdl::create-rwops-from-byte-array array)))
+    (values (load-music rwops)
+	    rwops)))
+
+(defmethod load-sample ((filepath STRING))
     "Loads the sample file at location `FILEPATH`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
 Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
   (let ((file (namestring filepath)))
@@ -85,6 +101,21 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
 	      (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
 	      (error "Cannot load ~A." file)))
 	(error "Sample file ~A does not exist." file))))
+
+(defmethod load-sample ((rwops sdl:RWOPS))
+  "Loads the sample from `RWOPS`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
+Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
+  (let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV-RW rwops 0)))
+    (if (sdl-base:is-valid-ptr chunk-fp)
+	(make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
+	(error "Cannot load sample from rwops ~A." rwops))))
+
+(defmethod load-sample ((array VECTOR))
+  "Loads the sample file from the byte `ARRAY`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
+Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
+  (let ((rwops (sdl::create-rwops-from-byte-array array)))
+    (load-sample rwops)
+    (sdl:free-rwops rwops)))
 
 (defun sample-from-channel (channel)
       "Returns currently playing or most recently played sample on `CHANNEL` as a new [CHUNK](#chunk) object, 
