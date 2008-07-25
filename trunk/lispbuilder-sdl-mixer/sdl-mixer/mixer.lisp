@@ -78,7 +78,7 @@ Returns music as a new [MUSIC](#music) object, or NIL on error."
 (defmethod load-music ((rwops SDL:RWOPS))
   "Loads the music file from `RWOPS`. Must be a `WAVE`, `MOD`, `MIDI`, `OGG` or `MP3` file.
 Returns music as a new [MUSIC](#music) object, or NIL on error."
-  (let ((music-fp (sdl-mixer-cffi::LOAD-MUS-RW rwops)))
+  (let ((music-fp (sdl-mixer-cffi::LOAD-MUS-RW (sdl:fp rwops))))
     (if (sdl-base:is-valid-ptr music-fp)
 	(make-instance 'sdl-mixer-cffi::music :fp music-fp)
 	(error "Cannot load music from rwops ~A." rwops))))
@@ -105,7 +105,7 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
 (defmethod load-sample ((rwops sdl:RWOPS))
   "Loads the sample from `RWOPS`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
 Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
-  (let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV-RW rwops 0)))
+  (let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV-RW (sdl:fp rwops) 0)))
     (if (sdl-base:is-valid-ptr chunk-fp)
 	(make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
 	(error "Cannot load sample from rwops ~A." rwops))))
