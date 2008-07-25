@@ -315,4 +315,12 @@
       (sdl-cffi::SDL-Map-RGBA (pixel-format surface) r g b a)
       (sdl-cffi::SDL-Map-RGB (pixel-format surface) r g b)))
 
+(defun map-pixel (pixel surface &optional a)
+  (if a
+      (cffi:with-foreign-objects ((r :uint8) (g :uint8) (b :uint8) (a :uint8))
+	(sdl-cffi::SDL-Get-RGBA pixel (sdl-base::pixel-format surface) r g b a)
+	(values r g b a))
+      (cffi:with-foreign-objects ((r :uint8) (g :uint8) (b :uint8))
+	(sdl-cffi::SDL-Get-RGB pixel (sdl-base::pixel-format surface) r g b)
+	(values r g b))))
 
