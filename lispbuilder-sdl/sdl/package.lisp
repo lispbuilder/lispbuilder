@@ -240,7 +240,9 @@
    #:with-locked-surfaces
    #:clear-color-key
    #:set-color-key
+   #:get-color-key
    #:set-alpha
+   #:get-alpha
    #:get-clip-rect
    #:set-clip-rect
    #:clear-clip-rect

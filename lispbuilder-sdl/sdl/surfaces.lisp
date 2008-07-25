@@ -341,6 +341,18 @@ if available."
   (check-type surface sdl-surface)
   (sdl-base::set-alpha (fp surface) alpha rle-accel))
 
+(defun get-alpha (&optional (surface *default-surface*))
+  (check-type surface sdl-surface)
+  (foreign-slot-value (sdl-base::pixel-format (fp surface)) 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::alpha))
+
+(defun get-color-key (&optional (surface *default-surface*))
+  (check-type surface sdl-surface)
+  (multiple-value-bind (r g b)
+      (sdl-base::map-pixel (foreign-slot-value (sdl-base::pixel-format (fp surface)) 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::colorkey)
+			   (fp surface)
+			   nil)
+    (color :r r :g g :b b)))
+
 (defun get-clip-rect (&key (surface *default-surface*) (rectangle (rectangle)))
   (check-type surface sdl-surface)
   (check-type rectangle rectangle)
