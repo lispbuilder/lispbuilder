@@ -113,9 +113,10 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
 (defmethod load-sample ((array VECTOR))
   "Loads the sample file from the byte `ARRAY`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
 Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
-  (let ((rwops (sdl::create-rwops-from-byte-array array)))
-    (load-sample rwops)
-    (sdl:free-rwops rwops)))
+  (let* ((rwops (sdl::create-rwops-from-byte-array array))
+	 (chunk (load-sample rwops)))
+    (sdl:free-rwops rwops)
+    chunk))
 
 (defun sample-from-channel (channel)
       "Returns currently playing or most recently played sample on `CHANNEL` as a new [CHUNK](#chunk) object, 
