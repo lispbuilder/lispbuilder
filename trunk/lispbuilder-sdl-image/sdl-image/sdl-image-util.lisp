@@ -136,7 +136,7 @@
 	      :key-color key-color :surface-alpha surface-alpha :image-type image-type
 	      :force force :free t :key-color-at key-color-at))
 
-(defmethod load-image (source &key key-color surface-alpha (image-type nil) (force nil) (free nil) (key-color-at nil))
+(defmethod load-image ((source string) &key key-color surface-alpha (image-type nil) (force nil) (free nil) (key-color-at nil))
   "Creates and returns a new surface from the image in the file at the location `SOURCE`. 
 
 ##### Parameters
