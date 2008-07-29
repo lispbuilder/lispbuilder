@@ -6,9 +6,8 @@
   (let ((surf (make-instance 'surface
 			     :surface (sdl-base::load-image (namestring filename))
 			     :key-color key-color
+			     :key-color-at key-color-at
 			     :surface-alpha surface-alpha)))
-    (when key-color-at
-      (set-color-key (read-pixel key-color-at :surface surf) :surface surf))
     surf))
 
 (defmethod load-image ((source rwops) &key key-color surface-alpha image-type force free (key-color-at nil))
@@ -16,9 +15,8 @@
   (let ((surf (make-instance 'surface
 			     :surface (sdl-cffi::SDL-Load-BMP-RW (fp source) 0)
 			     :key-color key-color
+			     :key-color-at key-color-at
 			     :surface-alpha surface-alpha)))
-    (when key-color-at
-      (set-color-key (read-pixel key-color-at :surface surf) :surface surf))
     (when free
       (sdl:free-rwops source))
     surf))
@@ -26,7 +24,9 @@
 (defmethod load-image ((source VECTOR) &key key-color surface-alpha image-type force free (key-color-at nil))
   (declare (ignore image-type force free))
   (let ((surf (load-image (create-RWops-from-byte-array source)
-			  :key-color key-color :surface-alpha surface-alpha
+			  :key-color key-color
+			  :key-color-at key-color-at
+			  :surface-alpha surface-alpha
 			  :free t :key-color-at key-color-at)))
     surf))
 
