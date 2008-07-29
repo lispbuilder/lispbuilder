@@ -58,6 +58,7 @@ This object will be garbage collected and the surface freed when out of scope.")
 (defmethod initialize-instance :after ((surface surface)
 				       &key (x 0) (y 0) (bpp 32)
 				       (key-color nil)
+				       (key-color-at nil)
 				       (alpha nil)
 				       (channel-alpha nil)
 				       (surface-alpha nil)
@@ -73,6 +74,8 @@ This object will be garbage collected and the surface freed when out of scope.")
 	   (y surface) y)
      (when key-color
        (set-color-key key-color :surface surface :rle-accel rle-accel))
+     (when key-color-at
+       (set-color-key (read-pixel key-color-at :surface surface) :surface surface))
      (set-alpha surface-alpha :surface surface :rle-accel rle-accel))
     ((and (integerp width) (integerp height))
      (when alpha
@@ -399,14 +402,18 @@ if available."
   (sdl-base::get-surface-rect (fp surface) (fp rectangle))
   rectangle)
 
-(defun convert-surface (&key (surface *default-surface*) key-color alpha surface-alpha (free-p nil))
+(defun convert-surface (&key (surface *default-surface*) key-color key-color-at alpha surface-alpha (free-p nil))
   (check-type surface sdl-surface)
   (when key-color
     (check-type key-color sdl-color))
   (when alpha
     (setf surface-alpha alpha))
   (let ((surf (sdl-base::convert-surface-to-display-format (fp surface)
-							   :key-color (when key-color (map-color key-color surface))
+							   :key-color (cond
+									(key-color
+									 (map-color key-color surface))
+									(key-color-at
+									 (map-color (read-pixel key-color-at :surface surface) surface)))
 							   :surface-alpha surface-alpha
 							   :free-p nil)))
     (unless (sdl-base::is-valid-ptr surf)
