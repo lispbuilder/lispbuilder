@@ -118,10 +118,7 @@
     (when free
       (sdl:free-rwops source))
     (when (sdl-base::is-valid-ptr image)
-      (let ((surface (make-instance 'sdl:surface :surface image :key-color key-color :surface-alpha surface-alpha)))
-	(when key-color-at
-	  (sdl:set-color-key (sdl:read-pixel key-color-at :surface surface) :surface surface))
-	surface))))
+      (make-instance 'sdl:surface :surface image :key-color key-color :key-color-at key-color-at :surface-alpha surface-alpha))))
 
 (defmethod load-image ((source VECTOR) &key key-color surface-alpha (image-type nil) (force nil) (free t) (key-color-at nil))
   "Creates and returns a new surface from the image contained in the byte VECTOR in `SOURCE`.
