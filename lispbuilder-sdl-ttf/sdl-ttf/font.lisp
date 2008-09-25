@@ -1,11 +1,17 @@
 
 (in-package #:lispbuilder-sdl-ttf)
 
-(defclass font (sdl::sdl-font)
-  ((foreign-pointer-to-font :accessor fp-font :initform nil :initarg :font)
-   (font-style :accessor font-style :initform nil :initarg :style)
+(defclass font (sdl::sdl-font sdl::foreign-object)
+  ((font-style :accessor font-style :initform nil :initarg :style)
    (font-encoding :accessor font-encoding :initform nil :initarg :encoding)
-   (generation :accessor generation :initform nil :initarg :generation))
+   (generation :accessor generation :initform *generation* :initarg :generation))
+  (:default-initargs
+   :gc t
+    :free (let ((font-generation *generation*))
+	    #'(lambda (fp)
+		(when (and (is-init)
+			   (= (is-init) font-generation))
+		  (sdl-ttf-cffi::ttf-close-font fp)))))
   (:documentation
    "A `FONT` object is wrapper around a foreign `TTF_Font` object. 
 
@@ -14,18 +20,3 @@ The `FONT` object maintains the most recent surface `SDL:SURFACE` created by a c
 or [DRAW-FONT-AT-*](#draw-font-at-*) to draw the cached surface.
 
 Prior to the first call to a `RENDER-STRING*` function, the cached surface is `NIL`."))
-
-(defun new-font (fp)
-  "Creates and returns a new `FONT` object when `FP` is a pointer to a foreign `TTF_Font` object. 
-Returns `NIL` otherwise." 
-  (when (sdl:is-valid-ptr fp)
-    (make-instance 'font :font fp :generation *generation*)))
-
-(defmethod free-font ((font font))
-  "Free the resources used by the font `FONT`. 
-Free's any cached surface. Closes the `TTF_Font` object."
-  (tg:cancel-finalization font)
-  (when (equal (is-init) (generation font))
-    (sdl-ttf-cffi::ttf-close-font (fp-font font)))
-  (when (sdl:cached-surface font)
-    (sdl:free-cached-surface font)))

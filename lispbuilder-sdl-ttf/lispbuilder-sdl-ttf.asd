@@ -9,7 +9,7 @@
   :description "lispbuilder-sdl-ttf: SDL_ttf 2.0.9 library wrapper and tools"
   :long-description
   "lispbuilder-sdl-ttf is a wrapper for the SDL_ttf 2.0.9 library."
-  :version "0.2.3"
+  :version "0.2.4"
   :author "Luke J Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>, Luke J Crook <luke@balooga.com>"
   :licence "BSD"
@@ -23,7 +23,6 @@
 	     (:file "generics" :depends-on ("package"))
 	     (:file "globals" :depends-on ("package"))
 	     (:file "font" :depends-on ("package" "generics" "globals"))
-	     (:file "cffi-finalizers" :depends-on ("font" "package" "globals"))
 	     (:file "sdl-util-ttf" :depends-on ("font" "globals" "package"))
 	     (:file "string-solid" :depends-on ("sdl-util-ttf"))
 	     (:file "string-shaded" :depends-on ("sdl-util-ttf"))

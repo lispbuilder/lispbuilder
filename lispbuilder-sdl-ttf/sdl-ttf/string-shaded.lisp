@@ -36,8 +36,7 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
   (let ((surf
 	 (sdl:with-foreign-color-copy (fg-struct fg-color)
 	   (sdl:with-foreign-color-copy (bg-struct bg-color)
-	     (sdl:surface (sdl-ttf-cffi::ttf-Render-UTF8-shaded (fp-font font)
-								text fg-struct bg-struct))))))
+	     (make-instance 'sdl:surface :fp (sdl-ttf-cffi::ttf-Render-UTF8-shaded (sdl:fp font) text fg-struct bg-struct))))))
     (when cache
       (setf (sdl:cached-surface font) surf))
     surf))
