@@ -35,7 +35,7 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
   (let ((surf (sdl:convert-surface :surface (sdl:create-surface (* (font-width font)
 								   (length string))
 								(font-height font))
-				   :free-p t)))
+				   :free t)))
     (draw-string-shaded-* string 0 0 fg-color bg-color
 			  :font font
 			  :surface surf)
