@@ -7,8 +7,13 @@
 			   cffi:*foreign-library-directories*
 			   :test #'equal))
 
+;; This is where FINK installs SDL.
+#+darwin (pushnew #P"/sw/lib/" cffi:*foreign-library-directories*
+	             :test #'equal)
+
 (cffi:define-foreign-library sdl
-  (:darwin (:framework "SDL"))
+  (:darwin (:or (:framework "SDL")
+                (:default "libSDL")))
   (:windows "SDL.dll")
   (:unix (:or "libSDL-1.2.so.0.7.2"
 	      "libSDL-1.2.so.0"

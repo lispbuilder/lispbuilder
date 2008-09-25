@@ -288,6 +288,7 @@
    #:list-modes
    #:video-memory
    #:video-dimensions
+   #:set-gl-attribute
    
    ;; rwops.lisp
    #:rwops
