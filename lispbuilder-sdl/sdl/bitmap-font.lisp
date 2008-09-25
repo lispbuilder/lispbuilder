@@ -2,13 +2,16 @@
 
 (in-package :lispbuilder-sdl)
 
-(defclass bitmap-font (sdl-font)
+(defclass bitmap-font (sdl-font foreign-object)
   ((char-pitch :reader char-pitch :initform 0 :initarg :pitch)
    (char-size :reader char-size :initform 0 :initarg :size)
    (char-width :reader char-width :initform 0 :initarg :width)
    (char-height :reader char-height :initform 0 :initarg :height)
-   (font-data :reader font-data :initform nil :initarg :data)
+   ;; (font-data :reader font-data :initform nil :initarg :data)
    (characters :reader characters :initform (make-hash-table :test 'equal)))
+  (:default-initargs
+   :gc t
+    :free #'cffi:foreign-free)
   (:documentation
    "The `BITMAP-FONT` object manages the resources for a bitmap font. Resources include 
 the foreign array containing font data, and the most recent cached `SURFACE` created by a call 
@@ -21,6 +24,10 @@ the cached surface is `NIL`."))
   surface
   fg-color
   bg-color)
+
+(defgeneric font-data (bitmap-font))
+(defmethod font-data ((font bitmap-font))
+  (fp font))
 
 (defun initialise-font (font-definition)
   "Creates a new `BITMAP-FONT` object from the font data in `FONT-DEFINITION`.
@@ -38,7 +45,7 @@ built-in fonts:
 		   :height (font-definition-height font-definition)
 		   :pitch pitch
 		   :size (* pitch (font-definition-height font-definition))
-		   :data data)))
+		   :fp data)))
 
 (defun initialise-default-font (&optional (font-definition *font-8x8*))
   "Calls [INITIALISE-FONT](#initialise-font) to create a new `BITMAP-FONT` from `FONT-DEFINITION`. 
@@ -46,20 +53,6 @@ built-in fonts:
 Reutns the new font, or `NIL` if the font cannot be created."
   (check-type font-definition font-definition)
   (setf *default-font* (initialise-font font-definition)))
-
-(defmethod free-font ((font bitmap-font))
-  "Free resources associated with the bitmap font `FONT`."
-  (tg:cancel-finalization font)
-  (when (cached-surface font)
-    (free-cached-surface font))
-  (cffi:foreign-free (font-data font))
-;;   #-clisp(maphash #'(lambda (key val)
-;; 		      (declare (ignore key))
-;; 		      (when val
-;; 			(free-surface (glyph-surface val))))
-;; 		  (characters font))
-  (clrhash (characters font))
-  font)
 
 (defun glyph (char font)
   (gethash char (characters font)))
@@ -77,7 +70,7 @@ Reutns the new font, or `NIL` if the font cannot be created."
 	(glyph (glyph char font)))
     ;; Create a surface for the character, if one does not already exist.
     (unless glyph
-      (let ((g (make-glyph :surface (create-surface (char-width font) (char-height font) :surface-alpha t :channel-alpha t)
+      (let ((g (make-glyph :surface (create-surface (char-width font) (char-height font) :surface-alpha 0 :pixel-alpha t)
 			   :fg-color fg-color
 			   :bg-color bg-color)))
 	(setf (gethash char (characters font)) g)
@@ -89,7 +82,7 @@ Reutns the new font, or `NIL` if the font cannot be created."
       (setf (glyph-fg-color glyph) fg-color)
       (setf redraw? t))
 
-    ;; If bg-color must match or font will br redrawn.
+    ;; If bg-color must match or font will be redrawn.
     (when (and bg-color (glyph-bg-color glyph))
       (unless (color= (glyph-bg-color glyph) bg-color)
 	(setf (glyph-bg-color glyph) bg-color)
@@ -292,5 +285,5 @@ Frees the bitmap font when `WITH-FONT` goes out of scope.
   `(let ((,font (initialise-font ,font-definition)))
      (with-default-font (,font)
        ,@body)
-     (free-font ,font)))
+     (free ,font)))
 

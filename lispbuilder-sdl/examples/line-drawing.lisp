@@ -9,7 +9,7 @@
 
 (defun line-drawing ()
   (sdl:with-init ()
-    (sdl:window 300 300)
+    (sdl:window 300 300 :title-caption "Line Drawing" :icon-caption "Line Drawing")
     (setf (sdl:frame-rate) 5)
     (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
     

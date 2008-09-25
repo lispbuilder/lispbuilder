@@ -66,7 +66,7 @@ will be released automatically by SDL.
     (setf *default-display* nil
 	  *opengl-context* nil)
     (when surf
-      (setf *default-display* (surface surf t))
+      (setf *default-display* (make-instance 'display-surface :fp surf))
       (setf *opengl-context* (surface-info *default-display* sdl-opengl)))
     *default-display*))
 
@@ -134,7 +134,7 @@ The display is updated when `UPDATE-P` is `T`."
 ##### Returns
 
 `INFO` when `NIL` will return a list of all enabled surface flags. Otherwise will
-return the status of `INFO` as `T` or `NIL` if supported by the surface.
+return `INFO` as `T` or `NIL` if supported by the surface.
 
 ##### Example
 
@@ -173,7 +173,19 @@ return the status of `INFO` as `T` or `NIL` if supported by the surface.
 				(list SDL-SRC-ALPHA 'SDL-SRC-ALPHA)
 				(list SDL-PRE-ALLOC 'SDL-PRE-ALLOC))))))
 
-(defun video-info (info)
+(defun video-memory ()
+  "Returns the amount of video memory of the graphics hardware. Must be called after SDL is initialized 
+using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)."
+  (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::video-mem))
+
+(defun video-dimensions ()
+  "Returns the best video dimensions if called before a window is created, using [WINDOW](#window). 
+Returns the current video dimensions if called after a window is created.
+Must be called after SDL is initialized using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)"
+  (vector (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::current-w)
+	  (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::current-h)))
+
+(defun video-info (&optional (info nil))
   "Returns information about the video hardware. 
 `GET-VIDEO-INFO` must be called after SDL is initialised using [INIT-SDL](#init-sdl) or 
 [WITH-INIT](#with-init).
@@ -183,25 +195,16 @@ returned is of the *current* video mode.
 
 ##### Parameters
 
-* `INFO` must be one of `:HW-AVAILABLE`, `:WM-AVAILABLE`, `:BLIT-HW`, `:BLIT-HW-CC`, `:BLIT-HW-A`,
-`:BLIT-SW`, `:BLIT-SW-CC`, `:BLIT-SW-A`, `:BLIT-FILL`, `:VIDEO-MEM`, `:PIXEL-FORMAT`, 
-`:CURRENT-W` or `:CURRENT-H`.
+* `INFO` can be one of `:HW-AVAILABLE`, `:WM-AVAILABLE`, `:BLIT-HW`, `:BLIT-HW-CC`, `:BLIT-HW-A`,
+`:BLIT-SW`, `:BLIT-SW-CC`, `:BLIT-SW-A`or `:BLIT-FILL`. If `NIL`, returns a list of all supported
+video flags.
 
 ##### Example
 
-    \(video-info :video-mem\)"
-  (case info
-  (:current-w
-   (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::current-w))
-  (:current-h
-   (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::current-h))
-  (:video-mem
-   (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::video-mem))
-  (:pixel-format
-   (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::vfmt))
-  (otherwise
-   (find info (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))))
-
+    \(video-info :HW-AVAILABLE\)"
+  (if info
+      (find info (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags))
+      (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))
 
 (defun list-modes (flags &optional (surface nil))
   "Returns a LIST of vectors sorted largest to smallest that contains the width and height 

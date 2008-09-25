@@ -14,7 +14,7 @@
 ;;;;  GNU General Public License for more details.
 ;;;; 
 ;;;;  You should have received a copy of the GNU General Public License
-;;;;  along with this program. If not, see <http://www.gnu.org/licenses/>.
+;;;;  along with this program. If not, see <http://ww.gnu.org/licenses/>.
 ;;;; ---------------------------------------------------------------------
 
 (in-package #:sdl-examples)
@@ -164,8 +164,10 @@
       ;; Load images
       ;; Convert the 24-bit particle surface into a 32bpp surface with an alpha component
       (setf *particle-img* (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "particle.bmp" *bmp-path*))
-						:surface-alpha 10 :free-p t))
-    
+						:inherit nil
+						:pixel-alpha t
+						:free t))
+            
       ;; Replace the alpha channel of *particle-img* with the alpha map in particle-alpha.bmp
       (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp" *bmp-path*)))
 	(sdl:copy-channel-to-alpha *particle-img* alpha :channel :r))

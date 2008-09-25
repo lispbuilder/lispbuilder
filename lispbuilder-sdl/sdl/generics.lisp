@@ -180,7 +180,7 @@ remains unchanged between screen updates."))
 (defgeneric any-color-but-this (color)
   (:documentation "Returns a new color that is different to the color `COLOR`."))
 
-(defgeneric load-image (source &key key-color surface-alpha image-type force free key-color-at)
+(defgeneric load-image (source &key color-key surface-alpha image-type force free-rwops color-key-at)
   (:documentation
    "Creates and returns a new surface from the source `SOURCE`.
 
@@ -193,7 +193,7 @@ remains unchanged between screen updates."))
 255 is opaque, 0 is transparent.
 * `IMAGE-TYPE` specifies the type of image to load. 
 * `FORCE` forces an image to be loaded as `IMAGE-TYPE`.
-* `FREE` free's resources in `SOURCE` after creating a new `SDL_Surface`.
+* `FREE-RWOPS` free's the RWOPS resources in `SOURCE` after creating a new `SDL_Surface`, if applicable.
 
 ##### Returns
 

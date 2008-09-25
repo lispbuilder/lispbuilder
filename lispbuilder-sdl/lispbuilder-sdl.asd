@@ -10,7 +10,7 @@
   "lispbuilder-sdl uses CFFI to be highly compatible across lisp 
     implementations. It includes a selection of utilities to assist  
     game programming in Common Lisp."
-  :version "0.9.5"
+  :version "0.9.6"
   :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>, Luke J Crook <luke@balooga.com>"
   :licence "MIT"
@@ -24,6 +24,7 @@
 	     (:file "globals")
 	     (:file "generics")
 	     (:file "classes")
+	     (:file "base")
 	     (:file "util")
 	     (:file "bitmap-font-data")
 	     (:file "init")
@@ -46,7 +47,7 @@
 	     (:file "string-shaded")
 	     (:file "keys")
 	     (:file "sdl-util")
-	     (:file "cffi-finalizers")
+	     ;; (:file "cffi-finalizers")
 	     (:file "default-colors")
 	     ;;	       (:static-file "font.bmp")
 	     )

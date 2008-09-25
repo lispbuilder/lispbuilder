@@ -77,3 +77,10 @@
 	    vec))
       nil))
 
+(defun 1/0->t/nil (val)
+  (if (integerp val)
+      (if (= val 0)
+	  nil
+	  t)
+      val))
+

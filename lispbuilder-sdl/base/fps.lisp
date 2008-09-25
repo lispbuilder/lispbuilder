@@ -3,10 +3,10 @@
 
 (defstruct fps-average
   (index 0)
-  (window (make-array 60 :initial-element 0 :element-type 'fixnum))
+  (window (make-array 250 :initial-element 0 :element-type 'fixnum))
   (last-ticks 0)
   (calculated? nil)
-  (window-size 60))
+  (window-size 250))
 
 (defstruct time-scale
   (tscale 0)

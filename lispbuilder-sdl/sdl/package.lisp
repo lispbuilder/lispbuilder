@@ -15,7 +15,9 @@
 		lispbuilder-sdl-base::push-user-event
 		
 		lispbuilder-sdl-base::*default-fpsmanager*
-		lispbuilder-sdl-base::*fps-average*)
+		lispbuilder-sdl-base::*fps-average*
+
+		lispbuilder-sdl-base::1/0->t/nil)
   (:import-from #:lispbuilder-sdl-cffi
 		lispbuilder-sdl-cffi::sdl-get-ticks
 
@@ -107,7 +109,7 @@
    #:x2
    #:y2
    #:cached-surface
-   #:free-font
+   #:free
    #:color=
    #:any-color-but-this
    #:w
@@ -135,17 +137,11 @@
    #:set-surface
    #:set-surface-*
 
-   #:free-color
-   #:free-surface
-   #:free-rectangle
-   #:free-rwops
    #:free-cached-surface
 
    #:draw-font
    #:draw-font-at
    #:draw-font-at-*
-
-   #:free-font
 
    ;; default-colors.lisp
    #:*black*
@@ -290,7 +286,9 @@
    #:surface-info
    #:get-native-window
    #:list-modes
-
+   #:video-memory
+   #:video-dimensions
+   
    ;; rwops.lisp
    #:rwops
    #:create-RWops-from-file

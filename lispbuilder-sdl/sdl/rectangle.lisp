@@ -3,25 +3,23 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defclass rectangle ()
-  ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
-   (rectangle-color :accessor rectangle-color :initform (color :r 255 :g 255 :b 255) :initarg :color))
+(defclass rectangle (foreign-object) ()
+  ;; ((rectangle-color
+;;     :accessor rectangle-color
+;;     :initform (color :r 255 :g 255 :b 255)
+;;     :initarg :color))
+  (:default-initargs
+   :gc t
+    :free #'cffi:foreign-free)
   (:documentation "A `RECTANGLE` object manages the foreign SDL_Rect object."))
 
-(defclass null-rectangle (rectangle) ()
-  (:documentation "Contains a foreign `CFFI:NULL-POINTER` object."))
-
-(defun rectangle (&key (x 0) (y 0) (w 0) (h 0)
-		  (fp nil) (null nil))
+(defun rectangle (&key (x 0) (y 0) (w 0) (h 0) (fp nil))
   "Creates a new `RECTANGLE` from the specified `X`, `Y`, width `W` and height `H`.
-If `FP' is `NIL` then a foreign SDL_Rect is created. If `FP` is a pointer to a foreign SDL_Rect object then `FP` is used.
-If `NULL` is `NIL`, then a new `RECTANGLE` is returned. If `NULL` not `NIL` then a [NULL-RECTANGLE](#null-rectangle)` is created."
+If `FP' is `NIL` then a foreign SDL_Rect is created. If `FP` is a pointer to a foreign SDL_Rect object then `FP` is used."
   (declare (type fixnum x y w h))
-  (if null
-      (make-instance 'null-rectangle :rectangle (cffi:null-pointer))
-      (make-instance 'rectangle :rectangle (if (sdl-base::is-valid-ptr fp)
-					       (sdl-base::rectangle :src fp)
-					       (sdl-base::rectangle :x x :y y :w w :h h)))))
+  (make-instance 'rectangle :fp (if (sdl-base::is-valid-ptr fp)
+				    (sdl-base::rectangle :src fp)
+				    (sdl-base::rectangle :x x :y y :w w :h h))))
 
 (defun random-rectangle (bound-w bound-h &optional (rectangle (rectangle)))
   "Creates and return s a new `RECTANGLE` of random x, y width and height within the specified
@@ -104,7 +102,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 			     ,(intern (string-upcase (format nil "~A.h" var)))))
 	 (setf ,body-value (progn ,@body))
 	 (when ,free-p
-	   (free-rectangle ,var))
+	   (free ,var))
 	 ,body-value))))
 
 (defmacro with-rectangles (bindings &body body)
@@ -170,15 +168,6 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 (defmethod (setf height) (h-val (rectangle rectangle))
   "Sets the `INTEGER` height of the rectangle `RECTANGLE`."
   (setf (sdl-base::rect-h (fp rectangle)) h-val))
-
-(defmethod free-rectangle ((rectangle null-rectangle))
-  "Does nothing. A `NULL-RECTANGLE` cannot be freed."
-  nil)
-
-(defmethod free-rectangle ((rectangle rectangle))
-  "Frees the resources allocated to the rectangle `RECTANGLE`."
-  (cffi:foreign-free (fp rectangle))
-  (tg:cancel-finalization rectangle))
 
 (defmethod point-* ((rectangle rectangle))
   "Returns the `X` and `Y` coordinates of the rectangle `RECTANGLE` as a spread. 
