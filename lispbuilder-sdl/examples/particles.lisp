@@ -27,6 +27,7 @@
 (defparameter *particle-speed-min* 120.0)
 (defparameter *particle-speed-max* 200.0)
 (defparameter *particle-count* 200)
+(defparameter *increment* 100)
 
 ;;; ----------------------------------------------------------------------
 ;;;  Global variables.
@@ -38,8 +39,6 @@
 
 (defvar *font-large* nil)
 (defvar *font-small* nil)
-
-(defvar *increment* 10)
 
 ;;; ----------------------------------------------------------------------
 ;;;  Functions for rendering the current FPS to the screen.
@@ -60,15 +59,8 @@
 ;;; ----------------------------------------------------------------------
 ;;;  A 2D vector.
 ;;; ----------------------------------------------------------------------
-(defclass vec2 ()
-  ((x :accessor vec2-x :initform 0.0 :initarg :x)
-   (y :accessor vec2-y :initform 0.0 :initarg :y)))
-
-;;; ----------------------------------------------------------------------
-;;;  Create a 2D vector.
-;;; ----------------------------------------------------------------------
-(defun make-vec2 (x y)
-  (make-instance 'vec2 :x x :y y))
+(defstruct vec2
+  x y)
 
 ;;; ----------------------------------------------------------------------
 ;;;  Normalize a 2D vector.
@@ -83,15 +75,8 @@
 ;;; ----------------------------------------------------------------------
 ;;;  A particule.
 ;;; ----------------------------------------------------------------------
-(defclass particle ()
-  ((pos :accessor particle-pos :initarg :pos)
-   (velocity :accessor particle-velocity :initarg :velocity)))
-
-;;; ----------------------------------------------------------------------
-;;;  Create a particle.
-;;; ----------------------------------------------------------------------
-(defun make-particle (pos vel)
-  (make-instance 'particle :pos pos :velocity vel))
+(defstruct particle
+  pos velocity)
 
 ;;; ----------------------------------------------------------------------
 ;;;  Initialize a particle, position it to the center of the screen, 
@@ -99,12 +84,12 @@
 ;;; ----------------------------------------------------------------------
 (defun init-particle (p)
   (let ((hx (/ *screen-width* 2)) (hy (/ *screen-height* 2)))
-    (let ((vel (make-vec2 (rand-range -1.0 1.0) (rand-range -1.0 1.0))))
+    (let ((vel (make-vec2 :x (rand-range -1.0 1.0) :y (rand-range -1.0 1.0))))
       (vec2-normalize vel)
       (let ((sp (rand-range *particle-speed-min* *particle-speed-max*)))
         (setf (vec2-x vel) (* (vec2-x vel) sp))
         (setf (vec2-y vel) (* (vec2-y vel) sp))
-        (setf (particle-pos p) (make-vec2 hx hy))
+        (setf (particle-pos p) (make-vec2 :x hx :y hy))
         (setf (particle-velocity p) vel))))
   p)
 
@@ -129,7 +114,7 @@
 ;;; ----------------------------------------------------------------------
 (defun add-particles ()
   (dotimes (i *increment*)
-    (push (init-particle (make-instance 'particle))
+    (push (init-particle (make-particle))
 	  *particles*))
   (incf *particle-count* *increment*))
 
@@ -151,7 +136,7 @@
       (unless (sdl:window *screen-width* *screen-height*
 			  :title-caption "Particles Demo"
 			  :icon-caption "Particles Demo"
-			  :flags '(sdl:sdl-doublebuf sdl:sdl-hw-surface))
+			  :flags sdl:sdl-hw-surface)
 	(error "~&Unable to create a SDL window~%"))
 
       ;; Fix the framerate
@@ -187,7 +172,7 @@
       ;; Create the particles
       (setf *particles* nil)
       (dotimes (i *particle-count*)
-	(push (init-particle (make-instance 'particle))
+	(push (init-particle (make-particle))
 	      *particles*))
 
       ;; Event loop
@@ -225,8 +210,8 @@
 
 	 ;; Display text.
 	 (draw-cached-string "" 5 5 *font-large* sdl:*default-display* nil)
-	 (if (equal (sdl:average-fps) previous-average)
-	     (draw-cached-string "" 5 35 *font-small* sdl:*default-display* nil)
+	 (if (= (sdl:average-fps) previous-average)
+	     (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil)
 	     (draw-cached-string (format nil "Particles: ~d, Framerate: ~f" *particle-count* (sdl:average-fps))
 				 5 35 *font-small* sdl:*default-display* t))     
 	 

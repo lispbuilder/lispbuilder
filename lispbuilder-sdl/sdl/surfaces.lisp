@@ -513,20 +513,17 @@ if available."
   src)
 
 (defun draw-surface (src &key (surface *default-surface*))
-  ;; (cffi:with-foreign-object (temp-dest 'sdl-cffi::sdl-rect)
-;;     (setf (sdl-base:rect-x temp-dest) (x src)
-;; 	  (sdl-base:rect-y temp-dest) (y src))  
-;;     (sdl-base::blit-surface (fp src) (fp surface) (cell-rect src) temp-dest))
   (blit-surface src surface)
   src)
 
 (defun draw-surface-at-* (src x y &key (surface *default-surface*))
-  (set-surface-* src :x x :y y)
+  (setf (x src) x
+	(y src) y)
   (draw-surface src :surface surface))
 
 (defun draw-surface-at (src point &key (surface *default-surface*))
   (set-surface src point)
-  (draw-surface src :surface surface))
+  (blit-surface src surface))
 
 (defun fill-surface (color &key
 		     (template nil)

@@ -273,3 +273,5 @@ is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)
 	nil
 	string-return-val)))
 
+(defun set-gl-attribute (attribute value)
+  (sdl-cffi::sdl-gl-set-attribute attribute value))
