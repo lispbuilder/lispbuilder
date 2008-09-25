@@ -49,7 +49,7 @@ Binds `FONT` to a shadowed instance of `\*DEFAULT-FONT\*` valid within the scope
 	    (*default-font* ,font))
        (when ,font
 	 ,@body
-	 (close-font :font ,font)))))
+	 (sdl::free ,font)))))
 
 (defmacro with-default-font ((font) &body body)
   "Binds `FONT` to `\*DEFAULT-FONT\*` within the scope of `WITH-DEFAULT-FONT`."
@@ -106,7 +106,7 @@ and `\*DEFAULT-FONT\*` is already bound to a `FONT` when `INITIALISE-DEFAULT-FON
 * Returns a new `FONT`, or `NIL` if unsuccessful."
   (when *default-font*
     (if free
-	(close-font :font *default-font*)
+	(sdl::free *default-font*)
 	(error "INITIALISE-DEFAULT-FONT; *default-font* is already bound to a FONT.")))
   (setf *default-font* (initialise-font filename size)))
 
@@ -115,9 +115,7 @@ and `\*DEFAULT-FONT\*` is already bound to a `FONT` when `INITIALISE-DEFAULT-FON
 NOTE: `CLOSE-FONT` does not uninitialise the font library, and does not bind `\*DEFAULT-FONT\*` to `NIL`. Returns `T` 
 if successful, or `NIL` if the font cannot be closed or the `SDL_TTF` font library is not initialized."
   (check-type font font)
-  (if (is-init)
-      (free-font font))
-  (setf font nil))
+  (sdl::free font))
 
 ;;; g
 
@@ -197,7 +195,7 @@ actual width. The height returned is the same as returned using [GET-FONT-HEIGHT
       (case size
 	(:w (setf p-w w))
 	(:h (setf p-h h)))
-      (setf r-val (sdl-ttf-cffi::ttf-Size-UTF8 (fp-font font) text p-w p-h))
+      (setf r-val (sdl-ttf-cffi::ttf-Size-UTF8 (sdl:fp font) text p-w p-h))
       (if r-val
 	  (cond
 	    ((sdl:is-valid-ptr p-w)
@@ -219,7 +217,7 @@ or `NIL` upon error.
 
 * Retuns the font style as one or more of: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`"
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-Style (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-Style (sdl:fp font)))
 
 (defun get-font-height (&key (font *default-font*))
   "Returns the maximum pixel height of all glyphs of font `FONT`. 
@@ -236,7 +234,7 @@ for line spacing, see [GET-FONT-LINE-SKIP](#get-font-line-skip) as well.
 
 * Retuns the height of the `FONT` as an `INTEGER`."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-height (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-height (sdl:fp font)))
 
 (defun get-font-ascent (&key (font *default-font*))
   "Returns the maximum pixel ascent of all glyphs of font `FONT`. 
@@ -253,7 +251,7 @@ blitting the glyph on the screen.
 
 * Returns the ascent of the `FONT` as an `INTEGER`."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-Ascent (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-Ascent (sdl:fp font)))
 
 (defun get-font-descent (&key (font *default-font*))
   "Returns the maximum pixel descent of all glyphs of font `FONT`. 
@@ -270,7 +268,7 @@ blitting the glyph on the screen.
 
 * Returns the descent of the `FONT` as an `INTEGER`."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-Descent (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-Descent (sdl:fp font)))
 
 (defun get-font-line-skip (&key (font *default-font*))
   "Returns the recommended pixel height of a rendered line of text of the font `FONT`. 
@@ -284,7 +282,7 @@ This is usually larger than the [GET-FONT-HEIGHT](#get-font-height) of the font.
 
 * Returns the pixel height of the `FONT` as an `INTEGER`."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-Line-Skip (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-Line-Skip (sdl:fp font)))
 
 (defun get-font-faces (&key (font *default-font*))
   "Returns the number of faces 'sub-fonts' available in the font `FONT`. 
@@ -300,7 +298,7 @@ This is a count of the number of specific fonts (based on size and style and oth
 
 * Returns the number of faces in the `FONT` as an `INTEGER`."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-faces (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-faces (sdl:fp font)))
 
 (defun is-font-face-fixed-width (&key (font *default-font*))
   "Returns `T` if the font face is of a fixed width, or `NIL` otherwise. 
@@ -314,7 +312,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 
 * Retuns `T` if `FONT` is of fixed width, and `NIL` otherwise."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-face-is-fixed-width (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-face-is-fixed-width (sdl:fp font)))
 
 (defun get-font-face-family-name (&key (font *default-font*))
   "Returns the current font face family name of font `FONT` or `NIL` if the information is unavailable. 
@@ -327,7 +325,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 
 * Returns the name of the `FONT` face family name as a `STRING`, or `NIL` if unavailable."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-face-Family-Name (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-face-Family-Name (sdl:fp font)))
 
 (defun get-font-face-style-name (&key (font *default-font*))
   "Returns the current font face style name of font `FONT`, or `NIL` if the information is unavailable. 
@@ -341,7 +339,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 
 * Returns the name of the `FONT` face style as a `STRING`, or `NIL` if unavailable."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Get-Font-face-Style-Name (fp-font font)))
+  (sdl-ttf-cffi::ttf-Get-Font-face-Style-Name (sdl:fp font)))
 
 
 (defun open-font (filename size)
@@ -357,7 +355,7 @@ truetype library if the library is uninitialised.
 ##### Returns
 
 * Returns new `FONT` object if successful, returns `NIL` if unsuccessful."
-  (new-font (sdl-ttf-cffi::ttf-Open-Font (namestring filename) size)))
+  (make-instance 'font :fp (sdl-ttf-cffi::ttf-Open-Font (namestring filename) size)))
 
 ;;; s
 
@@ -372,7 +370,7 @@ rendered glyphs, even if there is no change in style, so it may be best to check
 * `STYLE` is a list of one or more: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`. 
 NOTE: Combining `:STYLE-UNDERLINE` with anything  can cause a segfault, other combinations may also do this."
   (check-type font font)
-  (sdl-ttf-cffi::ttf-Set-Font-Style (fp-font font) style))
+  (sdl-ttf-cffi::ttf-Set-Font-Style (sdl:fp font) style))
 
 (defun create-path (filename)
   (namestring (merge-pathnames filename *default-font-path*)))
