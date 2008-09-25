@@ -212,12 +212,11 @@ the smoother the spline.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::pixel-color (sdl:fp surface) x y
-			       (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::pixel-rgba (sdl:fp surface) x y
-			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::pixel-rgba (sdl:fp surface) x y
+			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::pixel-color (sdl:fp surface) x y
+			       (sdl:pack-color color))))
 
 (defun draw-hline (x0 x1 y &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw a horizontal line of color `COLOR` from `X0` to `X1` through `Y` onto the surface `SURFACE`. 
@@ -232,12 +231,11 @@ the smoother the spline.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::hline-color (sdl:fp surface) x0 x1 y
-			       (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
+  (if (sdl:a color)
     (sdl-gfx-cffi::hline-RGBA (sdl:fp surface) x0 x1 y
-			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+    (sdl-gfx-cffi::hline-color (sdl:fp surface) x0 x1 y
+			       (sdl:pack-color color))))
 
 (defun draw-vline (x y0 y1 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw a vertical line of color `COLOR` from `Y0` to `Y1` through `X` onto the surface `SURFACE`. 
@@ -252,12 +250,11 @@ the smoother the spline.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::vline-color (sdl:fp surface) x y0 y1
-			       (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::vline-RGBA (sdl:fp surface) x y0 y1
-			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::vline-RGBA (sdl:fp surface) x y0 y1
+			      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::vline-color (sdl:fp surface) x y0 y1
+			       (sdl:pack-color color))))
 
 (defun draw-rectangle (rect &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-RECTANGLE-*](#draw-rectangle-*).
@@ -292,12 +289,11 @@ the smoother the spline.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::rectangle-color (sdl:fp surface) x0 y0 x1 y1
-				   (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::rectangle-RGBA (sdl:fp surface) x0 y0 x1 y1
-				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::rectangle-RGBA (sdl:fp surface) x0 y0 x1 y1
+				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::rectangle-color (sdl:fp surface) x0 y0 x1 y1
+				   (sdl:pack-color color))))
 
 (defun draw-box (rect &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-BOX-*](#draw-box-*).
@@ -331,12 +327,11 @@ the smoother the spline.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::box-color (sdl:fp surface) x0 y0 x1 y1
-			     (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::box-RGBA (sdl:fp surface) x0 y0 x1 y1
-			    (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::box-RGBA (sdl:fp surface) x0 y0 x1 y1
+			    (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::box-color (sdl:fp surface) x0 y0 x1 y1
+			     (sdl:pack-color color))))
 
 (defun draw-line (p1 p2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-LINE-*](#draw-line-*).
@@ -360,12 +355,11 @@ the smoother the spline.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::line-color (sdl:fp surface) x0 y0 x1 y1
-			      (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::line-RGBA (sdl:fp surface) x0 y0 x1 y1
-			     (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::line-RGBA (sdl:fp surface) x0 y0 x1 y1
+			     (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::line-color (sdl:fp surface) x0 y0 x1 y1
+			      (sdl:pack-color color))))
 
 (defun draw-aa-line (p1 p2 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-AA-LINE-*](#draw-aa-line-*)-*
@@ -389,12 +383,11 @@ the smoother the spline.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::aa-line-color (sdl:fp surface) x0 y0 x1 y1
-				 (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::aa-line-RGBA (sdl:fp surface) x0 y0 x1 y1
-				(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::aa-line-RGBA (sdl:fp surface) x0 y0 x1 y1
+				(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::aa-line-color (sdl:fp surface) x0 y0 x1 y1
+				 (sdl:pack-color color))))
 
 (defun draw-circle (p1 r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-CIRCLE-*](#draw-circle-*).
@@ -419,12 +412,11 @@ Use [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*) to draw a filled circle.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::circle-color (sdl:fp surface) x y r
-				(sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::circle-RGBA (sdl:fp surface) x y r
-			       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::circle-RGBA (sdl:fp surface) x y r
+			       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::circle-color (sdl:fp surface) x y r
+				(sdl:pack-color color))))
 
 (defun draw-aa-circle (p1 r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-AA-CIRCLE-*](#draw-aa-circle-*).
@@ -449,12 +441,11 @@ Use [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*) to draw a filled circle.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::aa-circle-color (sdl:fp surface) x y r
-				   (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::aa-circle-RGBA (sdl:fp surface) x y r
-				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::aa-circle-RGBA (sdl:fp surface) x y r
+				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::aa-circle-color (sdl:fp surface) x y r
+				   (sdl:pack-color color))))
 
 (defun draw-filled-circle (p1 r &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*).
@@ -478,12 +469,11 @@ Use [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*) to draw a filled circle.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::filled-circle-color (sdl:fp surface) x y r
-				       (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::filled-circle-RGBA (sdl:fp surface) x y r
-				      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::filled-circle-RGBA (sdl:fp surface) x y r
+				      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::filled-circle-color (sdl:fp surface) x y r
+				       (sdl:pack-color color))))
 
 (defun draw-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-ELLIPSE-*](#draw-ellipse-*).
@@ -508,12 +498,11 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::ellipse-color (sdl:fp surface) x y rx ry
-				 (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::ellipse-RGBA (sdl:fp surface) x y rx ry
-				(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::ellipse-RGBA (sdl:fp surface) x y rx ry
+				(sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::ellipse-color (sdl:fp surface) x y rx ry
+				 (sdl:pack-color color))))
 
 (defun draw-aa-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-AA-ELLIPSE-*](#draw-aa-ellipse-*).
@@ -538,12 +527,11 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::aa-ellipse-color (sdl:fp surface) x y rx ry
-				    (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::aa-ellipse-RGBA (sdl:fp surface) x y rx ry
-				   (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::aa-ellipse-RGBA (sdl:fp surface) x y rx ry
+				   (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::aa-ellipse-color (sdl:fp surface) x y rx ry
+				    (sdl:pack-color color))))
 
 (defun draw-filled-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*).
@@ -567,12 +555,11 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::filled-ellipse-color (sdl:fp surface) x y rx ry
-					(sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::filled-ellipse-RGBA (sdl:fp surface) x y rx ry
-				       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::filled-ellipse-RGBA (sdl:fp surface) x y rx ry
+				       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::filled-ellipse-color (sdl:fp surface) x y rx ry
+					(sdl:pack-color color))))
 
 (defun draw-pie (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-PIE-*](#draw-pie-*).
@@ -599,12 +586,11 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::pie-color (sdl:fp surface) x y rad start end
-			     (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::pie-RGBA (sdl:fp surface) x y rad start end
-			    (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::pie-RGBA (sdl:fp surface) x y rad start end
+			    (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::pie-color (sdl:fp surface) x y rad start end
+			     (sdl:pack-color color))))
 
 (defun draw-filled-pie (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "See [DRAW-FILLED-PIE-*](#draw-filled-pie-*).
@@ -630,12 +616,11 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::filled-pie-color (sdl:fp surface) x y rad start end
-				    (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::filled-pie-RGBA (sdl:fp surface) x y rad start end
-				   (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::filled-pie-RGBA (sdl:fp surface) x y rad start end
+				   (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::filled-pie-color (sdl:fp surface) x y rad start end
+				    (sdl:pack-color color))))
 
 (defun draw-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw the outline of a trigon or triangle, of color `COLOR` to surface `SURFACE`.
@@ -651,16 +636,15 @@ Use [DRAW-FILLED-TRIGON-*](#draw-filled-trigon-*) to draw a filled trigon.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
-				(sdl:x p2) (sdl:y p2)
-				(sdl:x p3) (sdl:y p3)
-				(sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
-			       (sdl:x p2) (sdl:y p2)
-			       (sdl:x p3) (sdl:y p3)
-			       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+  (if (sdl:a color)
+      (sdl-gfx-cffi::trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				 (sdl:x p2) (sdl:y p2)
+				 (sdl:x p3) (sdl:y p3)
+				 (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				  (sdl:x p2) (sdl:y p2)
+				  (sdl:x p3) (sdl:y p3)
+				  (sdl:pack-color color))))
 
 (defun draw-aa-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw the outline of a trigon or triangle, of color `COLOR` to surface `SURFACE` using anti-aliasing.
@@ -676,16 +660,15 @@ Use [DRAW-FILLED-TRIGON-*](#draw-filled-trigon-*) to draw a filled trigon.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::aa-trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
-				   (sdl:x p2) (sdl:y p2)
-				   (sdl:x p3) (sdl:y p3)
-				   (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::aa-trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+  (if (sdl:a color)
+      (sdl-gfx-cffi::aa-trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
 				  (sdl:x p2) (sdl:y p2)
 				  (sdl:x p3) (sdl:y p3)
-				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::aa-trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				   (sdl:x p2) (sdl:y p2)
+				   (sdl:x p3) (sdl:y p3)
+				   (sdl:pack-color color))))
 
 (defun draw-filled-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw a filled trigon, of color `COLOR` to surface `SURFACE`.
@@ -700,16 +683,15 @@ Use [DRAW-FILLED-TRIGON-*](#draw-filled-trigon-*) to draw a filled trigon.
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:sdl-color)
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::filled-trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
-				       (sdl:x p2) (sdl:y p2)
-				       (sdl:x p3) (sdl:y p3)
-				       (sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::filled-trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+  (if (sdl:a color)
+      (sdl-gfx-cffi::filled-trigon-RGBA (sdl:fp surface) (sdl:x p1) (sdl:y p1)
 				      (sdl:x p2) (sdl:y p2)
 				      (sdl:x p3) (sdl:y p3)
-				      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+				      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+      (sdl-gfx-cffi::filled-trigon-color (sdl:fp surface) (sdl:x p1) (sdl:y p1)
+				       (sdl:x p2) (sdl:y p2)
+				       (sdl:x p3) (sdl:y p3)
+				       (sdl:pack-color color))))
 
 (defun draw-polygon (vertices &key (surface sdl:*default-surface*) (color sdl:*default-color*))
   "Draw the circumference of a polygon of color `COLOR` to surface SURFACE using the vertices in `VERTICES`.
@@ -728,12 +710,11 @@ Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*) to draw a filled polygon.
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :y)))
 	(poly-surface nil))
-    (when (typep color 'sdl:color)
-      (setf poly-surface (sdl-gfx-cffi::polygon-color (sdl:fp surface) x-array y-array (length vertices)
+    (if (sdl:a color)
+	  (setf poly-surface (sdl-gfx-cffi::polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
+						     (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color)))
+	  (setf poly-surface (sdl-gfx-cffi::polygon-color (sdl:fp surface) x-array y-array (length vertices)
 						      (sdl:pack-color color))))
-    (when (typep color 'sdl:color-a)
-      (setf poly-surface (sdl-gfx-cffi::polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
-						     (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
     (cffi:foreign-free x-array)
     (cffi:foreign-free y-array)
     poly-surface))
@@ -755,13 +736,12 @@ The polygon is anti-aliased. Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*)
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :y)))
 	(poly-surface nil))
-    (when (typep color 'sdl:color)
-      (setf poly-surface (sdl-gfx-cffi::aa-polygon-color (sdl:fp surface) x-array y-array (length vertices)
-							 (sdl:pack-color color))))
-    (when (typep color 'sdl:color-a)
-      (setf poly-surface (sdl-gfx-cffi::aa-polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
+    (if (sdl:a color)
+	(setf poly-surface (sdl-gfx-cffi::aa-polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
 							(sdl:r color) (sdl:g color) (sdl:b color)
-							(sdl:a color))))
+							(sdl:a color)))
+	(setf poly-surface (sdl-gfx-cffi::aa-polygon-color (sdl:fp surface) x-array y-array (length vertices)
+							 (sdl:pack-color color))))
     (cffi:foreign-free x-array)
     (cffi:foreign-free y-array)
     poly-surface))
@@ -782,13 +762,12 @@ The polygon is anti-aliased. Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*)
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :y)))
 	(poly-surface nil))
-    (when (typep color 'sdl:color)
-      (setf poly-surface (sdl-gfx-cffi::filled-polygon-color (sdl:fp surface) x-array y-array (length vertices)
-							     (sdl:pack-color color))))
-    (when (typep color 'sdl:color-a)
-      (setf poly-surface (sdl-gfx-cffi::filled-polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
+    (if (sdl:a color)
+	(setf poly-surface (sdl-gfx-cffi::filled-polygon-RGBA (sdl:fp surface) x-array y-array (length vertices)
 							      (sdl:r color) (sdl:g color) (sdl:b color)
-							      (sdl:a color))))
+							      (sdl:a color)))
+	(setf poly-surface (sdl-gfx-cffi::filled-polygon-color (sdl:fp surface) x-array y-array (length vertices)
+							     (sdl:pack-color color))))
     (cffi:foreign-free x-array)
     (cffi:foreign-free y-array)
     poly-surface))
@@ -819,11 +798,10 @@ A control point is a vertex containing an X and Y coordinate pair.
   (let ((x-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :x)))
 	(y-array (cffi:foreign-alloc :short :initial-contents (return-list-for-array vertices :y)))
 	(bezier-surface nil))
-    (when (typep color 'sdl:color)
-      (setf bezier-surface (sdl-gfx-cffi::bezier-color (sdl:fp surface) x-array y-array (length vertices) steps (sdl:pack-color color))))
-    (when (typep color 'sdl:color-a)
-      (setf bezier-surface (sdl-gfx-cffi::bezier-RGBA (sdl:fp surface) x-array y-array (length vertices) steps
-						      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))))
+    (if (sdl:a color)
+	(setf bezier-surface (sdl-gfx-cffi::bezier-RGBA (sdl:fp surface) x-array y-array (length vertices) steps
+						      (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color)))
+	(setf bezier-surface (sdl-gfx-cffi::bezier-color (sdl:fp surface) x-array y-array (length vertices) steps (sdl:pack-color color))))
     (cffi:foreign-free x-array)
     (cffi:foreign-free y-array)
     bezier-surface))
@@ -832,11 +810,11 @@ A control point is a vertex containing an X and Y coordinate pair.
 
 (defun roto-zoom-surface (angle zoom smooth &key (surface sdl:*default-surface*))
   (check-type surface sdl:surface)
-  (sdl:surface (sdl-gfx-cffi::rotozoomSurface (sdl:fp surface) angle zoom smooth)))
+  (make-instance 'sdl:surface :fp (sdl-gfx-cffi::rotozoomSurface (sdl:fp surface) angle zoom smooth)))
 
 (defun roto-zoom-xy (angle zoomx zoomy smooth &key (surface sdl:*default-surface*))
   (check-type surface sdl:surface)
-  (sdl:surface (sdl-gfx-cffi::rotozoomSurfacexy (sdl:fp surface) angle zoomx zoomy smooth)))
+  (make-instance 'sdl:surface :fp (sdl-gfx-cffi::rotozoomSurfacexy (sdl:fp surface) angle zoomx zoomy smooth)))
 
 (defun roto-zoom-size (width height angle zoom)
   (cffi:with-foreign-objects ((dstwidth :int) (dstheight :int))
@@ -852,7 +830,7 @@ A control point is a vertex containing an X and Y coordinate pair.
 
 (defun zoom-surface (zoomx zoomy smooth &key (surface sdl:*default-surface*))
   (check-type surface sdl:surface)
-  (sdl:surface (sdl-gfx-cffi::zoomSurface (sdl:fp surface) zoomx zoomy smooth)))
+  (make-instance 'sdl:surface :fp (sdl-gfx-cffi::zoomSurface (sdl:fp surface) zoomx zoomy smooth)))
 
 (defun zoom-surface-size (width height zoomx zoomy)
   (cffi:with-foreign-objects ((dstwidth :int) (dstheight :int))
