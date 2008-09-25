@@ -17,6 +17,9 @@
 (defclass foreign-color (sdl-color)
   ((foreign-pointer-to-color :accessor fp :initform nil :initarg :color)))
 
+(defmethod free ((color sdl-color))
+  nil)
+
 (defun color (&key (r 0) (g 0) (b 0) (a nil))
   "Creates and returns a new [COLOR](#color) from the soecified red `R`, green `G`, and blue `B` color components.
 When `A` is an `INTEGER`, will return a new [COLOR-A](#color-a) with the alpha transparency."
@@ -33,7 +36,7 @@ When `A` is an `INTEGER`, will return a new [COLOR-A](#color-a) with the alpha t
 		      &body body)
   "A convience macro that binds `\*DEFAULT-COLOR\*` to `VAR` within the scope of `WITH-COLOR`. 
 `VAR` is set to `COLOR` when `COLOR` is not `NIL`.`VAR` must be of type `SDL-COLOR`. 
-`VAR` is freed using [FREE-COLOR](#free-color) when `FREE-P` is not `NIL`."
+`VAR` is freed using [FREE](#free) when `FREE-P` is not `NIL`."
   `(let* ((,@(if color
 		 `(,var ,color)
 		 `(,var ,var)))
@@ -48,7 +51,7 @@ When `A` is an `INTEGER`, will return a new [COLOR-A](#color-a) with the alpha t
                            ,(intern (string-upcase (format nil "~A.a" var)))))
        ,@body
        (if ,free-p
-	   (free-color ,var)))))
+	   (free ,var)))))
 
 (defmethod r ((color color))
   "Returns the red color component of the color `COLOR` as an `INTEGER`."
@@ -164,12 +167,6 @@ Assumes an alpha component when A is not NIL."
 (defmethod pack-color ((color color-a))
   "Packs the RGBA color components in color into a four byte `INTEGER`."
   (pack-color-* (r color) (g color) (b color) (a color)))
-
-(defmethod free-color ((color sdl-color)) nil)
-
-(defmethod free-color ((color foreign-color))
-  (cffi:foreign-free (fp color))
-  (tg:cancel-finalization color))
 
 (defmacro with-foreign-color-copy ((struct color) &body body)
   "Creates a new foreign SDL_Color object `STRUCT on the stack. Then copies the color components from COLOR into STRUCT.

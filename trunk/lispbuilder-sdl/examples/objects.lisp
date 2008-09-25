@@ -87,29 +87,3 @@
 			 (funcall 100-frames-p))
 
 	       (sdl:update-display))))))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

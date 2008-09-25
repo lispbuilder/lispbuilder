@@ -52,3 +52,6 @@
   (fill-surface surface color :clipping-p nil)
   surface)
 
+(defun video-pixel-format ()
+  (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::vfmt))
+

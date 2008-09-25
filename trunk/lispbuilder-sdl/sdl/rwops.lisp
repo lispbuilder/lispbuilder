@@ -1,26 +1,23 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defclass rwops ()
-  ((foreign-pointer-to-rwops :accessor fp :initform nil :initarg :rwops))
+(defclass rwops (foreign-object) ()
+  (:default-initargs
+   :gc t
+    :free #'sdl-cffi::SDL-Free-RW)
   (:documentation "A wrapper around a foreign SDL_RWops object."))
-
-(defmethod free-rwops ((rwops rwops))
-  "Free's the wrapped foreign SDL_rwops object."
-  (sdl-cffi::SDL-Free-RW (fp rwops))
-  (tg:cancel-finalization rwops))
 
 (defun create-RWops-from-file (filename)
   "Creates and returns a new `RWOPS` object from the file at location `FILENAME`."
   (let ((rwops (sdl-base::create-RWops-from-file (namestring filename))))
     (if (sdl-base::is-valid-ptr rwops)
-	(make-instance 'rwops :rwops rwops)
+	(make-instance 'rwops :fp rwops)
 	nil)))
 
 (defmethod create-RWops-from-byte-array (array)
   "Creates and returns a new `RWOPS` object from the Lisp array `ARRAY`."
   (let* ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array))
-	 (rwops (make-instance 'rwops :rwops (sdl-cffi::sdl-rw-from-mem mem-array (length array)))))
+	 (rwops (make-instance 'rwops :fp (sdl-cffi::sdl-rw-from-mem mem-array (length array)))))
     rwops))
 
 (defun file-to-byte-sequence (filepath)
@@ -35,7 +32,7 @@
 
 (defmethod load-image-from-byte-sequence (array)
   (let* ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array))
-	 (surf (make-instance 'surface :surface (sdl-cffi::sdl-load-bmp-rw (sdl-cffi::sdl-rw-from-mem mem-array (length array)) 1))))
+	 (surf (make-instance 'surface :fp (sdl-cffi::sdl-load-bmp-rw (sdl-cffi::sdl-rw-from-mem mem-array (length array)) 1))))
     surf))
 
 ;; (defmethod load-image-from-byte-sequence (array)

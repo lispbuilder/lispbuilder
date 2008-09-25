@@ -26,8 +26,7 @@
 
 ;;; Anthony Fairchild.
 ;;; http://article.gmane.org/gmane.lisp.cl-lispbuilder.general/559
-(defun rotate-surface (degrees &key
-		       (surface *default-surface*) (free-p nil) (key-color nil) (alpha nil))
+(defun rotate-surface (degrees &key (surface *default-surface*) (free-p nil))
   "Returns a new `SURFACE` rotated `0`, `90`, `180`, or `270` degrees.
 
 ##### Parameters
@@ -42,15 +41,14 @@
 When `ALPHA` is `NIL`, the new surface is created without alpha transparency. See
 [SET-ALPHA](#set-alpha) for more detailed information."
   (declare (type fixnum degrees)
- 	   (optimize (speed 3)(safety 0))
-	   )
+ 	   (optimize (speed 3)(safety 0)))
   (unless (member degrees '(0 90 180 270))
     (error "ERROR, ROTATE-SURFACE: degrees ~A is not one of 0, 90, 180 or 270" degrees))
   (if (= 0 degrees)
       ;; in the case of 0 degrees, just return the surface
-      (let ((new-surf (surface (fp surface))))
+      (let ((new-surf (copy-surface :surface surface :all t)))
 	(when free-p
-	  (free-surface surface))
+	  (free surface))
 	new-surf)
       ;; else do rotation
       (let* ((even (evenp (/ degrees 90)))
@@ -60,8 +58,7 @@ When `ALPHA` is `NIL`, the new surface is created without alpha transparency. Se
 	     (new-h (if even h w)))
 	(declare (type fixnum w h new-w new-h))
 	(with-surfaces ((src surface free-p)
-			(dst (create-surface new-w new-h :surface surface
-					     :key-color key-color :alpha alpha) nil))
+			(dst (create-surface-from new-w new-h :surface surface) nil))
 	  (let ((new-x (case degrees
 			 (90  #'(lambda (x y)
 				  (declare (ignore x)(type fixnum x y))
@@ -344,3 +341,17 @@ bit of ram."
 ;; 	(rect-y rectangle) (pos-y position))
 ;;   rectangle)
 
+
+(defun print-surface-info (name surface)
+  (format t "~A.ENABLE-COLOR-KEY-P: ~A~%" name (sdl::enable-color-key-p surface))
+  (format t "~A.COLOR-KEY-P: ~A:~A, ~A, ~A, ~A~%" name (sdl::color-key-p surface)
+	  (sdl:r (sdl::color-key-p surface))
+	  (sdl:g (sdl::color-key-p surface))
+	  (sdl:b (sdl::color-key-p surface))
+	  (sdl:a (sdl::color-key-p surface)))
+  (format t "~A.ENABLE-SURFACE-ALPHA-P: ~A~%" name (sdl::enable-surface-alpha-p surface))
+  (format t "~A.SURFACE-ALPHA-P: ~A~%" name (sdl::surface-alpha-p surface))
+  (format t "~A.PIXEL-ALPHA-P: ~A~%" name (sdl::pixel-alpha-p surface))
+  (format t "~A.RLE-ACCEL-P: ~A~%" name (sdl::rle-accel-p surface))
+  (format t "~A.PIXEL-FORMAT: ~A~%" name (sdl::pixel-depth surface))
+  (format t "~%"))

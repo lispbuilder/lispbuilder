@@ -6,13 +6,11 @@
 (defparameter *height* 480)
 
 (defun fireworks ()
-  (sdl:WITH-INIT (sdl:SDL-INIT-VIDEO)
-    (sdl:WINDOW *width* *height*
-		:flags (logior sdl:sdl-sw-surface)
-		:title-caption "Fireworks" :icon-caption "Fireworks")
-    (setf (sdl:frame-rate) 50)
+  (sdl:WITH-INIT ()
+    (sdl:WINDOW *width* *height* :title-caption "Fireworks" :icon-caption "Fireworks")
+    (setf (sdl:frame-rate) 0)
     (let ((world (make-world))
-	  (100-frames-p (every-n-frames 100)))
+	  (100-frames-p (every-n-frames 500)))
 
       (sdl:initialise-default-font sdl:*font-5x7*)
       (draw-fps "Calculating FPS....." 10 10 sdl:*default-font* sdl:*default-surface* t)
@@ -24,18 +22,17 @@
 	 (WHEN (sdl:KEY= key :SDL-KEY-ESCAPE)
 	   (sdl:PUSH-QUIT-EVENT)))
 	(:IDLE
-	 ()
 	 (dim-screen)
 	 (setf world (funcall world))
 	 (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
-			 10 10 sdl:*default-font* sdl:*default-surface*
-			 (funcall 100-frames-p))
+		   10 10 sdl:*default-font* sdl:*default-surface*
+		   (funcall 100-frames-p))
 	 (sdl:UPDATE-DISPLAY))))))
 
 (defun dim-screen ()
   (sdl:draw-box-* 0 0 *width* *height* 
-		:color (sdl:color :r 0 :g 0 :b 0 :a 10)
-		:alpha t))
+		  :color (sdl:color :r 0 :g 0 :b 0 :a 20)
+		  :alpha 255))
 
 (defun random-pos ()
   (vector (random *width*)

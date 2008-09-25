@@ -7,7 +7,7 @@
 
       (setf (sdl:frame-rate) 0)
       (sdl:window 320 240 :title-caption "Circle-1: Circles & Filled Circles" :icon-caption "Circle-1: Circles & Filled Circles")
-
+      
       (sdl:initialise-default-font sdl:*font-5x7*)
       (draw-fps "Calculating FPS....." 10 200 sdl:*default-font* sdl:*default-surface* t)
            
