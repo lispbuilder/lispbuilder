@@ -6,7 +6,7 @@
   (window (make-array 250 :initial-element 0 :element-type 'fixnum))
   (last-ticks 0)
   (calculated? nil)
-  (window-size 250))
+  (window-size 100))
 
 (defstruct time-scale
   (tscale 0)
