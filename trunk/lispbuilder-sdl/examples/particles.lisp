@@ -210,12 +210,12 @@
 
 	 ;; Display text.
 	 (draw-cached-string "" 5 5 *font-large* sdl:*default-display* nil)
-	 (if (= (sdl:average-fps) previous-average)
+	 (if (= (truncate (sdl:average-fps)) previous-average)
 	     (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil)
-	     (draw-cached-string (format nil "Particles: ~d, Framerate: ~f" *particle-count* (sdl:average-fps))
+	     (draw-cached-string (format nil "Particles: ~d, Framerate: ~f" *particle-count* (truncate (sdl:average-fps)))
 				 5 35 *font-small* sdl:*default-display* t))     
 	 
-	 (setf previous-average (sdl:average-fps))
+	 (setf previous-average (truncate (sdl:average-fps)))
 	
 	 ;; Flip back/front buffers
 	 (sdl:update-display)
