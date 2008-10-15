@@ -3,13 +3,13 @@
 
 
 (defmethod cffi:translate-to-foreign (value (type (eql 'sdl-mixer-cffi::chunk)))
-  (fp value))
+  (sdl:fp value))
 
 (defmethod cffi:translate-to-foreign (value (type (eql 'sdl-mixer-cffi::music)))
-  (fp value))
+  (sdl:fp value))
 
 (defun to-mix-chunk (value)
-  (fp value))
+  (sdl:fp value))
 
 (defun to-mix-music (value)
-  (fp value))
+  (sdl:fp value))
