@@ -115,7 +115,7 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
 Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
   (let* ((rwops (sdl::create-rwops-from-byte-array array))
 	 (chunk (load-sample rwops)))
-    (sdl:free-rwops rwops)
+    (sdl:free rwops)
     chunk))
 
 (defun sample-from-channel (channel)
@@ -397,13 +397,13 @@ Returns the previous music `VOLUME` as an `INTEGER` from 0 to [+MAX-VOLUME+](#+m
 
 (defmethod free ((chunk sdl-mixer-cffi::chunk))
   "Frees the sample in [CHUNK](#chunk). Do not reuse a [CHUNK](#chunk) once freed. Do not attempt to free a [CHUNK](#chunk) that is still being played."
-  (sdl-mixer-cffi::free chunk))
+  (sdl:free chunk))
 
 (defmethod free ((music sdl-mixer-cffi::music))
   "Frees the music in [MUSIC](#music). Stops [MUSIC](#music) if currently playing. 
 Will block until any current fade effect completes. 
  Do not reuse [MUSIC](#music) once freed."
-  (sdl-mixer-cffi::free music))
+  (sdl:free music))
 
 (defun sample-playing-p (channel)
   "Returns `T` if a sample is currently playing or is paused on `CHANNEL`, or `NIL` if the sample is halted.

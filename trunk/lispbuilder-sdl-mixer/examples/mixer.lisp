@@ -43,7 +43,7 @@
 (defun clean-up ()
   (when *music*
     (sdl-mixer:Halt-Music)
-    (sdl-mixer:Free *music*)
+    (sdl:Free *music*)
     (setf *music* nil))
   (when *sample*
     (sdl-mixer:Halt-sample :channel t)
