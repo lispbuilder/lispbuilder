@@ -58,7 +58,15 @@ When `ALPHA` is `NIL`, the new surface is created without alpha transparency. Se
 	     (new-h (if even h w)))
 	(declare (type fixnum w h new-w new-h))
 	(with-surfaces ((src surface free-p)
-			(dst (create-surface-from new-w new-h :surface surface) nil))
+			(dst (make-instance 'surface
+					    :using-surface surface
+					    :width new-w :height new-h
+					    :bpp (bit-depth surface)
+					    :enable-surface-alpha (enable-surface-alpha-p surface)
+					    :enable-color-key (enable-color-key-p surface)
+					    :surface-alpha (when (enable-surface-alpha-p surface) (surface-alpha-p surface))
+					    :color-key (when (enable-color-key-p surface) (color-key-p surface))
+					    :pixel-alpha (pixel-alpha-p surface)) nil))
 	  (let ((new-x (case degrees
 			 (90  #'(lambda (x y)
 				  (declare (ignore x)(type fixnum x y))
@@ -343,6 +351,7 @@ bit of ram."
 
 
 (defun print-surface-info (name surface)
+  (format t "~A.WIDTH: ~A, ~A.HEIGHT: ~A~%" name (sdl::width surface) name (sdl::height surface))
   (format t "~A.ENABLE-COLOR-KEY-P: ~A~%" name (sdl::enable-color-key-p surface))
   (format t "~A.COLOR-KEY-P: ~A:~A, ~A, ~A, ~A~%" name (sdl::color-key-p surface)
 	  (sdl:r (sdl::color-key-p surface))
@@ -353,5 +362,5 @@ bit of ram."
   (format t "~A.SURFACE-ALPHA-P: ~A~%" name (sdl::surface-alpha-p surface))
   (format t "~A.PIXEL-ALPHA-P: ~A~%" name (sdl::pixel-alpha-p surface))
   (format t "~A.RLE-ACCEL-P: ~A~%" name (sdl::rle-accel-p surface))
-  (format t "~A.PIXEL-FORMAT: ~A~%" name (sdl::pixel-depth surface))
+  (format t "~A.PIXEL-FORMAT: ~A~%" name (sdl::bit-depth surface))
   (format t "~%"))

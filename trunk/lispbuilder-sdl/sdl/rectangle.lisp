@@ -75,12 +75,12 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 		   :w w
 		   :h h))
 
-(defmacro with-rectangle ((var &optional rectangle (free-p t))
+(defmacro with-rectangle ((var &optional rectangle (free t))
 			  &body body)
   "A convenience macro that binds `\*DEFAULT-RECTANGLE\*` to `VAR` within the scope of `WITH-RECTANGLE`. 
 `VAR` must be of type `RECTANGLE`.
 `VAR` is set to `RECTANGLE` when `RECTANGLE` is not `NIL`.
-`VAR` is freed when `FREE-P` is `T`.
+`VAR` is freed when `FREE` is `T`.
 
 ##### Example
 
@@ -101,7 +101,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 			     ,(intern (string-upcase (format nil "~A.w" var)))
 			     ,(intern (string-upcase (format nil "~A.h" var)))))
 	 (setf ,body-value (progn ,@body))
-	 (when ,free-p
+	 (when ,free
 	   (free ,var))
 	 ,body-value))))
 

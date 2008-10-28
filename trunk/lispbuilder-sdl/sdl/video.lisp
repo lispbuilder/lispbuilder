@@ -141,7 +141,7 @@ return `INFO` as `T` or `NIL` if supported by the surface.
     \(SURFACE-INFO A-SURFACE '\(SDL-HW-SURFACE SDL-HW-PALETTE SDL-HW-ACCELL\)\)"
   (check-type surface sdl-surface)
   (if info
-      (let ((property (find info (list SDL-HW-SURFACE SDL-ASYNC-BLIT SDL-ANY-FORMAT
+      (let ((property (find info (list SDL-HW-SURFACE SDL-SW-SURFACE SDL-ASYNC-BLIT SDL-ANY-FORMAT
 				       SDL-HW-PALETTE SDL-DOUBLEBUF SDL-FULLSCREEN
 				       SDL-OPENGL SDL-RESIZABLE SDL-HW-ACCEL
 				       SDL-SRC-COLOR-KEY SDL-RLE-ACCEL SDL-SRC-ALPHA
@@ -160,6 +160,7 @@ return `INFO` as `T` or `NIL` if supported by the surface.
 				  (unless (eq result 0)
 				    description))))
 			  (list (list SDL-HW-SURFACE 'SDL-HW-SURFACE)
+				(list SDL-SW-SURFACE 'SDL-SW-SURFACE)
 				(list SDL-ASYNC-BLIT 'SDL-ASYNC-BLIT)
 				(list SDL-ANY-FORMAT 'SDL-ANY-FORMAT)
 				(list SDL-HW-PALETTE 'SDL-HW-PALETTE)

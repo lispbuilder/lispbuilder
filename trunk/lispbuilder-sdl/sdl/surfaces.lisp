@@ -12,27 +12,31 @@
     :reader position-rect
     :initform (rectangle)
     :initarg :position)
-   (cell-rect
-    :accessor cell-rect
-    :initform (rectangle)
-    :initarg cell))
+   (cell-index
+    :accessor cell-index
+    :initform 0
+    :initarg :cell-index)
+   (cells
+    :accessor cells
+    :initform nil
+    :initarg :cells)
+   (display-surface-p
+    :accessor display-surface-p
+    :initform nil
+    :initarg :display-surface-p))
   (:documentation
-   "A wrapper for a foreign object of type SDL_Surface. A `SDL-SURFACE` object contains:
-* a foreign SDL_Surface, 
-* a foreign SDL_Rect used to position the surface for blitting operations, and 
-* an SDL_Rect that defines the bounds of the surface to use when blitting."))
+   "A wrapper for the foreign SDL_Surface object."))
 
-;;; An object of type display should never be finalized by CFFI
-;;; at time of garbage collection.
 (defclass display-surface (sdl-surface) ()
   (:default-initargs
-   :gc nil
+   :display-surface-p t
+    :gc nil
     :free #'(lambda (fp) fp))
   (:documentation
-   "A subclass of `SDL-SURFACE` that holds the surface for the current *display*. 
-This object will never be garbage collected."))
+   "The current display surface. Can be accessed using `SDL:*DEFAULT-DISPLAY*`."))
 
 (defmethod free ((self display-surface))
+  "Freeing the display surface is not a valid operation."
   nil)
 
 (defmethod initialize-instance :around ((surface sdl-surface) &key)
@@ -40,15 +44,13 @@ This object will never be garbage collected."))
     (error "ERROR: The SDL library must be initialized prior to use."))
   (call-next-method))
 
-;;; An object of type is finalized by CFFI
-;;; at time of garbage collection.
 (defclass surface (sdl-surface) ()
   (:default-initargs
-   :gc t
+   :display-surface-p nil
+    :gc t
     :free (simple-free 'sdl-cffi::sdl-free-surface 'surface))
   (:documentation
-   "A subclass of 'SDL-SURFACE' that holds a standard SDL_Surface object.
-This object will be garbage collected and the surface freed when out of scope."))
+   "This object is garbage collected and the `SDL_Surface` object freed when out of scope."))
 
 (defclass rectangle-array ()
   ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
@@ -78,7 +80,6 @@ This object will be garbage collected and the surface freed when out of scope.")
   ;; 3) Using SDL_Surface when :USING-SURFACE is set. Surface parameters may be set.
   ;; 4) Creating a new SDL_Surface when :WIDTH & :HEIGHT are set. Surface parameters may be set.
 
-
   ;; Takes care of (2) and (4)
   (if (and width height)
       (setf (slot-value surface 'foreign-pointer-to-object)
@@ -96,13 +97,16 @@ This object will be garbage collected and the surface freed when out of scope.")
 	  (setf (slot-value surface 'foreign-pointer-to-object)
 		using-surface)))
 
-  (set-cell-* (x surface) (y surface) (width surface) (height surface) :surface surface)
+  (unless (cells surface)
+    (setf (cells surface) (vector (rectangle)))
+    (set-cell-* (x surface) (y surface) (width surface) (height surface) :surface surface))
+
+  (when x (setf (x surface) x))
+  (when y (setf (y surface) y))
   
   (when (or (and surface width height)
 	    (and width height)
 	    using-surface)
-    (when x (setf (x surface) x))
-    (when y (setf (y surface) y))
     (setf (enable-color-key-p surface) enable-color-key
 	  (enable-surface-alpha-p surface) enable-surface-alpha)
     (when color-key
@@ -175,48 +179,48 @@ This object will be garbage collected and the surface freed when out of scope.")
 
 
 (defmethod width ((surface sdl-surface))
-  "Returns the width of the surface `SURFACE` as an `INTEGER`."
+  "Returns the width of `SURFACE` as an `INTEGER`."
   (sdl-base::surf-w (fp surface)))
 ;; (defmethod (setf width) (w-val (surface sdl-surface))
 ;;   "Sets the width of the surface `SURFACE`. Must be an `INTEGER`."
 ;;   (setf (width (position-rect surface)) w-val))
 
 (defmethod height ((surface sdl-surface))
-  "Returns the height of the surface `SURFACE` as an `INTEGER`."
+  "Returns the height of `SURFACE` as an `INTEGER`."
   (sdl-base::surf-h (fp surface)))
 ;; (defmethod (setf height) (h-val (surface sdl-surface))
 ;;   "Sets the height of the surface `SURFACE`. Must be an `INTEGER`."
 ;;   (setf (height (position-rect surface)) h-val))
 
 (defmethod x ((surface sdl-surface))
-  "Returns the x position coordinate of the surface `SURFACE` as an `INTEGER`."
+  "Returns the `X` position coordinate of `SURFACE` as an `INTEGER`."
   (x (position-rect surface)))
 (defmethod (setf x) (x-val (surface sdl-surface))
-  "Returns the `X` position coordinate of the surface `SURFACE`. Must be an `INTEGER`."
+  "Sets the integer `X` position coordinate of `SURFACE`."
   (setf (x (position-rect surface)) x-val))
 
 (defmethod y ((surface sdl-surface))
-  "Returns the y position coordinate of the surface `SURFACE` as an `INTEGER`."
+  "Returns the `Y` position coordinate of `SURFACE` as an `INTEGER`."
   (y (position-rect surface)))
 (defmethod (setf y) (y-val (surface sdl-surface))
-  "Returns the `Y` position coordinate of the surface `SURFACE`. Must be an `INTEGER`."  
+  "Sets the integer `Y` position coordinate of `SURFACE`."  
   (setf (y (position-rect surface)) y-val))
 
 (defmethod point-* ((surface sdl-surface))
-  "Returns the `X` and `Y` position coordinates of the surface `SURFACE` as a spread."
+  "Returns the `X` and `Y` position coordinates of `SURFACE` as a spread."
   (values (x surface) (y surface)))
 
 (defmethod get-point ((surface sdl-surface))
-  "Returns the `X` and `Y` position coordinates of the surface `SURFACE` as a `POINT`."
+  "Returns the `POINT` position coordinates of `SURFACE`."
   (vector (x surface) (y surface)))
 
 (defmethod set-point ((surface sdl-surface) (position vector))
-  "Sets the `X` and `Y` position coordinates of the surface `SURFACE`. `POSITION` is a `POINT`."
+  "Sets the `POINT` position coordinates of `SURFACE`."
   (set-point-* surface :x (x position) :y (y position))
   surface)
 
 (defmethod set-point-* ((surface sdl-surface) &key x y)
-  "Sets the `X` and `Y` position coordinates of the surface `SURFACE`. `X` and `Y` are `INTEGERS`."
+  "Sets the `X` and `Y` position coordinates of `SURFACE`. `X` and `Y` are integers."
   (when x (setf (x surface) x))
   (when y (setf (y surface) y))
   surface)
@@ -230,7 +234,7 @@ This object will be garbage collected and the surface freed when out of scope.")
   (point :x (x surface) :y (y surface)))
 
 (defmethod set-position ((surface sdl-surface) (position vector))
-    "See [SET-POINT](#set-point)."
+  "See [SET-POINT](#set-point)."
   (set-position-* surface :x (x position) :y (y position))
   surface)
 
@@ -241,26 +245,22 @@ This object will be garbage collected and the surface freed when out of scope.")
   surface)
 
 (defmethod set-surface ((surface sdl-surface) (position vector))
-  "Sets the coordinates of the surface `SURFACE` to `POSITION`, 
-where position is of type `POINT`."
+  "See [SET-POINT](#set-point)."
   (set-surface-* surface :x (x position) :y (y position))
   surface)
 
 (defmethod set-surface-* ((surface sdl-surface) &key x y)
-  "Sets the coordinates of the surface `SURFACE` to the spead `X` and `Y` `INTEGER` coordinates.
-`X` and `Y` are `KEY`word parameters having default values of `0` if unspecified."
+  "See [SET-POINT-*](#set-point-*)."
   (when x (setf (x surface) x))
   (when y (setf (y surface) y))
   surface)
 
 (defmethod rectangle-* ((surface sdl-surface))
-  "Returns the `X`, `Y`, `WIDTH` and `HEIGHT` values of the surface `SURFACE` as a spread. 
-The `RESULT` is `\(VALUES X Y WIDTH HEIGHT\)`"
+  "Returns the fields `X`, `Y`, `WIDTH` and `HEIGHT` from `SURFACE` as a spread."
   (values (x surface) (y surface) (width surface) (height surface)))
 
 (defmethod get-rectangle-* ((surface sdl-surface))
-  "Creates and returns a `RECTANGLE` object from the `X`, `Y`, `WIDTH` and `HEIGHT` 
-values in the surface `SURFACE`."
+  "Returns new `RECTANGLE` containing the `X`, `Y`, `WIDTH` and `HEIGHT` values of `SURFACE`."
   (rectangle :x (x surface)
 	     :y (y surface)
 	     :w (width surface)
@@ -268,52 +268,84 @@ values in the surface `SURFACE`."
   surface)
 
 (defmethod enable-surface-alpha-p ((surface sdl-surface))
+  "Returns `T` when alpha blending is enabled for `SURFACE`, 
+and `NIL` when disabled"
   (1/0->T/NIL (sdl-base::enable-surface-alpha-p (fp surface))))
 (defmethod (setf enable-surface-alpha-p) (value (surface sdl-surface))
+  "Enable alpha blending for `SURFACE` when `T`. Disable alpha blending when `NIL`. 
+A `SURFACE` need not have an alpha channel \(RGBA\) to use alpha blending."
   (setf (sdl-base::enable-surface-alpha-p (fp surface)) value))
 
 (defmethod surface-alpha-p ((surface sdl-surface))
+  "Returns the per-surface alpha value for `SURFACE`. 0 is transparent, and 255 is opaque."
   (sdl-base::surface-alpha-p (fp surface)))
 (defmethod (setf surface-alpha-p) (value (surface sdl-surface))
+  "Sets the per-surface alpha value for `SURFACE`. 0 is transparent, and 255 is opaque. 
+
+*Note*: The per-surface alpha value of 128 is considered a special case and is optimised, so it's much faster than other per-surface values.
+*Note*: A surface need not have an alpha channel to use alpha blending.
+*Note*: When blitting, the presence or absence of [SDL-SRC-ALPHA](#sdl-src-alpha) is relevant only on the source surface, not the destination. 
+*Note*: Per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used if available."
   (setf (sdl-base::surface-alpha-p (fp surface)) value))
 
 (defmethod enable-color-key-p ((surface sdl-surface))
+  "Returns `T` when color keying is enabled for `SURFACE`, and `NIL` when color keying is disabled."
   (1/0->T/NIL (sdl-base::enable-color-key-p (fp surface))))
 (defmethod (setf enable-color-key-p) (value (surface sdl-surface))
+  "Enables color keying for `SURFACE` when `T`. Disable color keying when `NIL`"
   (setf (sdl-base::enable-color-key-p (fp surface)) value))
 
 (defmethod color-key-p ((surface sdl-surface))
+  "Returns the color key \(transparent pixel\) of `SURFACE` as [COLOR-A](#color-a)."
   (multiple-value-bind (r g b a)
       (sdl-base::map-pixel (sdl-base::color-key-p (fp surface))
 			   (fp surface))
     (color :r r :g g :b b :a a)))
 (defmethod (setf color-key-p) (value (surface sdl-surface))
+  "Set the color key \(transparent pixel\) for `SURFACE`. 
+Of type [COLOR](#color) for RGB, or [COLOR-A](#color-a) for RGBA."
   (setf (sdl-base::color-key-p (fp surface)) (map-color value surface)))
 
-(defmethod pixel-alpha-p ((surface sdl-surface))
-  (1/0->T/NIL (sdl-base::pixel-alpha-p (fp surface))))
-
-(defmethod rle-accel-p ((surface sdl-surface))
-  (1/0->T/NIL (sdl-base::rle-accel-p (fp surface))))
-(defmethod (setf rle-accel-p) (value (surface sdl-surface))
-  (setf (sdl-base::rle-accel-p (fp surface)) value))
-
-
-(defun clear-color-key (&key (surface *default-surface*) (rle-accel t))
+(defun clear-color-key (&key (surface *default-surface*))
+  "Disables the color key for `SURFACE`."
   (check-type surface sdl-surface)
   (setf (enable-color-key-p surface) nil))
 
+(defmethod pixel-alpha-p ((surface sdl-surface))
+  "Returns `T` if `SURFACE` has a pixel alpha component \(RGBA\), or `NIL` if not\(RGB\).
+*Note*: The pixel alpha component differs from the surface alpha component which is 
+retrieved using [ENABLE-SURFACE-ALPHA-P](#enable-surface-alpha-p)."
+  (1/0->T/NIL (sdl-base::pixel-alpha-p (fp surface))))
+
+(defmethod rle-accel-p ((surface sdl-surface))
+  "Returns `T` if RLE acceleration is enabled for `SURFACE`, and `NIL` when RLE is disabled."
+  (1/0->T/NIL (sdl-base::rle-accel-p (fp surface))))
+(defmethod (setf rle-accel-p) (value (surface sdl-surface))
+  "Enables RLE blit acceleration when `T`, disables RLE acceleration when `NIL`. 
+RLE acceleration can substantially speed up blitting of images with large horizontal runs 
+of transparent pixels (i.e., pixels that match the key color)."
+  (setf (sdl-base::rle-accel-p (fp surface)) value))
+
+(defmethod clip-rect ((surface sdl-surface))
+  "Returns the clipping `RECTANGLE` for `SURFACE`."
+  (get-clip-rect :surface surface))
+(defmethod (setf clip-rect) (value (surface sdl-surface))
+  "Sets the clipping `RECTANGLE` for `SURFACE`. Removes the clipping rectangle when `NIL`.
+*Note:* When `SURFACE` is the destination of a blit, only the area within the clipping rectangle is 
+drawn into."
+  (set-clip-rect value :surface surface))
+
 (defun set-color-key (color &key (surface *default-surface*) (rle-accel t))
-  "Sets the color key (transparent pixel) `COLOR` in a blittable surface `SURFACE`.
+  "Set the color key \(transparent pixel\) for `SURFACE`. 
 
 ##### Paremeters
 
-* `COLOR` the color to be used as the transparent pixel of the surface when blitting, 
-of type [COLOR](#color), or [COLOR-A](#color-a). When 'NIL' will disable color keying.
+* `COLOR` the transparent pixel color, of type [COLOR](#color), or [COLOR-A](#color-a). 
+When 'NIL' will disable color keying.
 * `RLE-ACCEL` when `T` will use RLE information when blitting. See [RLE-CCEL](#rle-accel)."
   (check-type surface sdl-surface)
   (check-type color sdl-color)
-  (sdl-base::set-color-key (fp surface) (map-color color surface ) rle-accel))
+  (sdl-base::set-color-key (fp surface) (map-color color surface) rle-accel))
   
 (defun set-alpha (alpha &key (surface *default-surface*) (source-alpha nil) (rle-accel nil))
   "Set the transparency,  alpha blending and RLE acceleration properties of `SURFACE`.
@@ -324,17 +356,281 @@ of type [COLOR](#color), or [COLOR-A](#color-a). When 'NIL' will disable color k
 `0` is  transparent and `255` being opaque.
 *Note*: The per-surface alpha value of 128 is considered a special case and is optimised, so it's much faster than other per-surface values. 
 * `SOURCE-ALPHA` will enable or disable alpha blending for `SURFACE`.
-* `RLE-ACCEL` will enable or disable RLE acceleration when blitting. See [RLE-ACCEL](#rle-accel).
-* `UNCHANGED` will leave the current surface values of SOURCE-ALPHA and RLW-ACCEL unchanged.
+* `RLE-ACCEL` will enable or disable RLE acceleration when blitting. See [RLE-ACCEL](#rle-accel)."
+  (check-type surface sdl-surface)
+  (sdl-base::set-alpha (fp surface) alpha source-alpha rle-accel))
 
-##### For Example
+(defun get-clip-rect (&key (surface *default-surface*) (rectangle (rectangle)))
+  "Returns the clipping `RECTANGLE` of `SURFACE` as a new `RECTANGLE`, 
+or will fill the specified rectangle."
+  (check-type surface sdl-surface)
+  (check-type rectangle rectangle)
+  (sdl-base::get-clip-rect (fp surface) (fp rectangle))
+  rectangle)
 
-* To set only the surface transparen
+(defun set-clip-rect (rectangle &key (surface *default-surface*))
+  "See [CLIP-RECT](#clip-rect)."
+  (check-type surface sdl-surface)
+  (when rectangle (check-type rectangle rectangle))
+  (if rectangle
+      (sdl-base::set-clip-rect (fp surface) (fp rectangle))
+      (sdl-base::set-clip-rect (fp surface) (cffi:null-pointer))))
 
+(defun clear-clip-rect (&optional (surface *default-surface*))
+  "Removes the clipping `RECTANGLE` from `SURFACE`."
+  (check-type surface sdl-surface)
+  (set-clip-rect NIL :surface surface)
+  t)
 
-##### Alpha effects
+(defun get-cell (&key (surface *default-surface*) (index 0))
+  "Returns the `CELL` for `SURFACE` at the specified `INDEX`.
+*Note:* When `SURFACE` is the source of a blit, only the area within the cell rectangle is drawn."
+  (check-type surface sdl-surface)
+  (aref (cells surface) index))
 
-Alpha has the following effect on surface blitting: 
+(defun current-cell (&key (surface *default-surface*))
+  "Returns the current `CELL` for `SURFACE`.
+*Note:* When `SURFACE` is the source of a blit, only the area within the cell rectangle is drawn."
+  (get-cell :surface surface :index (cell-index surface)))
+
+(defun clear-cell (&key (surface *default-surface*) (index nil))
+  "Sets the specified `CELL` at `INDEX` to the bounds of `SURFACE`."
+  (check-type surface sdl-surface)
+  (unless index
+    (setf index (cell-index surface)))
+  (with-rectangle (cell (get-cell :surface surface :index index) nil)
+    (setf cell.x (x surface)
+	  cell.y (y surface)
+	  cell.w (width surface)
+	  cell.h (height surface))
+    cell))
+
+(defun set-cell (rectangle &key (surface *default-surface*) (index nil))
+  "Sets the specified `CELL` at `INDEX` to the bounds of `RECTANGLE`.
+*Note:* When `SURFACE` is the source of a blit, only the area within the cell rectangle is drawn."
+  (check-type surface sdl-surface)
+  (check-type rectangle rectangle)
+  (unless index
+    (setf index (cell-index surface)))
+  (sdl-base::copy-rectangle (fp rectangle) (fp (get-cell :surface surface :index index)))
+  (get-cell :surface surface :index index))
+
+(defun set-cell-* (x y w h &key (surface *default-surface*) (index nil))
+  "Sets the specified `CELL` at `INDEX` to a rectangle bounded by `X`, `Y`, `W` and `H`.
+*Note:* When `SURFACE` is the source of a blit, only the area within the cell rectangle is drawn."
+  (check-type surface sdl-surface)
+  (unless index
+    (setf index (cell-index surface)))
+  (with-rectangle (cell (get-cell :surface surface :index index) nil)
+    (setf cell.x x
+	  cell.y y
+	  cell.w w
+	  cell.h h)
+    cell))
+
+(defun get-surface-rect (b &key (surface *default-surface*) (rectangle (rectangle)))
+  (check-type surface sdl-surface)
+  (check-type rectangle rectangle)
+  (sdl-base::get-surface-rect (fp surface) (fp rectangle))
+  rectangle)
+
+(defun create-surface (width height
+		       &key (bpp 32) (type :sw) color-key color-key-at pixel-alpha surface-alpha (rle-accel t) (x 0) (y 0))
+  "Creates and returns a new `SURFACE` with the dimensions `WIDTH` and `HEIGHT`.
+
+`:COLOR-KEY` sets the color key of the surface and enables color-keying. 
+
+`:SURFACE-ALPHA` sets the surface alpha transparency and enables alpha blending. This allows a pixel color of `RGB` with the surface `A`.
+
+`:PIXEL-ALPHA` enables a pixel alpha component \(alpha mask of 0xFF\) on the new surface. This allows a pixel color of `RGBA`.
+
+`:RLE-ACCEL` enables RLE blit acceleration. 
+
+`:BPP` is the pixel depth of the surface, and my be 8, 16, 24 or 32. 
+
+`:TYPE` attempts to create the `SURFACE` in video memory when `:HW`, and in system memory when `:SW`
+
+`:X` and `:Y` are the positions of the `SURFACE` in screen coordinates."
+  (when color-key
+    (check-type color-key sdl-color))
+  (make-instance 'surface
+		 :width width :height height :x x :y y
+		 :enable-color-key (or color-key color-key-at)
+		 :color-key (or color-key color-key-at)
+		 :pixel-alpha pixel-alpha
+		 :enable-surface-alpha surface-alpha
+		 :surface-alpha surface-alpha
+		 :type type
+		 :rle-accel rle-accel
+		 :bpp bpp))
+
+(defun convert-to-display-format (&key (surface *default-surface*) enable-surface-alpha enable-color-key pixel-alpha (free nil) (inherit t))
+  "Returns a new surface matching the pixel format and color of the video frame buffer \(`*display surface*\), 
+that is suitable for fast blitting. 
+The new surface will inherit the pixel, alpha and color key components of the source, *unless* `:INHERIT` is `NIL`.
+
+Use `:ENABLE-COLOR-KEY` or `:ENABLE-SURFACE-ALPHA` to take advantage of hardware 
+colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily 
+utilize available harware acceleration if the surface was not initally created in video memory.
+
+Use `:PIXEL-ALPHA` to enable the pixel alpha component \(alpha mask of 0xFF\) for the new surface.
+
+Use `:FREE` to delete the source `SURFACE`.
+
+Differences between [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format), [CONVERT-SURFACE](#convert-surface),
+[COPY-SURFACE](#copy-surface), and [CREATE-SURFACE](#create-surface);
+
+* [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format) 
+** will always attempt to create a surface in video memory using hardware acceleration if key color and surface alpha are supported. 
+** A pixel alpha component can be specified. 
+** New surface is filled with old surface. 
+ 
+* [CONVERT-SURFACE](#convert-surface)
+** Calls [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format) if converting a surface to the display format.
+** paramatized option to create new surface in video or system memory.
+** Pixel format and color match that of the source surface. 
+** Pixel alpha cannot be specified.
+** New surface is filled with old surface. 
+
+* [COPY-SURFACE](#copy-surface) 
+** Copies a portion of the source surface to a new destination surface
+** paramatized option to create new surface in video or system memory.
+** Pixel format and color match that of the source surface. 
+** Pixel alpha cannot be specified.
+** New surface is filled with old surface."
+  (check-type surface sdl-surface)
+  (let ((surf (make-instance 'surface
+			     :fp (sdl-base::convert-surface-to-display-format (fp surface)
+									      :enable-color-key (if inherit
+												    (enable-color-key-p surface)
+												    enable-color-key)
+									      :enable-surface-alpha (if inherit
+													(enable-surface-alpha-p surface)
+													enable-surface-alpha) 
+									      :pixel-alpha (if inherit
+											       (pixel-alpha-p surface)
+											       pixel-alpha)
+									      :free nil))))
+    (when free
+      (free surface))
+    surf))
+
+(defun convert-surface (&key (surface *default-surface*) (to-surface *default-display*) enable-surface-alpha enable-color-key (free nil) (inherit t) (type :sw))
+  "Converts `:SURFACE` and returns a new surface matching the pixel format and color of `:TO-SURFACE`.
+Calls [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format) if converting to the display format.
+
+Use `:ENABLE-COLOR-KEY` or `:ENABLE-SURFACE-ALPHA` to take advantage of hardware 
+colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily 
+utilize available harware acceleration if the surface was not initally created in video memory.
+
+Will create the new surface in system menory when `TYPE` is `:HW`. 
+Will attempt to create the new surface in video menory when `TYPE` is `:HW`, otherwise the surface is created in system memory if the combination 
+of color key and alpha do not allow hardware acceleration.
+
+The new surface will inherit the pixel, alpha and color key components of the source, *unless* `:INHERIT` is `NIL`.
+
+Use `:FREE` to delete the source `SURFACE`."
+  (check-type surface sdl-surface)
+  (check-type to-surface sdl-surface)
+  (let ((surf (if (display-surface-p to-surface)
+		  (convert-to-display-format :surface surface
+					     :enable-color-key enable-color-key
+					     :enable-surface-alpha enable-surface-alpha
+					     :pixel-alpha (pixel-alpha-p surface)
+					     :free nil
+					     :inherit inherit)
+		  (make-instance 'surface
+				 :fp (sdl-base::convert-surface (fp surface) (fp to-surface)
+								:enable-color-key (if inherit
+										      (enable-color-key-p surface)
+										      enable-color-key)
+								:enable-surface-alpha (if inherit
+											  (enable-surface-alpha-p surface)
+											  enable-surface-alpha)
+								:free nil
+								:type type)))))
+    (when free
+      (free surface))
+    surf))
+
+(defun copy-surface (&key cell cell-index (surface *default-surface*) color-key surface-alpha pixel-alpha (rle-accel nil) (type :sw) (free nil) (inherit t)
+		     (fill t) (color-key-fill t)
+		     (pixel-format nil))
+  "Returns a copy of `SURFACE` created in video memory when `TYPE` is `:HW`, and in system memory when `TYPE` is `:SW`. 
+The new surface will inherit *all* of the source `SURFACE`s pixel format, color, alpha and color key components.
+The new surface is filled with the source surface color key if the color key component of the source surface is enabled.
+The source surface is blitted to the new surface when `:ALL` is `T`."
+  (check-type surface sdl-surface)
+  (let ((new-surface nil))
+    (let ((x 0) (y 0) (width (width surface)) (height (height surface))
+	  (rect nil))
+      (when (or cell cell-index)
+	(when cell
+	  (setf x (x cell)
+		y (y cell)
+		width (width cell)
+		height (height cell))
+	  (setf rect cell))
+	(when cell-index
+	  (setf rect (get-cell :surface surface :index cell-index))
+	  (setf x (x rect)
+		y (y rect)
+		width (width rect)
+		height (height rect))))
+      (setf new-surface (make-instance 'surface
+				       :using-surface (when pixel-format surface)
+				       :x x :y y :width width :height height
+				       :enable-color-key (if inherit
+							     (enable-color-key-p surface)
+							     color-key)
+				       :color-key (if (or inherit (eq t color-key))
+						      (color-key-p surface)
+						      color-key)
+				       :enable-surface-alpha (if inherit
+								 (enable-surface-alpha-p surface)
+								 surface-alpha)
+				       :surface-alpha (if (or inherit (eq t surface-alpha))
+							  (surface-alpha-p surface)
+							  surface-alpha)
+				       :pixel-alpha (if inherit
+							(pixel-alpha-p surface)
+							pixel-alpha)
+				       :type type
+				       :rle-accel rle-accel
+				       :bpp (bit-depth surface)))
+      (when color-key-fill
+	(if inherit
+	  (if (enable-color-key-p surface)
+	      (fill-surface (color-key-p surface) :surface new-surface))
+	  (if color-key
+	      (fill-surface (color-key-p surface) :surface new-surface))))      
+      (when fill
+	(if (or cell cell-index)
+	  (sdl-base::blit-surface (fp surface) (fp new-surface)
+				  (fp rect) (fp rect))
+	  (blit-surface surface new-surface))))
+    (when free
+      (free surface))
+    new-surface))
+ 
+(defun update-surface (surface &optional template)
+  (check-type surface sdl-surface)
+  (if template
+    (progn
+      (check-type template rectangle)
+      (sdl-base::update-surface (fp surface) :template (fp template)))
+    (sdl-base::update-surface (fp surface)))
+  surface)
+
+(defun update-surface-* (surface x y w h)
+  (check-type surface sdl-surface)
+  (sdl-base::update-surface (fp surface) :x x :y y :w w :h h)
+  surface)
+
+(defun blit-surface (src &optional (surface *default-surface*))
+  "##### Alpha effects
+
+Alpha has the following effect on `SURFACE` blitting: 
 
 * _RGBA to RGB_ with [SDL-SRC-ALPHA](#sdl-src-alpha): 
 The source is alpha-blended with the destination, using the alpha channel. [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) 
@@ -362,154 +658,14 @@ If [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is set, only the pixels not matching 
 The RGB data is copied from the source. If [SDL-SRC-COLOR-KEY](#SDL-SRC-COLOR-KEY) is set, only the pixels not 
 matching the colorkey value are copied.
 
-*Note*: When blitting, the presence or absence of [SDL-SRC-ALPHA](#sdl-src-alpha) is relevant only on the 
-source surface, not the destination. 
-
-*Note*: Note that _RGBA to RGBA_ blits (with [SDL-SRC-ALPHA](#sdl-src-alpha) set) keep the alpha of the destination 
+*Note*: _RGBA to RGBA_ blits (with [SDL-SRC-ALPHA](#sdl-src-alpha) set) keep the alpha of the destination 
 surface. This means that you cannot compose two arbitrary _RGBA_ surfaces this way and get the result you would 
-expect from \"overlaying\" them; the destination alpha will work as a mask. 
-
-*Note*: Also note that per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used 
-if available."
-  (check-type surface sdl-surface)
-  (sdl-base::set-alpha (fp surface) alpha source-alpha rle-accel))
-
-(defun pixel-depth (&optional (surface *default-surface*))
-  (with-foreign-slots ((sdl-cffi::BitsPerPixel)
-		       (sdl-base:pixel-format (fp surface))
-		       sdl-cffi::SDL-Pixel-Format)
-    sdl-cffi::BitsPerPixel))
-
-(defun get-clip-rect (&key (surface *default-surface*) (rectangle (rectangle)))
-  (check-type surface sdl-surface)
-  (check-type rectangle rectangle)
-  (sdl-base::get-clip-rect (fp surface) (fp rectangle))
-  rectangle)
-
-(defun set-clip-rect (rectangle &key (surface *default-surface*))
-  (check-type surface sdl-surface)
-  (when rectangle (check-type rectangle rectangle))
-  (if rectangle
-      (sdl-base::set-clip-rect (fp surface) (fp rectangle))
-      (sdl-base::set-clip-rect (fp surface) (cffi:null-pointer))))
-
-(defun clear-clip-rect (&optional (surface *default-surface*))
-  (check-type surface sdl-surface)
-  (set-clip-rect NIL :surface surface)
-  t)
-
-(defun clear-cell (&key (surface *default-surface*))
-  (check-type surface sdl-surface)
-  (set-cell-* (x surface) (y surface) (width surface) (height surface)))
-
-(defun set-cell (rectangle &key (surface *default-surface*))
-  (check-type surface sdl-surface)
-  (check-type rectangle rectangle)
-  (sdl-base::copy-rectangle (fp rectangle) (fp (cell-rect surface))))
-
-(defun set-cell-* (x y w h &key (surface *default-surface*))
-  (check-type surface sdl-surface)
-  (setf (x (cell-rect surface)) x
-	(y (cell-rect surface)) y
-	(width (cell-rect surface)) w
-	(height (cell-rect surface)) h))
-
-(defun get-surface-rect (&key (surface *default-surface*) (rectangle (rectangle)))
-  (check-type surface sdl-surface)
-  (check-type rectangle rectangle)
-  (sdl-base::get-surface-rect (fp surface) (fp rectangle))
-  rectangle)
-
-(defun convert-surface (&key (surface *default-surface*) enable-surface-alpha enable-color-key pixel-alpha (free nil) (inherit t))
-  (check-type surface sdl-surface)
-  (let ((surf (make-instance 'surface
-			     :fp (sdl-base::convert-surface-to-display-format (fp surface)
-									      :enable-color-key (if inherit
-												    (enable-color-key-p surface)
-												    enable-color-key)
-									      :enable-surface-alpha (if inherit
-													(enable-surface-alpha-p surface)
-													enable-surface-alpha) 
-									      :pixel-alpha (if inherit
-											       (enable-surface-alpha-p surface)
-											       pixel-alpha)
-									      :free nil))))
-    (when free
-      (free surface))
-    surf))
-
-(defun copy-surface (&key (surface *default-surface*) (type :sw) (all nil))
-  (check-type surface sdl-surface)
-  (let ((new-surface (make-instance 'surface
-				    :using-surface (sdl-base::copy-surface (fp surface)
-									   :enable-color-key (enable-color-key-p surface)
-									   :pixel-alpha (pixel-alpha-p surface)
-									   :enable-surface-alpha (enable-surface-alpha-p surface)
-									   :type type
-									   :rle-accel (rle-accel-p surface))
-				    :x (x surface) :y (y surface)
-				    :enable-color-key (enable-color-key-p surface)
-				    :color-key (color-key-p surface)
-				    :enable-surface-alpha (enable-surface-alpha-p surface)
-				    :surface-alpha (surface-alpha-p surface))))
-    (when (color-key-p surface)
-	(fill-surface (color-key-p surface) :surface new-surface))
-    (when all
-      (blit-surface surface new-surface))
-    new-surface))
-
-(defun create-surface (width height &key
-		       (surface nil) (bpp 32) (type :sw) color-key color-key-at pixel-alpha surface-alpha (rle-accel t) (x 0) (y 0))
-  (when color-key
-    (check-type color-key sdl-color))
-  (make-instance 'surface
-		 :using-surface surface
-		 :width width :height height :x x :y y
-		 :enable-color-key (or color-key color-key-at)
-		 :color-key (or color-key color-key-at)
-		 :pixel-alpha pixel-alpha
-		 :enable-surface-alpha surface-alpha
-		 :surface-alpha surface-alpha
-		 :type type
-		 :rle-accel rle-accel
-		 :bpp bpp))
-
-(defun create-surface-from (width height &key
-			    (surface *default-surface*) (type :sw) (rle-accel t))
-  (let ((new-surface (make-instance 'surface
-				    :using-surface surface
-				    :width width :height height :x (x surface) :y (y surface)
-				    :enable-color-key (enable-color-key-p surface)
-				    :color-key (color-key-p surface)
-				    :pixel-alpha (pixel-alpha-p surface)
-				    :enable-surface-alpha (enable-surface-alpha-p surface)
-				    :surface-alpha (surface-alpha-p surface)
-				    :type type
-				    :rle-accel rle-accel
-				    :bpp (pixel-depth surface))))
-    (when (color-key-p surface)
-	(fill-surface (color-key-p surface) :surface new-surface))
-    new-surface))
- 
-(defun update-surface (surface &optional template)
-  (check-type surface sdl-surface)
-  (if template
-    (progn
-      (check-type template rectangle)
-      (sdl-base::update-surface (fp surface) :template (fp template)))
-    (sdl-base::update-surface (fp surface)))
-  surface)
-
-(defun update-surface-* (surface x y w h)
-  (check-type surface sdl-surface)
-  (sdl-base::update-surface (fp surface) :x x :y y :w w :h h)
-  surface)
-
-(defun blit-surface (src &optional (surface *default-surface*))
+expect from \"overlaying\" them; the destination alpha will work as a mask."
   (unless surface
     (setf surface *default-display*))
   (check-types sdl-surface src surface)
-  (sdl-base::blit-surface (fp src) (fp surface) (fp (cell-rect src)) (fp (position-rect src)))
+  (sdl-base::blit-surface (fp src) (fp surface)
+			  (fp (current-cell :surface src)) (fp (position-rect src)))
   src)
 
 (defun draw-surface (src &key (surface *default-surface*))
