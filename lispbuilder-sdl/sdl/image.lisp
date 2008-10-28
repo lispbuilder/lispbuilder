@@ -2,6 +2,7 @@
 (in-package #:lispbuilder-sdl)
                          
 (defmethod load-image ((source rwops) &key color-key surface-alpha image-type force free-rwops (color-key-at nil))
+  "Returns a new `SURFACE` from the `RWOPS` in `SOURCE`."
   (declare (ignore image-type force))
   (let ((surf (make-instance 'surface
 			     :using-surface (sdl-cffi::SDL-Load-BMP-RW (fp source) 0)
@@ -16,6 +17,7 @@
     surf))
 
 (defmethod load-image ((source VECTOR) &key color-key surface-alpha image-type force free-rwops (color-key-at nil))
+  "Returns a new `SURFACE` from the byte array in `SOURCE`."
   (declare (ignore image-type force free-rwops))
   (load-image (create-RWops-from-byte-array source)
 			  :color-key color-key
@@ -24,6 +26,7 @@
 			  :free-rwops t))
 
 (defmethod load-image ((filename string) &key color-key surface-alpha image-type force free-rwops (color-key-at nil))
+  "Returns a new `SURFACE` from the file at location `FILENAME`."
   (declare (ignore image-type force free-rwops))
   (let ((file (namestring filename)))
     (if (and (stringp file) (probe-file file))

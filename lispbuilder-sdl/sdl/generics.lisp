@@ -182,20 +182,15 @@ remains unchanged between screen updates."))
 
 (defgeneric load-image (source &key color-key surface-alpha image-type force free-rwops color-key-at)
   (:documentation
-   "Creates and returns a new surface from the source `SOURCE`.
+   "Returns a new `SURFACE` from `SOURCE`, or `NIL` if `SOURCE` does not contain a valid image.
 
 ##### Parameters
 
-* `SOURCE` can be an `RWOPS` object, or a file path to the image.
-* `KEY-COLOR` sets the color key to be used for the surface, of type `COLOR`, or 'COLOR-A`.
-* 'KEY-COLOR-AT' sets the color key to be the color at the specifed xy coordinates. Of type `POINT`.
-* `ALPHA-VALUE` sets the alpha value of the surface, of type INTEGER. Must be in the range 0-255. 
-255 is opaque, 0 is transparent.
-* `IMAGE-TYPE` specifies the type of image to load. 
-* `FORCE` forces an image to be loaded as `IMAGE-TYPE`.
-* `FREE-RWOPS` free's the RWOPS resources in `SOURCE` after creating a new `SDL_Surface`, if applicable.
-
-##### Returns
-
-* Returns a new `SURFACE`, or `NIL` if `SOURCE` does not contain a valid image."))
+* `SOURCE` is an image.
+* `COLOR-KEY` sets the color key, of type `COLOR` or 'COLOR-A`.
+* 'COLOR-KEY-AT' uses the color at `POINT` x/y as the color key.
+* `ALPHA-VALUE` sets the alpha value of the surface in the range 0-255. Where 255 is opaque, 0 is transparent.
+* `IMAGE-TYPE` specifies the image type of `SOURCE`.
+* `FORCE` forces `SOURCE` to be loaded as `IMAGE-TYPE`. Images of type TGA must be loaded using :FORCE T.
+* `FREE-RWOPS` free's the RWOPS resources in `SOURCE` after creating a new `SDL_Surface`, if applicable. Default is T"))
 

@@ -246,6 +246,7 @@
    #:convert-surface
    #:copy-surface
    #:create-surface
+   #:create-surface-from
    #:update-surface
    #:update-surface-*
    #:blit-surface

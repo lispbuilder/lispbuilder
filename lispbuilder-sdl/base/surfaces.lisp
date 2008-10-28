@@ -187,11 +187,10 @@
   (sdl-cffi::sdl-set-clip-rect surface rectangle)
   rectangle)
 
-(defun convert-surface-to-display-format (surface &key enable-color-key enable-surface-alpha pixel-alpha (free nil))
-  "converts a surface to display format and free's the source surface
-    :SOURCE-ALPHA T will convert the surface and add an alpha channel.
-    :FREE NIL will not free surface.
-   returns NIL if the surface cannot be converted."
+(defun convert-surface-to-display-format (surface
+					  &key enable-color-key enable-surface-alpha pixel-alpha (free nil))
+  "Returns a new surface that has been converted to the display format and optionally free the source surface.
+   Returns NIL if the surface cannot be converted."
   ;; LJC: Added support for converting to an alpha surface.
   ;; LJC: Freeing surface is now optional.
   (setf (enable-color-key-p surface) enable-color-key
@@ -205,15 +204,26 @@
       (sdl-cffi::sdl-Free-Surface surface))
     display-surface))
 
-(defun copy-surface (surface &key (type :sw) rle-accel enable-color-key pixel-alpha enable-surface-alpha)
-  "create a surface compatible with the supplied surface"
-  (create-surface (surf-w surface) (surf-h surface)
-		  :surface surface
-		  :enable-color-key enable-color-key
-		  :pixel-alpha pixel-alpha
-		  :enable-surface-alpha enable-surface-alpha
-		  :type type
-		  :rle-accel rle-accel))
+(defun convert-surface (surface to-surface
+			&key enable-color-key enable-surface-alpha (rle-accel nil) (type :sw) (free nil))
+  "Returns a new surface of the specified pixel format, 
+and then copies and maps the given surface to it. Returns NIL if the surface cannot be converted."
+  (let ((flags nil))
+    (when enable-color-key
+      (push sdl-cffi::SDL-SRC-COLOR-KEY flags))
+    (when enable-surface-alpha
+      (push sdl-cffi::SDL-SRC-ALPHA flags))
+    (when rle-accel
+      (push sdl-cffi::SDL-RLE-ACCEL flags))
+    (case type
+      (:sw (push sdl-cffi::SDL-SW-SURFACE flags))
+      (:hw (push sdl-cffi::SDL-HW-SURFACE flags)))
+    (let ((surf (sdl-cffi::SDL-convert-surface surface (pixel-format to-surface) flags)))
+      (unless (is-valid-ptr surf)
+	(error "ERROR, CONVERT-SURFACE Cannot convert surface to display format."))
+      (when free
+	(sdl-cffi::sdl-Free-Surface surface))
+      surf)))
 
 (defun create-surface (width height
 		       &key (bpp 32) surface (type :sw) enable-color-key pixel-alpha enable-surface-alpha rle-accel pixels pitch)
