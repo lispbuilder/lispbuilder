@@ -152,7 +152,7 @@
 							   :inherit nil
 							   :pixel-alpha t
 							   :free t))
-            
+      
       ;; Replace the alpha channel of *particle-img* with the alpha map in particle-alpha.bmp
       (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp" *bmp-path*)))
 	(sdl:copy-channel-to-alpha *particle-img* alpha :channel :r))

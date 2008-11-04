@@ -512,7 +512,7 @@ The default is `NIL` as the SDL library will perform the necessary clipping auto
 	 (height (height rect))
 	 (x (x rect))
 	 (y (y rect))
-	 (surf (if alpha (create-surface width height :surface-alpha alpha :pixel-alpha (a color)) surface)))
+	 (surf (if alpha (create-surface width height :alpha alpha :pixel-alpha (a color)) surface)))
     (fill-surface color :surface surf :template (if alpha nil rect) :clipping-p clipping-p)
     (when stroke-color
       (draw-rectangle-* (if alpha 0 x) (if alpha 0 y) width height
@@ -592,7 +592,7 @@ The default is `NIL` as the SDL library will perform the necessary clipping auto
   (check-type color sdl-color)
   (let ((x+width  (1- (+ x w)))
 	(y+height (1- (+ y h))))
-    (let ((surf (if alpha (create-surface w h :surface-alpha alpha :pixel-alpha (a color)) surface))
+    (let ((surf (if alpha (create-surface w h :alpha alpha :pixel-alpha (a color)) surface))
 	  (x (if alpha 0 x))
 	  (y (if alpha 0 y)))
       (with-rectangle (template (rectangle))
@@ -711,7 +711,7 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
   
   (let ((surf (if alpha (create-surface (the fixnum (1+ (the fixnum (* r 2))))
 					(the fixnum (1+ (the fixnum (* r 2))))
-					:surface-alpha alpha
+					:alpha alpha
 					:pixel-alpha (a color))
 		  surface)))
     (let ((x0 (if alpha r x0))
@@ -800,7 +800,7 @@ SDL will core dump if pixels are drawn outside a surface. It is therefore safer 
       
       (let* ((width (if alpha (1+ (* r 2)) (width surface)))
 	     (height (if alpha (1+ (* r 2)) (height surface)))
-	     (surf (if alpha (create-surface width height :surface-alpha alpha :pixel-alpha (a color)) surface))
+	     (surf (if alpha (create-surface width height :alpha alpha :pixel-alpha (a color)) surface))
 	     (col (map-color color surf)))
 	(let ((x0 (if alpha r x0))
 	      (y0 (if alpha r y0)))

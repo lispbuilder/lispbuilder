@@ -235,18 +235,21 @@
    #:with-locked-surface
    #:with-locked-surfaces
    #:clear-color-key
-   #:set-color-key
-   #:get-color-key
-   #:set-alpha
-   #:get-alpha
+   #:alpha-enabled?
+   #:alpha
+   #:color-key-enabled?
+   #:color-key
+   #:pixel-alpha-enabled?
+   #:rle-accel-enabled?
+   #:clip-rect
+   #:clear-clip-rect
    #:get-clip-rect
    #:set-clip-rect
-   #:clear-clip-rect
    #:get-surface-rect
    #:convert-surface
+   #:convert-to-display-format
    #:copy-surface
    #:create-surface
-   #:create-surface-from
    #:update-surface
    #:update-surface-*
    #:blit-surface

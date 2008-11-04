@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
-      <title>LISPBUILDER-SDL - Use SDL from Common Lisp</title>
+      <title>LISPBUILDER-SDL - a cool library</title>
       <style type=\"text/css\">
 	pre { padding:5px; background-color:#e0e0e0 }
 	h3, h4 { text-decoration: underline; }
@@ -35,7 +35,7 @@
     
     <body bgcolor=white>
       
-      <h3> LISPBUILDER-SDL - Use SDL from Common Lisp</h3>
+      <h3> LISPBUILDER-SDL - a cool library</h3>
     
       <blockquote>
 	<br>&nbsp;</br><h3><a name=abstract class=none>Abstract</a></h3>
@@ -217,6 +217,7 @@
 	          <li><a href="#char-width"><code>char-width</code></a></li>
 	          <li><a href="#check-types"><code>check-types</code></a></li>
 	          <li><a href="#clear-cell"><code>clear-cell</code></a></li>
+	          <li><a href="#clear-clip-rect"><code>clear-clip-rect</code></a></li>
 	          <li><a href="#clear-color-key"><code>clear-color-key</code></a></li>
 	          <li><a href="#clear-display"><code>clear-display</code></a></li>
 	          <li><a href="#color"><code>color</code></a></li>
@@ -225,6 +226,7 @@
 	          <li><a href="#color-a"><code>color-a</code></a></li>
 	          <li><a href="#color="><code>color=</code></a></li>
 	          <li><a href="#convert-surface"><code>convert-surface</code></a></li>
+	          <li><a href="#convert-to-display-format"><code>convert-to-display-format</code></a></li>
 	          <li><a href="#copy-channel-to-alpha"><code>copy-channel-to-alpha</code></a></li>
 	          <li><a href="#copy-point"><code>copy-point</code></a></li>
 	          <li><a href="#copy-surface"><code>copy-surface</code></a></li>
@@ -277,15 +279,10 @@
 	          <li><a href="#flood-fill-stack"><code>flood-fill-stack</code></a></li>
 	          <li><a href="#flood-fill-stack-*"><code>flood-fill-stack-*</code></a></li>
 	          <li><a href="#fp"><code>fp</code></a></li>
-	          <li><a href="#fp-cell"><code>fp-cell</code></a></li>
 	          <li><a href="#fp-position"><code>fp-position</code></a></li>
 	          <li><a href="#frame-rate"><code>frame-rate</code></a></li>
+	          <li><a href="#free"><code>free</code></a></li>
 	          <li><a href="#free-cached-surface"><code>free-cached-surface</code></a></li>
-	          <li><a href="#free-color"><code>free-color</code></a></li>
-	          <li><a href="#free-font"><code>free-font</code></a></li>
-	          <li><a href="#free-rectangle"><code>free-rectangle</code></a></li>
-	          <li><a href="#free-rwops"><code>free-rwops</code></a></li>
-	          <li><a href="#free-surface"><code>free-surface</code></a></li>
 	          <li><a href="#g"><code>g</code></a></li>
 	          <li><a href="#get-clip-rect"><code>get-clip-rect</code></a></li>
 	          <li><a href="#get-key-state"><code>get-key-state</code></a></li>
@@ -370,6 +367,7 @@
 	          <li><a href="#sdl-surface"><code>sdl-surface</code></a></li>
 	          <li><a href="#sdl-sw-surface"><code>sdl-sw-surface</code></a></li>
 	          <li><a href="#sdl-uyvy-overlay"><code>sdl-uyvy-overlay</code></a></li>
+	          <li><a href="#sdl-wm-grab-input"><code>sdl-wm-grab-input</code></a></li>
 	          <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a></li>
 	          <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a></li>
 	          <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a></li>
@@ -380,6 +378,7 @@
 	          <li><a href="#set-color"><code>set-color</code></a></li>
 	          <li><a href="#set-color-*"><code>set-color-*</code></a></li>
 	          <li><a href="#set-color-key"><code>set-color-key</code></a></li>
+	          <li><a href="#set-gl-attribute"><code>set-gl-attribute</code></a></li>
 	          <li><a href="#set-point"><code>set-point</code></a></li>
 	          <li><a href="#set-point-*"><code>set-point-*</code></a></li>
 	          <li><a href="#set-position"><code>set-position</code></a></li>
@@ -390,7 +389,6 @@
 	          <li><a href="#set-surface-*"><code>set-surface-*</code></a></li>
 	          <li><a href="#show-cursor"><code>show-cursor</code></a></li>
 	          <li><a href="#surface"><code>surface</code></a></li>
-	          <li><a href="#surface"><code>surface</code></a></li>
 	          <li><a href="#surface-info"><code>surface-info</code></a></li>
 	          <li><a href="#time-scale"><code>time-scale</code></a></li>
 	          <li><a href="#to-degree"><code>to-degree</code></a></li>
@@ -398,8 +396,10 @@
 	          <li><a href="#update-display"><code>update-display</code></a></li>
 	          <li><a href="#update-surface"><code>update-surface</code></a></li>
 	          <li><a href="#update-surface-*"><code>update-surface-*</code></a></li>
+	          <li><a href="#video-dimensions"><code>video-dimensions</code></a></li>
 	          <li><a href="#video-driver-name"><code>video-driver-name</code></a></li>
 	          <li><a href="#video-info"><code>video-info</code></a></li>
+	          <li><a href="#video-memory"><code>video-memory</code></a></li>
 	          <li><a href="#width"><code>width</code></a></li>
 	          <li><a href="#window"><code>window</code></a></li>
 	          <li><a href="#with-bezier"><code>with-bezier</code></a></li>
@@ -1752,10 +1752,10 @@
 
 <!-- Entry for BIT-DEPTH -->
 
-<p><br>[Function]<br><a class=none name='bit-depth'><b>bit-depth</b> <i>surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='bit-depth'><b>bit-depth</b> <i><tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the bit depth (the number of bytes per pixel, or bpp) of the surface <code>SURFACE</code> as an <code>INTEGER</code>. </p>
+<p>Returns the number of bytes per pixel, or bpp, of <code>SURFACE</code>. </p>
 
 </blockquote>
 
@@ -1764,10 +1764,23 @@
 
 <!-- Entry for BLIT-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='blit-surface'><b>blit-surface</b> <i>src <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='blit-surface'><b>blit-surface</b> <i>source <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Performs a fast blit of the <code>SOURCE</code> surface to the destination <code>SURFACE</code>. The area defined  by the <code>SOURCE</code> cell is blitted to the area defined by the destination clipping rectangle.  The blit function should not be called on a locked surface. The results of blitting operations vary greatly depending on whether a surface ALPHA channel is set  on the source surface or not. The priorty of how color key and alpha attributes interact with surface blitting is as follows: </p><ul><li>source surface with <code>SURFACE-ALPHA-P</code> + <code>PIXEL-ALPHA</code>: Blit using per-pixel alpha only </li>
+<li>source surface with <code>SURFACE-ALPHA-P</code> + <code>COLOR-KEY-P</code>: Blit using the colour key AND the per-surface alpha value </li>
+<li>source surface with <code>SURFACE-ALPHA-P</code>: Blit using the colour key AND the per-surface alpha value </li>
+<li>source surface with <code>COLOR-KEY-P</code>: Blit using the colour key </li>
+<li>source surface: Blit using opaque rectangular blit </li>
+</ul><p>An ALPHA channel has the following effect on blitting operations:  </p><ul><li><STRONG>RGBA to RGB</STRONG> with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The source is alpha-blended with the destination, using the alpha channel. <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a>  and the per-surface alpha are ignored. </li>
+<li><STRONG>RGBA to RGB</STRONG> without <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored.  If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGBA</STRONG> with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The source is alpha-blended with the destination using the per-surface alpha value. If  <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not matching the colorkey value are copied.  The alpha channel of the copied pixels is set to opaque. </li>
+<li><STRONG>RGB to RGBA</STRONG> without <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque.  If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGBA to RGBA</STRONG> with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination  surface is left untouched. <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is ignored. </li>
+<li><STRONG>RGBA to RGBA</STRONG> without <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:	 The RGBA data is copied to the destination surface. If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set,  only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGB</STRONG> with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The source is alpha-blended with the destination using the per-surface alpha value.  If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGB</STRONG> without <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>: The RGB data is copied from the source. If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not  matching the colorkey value are copied. </li>
+</ul><p><EM>Note</EM>: <STRONG>RGBA to RGBA</STRONG> blits (with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a> set) keep the alpha of the destination  surface. This means that you cannot compose two arbitrary <STRONG>RGBA</STRONG> surfaces this way and get the result you would  expect from &quot;overlaying&quot; them; the destination alpha will work as a mask. </p>
 
 </blockquote>
 
@@ -1910,22 +1923,34 @@
 
 <!-- Entry for CLEAR-CELL -->
 
-<p><br>[Function]<br><a class=none name='clear-cell'><b>clear-cell</b> <i><tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='clear-cell'><b>clear-cell</b> <i><tt>&amp;key</tt> surface index</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the <code>CELL</code> at <code>INDEX</code> to the bounds of <code>SURFACE</code>. </p>
 
 </blockquote>
 
 <!-- End of entry for CLEAR-CELL -->
 
 
-<!-- Entry for CLEAR-COLOR-KEY -->
+<!-- Entry for CLEAR-CLIP-RECT -->
 
-<p><br>[Function]<br><a class=none name='clear-color-key'><b>clear-color-key</b> <i><tt>&amp;key</tt> surface rle-accel</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='clear-clip-rect'><b>clear-clip-rect</b> <i><tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
+<p>Removes the clipping <a href="#rectangle">RECTANGLE</a>. </p>
 
+</blockquote>
+
+<!-- End of entry for CLEAR-CLIP-RECT -->
+
+
+<!-- Entry for CLEAR-COLOR-KEY -->
+
+<p><br>[Function]<br><a class=none name='clear-color-key'><b>clear-color-key</b> <i><tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Disables the color key. </p>
 
 </blockquote>
 
@@ -2078,14 +2103,29 @@
 
 <!-- Entry for CONVERT-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='convert-surface'><b>convert-surface</b> <i><tt>&amp;key</tt> surface key-color alpha-value free-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='convert-surface'><b>convert-surface</b> <i><tt>&amp;key</tt> surface to-surface enable-surface-alpha enable-color-key free inherit type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Converts <code>:SURFACE</code> and returns a new surface matching the pixel format and color of <code>:TO-SURFACE</code>. Calls <a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a> if converting to the display format. </p><p>Use <code>:ENABLE-COLOR-KEY</code> or <code>:ENABLE-SURFACE-ALPHA</code> to take advantage of hardware  colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily  utilize available harware acceleration if the surface was not initally created in video memory. </p><p>Will create the new surface in system menory when <code>TYPE</code> is <code>:SW</code>.  Will attempt to create the new surface in video menory when <code>TYPE</code> is <code>:HW</code>,  otherwise the surface is created in system memory if the combination  of color key and alpha do not allow hardware acceleration. </p><p>The new surface will inherit the pixel, alpha and color key components of the source, <EM>unless</EM><code>:INHERIT</code> is <code>NIL</code>. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p>
 
 </blockquote>
 
 <!-- End of entry for CONVERT-SURFACE -->
+
+
+<!-- Entry for CONVERT-TO-DISPLAY-FORMAT -->
+
+<p><br>[Function]<br><a class=none name='convert-to-display-format'><b>convert-to-display-format</b> <i><tt>&amp;key</tt> surface enable-surface-alpha enable-color-key pixel-alpha free inherit</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a new surface matching the pixel format and color of the video frame buffer (<code>*display surface*),  that is suitable for fast blitting.  The new surface will inherit the pixel, alpha and color key components of the source, *unless* </code>:INHERIT<code> is </code>NIL`. </p><p>Use <code>:ENABLE-COLOR-KEY</code> or <code>:ENABLE-SURFACE-ALPHA</code> to take advantage of hardware  colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily  utilize available harware acceleration if the surface was not initally created in video memory. </p><p>Use <code>:PIXEL-ALPHA</code> to enable the pixel alpha component (alpha mask of 0xFF) for the new surface. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p><p>Differences between <a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a>, <a href="#convert-surface">CONVERT-SURFACE</a>, <a href="#copy-surface">COPY-SURFACE</a>, and <a href="#create-surface">CREATE-SURFACE</a>; </p><ul><li><p><a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a><EM> will always attempt to create a surface in video memory using hardware acceleration if key color and surface alpha are supported.  </EM> A pixel alpha component can be specified.  ** New surface is filled with old surface.  </p></li>
+<li><p><a href="#convert-surface">CONVERT-SURFACE</a> ** calls <a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a> if converting a surface to the display format. <EM> paramatized option to create new surface in video or system memory. </EM> Pixel format and color match that of the source surface.  ** New surface is filled with old surface.  </p></li>
+<li><a href="#copy-surface">COPY-SURFACE</a><EM> paramatized option to create new surface in video or system memory. </EM> copies a portion or all of the source surface to a new destination surface <EM> A pixel alpha component can be specified.  </EM> New surface can be filled with the old surface, or the color key or both. </li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for CONVERT-TO-DISPLAY-FORMAT -->
 
 
 <!-- Entry for COPY-CHANNEL-TO-ALPHA -->
@@ -2114,10 +2154,10 @@
 
 <!-- Entry for COPY-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='copy-surface'><b>copy-surface</b> <i><tt>&amp;key</tt> surface key-color alpha-value type rle-accel</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='copy-surface'><b>copy-surface</b> <i><tt>&amp;key</tt> cell cell-index surface color-key surface-alpha pixel-alpha rle-accel type free inherit fill color-key-fill pixel-format</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns a copy of <code>:SURFACE</code>.  </p><p>Use <code>:COLOR-KEY</code> or <code>:SURFACE-ALPHA</code> to set the key color and surface alpha transparency. Hardware colorkey and alpha blit acceleration will be used if supported.  </p><p>Will create the new surface in system menory when <code>TYPE</code> is <code>:SW</code>.  Will attempt to create the new surface in video menory when <code>TYPE</code> is <code>:HW</code>,  otherwise the surface is created in system memory if the combination  of color key and alpha do not allow hardware acceleration. </p><p>The new surface will be filled with the old surface unless <code>:FILL</code> is <code>NIL</code>. The new surface will be filled with the color key of the old surface (if available) unless <code>:COLOR-KEY-FILL</code> is <code>NIL</code>. </p><p>The new surface will inherit the pixel, alpha and color key components of the source, <EM>unless</EM><code>:INHERIT</code> is <code>NIL</code>. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p>
 
 </blockquote>
 
@@ -2162,10 +2202,10 @@
 
 <!-- Entry for CREATE-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='create-surface'><b>create-surface</b> <i>width height <tt>&amp;key</tt> surface bpp key-color alpha-value type rle-accel</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='create-surface'><b>create-surface</b> <i>width height <tt>&amp;key</tt> bpp type color-key color-key-at pixel-alpha surface-alpha rle-accel x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Creates and returns a new <code>SURFACE</code> with the dimensions <code>WIDTH</code> and <code>HEIGHT</code>. </p><p><code>:COLOR-KEY</code> sets the color key of the surface and enables color-keying.  </p><p><code>:SURFACE-ALPHA</code> sets the surface alpha transparency and enables alpha blending. This allows a pixel color of <code>RGB</code> with the surface <code>A</code>. </p><p><code>:PIXEL-ALPHA</code> enables a pixel alpha component (alpha mask of 0xFF) on the new surface. This allows a pixel color of <code>RGBA</code>. </p><p><code>:RLE-ACCEL</code> enables RLE blit acceleration.  </p><p><code>:BPP</code> is the pixel depth of the surface, and my be 8, 16, 24 or 32.  </p><p><code>:TYPE</code> attempts to create the <code>SURFACE</code> in video memory when <code>:HW</code>, and in system memory when <code>:SW</code></p><p><code>:X</code> and <code>:Y</code> are the positions of the <code>SURFACE</code> in screen coordinates. </p>
 
 </blockquote>
 
@@ -2693,7 +2733,7 @@
 <p><br>[Function]<br><a class=none name='draw-surface'><b>draw-surface</b> <i>src <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#blit-surface">BLIT-SURFACE</a></p>
 
 </blockquote>
 
@@ -2705,7 +2745,7 @@
 <p><br>[Function]<br><a class=none name='draw-surface-at'><b>draw-surface-at</b> <i>src point <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Draws the source surface to the destination surface at position POINT.  See <a href="#blit-surface">BLIT-SURFACE</a>. </p>
 
 </blockquote>
 
@@ -2717,7 +2757,7 @@
 <p><br>[Function]<br><a class=none name='draw-surface-at-*'><b>draw-surface-at-*</b> <i>src x y <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Draws the source surface to the destination surface at position X and Y.  See <a href="#blit-surface">BLIT-SURFACE</a></p>
 
 </blockquote>
 
@@ -2813,7 +2853,7 @@
 <p><br>[Function]<br><a class=none name='fill-surface'><b>fill-surface</b> <i>color <tt>&amp;key</tt> template surface update-p clipping-p</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Fill the surface with the specified color COLOR.    Use :template to specify the SDL<STRONG>Rect to be used as the fill template.    Use :update-p to call SDL</STRONG>UpdateRect, using :template if provided. This allows for a     &#039;dirty recs&#039; screen update. </p>
+<p>Fills surface with the specified <code>COLOR</code>.    <code>:TEMPLATE</code> accepts  a <code>RECTANGLE</code> defining the fill bounds.    <code>The surface is updated when </code>:UPDATE-P` </p>
 
 </blockquote>
 
@@ -2825,7 +2865,7 @@
 <p><br>[Function]<br><a class=none name='fill-surface-*'><b>fill-surface-*</b> <i>r g b <tt>&amp;key</tt> a template surface update-p clipping-p</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Fill the surface with the specified color R G B :A A.    Use :TEMPLATE to specify the SDL<STRONG>Rectangle to be used as the fill template.    Use :UPDATE-P to call SDL</STRONG>UpdateRect, using :TEMPLATE if provided. This allows for a     &#039;dirty recs&#039; screen update. </p>
+<p>Fill the surface with the specified color <code>R</code><code>G</code><code>B</code><code>:A</code><code>A</code>.  See <a href="#fill-surface">FILL-SURFACE</a>. </p>
 
 </blockquote>
 
@@ -2890,8 +2930,8 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>rwops</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>rwops</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>rectangle-array</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>fp</b> <i>rectangle-array</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the default foreign object for <code>OBJECT</code>. </p>
@@ -2903,20 +2943,8 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Method]<br><a class=none><b>fp</b> <i>(rwops sdl-font)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the cached surface <code>SURFACE</code> in <code>FONT</code>, or <code>NIL</code> if the font does not contain a cached surface. </p>
-
-</blockquote>
-
-<!-- End of entry for FP -->
-
-
-<!-- Entry for FP -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops rwops)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops rwops)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array rectangle-array)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array rectangle-array)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -2928,8 +2956,8 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops rectangle-array)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops rectangle-array)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array foreign-color)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array foreign-color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -2941,7 +2969,8 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Method]<br><a class=none><b>fp</b> <i>(rwops sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array color-a)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -2953,8 +2982,8 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops rectangle)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array color)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -2966,8 +2995,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops foreign-color)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops foreign-color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Method]<br><a class=none><b>fp</b> <i>(rectangle-array foreign-object)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -2975,90 +3003,14 @@
 </blockquote>
 
 <!-- End of entry for FP -->
-
-
-<!-- Entry for FP -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops color-a)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP -->
-
-
-<!-- Entry for FP -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rwops color)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rwops color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP -->
-
-
-<!-- Entry for FP-CELL -->
-
-<p><br>[Generic accessor]<br><a class=none name='fp-cell'><b>fp-cell</b> <i>sdl-surface</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp-cell</b> <i>sdl-surface</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP-CELL -->
-
-
-<!-- Entry for FP-CELL -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>fp-cell</b> <i>(sdl-surface sdl-surface)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp-cell</b> <i>(sdl-surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP-CELL -->
 
 
 <!-- Entry for FP-POSITION -->
 
-<p><br>[Generic function]<br><a class=none name='fp-position'><b>fp-position</b> <i>sdl-surface</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='fp-position'><b>fp-position</b> <i>object</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns the default foreign SDL_Rect object for <code>OBJECT</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for FP-POSITION -->
-
-
-<!-- Entry for FP-POSITION -->
-
-<p><br>[Method]<br><a class=none><b>fp-position</b> <i>(sdl-surface sdl-font)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code> and <code>Y</code> coordinates of the cached surface <code>SURFACE</code> in <code>FONT</code>, as <code>POINT</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for FP-POSITION -->
-
-
-<!-- Entry for FP-POSITION -->
-
-<p><br>[Method]<br><a class=none><b>fp-position</b> <i>(sdl-surface sdl-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -3078,6 +3030,54 @@
 <!-- End of entry for FRAME-RATE -->
 
 
+<!-- Entry for FREE -->
+
+<p><br>[Generic function]<br><a class=none name='free'><b>free</b> <i>foreign-object</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>This is the general explicit cleanup method for all FOREIGN-OBJECTs. Objects that subclass FOREIGN-OBJECT should specify an :AFTER method on FREE to clean up any additional fields, if necessary. </p>
+
+</blockquote>
+
+<!-- End of entry for FREE -->
+
+
+<!-- Entry for FREE -->
+
+<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object display-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Freeing the display surface is not a valid operation. </p>
+
+</blockquote>
+
+<!-- End of entry for FREE -->
+
+
+<!-- Entry for FREE -->
+
+<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object sdl-color)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FREE -->
+
+
+<!-- Entry for FREE -->
+
+<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object foreign-object)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FREE -->
+
+
 <!-- Entry for FREE-CACHED-SURFACE -->
 
 <p><br>[Generic function]<br><a class=none name='free-cached-surface'><b>free-cached-surface</b> <i>font</i> =&gt; <i>result</i></a>
@@ -3095,179 +3095,11 @@
 <p><br>[Method]<br><a class=none><b>free-cached-surface</b> <i>(font sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Frees resources allocated to the cached surface <code>SURFACE</code> in <code>FONT</code>, if any.  Sets the <code>FONT</code>s <code>CACHED-SURFACE</code> slot to NIL. </p>
+
 
 </blockquote>
 
 <!-- End of entry for FREE-CACHED-SURFACE -->
-
-
-<!-- Entry for FREE-COLOR -->
-
-<p><br>[Generic function]<br><a class=none name='free-color'><b>free-color</b> <i>color</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free&#039;s resources allocated to COLOR. Meant specifically for the SDL_Color foreign object.  <code>COLOR</code> and <code>COLOR-A</code> are ignored. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-COLOR -->
-
-
-<!-- Entry for FREE-COLOR -->
-
-<p><br>[Method]<br><a class=none><b>free-color</b> <i>(color foreign-color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FREE-COLOR -->
-
-
-<!-- Entry for FREE-COLOR -->
-
-<p><br>[Method]<br><a class=none><b>free-color</b> <i>(color sdl-color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FREE-COLOR -->
-
-
-<!-- Entry for FREE-FONT -->
-
-<p><br>[Generic function]<br><a class=none name='free-font'><b>free-font</b> <i>font</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free&#039;s the resources allocated to the <code>FONT</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-FONT -->
-
-
-<!-- Entry for FREE-FONT -->
-
-<p><br>[Method]<br><a class=none><b>free-font</b> <i>(font bitmap-font)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free resources associated with the bitmap font <code>FONT</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-FONT -->
-
-
-<!-- Entry for FREE-FONT -->
-
-<p><br>[Method]<br><a class=none><b>free-font</b> <i>(font sdl-font)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free&#039;s the resources allocated to the <code>FONT</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-FONT -->
-
-
-<!-- Entry for FREE-RECTANGLE -->
-
-<p><br>[Generic function]<br><a class=none name='free-rectangle'><b>free-rectangle</b> <i>rectangle</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free&#039;s the resources allocated to <code>RECTANGLE</code>. Specifically free&#039;s the wrapped SDL_Rect foreign object. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-RECTANGLE -->
-
-
-<!-- Entry for FREE-RECTANGLE -->
-
-<p><br>[Method]<br><a class=none><b>free-rectangle</b> <i>(rectangle rectangle)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Frees the resources allocated to the rectangle <code>RECTANGLE</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-RECTANGLE -->
-
-
-<!-- Entry for FREE-RECTANGLE -->
-
-<p><br>[Method]<br><a class=none><b>free-rectangle</b> <i>(rectangle null-rectangle)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Does nothing. A <code>NULL-RECTANGLE</code> cannot be freed. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-RECTANGLE -->
-
-
-<!-- Entry for FREE-RWOPS -->
-
-<p><br>[Generic function]<br><a class=none name='free-rwops'><b>free-rwops</b> <i>rwops</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free&#039;s the resources allocated to <code>RWOPS</code>. Specifically free&#039;s the wrapped SDL_rwops foreign object. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-RWOPS -->
-
-
-<!-- Entry for FREE-RWOPS -->
-
-<p><br>[Method]<br><a class=none><b>free-rwops</b> <i>(rwops rwops)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free&#039;s the wrapped foreign SDL_rwops object. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-RWOPS -->
-
-
-<!-- Entry for FREE-SURFACE -->
-
-<p><br>[Generic function]<br><a class=none name='free-surface'><b>free-surface</b> <i>surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free&#039;s the resources allocated to <code>SURFACE</code>. Specifically free&#039;s the wrapped SDL_Surface foreign object. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-SURFACE -->
-
-
-<!-- Entry for FREE-SURFACE -->
-
-<p><br>[Method]<br><a class=none><b>free-surface</b> <i>(surface surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Free the foreign SDL<STRONG>Surface and the SDL</STRONG>Rect used for position. Also free the SDL_Rect used as the cell mask. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE-SURFACE -->
-
-
-<!-- Entry for FREE-SURFACE -->
-
-<p><br>[Method]<br><a class=none><b>free-surface</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FREE-SURFACE -->
 
 
 <!-- Entry for G -->
@@ -3301,7 +3133,7 @@
 <p><br>[Function]<br><a class=none name='get-clip-rect'><b>get-clip-rect</b> <i><tt>&amp;key</tt> surface rectangle</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the clipping <a href="#rectangle">RECTANGLE</a>. </p>
 
 </blockquote>
 
@@ -3349,7 +3181,7 @@
 <p><br>[Method]<br><a class=none><b>get-point</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the <code>X</code> and <code>Y</code> position coordinates of the surface <code>SURFACE</code> as a <code>POINT</code>. </p>
+<p>Returns the <code>POINT</code> position coordinates of <code>SURFACE</code>. </p>
 
 </blockquote>
 
@@ -3442,7 +3274,7 @@
 
 <!-- Entry for GET-SURFACE-RECT -->
 
-<p><br>[Function]<br><a class=none name='get-surface-rect'><b>get-surface-rect</b> <i><tt>&amp;key</tt> surface rectangle</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='get-surface-rect'><b>get-surface-rect</b> <i>b <tt>&amp;key</tt> surface rectangle</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -3467,8 +3299,7 @@
 
 <!-- Entry for HEIGHT -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>height</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>height</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Method]<br><a class=none><b>height</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns the <code>INTEGER</code> height of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
@@ -3480,11 +3311,10 @@
 
 <!-- Entry for HEIGHT -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>height</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>height</b> <i>(obj sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Method]<br><a class=none><b>height</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the height of the surface <code>SURFACE</code> as an <code>INTEGER</code>. </p>
+<p>Returns the height of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -3663,19 +3493,17 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Generic function]<br><a class=none name='load-image'><b>load-image</b> <i>source <tt>&amp;key</tt> key-color alpha-value image-type force free key-color-at</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='load-image'><b>load-image</b> <i>source <tt>&amp;key</tt> color-key surface-alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates and returns a new surface from the source <code>SOURCE</code>. </p><h5>Parameters </h5>
-<ul><li><code>SOURCE</code> is the source of the image. </li>
-<li><code>KEY-COLOR</code> sets the color key to be used for the surface, of type <code>COLOR</code>, or &#039;COLOR-A`. </li>
-<li>&#039;KEY-COLOR-AT&#039; sets the color key to be the color at the specifed xy coordinates. Of type <code>POINT</code>. </li>
-<li><code>ALPHA-VALUE</code> sets the alpha value of the surface, of type INTEGER. Must be in the range 0-255.  255 is opaque, 0 is transparent. </li>
-<li><code>IMAGE-TYPE</code> specifies the type of image to load.  </li>
-<li><code>FORCE</code> forces an image to be loaded as <code>IMAGE-TYPE</code>. </li>
-<li><code>FREE</code> free&#039;s resources in <code>SOURCE</code> after creating a new <code>SDL_Surface</code>. </li>
-</ul><h5>Returns </h5>
-<ul><li>Returns a new <code>SURFACE</code>, or <code>NIL</code> if <code>SOURCE</code> does not contain a valid image. </li>
+<p>Returns a new <code>SURFACE</code> from <code>SOURCE</code>, or <code>NIL</code> if <code>SOURCE</code> does not contain a valid image. </p><h5>Parameters </h5>
+<ul><li><code>SOURCE</code> is an image. </li>
+<li><code>COLOR-KEY</code> sets the color key, of type <code>COLOR</code> or &#039;COLOR-A`. </li>
+<li>&#039;COLOR-KEY-AT&#039; uses the color at <code>POINT</code> x/y as the color key. </li>
+<li><code>ALPHA-VALUE</code> sets the alpha value of the surface in the range 0-255. Where 255 is opaque, 0 is transparent. </li>
+<li><code>IMAGE-TYPE</code> specifies the image type of <code>SOURCE</code>. </li>
+<li><code>FORCE</code> forces <code>SOURCE</code> to be loaded as <code>IMAGE-TYPE</code>. Images of type TGA must be loaded using :FORCE T. </li>
+<li><code>FREE-RWOPS</code> free&#039;s the RWOPS resources in <code>SOURCE</code> after creating a new <code>SDL_Surface</code>, if applicable. Default is T </li>
 </ul>
 
 </blockquote>
@@ -3685,15 +3513,34 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt> key-color alpha-value image-type force free key-color-at</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt> color-key surface-alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Load a BMP image from a file at location <code>FILENAME</code>. Returns a new SURFACE. </p><h5>Parameters </h5>
-<ul><li><code>FILENAME</code> is the location of the image file on disk, as a <code>STRING</code>. </li>
-<li><code>KEY-COLOR</code> when not <code>NIL</code> is the color to be used as the transpart pixel. When <code>KEY-COLOR</code> is <code>NIL</code>, the surface is created without a key color. See <a href="#set-color-key">SET-COLOR-KEY</a> for more detailed information. </li>
-<li><code>KEY-COLOR-AT</code> is the <a href="#pixel">POINT</a> x/y coords of the pixel on the surface to be used as the key color. is <code>NIL</code>, the surface is created without a key color. See <a href="#set-color-key">SET-COLOR-KEY</a> for more detailed information. </li>
-<li><code>ALPHA</code> when between <code>0</code> and <code>255</code> will set the level of alpha transparency for the new surface. When <code>ALPHA</code> is <code>NIL</code>, the new surface is created without alpha transparency. See <a href="#set-alpha">SET-ALPHA</a> for more detailed information. </li>
-</ul>
+<p>Returns a new <code>SURFACE</code> from the file at location <code>FILENAME</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for LOAD-IMAGE -->
+
+
+<!-- Entry for LOAD-IMAGE -->
+
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source vector) <tt>&amp;key</tt> color-key surface-alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a new <code>SURFACE</code> from the byte array in <code>SOURCE</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for LOAD-IMAGE -->
+
+
+<!-- Entry for LOAD-IMAGE -->
+
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source rwops) <tt>&amp;key</tt> color-key surface-alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a new <code>SURFACE</code> from the <code>RWOPS</code> in <code>SOURCE</code>. </p>
 
 </blockquote>
 
@@ -3825,7 +3672,7 @@
 <p><br>[Method]<br><a class=none><b>point-*</b> <i>(point sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the <code>X</code> and <code>Y</code> position coordinates of the surface <code>SURFACE</code> as a spread. </p>
+<p>Returns the <code>X</code> and <code>Y</code> position coordinates of <code>SURFACE</code> as a spread. </p>
 
 </blockquote>
 
@@ -4070,10 +3917,10 @@
 
 <!-- Entry for RECTANGLE -->
 
-<p><br>[Function]<br><a class=none name='rectangle'><b>rectangle</b> <i><tt>&amp;key</tt> x y w h fp null</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='rectangle'><b>rectangle</b> <i><tt>&amp;key</tt> x y w h fp</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates a new <code>RECTANGLE</code> from the specified <code>X</code>, <code>Y</code>, width <code>W</code> and height <code>H</code>. If <code>FP&amp;#039; is </code>NIL<code> then a foreign SDL_Rect is created. If </code>FP<code> is a pointer to a foreign SDL_Rect object then </code>FP<code> is used. If </code>NULL<code> is </code>NIL<code>, then a new </code>RECTANGLE<code> is returned. If </code>NULL<code> not </code>NIL` then a <a href="#null-rectangle">NULL-RECTANGLE</a>` is created. </p>
+<p>Creates a new <code>RECTANGLE</code> from the specified <code>X</code>, <code>Y</code>, width <code>W</code> and height <code>H</code>. If <code>FP&amp;#039; is </code>NIL<code> then a foreign SDL_Rect is created. If </code>FP<code> is a pointer to a foreign SDL_Rect object then </code>FP` is used. </p>
 
 </blockquote>
 
@@ -4097,7 +3944,7 @@
 <p><br>[Method]<br><a class=none><b>rectangle-*</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> values of the surface <code>SURFACE</code> as a spread.  The <code>RESULT</code> is <code>(VALUES X Y WIDTH HEIGHT)</code></p>
+<p>Returns the fields <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> from <code>SURFACE</code> as a spread. </p>
 
 </blockquote>
 
@@ -4221,7 +4068,7 @@
 
 <!-- Entry for ROTATE-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='rotate-surface'><b>rotate-surface</b> <i>degrees <tt>&amp;key</tt> surface free-p key-color alpha-value</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='rotate-surface'><b>rotate-surface</b> <i>degrees <tt>&amp;key</tt> surface free-p</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns a new <code>SURFACE</code> rotated <code>0</code>, <code>90</code>, <code>180</code>, or <code>270</code> degrees. </p><h5>Parameters </h5>
@@ -4640,10 +4487,7 @@ Applies to <a href="#surface">SURFACE</a>. <ul><li>When passed as a <code>FLAG</
 <p><br>[Standard class]<br><a class=none name='sdl-surface'><b>sdl-surface</b></a>
 <blockquote><br>
 
-A wrapper for a foreign object of type SDL_Surface. A <code>SDL-SURFACE</code> object contains: <ul><li>a foreign SDL_Surface,  </li>
-<li>a foreign SDL_Rect used to position the surface for blitting operations, and  </li>
-<li>an SDL_Rect that defines the bounds of the surface to use when blitting. </li>
-</ul>
+<p>A wrapper for the foreign SDL_Surface object. </p>
 
 </blockquote>
 
@@ -4674,6 +4518,18 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 </blockquote>
 
 <!-- End of entry for SDL-UYVY-OVERLAY -->
+
+
+<!-- Entry for SDL-WM-GRAB-INPUT -->
+
+<p><br>[Function]<br><a class=none name='sdl-wm-grab-input'><b>sdl-wm-grab-input</b> <i>mode</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SDL-WM-GRAB-INPUT -->
 
 
 <!-- Entry for SDL-YUY2-OVERLAY -->
@@ -4714,22 +4570,14 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for SET-ALPHA -->
 
-<p><br>[Function]<br><a class=none name='set-alpha'><b>set-alpha</b> <i>alpha <tt>&amp;key</tt> surface rle-accel</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='set-alpha'><b>set-alpha</b> <i>alpha <tt>&amp;key</tt> surface source-alpha rle-accel</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Adjust the alpha <code>ALPHA</code> properties of a surface <code>SURFACE</code>. Also enables or disables alpha blending.  </p><h5>Parameters </h5>
-<ul><li><code>ALPHA</code> when <code>NIL</code> will ignore all alpha information when blitting the surface. <code>ALPHA</code> when not <code>NIL</code> is an <code>INTEGER</code> value between <code>0</code> and <code>255</code> with <code>0</code> being transparent and <code>255</code> being opaque. <EM>Note</EM>: The per-surface alpha value of  128 is considered a special case and is optimised, so it&#039;s much faster than other per-surface values.  </li>
-<li><code>RLE-ACCEL</code> when <code>T</code> wil use RLE information when blitting. See <a href="#rle-accel">RLE-ACCEL</a>. </li>
-</ul><h5>Alpha effects </h5>
-<p>Alpha has the following effect on surface blitting:  </p><ul><li><STRONG>RGBA to RGB</STRONG> with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The source is alpha-blended with the destination, using the alpha channel. <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a>  and the per-surface alpha are ignored. </li>
-<li><STRONG>RGBA to RGB</STRONG> without <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored.  If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not matching the colorkey value are copied. </li>
-<li><STRONG>RGB to RGBA</STRONG> with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The source is alpha-blended with the destination using the per-surface alpha value. If  <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not matching the colorkey value are copied.  The alpha channel of the copied pixels is set to opaque. </li>
-<li><STRONG>RGB to RGBA</STRONG> without <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque.  If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not matching the colorkey value are copied. </li>
-<li><STRONG>RGBA to RGBA</STRONG> with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination  surface is left untouched. <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is ignored. </li>
-<li><STRONG>RGBA to RGBA</STRONG> without <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:	 The RGBA data is copied to the destination surface. If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set,  only the pixels not matching the colorkey value are copied. </li>
-<li><STRONG>RGB to RGB</STRONG> with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>:  The source is alpha-blended with the destination using the per-surface alpha value.  If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not matching the colorkey value are copied. </li>
-<li><STRONG>RGB to RGB</STRONG> without <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>: The RGB data is copied from the source. If <a href="#SDL-SRC-COLOR-KEY">SDL-SRC-COLOR-KEY</a> is set, only the pixels not  matching the colorkey value are copied. </li>
-</ul><p><EM>Note</EM>: When blitting, the presence or absence of <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a> is relevant only on the  source surface, not the destination.  </p><p><EM>Note</EM>: Note that <STRONG>RGBA to RGBA</STRONG> blits (with <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a> set) keep the alpha of the destination  surface. This means that you cannot compose two arbitrary <STRONG>RGBA</STRONG> surfaces this way and get the result you would  expect from &quot;overlaying&quot; them; the destination alpha will work as a mask.  </p><p><EM>Note</EM>: Also note that per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used  if available. </p>
+<p>Set the transparency,  alpha blending and RLE acceleration properties of <code>SURFACE</code>. </p><h5>Parameters </h5>
+<ul><li><code>ALPHA</code> sets the <code>SURFACE</code> transparency. Allowable values are <code>NIL</code>, or any <code>INTEGER</code> between <code>0</code> and <code>255</code> inclusive. <code>0</code> is  transparent and <code>255</code> being opaque. <EM>Note</EM>: The per-surface alpha value of 128 is considered a special case and is optimised, so it&#039;s much faster than other per-surface values.  </li>
+<li><code>SOURCE-ALPHA</code> will enable or disable alpha blending for <code>SURFACE</code>. </li>
+<li><code>RLE-ACCEL</code> will enable or disable RLE acceleration when blitting. See <a href="#rle-accel">RLE-ACCEL</a>. </li>
+</ul>
 
 </blockquote>
 
@@ -4738,10 +4586,10 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for SET-CELL -->
 
-<p><br>[Function]<br><a class=none name='set-cell'><b>set-cell</b> <i>rectangle <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='set-cell'><b>set-cell</b> <i>rectangle <tt>&amp;key</tt> surface index</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the <code>CELL</code> at <code>INDEX</code> to the bounds of <code>RECTANGLE</code>. <EM>Note:</EM> When <code>SURFACE</code> is the source of a blit, only the area within the cell rectangle is drawn. </p>
 
 </blockquote>
 
@@ -4750,10 +4598,10 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for SET-CELL-* -->
 
-<p><br>[Function]<br><a class=none name='set-cell-*'><b>set-cell-*</b> <i>x y w h <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='set-cell-*'><b>set-cell-*</b> <i>x y w h <tt>&amp;key</tt> surface index</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the <code>CELL</code> at <code>INDEX</code> to a rectangle bounded by <code>X</code>, <code>Y</code>, <code>W</code> and <code>H</code>. <EM>Note:</EM> When <code>SURFACE</code> is the source of a blit, only the area within the cell rectangle is drawn. </p>
 
 </blockquote>
 
@@ -4765,7 +4613,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Function]<br><a class=none name='set-clip-rect'><b>set-clip-rect</b> <i>rectangle <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#clip-rect">CLIP-RECT</a>. </p>
 
 </blockquote>
 
@@ -4825,14 +4673,26 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Function]<br><a class=none name='set-color-key'><b>set-color-key</b> <i>color <tt>&amp;key</tt> surface rle-accel</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the color key (transparent pixel) <code>COLOR</code> in a blittable surface <code>SURFACE</code>. </p><h5>Paremeters </h5>
-<ul><li><code>COLOR</code> the color to be used as the transparent pixel of the surface when blitting,  of type <a href="#color">COLOR</a>, or <a href="#color-a">COLOR-A</a>. When &#039;NIL&#039; will disable color keying. </li>
+<p>Set the color key (transparent pixel).  </p><h5>Paremeters </h5>
+<ul><li><code>COLOR</code> the transparent pixel color, of type <a href="#color">COLOR</a>, or <a href="#color-a">COLOR-A</a>.  When &#039;NIL&#039; will disable color keying. </li>
 <li><code>RLE-ACCEL</code> when <code>T</code> will use RLE information when blitting. See <a href="#rle-accel">RLE-CCEL</a>. </li>
 </ul>
 
 </blockquote>
 
 <!-- End of entry for SET-COLOR-KEY -->
+
+
+<!-- Entry for SET-GL-ATTRIBUTE -->
+
+<p><br>[Function]<br><a class=none name='set-gl-attribute'><b>set-gl-attribute</b> <i>attribute value</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SET-GL-ATTRIBUTE -->
 
 
 <!-- Entry for SET-POINT -->
@@ -4852,7 +4712,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst sdl-surface) (src vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the <code>X</code> and <code>Y</code> position coordinates of the surface <code>SURFACE</code>. <code>POSITION</code> is a <code>POINT</code>. </p>
+<p>Sets the <code>POINT</code> position coordinates of <code>SURFACE</code>. </p>
 
 </blockquote>
 
@@ -4900,7 +4760,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj sdl-surface) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the <code>X</code> and <code>Y</code> position coordinates of the surface <code>SURFACE</code>. <code>X</code> and <code>Y</code> are <code>INTEGERS</code>. </p>
+<p>Sets the <code>X</code> and <code>Y</code> position coordinates of <code>SURFACE</code>. <code>X</code> and <code>Y</code> are integers. </p>
 
 </blockquote>
 
@@ -5092,7 +4952,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Method]<br><a class=none><b>set-surface</b> <i>(surface sdl-surface) (position vector)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the coordinates of the surface <code>SURFACE</code> to <code>POSITION</code>,  where position is of type <code>POINT</code>. </p>
+<p>See <a href="#set-point">SET-POINT</a>. </p>
 
 </blockquote>
 
@@ -5116,7 +4976,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Method]<br><a class=none><b>set-surface-*</b> <i>(surface sdl-surface) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the coordinates of the surface <code>SURFACE</code> to the spead <code>X</code> and <code>Y</code><code>INTEGER</code> coordinates. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters having default values of <code>0</code> if unspecified. </p>
+<p>See <a href="#set-point-*">SET-POINT-*</a>. </p>
 
 </blockquote>
 
@@ -5140,19 +5000,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Standard class]<br><a class=none name='surface'><b>surface</b></a>
 <blockquote><br>
 
-<p>A subclass of &#039;SDL-SURFACE&#039; that holds a standard SDL_Surface object. This object will be garbage collected and the surface freed when out of scope. </p>
-
-</blockquote>
-
-<!-- End of entry for SURFACE -->
-
-
-<!-- Entry for SURFACE -->
-
-<p><br>[Function]<br><a class=none name='surface'><b>surface</b> <i>surface-fp <tt>&amp;optional</tt> display</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Creates a new <code>SURFACE</code> or a new <code>DISPLAY-SURFACE</code> when <code>DISPLAY</code> is <code>T</code>.  <code>SURFACE-FP</code> must be a pointer to a valid SDL_Surface foreign object. </p>
+<p>This object is garbage collected and the <code>SDL_Surface</code> object freed when out of scope. </p>
 
 </blockquote>
 
@@ -5168,7 +5016,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <ul><li><code>SURFACE</code> is an SDL surface of type <a href="#sdl-surface">SDL-SURFACE</a>. </li>
 <li><code>INFO</code> must be one of <code>NIL</code>, <a href="#sdl-sw-surface">SDL-SW-SURFACE</a>,  <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>, <a href="#sdl-async-blit">SDL-ASYNC-BLIT</a>, <a href="#sdl-any-format">SDL-ANY-FORMAT</a>, <a href="#sdl-hw-palette">SDL-HW-PALETTE</a>,  <a href="#sdl-doublebuf">SDL-DOUBLEBUF</a>, <a href="#sdl-fullscreen">SDL-FULLSCREEN</a>,  <a href="#sdl-opengl">SDL-OPENGL</a>, <a href="#sdl-resizable">SDL-RESIZABLE</a><a href="#sdl-hw-accel">SDL-HW-ACCEL</a>, <a href="#sdl-src-color-key">SDL-SRC-COLOR-KEY</a>, <a href="#sdl-rle-accel">SDL-RLE-ACCEL</a>, <a href="#sdl-src-alpha">SDL-SRC-ALPHA</a>  or <a href="#sdl-pre-alloc">SDL-PRE-ALLOC</a>. </li>
 </ul><h5>Returns </h5>
-<p><code>INFO</code> when <code>NIL</code> will return a list of all enabled surface flags. Otherwise will return the status of <code>INFO</code> as <code>T</code> or <code>NIL</code> if supported by the surface. </p><h5>Example </h5>
+<p><code>INFO</code> when <code>NIL</code> will return a list of all enabled surface flags. Otherwise will return <code>INFO</code> as <code>T</code> or <code>NIL</code> if supported by the surface. </p><h5>Example </h5>
 <pre><code>(SURFACE-INFO A-SURFACE &amp;#039;(SDL-HW-SURFACE SDL-HW-PALETTE SDL-HW-ACCELL))
 </code></pre>
 
@@ -5230,7 +5078,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Function]<br><a class=none name='update-surface'><b>update-surface</b> <i>surface <tt>&amp;optional</tt> template</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Updates the surface </p>
 
 </blockquote>
 
@@ -5242,11 +5090,23 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Function]<br><a class=none name='update-surface-*'><b>update-surface-*</b> <i>surface x y w h</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#update-surface">UPDATE-SURFACE</a>. </p>
 
 </blockquote>
 
 <!-- End of entry for UPDATE-SURFACE-* -->
+
+
+<!-- Entry for VIDEO-DIMENSIONS -->
+
+<p><br>[Function]<br><a class=none name='video-dimensions'><b>video-dimensions</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the best video dimensions if called before a window is created, using <a href="#window">WINDOW</a>.  Returns the current video dimensions if called after a window is created. Must be called after SDL is initialized using <a href="#init-sdl">INIT-SDL</a> or <a href="#with-init">WITH-INIT</a></p>
+
+</blockquote>
+
+<!-- End of entry for VIDEO-DIMENSIONS -->
 
 
 <!-- Entry for VIDEO-DRIVER-NAME -->
@@ -5267,18 +5127,30 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for VIDEO-INFO -->
 
-<p><br>[Function]<br><a class=none name='video-info'><b>video-info</b> <i>info</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='video-info'><b>video-info</b> <i><tt>&amp;optional</tt> info</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns information about the video hardware.  <code>GET-VIDEO-INFO</code> must be called after SDL is initialised using <a href="#init-sdl">INIT-SDL</a> or  <a href="#with-init">WITH-INIT</a>. If <code>GET-VIDEO-INFO</code> is called before <a href="#window">WINDOW</a>, the information returned is of  the <EM>best</EM> video mode. If <code>GET-VIDEO-INFO</code> is called after <a href="#window">WINDOW</a>, the information  returned is of the <EM>current</EM> video mode.  </p><h5>Parameters </h5>
-<ul><li><code>INFO</code> must be one of <code>:HW-AVAILABLE</code>, <code>:WM-AVAILABLE</code>, <code>:BLIT-HW</code>, <code>:BLIT-HW-CC</code>, <code>:BLIT-HW-A</code>, <code>:BLIT-SW</code>, <code>:BLIT-SW-CC</code>, <code>:BLIT-SW-A</code>, <code>:BLIT-FILL</code>, <code>:VIDEO-MEM</code>, <code>:PIXEL-FORMAT</code>,  <code>:CURRENT-W</code> or <code>:CURRENT-H</code>. </li>
+<ul><li><code>INFO</code> can be one of <code>:HW-AVAILABLE</code>, <code>:WM-AVAILABLE</code>, <code>:BLIT-HW</code>, <code>:BLIT-HW-CC</code>, <code>:BLIT-HW-A</code>, <code>:BLIT-SW</code>, <code>:BLIT-SW-CC</code>, <code>:BLIT-SW-A</code>or <code>:BLIT-FILL</code>. If <code>NIL</code>, returns a list of all supported video flags. </li>
 </ul><h5>Example </h5>
-<pre><code>(video-info :video-mem)
+<pre><code>(video-info :HW-AVAILABLE)
 </code></pre>
 
 </blockquote>
 
 <!-- End of entry for VIDEO-INFO -->
+
+
+<!-- Entry for VIDEO-MEMORY -->
+
+<p><br>[Function]<br><a class=none name='video-memory'><b>video-memory</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the amount of video memory of the graphics hardware. Must be called after SDL is initialized  using <a href="#init-sdl">INIT-SDL</a> or <a href="#with-init">WITH-INIT</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for VIDEO-MEMORY -->
 
 
 <!-- Entry for WIDTH -->
@@ -5296,8 +5168,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for WIDTH -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>width</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>width</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Method]<br><a class=none><b>width</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns the <code>INTEGER</code> width of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
@@ -5309,11 +5180,10 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for WIDTH -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>width</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>width</b> <i>(obj sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Method]<br><a class=none><b>width</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the width of the surface <code>SURFACE</code> as an <code>INTEGER</code>. </p>
+<p>Returns the width of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -5387,7 +5257,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Macro]<br><a class=none name='with-color'><b>with-color</b> <i>(var <tt>&amp;optional</tt> color free-p) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>A convience macro that binds <code>*DEFAULT-COLOR*</code> to <code>VAR</code> within the scope of <code>WITH-COLOR</code>.  <code>VAR</code> is set to <code>COLOR</code> when <code>COLOR</code> is not <code>NIL</code>.<code>VAR</code> must be of type <code>SDL-COLOR</code>.  <code>VAR</code> is freed using <a href="#free-color">FREE-COLOR</a> when <code>FREE-P</code> is not <code>NIL</code>. </p>
+<p>A convience macro that binds <code>*DEFAULT-COLOR*</code> to <code>VAR</code> within the scope of <code>WITH-COLOR</code>.  <code>VAR</code> is set to <code>COLOR</code> when <code>COLOR</code> is not <code>NIL</code>.<code>VAR</code> must be of type <code>SDL-COLOR</code>.  <code>VAR</code> is freed using <a href="#free">FREE</a> when <code>FREE-P</code> is not <code>NIL</code>. </p>
 
 </blockquote>
 
@@ -5691,10 +5561,10 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for WITH-RECTANGLE -->
 
-<p><br>[Macro]<br><a class=none name='with-rectangle'><b>with-rectangle</b> <i>(var <tt>&amp;optional</tt> rectangle free-p) declaration* statement*</i> =&gt; <i>result</i></a>
+<p><br>[Macro]<br><a class=none name='with-rectangle'><b>with-rectangle</b> <i>(var <tt>&amp;optional</tt> rectangle free) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>A convenience macro that binds <code>*DEFAULT-RECTANGLE*</code> to <code>VAR</code> within the scope of <code>WITH-RECTANGLE</code>.  <code>VAR</code> must be of type <code>RECTANGLE</code>. <code>VAR</code> is set to <code>RECTANGLE</code> when <code>RECTANGLE</code> is not <code>NIL</code>. <code>VAR</code> is freed when <code>FREE-P</code> is <code>T</code>. </p><h5>Example </h5>
+<p>A convenience macro that binds <code>*DEFAULT-RECTANGLE*</code> to <code>VAR</code> within the scope of <code>WITH-RECTANGLE</code>.  <code>VAR</code> must be of type <code>RECTANGLE</code>. <code>VAR</code> is set to <code>RECTANGLE</code> when <code>RECTANGLE</code> is not <code>NIL</code>. <code>VAR</code> is freed when <code>FREE</code> is <code>T</code>. </p><h5>Example </h5>
 <pre><code>(WITH-RECTANGLE (a-rect (RECTANGLE :x 0 :y 0 :w 100 :h 100))
     ...)
 </code></pre>
@@ -5747,7 +5617,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for WITH-SURFACE -->
 
-<p><br>[Macro]<br><a class=none name='with-surface'><b>with-surface</b> <i>(var <tt>&amp;optional</tt> surface free-p) declaration* statement*</i> =&gt; <i>result</i></a>
+<p><br>[Macro]<br><a class=none name='with-surface'><b>with-surface</b> <i>(var <tt>&amp;optional</tt> surface free) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -5837,7 +5707,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the x position coordinate of the surface <code>SURFACE</code> as an <code>INTEGER</code>. </p>
+<p>Returns the <code>X</code> position coordinate of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -5928,7 +5798,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the y position coordinate of the surface <code>SURFACE</code> as an <code>INTEGER</code>. </p>
+<p>Returns the <code>Y</code> position coordinate of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
 
 </blockquote>
 

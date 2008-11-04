@@ -1,7 +1,7 @@
 
 (in-package #:lispbuilder-sdl)
                          
-(defmethod load-image ((source rwops) &key color-key surface-alpha image-type force free-rwops (color-key-at nil))
+(defmethod load-image ((source rwops) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the `RWOPS` in `SOURCE`."
   (declare (ignore image-type force))
   (let ((surf (make-instance 'surface
@@ -9,23 +9,23 @@
 			     :enable-color-key (or color-key color-key-at)
 			     :color-key color-key
 			     :color-key-at color-key-at
-			     :enable-surface-alpha surface-alpha
-			     :surface-alpha surface-alpha
+			     :enable-alpha alpha
+			     :alpha alpha
 			     :x 0 :y 0)))
     (when free-rwops
       (free source))
     surf))
 
-(defmethod load-image ((source VECTOR) &key color-key surface-alpha image-type force free-rwops (color-key-at nil))
+(defmethod load-image ((source VECTOR) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the byte array in `SOURCE`."
   (declare (ignore image-type force free-rwops))
   (load-image (create-RWops-from-byte-array source)
-			  :color-key color-key
-			  :color-key-at color-key-at
-			  :surface-alpha surface-alpha
-			  :free-rwops t))
+	      :color-key color-key
+	      :color-key-at color-key-at
+	      :alpha alpha
+	      :free-rwops t))
 
-(defmethod load-image ((filename string) &key color-key surface-alpha image-type force free-rwops (color-key-at nil))
+(defmethod load-image ((filename string) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the file at location `FILENAME`."
   (declare (ignore image-type force free-rwops))
   (let ((file (namestring filename)))
@@ -33,7 +33,7 @@
 	(load-image (create-RWops-from-file file)
 		    :color-key color-key
 		    :color-key-at color-key-at
-		    :surface-alpha surface-alpha
+		    :alpha alpha
 		    :free-rwops t)
 	(error "File ~A does not exist." file))))
 

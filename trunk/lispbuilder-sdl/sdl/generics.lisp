@@ -180,7 +180,7 @@ remains unchanged between screen updates."))
 (defgeneric any-color-but-this (color)
   (:documentation "Returns a new color that is different to the color `COLOR`."))
 
-(defgeneric load-image (source &key color-key surface-alpha image-type force free-rwops color-key-at)
+(defgeneric load-image (source &key color-key alpha image-type force free-rwops color-key-at)
   (:documentation
    "Returns a new `SURFACE` from `SOURCE`, or `NIL` if `SOURCE` does not contain a valid image.
 
