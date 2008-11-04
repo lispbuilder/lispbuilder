@@ -75,102 +75,102 @@
 	 (update-surface ,var :template ,template))
        ,body-value)))
 
-(defun get-surface-flag (surface flag)
+(defun surface-flag (surface flag)
   (logand (cffi:foreign-slot-value surface 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
 	  flag))
 
-(defun enable-surface-alpha-p (surface)
-  (get-surface-flag surface sdl-cffi::SDL-SRC-ALPHA))
-(defun surface-alpha-p (surface)
+(defun alpha-enabled-p (surface)
+  (surface-flag surface sdl-cffi::SDL-SRC-ALPHA))
+(defun alpha (surface)
   (cffi:foreign-slot-value (pixel-format surface) 'sdl-cffi::sdl-pixel-format 'sdl-cffi::alpha))
-(defun enable-color-key-p (surface)
-  (get-surface-flag surface sdl-cffi::SDL-SRC-COLOR-KEY))
-(defun color-key-p (surface)
+(defun color-key-enabled-p (surface)
+  (surface-flag surface sdl-cffi::SDL-SRC-COLOR-KEY))
+(defun color-key (surface)
   (cffi:foreign-slot-value (pixel-format surface) 'sdl-cffi::sdl-pixel-format 'sdl-cffi::colorkey))
-(defun pixel-alpha-p (surface)
+(defun pixel-alpha-enabled-p (surface)
   (cffi:foreign-slot-value (pixel-format surface) 'sdl-cffi::sdl-pixel-format 'sdl-cffi::amask))
-(defun rle-accel-p (surface)
-  (get-surface-flag surface sdl-cffi::SDL-RLE-ACCEL))
+(defun rle-accel-enabled-p (surface)
+  (surface-flag surface sdl-cffi::SDL-RLE-ACCEL))
 
-(defun (setf enable-surface-alpha-p) (value surface)
-  (let ((flags (logior (rle-accel-p surface)
+(defun (setf alpha-enabled-p) (value surface)
+  (let ((flags (logior (rle-accel-enabled-p surface)
 		       (if value sdl-cffi::SDL-SRC-ALPHA 0))))
     (with-foreign-slots ((sdl-cffi::alpha)
 			 (pixel-format surface)
 			 sdl-cffi::SDL-Pixel-Format)
       (sdl-cffi::SDL-Set-Alpha surface flags sdl-cffi::alpha))))
 
-(defun (setf surface-alpha-p) (value surface)
-  (let ((flags (logior (rle-accel-p surface)
-		       (enable-surface-alpha-p surface))))
+(defun (setf alpha) (value surface)
+  (let ((flags (logior (rle-accel-enabled-p surface)
+		       (alpha-enabled-p surface))))
     (sdl-cffi::SDL-Set-Alpha surface flags (clamp (to-int value) 0 255))))
 
-(defun (setf enable-color-key-p) (value surface)
-  (let ((flags (logior (rle-accel-p surface)
+(defun (setf color-key-enabled-p) (value surface)
+  (let ((flags (logior (rle-accel-enabled-p surface)
 		       (if value sdl-cffi::SDL-SRC-COLOR-KEY 0))))
     (with-foreign-slots ((sdl-cffi::colorkey)
 			 (pixel-format surface)
 			 sdl-cffi::SDL-Pixel-Format)
       (sdl-cffi::SDL-Set-Color-Key surface flags sdl-cffi::colorkey))))
 
-(defun (setf color-key-p) (value surface)
-  (let ((flags (logior (rle-accel-p surface)
-		       (enable-color-key-p surface))))
+(defun (setf color-key) (value surface)
+  (let ((flags (logior (rle-accel-enabled-p surface)
+		       (color-key-enabled-p surface))))
     (sdl-cffi::SDL-Set-Color-Key surface flags value)))
 
-(defun (setf rle-accel-p) (value surface)
+(defun (setf rle-accel-enabled-p) (value surface)
   (cond
-    ((> (enable-surface-alpha-p surface) 0)
+    ((> (alpha-enabled-p surface) 0)
      (let ((flags (logior (if value sdl-cffi::SDL-RLE-ACCEL 0)
-			   (enable-surface-alpha-p surface))))
+			   (alpha-enabled-p surface))))
 	(with-foreign-slots ((sdl-cffi::alpha)
 			     (pixel-format surface)
 			     sdl-cffi::SDL-Pixel-Format)
 	  (sdl-cffi::SDL-Set-Alpha surface flags sdl-cffi::alpha))))
-    ((> (enable-color-key-p surface) 0)
+    ((> (color-key-enabled-p surface) 0)
      (let ((flags (logior (if value sdl-cffi::SDL-RLE-ACCEL 0)
-			   (enable-color-key-p surface))))
-	(with-foreign-slots ((sdl-cffi::colorkey)
-			     (pixel-format surface)
-			     sdl-cffi::SDL-Pixel-Format)
-	  (sdl-cffi::SDL-Set-Color-Key surface flags sdl-cffi::colorkey))))))
+			  (color-key-enabled-p surface))))
+       (with-foreign-slots ((sdl-cffi::colorkey)
+			    (pixel-format surface)
+			    sdl-cffi::SDL-Pixel-Format)
+	 (sdl-cffi::SDL-Set-Color-Key surface flags sdl-cffi::colorkey))))))
 
-(defun set-color-key (surface color &optional (enable-color-key nil) (rle-accel nil))
-  "Sets the key color for the given surface. The key color is made transparent."
-  (when (is-valid-ptr surface)
-    (let ((flags 0))
-      (when rle-accel
-	(setf flags (logior sdl-cffi::SDL-RLE-ACCEL flags)))
-      (when enable-color-key
-	(setf flags (logior sdl-cffi::SDL-SRC-COLOR-KEY flags)))
+;; (defun set-color-key (surface color &optional (enable-color-key nil) (rle-accel nil))
+;;   "Sets the key color for the given surface. The key color is made transparent."
+;;   (when (is-valid-ptr surface)
+;;     (let ((flags 0))
+;;       (when rle-accel
+;; 	(setf flags (logior sdl-cffi::SDL-RLE-ACCEL flags)))
+;;       (when enable-color-key
+;; 	(setf flags (logior sdl-cffi::SDL-SRC-COLOR-KEY flags)))
 
-      (with-foreign-slots ((sdl-cffi::colorkey)
-			   (pixel-format surface)
-			   sdl-cffi::SDL-Pixel-Format)
-	;; Unless color is an INTEGER, set it to the
-	;; current colorkey.
-	(unless (integerp color)
-	  (setf color sdl-cffi::colorkey)))
-      (sdl-cffi::SDL-Set-Color-Key surface flags color))
-    surface))
+;;       (with-foreign-slots ((sdl-cffi::colorkey)
+;; 			   (pixel-format surface)
+;; 			   sdl-cffi::SDL-Pixel-Format)
+;; 	;; Unless color is an INTEGER, set it to the
+;; 	;; current colorkey.
+;; 	(unless (integerp color)
+;; 	  (setf color sdl-cffi::colorkey)))
+;;       (sdl-cffi::SDL-Set-Color-Key surface flags color))
+;;     surface))
 
-(defun set-alpha (surface alpha &optional (source-alpha nil) (rle-accel nil))
-  "Sets the alpha value for the given surface."
-  (when (is-valid-ptr surface)
-    (let ((flags 0))
-      (when rle-accel
-	(setf flags (logior sdl-cffi::SDL-RLE-ACCEL flags)))
-      (when source-alpha
-	(setf flags (logior sdl-cffi::SDL-SRC-ALPHA flags)))
-      (with-foreign-slots ((sdl-cffi::alpha)
-			   (pixel-format surface)
-			   sdl-cffi::SDL-Pixel-Format)
-	;; Unless alpha is an INTEGER, set it to the
-	;; current surface alpha.
-	(unless (integerp alpha)
-	  (setf alpha sdl-cffi::alpha)))
-      (sdl-cffi::SDL-Set-Alpha surface flags (clamp (to-int alpha) 0 255)))
-    surface))
+;; (defun set-alpha (surface alpha &optional (source-alpha nil) (rle-accel nil))
+;;   "Sets the alpha value for the given surface."
+;;   (when (is-valid-ptr surface)
+;;     (let ((flags 0))
+;;       (when rle-accel
+;; 	(setf flags (logior sdl-cffi::SDL-RLE-ACCEL flags)))
+;;       (when source-alpha
+;; 	(setf flags (logior sdl-cffi::SDL-SRC-ALPHA flags)))
+;;       (with-foreign-slots ((sdl-cffi::alpha)
+;; 			   (pixel-format surface)
+;; 			   sdl-cffi::SDL-Pixel-Format)
+;; 	;; Unless alpha is an INTEGER, set it to the
+;; 	;; current surface alpha.
+;; 	(unless (integerp alpha)
+;; 	  (setf alpha sdl-cffi::alpha)))
+;;       (sdl-cffi::SDL-Set-Alpha surface flags (clamp (to-int alpha) 0 255)))
+;;     surface))
 
 (defun get-surface-rect (surface rectangle)
   (setf (rect-x rectangle) 0
@@ -188,13 +188,13 @@
   rectangle)
 
 (defun convert-surface-to-display-format (surface
-					  &key enable-color-key enable-surface-alpha pixel-alpha (free nil))
+					  &key enable-color-key enable-alpha pixel-alpha (free nil))
   "Returns a new surface that has been converted to the display format and optionally free the source surface.
    Returns NIL if the surface cannot be converted."
   ;; LJC: Added support for converting to an alpha surface.
   ;; LJC: Freeing surface is now optional.
-  (setf (enable-color-key-p surface) enable-color-key
-	(enable-surface-alpha-p surface) enable-surface-alpha)
+  (setf (color-key-enabled-p surface) enable-color-key
+	(alpha-enabled-p surface) enable-alpha)
   (let ((display-surface (if pixel-alpha
 			     (sdl-cffi::SDL-Display-Format-Alpha surface)
 			     (sdl-cffi::SDL-Display-Format surface))))
@@ -205,13 +205,13 @@
     display-surface))
 
 (defun convert-surface (surface to-surface
-			&key enable-color-key enable-surface-alpha (rle-accel nil) (type :sw) (free nil))
+			&key enable-color-key enable-alpha (rle-accel nil) (type :sw) (free nil))
   "Returns a new surface of the specified pixel format, 
 and then copies and maps the given surface to it. Returns NIL if the surface cannot be converted."
   (let ((flags nil))
     (when enable-color-key
       (push sdl-cffi::SDL-SRC-COLOR-KEY flags))
-    (when enable-surface-alpha
+    (when enable-alpha
       (push sdl-cffi::SDL-SRC-ALPHA flags))
     (when rle-accel
       (push sdl-cffi::SDL-RLE-ACCEL flags))
@@ -226,12 +226,12 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
       surf)))
 
 (defun create-surface (width height
-		       &key (bpp 32) surface (type :sw) enable-color-key pixel-alpha enable-surface-alpha rle-accel pixels pitch)
+		       &key (bpp 32) surface (type :sw) enable-color-key pixel-alpha enable-alpha rle-accel pixels pitch)
   "create a surface compatible with the supplied :surface, if provided."
   (let ((surf nil) (flags nil))
     (when enable-color-key
       (push sdl-cffi::SDL-SRC-COLOR-KEY flags))
-    (when enable-surface-alpha
+    (when enable-alpha
       (push sdl-cffi::SDL-SRC-ALPHA flags))
     (when rle-accel
       (push sdl-cffi::SDL-RLE-ACCEL flags))
