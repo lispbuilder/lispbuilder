@@ -428,7 +428,7 @@ or will fill the specified rectangle."
 	  cell.h h)
     cell))
 
-(defun get-surface-rect (b &key (surface *default-surface*) (rectangle (rectangle)))
+(defun get-surface-rect (&key (surface *default-surface*) (rectangle (rectangle)))
   (check-type surface sdl-surface)
   (check-type rectangle rectangle)
   (sdl-base::get-surface-rect (fp surface) (fp rectangle))
