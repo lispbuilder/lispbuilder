@@ -4,12 +4,6 @@
 (in-package #:lispbuilder-sdl-image)
 
 (defmethod image-p ((source sdl:rwops) image-type)
-  "Returns `T` when the type of image contained in the `RWOPS` in the source `SOURCE` is of the type `IMAGE-TYPE`.
-
-##### Parameters
-
-* `SOURCE` is of type `RWOPS`.
-* `IMAGE-TYPE` must be one of `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TIF`, `:XCF`, `:XPM` or `:XV`."
   (case image-type
     (:BMP (if (sdl-image-cffi::img-is-BMP (sdl:fp source)) 
 	      :BMP))
@@ -36,16 +30,6 @@
     (otherwise nil)))
 
 (defmethod image-p (source image-type)
-  "Returns `T` if the image in the file at location `SOURCE` is of type `IMAGE-TYPE`.
-
-##### Parameters
-
-* `SOURCE` is the filename and path of the file on the drive of type `STRING`. 
-* `IMAGE-TYPE` can be one of `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
-
-##### Examples
-
-    \(IMAGE-P \"image.bmp\" :IMAGE-TYPE :BMP\)"
   (let ((rwops (sdl:create-RWops-from-file source)))
     (when rwops
       (let ((result (image-p rwops image-type)))
@@ -53,15 +37,6 @@
 	result))))
 
 (defmethod image-type-of ((source sdl:rwops))
-  "Returns the type of image contained in the `RWOPS` in the source `SOURCE`.
-
-##### Parameters
-
-* `SOURCE` is of type `RWOPS`.
-
-##### Example
-
-    \(IMAGE-TYPE-OF SOURCE\)"
   (let ((i-type nil))
     (block image-loop
       (dolist (type '(:BMP :PNM :XPM :XCF :PCX :GIF :JPG :TIF :LBM :PNG :XV))
@@ -72,15 +47,6 @@
 
 
 (defmethod image-type-of (source)
-  "Returns the type of image in the file at location `SOURCE`.
-
-##### Parameters
-
-* `SOURCE` is the filename and path of the file on the drive of type `STRING`. 
-
-##### Example
-
-    \(IMAGE-TYPE-OF \"image.bmp\"\)"
   (let ((rwops (sdl:create-RWops-from-file source)))
     (when rwops
       (let ((result (image-type-of rwops)))
@@ -88,15 +54,8 @@
 	result))))
 
 
-(defmethod load-image ((source sdl:rwops) &key color-key surface-alpha (image-type nil) (force nil) (free-rwops t) (color-key-at nil))
-  "Creates and returns a new surface from the image contained in the `RWOPS` structure in the source `SOURCE`.
-
-##### Parameters
-
-* `SOURCE` is of type `RWOPS`.
-* `IMAGE-TYPE` when specified type may be one of `NIL`, `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TGA`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
-* `FORCE` when `T` will force an image to be loaded as `IMAGE-TYPE`, ignoring any *magic number* when present in `SOURCE`. 
-* `FREE-RWOPS` when `T` will automatically free the `RWOPS` in `SOURCE`."
+(defmethod load-image ((source sdl:rwops) &key color-key alpha (image-type nil) (force nil) (free-rwops t) (color-key-at nil))
+  "Creates and returns a new surface from the image contained in the `RWOPS` structure in the source `SOURCE`."
   (let ((image nil))
     (setf image (if image-type
 		    (if force
@@ -123,55 +82,28 @@
 		     :enable-color-key (or color-key color-key-at)
 		     :color-key color-key
 		     :color-key-at color-key-at
-		     :enable-surface-alpha surface-alpha
-		     :surface-alpha surface-alpha))))
+		     :enable-alpha alpha
+		     :alpha alpha))))
 
-(defmethod load-image ((source VECTOR) &key color-key surface-alpha (image-type nil) (force nil) (free-rwops t) (color-key-at nil))
-  "Creates and returns a new surface from the image contained in the byte VECTOR in `SOURCE`.
-
-##### Parameters
-
-* `SOURCE` is of type `VECTOR`.
-* `IMAGE-TYPE` when specified type may be one of `NIL`, `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TGA`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
-* `FORCE` when `T` will force an image to be loaded as `IMAGE-TYPE`, ignoring any *magic number* when present in `SOURCE`."
+(defmethod load-image ((source VECTOR) &key color-key alpha (image-type nil) (force nil) (free-rwops t) (color-key-at nil))
+  "Creates and returns a new surface from the image contained in the byte VECTOR in `SOURCE`."
   (declare (ignore free-rwops))
   (load-image (sdl::create-RWops-from-byte-array source)
 	      :color-key color-key
 	      :color-key-at color-key-at
-	      :surface-alpha surface-alpha
+	      :alpha alpha
 	      :image-type image-type
 	      :force force :free-rwops t))
 
-(defmethod load-image ((source string) &key color-key surface-alpha (image-type nil) (force nil) (free-rwops nil) (color-key-at nil))
-  "Creates and returns a new surface from the image in the file at the location `SOURCE`. 
-
-##### Parameters
-
-* `SOURCE` is the filename and path of the file on the drive of type `STRING`. 
-* `IMAGE-TYPE` when specified type may be one of `NIL`, `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TGA`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
-* `FORCE` when `T` will force an image to be loaded as `IMAGE-TYPE`, ignoring any *magic number* when present in `SOURCE`. 
-* `FREE` is only used when `SOURCE` is `RWOPS`.
-
-##### Example
-
-* To load a `BMP` image using the *magic number*
-
-    \(LOAD-IMAGE \"image.bmp\"\)
-    
-* To load a `TGA` image
-
-    \(LOAD-IMAGE \"image.tga\" :IMAGE-TYPE :TGA\)
-    
-* To load a `BMP` image as `TGA`
-
-    \(LOAD-IMAGE \"image.bmp\" :IMAGE-TYPE :BMP :FORCE T\)"
+(defmethod load-image ((source string) &key color-key alpha (image-type nil) (force nil) (free-rwops nil) (color-key-at nil))
+  "Creates and returns a new surface from the image in the file at the location `SOURCE`."
   (declare (ignore free-rwops))
   (let ((rwops (sdl:create-RWops-from-file source)))
     (when rwops
       (let ((surface (load-image rwops
 				 :color-key color-key
 				 :color-key-at color-key-at
-				 :surface-alpha surface-alpha
+				 :alpha alpha
 				 :free-rwops t
 				 :image-type image-type
 				 :force force)))
@@ -179,18 +111,18 @@
 	    surface
 	    (error "ERROR, LOAD-IMAGE: file ~A, not found" source))))))
 
-(defun load-and-convert-image (source &key color-key surface-alpha (color-key-at nil) image-type force &allow-other-keys)
+(defun load-and-convert-image (source &key color-key alpha (color-key-at nil) image-type force &allow-other-keys)
   "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*), 
  converts this image to the current display format using `CONVERT-SURFACE`. 
 
 Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `CONVERT-IMAGE`. "
-  (sdl:convert-surface :surface (load-image source
-					    :free-rwops t
-					    :image-type image-type
-					    :force force
-					    :color-key color-key
-					    :surface-alpha surface-alpha
-					    :color-key-at color-key-at)
+  (sdl:convert-to-display-format :surface (load-image source
+						      :free-rwops t
+						      :image-type image-type
+						      :force force
+						      :color-key color-key
+						      :alpha alpha
+						      :color-key-at color-key-at)
 		       :free t
 		       :inherit t))
 
