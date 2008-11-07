@@ -182,15 +182,45 @@ remains unchanged between screen updates."))
 
 (defgeneric load-image (source &key color-key alpha image-type force free-rwops color-key-at)
   (:documentation
-   "Returns a new `SURFACE` from `SOURCE`, or `NIL` if `SOURCE` does not contain a valid image.
+   "Creates and returns a new `SURFACE` from the image in `SOURCE`, or returns `NIL` if `SOURCE` does not contain a valid image
+or the image type cannot be determined.
+
+The *magic number* if present is be used to determine the image type. To load an image when the 
+*magic number* is unavailable \(image formats such as `TGA` do not contain a *magic number*\), 
+specify the image type using `:IMAGE-TYPE`.  All non-magicable image formats, such as `TGA`, 
+must be specified using `IMAGE-TYPE`. To load a TGA image use `:IMAGE-TYPE :TGA` 
+
+* `LISPBUILDER-SDL` only supports `BMP` images. Any alpha channel present in the source image is ignored. The new `SURFACE` is
+created as an `RGB` surface, not `RGBA`.
+* `LISPBUILDER-SDL-IMAGE` supports the following image formats, `BMP`, `GIF`, `JPG`, `LBM`, `PCX`, `PNG`, 
+`PNM`, `TIF`, `XCF`, `XPM`, `XV`. `BMP` and `TGA`. Alpha channels are supported. The new `SURFACE` is created as `RGB` or `RGBA`
+as appropriate.
 
 ##### Parameters
 
 * `SOURCE` is an image.
-* `COLOR-KEY` sets the color key, of type `COLOR` or 'COLOR-A`.
-* 'COLOR-KEY-AT' uses the color at `POINT` x/y as the color key.
-* `ALPHA-VALUE` sets the alpha value of the surface in the range 0-255. Where 255 is opaque, 0 is transparent.
-* `IMAGE-TYPE` specifies the image type of `SOURCE`.
-* `FORCE` forces `SOURCE` to be loaded as `IMAGE-TYPE`. Images of type TGA must be loaded using :FORCE T.
-* `FREE-RWOPS` free's the RWOPS resources in `SOURCE` after creating a new `SDL_Surface`, if applicable. Default is T"))
+* `COLOR-KEY` sets the color key, and turns on color keying.
+* 'COLOR-KEY-AT' uses the pixel color at `POINT` x/y as the color key, and turns on color keying.
+* `ALPHA` sets the transparency level for the surface, and turns on alpha blending. Must be in the range 0-255, where 255 is opaque and 0 is transparent.
+* `IMAGE-TYPE` specifies the image type. May be `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, `:PNM`, `:TGA`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
+ The image type is determined using the *magic number* when present in the image if `NIL`.
+ If the *magic number* is available and does not match `IMAGE-TYPE`, then `IMAGE-TYPE` is ignored.
+* `FORCE` when `T` will ignore any *magic number* present in the image and load an image as `:IMAGE-TYPE`. 
+ Images of type `TGA` must be loaded using `:FORCE T`.
+* `FREE-RWOPS` will free a RWOPS passed as a parameter in `SOURCE`. Default is `T`
 
+_NOTES_: The `:IMAGE-TYPE` and `:FORCE` keywords are ignored for `LISPBUILDER-SDL`.
+
+##### Example
+
+* To load a `BMP` image using the *magic number*
+
+    \(LOAD-IMAGE \"image.bmp\"\)
+    
+* To load a `TGA` image
+
+    \(LOAD-IMAGE \"image.tga\" :IMAGE-TYPE :TGA\)
+    
+* Try to load a `BMP` image as `TGA`
+
+    \(LOAD-IMAGE \"image.bmp\" :IMAGE-TYPE :BMP :FORCE T\)"))
