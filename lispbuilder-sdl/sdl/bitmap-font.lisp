@@ -70,7 +70,7 @@ Reutns the new font, or `NIL` if the font cannot be created."
 	(glyph (glyph char font)))
     ;; Create a surface for the character, if one does not already exist.
     (unless glyph
-      (let ((g (make-glyph :surface (create-surface (char-width font) (char-height font) :alpha 0 :pixel-alpha t)
+      (let ((g (make-glyph :surface (create-surface (char-width font) (char-height font) :alpha 0 :pixel-alpha t :type :hw)
 			   :fg-color fg-color
 			   :bg-color bg-color)))
 	(setf (gethash char (characters font)) g)
