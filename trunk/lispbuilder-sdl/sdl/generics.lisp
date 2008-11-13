@@ -139,13 +139,25 @@ When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
 (defgeneric draw-font (&key font surface)
   (:documentation "Blit the cached [SURFACE](#surface) in [font](#FONT) to 
 the destination `SURFACE`. The cached surface is created during a previous call to any of 
-the DRAW-STRING* functions."))
+the DRAW-STRING* functions.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"))
 
 (defgeneric draw-font-at (position &key font surface)
-  (:documentation "See [DRAW-FONT](#draw-font). The cached surface is rendered at `POSITION` [POINT](#point)."))
+  (:documentation "See [DRAW-FONT](#draw-font). The cached surface is rendered at `POSITION` [POINT](#point).
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"))
 
 (defgeneric draw-font-at-* (x y &key font surface)
-  (:documentation "See [DRAW-FONT](#draw-font).  The cached surface is rendered at poisition `X` and `Y`."))
+  (:documentation "See [DRAW-FONT](#draw-font).  The cached surface is rendered at poisition `X` and `Y`.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"))
 
 (defgeneric color= (color1 color2)
   (:documentation "Returns `T` if the `RGB`<->`RGB` or `RGBA`<->`RGBA` color components in `COLOR1` and `COLOR2` match. 
@@ -164,12 +176,6 @@ The *magic number* if present is be used to determine the image type. To load an
 specify the image type using `:IMAGE-TYPE`.  All non-magicable image formats, such as `TGA`, 
 must be specified using `IMAGE-TYPE`. To load a TGA image use `:IMAGE-TYPE :TGA` 
 
-* `LISPBUILDER-SDL` only supports `BMP` images. Any alpha channel present in the source image is ignored. The new `SURFACE` is
-created as an `RGB` surface, not `RGBA`.
-* `LISPBUILDER-SDL-IMAGE` supports the following image formats, `BMP`, `GIF`, `JPG`, `LBM`, `PCX`, `PNG`, 
-`PNM`, `TIF`, `XCF`, `XPM`, `XV`. `BMP` and `TGA`. Alpha channels are supported. The new `SURFACE` is created as `RGB` or `RGBA`
-as appropriate.
-
 ##### Parameters
 
 * `SOURCE` is an image.
@@ -183,8 +189,6 @@ as appropriate.
  Images of type `TGA` must be loaded using `:FORCE T`.
 * `FREE-RWOPS` will free a RWOPS passed as a parameter in `SOURCE`. Default is `T`
 
-_NOTES_: The `:IMAGE-TYPE` and `:FORCE` keywords are ignored for `LISPBUILDER-SDL`.
-
 ##### Example
 
 * To load a `BMP` image using the *magic number*
@@ -197,4 +201,50 @@ _NOTES_: The `:IMAGE-TYPE` and `:FORCE` keywords are ignored for `LISPBUILDER-SD
     
 * Try to load a `BMP` image as `TGA`
 
-    \(LOAD-IMAGE \"image.bmp\" :IMAGE-TYPE :BMP :FORCE T\)"))
+    \(LOAD-IMAGE \"image.bmp\" :IMAGE-TYPE :BMP :FORCE T\)
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-IMAGE_
+* _LISPBUILDER-SDL_ only supports `BMP` images. Any alpha channel present in the source image is ignored. The new `SURFACE` is
+created as an `RGB` surface, not `RGBA`.
+* _LISPBUILDER-SDL-IMAGE_ supports the following image formats, `BMP`, `GIF`, `JPG`, `LBM`, `PCX`, `PNG`, 
+`PNM`, `TIF`, `XCF`, `XPM`, `XV`. `BMP` and `TGA`. Alpha channels are supported. The new `SURFACE` is created as `RGB` or `RGBA`
+as appropriate.
+* `:IMAGE-TYPE` and `:FORCE` are ignored for _LISPBUILDER-SDL_.
+"))
+
+(defgeneric image-p (source image-type)
+  (:documentation
+   "Returns `T` when the image type in `SOURCE` is of `IMAGE-TYPE`. Returns `NIL` otherwise. 
+Attempts to detect the image type using the *magic number* contained in the image if one is available.
+ `NIL` is always returned for images of type `TGA` as a `TGA` image does not contain a *magic number*.
+ `IMAGE-TYPE` must be one of `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, 
+`:PNM`, `:TIF`, `:XCF`, `:XPM` or `:XV`. 
+
+##### Example
+
+    \(RWOPS-P SOURCE :IMAGE-TYPE :BMP\)
+    \(IMAGE-P \"image.bmp\" :IMAGE-TYPE :BMP\)
+
+##### Packages
+
+* Supported in _LISPBUILDER-SDL-IMAGE_"))
+
+(defgeneric image-type-of (source)
+  (:documentation
+   "Returns the type of image in source `SOURCE`. 
+Attempts to detect the image type using the *magic number* contained in the image if one is available. 
+ Returns one of `:BMP`, `:GIF`, `:JPG`, `:LBM`, `:PCX`, `:PNG`, 
+`:PNM`, `:TIF`, `:XCF`, `:XPM` or `:XV`, if the image type can be determined. 
+Returns `NIL` if the image cannot be determined \(The *magic number* is not supported or the *magic number* is not found\).
+ `NIL` is always returned for images of type `TGA` as a `TGA` image does not contain a *magic number*.
+
+##### Example
+
+    \(IMAGE-TYPE-OF SOURCE\)
+    \(IMAGE-TYPE-OF \"image.bmp\"\)
+
+##### Packages
+
+* Supported in _LISPBUILDER-SDL-IMAGE_"))

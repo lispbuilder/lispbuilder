@@ -143,6 +143,9 @@
    #:draw-font-at
    #:draw-font-at-*
 
+   #:image-p
+   #:image-type-of
+
    ;; default-colors.lisp
    #:*black*
    #:*white*
