@@ -259,7 +259,6 @@
 	          <li><a href="#draw-filled-polygon"><code>draw-filled-polygon</code></a></li>
 	          <li><a href="#draw-filled-trigon"><code>draw-filled-trigon</code></a></li>
 	          <li><a href="#draw-font"><code>draw-font</code></a></li>
-	          <li><a href="#draw-font"><code>draw-font</code></a></li>
 	          <li><a href="#draw-font-at"><code>draw-font-at</code></a></li>
 	          <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a></li>
 	          <li><a href="#draw-hline"><code>draw-hline</code></a></li>
@@ -305,6 +304,8 @@
 	          <li><a href="#get-rectangle"><code>get-rectangle</code></a></li>
 	          <li><a href="#get-surface-rect"><code>get-surface-rect</code></a></li>
 	          <li><a href="#height"><code>height</code></a></li>
+	          <li><a href="#image-p"><code>image-p</code></a></li>
+	          <li><a href="#image-type-of"><code>image-type-of</code></a></li>
 	          <li><a href="#init-sdl"><code>init-sdl</code></a></li>
 	          <li><a href="#init-sub-systems"><code>init-sub-systems</code></a></li>
 	          <li><a href="#initialise-default-font"><code>initialise-default-font</code></a></li>
@@ -1241,7 +1242,7 @@
 <p><br>[Special variable]<br><a class=none name='*default-font-path*'><b>*default-font-path*</b></a>
 <blockquote><br>
 
-
+<p>The path to any fonts used in teh <code>LISPBUILDER-SDL</code> packages. </p>
 
 </blockquote>
 
@@ -1721,31 +1722,6 @@
 <!-- End of entry for A -->
 
 
-<!-- Entry for A -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>a</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>a</b> <i>(color color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for A -->
-
-
-<!-- Entry for A -->
-
-<p><br>[Method]<br><a class=none><b>a</b> <i>(color color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for A -->
-
-
 <!-- Entry for ALL-INTEGERS? -->
 
 <p><br>[Macro]<br><a class=none name='all-integers?'><b>all-integers?</b> <i><tt>&amp;rest</tt> values</i> =&gt; <i>result</i></a>
@@ -1796,18 +1772,6 @@
 <!-- End of entry for ANY-COLOR-BUT-THIS -->
 
 
-<!-- Entry for ANY-COLOR-BUT-THIS -->
-
-<p><br>[Method]<br><a class=none><b>any-color-but-this</b> <i>color</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for ANY-COLOR-BUT-THIS -->
-
-
 <!-- Entry for AVERAGE-FPS -->
 
 <p><br>[Function]<br><a class=none name='average-fps'><b>average-fps</b> <i></i> =&gt; <i>result</i></a>
@@ -1827,19 +1791,6 @@
 <blockquote><br>
 
 <p>Returns the blue color component of the object. </p>
-
-</blockquote>
-
-<!-- End of entry for B -->
-
-
-<!-- Entry for B -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>b</b> <i>(color color)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>b</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -2139,30 +2090,6 @@
 <!-- End of entry for COLOR-* -->
 
 
-<!-- Entry for COLOR-* -->
-
-<p><br>[Method]<br><a class=none><b>color-*</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for COLOR-* -->
-
-
-<!-- Entry for COLOR-* -->
-
-<p><br>[Method]<br><a class=none><b>color-*</b> <i>(color color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for COLOR-* -->
-
-
 <!-- Entry for COLOR-A -->
 
 <p><br>[Standard class]<br><a class=none name='color-a'><b>color-a</b></a>
@@ -2207,42 +2134,6 @@
 <blockquote><br>
 
 <p>Returns <code>T</code> if the <code>RGB</code>&lt;-&gt;<code>RGB</code> or <code>RGBA</code>&lt;-&gt;<code>RGBA</code> color components in <code>COLOR1</code> and <code>COLOR2</code> match.  Returns <code>NIL</code> otherwise. </p>
-
-</blockquote>
-
-<!-- End of entry for COLOR= -->
-
-
-<!-- Entry for COLOR= -->
-
-<p><br>[Method]<br><a class=none><b>color=</b> <i>(color1 color-a) (color2 color-a)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for COLOR= -->
-
-
-<!-- Entry for COLOR= -->
-
-<p><br>[Method]<br><a class=none><b>color=</b> <i>(color1 color) (color2 color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for COLOR= -->
-
-
-<!-- Entry for COLOR= -->
-
-<p><br>[Method]<br><a class=none><b>color=</b> <i>color1 color2</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -2724,19 +2615,9 @@
 <p><br>[Generic function]<br><a class=none name='draw-font'><b>draw-font</b> <i><tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Blit the cached <a href="#surface">SURFACE</a> in <a href="#FONT">font</a> to  the destination <code>SURFACE</code>. The cached surface is created during a previous call to any of  the DRAW-STRING* functions. </p>
-
-</blockquote>
-
-<!-- End of entry for DRAW-FONT -->
-
-
-<!-- Entry for DRAW-FONT -->
-
-<p><br>[Function]<br><a class=none name='draw-font'><b>draw-font</b> <i><tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
+<p>Blit the cached <a href="#surface">SURFACE</a> in <a href="#FONT">font</a> to  the destination <code>SURFACE</code>. The cached surface is created during a previous call to any of  the DRAW-STRING* functions. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG>, and <STRONG>LISPBUILDER-SDL-TTF</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -2748,19 +2629,9 @@
 <p><br>[Generic function]<br><a class=none name='draw-font-at'><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-font">DRAW-FONT</a>. The cached surface is rendered at <code>POSITION</code><a href="#point">POINT</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for DRAW-FONT-AT -->
-
-
-<!-- Entry for DRAW-FONT-AT -->
-
-<p><br>[Method]<br><a class=none><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
+<p>See <a href="#draw-font">DRAW-FONT</a>. The cached surface is rendered at <code>POSITION</code><a href="#point">POINT</a>. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG>, and <STRONG>LISPBUILDER-SDL-TTF</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -2772,19 +2643,9 @@
 <p><br>[Generic function]<br><a class=none name='draw-font-at-*'><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-font">DRAW-FONT</a>.  The cached surface is rendered at poisition <code>X</code> and <code>Y</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for DRAW-FONT-AT-* -->
-
-
-<!-- Entry for DRAW-FONT-AT-* -->
-
-<p><br>[Method]<br><a class=none><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
+<p>See <a href="#draw-font">DRAW-FONT</a>.  The cached surface is rendered at poisition <code>X</code> and <code>Y</code>. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG>, and <STRONG>LISPBUILDER-SDL-TTF</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -3012,6 +2873,8 @@
 
 <p>See <a href="#draw-string-shaded-*">DRAW-STRING-SHADED-*</a>. </p><h5>Parameters </h5>
 <ul><li><code>P1</code> is the <code>X</code> and <code>Y</code> coordinates to render the text, of type <code>SDL:POINT</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -3034,7 +2897,9 @@
 <ul><li>Returns the surface <code>SURFACE</code>. </li>
 </ul><h5>Example </h5>
 <pre><code>(DRAW-STRING-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE)
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -3300,57 +3165,6 @@
 <!-- End of entry for FP -->
 
 
-<!-- Entry for FP -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(foreign-object rectangle-array)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array rectangle-array)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP -->
-
-
-<!-- Entry for FP -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(foreign-object color-a)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP -->
-
-
-<!-- Entry for FP -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(foreign-object color)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP -->
-
-
-<!-- Entry for FP -->
-
-<p><br>[Method]<br><a class=none><b>fp</b> <i>(foreign-object foreign-object)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP -->
-
-
 <!-- Entry for FRAME-RATE -->
 
 <p><br>[Accessor]<br><a class=none name='frame-rate'><b>frame-rate</b> <i></i> =&gt; <i>result</i></a>
@@ -3370,42 +3184,6 @@
 <blockquote><br>
 
 <p>The general explicit cleanup method for the  FOREIGN-OBJECT wrapper class. Objects that subclass FOREIGN-OBJECT should  specify an :AFTER method on FREE to clean up any additional fields, if necessary. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE -->
-
-
-<!-- Entry for FREE -->
-
-<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object display-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Freeing the display surface is not a valid operation. </p>
-
-</blockquote>
-
-<!-- End of entry for FREE -->
-
-
-<!-- Entry for FREE -->
-
-<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FREE -->
-
-
-<!-- Entry for FREE -->
-
-<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object foreign-object)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -3443,19 +3221,6 @@
 <blockquote><br>
 
 <p>Returns the green color component the object. </p>
-
-</blockquote>
-
-<!-- End of entry for G -->
-
-
-<!-- Entry for G -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>g</b> <i>(color color)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>g</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -3510,42 +3275,6 @@
 <!-- End of entry for GET-POINT -->
 
 
-<!-- Entry for GET-POINT -->
-
-<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the <code>POINT</code> position coordinates of <code>SURFACE</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for GET-POINT -->
-
-
-<!-- Entry for GET-POINT -->
-
-<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object rectangle)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code> and <code>Y</code> coordinates of rectangle <code>RECTANGLE</code> as a <code>POINT</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for GET-POINT -->
-
-
-<!-- Entry for GET-POINT -->
-
-<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the point <code>POINT</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for GET-POINT -->
-
-
 <!-- Entry for GET-POSITION -->
 
 <p><br>[Generic function]<br><a class=none name='get-position'><b>get-position</b> <i>object</i> =&gt; <i>result</i></a>
@@ -3558,45 +3287,9 @@
 <!-- End of entry for GET-POSITION -->
 
 
-<!-- Entry for GET-POSITION -->
-
-<p><br>[Method]<br><a class=none><b>get-position</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#get-point">GET-POINT</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for GET-POSITION -->
-
-
-<!-- Entry for GET-POSITION -->
-
-<p><br>[Method]<br><a class=none><b>get-position</b> <i>(object rectangle)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#get-POINT">GET-POINT</a></p>
-
-</blockquote>
-
-<!-- End of entry for GET-POSITION -->
-
-
 <!-- Entry for GET-RECTANGLE -->
 
 <p><br>[Generic function]<br><a class=none name='get-rectangle'><b>get-rectangle</b> <i>obj</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the rectangle <code>RECTANGLE</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for GET-RECTANGLE -->
-
-
-<!-- Entry for GET-RECTANGLE -->
-
-<p><br>[Method]<br><a class=none><b>get-rectangle</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns the rectangle <code>RECTANGLE</code>. </p>
@@ -3631,41 +3324,38 @@
 <!-- End of entry for HEIGHT -->
 
 
-<!-- Entry for HEIGHT -->
+<!-- Entry for IMAGE-P -->
 
-<p><br>[Method]<br><a class=none><b>height</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='image-p'><b>image-p</b> <i>source image-type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns <code>T</code> when the image type in <code>SOURCE</code> is of <code>IMAGE-TYPE</code>. Returns <code>NIL</code> otherwise.  Attempts to detect the image type using the <EM>magic number</EM> contained in the image if one is available.  <code>NIL</code> is always returned for images of type <code>TGA</code> as a <code>TGA</code> image does not contain a <EM>magic number</EM>.  <code>IMAGE-TYPE</code> must be one of <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>,  <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>.  </p><h5>Example </h5>
+<pre><code>(RWOPS-P SOURCE :IMAGE-TYPE :BMP)
+(IMAGE-P &amp;quot;image.bmp&amp;quot; :IMAGE-TYPE :BMP)
+</code></pre><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-IMAGE</STRONG></li>
+</ul>
 
 </blockquote>
 
-<!-- End of entry for HEIGHT -->
+<!-- End of entry for IMAGE-P -->
 
 
-<!-- Entry for HEIGHT -->
+<!-- Entry for IMAGE-TYPE-OF -->
 
-<p><br>[Method]<br><a class=none><b>height</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='image-type-of'><b>image-type-of</b> <i>source</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the height of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
+<p>Returns the type of image in source <code>SOURCE</code>.  Attempts to detect the image type using the <EM>magic number</EM> contained in the image if one is available.   Returns one of <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>,  <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>, if the image type can be determined.  Returns <code>NIL</code> if the image cannot be determined (The <EM>magic number</EM> is not supported or the <EM>magic number</EM> is not found).  <code>NIL</code> is always returned for images of type <code>TGA</code> as a <code>TGA</code> image does not contain a <EM>magic number</EM>. </p><h5>Example </h5>
+<pre><code>(IMAGE-TYPE-OF SOURCE)
+(IMAGE-TYPE-OF &amp;quot;image.bmp&amp;quot;)
+</code></pre><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-IMAGE</STRONG></li>
+</ul>
 
 </blockquote>
 
-<!-- End of entry for HEIGHT -->
-
-
-<!-- Entry for HEIGHT -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>height</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>height</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns the <code>INTEGER</code> height of the rectangle <code>RECTANGLE</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for HEIGHT -->
+<!-- End of entry for IMAGE-TYPE-OF -->
 
 
 <!-- Entry for INIT-SDL -->
@@ -3834,9 +3524,7 @@
 <p><br>[Generic function]<br><a class=none name='load-image'><b>load-image</b> <i>source <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates and returns a new <code>SURFACE</code> from the image in <code>SOURCE</code>, or returns <code>NIL</code> if <code>SOURCE</code> does not contain a valid image or the image type cannot be determined. </p><p>The <EM>magic number</EM> if present is be used to determine the image type. To load an image when the  <EM>magic number</EM> is unavailable (image formats such as <code>TGA</code> do not contain a <EM>magic number</EM>),  specify the image type using <code>:IMAGE-TYPE</code>.  All non-magicable image formats, such as <code>TGA</code>,  must be specified using <code>IMAGE-TYPE</code>. To load a TGA image use <code>:IMAGE-TYPE :TGA</code></p><ul><li><code>LISPBUILDER-SDL</code> only supports <code>BMP</code> images. Any alpha channel present in the source image is ignored. The new <code>SURFACE</code> is created as an <code>RGB</code> surface, not <code>RGBA</code>. </li>
-<li><code>LISPBUILDER-SDL-IMAGE</code> supports the following image formats, <code>BMP</code>, <code>GIF</code>, <code>JPG</code>, <code>LBM</code>, <code>PCX</code>, <code>PNG</code>,  <code>PNM</code>, <code>TIF</code>, <code>XCF</code>, <code>XPM</code>, <code>XV</code>. <code>BMP</code> and <code>TGA</code>. Alpha channels are supported. The new <code>SURFACE</code> is created as <code>RGB</code> or <code>RGBA</code> as appropriate. </li>
-</ul><h5>Parameters </h5>
+<p>Creates and returns a new <code>SURFACE</code> from the image in <code>SOURCE</code>, or returns <code>NIL</code> if <code>SOURCE</code> does not contain a valid image or the image type cannot be determined. </p><p>The <EM>magic number</EM> if present is be used to determine the image type. To load an image when the  <EM>magic number</EM> is unavailable (image formats such as <code>TGA</code> do not contain a <EM>magic number</EM>),  specify the image type using <code>:IMAGE-TYPE</code>.  All non-magicable image formats, such as <code>TGA</code>,  must be specified using <code>IMAGE-TYPE</code>. To load a TGA image use <code>:IMAGE-TYPE :TGA</code></p><h5>Parameters </h5>
 <ul><li><code>SOURCE</code> is an image. </li>
 <li><code>COLOR-KEY</code> sets the color key, and turns on color keying. </li>
 <li>&#039;COLOR-KEY-AT&#039; uses the pixel color at <code>POINT</code> x/y as the color key, and turns on color keying. </li>
@@ -3844,50 +3532,19 @@
 <li><code>IMAGE-TYPE</code> specifies the image type. May be <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TGA</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>.   The image type is determined using the <EM>magic number</EM> when present in the image if <code>NIL</code>.  If the <EM>magic number</EM> is available and does not match <code>IMAGE-TYPE</code>, then <code>IMAGE-TYPE</code> is ignored. </li>
 <li><code>FORCE</code> when <code>T</code> will ignore any <EM>magic number</EM> present in the image and load an image as <code>:IMAGE-TYPE</code>.   Images of type <code>TGA</code> must be loaded using <code>:FORCE T</code>. </li>
 <li><code>FREE-RWOPS</code> will free a RWOPS passed as a parameter in <code>SOURCE</code>. Default is <code>T</code></li>
-</ul><p><STRONG>NOTES</STRONG>: The <code>:IMAGE-TYPE</code> and <code>:FORCE</code> keywords are ignored for <code>LISPBUILDER-SDL</code>. </p><h5>Example </h5>
+</ul><h5>Example </h5>
 <ul><li>To load a <code>BMP</code> image using the <EM>magic number</EM></li>
 (LOAD-IMAGE &amp;quot;image.bmp&amp;quot;)
 
 (LOAD-IMAGE &amp;quot;image.tga&amp;quot; :IMAGE-TYPE :TGA)
 
 (LOAD-IMAGE &amp;quot;image.bmp&amp;quot; :IMAGE-TYPE :BMP :FORCE T)
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-IMAGE</STRONG></li>
+<li><STRONG>LISPBUILDER-SDL</STRONG> only supports <code>BMP</code> images. Any alpha channel present in the source image is ignored. The new <code>SURFACE</code> is created as an <code>RGB</code> surface, not <code>RGBA</code>. </li>
+<li><STRONG>LISPBUILDER-SDL-IMAGE</STRONG> supports the following image formats, <code>BMP</code>, <code>GIF</code>, <code>JPG</code>, <code>LBM</code>, <code>PCX</code>, <code>PNG</code>,  <code>PNM</code>, <code>TIF</code>, <code>XCF</code>, <code>XPM</code>, <code>XV</code>. <code>BMP</code> and <code>TGA</code>. Alpha channels are supported. The new <code>SURFACE</code> is created as <code>RGB</code> or <code>RGBA</code> as appropriate. </li>
+<li><code>:IMAGE-TYPE</code> and <code>:FORCE</code> are ignored for <STRONG>LISPBUILDER-SDL</STRONG>. </li>
 </ul>
-
-</blockquote>
-
-<!-- End of entry for LOAD-IMAGE -->
-
-
-<!-- Entry for LOAD-IMAGE -->
-
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns a new <code>SURFACE</code> from the file at location <code>FILENAME</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for LOAD-IMAGE -->
-
-
-<!-- Entry for LOAD-IMAGE -->
-
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source vector) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns a new <code>SURFACE</code> from the byte array in <code>SOURCE</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for LOAD-IMAGE -->
-
-
-<!-- Entry for LOAD-IMAGE -->
-
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source rwops) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns a new <code>SURFACE</code> from the <code>RWOPS</code> in <code>SOURCE</code>. </p>
 
 </blockquote>
 
@@ -3906,48 +3563,12 @@
 <!-- End of entry for MAP-COLOR -->
 
 
-<!-- Entry for MAP-COLOR -->
-
-<p><br>[Method]<br><a class=none><b>map-color</b> <i>(color color-a) <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for MAP-COLOR -->
-
-
-<!-- Entry for MAP-COLOR -->
-
-<p><br>[Method]<br><a class=none><b>map-color</b> <i>(color color) <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for MAP-COLOR -->
-
-
 <!-- Entry for MAP-COLOR-* -->
 
 <p><br>[Generic function]<br><a class=none name='map-color-*'><b>map-color-*</b> <i>r g b a <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Maps the color specified by the <code>R</code>, <code>G</code>, <code>B</code>, and <code>A</code> color components to the pixel format of <a href="#surface">SURFACE</a> and returns  the pixel value that best approximates the color value of the surface.  If <code>A</code> is not <code>NIL</code> then the color is assumed to contain an alpha component. See <a href="#map-color">MAP-COLOR</a> for more details. </p>
-
-</blockquote>
-
-<!-- End of entry for MAP-COLOR-* -->
-
-
-<!-- Entry for MAP-COLOR-* -->
-
-<p><br>[Method]<br><a class=none><b>map-color-*</b> <i>(r integer) (g integer) (b integer) a <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -3978,30 +3599,6 @@
 <!-- End of entry for PACK-COLOR -->
 
 
-<!-- Entry for PACK-COLOR -->
-
-<p><br>[Method]<br><a class=none><b>pack-color</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for PACK-COLOR -->
-
-
-<!-- Entry for PACK-COLOR -->
-
-<p><br>[Method]<br><a class=none><b>pack-color</b> <i>(color color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for PACK-COLOR -->
-
-
 <!-- Entry for POINT -->
 
 <p><br>[Function]<br><a class=none name='point'><b>point</b> <i><tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
@@ -4026,84 +3623,12 @@
 <!-- End of entry for POINT-* -->
 
 
-<!-- Entry for POINT-* -->
-
-<p><br>[Method]<br><a class=none><b>point-*</b> <i>(point sdl-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code> and <code>Y</code> position coordinates of <code>SURFACE</code> as a spread. </p>
-
-</blockquote>
-
-<!-- End of entry for POINT-* -->
-
-
-<!-- Entry for POINT-* -->
-
-<p><br>[Method]<br><a class=none><b>point-*</b> <i>(point rectangle)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code> as a spread.    The <code>RESULT</code> is <code>(VALUES X Y)</code></p>
-
-</blockquote>
-
-<!-- End of entry for POINT-* -->
-
-
-<!-- Entry for POINT-* -->
-
-<p><br>[Method]<br><a class=none><b>point-*</b> <i>(point vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code> and <code>Y</code> coordinates of the point <code>POINT</code> as a spread. </p>
-
-</blockquote>
-
-<!-- End of entry for POINT-* -->
-
-
 <!-- Entry for POSITION-* -->
 
 <p><br>[Generic function]<br><a class=none name='position-*'><b>position-*</b> <i>obj</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#point-*">POINT-*</a></p>
-
-</blockquote>
-
-<!-- End of entry for POSITION-* -->
-
-
-<!-- Entry for POSITION-* -->
-
-<p><br>[Method]<br><a class=none><b>position-*</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#position">POSITION</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for POSITION-* -->
-
-
-<!-- Entry for POSITION-* -->
-
-<p><br>[Method]<br><a class=none><b>position-*</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#point-*">POINT-*</a></p>
-
-</blockquote>
-
-<!-- End of entry for POSITION-* -->
-
-
-<!-- Entry for POSITION-* -->
-
-<p><br>[Method]<br><a class=none><b>position-*</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#point-*">POINT-*</a>. </p>
 
 </blockquote>
 
@@ -4195,19 +3720,6 @@
 <blockquote><br>
 
 <p>Returns the red color component of the object. </p>
-
-</blockquote>
-
-<!-- End of entry for R -->
-
-
-<!-- Entry for R -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>r</b> <i>(color color)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>r</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -4309,30 +3821,6 @@
 <!-- End of entry for RECTANGLE-* -->
 
 
-<!-- Entry for RECTANGLE-* -->
-
-<p><br>[Method]<br><a class=none><b>rectangle-*</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the fields <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> from <code>SURFACE</code> as a spread. </p>
-
-</blockquote>
-
-<!-- End of entry for RECTANGLE-* -->
-
-
-<!-- Entry for RECTANGLE-* -->
-
-<p><br>[Method]<br><a class=none><b>rectangle-*</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates of the rectangle <code>RECTANGLE</code> as a spread.  The <code>RESULT</code> is <code>(VALUES X Y WIDTH HEIGHT)</code></p>
-
-</blockquote>
-
-<!-- End of entry for RECTANGLE-* -->
-
-
 <!-- Entry for RECTANGLE-FROM-EDGES -->
 
 <p><br>[Function]<br><a class=none name='rectangle-from-edges'><b>rectangle-from-edges</b> <i>p1 p2 <tt>&amp;optional</tt> rectangle</i> =&gt; <i>result</i></a>
@@ -4390,7 +3878,9 @@
 <ul><li>Returns a new cached surface <code>SDL-SURFACE</code>. </li>
 </ul><h5>Example </h5>
 <pre><code>(RENDER-STRING-SHADED &amp;quot;Hello World!&amp;quot; F-COLOR B-COLOR)
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -4500,7 +3990,7 @@
 <p><br>[Function]<br><a class=none name='save-image'><b>save-image</b> <i>surface filename</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Saves the surface <code>SURFACE</code> as a BMP image to a file at location <code>FILENAME</code>. </p>
+<p>Saves the <code>SURFACE</code> as a <code>BMP</code> image to a file at location <code>FILENAME</code>. </p>
 
 </blockquote>
 
@@ -5003,36 +4493,12 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for SET-COLOR -->
 
 
-<!-- Entry for SET-COLOR -->
-
-<p><br>[Method]<br><a class=none><b>set-color</b> <i>(dst color) (src color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for SET-COLOR -->
-
-
 <!-- Entry for SET-COLOR-* -->
 
 <p><br>[Generic function]<br><a class=none name='set-color-*'><b>set-color-*</b> <i>color <tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Sets <code>COLOR</code> to the red <code>R</code>, green <code>G</code>, blue <code>B</code> and alpha <code>A</code> color components. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-COLOR-* -->
-
-
-<!-- Entry for SET-COLOR-* -->
-
-<p><br>[Method]<br><a class=none><b>set-color-*</b> <i>(color color) <tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
 
 </blockquote>
 
@@ -5063,84 +4529,12 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for SET-POINT -->
 
 
-<!-- Entry for SET-POINT -->
-
-<p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst sdl-surface) (src vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Sets the <code>POINT</code> position coordinates of <code>SURFACE</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POINT -->
-
-
-<!-- Entry for SET-POINT -->
-
-<p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst rectangle) (src vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Copies the <code>X</code> and <code>Y</code> coordinates to the destination rectangle <code>RECTANGLE</code> from the source point <code>POSITION</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POINT -->
-
-
-<!-- Entry for SET-POINT -->
-
-<p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst vector) (src vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Sets the <code>X</code> and <code>Y</code> coordinates of the destination point <code>DST</code> to the coordinates in  the source point <code>SRC</code>. Returns the destination point <code>DST</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POINT -->
-
-
 <!-- Entry for SET-POINT-* -->
 
 <p><br>[Generic function]<br><a class=none name='set-point-*'><b>set-point-*</b> <i>obj <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Sets the <code>X</code> and <code>Y</code> coordinates of the object <code>OBJ</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POINT-* -->
-
-
-<!-- Entry for SET-POINT-* -->
-
-<p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj sdl-surface) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Sets the <code>X</code> and <code>Y</code> position coordinates of <code>SURFACE</code>. <code>X</code> and <code>Y</code> are integers. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POINT-* -->
-
-
-<!-- Entry for SET-POINT-* -->
-
-<p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj rectangle) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POINT-* -->
-
-
-<!-- Entry for SET-POINT-* -->
-
-<p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj vector) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Sets the <code>X</code> and <code>Y</code> coordinates of the point <code>POINT</code> to <code>X</code> and <code>Y</code>. </p>
 
 </blockquote>
 
@@ -5159,42 +4553,6 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for SET-POSITION -->
 
 
-<!-- Entry for SET-POSITION -->
-
-<p><br>[Method]<br><a class=none><b>set-position</b> <i>(dst sdl-surface) (src vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#set-point">SET-POINT</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POSITION -->
-
-
-<!-- Entry for SET-POSITION -->
-
-<p><br>[Method]<br><a class=none><b>set-position</b> <i>(dst rectangle) (src vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code> from the point <code>POSITION</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POSITION -->
-
-
-<!-- Entry for SET-POSITION -->
-
-<p><br>[Method]<br><a class=none><b>set-position</b> <i>(dst vector) (src vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#set-point">SET-POINT</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POSITION -->
-
-
 <!-- Entry for SET-POSITION-* -->
 
 <p><br>[Generic function]<br><a class=none name='set-position-*'><b>set-position-*</b> <i>obj <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
@@ -5207,57 +4565,9 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for SET-POSITION-* -->
 
 
-<!-- Entry for SET-POSITION-* -->
-
-<p><br>[Method]<br><a class=none><b>set-position-*</b> <i>(obj sdl-surface) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#set-point-*">SET-POINT-*</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POSITION-* -->
-
-
-<!-- Entry for SET-POSITION-* -->
-
-<p><br>[Method]<br><a class=none><b>set-position-*</b> <i>(obj rectangle) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POSITION-* -->
-
-
-<!-- Entry for SET-POSITION-* -->
-
-<p><br>[Method]<br><a class=none><b>set-position-*</b> <i>(obj vector) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#set-point-*">SET-POINT-*</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-POSITION-* -->
-
-
 <!-- Entry for SET-RECTANGLE -->
 
 <p><br>[Generic function]<br><a class=none name='set-rectangle'><b>set-rectangle</b> <i>dst src</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Copies the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates to the destination rectangle <code>DST</code> from the source rectangle <code>SRC</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-RECTANGLE -->
-
-
-<!-- Entry for SET-RECTANGLE -->
-
-<p><br>[Method]<br><a class=none><b>set-rectangle</b> <i>(dst rectangle) (src rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Copies the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates to the destination rectangle <code>DST</code> from the source rectangle <code>SRC</code>. </p>
@@ -5279,18 +4589,6 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for SET-RECTANGLE-* -->
 
 
-<!-- Entry for SET-RECTANGLE-* -->
-
-<p><br>[Method]<br><a class=none><b>set-rectangle-*</b> <i>(rectangle rectangle) <tt>&amp;key</tt> x y w h</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Sets the coordinates of the rectangle <code>RECTANGLE</code> to the specified <code>X</code>, <code>Y</code> , width <code>W</code> and height <code>HEIGHT</code> coordinates. <code>X</code>, <code>Y</code>, <code>W</code> and <code>H</code> are <code>KEY</code>word parameters of type <code>INTEGER</code>.  Returns the rectangle <code>RECTANGLE</code> as RESULT. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-RECTANGLE-* -->
-
-
 <!-- Entry for SET-SURFACE -->
 
 <p><br>[Generic function]<br><a class=none name='set-surface'><b>set-surface</b> <i>surface position</i> =&gt; <i>result</i></a>
@@ -5303,36 +4601,12 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for SET-SURFACE -->
 
 
-<!-- Entry for SET-SURFACE -->
-
-<p><br>[Method]<br><a class=none><b>set-surface</b> <i>(surface sdl-surface) (position vector)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#set-point">SET-POINT</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-SURFACE -->
-
-
 <!-- Entry for SET-SURFACE-* -->
 
 <p><br>[Generic function]<br><a class=none name='set-surface-*'><b>set-surface-*</b> <i>surface <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Sets the coordinates of the surface <code>SURFACE</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters having default values of <code>0</code> if unspecified. </p>
-
-</blockquote>
-
-<!-- End of entry for SET-SURFACE-* -->
-
-
-<!-- Entry for SET-SURFACE-* -->
-
-<p><br>[Method]<br><a class=none><b>set-surface-*</b> <i>(surface sdl-surface) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>See <a href="#set-point-*">SET-POINT-*</a>. </p>
 
 </blockquote>
 
@@ -5516,43 +4790,6 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <blockquote><br>
 
 <p>Returns the width of the object, as an <code>INTEGER</code>.  When <code>OBJ</code> is a <a href="#font">FONT</a>, use the cached <a href="#surface">SURFACE</a>. </p>
-
-</blockquote>
-
-<!-- End of entry for WIDTH -->
-
-
-<!-- Entry for WIDTH -->
-
-<p><br>[Method]<br><a class=none><b>width</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for WIDTH -->
-
-
-<!-- Entry for WIDTH -->
-
-<p><br>[Method]<br><a class=none><b>width</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the width of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for WIDTH -->
-
-
-<!-- Entry for WIDTH -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>width</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>width</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns the <code>INTEGER</code> width of the rectangle <code>RECTANGLE</code>. </p>
 
 </blockquote>
 
@@ -6054,58 +5291,6 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for X -->
 
 
-<!-- Entry for X -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for X -->
-
-
-<!-- Entry for X -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code> position coordinate of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for X -->
-
-
-<!-- Entry for X -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code> position coordinate of the rectangle <code>RECTANGLE</code> as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for X -->
-
-
-<!-- Entry for X -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj vector)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns the <code>X</code> coordindate of the point <code>POINT</code> as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for X -->
-
-
 <!-- Entry for X2 -->
 
 <p><br>[Generic accessor]<br><a class=none name='x2'><b>x2</b> <i>obj</i> =&gt; <i>result</i></a>
@@ -6113,19 +5298,6 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <blockquote><br>
 
 <p>Returns <code>(+ X WIDTH)</code> of the object, as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for X2 -->
-
-
-<!-- Entry for X2 -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>x2</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>x2</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Sets the WIDTH of the rectangle <code>RECTANGLE</code> to <code>(- X2 X)</code></p>
 
 </blockquote>
 
@@ -6145,58 +5317,6 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for Y -->
 
 
-<!-- Entry for Y -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for Y -->
-
-
-<!-- Entry for Y -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns the <code>Y</code> position coordinate of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for Y -->
-
-
-<!-- Entry for Y -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns the <code>Y</code> position coordinate of the rectangle <code>RECTANGLE</code> as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for Y -->
-
-
-<!-- Entry for Y -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj vector)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns the <code>Y</code> coordindate of the point <code>POINT</code> as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for Y -->
-
-
 <!-- Entry for Y2 -->
 
 <p><br>[Generic accessor]<br><a class=none name='y2'><b>y2</b> <i>obj</i> =&gt; <i>result</i></a>
@@ -6204,19 +5324,6 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <blockquote><br>
 
 <p>Returns <code>(+ Y HEIGHT)</code> of the object, as an <code>INTEGER</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for Y2 -->
-
-
-<!-- Entry for Y2 -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>y2</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>y2</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-<p>Returns <code>(+ Y HEIGHT)</code> of the rectangle <code>RECTANGLE</code>. </p>
 
 </blockquote>
 
@@ -6241,6 +5348,42 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 </blockquote>
 
 <!-- End of entry for ZOOM-SURFACE -->
+
+
+<!-- Entry for (SETF FP) -->
+
+<p><br>[Method]<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array rectangle-array)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for (SETF FP) -->
+
+
+<!-- Entry for (SETF FP) -->
+
+<p><br>[Method]<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for (SETF FP) -->
+
+
+<!-- Entry for (SETF FP) -->
+
+<p><br>[Method]<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for (SETF FP) -->
 <br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
 
 <ul>
