@@ -4,52 +4,55 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defgeneric fp (object)
-  (:documentation "Returns the default foreign object for `OBJECT`."))
-
-(defgeneric fp-position (object)
-  (:documentation "Returns the default foreign SDL_Rect object for `OBJECT`."))
-
-(defgeneric pack-color (color)
-  (:documentation "Packs the color components in `COLOR` into a four byte `INTEGER`."))
-
 (defgeneric r (color)
-  (:documentation "Returns the red component of color `COLOR` as an `INTEGER`."))
+  (:documentation "Returns the red color component of the object."))
 (defgeneric g (color)
-  (:documentation "Returns the green component of color `COLOR` as an `INTEGER`."))
+  (:documentation "Returns the green color component the object."))
 (defgeneric b (color)
-  (:documentation "Returns the blue component of color `COLOR` as an `INTEGER`."))
+  (:documentation "Returns the blue color component of the object."))
 (defgeneric a (color)
-  (:documentation "Returns the alpha component of color `COLOR` as an `INTEGER`."))
+  (:documentation "Returns the alpha color component of the object."))
 
 (defgeneric (setf r) (value color)
-  (:documentation "Sets the red `R` component of color `COLOR`."))
+  (:documentation "Sets the red color component of the object."))
 (defgeneric (setf g) (value color)
-  (:documentation "Sets the green `G` component of color `COLOR`."))
+  (:documentation "Sets the green color component of the object."))
 (defgeneric (setf b) (value color)
-  (:documentation "Sets the blue `B` component of color `COLOR`."))
+  (:documentation "Sets the blue color component of the object."))
 (defgeneric (setf a) (value color)
-  (:documentation "Sets the alpha `A` component of color `COLOR`."))
+  (:documentation "Sets the alpha color component of the object."))
+
+(defgeneric pack-color (color)
+  (:documentation "Packs [COLOR](#color) or [COLOR-A](#color-a) into a four byte `INTEGER`."))
+(defgeneric pack-color-* (r g b &optional a)
+  (:documentation "Packs [COLOR](#color) or [COLOR-A](#color-a) into a four byte `INTEGER`.
+Assumes an alpha component when `A` is not `NIL`."))
 
 (defgeneric map-color (color &optional surface)
-  (:documentation "Maps the color `COLOR` to the pixel format of the surface `SURFACE` and returns 
-the pixel value that best approximates the color value of the 
-surface `SURFACE`. If the surface has a palette \(8-bit\) the index of the 
+  (:documentation
+  "Maps [COLOR](#color) or [COLOR-A](#color-a) to the pixel format of [SURFACE](#surface) and returns 
+the pixel value that best approximates the color value of the surface. 
+If the surface has a palette \(8-bit\) the index of the 
 closest matching color in the palette will be returned. If the surface has an 
 alpha component it will be returned as all `1` bits \(fully opaque\). If the surface 
 color depth is less than 32-bpp then the unused upper bits of the return value can safely be ignored 
 \(e.g., with a 16-bpp format the return value can be assigned to a Uint16, and similarly a Uint8 for an 8-bpp format\)."))
 
-;; set-'s and get-'s
+(defgeneric map-color-* (r g b a &optional surface)
+  (:documentation
+  "Maps the color specified by the `R`, `G`, `B`, and `A` color components to the pixel format of [SURFACE](#surface) and returns 
+the pixel value that best approximates the color value of the surface. 
+If `A` is not `NIL` then the color is assumed to contain an alpha component.
+See [MAP-COLOR](#map-color) for more details."))
+
 (defgeneric color-* (color)
-  (:documentation "Returns the RGB/A components of color as a spread. 
-If `COLOR` contains an alpha component then `RESULT` is `\(VALUES R G B A\)`
-If `COLOR` contains no alpha component then `RESULT` is `\(VALUES R G B\)`"))
+  (:documentation "Returns the `RGB/A` color components as a spread. 
+[COLOR-A](#color-a) returns `\(VALUES R G B A\)`. 
+[COLOR](#color) returns `\(VALUES R G B\)`"))
 (defgeneric set-color (dst src)
-  (:documentation "Copies the RGB/A color components to teh destination color `DST` from the source color `SRC`."))
+  (:documentation "Copies the `RGB/A` color components to the destination `DST` from the source `SRC`."))
 (defgeneric set-color-* (color &key r g b a)
-  (:documentation "Sets the red `R`, green `G`, blue `B` and alpha `A` components of the color `COLOR`.
-`R`, `G`, `B` and `A` are `KEY`word parameters having default values of `0` if unspecified."))
+  (:documentation "Sets `COLOR` to the red `R`, green `G`, blue `B` and alpha `A` color components."))
 
 (defgeneric point-* (point)
     (:documentation "Returns the `X` and `Y` coordinates of the object as a spread. 
@@ -93,25 +96,27 @@ where position is of type `POINT`."))
   (:documentation "Sets the coordinates of the surface `SURFACE`.
 `X` and `Y` are `KEY`word parameters having default values of `0` if unspecified."))
 
-;; end set-'s and get-'s
-
 
 (defgeneric width (obj)
-  (:documentation "Returns the width of the object."))
+  (:documentation "Returns the width of the object, as an `INTEGER`. 
+When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
 
 (defgeneric height (obj)
-  (:documentation "Returns the height of the object."))
+  (:documentation "Returns the height of the object, as an `INTEGER`.
+When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
 
 (defgeneric x (obj)
-  (:documentation "Returns the x coordinate of the object."))
+  (:documentation "Returns the `X` coordinate of the object, as an `INTEGER`.
+When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
 
 (defgeneric y (obj)
-  (:documentation "Returns the y coordinate of the object."))
+  (:documentation "Returns the `Y` coordinate of the object, as an `INTEGER`.
+When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
 
 (defgeneric x2 (obj)
-  (:documentation "Returns `\(+ X WIDTH\)` of the object."))
+  (:documentation "Returns `\(+ X WIDTH\)` of the object, as an `INTEGER`."))
 (defgeneric y2 (obj)
-  (:documentation "Returns `\(+ Y HEIGHT\)` of the object."))
+  (:documentation "Returns `\(+ Y HEIGHT\)` of the object, as an `INTEGER`."))
 
 
 (defgeneric (setf width) (value obj)
@@ -120,65 +125,34 @@ where position is of type `POINT`."))
   (:documentation "Sets the height of the object."))
 
 (defgeneric (setf x) (value obj)
-  (:documentation "Sets the X coordinate of the object."))
+  (:documentation "Sets the `X` `INTEGER` coordinate of the object.
+When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
 (defgeneric (setf y) (value obj)
-  (:documentation "Sets the Y coordinate of the object."))
+  (:documentation "Sets the `Y` `INTEGER` coordinate of the object.
+When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
 
 (defgeneric (setf x2) (value obj)
   (:documentation "Sets the WIDTH of the object to `\(- X2 X\)`"))
 (defgeneric (setf y2) (value obj)
   (:documentation "Sets the HEIGHT of the object to `\(- Y2 Y\)`"))
 
-(defgeneric free-color (color)
-  (:documentation "Free's resources allocated to COLOR.
-Meant specifically for the SDL_Color foreign object. 
-`COLOR` and `COLOR-A` are ignored."))
-
-(defgeneric free-surface (surface)
-  (:documentation "Free's the resources allocated to `SURFACE`.
-Specifically free's the wrapped SDL_Surface foreign object."))
-
-(defgeneric free-rectangle (rectangle)
-  (:documentation "Free's the resources allocated to `RECTANGLE`.
-Specifically free's the wrapped SDL_Rect foreign object."))
-
-(defgeneric free-rwops (rwops)
-  (:documentation "Free's the resources allocated to `RWOPS`.
-Specifically free's the wrapped SDL_rwops foreign object."))
-
-(defgeneric free-font (font)
-  (:documentation "Free's the resources allocated to the `FONT`."))
-
-(defgeneric free-cached-surface (font)
-  (:documentation "Frees resources allocated to the cached surface `SURFACE` in `FONT`, if any. 
-Sets the `FONT`s `CACHED-SURFACE` slot to NIL."))
-
 (defgeneric draw-font (&key font surface)
-  (:documentation "Blit the cached surface in the font `FONT` to 
-the destination surface `SURFACE`. The cached surface is created during a previous call to any of 
-the DRAW-STRING* functions. Uses the `POSITION` of the cached surface to render at X/Y coordinates 
-on the destination `SURFACE`. This function can provide a speed increase upon redraws when the text in `FONT` 
-remains unchanged between screen updates."))
+  (:documentation "Blit the cached [SURFACE](#surface) in [font](#FONT) to 
+the destination `SURFACE`. The cached surface is created during a previous call to any of 
+the DRAW-STRING* functions."))
 
 (defgeneric draw-font-at (position &key font surface)
-  (:documentation "See [DRAW-FONT](#draw-font). 
-
-##### Parameters
-
-* `POINT` is the `X` and `Y` coordinates of the the `FONT`s cached surface, of type `POINT`."))
+  (:documentation "See [DRAW-FONT](#draw-font). The cached surface is rendered at `POSITION` [POINT](#point)."))
 
 (defgeneric draw-font-at-* (x y &key font surface)
-  (:documentation "See [DRAW-FONT](#draw-font) 
-
-##### Parameters
-
-* `X` and `Y` are the `INTEGER` position coordinates of the `FONT`s cached surface."))
+  (:documentation "See [DRAW-FONT](#draw-font).  The cached surface is rendered at poisition `X` and `Y`."))
 
 (defgeneric color= (color1 color2)
-  (:documentation "Returns `T` if colors match, returns `NIL` otherwise."))
+  (:documentation "Returns `T` if the `RGB`<->`RGB` or `RGBA`<->`RGBA` color components in `COLOR1` and `COLOR2` match. 
+Returns `NIL` otherwise."))
 
 (defgeneric any-color-but-this (color)
-  (:documentation "Returns a new color that is different to the color `COLOR`."))
+  (:documentation "Returns a new color that is different to `COLOR`."))
 
 (defgeneric load-image (source &key color-key alpha image-type force free-rwops color-key-at)
   (:documentation

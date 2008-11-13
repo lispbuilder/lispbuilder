@@ -50,7 +50,8 @@
     :gc t
     :free (simple-free 'sdl-cffi::sdl-free-surface 'surface))
   (:documentation
-   "This object is garbage collected and the `SDL_Surface` object freed when out of scope."))
+   "This object is garbage collected and the `SDL_Surface` object freed when out of scope.
+Free using [FREE](#free)."))
 
 (defclass rectangle-array ()
   ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
@@ -354,7 +355,7 @@ drawn into."
 ;; When 'NIL' will disable color keying.
 ;; * `RLE-ACCEL` when `T` will use RLE information when blitting. See [RLE-CCEL](#rle-accel)."
 ;;   (check-type surface sdl-surface)
-;;   (check-type color sdl-color)
+;;   (check-type color color)
 ;;   (sdl-base::set-color-key (fp surface) (map-color color surface) rle-accel))
   
 ;; (defun set-alpha (alpha &key (surface *default-surface*) (source-alpha nil) (rle-accel nil))
@@ -455,7 +456,7 @@ drawn into."
 
 `:X` and `:Y` are the positions of the `SURFACE` in screen coordinates."
   (when color-key
-    (check-type color-key sdl-color))
+    (check-type color-key color))
   (make-instance 'surface
 		 :width width :height height :x x :y y
 		 :enable-color-key (or color-key color-key-at)
@@ -714,17 +715,17 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
 
 (defun fill-surface (color &key
 		     (template nil)
-		     (surface *default-surface*) (update-p nil) (clipping-p nil))
+		     (surface *default-surface*) (update nil) (clipping nil))
   "Fills surface with the specified `COLOR`.
    `:TEMPLATE` accepts  a `RECTANGLE` defining the fill bounds.
-   `The surface is updated when `:UPDATE-P`"
-  (check-type color sdl-color)
+   `The surface is updated when `:UPDATE`"
+  (check-type color color)
   (fill-surface-* (r color) (g color) (b color) :a (a color)
-		  :template template :surface surface :update-p update-p :clipping-p clipping-p)
+		  :template template :surface surface :update update :clipping clipping)
   surface)
 
 (defun fill-surface-* (r g b &key (a nil) (template nil)
-		       (surface *default-surface*) (update-p nil) (clipping-p t))
+		       (surface *default-surface*) (update nil) (clipping t))
   "Fill the surface with the specified color `R` `G` `B` `:A` `A`.
  See [FILL-SURFACE](#fill-surface)."
   (unless surface
@@ -737,8 +738,8 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
 			  :template (if template
 					(fp template)
 					(cffi:null-pointer))
-			  :clipping-p clipping-p
-			  :update-p update-p)
+			  :clipping clipping
+			  :update update)
   surface)
 
 (defun copy-channel-to-alpha (destination source &key (channel :r))

@@ -5,7 +5,8 @@
   (:default-initargs
    :gc t
     :free #'sdl-cffi::SDL-Free-RW)
-  (:documentation "A wrapper around a foreign SDL_RWops object."))
+  (:documentation "A wrapper around a foreign SDL_RWops object.
+Free using [FREE](#free)."))
 
 (defun create-RWops-from-file (filename)
   "Creates and returns a new `RWOPS` object from the file at location `FILENAME`."

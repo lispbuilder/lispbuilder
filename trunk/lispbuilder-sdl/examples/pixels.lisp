@@ -54,7 +54,7 @@
 	    (:idle ()
 		   (sdl:fill-surface (sdl:set-color-* color :r (random 255) :g (random 255) :b (random 255))
 				     :template (sdl:set-rectangle-* template :x (random width) :y (random height))
-				     :update-p t
+				     :update t
 				     :surface sdl:*default-display*))))))))
 
 (defun pixels-4 ()
@@ -72,7 +72,7 @@
 	  (:idle ()
 		 (sdl:fill-surface (sdl:set-color-* color :r (random 255) :g (random 255) :b (random 255))
 				   :template (sdl:set-rectangle-* template :x (random width) :y (random height))
-				   :update-p t
+				   :update t
 				   :surface sdl:*default-display*)))))))
 
 

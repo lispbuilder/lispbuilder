@@ -203,10 +203,12 @@
 	          <li><a href="#*yellow*"><code>*yellow*</code></a></li>
 	          <li><a href="#a"><code>a</code></a></li>
 	          <li><a href="#all-integers?"><code>all-integers?</code></a></li>
+	          <li><a href="#alpha"><code>alpha</code></a></li>
 	          <li><a href="#any-color-but-this"><code>any-color-but-this</code></a></li>
 	          <li><a href="#average-fps"><code>average-fps</code></a></li>
 	          <li><a href="#b"><code>b</code></a></li>
 	          <li><a href="#bit-depth"><code>bit-depth</code></a></li>
+	          <li><a href="#bitmap-font"><code>bitmap-font</code></a></li>
 	          <li><a href="#blit-surface"><code>blit-surface</code></a></li>
 	          <li><a href="#cached-surface"><code>cached-surface</code></a></li>
 	          <li><a href="#cast"><code>cast</code></a></li>
@@ -220,10 +222,12 @@
 	          <li><a href="#clear-clip-rect"><code>clear-clip-rect</code></a></li>
 	          <li><a href="#clear-color-key"><code>clear-color-key</code></a></li>
 	          <li><a href="#clear-display"><code>clear-display</code></a></li>
+	          <li><a href="#clip-rect"><code>clip-rect</code></a></li>
 	          <li><a href="#color"><code>color</code></a></li>
 	          <li><a href="#color"><code>color</code></a></li>
 	          <li><a href="#color-*"><code>color-*</code></a></li>
 	          <li><a href="#color-a"><code>color-a</code></a></li>
+	          <li><a href="#color-key"><code>color-key</code></a></li>
 	          <li><a href="#color="><code>color=</code></a></li>
 	          <li><a href="#convert-surface"><code>convert-surface</code></a></li>
 	          <li><a href="#convert-to-display-format"><code>convert-to-display-format</code></a></li>
@@ -235,6 +239,7 @@
 	          <li><a href="#create-rwops-from-file"><code>create-rwops-from-file</code></a></li>
 	          <li><a href="#create-surface"><code>create-surface</code></a></li>
 	          <li><a href="#disable-key-repeat"><code>disable-key-repeat</code></a></li>
+	          <li><a href="#display-surface"><code>display-surface</code></a></li>
 	          <li><a href="#distance"><code>distance</code></a></li>
 	          <li><a href="#distance-*"><code>distance-*</code></a></li>
 	          <li><a href="#draw-bezier"><code>draw-bezier</code></a></li>
@@ -243,8 +248,16 @@
 	          <li><a href="#draw-circle"><code>draw-circle</code></a></li>
 	          <li><a href="#draw-circle-*"><code>draw-circle-*</code></a></li>
 	          <li><a href="#draw-curve"><code>draw-curve</code></a></li>
+	          <li><a href="#draw-ellipse"><code>draw-ellipse</code></a></li>
+	          <li><a href="#draw-ellipse-*"><code>draw-ellipse-*</code></a></li>
 	          <li><a href="#draw-filled-circle"><code>draw-filled-circle</code></a></li>
 	          <li><a href="#draw-filled-circle-*"><code>draw-filled-circle-*</code></a></li>
+	          <li><a href="#draw-filled-ellipse"><code>draw-filled-ellipse</code></a></li>
+	          <li><a href="#draw-filled-ellipse-*"><code>draw-filled-ellipse-*</code></a></li>
+	          <li><a href="#draw-filled-pie"><code>draw-filled-pie</code></a></li>
+	          <li><a href="#draw-filled-pie-*"><code>draw-filled-pie-*</code></a></li>
+	          <li><a href="#draw-filled-polygon"><code>draw-filled-polygon</code></a></li>
+	          <li><a href="#draw-filled-trigon"><code>draw-filled-trigon</code></a></li>
 	          <li><a href="#draw-font"><code>draw-font</code></a></li>
 	          <li><a href="#draw-font"><code>draw-font</code></a></li>
 	          <li><a href="#draw-font-at"><code>draw-font-at</code></a></li>
@@ -252,13 +265,14 @@
 	          <li><a href="#draw-hline"><code>draw-hline</code></a></li>
 	          <li><a href="#draw-line"><code>draw-line</code></a></li>
 	          <li><a href="#draw-line-*"><code>draw-line-*</code></a></li>
+	          <li><a href="#draw-pie"><code>draw-pie</code></a></li>
+	          <li><a href="#draw-pie-*"><code>draw-pie-*</code></a></li>
 	          <li><a href="#draw-pixel"><code>draw-pixel</code></a></li>
 	          <li><a href="#draw-pixel-*"><code>draw-pixel-*</code></a></li>
 	          <li><a href="#draw-polygon"><code>draw-polygon</code></a></li>
 	          <li><a href="#draw-rectangle"><code>draw-rectangle</code></a></li>
 	          <li><a href="#draw-rectangle-*"><code>draw-rectangle-*</code></a></li>
 	          <li><a href="#draw-shape"><code>draw-shape</code></a></li>
-	          <li><a href="#draw-string-centered-*"><code>draw-string-centered-*</code></a></li>
 	          <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a></li>
 	          <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a></li>
 	          <li><a href="#draw-string-solid"><code>draw-string-solid</code></a></li>
@@ -279,7 +293,6 @@
 	          <li><a href="#flood-fill-stack"><code>flood-fill-stack</code></a></li>
 	          <li><a href="#flood-fill-stack-*"><code>flood-fill-stack-*</code></a></li>
 	          <li><a href="#fp"><code>fp</code></a></li>
-	          <li><a href="#fp-position"><code>fp-position</code></a></li>
 	          <li><a href="#frame-rate"><code>frame-rate</code></a></li>
 	          <li><a href="#free"><code>free</code></a></li>
 	          <li><a href="#free-cached-surface"><code>free-cached-surface</code></a></li>
@@ -333,11 +346,11 @@
 	          <li><a href="#render-string-solid"><code>render-string-solid</code></a></li>
 	          <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a></li>
 	          <li><a href="#rotate-surface"><code>rotate-surface</code></a></li>
+	          <li><a href="#rotate-surface-xy"><code>rotate-surface-xy</code></a></li>
 	          <li><a href="#rwops"><code>rwops</code></a></li>
 	          <li><a href="#save-image"><code>save-image</code></a></li>
 	          <li><a href="#sdl-any-format"><code>sdl-any-format</code></a></li>
 	          <li><a href="#sdl-async-blit"><code>sdl-async-blit</code></a></li>
-	          <li><a href="#sdl-color"><code>sdl-color</code></a></li>
 	          <li><a href="#sdl-doublebuf"><code>sdl-doublebuf</code></a></li>
 	          <li><a href="#sdl-fullscreen"><code>sdl-fullscreen</code></a></li>
 	          <li><a href="#sdl-get-ticks"><code>sdl-get-ticks</code></a></li>
@@ -371,13 +384,11 @@
 	          <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a></li>
 	          <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a></li>
 	          <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a></li>
-	          <li><a href="#set-alpha"><code>set-alpha</code></a></li>
 	          <li><a href="#set-cell"><code>set-cell</code></a></li>
 	          <li><a href="#set-cell-*"><code>set-cell-*</code></a></li>
 	          <li><a href="#set-clip-rect"><code>set-clip-rect</code></a></li>
 	          <li><a href="#set-color"><code>set-color</code></a></li>
 	          <li><a href="#set-color-*"><code>set-color-*</code></a></li>
-	          <li><a href="#set-color-key"><code>set-color-key</code></a></li>
 	          <li><a href="#set-gl-attribute"><code>set-gl-attribute</code></a></li>
 	          <li><a href="#set-point"><code>set-point</code></a></li>
 	          <li><a href="#set-point-*"><code>set-point-*</code></a></li>
@@ -425,6 +436,7 @@
 	          <li><a href="#x2"><code>x2</code></a></li>
 	          <li><a href="#y"><code>y</code></a></li>
 	          <li><a href="#y2"><code>y2</code></a></li>
+	          <li><a href="#zoom-surface"><code>zoom-surface</code></a></li>
 	        </ul>
 	  <li><a href="#ack">Acknowledgements</a></li>
 	</ol>
@@ -942,6 +954,8 @@
 	  <a href="#*default-font*">*DEFAULT-FONT*</a> is bound to a font, all subsequent font drawing 
 	  or font rendering functions will use this implied font while it remains in scope.
 	</p>
+	<p>The following methods also apply to fonts; <a href="#x">X</a>, <a href="#y">Y</a>,
+	  <a href="#width">WIDTH</a>, <a href="#height">HEIGHT</a>, Returns the width of the cached [SURFACE](#surface) when `OBJ` is a [FONT](#font).
 	<pre>
 (WITH-COLOR (*WHITE*)
   (WITH-FONT (*FONT-8x8*)
@@ -1134,7 +1148,7 @@
 <p><br>[Special variable]<br><a class=none name='*black*'><b>*black*</b></a>
 <blockquote><br>
 
-<p>The <code>COLOR</code> black. </p>
+<p><code>RGB</code><a href="#color">COLOR</a> black. </p>
 
 </blockquote>
 
@@ -1146,7 +1160,7 @@
 <p><br>[Special variable]<br><a class=none name='*blue*'><b>*blue*</b></a>
 <blockquote><br>
 
-<p>The <code>COLOR</code> blue. </p>
+<p><code>RGB</code><a href="#color">COLOR</a> blue. </p>
 
 </blockquote>
 
@@ -1158,7 +1172,7 @@
 <p><br>[Special variable]<br><a class=none name='*cyan*'><b>*cyan*</b></a>
 <blockquote><br>
 
-<p>The <code>COLOR</code> cyan. </p>
+<p><code>RGB</code><a href="#color">COLOR</a> cyan. </p>
 
 </blockquote>
 
@@ -1170,7 +1184,7 @@
 <p><br>[Special variable]<br><a class=none name='*default-color*'><b>*default-color*</b></a>
 <blockquote><br>
 
-<p>Functions that accept the <code>KEY</code>word parameter <code>COLOR</code> will most likely bind to the  symbol <code>*DEFAULT-COLOR*</code> if <code>COLOR</code> is not specified, automatically using whatever color is referenced  by <code>*DEFAULT-COLOR*</code>.  </p><p>A color is bound to <code>*DEFAULT-COLOR*</code> by the following macro: <a href="#with-color">WITH-COLOR</a>. </p><h5>Example </h5>
+<p>Functions that accept the <code>KEY</code>word parameter <code>COLOR</code> will most likely bind to the  symbol <code>*DEFAULT-COLOR*</code> by default if <code>COLOR</code> is not specified.  </p><p>A color is bound to <code>*DEFAULT-COLOR*</code> by the following macro: <a href="#with-color">WITH-COLOR</a>. </p><h5>Example </h5>
 <pre><code>(DRAW-BOX A-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)
 (DRAW-BOX B-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)
 (DRAW-BOX C-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)
@@ -1203,7 +1217,19 @@
 <p><br>[Special variable]<br><a class=none name='*default-font*'><b>*default-font*</b></a>
 <blockquote><br>
 
-
+<p>Functions that accept the <code>KEY</code>word parameter <code>FONT</code> will most likely bind to the  symbol <code>*DEFAULT-FONT*</code> by default if <code>FONT</code> is not specified.  </p><p>A font is bound to <code>*DEFAULT-FONT*</code> by the following; <a href="#with-default-font">WITH-DEFAULT-FONT</a>,  <a href="#with-font">WITH-FONT</a> and <a href="#initialise-default-font">INITIALISE-DEFAULT-FONT</a>. </p><h5>Example </h5>
+<pre><code>(draw-string-solid-* &amp;quot;draw string centered&amp;quot; 100 100
+                      :justify :center :color sdl:*white* :font a-font)
+(draw-string-solid-* &amp;quot;draw string left&amp;quot; 100 100
+                      :justify :left :color sdl:*white* :font a-font)
+(draw-string-solid-* &amp;quot;draw string right&amp;quot; 100 100
+                      :justify :right :color sdl:*white* :font a-font)
+</code></pre><p>The above can be shortened by setting <code>*DEFAULT-FONT*</code> to <code>a-font</code>. </p><pre><code>(WITH-DEFAULT-FONT (a-font)
+  (WITH-COLOR (COL SDL:*WHITE*)
+    (DRAW-STRING-SOLID-* &amp;quot;draw string centered&amp;quot; 100 100 :JUSTIFY :CENTER)
+    (DRAW-STRING-SOLID-* &amp;quot;draw string left&amp;quot; 100 100 :JUSTIFY :LEFT)
+    (DRAW-STRING-SOLID-* &amp;quot;draw string right&amp;quot; 100 100 :JUSTIFY :RIGHT)))
+</code></pre>
 
 </blockquote>
 
@@ -1251,7 +1277,7 @@
 <p><br>[Special variable]<br><a class=none name='*default-surface*'><b>*default-surface*</b></a>
 <blockquote><br>
 
-<p>Functions that accept the <code>KEY</code>word parameter <code>SURFACE</code> will most likely bind to the  symbol <code>*DEFAULT-SURFACE*</code> if <code>SURFACE</code> is not specified, automatically using whatever surface is referenced  by <code>*DEFAULT-SURFACE*</code>.  </p><p>A surface is bound to <code>*DEFAULT-SURFACE*</code> by the following macros: <a href="#with-surface">WITH-SURFACE</a>,  and <a href="#with-surfaces">WITH-SURFACES</a>. </p><h5>Example </h5>
+<p>Functions that accept the <code>KEY</code>word parameter <code>:SURFACE</code> will most likely bind to the  symbol <code>*DEFAULT-SURFACE*</code> by default if <code>SURFACE</code> is not specified.  </p><p>A surface is bound to <code>*DEFAULT-SURFACE*</code> by the following macros: <a href="#with-surface">WITH-SURFACE</a>,  and <a href="#with-surfaces">WITH-SURFACES</a>. </p><h5>Example </h5>
 <pre><code>(DRAW-SURFACE SURF-1 :SURFACE SDL:*DEFAULT-DISPLAY*)
 (DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*)
 (DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*)
@@ -1295,7 +1321,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-10x20*'><b>*font-10x20*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 10x20 bitmap font. </p>
+<p>Contains the font data for an 10x20 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1307,7 +1335,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-5x7*'><b>*font-5x7*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 5x7 bitmap font. </p>
+<p>Contains the font data for an 5x7 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1319,7 +1349,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-5x8*'><b>*font-5x8*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 5x8 bitmap font. </p>
+<p>Contains the font data for an 5x8 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1331,7 +1363,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-6x10*'><b>*font-6x10*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 6x10 bitmap font. </p>
+<p>Contains the font data for an 6x10 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1343,7 +1377,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-6x12*'><b>*font-6x12*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 6x12 bitmap font. </p>
+<p>Contains the font data for an 6x12 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1355,7 +1391,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-6x13*'><b>*font-6x13*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 6x13 bitmap font. </p>
+<p>Contains the font data for an 6x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1367,7 +1405,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-6x13b*'><b>*font-6x13b*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 6x13 bitmap font. </p>
+<p>Contains the font data for an 6x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1379,7 +1419,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-6x13o*'><b>*font-6x13o*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 6x13 bitmap font. </p>
+<p>Contains the font data for an 6x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1391,7 +1433,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-6x9*'><b>*font-6x9*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 6x9 bitmap font. </p>
+<p>Contains the font data for an 6x9 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1403,7 +1447,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-7x13*'><b>*font-7x13*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 7x13 bitmap font. </p>
+<p>Contains the font data for an 7x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1415,7 +1461,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-7x13b*'><b>*font-7x13b*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 7x13 bitmap font. </p>
+<p>Contains the font data for an 7x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1427,7 +1475,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-7x13o*'><b>*font-7x13o*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 7x13 bitmap font. </p>
+<p>Contains the font data for an 7x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1439,7 +1489,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-7x14*'><b>*font-7x14*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 7x14 bitmap font. </p>
+<p>Contains the font data for an 7x14 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1451,7 +1503,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-7x14b*'><b>*font-7x14b*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 7x14 bitmap font. </p>
+<p>Contains the font data for an 7x14 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1463,7 +1517,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-8x13*'><b>*font-8x13*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 8x13 bitmap font. </p>
+<p>Contains the font data for an 8x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1475,7 +1531,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-8x13b*'><b>*font-8x13b*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 8x13 bitmap font. </p>
+<p>Contains the font data for an 8x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1487,7 +1545,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-8x13o*'><b>*font-8x13o*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 8x13 bitmap font. </p>
+<p>Contains the font data for an 8x13 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1499,7 +1559,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-8x8*'><b>*font-8x8*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 8x8 bitmap font. </p>
+<p>Contains the font data for an 8x8 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1511,7 +1573,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-9x15*'><b>*font-9x15*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 9x15 bitmap font. </p>
+<p>Contains the font data for an 9x15 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1523,7 +1587,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-9x15b*'><b>*font-9x15b*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 9x15 bitmap font. </p>
+<p>Contains the font data for an 9x15 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1535,7 +1601,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-9x18*'><b>*font-9x18*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 9x18 bitmap font. </p>
+<p>Contains the font data for an 9x18 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1547,7 +1615,9 @@
 <p><br>[Special variable]<br><a class=none name='*font-9x18b*'><b>*font-9x18b*</b></a>
 <blockquote><br>
 
-<p>Contains the font data for an 9x18 bitmap font. </p>
+<p>Contains the font data for an 9x18 bitmap font. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -1559,7 +1629,7 @@
 <p><br>[Special variable]<br><a class=none name='*green*'><b>*green*</b></a>
 <blockquote><br>
 
-<p>The <code>COLOR</code> green. </p>
+<p><code>RGB</code><a href="#color">COLOR</a> green. </p>
 
 </blockquote>
 
@@ -1571,7 +1641,7 @@
 <p><br>[Special variable]<br><a class=none name='*magenta*'><b>*magenta*</b></a>
 <blockquote><br>
 
-<p>The <code>COLOR</code> magenta. </p>
+<p><code>RGB</code><a href="#color">COLOR</a> magenta. </p>
 
 </blockquote>
 
@@ -1583,7 +1653,7 @@
 <p><br>[Special variable]<br><a class=none name='*opengl-context*'><b>*opengl-context*</b></a>
 <blockquote><br>
 
-<p>The symbol <code>*OPENGL-CONTEXT*</code> is <code>T</code> when an OpenGL display context is created, and <code>NIL</code> otherwise. <a href="#update-surface">UPDATE-SURFACE</a> will call <a href="#sdl-gl-swap-buffers">SDL-GL-SWAP-BUFFERS</a> when <code>*OPENGL-CONTEXT*</code> is <code>T</code>,  and <a href="#sdl-flip">SDL-FLIP</a> otherwise. </p>
+<p>The symbol <code>*OPENGL-CONTEXT*</code> is <code>T</code> when an OpenGL display context is created, and <code>NIL</code> otherwise. <a href="#update-surface">UPDATE-SURFACE</a> will swap the <code>OPENGL</code> buffers when <code>*OPENGL-CONTEXT*</code> is <code>T</code>,  and swap the <code>SDL</code> video buffers otherwise. </p>
 
 </blockquote>
 
@@ -1595,7 +1665,7 @@
 <p><br>[Special variable]<br><a class=none name='*red*'><b>*red*</b></a>
 <blockquote><br>
 
-<p>The <code>COLOR</code> red. </p>
+<p><code>RGB</code><a href="#color">COLOR</a> red. </p>
 
 </blockquote>
 
@@ -1619,7 +1689,7 @@
 <p><br>[Special variable]<br><a class=none name='*white*'><b>*white*</b></a>
 <blockquote><br>
 
-<p>The <code>COLOR</code> white. </p>
+<p><code>RGB</code><a href="#color">COLOR</a> white. </p>
 
 </blockquote>
 
@@ -1631,7 +1701,7 @@
 <p><br>[Special variable]<br><a class=none name='*yellow*'><b>*yellow*</b></a>
 <blockquote><br>
 
-<p>The <code>COLOR</code> yellow. </p>
+<p><code>RGB</code><a href="#color">COLOR</a> yellow. </p>
 
 </blockquote>
 
@@ -1644,7 +1714,7 @@
 <br><a class=none><tt>(setf (</tt><b>a</b> <i>color</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the alpha component of color <code>COLOR</code> as an <code>INTEGER</code>. </p>
+<p>Returns the alpha color component of the object. </p>
 
 </blockquote>
 
@@ -1657,7 +1727,7 @@
 <br><a class=none><tt>(setf (</tt><b>a</b> <i>(color color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the alpha color component of the color <code>COLOR</code> as an <code>INTEGER</code>. </p>
+
 
 </blockquote>
 
@@ -1669,7 +1739,7 @@
 <p><br>[Method]<br><a class=none><b>a</b> <i>(color color)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>NIL</code> as <code>COLOR</code> has no alpha component. </p>
+
 
 </blockquote>
 
@@ -1688,12 +1758,38 @@
 <!-- End of entry for ALL-INTEGERS? -->
 
 
+<!-- Entry for ALPHA -->
+
+<p><br>[Generic accessor]<br><a class=none name='alpha'><b>alpha</b> <i>surface</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>alpha</b> <i>surface</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for ALPHA -->
+
+
+<!-- Entry for ALPHA -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>alpha</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>alpha</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+<p>Returns the per-surface alpha value. 0 is transparent, and 255 is opaque. </p>
+
+</blockquote>
+
+<!-- End of entry for ALPHA -->
+
+
 <!-- Entry for ANY-COLOR-BUT-THIS -->
 
 <p><br>[Generic function]<br><a class=none name='any-color-but-this'><b>any-color-but-this</b> <i>color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a new color that is different to the color <code>COLOR</code>. </p>
+<p>Returns a new color that is different to <code>COLOR</code>. </p>
 
 </blockquote>
 
@@ -1705,7 +1801,7 @@
 <p><br>[Method]<br><a class=none><b>any-color-but-this</b> <i>color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a new color that is different to the color <code>COLOR</code>. </p>
+
 
 </blockquote>
 
@@ -1717,7 +1813,7 @@
 <p><br>[Function]<br><a class=none name='average-fps'><b>average-fps</b> <i></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Returns the average frame rate of the event loop calculated over a sliding window of 100 frames. </p>
 
 </blockquote>
 
@@ -1730,7 +1826,7 @@
 <br><a class=none><tt>(setf (</tt><b>b</b> <i>color</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the blue component of color <code>COLOR</code> as an <code>INTEGER</code>. </p>
+<p>Returns the blue color component of the object. </p>
 
 </blockquote>
 
@@ -1743,7 +1839,7 @@
 <br><a class=none><tt>(setf (</tt><b>b</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the blue color component of the color <code>COLOR</code> as an <code>INTEGER</code>. </p>
+
 
 </blockquote>
 
@@ -1762,25 +1858,37 @@
 <!-- End of entry for BIT-DEPTH -->
 
 
+<!-- Entry for BITMAP-FONT -->
+
+<p><br>[Standard class]<br><a class=none name='bitmap-font'><b>bitmap-font</b></a>
+<blockquote><br>
+
+<p>The <code>BITMAP-FONT</code> object manages the resources for a bitmap font.  Prior to the first call to a <code>RENDER-STRING*</code> function,  the cached <a href="#surface">SURFACE</a> is <code>NIL</code>.  </p><p>The cached surface is created by a call to any of the RENDER-STRING* functions.  Use <a href="#draw-font">DRAW-FONT</a>, <a href="#draw-font-at">DRAW-FONT-AT</a>  or <a href="#draw-font-at-*">DRAW-FONT-AT-*</a> to draw the cached surface. </p><p>Free using <a href="#free">FREE</a></p>
+
+</blockquote>
+
+<!-- End of entry for BITMAP-FONT -->
+
+
 <!-- Entry for BLIT-SURFACE -->
 
 <p><br>[Function]<br><a class=none name='blit-surface'><b>blit-surface</b> <i>source <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Performs a fast blit of the <code>SOURCE</code> surface to the destination <code>SURFACE</code>. The area defined  by the <code>SOURCE</code> cell is blitted to the area defined by the destination clipping rectangle.  The blit function should not be called on a locked surface. The results of blitting operations vary greatly depending on whether a surface ALPHA channel is set  on the source surface or not. The priorty of how color key and alpha attributes interact with surface blitting is as follows: </p><ul><li>source surface with <code>SURFACE-ALPHA-P</code> + <code>PIXEL-ALPHA</code>: Blit using per-pixel alpha only </li>
-<li>source surface with <code>SURFACE-ALPHA-P</code> + <code>COLOR-KEY-P</code>: Blit using the colour key AND the per-surface alpha value </li>
-<li>source surface with <code>SURFACE-ALPHA-P</code>: Blit using the colour key AND the per-surface alpha value </li>
-<li>source surface with <code>COLOR-KEY-P</code>: Blit using the colour key </li>
+<p>Performs a fast blit of the <code>SOURCE</code> surface to the destination <code>SURFACE</code>. The area defined  by the <code>SOURCE</code> cell is blitted to the area defined by the destination clipping rectangle.  The blit function should not be called on a locked surface. The results of blitting operations vary greatly depending on whether a surface ALPHA channel is set  on the source surface or not. The priorty of how color key and alpha attributes interact with surface blitting is as follows: </p><ul><li>source surface with <code>ALPHA</code> + <code>PIXEL-ALPHA</code>: Blit using per-pixel alpha only </li>
+<li>source surface with <code>ALPHA</code> + <code>COLOR-KEY</code>: Blit using the colour key AND the per-surface alpha value </li>
+<li>source surface with <code>ALPHA</code>: Blit using the colour key AND the per-surface alpha value </li>
+<li>source surface with <code>COLOR-KEY</code>: Blit using the colour key </li>
 <li>source surface: Blit using opaque rectangular blit </li>
-</ul><p>An ALPHA channel has the following effect on blitting operations:  </p><ul><li><STRONG>RGBA to RGB</STRONG> with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The source is alpha-blended with the destination, using the alpha channel. <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a>  and the per-surface alpha are ignored. </li>
-<li><STRONG>RGBA to RGB</STRONG> without <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored.  If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
-<li><STRONG>RGB to RGBA</STRONG> with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The source is alpha-blended with the destination using the per-surface alpha value. If  <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not matching the colorkey value are copied.  The alpha channel of the copied pixels is set to opaque. </li>
-<li><STRONG>RGB to RGBA</STRONG> without <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque.  If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
-<li><STRONG>RGBA to RGBA</STRONG> with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination  surface is left untouched. <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is ignored. </li>
-<li><STRONG>RGBA to RGBA</STRONG> without <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:	 The RGBA data is copied to the destination surface. If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set,  only the pixels not matching the colorkey value are copied. </li>
-<li><STRONG>RGB to RGB</STRONG> with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>:  The source is alpha-blended with the destination using the per-surface alpha value.  If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
-<li><STRONG>RGB to RGB</STRONG> without <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a>: The RGB data is copied from the source. If <a href="#enable-color-key-p">ENABLE-COLOR-KEY-P</a> is set, only the pixels not  matching the colorkey value are copied. </li>
-</ul><p><EM>Note</EM>: <STRONG>RGBA to RGBA</STRONG> blits (with <a href="#enable-surface-alpha-p">ENABLE-SURFACE-ALPHA-P</a> set) keep the alpha of the destination  surface. This means that you cannot compose two arbitrary <STRONG>RGBA</STRONG> surfaces this way and get the result you would  expect from &quot;overlaying&quot; them; the destination alpha will work as a mask. </p>
+</ul><p>An ALPHA channel has the following effect on blitting operations:  </p><ul><li><STRONG>RGBA to RGB</STRONG> with <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>:  The source is alpha-blended with the destination, using the alpha channel. <a href="#color-key-enabled-p">COLOR-KEY-ENABLED-P</a>  and the per-surface alpha are ignored. </li>
+<li><STRONG>RGBA to RGB</STRONG> without <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>:  The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored.  If <a href="#color-key-enabled-p">COLOR-KEY-ENABLED-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGBA</STRONG> with <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>:  The source is alpha-blended with the destination using the per-surface alpha value. If  <a href="#color-key-enabled-p">COLOR-KEY-ENABLED-P</a> is set, only the pixels not matching the colorkey value are copied.  The alpha channel of the copied pixels is set to opaque. </li>
+<li><STRONG>RGB to RGBA</STRONG> without <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>:  The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque.  If <a href="#color-key-enabled-p">COLOR-KEY-ENABLED-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGBA to RGBA</STRONG> with <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>:  The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination  surface is left untouched. <a href="#color-key-enabled-p">COLOR-KEY-ENABLED-P</a> is ignored. </li>
+<li><STRONG>RGBA to RGBA</STRONG> without <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>:	 The RGBA data is copied to the destination surface. If <a href="#color-key-enabled-p">COLOR-KEY-ENABLED-P</a> is set,  only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGB</STRONG> with <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>:  The source is alpha-blended with the destination using the per-surface alpha value.  If <a href="#color-key-enabled-p">COLOR-KEY-ENABLED-P</a> is set, only the pixels not matching the colorkey value are copied. </li>
+<li><STRONG>RGB to RGB</STRONG> without <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>: The RGB data is copied from the source. If <a href="#color-key-enabled-p">COLOR-KEY-ENABLED-P</a> is set, only the pixels not  matching the colorkey value are copied. </li>
+</ul><p><EM>Note</EM>: <STRONG>RGBA to RGBA</STRONG> blits (with <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a> set) keep the alpha of the destination  surface. This means that you cannot compose two arbitrary <STRONG>RGBA</STRONG> surfaces this way and get the result you would  expect from &quot;overlaying&quot; them; the destination alpha will work as a mask. </p>
 
 </blockquote>
 
@@ -1959,14 +2067,40 @@
 
 <!-- Entry for CLEAR-DISPLAY -->
 
-<p><br>[Function]<br><a class=none name='clear-display'><b>clear-display</b> <i>color <tt>&amp;key</tt> surface update-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='clear-display'><b>clear-display</b> <i>color <tt>&amp;key</tt> surface update</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Fills the display <code>SURFACE</code> using color <code>COLOR</code>. <code>SURFACE</code> is bound to <code>*DEFAULT-DISPLAY*</code> if unspecified.  The display is updated when <code>UPDATE-P</code> is <code>T</code>. </p>
+<p>Fills the display <code>SURFACE</code> using color <code>COLOR</code>. <code>SURFACE</code> is bound to <code>*DEFAULT-DISPLAY*</code> if unspecified.  The display is updated when <code>UPDATE</code> is <code>T</code>. </p>
 
 </blockquote>
 
 <!-- End of entry for CLEAR-DISPLAY -->
+
+
+<!-- Entry for CLIP-RECT -->
+
+<p><br>[Generic accessor]<br><a class=none name='clip-rect'><b>clip-rect</b> <i>surface</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>clip-rect</b> <i>surface</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for CLIP-RECT -->
+
+
+<!-- Entry for CLIP-RECT -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>clip-rect</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>clip-rect</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+<p>Returns the clipping <code>RECTANGLE</code> for <code>SURFACE</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for CLIP-RECT -->
 
 
 <!-- Entry for COLOR -->
@@ -1974,7 +2108,7 @@
 <p><br>[Standard class]<br><a class=none name='color'><b>color</b></a>
 <blockquote><br>
 
-<p>An SDL color containing <code>INTEGER</code> Red, Green and Blue color components. </p>
+<p>A color containing <code>INTEGER</code> Red, Green and Blue components. Free using <a href="#free">FREE</a>. </p>
 
 </blockquote>
 
@@ -1986,7 +2120,7 @@
 <p><br>[Function]<br><a class=none name='color'><b>color</b> <i><tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates and returns a new <a href="#color">COLOR</a> from the soecified red <code>R</code>, green <code>G</code>, and blue <code>B</code> color components. When <code>A</code> is an <code>INTEGER</code>, will return a new <a href="#color-a">COLOR-A</a> with the alpha transparency. </p>
+<p>Returns a new <code>RGB</code><a href="#color">COLOR</a> from the specified <code>R</code>ed, <code>G</code>reen, and <code>B</code>lue components. Returns a new <code>RGBA</code><a href="#color-a">COLOR-A</a> from the specified <code>R</code>ed, <code>G</code>reen, <code>B</code>lue, and <code>A</code>lpha components. </p>
 
 </blockquote>
 
@@ -1998,19 +2132,7 @@
 <p><br>[Generic function]<br><a class=none name='color-*'><b>color-*</b> <i>color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the RGB/A components of color as a spread.  If <code>COLOR</code> contains an alpha component then <code>RESULT</code> is <code>(VALUES R G B A)</code> If <code>COLOR</code> contains no alpha component then <code>RESULT</code> is <code>(VALUES R G B)</code></p>
-
-</blockquote>
-
-<!-- End of entry for COLOR-* -->
-
-
-<!-- Entry for COLOR-* -->
-
-<p><br>[Method]<br><a class=none><b>color-*</b> <i>(color foreign-color)</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Not implemented yet. Returns <code>NIL</code></p>
+<p>Returns the <code>RGB/A</code> color components as a spread.  <a href="#color-a">COLOR-A</a> returns <code>(VALUES R G B A)</code>.  <a href="#color">COLOR</a> returns <code>(VALUES R G B)</code></p>
 
 </blockquote>
 
@@ -2022,7 +2144,7 @@
 <p><br>[Method]<br><a class=none><b>color-*</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the read, green, blue and alpha components of the color <code>COLOR</code> as a spread. </p>
+
 
 </blockquote>
 
@@ -2034,7 +2156,7 @@
 <p><br>[Method]<br><a class=none><b>color-*</b> <i>(color color)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the read, green and blue components of the color <code>COLOR</code> as a spread. </p>
+
 
 </blockquote>
 
@@ -2046,11 +2168,37 @@
 <p><br>[Standard class]<br><a class=none name='color-a'><b>color-a</b></a>
 <blockquote><br>
 
-<p>An SDL color containing <code>INTEGER</code> Red, Green, Blue and Alpha color components. </p>
+<p>An color containing <code>INTEGER</code> Red, Green, Blue and Alpha components. Free using <a href="#free">FREE</a>. </p>
 
 </blockquote>
 
 <!-- End of entry for COLOR-A -->
+
+
+<!-- Entry for COLOR-KEY -->
+
+<p><br>[Generic accessor]<br><a class=none name='color-key'><b>color-key</b> <i>surface</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>color-key</b> <i>surface</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for COLOR-KEY -->
+
+
+<!-- Entry for COLOR-KEY -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>color-key</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>color-key</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+<p>Returns the current color key (transparent pixel) as <a href="#color">COLOR</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for COLOR-KEY -->
 
 
 <!-- Entry for COLOR= -->
@@ -2058,7 +2206,7 @@
 <p><br>[Generic function]<br><a class=none name='color='><b>color=</b> <i>color1 color2</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>T</code> if colors match, returns <code>NIL</code> otherwise. </p>
+<p>Returns <code>T</code> if the <code>RGB</code>&lt;-&gt;<code>RGB</code> or <code>RGBA</code>&lt;-&gt;<code>RGBA</code> color components in <code>COLOR1</code> and <code>COLOR2</code> match.  Returns <code>NIL</code> otherwise. </p>
 
 </blockquote>
 
@@ -2070,7 +2218,7 @@
 <p><br>[Method]<br><a class=none><b>color=</b> <i>(color1 color-a) (color2 color-a)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>T</code> if the <code>RGBA</code> colors match, returns <code>NIL</code> otherwise. </p>
+
 
 </blockquote>
 
@@ -2082,7 +2230,7 @@
 <p><br>[Method]<br><a class=none><b>color=</b> <i>(color1 color) (color2 color)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>T</code> if the <code>RGB</code> colors match, returns <code>NIL</code> otherwise. </p>
+
 
 </blockquote>
 
@@ -2094,7 +2242,7 @@
 <p><br>[Method]<br><a class=none><b>color=</b> <i>color1 color2</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>NIL</code>. This is a catch all when an <code>RGB</code> color is compared with an <code>RGBA</code> color. </p>
+
 
 </blockquote>
 
@@ -2103,10 +2251,10 @@
 
 <!-- Entry for CONVERT-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='convert-surface'><b>convert-surface</b> <i><tt>&amp;key</tt> surface to-surface enable-surface-alpha enable-color-key free inherit type</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='convert-surface'><b>convert-surface</b> <i><tt>&amp;key</tt> surface to-surface enable-alpha enable-color-key free inherit type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Converts <code>:SURFACE</code> and returns a new surface matching the pixel format and color of <code>:TO-SURFACE</code>. Calls <a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a> if converting to the display format. </p><p>Use <code>:ENABLE-COLOR-KEY</code> or <code>:ENABLE-SURFACE-ALPHA</code> to take advantage of hardware  colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily  utilize available harware acceleration if the surface was not initally created in video memory. </p><p>Will create the new surface in system menory when <code>TYPE</code> is <code>:SW</code>.  Will attempt to create the new surface in video menory when <code>TYPE</code> is <code>:HW</code>,  otherwise the surface is created in system memory if the combination  of color key and alpha do not allow hardware acceleration. </p><p>The new surface will inherit the pixel, alpha and color key components of the source, <EM>unless</EM><code>:INHERIT</code> is <code>NIL</code>. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p>
+<p>Converts <code>:SURFACE</code> and returns a new surface matching the pixel format and color of <code>:TO-SURFACE</code>. Calls <a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a> if converting to the display format. </p><p>Use <code>:ENABLE-COLOR-KEY</code> or <code>:ENABLE-ALPHA</code> to take advantage of hardware  colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily  utilize available harware acceleration if the surface was not initally created in video memory. </p><p>Will create the new surface in system menory when <code>TYPE</code> is <code>:SW</code>.  Will attempt to create the new surface in video menory when <code>TYPE</code> is <code>:HW</code>,  otherwise the surface is created in system memory if the combination  of color key and alpha do not allow hardware acceleration. </p><p>The new surface will inherit the pixel, alpha and color key components of the source, <EM>unless</EM><code>:INHERIT</code> is <code>NIL</code>. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p>
 
 </blockquote>
 
@@ -2115,10 +2263,10 @@
 
 <!-- Entry for CONVERT-TO-DISPLAY-FORMAT -->
 
-<p><br>[Function]<br><a class=none name='convert-to-display-format'><b>convert-to-display-format</b> <i><tt>&amp;key</tt> surface enable-surface-alpha enable-color-key pixel-alpha free inherit</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='convert-to-display-format'><b>convert-to-display-format</b> <i><tt>&amp;key</tt> surface enable-alpha enable-color-key pixel-alpha free inherit</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a new surface matching the pixel format and color of the video frame buffer (<code>*display surface*),  that is suitable for fast blitting.  The new surface will inherit the pixel, alpha and color key components of the source, *unless* </code>:INHERIT<code> is </code>NIL`. </p><p>Use <code>:ENABLE-COLOR-KEY</code> or <code>:ENABLE-SURFACE-ALPHA</code> to take advantage of hardware  colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily  utilize available harware acceleration if the surface was not initally created in video memory. </p><p>Use <code>:PIXEL-ALPHA</code> to enable the pixel alpha component (alpha mask of 0xFF) for the new surface. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p><p>Differences between <a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a>, <a href="#convert-surface">CONVERT-SURFACE</a>, <a href="#copy-surface">COPY-SURFACE</a>, and <a href="#create-surface">CREATE-SURFACE</a>; </p><ul><li><p><a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a><EM> will always attempt to create a surface in video memory using hardware acceleration if key color and surface alpha are supported.  </EM> A pixel alpha component can be specified.  ** New surface is filled with old surface.  </p></li>
+<p>Returns a new surface matching the pixel format and color of the video frame buffer (<code>*display surface*),  that is suitable for fast blitting.  The new surface will inherit the pixel, alpha and color key components of the source, *unless* </code>:INHERIT<code> is </code>NIL`. </p><p>Use <code>:ENABLE-COLOR-KEY</code> or <code>:ENABLE-ALPHA</code> to take advantage of hardware  colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily  utilize available harware acceleration if the surface was not initally created in video memory. </p><p>Use <code>:PIXEL-ALPHA</code> to enable the pixel alpha component (alpha mask of 0xFF) for the new surface. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p><p>Differences between <a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a>, <a href="#convert-surface">CONVERT-SURFACE</a>, <a href="#copy-surface">COPY-SURFACE</a>, and <a href="#create-surface">CREATE-SURFACE</a>; </p><ul><li><p><a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a><EM> will always attempt to create a surface in video memory using hardware acceleration if key color and surface alpha are supported.  </EM> A pixel alpha component can be specified.  ** New surface is filled with old surface.  </p></li>
 <li><p><a href="#convert-surface">CONVERT-SURFACE</a> ** calls <a href="#convert-to-display-format">CONVERT-TO-DISPLAY-FORMAT</a> if converting a surface to the display format. <EM> paramatized option to create new surface in video or system memory. </EM> Pixel format and color match that of the source surface.  ** New surface is filled with old surface.  </p></li>
 <li><a href="#copy-surface">COPY-SURFACE</a><EM> paramatized option to create new surface in video or system memory. </EM> copies a portion or all of the source surface to a new destination surface <EM> A pixel alpha component can be specified.  </EM> New surface can be filled with the old surface, or the color key or both. </li>
 </ul>
@@ -2154,10 +2302,10 @@
 
 <!-- Entry for COPY-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='copy-surface'><b>copy-surface</b> <i><tt>&amp;key</tt> cell cell-index surface color-key surface-alpha pixel-alpha rle-accel type free inherit fill color-key-fill pixel-format</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='copy-surface'><b>copy-surface</b> <i><tt>&amp;key</tt> cell cell-index surface color-key alpha pixel-alpha rle-accel type free inherit fill color-key-fill pixel-format</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a copy of <code>:SURFACE</code>.  </p><p>Use <code>:COLOR-KEY</code> or <code>:SURFACE-ALPHA</code> to set the key color and surface alpha transparency. Hardware colorkey and alpha blit acceleration will be used if supported.  </p><p>Will create the new surface in system menory when <code>TYPE</code> is <code>:SW</code>.  Will attempt to create the new surface in video menory when <code>TYPE</code> is <code>:HW</code>,  otherwise the surface is created in system memory if the combination  of color key and alpha do not allow hardware acceleration. </p><p>The new surface will be filled with the old surface unless <code>:FILL</code> is <code>NIL</code>. The new surface will be filled with the color key of the old surface (if available) unless <code>:COLOR-KEY-FILL</code> is <code>NIL</code>. </p><p>The new surface will inherit the pixel, alpha and color key components of the source, <EM>unless</EM><code>:INHERIT</code> is <code>NIL</code>. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p>
+<p>Returns a copy of <code>:SURFACE</code>.  </p><p>Use <code>:COLOR-KEY</code> or <code>:ALPHA</code> to set the key color and surface alpha transparency. Hardware colorkey and alpha blit acceleration will be used if supported.  </p><p>Will create the new surface in system menory when <code>TYPE</code> is <code>:SW</code>.  Will attempt to create the new surface in video menory when <code>TYPE</code> is <code>:HW</code>,  otherwise the surface is created in system memory if the combination  of color key and alpha do not allow hardware acceleration. </p><p>The new surface will be filled with the old surface unless <code>:FILL</code> is <code>NIL</code>. The new surface will be filled with the color key of the old surface (if available) unless <code>:COLOR-KEY-FILL</code> is <code>NIL</code>. </p><p>The new surface will inherit the pixel, alpha and color key components of the source, <EM>unless</EM><code>:INHERIT</code> is <code>NIL</code>. </p><p>Use <code>:FREE</code> to delete the source <code>SURFACE</code>. </p>
 
 </blockquote>
 
@@ -2202,10 +2350,10 @@
 
 <!-- Entry for CREATE-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='create-surface'><b>create-surface</b> <i>width height <tt>&amp;key</tt> bpp type color-key color-key-at pixel-alpha surface-alpha rle-accel x y</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='create-surface'><b>create-surface</b> <i>width height <tt>&amp;key</tt> bpp type color-key color-key-at pixel-alpha alpha rle-accel x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates and returns a new <code>SURFACE</code> with the dimensions <code>WIDTH</code> and <code>HEIGHT</code>. </p><p><code>:COLOR-KEY</code> sets the color key of the surface and enables color-keying.  </p><p><code>:SURFACE-ALPHA</code> sets the surface alpha transparency and enables alpha blending. This allows a pixel color of <code>RGB</code> with the surface <code>A</code>. </p><p><code>:PIXEL-ALPHA</code> enables a pixel alpha component (alpha mask of 0xFF) on the new surface. This allows a pixel color of <code>RGBA</code>. </p><p><code>:RLE-ACCEL</code> enables RLE blit acceleration.  </p><p><code>:BPP</code> is the pixel depth of the surface, and my be 8, 16, 24 or 32.  </p><p><code>:TYPE</code> attempts to create the <code>SURFACE</code> in video memory when <code>:HW</code>, and in system memory when <code>:SW</code></p><p><code>:X</code> and <code>:Y</code> are the positions of the <code>SURFACE</code> in screen coordinates. </p>
+<p>Creates and returns a new <code>SURFACE</code> with the dimensions <code>WIDTH</code> and <code>HEIGHT</code>. </p><p><code>:COLOR-KEY</code> sets the color key of the surface and enables color-keying.  </p><p><code>:ALPHA</code> sets the surface alpha transparency and enables alpha blending. This allows a pixel color of <code>RGB</code> with the surface <code>A</code>. </p><p><code>:PIXEL-ALPHA</code> enables a pixel alpha component (alpha mask of 0xFF) on the new surface. This allows a pixel color of <code>RGBA</code>. </p><p><code>:RLE-ACCEL</code> enables RLE blit acceleration.  </p><p><code>:BPP</code> is the pixel depth of the surface, and my be 8, 16, 24 or 32.  </p><p><code>:TYPE</code> attempts to create the <code>SURFACE</code> in video memory when <code>:HW</code>, and in system memory when <code>:SW</code></p><p><code>:X</code> and <code>:Y</code> are the positions of the <code>SURFACE</code> in screen coordinates. </p>
 
 </blockquote>
 
@@ -2222,6 +2370,18 @@
 </blockquote>
 
 <!-- End of entry for DISABLE-KEY-REPEAT -->
+
+
+<!-- Entry for DISPLAY-SURFACE -->
+
+<p><br>[Standard class]<br><a class=none name='display-surface'><b>display-surface</b></a>
+<blockquote><br>
+
+<p>The current display surface. Can be accessed using <code>SDL:*DEFAULT-DISPLAY*</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for DISPLAY-SURFACE -->
 
 
 <!-- Entry for DISTANCE -->
@@ -2250,23 +2410,26 @@
 
 <!-- Entry for DRAW-BEZIER -->
 
-<p><br>[Function]<br><a class=none name='draw-bezier'><b>draw-bezier</b> <i>points type <tt>&amp;key</tt> clipping-p surface color segments</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-bezier'><b>draw-bezier</b> <i>vertices <tt>&amp;key</tt> clipping surface color segments style</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a bezier curve of color <code>COLOR</code> to the surface <code>SURFACE</code>. The shape of the Bezier curve is defined by several control points.  A control point is a vertex containing an X and Y coordinate pair. </p><h5>Parameters </h5>
-<ul><li><code>VERTICES</code> is the list of control points of type <code>SDL:POINT</code>. </li>
-<li><code>TYPE</code> describes the line style used to draw the curve and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
-<li><code>SEGMENTS</code> is the number of segments used to draw the curve. Default is 10 segments if unspecified. The greater the number of segments,  the smoother the curve. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<p>Draw a bezier curve of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. The shape of the Bezier curve is defined by several control points.  A control point is a vertex containing an X and Y coordinate pair. </p><h5>Parameters </h5>
+<ul><li><code>:VERTICES</code> is a list of control points of <a href="#point">POINT</a>. </li>
+<li><code>:STYLE</code> describes the line style used to draw the curve and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints.  Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+<li><code>:SEGMENTS</code> is the number of line segments used to draw the curve. The default is 20 segments if unspecified. The greater the number of segments,  the smoother the curve. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li>
 </ul><h5>Example </h5>
 <pre><code>(DRAW-BEZIER (LIST (SDL:POINT :X 60  :Y 40)
                      (SDL:POINT :X 160 :Y 10)
                      (SDL:POINT :X 170 :Y 150)
                      (SDL:POINT :X 60 :Y 150))
-               :SOLID)
-</code></pre>
+               :style :SOLID)
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><code>:STYLE</code> is ignored in <code>LISPBUILDER-SDL-GFX</code>. </li>
+</ul>
 
 </blockquote>
 
@@ -2275,11 +2438,13 @@
 
 <!-- Entry for DRAW-BOX -->
 
-<p><br>[Function]<br><a class=none name='draw-box'><b>draw-box</b> <i>rect <tt>&amp;key</tt> clipping-p surface color stroke-color alpha</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-box'><b>draw-box</b> <i>rect <tt>&amp;key</tt> clipping surface color stroke-color alpha</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#draw-box-*">DRAW-BOX-*</a>. </p><h5>Parameters </h5>
-<ul><li><code>RECT</code> is the rectangle to fill, of type <code>SDL:RECTANGLE</code>. </li>
+<ul><li><code>RECT</code> is <a href="#rectangle">RECTANGLE</a>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2289,17 +2454,19 @@
 
 <!-- Entry for DRAW-BOX-* -->
 
-<p><br>[Function]<br><a class=none name='draw-box-*'><b>draw-box-*</b> <i>x y w h <tt>&amp;key</tt> clipping-p surface color stroke-color alpha</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-box-*'><b>draw-box-*</b> <i>x y w h <tt>&amp;key</tt> clipping surface color stroke-color alpha</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draws a filled rectangle of color <code>COLOR</code> to surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<p>Draws a filled rectangle of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. </p><h5>Parameters </h5>
 <ul><li><code>X</code> and <code>Y</code> are the <code>INTEGER</code> coordinates of the top-left corner of the rectangle. </li>
 <li><code>W</code> and <code>H</code> are the width and height of the rectangle, of type <code>INTEGER</code>. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>STROKE-COLOR</code> when not <code>NIL</code> will draw a <code>1</code> pixel line of color <code>COLOR</code> around the perimiter of the box. </li>
-<li><code>ALPHA</code> when between <code>0</code> and <code>255</code> is used as the alpha transparency value when blitting the rectangle onto <code>SURFACE</code>. <EM>Note:</EM> An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface is blitted to <code>SURFACE</code>. </li>
-<li><code>CLIPPING-P</code> when <code>T</code> will clip the shape to the dimensions of <code>SURFACE</code>.  The default is <code>NIL</code> as the SDL library will perform the necessary clipping automatically. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:STROKE-COLOR</code> when not <code>NIL</code> will draw a <code>1</code> pixel line of color <code>COLOR</code> around the perimiter of the box. </li>
+<li><code>:ALPHA</code> when between <code>0</code> and <code>255</code> is used as the alpha transparency value when blitting the rectangle onto <code>SURFACE</code>. <EM>Note:</EM> An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface is blitted to <code>SURFACE</code>. </li>
+<li><code>:CLIPPING</code> is <code>NIL</code> The default is <code>NIL</code> as the SDL library will perform the necessary clipping automatically. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2309,11 +2476,14 @@
 
 <!-- Entry for DRAW-CIRCLE -->
 
-<p><br>[Function]<br><a class=none name='draw-circle'><b>draw-circle</b> <i>p1 r <tt>&amp;key</tt> surface color alpha</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-circle'><b>draw-circle</b> <i>p1 r <tt>&amp;key</tt> surface color alpha aa</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#draw-circle-*">DRAW-CIRCLE-*</a>. </p><h5>Parameters </h5>
-<ul><li><code>P1</code> is the X/Y coordinate of the center of the circle, of type <code>SDL:POINT</code>. </li>
+<ul><li><code>P1</code> is the <a href="#point">POINT</a> coordinates at the center of the circle. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><code>:AA</code> ignored in <STRONG>LISPBUILDER-SDL</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2323,16 +2493,19 @@
 
 <!-- Entry for DRAW-CIRCLE-* -->
 
-<p><br>[Function]<br><a class=none name='draw-circle-*'><b>draw-circle-*</b> <i>x0 y0 r <tt>&amp;key</tt> surface color alpha</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-circle-*'><b>draw-circle-*</b> <i>x0 y0 r <tt>&amp;key</tt> surface color alpha aa</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draws a circle circumference of color <code>COLOR</code> to the surface <code>SURFACE</code>. Use <a href="#draw-filled-circle-*">DRAW-FILLED-CIRCLE-*</a> to draw a filled circle. </p><h5>Parameters </h5>
+<p>Draws a circle circumference of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. Use <a href="#draw-filled-circle-*">DRAW-FILLED-CIRCLE-*</a> to draw a filled circle. </p><h5>Parameters </h5>
 <ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the circle, of type <code>INTEGER</code>. </li>
 <li><code>R</code> is the circle r, of type <code>INTEGER</code>. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>ALPHA</code> when between <code>0</code> and <code>255</code> is used as the alpha transparency value when blitting the rectangle onto <code>SURFACE</code>. <EM>Note:</EM> An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface is blitted to <code>SURFACE</code>. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<li><code>:AA</code> determines if the line is to be drawn using antialiasing. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:ALPHA</code> when between <code>0</code> and <code>255</code> is used as the alpha transparency value when blitting the rectangle onto <code>SURFACE</code>. <EM>Note:</EM> An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface is blitted to <code>SURFACE</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><code>:AA</code> ignored in <STRONG>LISPBUILDER-SDL</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2342,28 +2515,63 @@
 
 <!-- Entry for DRAW-CURVE -->
 
-<p><br>[Function]<br><a class=none name='draw-curve'><b>draw-curve</b> <i>points type <tt>&amp;key</tt> clipping-p surface color segments</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-curve'><b>draw-curve</b> <i>vertices <tt>&amp;key</tt> clipping surface color segments style</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a Cattmul-Rom spline using color <code>COLOR</code> to the surface <code>SURFACE</code>. The shape of the curve is defined by waypoints.  A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Parameters </h5>
-<ul><li><code>POINTS</code> is a list of waypoints or vetices for the spline, of type <code>SDL:POINT</code></li>
-<li><code>TYPE</code> describes the line style used to draw the curve and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
-<li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline.   Default is 10 segments if unspecified. The greater the number of segments,  the smoother the spline. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>.  </li>
-<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<p>Draw a Cattmul-Rom spline of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>.  The shape of the curve is defined by waypoints.  A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Parameters </h5>
+<ul><li><code>VERTICES</code> is a list of waypoints or vetices for the spline, of <a href="#point">POINT</a></li>
+<li><code>STYLE</code> describes the line style used to draw the curve and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>.  Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints.  Use <code>:DASH</code> to draw a line between alternate waypoint pairs.  Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+<li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline.   Default is 20 segments if unspecified. The greater the number of segments,  the smoother the spline. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li>
 </ul><h5>Example </h5>
 <pre><code>(DRAW-CURVE (LIST (SDL:POINT :X 60  :Y 40)
     	  (SDL:POINT :X 160 :Y 10)
 	  (SDL:POINT :X 170 :Y 150)
-	  (SDL:POINT :X 60  :Y 150))
-    :SOLID
-    10)
-</code></pre>
+	  (SDL:POINT :X 60  :Y 150)))
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
 <!-- End of entry for DRAW-CURVE -->
+
+
+<!-- Entry for DRAW-ELLIPSE -->
+
+<p><br>[Function]<br><a class=none name='draw-ellipse'><b>draw-ellipse</b> <i>p1 rx ry <tt>&amp;key</tt> surface color aa</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#draw-ellipse-*">DRAW-ELLIPSE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the <a href="#point">POINT</a> coordinates at the center of the ellipse. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-ELLIPSE -->
+
+
+<!-- Entry for DRAW-ELLIPSE-* -->
+
+<p><br>[Function]<br><a class=none name='draw-ellipse-*'><b>draw-ellipse-*</b> <i>x y rx ry <tt>&amp;key</tt> surface color aa</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draws an ellipse circumference of <a href="#color">COLOR</a> to the <a href="#surface">SURFACE</a>. Use <a href="#draw-filled-ellipse-*">DRAW-FILLED-ELLIPSE-*</a> to draw a filled ellipse. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the ellipse, of type <code>INTEGER</code>. </li>
+<li><code>RX</code> and <code>RY</code> specify the ellipse radius, of type <code>INTEGER</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-ELLIPSE-* -->
 
 
 <!-- Entry for DRAW-FILLED-CIRCLE -->
@@ -2372,7 +2580,9 @@
 <blockquote><br>
 
 <p>See <a href="#draw-filled-circle-*">DRAW-FILLED-CIRCLE-*</a>. </p><h5>Parameters </h5>
-<ul><li><code>P1</code> is the X/Y coordinate of the center of the filled circle, of type <code>SDL:POINT</code>. </li>
+<ul><li><code>P1</code> is the <a href="#point">POINT</a> coordinates coordinate of the center of the filled circle. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2385,14 +2595,15 @@
 <p><br>[Function]<br><a class=none name='draw-filled-circle-*'><b>draw-filled-circle-*</b> <i>x0 y0 r <tt>&amp;key</tt> surface color stroke-color alpha</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draws a filled circle of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
-<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the circle, of type <code>INTEGER</code>. </li>
+<p>Draws a filled circle of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. </p><h5>Parameters </h5>
+<ul><li><code>X0</code> and <code>Y0</code> specify the center coordinate of the circle, of type <code>INTEGER</code>. </li>
 <li><code>R</code> is the circle radius, of type <code>INTEGER</code>. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the fill color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>STROKE-COLOR</code> when not <code>NIL</code> will draw a <code>1</code> pixel line of color <code>COLOR</code> around the perimiter of the circle </li>
-<li><code>ALPHA</code> when between <code>0</code> and <code>255</code> is used as the alpha transparency value when blitting the rectangle onto <code>SURFACE</code>. <EM>Note:</EM> An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface is blitted to <code>SURFACE</code>. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:STROKE-COLOR</code> when not <code>NIL</code> will draw a <code>1</code> pixel line of color <code>COLOR</code> around the perimiter of the box. </li>
+<li><code>:ALPHA</code> when between <code>0</code> and <code>255</code> is used as the alpha transparency value when blitting the rectangle onto <code>SURFACE</code>. <EM>Note:</EM> An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface is blitted to <code>SURFACE</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2400,12 +2611,120 @@
 <!-- End of entry for DRAW-FILLED-CIRCLE-* -->
 
 
+<!-- Entry for DRAW-FILLED-ELLIPSE -->
+
+<p><br>[Function]<br><a class=none name='draw-filled-ellipse'><b>draw-filled-ellipse</b> <i>p1 rx ry <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#draw-filled-ellipse-*">DRAW-FILLED-ELLIPSE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the <a href="#point">POINT</a> coordinates at the center of the filled ellipse. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-FILLED-ELLIPSE -->
+
+
+<!-- Entry for DRAW-FILLED-ELLIPSE-* -->
+
+<p><br>[Function]<br><a class=none name='draw-filled-ellipse-*'><b>draw-filled-ellipse-*</b> <i>x y rx ry <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draws a filled ellipse of <a href="#color">COLOR</a> to the <a href="#surface">SURFACE</a>. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the ellipse, of type <code>INTEGER</code>. </li>
+<li><code>RX</code> and <code>RY</code> specify the ellipse radius, of type <code>INTEGER</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-FILLED-ELLIPSE-* -->
+
+
+<!-- Entry for DRAW-FILLED-PIE -->
+
+<p><br>[Function]<br><a class=none name='draw-filled-pie'><b>draw-filled-pie</b> <i>p1 rad start end <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#draw-filled-pie-*">DRAW-FILLED-PIE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the <a href="#point">POINT</a> coordinates at the center of the filled pie. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-FILLED-PIE -->
+
+
+<!-- Entry for DRAW-FILLED-PIE-* -->
+
+<p><br>[Function]<br><a class=none name='draw-filled-pie-*'><b>draw-filled-pie-*</b> <i>x y rad start end <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draws a filled pie of <a href="#color">COLOR</a> to the <a href="#surface">SURFACE</a></p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the pie, of type <code>INTEGER</code>. </li>
+<li><code>RAD</code> is the pie radius, of type <code>INTEGER</code>. </li>
+<li><code>START</code> is the pie start, of type <code>INTEGER</code>. </li>
+<li><code>END</code> is the pie end, of type <code>INTEGER</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-FILLED-PIE-* -->
+
+
+<!-- Entry for DRAW-FILLED-POLYGON -->
+
+<p><br>[Function]<br><a class=none name='draw-filled-polygon'><b>draw-filled-polygon</b> <i>vertices <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draw a filled polygon of <a href="#color">COLOR</a> to the <a href="#surface">SURFACE</a></p><h5>Parameters </h5>
+<ul><li><code>VERTICES</code> is the list of vertices of type <code>SDL:POINT</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-FILLED-POLYGON -->
+
+
+<!-- Entry for DRAW-FILLED-TRIGON -->
+
+<p><br>[Function]<br><a class=none name='draw-filled-trigon'><b>draw-filled-trigon</b> <i>p1 p2 p3 <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draw a filled trigon of <a href="#color">COLOR</a> to the <a href="#surface">SURFACE</a></p><h5>Parameters </h5>
+<ul><li><code>P1</code>, <code>P2</code> and <code>P3</code> specify the vertices of the trigon, of type <code>SDL:POINT</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-FILLED-TRIGON -->
+
+
 <!-- Entry for DRAW-FONT -->
 
 <p><br>[Generic function]<br><a class=none name='draw-font'><b>draw-font</b> <i><tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Blit the cached surface in the font <code>FONT</code> to  the destination surface <code>SURFACE</code>. The cached surface is created during a previous call to any of  the DRAW-STRING* functions. Uses the <code>POSITION</code> of the cached surface to render at X/Y coordinates  on the destination <code>SURFACE</code>. This function can provide a speed increase upon redraws when the text in <code>FONT</code>  remains unchanged between screen updates. </p>
+<p>Blit the cached <a href="#surface">SURFACE</a> in <a href="#FONT">font</a> to  the destination <code>SURFACE</code>. The cached surface is created during a previous call to any of  the DRAW-STRING* functions. </p>
 
 </blockquote>
 
@@ -2417,7 +2736,7 @@
 <p><br>[Function]<br><a class=none name='draw-font'><b>draw-font</b> <i><tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Blit the cached surface in the font <code>FONT</code> to  the destination surface <code>SURFACE</code>. The cached surface is created during a previous call to any of  the DRAW-STRING* functions. Uses the <code>POSITION</code> of the cached surface to render at X/Y coordinates  on the destination <code>SURFACE</code>. This function can provide a speed increase upon redraws when the text in <code>FONT</code>  remains unchanged between screen updates. </p>
+
 
 </blockquote>
 
@@ -2429,9 +2748,7 @@
 <p><br>[Generic function]<br><a class=none name='draw-font-at'><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-font">DRAW-FONT</a>.  </p><h5>Parameters </h5>
-<ul><li><code>POINT</code> is the <code>X</code> and <code>Y</code> coordinates of the the <code>FONT</code>s cached surface, of type <code>POINT</code>. </li>
-</ul>
+<p>See <a href="#draw-font">DRAW-FONT</a>. The cached surface is rendered at <code>POSITION</code><a href="#point">POINT</a>. </p>
 
 </blockquote>
 
@@ -2443,8 +2760,7 @@
 <p><br>[Method]<br><a class=none><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-font">DRAW-FONT</a>.  </p><ul><li><code>POINT</code> is the X/Y position of the the font&#039;s cached surface. <code>POINT</code> is of type <code>POINT</code>. </li>
-</ul>
+
 
 </blockquote>
 
@@ -2456,9 +2772,7 @@
 <p><br>[Generic function]<br><a class=none name='draw-font-at-*'><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-font">DRAW-FONT</a></p><h5>Parameters </h5>
-<ul><li><code>X</code> and <code>Y</code> are the <code>INTEGER</code> position coordinates of the <code>FONT</code>s cached surface. </li>
-</ul>
+<p>See <a href="#draw-font">DRAW-FONT</a>.  The cached surface is rendered at poisition <code>X</code> and <code>Y</code>. </p>
 
 </blockquote>
 
@@ -2470,9 +2784,7 @@
 <p><br>[Method]<br><a class=none><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-font">DRAW-FONT</a>.  </p><h5>Parameters </h5>
-<ul><li><code>POINT</code> is the <code>X</code> and <code>Y</code> coordinates of the the <code>FONT</code>s cached surface, of type <code>POINT</code>. </li>
-</ul>
+
 
 </blockquote>
 
@@ -2481,16 +2793,18 @@
 
 <!-- Entry for DRAW-HLINE -->
 
-<p><br>[Function]<br><a class=none name='draw-hline'><b>draw-hline</b> <i>x0 x1 y <tt>&amp;key</tt> surface color clipping-p template</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-hline'><b>draw-hline</b> <i>x0 x1 y <tt>&amp;key</tt> surface color clipping template</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a horizontal line of color <code>COLOR</code> from <code>X0</code> to <code>X1</code> through <code>Y</code> onto the surface <code>SURFACE</code>.  </p><h5>Parameters </h5>
+<p>Draw a horizontal line of <a href="#color">COLOR</a> from <code>X0</code> to <code>X1</code> through <code>Y</code> onto onto <a href="#surface">SURFACE</a>.  </p><h5>Parameters </h5>
 <ul><li><code>X0</code> and <code>X1</code> are the horizontal start and end points of the line, of type <code>INTEGER</code>. </li>
 <li><code>Y</code> is the vertical <code>INTEGER</code> coordinate that the horizontal line must intersect.   </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when <code>T</code> will clip the shape to the dimensions of <code>SURFACE</code>.  </li>
-<li><code>TEMPLATE</code> will use this rectangle to fill the surface when set. Will not free TEMPLATE. The default is <code>NIL</code> as the SDL library will perform the necessary clipping automatically. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> is <code>NIL</code> The default is <code>NIL</code> as the SDL library will perform the necessary clipping automatically. </li>
+<li><code>:TEMPLATE</code> specifies an optional <a href="#rectangle">RECTANGLE</a> to fill the surface. Will not free <code>TEMPLATE</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2500,11 +2814,13 @@
 
 <!-- Entry for DRAW-LINE -->
 
-<p><br>[Function]<br><a class=none name='draw-line'><b>draw-line</b> <i>p1 p2 <tt>&amp;key</tt> surface color clipping-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-line'><b>draw-line</b> <i>p1 p2 <tt>&amp;key</tt> surface color clipping aa</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#draw-line-*">DRAW-LINE-*</a>. </p><h5>Parameters </h5>
-<ul><li><code>POINT1</code> and <code>POINT2</code> are the start and end x/y co-ordinates of the line, of type <code>SDL:POINT</code>. </li>
+<ul><li><code>P1</code> and <code>P2</code> are the start and end x/y co-ordinates of the line, of <code>POINT</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2514,15 +2830,19 @@
 
 <!-- Entry for DRAW-LINE-* -->
 
-<p><br>[Function]<br><a class=none name='draw-line-*'><b>draw-line-*</b> <i>x0 y0 x1 y1 <tt>&amp;key</tt> surface color clipping-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-line-*'><b>draw-line-*</b> <i>x0 y0 x1 y1 <tt>&amp;key</tt> surface color clipping aa</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draws a line of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
-<ul><li><code>X0</code><code>Y0</code> are the start X/Y coordinates of the line, of type <code>INTEGER</code>. </li>
-<li><code>X1</code><code>Y1</code> are the end X/Y coordinates of the line, of type <code>INTEGER</code>. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<p>Draws a line of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. </p><h5>Parameters </h5>
+<ul><li><code>X0</code><code>Y0</code> are the start X/Y coordinates of the line, of <code>INTEGER</code>. </li>
+<li><code>X1</code><code>Y1</code> are the end X/Y coordinates of the line, of <code>INTEGER</code>. </li>
+<li><code>:AA</code> determines if the line is to be drawn using antialiasing. <STRONG>NOTE</STRONG>: Supported only in <code>LISPBUILDER-SDL-GFX</code>, otherwise ignored. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><code>:AA</code> not supported in <STRONG>LISPBUILDER-SDL</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2530,13 +2850,52 @@
 <!-- End of entry for DRAW-LINE-* -->
 
 
+<!-- Entry for DRAW-PIE -->
+
+<p><br>[Function]<br><a class=none name='draw-pie'><b>draw-pie</b> <i>p1 rad start end <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#draw-pie-*">DRAW-PIE-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>P1</code> is the <a href="#point">POINT</a> coordinates at the center of the pie. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-PIE -->
+
+
+<!-- Entry for DRAW-PIE-* -->
+
+<p><br>[Function]<br><a class=none name='draw-pie-*'><b>draw-pie-*</b> <i>x y rad start end <tt>&amp;key</tt> surface color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draws a pie of <a href="#color">COLOR</a> to the <a href="#surface">SURFACE</a>. Use <a href="#draw-filled-pie-*">DRAW-FILLED-PIE-*</a> to draw a filled pie. </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the center coordinate of the pie, of type <code>INTEGER</code>. </li>
+<li><code>RAD</code> is the pie radius, of type <code>INTEGER</code>. </li>
+<li><code>START</code> is the pie start, of type <code>INTEGER</code>. </li>
+<li><code>END</code> is the pie end, of type <code>INTEGER</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-PIE-* -->
+
+
 <!-- Entry for DRAW-PIXEL -->
 
-<p><br>[Function]<br><a class=none name='draw-pixel'><b>draw-pixel</b> <i>point <tt>&amp;key</tt> clipping-p surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-pixel'><b>draw-pixel</b> <i>point <tt>&amp;key</tt> clipping surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#draw-pixel-*">DRAW-PIXEL-*</a>. </p><h5>Parameters </h5>
-<ul><li><code>POSITION</code> is the <code>X</code>/<code>Y</code> coordinates of the pixel, of type <code>POINT</code>. </li>
+<ul><li><code>POINT</code> is the <a href="#point">POINT</a> coordinates of the pixel. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2546,14 +2905,16 @@
 
 <!-- Entry for DRAW-PIXEL-* -->
 
-<p><br>[Function]<br><a class=none name='draw-pixel-*'><b>draw-pixel-*</b> <i>x y <tt>&amp;key</tt> clipping-p surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-pixel-*'><b>draw-pixel-*</b> <i>x y <tt>&amp;key</tt> clipping surface color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a single pixel of color <code>COLOR</code> to the surface <code>SURFACE</code> at the specified <code>X</code> and <code>Y</code> coordiates.  </p><h5>Parameters </h5>
+<p>Draw a single pixel of <a href="#color">COLOR</a> to the <a href="#surface">SURFACE</a> at the specified <code>X</code> and <code>Y</code> coordiates.  </p><h5>Parameters </h5>
 <ul><li><code>X</code> and <code>Y</code> specify the coordinates of the pixel, and are of type <code>INTEGER</code>. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the pixel color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the pixel is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2563,14 +2924,18 @@
 
 <!-- Entry for DRAW-POLYGON -->
 
-<p><br>[Function]<br><a class=none name='draw-polygon'><b>draw-polygon</b> <i>vertices <tt>&amp;key</tt> surface color clipping-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-polygon'><b>draw-polygon</b> <i>vertices <tt>&amp;key</tt> surface color clipping aa</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw the circumference of a polygon of color <code>COLOR</code> to surface SURFACE using the vertices in <code>POINTS</code>. Use <a href="#draw-filled-polygon-*">DRAW-FILLED-POLYGON-*</a> to draw a filled polygon. </p><h5>Parameters </h5>
-<ul><li><code>POINTS</code> is the list of vertices for the polygon. <code>POINTS</code> is a list of <code>SDL:POINT</code>s. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<p>Draw the circumference of a polygon of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a> using the vertices in <code>POINTS</code>. Use <a href="#draw-filled-polygon-*">DRAW-FILLED-POLYGON-*</a> to draw a filled polygon. </p><h5>Parameters </h5>
+<ul><li><code>:POINTS</code> is the list of vertices for the polygon. <code>POINTS</code> is a list of <code>POINT</code>s. </li>
+<li><code>:AA</code> determines if the line is to be drawn using antialiasing. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the pixel is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><code>:AA</code> ignored in <STRONG>LISPBUILDER-SDL</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2580,11 +2945,13 @@
 
 <!-- Entry for DRAW-RECTANGLE -->
 
-<p><br>[Function]<br><a class=none name='draw-rectangle'><b>draw-rectangle</b> <i>rect <tt>&amp;key</tt> clipping-p surface color alpha</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-rectangle'><b>draw-rectangle</b> <i>rect <tt>&amp;key</tt> clipping surface color alpha</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#draw-rectangle-*">DRAW-RECTANGLE-*</a>. </p><h5>Parameters </h5>
-<ul><li><code>RECT</code> is the rectangle to draw, of type <code>SDL:RECTANGLE</code>. </li>
+<ul><li><code>RECT</code> is <a href="#rectangle">RECTANGLE</a>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2594,16 +2961,18 @@
 
 <!-- Entry for DRAW-RECTANGLE-* -->
 
-<p><br>[Function]<br><a class=none name='draw-rectangle-*'><b>draw-rectangle-*</b> <i>x y w h <tt>&amp;key</tt> clipping-p surface color alpha</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-rectangle-*'><b>draw-rectangle-*</b> <i>x y w h <tt>&amp;key</tt> clipping surface color alpha</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a rectangle outline of color <code>COLOR</code> to the surface <code>SURFACE</code>. </p><h5>Parameters </h5>
+<p>Draw a rectangle outline of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. </p><h5>Parameters </h5>
 <ul><li><code>X</code> and <code>Y</code> are the <code>INTEGER</code> coordinates of the top-left corner of the rectangle. </li>
 <li><code>W</code> and <code>H</code> are the width and height of the rectangle, of type <code>INTEGER</code>. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>ALPHA</code> when between <code>0</code> and <code>255</code> is used as the alpha transparency value when blitting the rectangle onto <code>SURFACE</code>. <EM>Note:</EM> An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface is blitted to <code>SURFACE</code>. </li>
-<li><code>CLIPPING-P</code> when <code>T</code> will clip the shape to the dimensions of <code>SURFACE</code>.  The default is <code>NIL</code> as the SDL library will perform the necessary clipping automatically. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:ALPHA</code> when between <code>0</code> and <code>255</code> is used as the alpha transparency value when blitting the rectangle onto <code>SURFACE</code>. <EM>Note:</EM> An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface is blitted to <code>SURFACE</code>. </li>
+<li><code>:CLIPPING</code> is <code>NIL</code> The default is <code>NIL</code> as the SDL library will perform the necessary clipping automatically. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2613,47 +2982,27 @@
 
 <!-- Entry for DRAW-SHAPE -->
 
-<p><br>[Function]<br><a class=none name='draw-shape'><b>draw-shape</b> <i>points type <tt>&amp;key</tt> clipping-p surface color</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-shape'><b>draw-shape</b> <i>vertices <tt>&amp;key</tt> clipping surface color style</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a polygon of color <code>COLOR</code> to the surface <code>SURFACE</code> using the vertices in <code>POINTS</code>. </p><h5>Parameters </h5>
-<ul><li><code>POINTS</code> is a list of vertices, of type <code>SDL:POINT</code></li>
-<li><code>TYPE</code> describes the line style used to draw the polygon and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<p>Draw a polygon of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a> using <code>VERTICES</code>. </p><h5>Parameters </h5>
+<ul><li><code>VERTICES</code> is a list of vertices, of <code>POINT</code></li>
+<li><code>STYLE</code> describes the line style used to draw the polygon and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>.  Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints.  Use <code>:DASH</code> to draw a line between alternate waypoint pairs.  Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li>
 </ul><h5>Example </h5>
 <pre><code>(DRAW-SHAPE (LIST (SDL:POINT :X 60  :Y 40)
 	    (SDL:POINT :X 160 :Y 10)
 	    (SDL:POINT :X 170 :Y 150)
-	    (SDL:POINT :X 60  :Y 150))
-    :SOLID)
-</code></pre>
-
-</blockquote>
-
-<!-- End of entry for DRAW-SHAPE -->
-
-
-<!-- Entry for DRAW-STRING-CENTERED-* -->
-
-<p><br>[Function]<br><a class=none name='draw-string-centered-*'><b>draw-string-centered-*</b> <i>str x y fg-color bg-color <tt>&amp;key</tt> surface font</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Draw the text in the string <code>STR</code><EM>with midpoint centered</EM> at location <code>X</code> and <code>Y</code> using font <code>FONT</code> with foreground and background colors <code>FG-COLOR</code> and <code>BG-COLOR</code>  onto surface <code>SURFACE</code>. </p><h5>Parameters </h5>
-<ul><li><code>STR</code> is the text to render.  </li>
-<li><code>X</code> and <code>Y</code> are the X and Y position coordinates, as <code>INTEGERS</code>. </li>
-<li><code>FG-COLOR</code> is the foreground color used to render text, of type <code>SDL-COLOR</code></li>
-<li><code>BG-COLOR</code> is the background color used to render text, of type <code>SDL-COLOR</code></li>
-<li><code>FONT</code> is the bitmap font used to render the character. Bound to <code>*DEFAULT-FONT*</code> if unspecified. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified. </li>
-</ul><h5>Returns </h5>
-<ul><li>Returns the surface SURFACE. </li>
+	    (SDL:POINT :X 60  :Y 150)))
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
 
-<!-- End of entry for DRAW-STRING-CENTERED-* -->
+<!-- End of entry for DRAW-SHAPE -->
 
 
 <!-- Entry for DRAW-STRING-SHADED -->
@@ -2677,8 +3026,8 @@
 
 <p>Draw text <code>STRING</code> at location <code>X</code><code>Y</code> using font <code>FONT</code> with text color <code>FG-COLOR</code> and background color <code>BG-COLOR</code> onto surface <code>SURFACE</code>.  The surface background is filled with <code>BG-COLOR</code> so the surface cannot be keyed over other surfaces. </p><ul><li><code>STRING</code> is the text to render.  </li>
 <li><code>X</code> and <code>Y</code> are the <code>X</code> and <code>Y</code> coordinates, as <code>INTEGERS</code>. </li>
-<li><code>FG-COLOR</code> color is the text color, of type <code>SDL-COLOR</code></li>
-<li><code>BG-COLOR</code> color is the background color used to fill the surface <code>SURFACE</code>, of type <code>SDL-COLOR</code></li>
+<li><code>FG-COLOR</code> color is the text color, of type <code>COLOR</code></li>
+<li><code>BG-COLOR</code> color is the background color used to fill the surface <code>SURFACE</code>, of type <code>COLOR</code></li>
 <li><code>FONT</code> is the font face used to render the text. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
 <li><code>SURFACE</code> is the target surface, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified. </li>
 </ul><h5>Returns </h5>
@@ -2699,6 +3048,8 @@
 
 <p>See <a href="#draw-string-solid-*">DRAW-STRING-SOLID-*</a>. </p><h5>Parameters </h5>
 <ul><li><code>P1</code> is the <code>X</code> and <code>X</code> coordinates to render the text, of type <code>POINT</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2716,12 +3067,14 @@
 <li><code>X</code> and <code>Y</code> are the <code>X</code> and <code>Y</code> position coordinates, as <code>INTEGERS</code>. </li>
 <li><code>FONT</code> is the font face used to render the string. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
 <li><code>SURFACE</code> is the target surface, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> color is the text color, of type <code>SDL-COLOR</code>. </li>
+<li><code>COLOR</code> color is the text color, of type <code>COLOR</code>. </li>
 </ul><h5>Returns </h5>
 <ul><li>Returns the surface <code>SURFACE</code>. </li>
 </ul><h5>Example </h5>
 <pre><code>(DRAW-STRING-SOLID-* &amp;quot;Hello World!&amp;quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR)
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -2766,14 +3119,18 @@
 
 <!-- Entry for DRAW-TRIGON -->
 
-<p><br>[Function]<br><a class=none name='draw-trigon'><b>draw-trigon</b> <i>p1 p2 p3 <tt>&amp;key</tt> surface color clipping-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-trigon'><b>draw-trigon</b> <i>p1 p2 p3 <tt>&amp;key</tt> surface color clipping aa</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw the outline of a trigon or triangle, of color <code>COLOR</code> to surface <code>SURFACE</code>. Use <a href="#draw-filled-trigon-*">DRAW-FILLED-TRIGON-*</a> to draw a filled trigon. </p><h5>Parameters </h5>
+<p>Draw the outline of a trigon or triangle, of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. Use <a href="#draw-filled-trigon-*">DRAW-FILLED-TRIGON-*</a> to draw a filled trigon. </p><h5>Parameters </h5>
 <ul><li><code>P1</code>, <code>P2</code> and <code>P3</code> specify the vertices of the trigon, of type <code>SDL:POINT</code>. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the circumference color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is therefore safer to leave <code>CLIPPING-P</code> as <code>T</code>. </li>
+<li><code>:AA</code> determines if the line is to be drawn using antialiasing.  </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the pixel is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><code>:AA</code> ignored in <STRONG>LISPBUILDER-SDL</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2783,16 +3140,18 @@
 
 <!-- Entry for DRAW-VLINE -->
 
-<p><br>[Function]<br><a class=none name='draw-vline'><b>draw-vline</b> <i>x y0 y1 <tt>&amp;key</tt> surface color clipping-p template</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='draw-vline'><b>draw-vline</b> <i>x y0 y1 <tt>&amp;key</tt> surface color clipping template</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a vertical line of color <code>COLOR</code> from <code>Y0</code> to <code>Y1</code> through <code>X</code> onto the surface <code>SURFACE</code>.  </p><h5>Parameters </h5>
+<p>Draw a vertical line of <a href="#color">COLOR</a> from <code>Y0</code> to <code>Y1</code> through <code>X</code> onto <a href="#surface">SURFACE</a>.  </p><h5>Parameters </h5>
 <ul><li><code>X</code> is the horizontal <code>INTEGER</code> coordinate that the vertical line must intersect.   </li>
-<li><code>Y0</code> and <code>Y1</code> are the vertical start and end points of the line, of type <code>INTEGER</code>. </li>
-<li><code>SURFACE</code> is the target surface, of type <code>SDL:SDL-SURFACE</code>. Bound to <code>SDL:*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>COLOR</code> is the line color, of type <code>SDL:COLOR</code> or <code>SDL:COLOR-A</code>. Bound to <code>SDL:*DEFAULT-COLOR*</code> if unspecified. </li>
-<li><code>CLIPPING-P</code> when <code>T</code> will clip the shape to the dimensions of <code>SURFACE</code>.  </li>
-<li><code>TEMPLATE</code> will use this rectangle to fill the surface when set. Will not free TEMPLATE. The default is <code>NIL</code> as the SDL library will perform the necessary clipping automatically. </li>
+<li><code>Y0</code> and <code>Y1</code> are the vertical start and end points of the line, of <code>INTEGER</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> is <code>NIL</code> The default is <code>NIL</code> as the SDL library will perform the necessary clipping automatically. </li>
+<li><code>:TEMPLATE</code> specifies an optional <a href="#rectangle">RECTANGLE</a> to fill the surface. Will not free <code>TEMPLATE</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
 </ul>
 
 </blockquote>
@@ -2850,10 +3209,10 @@
 
 <!-- Entry for FILL-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='fill-surface'><b>fill-surface</b> <i>color <tt>&amp;key</tt> template surface update-p clipping-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='fill-surface'><b>fill-surface</b> <i>color <tt>&amp;key</tt> template surface update clipping</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Fills surface with the specified <code>COLOR</code>.    <code>:TEMPLATE</code> accepts  a <code>RECTANGLE</code> defining the fill bounds.    <code>The surface is updated when </code>:UPDATE-P` </p>
+<p>Fills surface with the specified <code>COLOR</code>.    <code>:TEMPLATE</code> accepts  a <code>RECTANGLE</code> defining the fill bounds.    <code>The surface is updated when </code>:UPDATE` </p>
 
 </blockquote>
 
@@ -2862,7 +3221,7 @@
 
 <!-- Entry for FILL-SURFACE-* -->
 
-<p><br>[Function]<br><a class=none name='fill-surface-*'><b>fill-surface-*</b> <i>r g b <tt>&amp;key</tt> a template surface update-p clipping-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='fill-surface-*'><b>fill-surface-*</b> <i>r g b <tt>&amp;key</tt> a template surface update clipping</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Fill the surface with the specified color <code>R</code><code>G</code><code>B</code><code>:A</code><code>A</code>.  See <a href="#fill-surface">FILL-SURFACE</a>. </p>
@@ -2930,11 +3289,11 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>rectangle-array</i> =&gt; <i>result</i></a>
+<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>foreign-object</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>rectangle-array</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the default foreign object for <code>OBJECT</code>. </p>
+<p>Returns the foreign pointer in FOREIGN-OBJECT </p>
 
 </blockquote>
 
@@ -2943,7 +3302,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array rectangle-array)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(foreign-object rectangle-array)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array rectangle-array)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2956,20 +3315,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array foreign-color)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array foreign-color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for FP -->
-
-
-<!-- Entry for FP -->
-
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array color-a)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(foreign-object color-a)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2982,7 +3328,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array color)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(foreign-object color)</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2995,7 +3341,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Method]<br><a class=none><b>fp</b> <i>(rectangle-array foreign-object)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>fp</b> <i>(foreign-object foreign-object)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -3005,25 +3351,13 @@
 <!-- End of entry for FP -->
 
 
-<!-- Entry for FP-POSITION -->
-
-<p><br>[Generic function]<br><a class=none name='fp-position'><b>fp-position</b> <i>object</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Returns the default foreign SDL_Rect object for <code>OBJECT</code>. </p>
-
-</blockquote>
-
-<!-- End of entry for FP-POSITION -->
-
-
 <!-- Entry for FRAME-RATE -->
 
 <p><br>[Accessor]<br><a class=none name='frame-rate'><b>frame-rate</b> <i></i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>frame-rate</b> <i></i><tt>)</tt> <i>rate</i><tt>)</tt></a>
 <blockquote><br>
 
-
+<p>Manage the target frame rate for the game loop. <code>RATE</code>&gt;<code>0</code> will lock the game loop to the specified frame rate, and calculate the average frame rate over a number of frames. <code>RATE</code> = <code>0</code> will unlock the frame rate, and calculate the average frame rate over a number of frames. <code>RATE</code>&lt;<code>0</code> will unlock the frame rate. The average frane rate is  not calculated. </p><p>See <a href="#with-events">WITH-EVENTS</a>, and <a href="#average-fps">AVERAGE-FPS</a>. </p>
 
 </blockquote>
 
@@ -3035,7 +3369,7 @@
 <p><br>[Generic function]<br><a class=none name='free'><b>free</b> <i>foreign-object</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>This is the general explicit cleanup method for all FOREIGN-OBJECTs. Objects that subclass FOREIGN-OBJECT should specify an :AFTER method on FREE to clean up any additional fields, if necessary. </p>
+<p>The general explicit cleanup method for the  FOREIGN-OBJECT wrapper class. Objects that subclass FOREIGN-OBJECT should  specify an :AFTER method on FREE to clean up any additional fields, if necessary. </p>
 
 </blockquote>
 
@@ -3056,7 +3390,7 @@
 
 <!-- Entry for FREE -->
 
-<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object sdl-color)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object color)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -3083,7 +3417,7 @@
 <p><br>[Generic function]<br><a class=none name='free-cached-surface'><b>free-cached-surface</b> <i>font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Frees resources allocated to the cached surface <code>SURFACE</code> in <code>FONT</code>, if any.  Sets the <code>FONT</code>s <code>CACHED-SURFACE</code> slot to NIL. </p>
+
 
 </blockquote>
 
@@ -3108,7 +3442,7 @@
 <br><a class=none><tt>(setf (</tt><b>g</b> <i>color</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the green component of color <code>COLOR</code> as an <code>INTEGER</code>. </p>
+<p>Returns the green color component the object. </p>
 
 </blockquote>
 
@@ -3121,7 +3455,7 @@
 <br><a class=none><tt>(setf (</tt><b>g</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the green color component of the color <code>COLOR</code> as an <code>INTEGER</code>. </p>
+
 
 </blockquote>
 
@@ -3274,7 +3608,7 @@
 
 <!-- Entry for GET-SURFACE-RECT -->
 
-<p><br>[Function]<br><a class=none name='get-surface-rect'><b>get-surface-rect</b> <i>b <tt>&amp;key</tt> surface rectangle</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='get-surface-rect'><b>get-surface-rect</b> <i><tt>&amp;key</tt> surface rectangle</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -3290,7 +3624,7 @@
 <br><a class=none><tt>(setf (</tt><b>height</b> <i>obj</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the height of the object. </p>
+<p>Returns the height of the object, as an <code>INTEGER</code>. When <code>OBJ</code> is a <a href="#font">FONT</a>, use the cached <a href="#surface">SURFACE</a>. </p>
 
 </blockquote>
 
@@ -3302,7 +3636,7 @@
 <p><br>[Method]<br><a class=none><b>height</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the <code>INTEGER</code> height of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
+
 
 </blockquote>
 
@@ -3363,7 +3697,9 @@
 <p><br>[Function]<br><a class=none name='initialise-default-font'><b>initialise-default-font</b> <i><tt>&amp;optional</tt> font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Calls <a href="#initialise-font">INITIALISE-FONT</a> to create a new <code>BITMAP-FONT</code> from <code>FONT-DEFINITION</code>.  <code>FONT-DEFINITION</code> is set to <code>*font-8x8*</code> if unspecified. Binds the symbol <code>*DEFAULT-FONT*</code> to the new font. Reutns the new font, or <code>NIL</code> if the font cannot be created. </p>
+<p>Returns a new <a href="#bitmap-font">BITMAP-FONT</a> initialized from <code>FONT-DEFINITION</code> data, or <code>NIL</code>  if the font cannot be created. <code>FONT-DEFINITION</code> is set to <code>*font-8x8*</code> if unspecified.  Binds the symbol <code>*DEFAULT-FONT*</code> to the new font to be used as the default for subsequent  font rendering or drawing operations. </p><h5>Packages </h5>
+<ul><li>Aslo supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -3375,7 +3711,9 @@
 <p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates a new <code>BITMAP-FONT</code> object from the font data in <code>FONT-DEFINITION</code>. Returns the new bitmap font, or <code>NIL</code> if the font cannot be created. <code>FONT-DEFINITION</code> must be one of the following built-in fonts:  <code>*FONT-10X20*, *FONT-5X7*, *FONT-5X8*, *FONT-6X10*, *FONT-6X12*, *FONT-6X13*, *FONT-6X13B*, *FONT-6X13O*, *FONT-6X9*, *FONT-7X13*, *FONT-7X13B*, *FONT-7X13O*, *FONT-7X14*, *FONT-7X14B*, *FONT-8X13*, *FONT-8X13B*, *FONT-8X13O*, *FONT-8X8*, *FONT-9X15*, *FONT-9X15B*, *FONT-9X18* OR *FONT-9X18B*</code>. </p>
+<p>Returns a new <a href="#bitmap-font">BITMAP-FONT</a> initialized from <code>FONT-DEFINITION</code> data, or <code>NIL</code>  if the font cannot be created. <code>FONT-DEFINITION</code> must be one of the following built-in fonts:  <code>*FONT-10X20*</code>, <code>*FONT-5X7*</code>, <code>*FONT-5X8*</code>, <code>*FONT-6X10*</code>, <code>*FONT-6X12*</code>, <code>*FONT-6X13*</code>,  <code>*FONT-6X13B*</code>, <code>*FONT-6X13O*</code>, <code>*FONT-6X9*</code>, <code>*FONT-7X13*</code>, <code>*FONT-7X13B*</code>, <code>*FONT-7X13O*</code>,  <code>*FONT-7X14*</code>, <code>*FONT-7X14B*</code>, <code>*FONT-8X13*</code>, <code>*FONT-8X13B*</code>, <code>*FONT-8X13O*</code>, <code>*FONT-8X8*</code>,  <code>*FONT-9X15*</code>, <code>*FONT-9X15B*</code>, <code>*FONT-9X18*</code> OR <code>*FONT-9X18B*</code>. </p><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -3493,17 +3831,26 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Generic function]<br><a class=none name='load-image'><b>load-image</b> <i>source <tt>&amp;key</tt> color-key surface-alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='load-image'><b>load-image</b> <i>source <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a new <code>SURFACE</code> from <code>SOURCE</code>, or <code>NIL</code> if <code>SOURCE</code> does not contain a valid image. </p><h5>Parameters </h5>
+<p>Creates and returns a new <code>SURFACE</code> from the image in <code>SOURCE</code>, or returns <code>NIL</code> if <code>SOURCE</code> does not contain a valid image or the image type cannot be determined. </p><p>The <EM>magic number</EM> if present is be used to determine the image type. To load an image when the  <EM>magic number</EM> is unavailable (image formats such as <code>TGA</code> do not contain a <EM>magic number</EM>),  specify the image type using <code>:IMAGE-TYPE</code>.  All non-magicable image formats, such as <code>TGA</code>,  must be specified using <code>IMAGE-TYPE</code>. To load a TGA image use <code>:IMAGE-TYPE :TGA</code></p><ul><li><code>LISPBUILDER-SDL</code> only supports <code>BMP</code> images. Any alpha channel present in the source image is ignored. The new <code>SURFACE</code> is created as an <code>RGB</code> surface, not <code>RGBA</code>. </li>
+<li><code>LISPBUILDER-SDL-IMAGE</code> supports the following image formats, <code>BMP</code>, <code>GIF</code>, <code>JPG</code>, <code>LBM</code>, <code>PCX</code>, <code>PNG</code>,  <code>PNM</code>, <code>TIF</code>, <code>XCF</code>, <code>XPM</code>, <code>XV</code>. <code>BMP</code> and <code>TGA</code>. Alpha channels are supported. The new <code>SURFACE</code> is created as <code>RGB</code> or <code>RGBA</code> as appropriate. </li>
+</ul><h5>Parameters </h5>
 <ul><li><code>SOURCE</code> is an image. </li>
-<li><code>COLOR-KEY</code> sets the color key, of type <code>COLOR</code> or &#039;COLOR-A`. </li>
-<li>&#039;COLOR-KEY-AT&#039; uses the color at <code>POINT</code> x/y as the color key. </li>
-<li><code>ALPHA-VALUE</code> sets the alpha value of the surface in the range 0-255. Where 255 is opaque, 0 is transparent. </li>
-<li><code>IMAGE-TYPE</code> specifies the image type of <code>SOURCE</code>. </li>
-<li><code>FORCE</code> forces <code>SOURCE</code> to be loaded as <code>IMAGE-TYPE</code>. Images of type TGA must be loaded using :FORCE T. </li>
-<li><code>FREE-RWOPS</code> free&#039;s the RWOPS resources in <code>SOURCE</code> after creating a new <code>SDL_Surface</code>, if applicable. Default is T </li>
+<li><code>COLOR-KEY</code> sets the color key, and turns on color keying. </li>
+<li>&#039;COLOR-KEY-AT&#039; uses the pixel color at <code>POINT</code> x/y as the color key, and turns on color keying. </li>
+<li><code>ALPHA</code> sets the transparency level for the surface, and turns on alpha blending. Must be in the range 0-255, where 255 is opaque and 0 is transparent. </li>
+<li><code>IMAGE-TYPE</code> specifies the image type. May be <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TGA</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>.   The image type is determined using the <EM>magic number</EM> when present in the image if <code>NIL</code>.  If the <EM>magic number</EM> is available and does not match <code>IMAGE-TYPE</code>, then <code>IMAGE-TYPE</code> is ignored. </li>
+<li><code>FORCE</code> when <code>T</code> will ignore any <EM>magic number</EM> present in the image and load an image as <code>:IMAGE-TYPE</code>.   Images of type <code>TGA</code> must be loaded using <code>:FORCE T</code>. </li>
+<li><code>FREE-RWOPS</code> will free a RWOPS passed as a parameter in <code>SOURCE</code>. Default is <code>T</code></li>
+</ul><p><STRONG>NOTES</STRONG>: The <code>:IMAGE-TYPE</code> and <code>:FORCE</code> keywords are ignored for <code>LISPBUILDER-SDL</code>. </p><h5>Example </h5>
+<ul><li>To load a <code>BMP</code> image using the <EM>magic number</EM></li>
+(LOAD-IMAGE &amp;quot;image.bmp&amp;quot;)
+
+(LOAD-IMAGE &amp;quot;image.tga&amp;quot; :IMAGE-TYPE :TGA)
+
+(LOAD-IMAGE &amp;quot;image.bmp&amp;quot; :IMAGE-TYPE :BMP :FORCE T)
 </ul>
 
 </blockquote>
@@ -3513,7 +3860,7 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt> color-key surface-alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns a new <code>SURFACE</code> from the file at location <code>FILENAME</code>. </p>
@@ -3525,7 +3872,7 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source vector) <tt>&amp;key</tt> color-key surface-alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source vector) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns a new <code>SURFACE</code> from the byte array in <code>SOURCE</code>. </p>
@@ -3537,7 +3884,7 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source rwops) <tt>&amp;key</tt> color-key surface-alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source rwops) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns a new <code>SURFACE</code> from the <code>RWOPS</code> in <code>SOURCE</code>. </p>
@@ -3552,7 +3899,7 @@
 <p><br>[Generic function]<br><a class=none name='map-color'><b>map-color</b> <i>color <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Maps the color <code>COLOR</code> to the pixel format of the surface <code>SURFACE</code> and returns  the pixel value that best approximates the color value of the  surface <code>SURFACE</code>. If the surface has a palette (8-bit) the index of the  closest matching color in the palette will be returned. If the surface has an  alpha component it will be returned as all <code>1</code> bits (fully opaque). If the surface  color depth is less than 32-bpp then the unused upper bits of the return value can safely be ignored  (e.g., with a 16-bpp format the return value can be assigned to a Uint16, and similarly a Uint8 for an 8-bpp format). </p>
+<p>Maps <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a> to the pixel format of <a href="#surface">SURFACE</a> and returns  the pixel value that best approximates the color value of the surface.  If the surface has a palette (8-bit) the index of the  closest matching color in the palette will be returned. If the surface has an  alpha component it will be returned as all <code>1</code> bits (fully opaque). If the surface  color depth is less than 32-bpp then the unused upper bits of the return value can safely be ignored  (e.g., with a 16-bpp format the return value can be assigned to a Uint16, and similarly a Uint8 for an 8-bpp format). </p>
 
 </blockquote>
 
@@ -3564,7 +3911,7 @@
 <p><br>[Method]<br><a class=none><b>map-color</b> <i>(color color-a) <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Maps the RBGA color <code>COLOR</code> to the pixel format of the surface <code>SURFACE</code> and returns  the pixel value that best approximates the color value of the  surface <code>SURFACE</code>. If the surface has a palette (8-bit) the index of the  closest matching color in the palette will be returned. If the surface   has no alpha component the alpha value will be ignored (as it will be in formats with a palette).  If the surface color depth is less than 32-bpp then the unused upper bits of the return value can safely be ignored  (e.g., with a 16-bpp format the return value can be assigned to a Uint16, and similarly a Uint8 for an 8-bpp format). </p>
+
 
 </blockquote>
 
@@ -3576,7 +3923,7 @@
 <p><br>[Method]<br><a class=none><b>map-color</b> <i>(color color) <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Maps the RBG color <code>COLOR</code> to the pixel format of the surface <code>SURFACE</code> and returns  the pixel value that best approximates the color value of the  surface <code>SURFACE</code>. If the surface has a palette (8-bit) the index of the  closest matching color in the palette will be returned. If the surface has an  alpha component it will be returned as all <code>1</code> bits (fully opaque). If the surface  color depth is less than 32-bpp then the unused upper bits of the return value can safely be ignored  (e.g., with a 16-bpp format the return value can be assigned to a Uint16, and similarly a Uint8 for an 8-bpp format). </p>
+
 
 </blockquote>
 
@@ -3585,10 +3932,22 @@
 
 <!-- Entry for MAP-COLOR-* -->
 
-<p><br>[Function]<br><a class=none name='map-color-*'><b>map-color-*</b> <i>r g b a <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='map-color-*'><b>map-color-*</b> <i>r g b a <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Maps the RBG color r g b a to the pixel format of the surface <code>SURFACE</code> and returns  the pixel value that best approximates the color value of the  surface <code>SURFACE</code>. If the surface has a palette (8-bit) the index of the  closest matching color in the palette will be returned. If the surface has an  alpha component it will be returned as all <code>1</code> bits (fully opaque). If the surface  color depth is less than 32-bpp then the unused upper bits of the return value can  safely be ignored (e.g., with a 16-bpp format the return value can be assigned to a  Uint16, and similarly a Uint8 for an 8-bpp format). If A is not NIL then the color is assumed to contain an alpha component. </p>
+<p>Maps the color specified by the <code>R</code>, <code>G</code>, <code>B</code>, and <code>A</code> color components to the pixel format of <a href="#surface">SURFACE</a> and returns  the pixel value that best approximates the color value of the surface.  If <code>A</code> is not <code>NIL</code> then the color is assumed to contain an alpha component. See <a href="#map-color">MAP-COLOR</a> for more details. </p>
+
+</blockquote>
+
+<!-- End of entry for MAP-COLOR-* -->
+
+
+<!-- Entry for MAP-COLOR-* -->
+
+<p><br>[Method]<br><a class=none><b>map-color-*</b> <i>(r integer) (g integer) (b integer) a <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
 
 </blockquote>
 
@@ -3612,7 +3971,7 @@
 <p><br>[Generic function]<br><a class=none name='pack-color'><b>pack-color</b> <i>color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Packs the color components in <code>COLOR</code> into a four byte <code>INTEGER</code>. </p>
+<p>Packs <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a> into a four byte <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -3624,7 +3983,7 @@
 <p><br>[Method]<br><a class=none><b>pack-color</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Packs the RGBA color components in color into a four byte <code>INTEGER</code>. </p>
+
 
 </blockquote>
 
@@ -3636,7 +3995,7 @@
 <p><br>[Method]<br><a class=none><b>pack-color</b> <i>(color color)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Packs the RGB color components in color into a four byte <code>INTEGER</code>. </p>
+
 
 </blockquote>
 
@@ -3835,7 +4194,7 @@
 <br><a class=none><tt>(setf (</tt><b>r</b> <i>color</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the red component of color <code>COLOR</code> as an <code>INTEGER</code>. </p>
+<p>Returns the red color component of the object. </p>
 
 </blockquote>
 
@@ -3848,7 +4207,7 @@
 <br><a class=none><tt>(setf (</tt><b>r</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the red color component of the color <code>COLOR</code> as an <code>INTEGER</code>. </p>
+
 
 </blockquote>
 
@@ -3881,10 +4240,14 @@
 
 <!-- Entry for READ-PIXEL -->
 
-<p><br>[Function]<br><a class=none name='read-pixel'><b>read-pixel</b> <i>point <tt>&amp;key</tt> clipping-p surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='read-pixel'><b>read-pixel</b> <i>point <tt>&amp;key</tt> clipping surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>See <a href="#read-pixel-*">READ-PIXEL-*</a>. </p><h5>Parameters </h5>
+<ul><li><code>POINT</code> is the <a href="#point">POINT</a> coordinates of the pixel. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -3893,10 +4256,17 @@
 
 <!-- Entry for READ-PIXEL-* -->
 
-<p><br>[Function]<br><a class=none name='read-pixel-*'><b>read-pixel-*</b> <i>x y <tt>&amp;key</tt> clipping-p surface</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='read-pixel-*'><b>read-pixel-*</b> <i>x y <tt>&amp;key</tt> clipping surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Read the <a href="#color">COLOR</a> of the pixel at <code>X</code> and <code>Y</code> coordiates from <a href="#surface">SURFACE</a>.  </p><h5>Parameters </h5>
+<ul><li><code>X</code> and <code>Y</code> specify the coordinates of the pixel, and are of type <code>INTEGER</code>. </li>
+<li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>. </li>
+<li><code>:COLOR</code> is the pixel color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.  </li>
+<li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the pixel is clipped to the dimensions of <code>SURFACE</code>.  SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -3908,7 +4278,7 @@
 <p><br>[Standard class]<br><a class=none name='rectangle'><b>rectangle</b></a>
 <blockquote><br>
 
-<p>A <code>RECTANGLE</code> object manages the foreign SDL_Rect object. </p>
+<p>A <code>RECTANGLE</code> object manages the foreign SDL_Rect object. Free using <a href="#free">FREE</a>. </p>
 
 </blockquote>
 
@@ -4012,8 +4382,8 @@
 <p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>FG-COLOR</code> and background color <code>BG-COLOR</code> to a new <code>SURFACE</code>.  The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is filled with <code>BG-COLOR</code> so the surface cannot be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters </h5>
 <ul><li><code>STRING</code> is the text to render.  </li>
 <li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to  <code>*DEFAULT-FONT*</code> if unspecified.  </li>
-<li><code>FG-COLOR</code> color is the text color, of type <code>SDL-COLOR</code></li>
-<li><code>BG-COLOR</code> color is the background color used to fill the surface, of type <code>SDL-COLOR</code></li>
+<li><code>FG-COLOR</code> color is the text color, of type <code>COLOR</code></li>
+<li><code>BG-COLOR</code> color is the background color used to fill the surface, of type <code>COLOR</code></li>
 <li><code>FREE</code> when <code>T</code> will free any exisiting cached surface in <code>FONT</code>. </li>
 <li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. Any cached surface can be accessed using <a href="#cached-surface">CACHED-SURFACE</a> and can be blitted to a target surface using <a href="#draw-font">DRAW-FONT</a>. </li>
 </ul><h5>Returns </h5>
@@ -4035,14 +4405,16 @@
 <p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>COLOR</code> to a new <code>SURFACE</code>.  The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is transparent and therefore can be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters </h5>
 <ul><li><code>STRING</code> is the text to render.  </li>
 <li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.  </li>
-<li><code>COLOR</code> color is the text color, of type <code>SDL-COLOR</code>. </li>
+<li><code>COLOR</code> color is the text color, of type <code>COLOR</code>. </li>
 <li><code>FREE</code> when <code>T</code> will free any exisitng cached surface in <code>FONT</code>. </li>
 <li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. Any cached surface can be accessed using <a href="#cached-surface">CACHED-SURFACE</a> and can be blitted to a target surface using <a href="#draw-font">DRAW-FONT</a>. </li>
 </ul><h5>Returns </h5>
 <ul><li>Returns a new cached surface <code>SDL-SURFACE</code>. </li>
 </ul><h5>Example </h5>
 <pre><code>(DRAW-STRING-SOLID &amp;quot;Hello World!&amp;quot; :COLOR A-COLOR)
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -4068,15 +4440,21 @@
 
 <!-- Entry for ROTATE-SURFACE -->
 
-<p><br>[Function]<br><a class=none name='rotate-surface'><b>rotate-surface</b> <i>degrees <tt>&amp;key</tt> surface free-p</i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='rotate-surface'><b>rotate-surface</b> <i>degrees <tt>&amp;key</tt> surface free zoom smooth</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns a new <code>SURFACE</code> rotated <code>0</code>, <code>90</code>, <code>180</code>, or <code>270</code> degrees. </p><h5>Parameters </h5>
-<ul><li><code>DEGREES</code> is the number of degrees to rotate the surface. Must be one of <code>0</code>, <code>90</code>, <code>180</code>, or <code>270</code> degrees. </li>
-<li><code>SURFACE</code> is the surface to rotate, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified. </li>
-<li><code>FREE-P</code> when not &#039;NIL&#039; will free the surface <code>SURFACE</code>. </li>
-<li><code>KEY-COLOR</code> when not <code>NIL</code> is the color to be used as the transpart pixel. <code>When </code>KEY-COLOR<code> is </code>NIL`, the surface is created without a key color. See <a href="#set-color-key">SET-COLOR-KEY</a> for more detailed information. </li>
-<li><code>ALPHA</code> when between <code>0</code> and <code>255</code> will set the level of alpha transparency for the new surface. When <code>ALPHA</code> is <code>NIL</code>, the new surface is created without alpha transparency. See <a href="#set-alpha">SET-ALPHA</a> for more detailed information. </li>
+<p>Returns a new <a href="#surface">SURFACE</a> rotated to <code>DEGREES</code>. </p><h5>Parameters </h5>
+<ul><li><code>DEGREES</code> is the rotation in degrees.  </li>
+<li><code>:SURFACE</code> is the surface to rotate <a href="#surface">SURFACE</a>. </li>
+<li><code>:FREE</code> when <code>T</code> will free <code>SURFACE</code>. </li>
+<li><code>:ZOOM</code> is the scaling factor. </li>
+<li><code>:SMOOTH</code> when <code>T</code> will anti-aliase the new surface. </li>
+</ul><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><STRONG>LISPBUILDER-SDL</STRONG> supports rotations of only <code>0</code>, <code>90</code>, <code>180</code>, or <code>270</code> degrees.  <STRONG>LISPBUILDER-SDL-GFX</STRONG> supports any rotation. </li>
+<li><STRONG>LISPBUILDER-SDL</STRONG> ignores <code>:SMOOTH</code>. <STRONG>LISPBUILDER-SDL-GFX</STRONG> supports <code>:SMOOTH</code>. </li>
+<li><STRONG>LISPBUILDER-SDL</STRONG> ignores <code>:ZOOM</code>. <STRONG>LISPBUILDER-SDL-GFX</STRONG> supports <code>:ZOOM</code>. </li>
+<li><STRONG>LISPBUILDER-SDL-GFX</STRONG> ignores <code>:FREE</code>. </li>
 </ul>
 
 </blockquote>
@@ -4084,12 +4462,33 @@
 <!-- End of entry for ROTATE-SURFACE -->
 
 
+<!-- Entry for ROTATE-SURFACE-XY -->
+
+<p><br>[Function]<br><a class=none name='rotate-surface-xy'><b>rotate-surface-xy</b> <i>degrees <tt>&amp;key</tt> surface free zoomx zoomy smooth</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a new <a href="#surface">SURFACE</a> rotated to <code>DEGREES</code>. </p><h5>Parameters </h5>
+<ul><li><code>DEGREES</code> is the rotation in degrees.  </li>
+<li><code>:SURFACE</code> is the surface to rotate <a href="#surface">SURFACE</a>. </li>
+<li><code>:FREE</code> when <code>T</code> will free <code>SURFACE</code>. </li>
+<li><code>:ZOOMX</code> and <code>ZOOMY</code> are the the scaling factors. A negative scaling factor will flip the corresponding axis.  <STRONG>Note</STRONG>: Flipping is only supported with anti-aliasing turned off. </li>
+<li><code>:SMOOTH</code> when <code>T</code> will anti-aliase the new surface. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><STRONG>LISPBUILDER-SDL-GFX</STRONG> ignores <code>:FREE</code>. </li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for ROTATE-SURFACE-XY -->
+
+
 <!-- Entry for RWOPS -->
 
 <p><br>[Standard class]<br><a class=none name='rwops'><b>rwops</b></a>
 <blockquote><br>
 
-<p>A wrapper around a foreign SDL_RWops object. </p>
+<p>A wrapper around a foreign SDL_RWops object. Free using <a href="#free">FREE</a>. </p>
 
 </blockquote>
 
@@ -4134,18 +4533,6 @@ Applies to <a href="#display-surface">DISPLAY-SURFACE</a>. <ul><li>When passed a
 </blockquote>
 
 <!-- End of entry for SDL-ASYNC-BLIT -->
-
-
-<!-- Entry for SDL-COLOR -->
-
-<p><br>[Standard class]<br><a class=none name='sdl-color'><b>sdl-color</b></a>
-<blockquote><br>
-
-<p>Root class defining an SDL color. All colors in SDL must inherit from this class. </p>
-
-</blockquote>
-
-<!-- End of entry for SDL-COLOR -->
 
 
 <!-- Entry for SDL-DOUBLEBUF -->
@@ -4568,22 +4955,6 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <!-- End of entry for SDL-YVYU-OVERLAY -->
 
 
-<!-- Entry for SET-ALPHA -->
-
-<p><br>[Function]<br><a class=none name='set-alpha'><b>set-alpha</b> <i>alpha <tt>&amp;key</tt> surface source-alpha rle-accel</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Set the transparency,  alpha blending and RLE acceleration properties of <code>SURFACE</code>. </p><h5>Parameters </h5>
-<ul><li><code>ALPHA</code> sets the <code>SURFACE</code> transparency. Allowable values are <code>NIL</code>, or any <code>INTEGER</code> between <code>0</code> and <code>255</code> inclusive. <code>0</code> is  transparent and <code>255</code> being opaque. <EM>Note</EM>: The per-surface alpha value of 128 is considered a special case and is optimised, so it&#039;s much faster than other per-surface values.  </li>
-<li><code>SOURCE-ALPHA</code> will enable or disable alpha blending for <code>SURFACE</code>. </li>
-<li><code>RLE-ACCEL</code> will enable or disable RLE acceleration when blitting. See <a href="#rle-accel">RLE-ACCEL</a>. </li>
-</ul>
-
-</blockquote>
-
-<!-- End of entry for SET-ALPHA -->
-
-
 <!-- Entry for SET-CELL -->
 
 <p><br>[Function]<br><a class=none name='set-cell'><b>set-cell</b> <i>rectangle <tt>&amp;key</tt> surface index</i> =&gt; <i>result</i></a>
@@ -4625,7 +4996,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Generic function]<br><a class=none name='set-color'><b>set-color</b> <i>dst src</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Copies the RGB/A color components to teh destination color <code>DST</code> from the source color <code>SRC</code>. </p>
+<p>Copies the <code>RGB/A</code> color components to the destination <code>DST</code> from the source <code>SRC</code>. </p>
 
 </blockquote>
 
@@ -4634,10 +5005,10 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for SET-COLOR -->
 
-<p><br>[Method]<br><a class=none><b>set-color</b> <i>(dst sdl-color) (src sdl-color)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>set-color</b> <i>(dst color) (src color)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Copies the color components from the source color <code>SRC</code> to the destination color <code>DST</code>. </p>
+
 
 </blockquote>
 
@@ -4649,7 +5020,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Generic function]<br><a class=none name='set-color-*'><b>set-color-*</b> <i>color <tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the red <code>R</code>, green <code>G</code>, blue <code>B</code> and alpha <code>A</code> components of the color <code>COLOR</code>. <code>R</code>, <code>G</code>, <code>B</code> and <code>A</code> are <code>KEY</code>word parameters having default values of <code>0</code> if unspecified. </p>
+<p>Sets <code>COLOR</code> to the red <code>R</code>, green <code>G</code>, blue <code>B</code> and alpha <code>A</code> color components. </p>
 
 </blockquote>
 
@@ -4658,29 +5029,14 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for SET-COLOR-* -->
 
-<p><br>[Method]<br><a class=none><b>set-color-*</b> <i>(color sdl-color) <tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>set-color-*</b> <i>(color color) <tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the components of the color <code>COLOR</code> to  the red <code>R</code>, green <code>G</code>, blue <code>BLUE</code> or alpha <code>A</code> color components. </p>
+
 
 </blockquote>
 
 <!-- End of entry for SET-COLOR-* -->
-
-
-<!-- Entry for SET-COLOR-KEY -->
-
-<p><br>[Function]<br><a class=none name='set-color-key'><b>set-color-key</b> <i>color <tt>&amp;key</tt> surface rle-accel</i> =&gt; <i>result</i></a>
-<blockquote><br>
-
-<p>Set the color key (transparent pixel).  </p><h5>Paremeters </h5>
-<ul><li><code>COLOR</code> the transparent pixel color, of type <a href="#color">COLOR</a>, or <a href="#color-a">COLOR-A</a>.  When &#039;NIL&#039; will disable color keying. </li>
-<li><code>RLE-ACCEL</code> when <code>T</code> will use RLE information when blitting. See <a href="#rle-accel">RLE-CCEL</a>. </li>
-</ul>
-
-</blockquote>
-
-<!-- End of entry for SET-COLOR-KEY -->
 
 
 <!-- Entry for SET-GL-ATTRIBUTE -->
@@ -5000,7 +5356,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Standard class]<br><a class=none name='surface'><b>surface</b></a>
 <blockquote><br>
 
-<p>This object is garbage collected and the <code>SDL_Surface</code> object freed when out of scope. </p>
+<p>This object is garbage collected and the <code>SDL_Surface</code> object freed when out of scope. Free using <a href="#free">FREE</a>. </p>
 
 </blockquote>
 
@@ -5159,7 +5515,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>width</b> <i>obj</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the width of the object. </p>
+<p>Returns the width of the object, as an <code>INTEGER</code>.  When <code>OBJ</code> is a <a href="#font">FONT</a>, use the cached <a href="#surface">SURFACE</a>. </p>
 
 </blockquote>
 
@@ -5171,7 +5527,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Method]<br><a class=none><b>width</b> <i>(obj sdl-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the <code>INTEGER</code> width of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
+
 
 </blockquote>
 
@@ -5229,23 +5585,25 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for WITH-BEZIER -->
 
-<p><br>[Macro]<br><a class=none name='with-bezier'><b>with-bezier</b> <i>(line-type <tt>&amp;optional</tt> segments) declaration* statement*</i> =&gt; <i>result</i></a>
+<p><br>[Macro]<br><a class=none name='with-bezier'><b>with-bezier</b> <i>(<tt>&amp;optional</tt> style segments) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a bezier curve of color <code>*DEFAULT-COLOR*</code> to the surface <code>*DEFAULT-SURFACE*</code>. The shape of the Bezier curve is defined by control points.  A control point is a vertex containing an X and Y coordinate pair. </p><p>The number of segments <code>SEGENTS</code> used to draw the Bezier curve defaults to 10. The greater the number of segments, the smoother the Bezier curve. </p><h5>Local Methods </h5>
+<p>Draw a bezier curve of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. The shape of the Bezier curve is defined by control points.  A control point is a vertex containing an X and Y coordinate pair. </p><p>The number of segments <code>SEGENTS</code> used to draw the Bezier curve defaults to 10. The greater the number of segments, the smoother the Bezier curve. </p><h5>Local Methods </h5>
 <p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>POINT</code>, or  </li>
 <li><code>ADD-VERTEX-*</code> which is the x/y spread version </li>
 </ul><p><code>ADD-VERTEX</code> and <code>ADD-VERTEX-*</code> are valid only within the scop of <code>WITH-BEZIER</code>. </p><h5>Parameters </h5>
-<ul><li><code>LINE-TYPE</code> is one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>.  When <code>LINE-TYPE</code> is <code>:SOLID</code>, a single continuous line is drawn through the  specified waypoints. When <code>LINE-TYPE</code> is <code>:DASH</code>, a line is drawn to alternate waypoint pairs. When <code>LINE-TYPE</code> is <code>:POINTS</code>, a single point is drawn at each waypoint. </li>
-<li><code>SEGMENTS</code> is the number of segments used to draw the Bezier curve.   Default is 10 segments if unspecified. The greater the number of segments,  the smoother the curve. </li>
+<ul><li><code>STYLE</code> is one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>.  When <code>STYLE</code> is <code>:SOLID</code>, a single continuous line is drawn through the  specified waypoints. When <code>STYLE</code> is <code>:DASH</code>, a line is drawn to alternate waypoint pairs. When <code>STYLE</code> is <code>:POINTS</code>, a single point is drawn at each waypoint. </li>
+<li><code>SEGMENTS</code> is the number of segments used to draw the Bezier curve.   Default is 20 segments if unspecified. The greater the number of segments,  the smoother the curve. </li>
 </ul><h5>Example </h5>
 <pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
-   (WITH-BEZIER (30)
+   (WITH-BEZIER ()
      (ADD-VERTEX-* 60  40)
      (ADD-VERTEX-* 160 10)
      (ADD-VERTEX-* 170 150)
      (ADD-VERTEX-* 60  150)))
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -5254,10 +5612,10 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for WITH-COLOR -->
 
-<p><br>[Macro]<br><a class=none name='with-color'><b>with-color</b> <i>(var <tt>&amp;optional</tt> color free-p) declaration* statement*</i> =&gt; <i>result</i></a>
+<p><br>[Macro]<br><a class=none name='with-color'><b>with-color</b> <i>(var <tt>&amp;optional</tt> color free) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>A convience macro that binds <code>*DEFAULT-COLOR*</code> to <code>VAR</code> within the scope of <code>WITH-COLOR</code>.  <code>VAR</code> is set to <code>COLOR</code> when <code>COLOR</code> is not <code>NIL</code>.<code>VAR</code> must be of type <code>SDL-COLOR</code>.  <code>VAR</code> is freed using <a href="#free">FREE</a> when <code>FREE-P</code> is not <code>NIL</code>. </p>
+<p>A convience macro that binds <code>*DEFAULT-COLOR*</code> to <code>VAR</code> within the scope of <code>WITH-COLOR</code>.  <code>VAR</code> is set to <code>COLOR</code> when <code>COLOR</code> is not <code>NIL</code>.<code>VAR</code> must be of type <a href="#color">COLOR</a>, or <a href="#color-a">COLOR-A</a>.  <code>VAR</code> is freed using <a href="#free">FREE</a> when <code>FREE</code> is <code>T</code>. </p>
 
 </blockquote>
 
@@ -5266,15 +5624,15 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for WITH-CURVE -->
 
-<p><br>[Macro]<br><a class=none name='with-curve'><b>with-curve</b> <i>(line-type <tt>&amp;optional</tt> segments) declaration* statement*</i> =&gt; <i>result</i></a>
+<p><br>[Macro]<br><a class=none name='with-curve'><b>with-curve</b> <i>(<tt>&amp;optional</tt> style segments) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a Cattmul-Rom spline of color <code>*DEFAULT-COLOR*</code> to the surface <code>*DEFAULT-SURFACE*</code>. The shape of the curve is defined by waypoints.  A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Local Methods </h5>
+<p>Draw a Cattmul-Rom spline of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. The shape of the curve is defined by waypoints.  A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Local Methods </h5>
 <p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or  </li>
 <li><code>ADD-VERTEX-*</code> which is the x/y spread version </li>
 </ul><p><code>ADD-VERTEX</code> and <code>ADD-VERTEX-*</code> are valid only within the scope of <code>WITH-CURVE</code>. </p><h5>Parameters </h5>
-<ul><li><code>LINE-TYPE</code> describes the line style used to draw the curve and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
-<li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline.   Default is 10 segments if unspecified. The greater the number of segments,  the smoother the spline. </li>
+<ul><li><code>STYLE</code> describes the line style used to draw the curve and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>.  Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints.  Use <code>:DASH</code> to draw a line between alternate waypoint pairs.  Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+<li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline.   Default is 20 segments if unspecified. The greater the number of segments,  the smoother the spline. </li>
 </ul><h5>Example </h5>
 <pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
    (WITH-CURVE (:SOLID 30)
@@ -5282,7 +5640,9 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
      (ADD-VERTEX-* 160 10)
      (ADD-VERTEX-* 170 150)
      (ADD-VERTEX-* 60  150)))
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -5294,10 +5654,12 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Macro]<br><a class=none name='with-default-font'><b>with-default-font</b> <i>(font) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets <code>*DEFAULT-FONT*</code> to the bitmap font in <code>FONT</code> within the scope of <code>WITH-DEFAULT-FONT</code>. </p><h5>Example </h5>
+<p>Sets <code>*DEFAULT-FONT*</code> to <code>FONT</code> within the scope of <code>WITH-DEFAULT-FONT</code>. </p><h5>Example </h5>
 <pre><code>(WITH-DEFAULT-FONT (new-font)
     (DRAW-CHARACTER-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 F-COLOR B-COLOR))
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -5455,10 +5817,12 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Macro]<br><a class=none name='with-font'><b>with-font</b> <i>(font font-definition) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates a new bitmap font <code>BITMAP-FONT</code> and sets <code>*DEFAULT-FONT*</code> to the bitmap font in <code>FONT</code> within the scope of <code>WITH-FONT</code>. Frees the bitmap font when <code>WITH-FONT</code> goes out of scope. </p><h5>Example </h5>
+<p>Sets <code>*DEFAULT-FONT*</code> to a new <a href="#bitmap-font">BITMAP-FONT</a> in <code>FONT</code> within the scope of <code>WITH-FONT</code>. Frees <code>FONT</code> when <code>WITH-FONT</code> goes out of scope. </p><h5>Example </h5>
 <pre><code>(WITH-FONT (new-font *font-8x8*)
     (DRAW-CHARACTER-SHADED-* &amp;quot;Hello World!&amp;quot; 0 0 F-COLOR B-COLOR))
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -5470,7 +5834,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <p><br>[Macro]<br><a class=none name='with-foreign-color-copy'><b>with-foreign-color-copy</b> <i>(struct color) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates a new foreign SDL_Color object `STRUCT on the stack. Then copies the color components from COLOR into STRUCT. STRUCT is free&#039;d after BODY. </p>
+<p>Creates and assigns a new foreign <code>SDL_Color</code> to <code>STRUCT</code>. Then copies the color components from <code>COLOR</code> into <code>STRUCT</code>. <code>STRUCT</code> is free&#039;d when out of scope. </p>
 
 </blockquote>
 
@@ -5593,14 +5957,14 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 
 <!-- Entry for WITH-SHAPE -->
 
-<p><br>[Macro]<br><a class=none name='with-shape'><b>with-shape</b> <i>(line-type) declaration* statement*</i> =&gt; <i>result</i></a>
+<p><br>[Macro]<br><a class=none name='with-shape'><b>with-shape</b> <i>(<tt>&amp;optional</tt> style) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a polygon of color <code>*DEFAULT-COLOR*</code> to the surface <code>*DEFAULT-SURFACE*</code>. </p><h5>Local Methods </h5>
+<p>Draw a polygon of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. </p><h5>Local Methods </h5>
 <p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or  </li>
 <li><code>ADD-VERTEX-*</code> which is the x/y spread version </li>
 </ul><p>ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE. </p><h5>Parameters </h5>
-<ul><li><code>LINE-TYPE</code> describes the line style used to draw the shape and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
+<ul><li><code>STYLE</code> describes the line style used to draw the shape and may be one of  <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>.  Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints.  Use <code>:DASH</code> to draw a line between alternate waypoint pairs.  Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li>
 </ul><h5>Example </h5>
 <pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
    (WITH-SHAPE (:POINTS)
@@ -5608,7 +5972,9 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
      (ADD-VERTEX-* 160 10)
      (ADD-VERTEX-* 170 150)
      (ADD-VERTEX-* 60  150)))
-</code></pre>
+</code></pre><h5>Packages </h5>
+<ul><li>Also supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+</ul>
 
 </blockquote>
 
@@ -5681,7 +6047,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>x</b> <i>obj</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the x coordinate of the object. </p>
+<p>Returns the <code>X</code> coordinate of the object, as an <code>INTEGER</code>. When <code>OBJ</code> is a <a href="#font">FONT</a>, use the cached <a href="#surface">SURFACE</a>. </p>
 
 </blockquote>
 
@@ -5694,7 +6060,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the <code>X</code> position of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
+
 
 </blockquote>
 
@@ -5746,7 +6112,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>x2</b> <i>obj</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns <code>(+ X WIDTH)</code> of the object. </p>
+<p>Returns <code>(+ X WIDTH)</code> of the object, as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -5772,7 +6138,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>y</b> <i>obj</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the y coordinate of the object. </p>
+<p>Returns the <code>Y</code> coordinate of the object, as an <code>INTEGER</code>. When <code>OBJ</code> is a <a href="#font">FONT</a>, use the cached <a href="#surface">SURFACE</a>. </p>
 
 </blockquote>
 
@@ -5785,7 +6151,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj sdl-font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the <code>Y</code> position of the cached surface <code>SURFACE</code> in <code>FONT</code>. </p>
+
 
 </blockquote>
 
@@ -5837,7 +6203,7 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 <br><a class=none><tt>(setf (</tt><b>y2</b> <i>obj</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns <code>(+ Y HEIGHT)</code> of the object. </p>
+<p>Returns <code>(+ Y HEIGHT)</code> of the object, as an <code>INTEGER</code>. </p>
 
 </blockquote>
 
@@ -5855,6 +6221,26 @@ Applies to <a href="#surface">SURFACE</a> and <a href="#display-surface">DISPLAY
 </blockquote>
 
 <!-- End of entry for Y2 -->
+
+
+<!-- Entry for ZOOM-SURFACE -->
+
+<p><br>[Function]<br><a class=none name='zoom-surface'><b>zoom-surface</b> <i>zoomx zoomy <tt>&amp;key</tt> surface free smooth</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a new <a href="#surface">SURFACE</a> scaled to <code>ZOOMX</code> and <code>ZOOMY</code>. </p><h5>Parameters </h5>
+<ul><li><code>:ZOOMX</code> and <code>ZOOMY</code> are the scaling factors.  A negative scaling factor will flip the corresponding axis.  <STRONG>Note</STRONG>: Flipping is only supported with anti-aliasing turned off. </li>
+<li><code>:SURFACE</code> is the surface to rotate <a href="#surface">SURFACE</a>. </li>
+<li><code>:FREE</code> when <code>T</code> will free <code>SURFACE</code>. </li>
+<li><code>:SMOOTH</code> when <code>T</code> will anti-aliase the new surface. </li>
+</ul><h5>Packages </h5>
+<ul><li>Supported in <STRONG>LISPBUILDER-SDL-GFX</STRONG></li>
+<li><STRONG>LISPBUILDER-SDL-GFX</STRONG> ignores <code>:FREE</code>. </li>
+</ul>
+
+</blockquote>
+
+<!-- End of entry for ZOOM-SURFACE -->
 <br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
 
 <ul>

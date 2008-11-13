@@ -92,7 +92,11 @@
 	   56 108 108 56 0 0 0 0 0 0 0 24 24 0 0 0 0 0 0 24 0 0 0 0 15 12 12 12 236 108
 	   60 28 108 54 54 54 54 0 0 0 120 12 24 48 124 0 0 0 0 0 60 60 60 60 0 0 0 0 0 0
 	   0 0 0 0))
-  "Contains the font data for an 8x8 bitmap font.")
+  "Contains the font data for an 8x8 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-5x7*
   (make-font-definition
@@ -166,7 +170,11 @@
 	   144 96 0 0 96 0 240 0 96 0 0 0 112 176 208 224 0 64 32 144 144 144 112 0 32 64
 	   144 144 144 112 0 96 0 144 144 144 112 0 80 0 144 144 144 112 0 32 64 144 144
 	   80 32 64 0 128 224 144 144 224 128 80 0 144 144 80 32 64))
-  "Contains the font data for an 5x7 bitmap font.")
+  "Contains the font data for an 5x7 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-5x8*
   (make-font-definition
@@ -248,7 +256,11 @@
 	   0 64 32 0 144 144 144 112 0 32 64 0 144 144 144 112 0 96 144 0 144 144 144 112
 	   0 0 144 0 144 144 144 112 0 32 64 0 144 144 112 144 96 0 128 128 224 144 224
 	   128 128 0 144 0 144 144 112 144 96))
-  "Contains the font data for an 5x8 bitmap font.")
+  "Contains the font data for an 5x8 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x9*
   (make-font-definition
@@ -333,7 +345,11 @@
 	   56 0 0 16 32 0 72 72 72 56 0 0 16 40 0 72 72 72 56 0 0 0 40 0 72 72 72 56 0 0
 	   16 32 0 72 72 72 56 72 48 0 64 64 112 72 72 112 64 64 0 40 0 72 72 72 56 72
 	   48))
-  "Contains the font data for an 6x9 bitmap font.")
+  "Contains the font data for an 6x9 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x10*
   (make-font-definition
@@ -433,7 +449,11 @@
 	   136 136 136 152 104 0 0 0 80 0 136 136 136 152 104 0 0 0 16 32 136 136 152 104
 	   8 136 112 0 0 128 240 136 136 136 240 128 128 0 80 0 136 136 152 104 8 136
 	   112))
-  "Contains the font data for an 6x10 bitmap font.")
+  "Contains the font data for an 6x10 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x12*
   (make-font-definition
@@ -547,7 +567,11 @@
 	   136 112 0 0 0 0 0 80 0 136 136 136 136 112 0 0 0 0 16 32 0 136 136 136 80 32
 	   64 128 0 0 0 128 128 240 136 136 136 240 128 128 0 0 0 80 0 136 136 136 80 32
 	   64 128))
-  "Contains the font data for an 6x12 bitmap font.")
+  "Contains the font data for an 6x12 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x13*
   (make-font-definition
@@ -672,7 +696,11 @@
 	   136 136 152 104 0 0 0 0 80 80 0 136 136 136 136 152 104 0 0 0 0 16 32 0 136
 	   136 136 152 104 8 136 112 0 0 0 128 128 176 200 136 136 200 176 128 128 0 0 80
 	   80 0 136 136 136 152 104 8 136 112))
-  "Contains the font data for an 6x13 bitmap font.")
+  "Contains the font data for an 6x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x13B*
   (make-font-definition
@@ -800,7 +828,11 @@
 	   108 0 204 204 204 204 220 108 0 0 0 0 204 204 0 204 204 204 204 220 108 0 0 0
 	   0 24 48 0 204 204 204 220 108 12 204 120 0 0 0 192 192 216 236 204 236 216 192
 	   192 192 0 0 204 204 0 204 204 204 220 108 12 204 120))
-  "Contains the font data for an 6x13 bitmap font.")
+  "Contains the font data for an 6x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x13O*
   (make-font-definition
@@ -917,7 +949,11 @@
 	   36 0 68 68 68 136 152 104 0 0 0 0 40 40 0 68 68 68 136 152 104 0 0 0 0 8 16 0
 	   68 68 136 152 104 8 144 96 0 0 0 64 64 88 100 68 136 200 176 128 128 0 0 40 40
 	   0 68 68 136 152 104 8 144 96))
-  "Contains the font data for an 6x13 bitmap font.")
+  "Contains the font data for an 6x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x13*
   (make-font-definition
@@ -1040,7 +1076,11 @@
 	   48 72 0 132 132 132 132 140 116 0 0 0 0 72 72 0 132 132 132 132 140 116 0 0 0
 	   0 16 32 0 132 132 132 140 116 4 132 120 0 0 0 128 128 184 196 132 132 196 184
 	   128 128 0 0 72 72 0 132 132 132 140 116 4 132 120))
-  "Contains the font data for an 7x13 bitmap font.")
+  "Contains the font data for an 7x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x13B*
   (make-font-definition
@@ -1168,7 +1208,11 @@
 	   0 108 108 0 204 204 204 204 220 124 0 0 0 0 24 48 0 204 204 204 220 124 12 204
 	   120 0 0 0 192 192 216 236 204 204 236 216 192 192 0 0 108 108 0 204 204 204
 	   220 108 12 204 120))
-  "Contains the font data for an 7x13 bitmap font.")
+  "Contains the font data for an 7x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x13O*
   (make-font-definition
@@ -1285,7 +1329,11 @@
 	   132 140 116 0 0 0 0 36 36 0 66 66 66 132 140 116 0 0 0 0 8 16 0 66 66 132 140
 	   116 4 132 120 0 0 0 64 64 92 98 66 132 196 184 128 128 0 0 36 36 0 66 66 132
 	   140 116 4 132 120))
-  "Contains the font data for an 7x13 bitmap font.")
+  "Contains the font data for an 7x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x14*
   (make-font-definition
@@ -1419,7 +1467,11 @@
 	   116 0 0 0 0 48 72 0 132 132 132 132 132 140 116 0 0 0 0 0 72 0 132 132 132 132
 	   132 140 116 0 0 0 0 16 32 0 132 132 68 72 40 56 16 144 96 0 0 128 128 128 184
 	   196 132 132 132 196 184 128 128 0 0 0 72 0 132 132 68 72 40 56 16 144 96))
-  "Contains the font data for an 7x14 bitmap font.")
+  "Contains the font data for an 7x14 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x14B*
   (make-font-definition
@@ -1558,7 +1610,11 @@
 	   0 0 0 0 204 204 0 204 204 204 204 204 204 124 0 0 0 0 24 48 0 204 204 204 120
 	   56 56 48 240 96 0 0 192 192 192 248 204 204 204 204 204 248 192 192 0 0 204
 	   204 0 204 204 204 120 56 56 48 240 96))
-  "Contains the font data for an 7x14 bitmap font.")
+  "Contains the font data for an 7x14 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-8x13*
   (make-font-definition
@@ -1673,7 +1729,11 @@
 	   68 58 0 0 0 0 24 36 0 68 68 68 68 68 58 0 0 0 0 40 40 0 68 68 68 68 68 58 0 0
 	   0 0 8 16 0 66 66 66 70 58 2 66 60 0 0 0 64 64 92 98 66 66 98 92 64 64 0 0 36
 	   36 0 66 66 66 70 58 2 66 60))
-  "Contains the font data for an 8x13 bitmap font.")
+  "Contains the font data for an 8x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-8x13B*
   (make-font-definition
@@ -1803,7 +1863,11 @@
 	   198 198 198 206 118 0 0 0 24 48 0 198 198 198 198 206 118 6 198 124 0 0 192
 	   192 220 230 198 198 198 230 220 192 192 0 108 108 0 198 198 198 198 206 118 6
 	   198 124))
-  "Contains the font data for an 8x13 bitmap font.")
+  "Contains the font data for an 8x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-8x13O*
   (make-font-definition
@@ -1918,7 +1982,11 @@
 	   68 58 0 0 0 0 12 18 0 34 34 34 68 68 58 0 0 0 0 20 20 0 34 34 34 68 68 58 0 0
 	   0 0 8 16 0 66 66 132 140 116 4 132 120 0 0 0 64 64 92 98 66 132 196 184 128
 	   128 0 0 36 36 0 66 66 132 140 116 4 132 120))
-  "Contains the font data for an 8x13 bitmap font.")
+  "Contains the font data for an 8x13 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-9x15*
   (make-font-definition
@@ -2141,7 +2209,11 @@
 	   0 2 0 66 0 60 0 0 0 0 0 0 0 64 0 64 0 64 0 94 0 97 0 65 0 65 0 97 0 94 0 64 0
 	   64 0 64 0 0 0 0 0 36 0 36 0 0 0 66 0 66 0 66 0 66 0 66 0 70 0 58 0 2 0 66 0 60
 	   0))
-  "Contains the font data for an 9x15 bitmap font.")
+  "Contains the font data for an 9x15 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-9x15B*
   (make-font-definition
@@ -2380,7 +2452,11 @@
 	   195 0 195 0 195 0 195 0 195 0 103 0 59 0 3 0 198 0 124 0 0 0 0 0 0 0 112 0 48
 	   0 48 0 62 0 51 0 51 0 51 0 51 0 62 0 48 0 48 0 112 0 0 0 0 0 102 0 102 0 0 0
 	   195 0 195 0 195 0 195 0 195 0 103 0 59 0 3 0 198 0 124 0))
-  "Contains the font data for an 9x15 bitmap font.")
+  "Contains the font data for an 9x15 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-9x18*
   (make-font-definition
@@ -2642,7 +2718,11 @@
 	   0 12 0 12 0 8 0 72 0 48 0 0 0 0 0 0 0 0 0 0 0 0 0 64 0 64 0 92 0 98 0 65 0 65
 	   0 65 0 98 0 92 0 64 0 64 0 0 0 0 0 0 0 0 0 0 0 0 0 18 0 18 0 0 0 33 0 33 0 18
 	   0 18 0 18 0 12 0 12 0 8 0 72 0 48 0 0 0))
-  "Contains the font data for an 9x18 bitmap font.")
+  "Contains the font data for an 9x18 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-9x18B*
   (make-font-definition
@@ -2914,7 +2994,11 @@
 	   0 24 0 0 0 99 0 99 0 54 0 54 0 54 0 28 0 28 0 24 0 88 0 48 0 0 0 0 0 0 0 0 0 0
 	   0 0 0 96 0 96 0 124 0 102 0 99 0 99 0 99 0 102 0 124 0 96 0 96 0 0 0 0 0 0 0 0
 	   0 0 0 0 0 54 0 54 0 0 0 99 0 99 0 54 0 54 0 54 0 28 0 28 0 24 0 88 0 48 0 0 0))
-  "Contains the font data for an 9x18 bitmap font.")
+  "Contains the font data for an 9x18 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-10x20*
   (make-font-definition
@@ -3234,5 +3318,9 @@
 	   0 0 0 0 0 48 0 48 0 48 0 48 0 48 0 48 0 62 0 51 0 49 128 49 128 49 128 51 0 62
 	   0 48 0 48 0 48 0 48 0 0 0 0 0 0 0 0 0 0 0 51 0 51 0 0 0 97 128 97 128 97 128
 	   97 128 97 128 97 128 51 128 29 128 1 128 97 128 51 0 30 0))
-  "Contains the font data for an 10x20 bitmap font.")
+  "Contains the font data for an 10x20 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
 

@@ -17,7 +17,7 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 * `STRING` is the text to render. 
 * `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
-* `COLOR` color is the text color, of type `SDL-COLOR`.
+* `COLOR` color is the text color, of type `COLOR`.
 * `FREE` when `T` will free any exisitng cached surface in `FONT`.
 * `CACHE` when `T` will cache the newly created SURFACE in `FONT`. Any cached surface can be accessed using
 [CACHED-SURFACE](#cached-surface) and can be blitted to a target surface using [DRAW-FONT](#draw-font).
@@ -28,7 +28,11 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Example
 
-    \(DRAW-STRING-SOLID \"Hello World!\" :COLOR A-COLOR\)"
+    \(DRAW-STRING-SOLID \"Hello World!\" :COLOR A-COLOR\)
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
   (when free
     (free-cached-surface font))
   (let ((surf (convert-surface :surface (create-surface (* (char-width font)
@@ -54,7 +58,11 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Parameters
 
-* `P1` is the `X` and `X` coordinates to render the text, of type `POINT`."
+* `P1` is the `X` and `X` coordinates to render the text, of type `POINT`.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
   (check-type p1 point)
   (draw-string-solid-* string (x p1) (y p1)
 		       :justify justify
@@ -76,7 +84,7 @@ The text is keyed onto `SURFACE`.
 * `X` and `Y` are the `X` and `Y` position coordinates, as `INTEGERS`.
 * `FONT` is the font face used to render the string. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
-* `COLOR` color is the text color, of type `SDL-COLOR`.
+* `COLOR` color is the text color, of type `COLOR`.
 
 ##### Returns
 
@@ -84,8 +92,12 @@ The text is keyed onto `SURFACE`.
 
 ##### Example
 
-    \(DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR\)"
-  (check-type color sdl-color)
+    \(DRAW-STRING-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR\)
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
+  (check-type color color)
   (check-type font bitmap-font)
   (unless surface
     (setf surface *default-display*))

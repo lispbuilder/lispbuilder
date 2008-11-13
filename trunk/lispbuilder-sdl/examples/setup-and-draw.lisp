@@ -18,6 +18,6 @@
 	       (when (< y 0)
 		 (setf y height))
 	       (sdl:draw-hline 0 width y
-			       :clipping-p nil
+			       :clipping nil
 			       :color (sdl:color :r 255 :g 255 :b 255))
 	       (sdl:update-display))))))
