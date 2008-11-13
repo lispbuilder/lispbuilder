@@ -11,7 +11,8 @@
   (:default-initargs
    :gc t
     :free #'cffi:foreign-free)
-  (:documentation "A `RECTANGLE` object manages the foreign SDL_Rect object."))
+  (:documentation "A `RECTANGLE` object manages the foreign SDL_Rect object.
+Free using [FREE](#free)."))
 
 (defun rectangle (&key (x 0) (y 0) (w 0) (h 0) (fp nil))
   "Creates a new `RECTANGLE` from the specified `X`, `Y`, width `W` and height `H`.
@@ -230,7 +231,7 @@ Returns the rectangle `RECTANGLE` as RESULT."
 ;;   "Returns the color of the rectangle `RECTANGLE`."
 ;;   (color-* (rectangle-color rectangle)))
 
-;; (defmethod set-color ((rectangle rectangle) (color sdl-color))
+;; (defmethod set-color ((rectangle rectangle) (color color))
 ;;   (set-color-* rectangle :r (r color) :g (g color) :b (b color) :a (a color))
 ;;   rectangle)
 

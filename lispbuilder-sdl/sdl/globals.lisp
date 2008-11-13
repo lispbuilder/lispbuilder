@@ -10,9 +10,8 @@
 ;;;; Globals
 
 (defvar *default-surface* nil
-  "Functions that accept the `KEY`word parameter `SURFACE` will most likely bind to the 
-symbol `\*DEFAULT-SURFACE*\` if `SURFACE` is not specified, automatically using whatever surface is referenced 
-by `\*DEFAULT-SURFACE*\`. 
+  "Functions that accept the `KEY`word parameter `:SURFACE` will most likely bind to the 
+symbol `\*DEFAULT-SURFACE*\` by default if `SURFACE` is not specified. 
 
 A surface is bound to `\*DEFAULT-SURFACE*\` by the following macros: [WITH-SURFACE](#with-surface), 
 and [WITH-SURFACES](#with-surfaces).
@@ -36,8 +35,7 @@ The above can be shortened using by setting the `\*DEFAULT-SURFACE\*` to the dis
   
 (defvar *default-color* nil
     "Functions that accept the `KEY`word parameter `COLOR` will most likely bind to the 
-symbol `\*DEFAULT-COLOR*\` if `COLOR` is not specified, automatically using whatever color is referenced 
-by `\*DEFAULT-COLOR*\`. 
+symbol `\*DEFAULT-COLOR*\` by default if `COLOR` is not specified. 
 
 A color is bound to `\*DEFAULT-COLOR*\` by the following macro: [WITH-COLOR](#with-color).
 
@@ -57,10 +55,32 @@ The above can be shortened by setting `\*DEFAULT-COLOR\*` to `\*BLACK\*`.
 
 (defvar *opengl-context* nil
   "The symbol `\*OPENGL-CONTEXT\*` is `T` when an OpenGL display context is created, and `NIL` otherwise.
-[UPDATE-SURFACE](#update-surface) will call [SDL-GL-SWAP-BUFFERS](#sdl-gl-swap-buffers) when `\*OPENGL-CONTEXT\*` is `T`, 
-and [SDL-FLIP](#sdl-flip) otherwise.")
+[UPDATE-SURFACE](#update-surface) will swap the `OPENGL` buffers when `\*OPENGL-CONTEXT\*` is `T`, 
+and swap the `SDL` video buffers otherwise.")
 
-(defvar *default-font* nil)
+(defvar *default-font* nil
+      "Functions that accept the `KEY`word parameter `FONT` will most likely bind to the 
+symbol `\*DEFAULT-FONT*\` by default if `FONT` is not specified. 
+
+A font is bound to `\*DEFAULT-FONT*\` by the following; [WITH-DEFAULT-FONT](#with-default-font), 
+[WITH-FONT](#with-font) and [INITIALISE-DEFAULT-FONT](#initialise-default-font).
+
+##### Example
+
+    \(draw-string-solid-* \"draw string centered\" 100 100
+                          :justify :center :color sdl:*white* :font a-font\)
+    \(draw-string-solid-* \"draw string left\" 100 100
+                          :justify :left :color sdl:*white* :font a-font\)
+    \(draw-string-solid-* \"draw string right\" 100 100
+                          :justify :right :color sdl:*white* :font a-font\)
+
+The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
+
+    \(WITH-DEFAULT-FONT \(a-font\)
+      \(WITH-COLOR \(COL SDL:*WHITE*\)
+        \(DRAW-STRING-SOLID-* \"draw string centered\" 100 100 :JUSTIFY :CENTER\)
+        \(DRAW-STRING-SOLID-* \"draw string left\" 100 100 :JUSTIFY :LEFT\)
+        \(DRAW-STRING-SOLID-* \"draw string right\" 100 100 :JUSTIFY :RIGHT\)\)\)")
 (defvar *default-position* nil)
 (defvar *default-rectangle* nil)
 
@@ -69,7 +89,8 @@ and [SDL-FLIP](#sdl-flip) otherwise.")
 (defvar *default-font-path* (make-pathname :host (pathname-host #.(or *compile-file-truename*
 								      *load-truename*))
 					   :directory (pathname-directory #.(or *compile-file-truename*
-										*load-truename*))))
+										*load-truename*)))
+  "The path to any fonts used in teh `LISPBUILDER-SDL` packages.")
 ;; (defvar *renderer* nil)
 ;; (defvar *quit* nil)
 

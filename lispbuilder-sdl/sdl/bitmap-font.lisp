@@ -1,4 +1,3 @@
-;;;; simple fixed height and width font
 
 (in-package :lispbuilder-sdl)
 
@@ -13,12 +12,15 @@
    :gc t
     :free #'cffi:foreign-free)
   (:documentation
-   "The `BITMAP-FONT` object manages the resources for a bitmap font. Resources include 
-the foreign array containing font data, and the most recent cached `SURFACE` created by a call 
-to any of the RENDER-STRING* functions. 
-Use [DRAW-FONT](#draw-font), [DRAW-FONT-AT](#draw-font-at) or [DRAW-FONT-AT-*](#draw-font-at-*) 
-to draw the cached surface. Prior to the first call to a RENDER-STRING* function, 
-the cached surface is `NIL`."))
+   "The `BITMAP-FONT` object manages the resources for a bitmap font. 
+Prior to the first call to a `RENDER-STRING*` function, 
+the cached [SURFACE](#surface) is `NIL`. 
+
+The cached surface is created by a call to any of the RENDER-STRING* functions. 
+Use [DRAW-FONT](#draw-font), [DRAW-FONT-AT](#draw-font-at) 
+or [DRAW-FONT-AT-*](#draw-font-at-*) to draw the cached surface.
+
+Free using [FREE](#free)"))
 
 (defstruct glyph
   surface
@@ -26,14 +28,19 @@ the cached surface is `NIL`."))
   bg-color)
 
 (defgeneric font-data (bitmap-font))
-(defmethod font-data ((font bitmap-font))
-  (fp font))
+(defmethod font-data ((font bitmap-font)) (fp font))
 
 (defun initialise-font (font-definition)
-  "Creates a new `BITMAP-FONT` object from the font data in `FONT-DEFINITION`.
-Returns the new bitmap font, or `NIL` if the font cannot be created. `FONT-DEFINITION` must be one of the following
-built-in fonts: 
-`*FONT-10X20*, *FONT-5X7*, *FONT-5X8*, *FONT-6X10*, *FONT-6X12*, *FONT-6X13*, *FONT-6X13B*, *FONT-6X13O*, *FONT-6X9*, *FONT-7X13*, *FONT-7X13B*, *FONT-7X13O*, *FONT-7X14*, *FONT-7X14B*, *FONT-8X13*, *FONT-8X13B*, *FONT-8X13O*, *FONT-8X8*, *FONT-9X15*, *FONT-9X15B*, *FONT-9X18* OR *FONT-9X18B*`."
+  "Returns a new [BITMAP-FONT](#bitmap-font) initialized from `FONT-DEFINITION` data, or `NIL` 
+if the font cannot be created. `FONT-DEFINITION` must be one of the following built-in fonts: 
+`*FONT-10X20*`, `*FONT-5X7*`, `*FONT-5X8*`, `*FONT-6X10*`, `*FONT-6X12*`, `*FONT-6X13*`, 
+`*FONT-6X13B*`, `*FONT-6X13O*`, `*FONT-6X9*`, `*FONT-7X13*`, `*FONT-7X13B*`, `*FONT-7X13O*`, 
+`*FONT-7X14*`, `*FONT-7X14B*`, `*FONT-8X13*`, `*FONT-8X13B*`, `*FONT-8X13O*`, `*FONT-8X8*`, 
+`*FONT-9X15*`, `*FONT-9X15B*`, `*FONT-9X18*` OR `*FONT-9X18B*`.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
   (check-type font-definition font-definition)
   (let ((data (cffi:foreign-alloc :unsigned-char
 				  :initial-contents (loop for i in (font-definition-data font-definition)
@@ -48,9 +55,14 @@ built-in fonts:
 		   :fp data)))
 
 (defun initialise-default-font (&optional (font-definition *font-8x8*))
-  "Calls [INITIALISE-FONT](#initialise-font) to create a new `BITMAP-FONT` from `FONT-DEFINITION`. 
-`FONT-DEFINITION` is set to `\*font-8x8\*` if unspecified. Binds the symbol `\*DEFAULT-FONT\*` to the new font.
-Reutns the new font, or `NIL` if the font cannot be created."
+  "Returns a new [BITMAP-FONT](#bitmap-font) initialized from `FONT-DEFINITION` data, or `NIL` 
+if the font cannot be created. `FONT-DEFINITION` is set to `\*font-8x8\*` if unspecified. 
+Binds the symbol `\*DEFAULT-FONT\*` to the new font to be used as the default for subsequent 
+font rendering or drawing operations.
+
+##### Packages
+
+* Aslo supported in _LISPBUILDER-SDL-GFX_"
   (check-type font-definition font-definition)
   (setf *default-font* (initialise-font font-definition)))
 
@@ -59,12 +71,13 @@ Reutns the new font, or `NIL` if the font cannot be created."
 
 (defun get-character (char fg-color bg-color &key
 		      (font *default-font*))
-  "Returns the `SURFACE` asociated with the character `CHAR`. Creates a new surface if
-`FG-COLOR` or `BG-COLOR` are different."
+  "Returns the [SURFACE](#surface) asociated with `CHAR`. Returns a new [SURFACE](#surface) if
+either of the foreground or background colors `FG-COLOR` or `BG-COLOR` 
+are different than specified for the existing surface."
   (check-type char character)
-  (check-type fg-color sdl-color)
+  (check-type fg-color color)
   (if bg-color
-      (check-type bg-color sdl-color))
+      (check-type bg-color color))
   (check-type font bitmap-font)
   (let ((redraw? nil)
 	(glyph (glyph char font)))
@@ -141,8 +154,8 @@ If `BG-COLOR` is NOT `NIL`, then the glyph is rendered using the `SHADED` mode.
 
 * `C` is the character to render. 
 * `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
-* `FG-COLOR` is the foreground color used to render text, of type `SDL-COLOR`
-* `BG-COLOR` is the background color used to render text, of type `SDL-COLOR`
+* `FG-COLOR` is the foreground color used to render text, of type `COLOR`
+* `BG-COLOR` is the background color used to render text, of type `COLOR`
 * `FONT` is the bitmap font used to render the character. Bound to `\*DEFAULT-FONT\*` if unspecified.
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 
@@ -154,9 +167,9 @@ If `BG-COLOR` is NOT `NIL`, then the glyph is rendered using the `SHADED` mode.
 
     \(DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE\)"
   (check-type c character)
-  (check-type fg-color sdl-color)
+  (check-type fg-color color)
   (if bg-color
-      (check-type bg-color sdl-color))
+      (check-type bg-color color))
   (check-type font bitmap-font)
   (check-type surface sdl-surface)
   (draw-surface-at-* (get-character c fg-color bg-color :font font)
@@ -174,8 +187,8 @@ onto surface `SURFACE`.
 
 * `STR` is the text to render. 
 * `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
-* `FG-COLOR` is the foreground color used to render text, of type `SDL-COLOR`
-* `BG-COLOR` is the background color used to render text, of type `SDL-COLOR`
+* `FG-COLOR` is the foreground color used to render text, of type `COLOR`
+* `BG-COLOR` is the background color used to render text, of type `COLOR`
 * `FONT` is the bitmap font used to render the character. Bound to `\*DEFAULT-FONT\*` if unspecified.
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 
@@ -199,8 +212,8 @@ onto surface `SURFACE`.
 
 * `STR` is the text to render. 
 * `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
-* `FG-COLOR` is the foreground color used to render text, of type `SDL-COLOR`
-* `BG-COLOR` is the background color used to render text, of type `SDL-COLOR`
+* `FG-COLOR` is the foreground color used to render text, of type `COLOR`
+* `BG-COLOR` is the background color used to render text, of type `COLOR`
 * `FONT` is the bitmap font used to render the character. Bound to `\*DEFAULT-FONT\*` if unspecified.
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 
@@ -226,8 +239,8 @@ onto surface `SURFACE`.
 
 * `STR` is the text to render. 
 * `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
-* `FG-COLOR` is the foreground color used to render text, of type `SDL-COLOR`
-* `BG-COLOR` is the background color used to render text, of type `SDL-COLOR`
+* `FG-COLOR` is the foreground color used to render text, of type `COLOR`
+* `BG-COLOR` is the background color used to render text, of type `COLOR`
 * `FONT` is the bitmap font used to render the character. Bound to `\*DEFAULT-FONT\*` if unspecified.
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 
@@ -265,23 +278,31 @@ onto surface `SURFACE`.
 ;; 	   (free-font *default-font*)))))
 
 (defmacro with-default-font ((font) &body body)
-  "Sets `\*DEFAULT-FONT\*` to the bitmap font in `FONT` within the scope of `WITH-DEFAULT-FONT`.
+  "Sets `\*DEFAULT-FONT\*` to `FONT` within the scope of `WITH-DEFAULT-FONT`.
 
 ##### Example
 
     \(WITH-DEFAULT-FONT \(new-font\)
-        \(DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR\)\)"
+        \(DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR\)\)
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
   `(let ((*default-font* ,font))
      ,@body))
 
 (defmacro with-font ((font font-definition) &body body)
-  "Creates a new bitmap font `BITMAP-FONT` and sets `\*DEFAULT-FONT\*` to the bitmap font in `FONT` within the scope of `WITH-FONT`.
-Frees the bitmap font when `WITH-FONT` goes out of scope.
+  "Sets `\*DEFAULT-FONT\*` to a new [BITMAP-FONT](#bitmap-font) in `FONT` within the scope of `WITH-FONT`.
+Frees `FONT` when `WITH-FONT` goes out of scope.
 
 ##### Example
 
     \(WITH-FONT \(new-font *font-8x8*\)
-        \(DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR\)\)"
+        \(DRAW-CHARACTER-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR\)\)
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
   `(let ((,font (initialise-font ,font-definition)))
      (with-default-font (,font)
        ,@body)

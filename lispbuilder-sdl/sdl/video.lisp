@@ -84,14 +84,14 @@ When [OPENGL-CONTEXT](#opengl-context) is `T`; `UPDATE-DISPLAY` will call
       (sdl-cffi::sdl-gl-swap-buffers)
       (sdl-cffi::sdl-flip (fp surface))))
 
-(defun clear-display (color &key (surface *default-display*) (update-p nil))
+(defun clear-display (color &key (surface *default-display*) (update nil))
   "Fills the display `SURFACE` using color `COLOR`.
 `SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified. 
-The display is updated when `UPDATE-P` is `T`."
+The display is updated when `UPDATE` is `T`."
   (sdl-base::fill-surface (fp surface)
 			  (map-color color surface)
-			  :update-p update-p
-			  :clipping-p nil))
+			  :update update
+			  :clipping nil))
 
 (defun show-cursor (state)
   "Disables the cursor when state is `NIL`, otherwise enables the cursor."

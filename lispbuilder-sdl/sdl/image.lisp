@@ -38,7 +38,7 @@
 	(error "File ~A does not exist." file))))
 
 (defun save-image (surface filename)
-  "Saves the surface `SURFACE` as a BMP image to a file at location `FILENAME`."
+  "Saves the `SURFACE` as a `BMP` image to a file at location `FILENAME`."
   (check-type surface sdl-surface)
   (let ((file (namestring filename)))
     (sdl-cffi::SDL-Save-BMP-RW (fp surface) (sdl-cffi::SDL-RW-FROM-FILE file "wb") 1)))

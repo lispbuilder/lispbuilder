@@ -1,16 +1,22 @@
 
 (in-package #:sdl)
 
+(defgeneric fp (foreign-object)
+  (:documentation "Returns the foreign pointer in FOREIGN-OBJECT"))
+
 (defgeneric this-fp (foreign-object)
-  (:documentation "Returns the foreign pointer to FOREIGN-OBJECT"))
+  (:documentation "Returns the reference to the foreign object for this FOREIGN-OBJECT.
+The difference between FP and THIS-FP, is that FP can be overriden, for example
+to refer to the TARGET-NODE of a META-NODE."))
 
 (defgeneric free (foreign-object)
-  (:documentation "This is the general explicit cleanup method for all FOREIGN-OBJECTs.
-Objects that subclass FOREIGN-OBJECT should specify an :AFTER
-method on FREE to clean up any additional fields, if necessary."))
+  (:documentation "The general explicit cleanup method for the 
+FOREIGN-OBJECT wrapper class. Objects that subclass FOREIGN-OBJECT should 
+specify an :AFTER method on FREE to clean up any additional fields, if necessary."))
 
 (defgeneric (setf gc-p) (value foreign-object)
-  (:documentation "Turns garbage collection for the FOREIGN-OBJECT on when T, or off when NIL."))
+  (:documentation "Turns on garbage collection for the FOREIGN-OBJECT when T, or turns off 
+garbage collection when NIL."))
 
 (defclass foreign-object ()
   ((foreign-pointer-to-object
@@ -56,9 +62,6 @@ method on FREE to clean up any additional fields, if necessary."))
 	(tg:cancel-finalization self))))
 
 (defmethod this-fp ((self foreign-object))
-  "Returns the reference to the foreign object for this FOREIGN-OBJECT.
-The difference between FP and THIS-FP, is that FP can be overriden, for example
-to refer to the TARGET-NODE of a META-NODE."
   (slot-value self 'foreign-pointer-to-object))
 
 (defun simple-free (func-fp type)

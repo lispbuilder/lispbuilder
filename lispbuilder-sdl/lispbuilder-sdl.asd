@@ -23,7 +23,6 @@
 	    ((:file "package")
 	     (:file "globals")
 	     (:file "generics")
-	     (:file "classes")
 	     (:file "base")
 	     (:file "util")
 	     (:file "bitmap-font-data")

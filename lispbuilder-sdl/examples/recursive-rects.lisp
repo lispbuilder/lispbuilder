@@ -38,7 +38,7 @@
 					  :g (random 255)
 					  :b (random 255)
 					  :a (random 255))
-			:clipping-p nil)
+			:clipping nil)
 	  (progn
 	    (draw-recursive-rects surface_ptr x1 y1 sx sy min-size (1+ level))
 	    (draw-recursive-rects surface_ptr sx y1 x2 sy min-size (1+ level))

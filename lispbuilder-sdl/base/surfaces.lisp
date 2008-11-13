@@ -327,49 +327,49 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
 	       y)))
   (values x y w h))
 
-(defun update-surface (surface &key template x y w h (clipping-p t))
+(defun update-surface (surface &key template x y w h (clipping t))
   "Updates the screen using the keyword co-ordinates in the Vector, :template.
    All co-ordinates default to 0, updating the entire screen."
   (if template
       (progn 
-	(when clipping-p
+	(when clipping
 	  (setf template (clip-to-surface template surface)))
 	(sdl-cffi::SDL-Update-Rect surface (rect-x template) (rect-y template) (rect-w template) (rect-h template)))
       (if x
 	  (progn
-	    (when clipping-p
+	    (when clipping
 	      (multiple-value-bind (clip-x clip-y clip-w clip-h)
 		  (clip-to-coords x y w h (surf-w surface) (surf-h surface))
 		(sdl-cffi::SDL-Update-Rect surface clip-x clip-y clip-w clip-h))))
 	  (sdl-cffi::SDL-Update-Rect surface 0 0 0 0)))
   surface)
 
-(defun blit-surface (src dst src-rect dst-rect &key (update-p nil))
+(defun blit-surface (src dst src-rect dst-rect &key (update nil))
   "Blits the entire SRC Sdl-Surface to the DST Sdl-Surface using SDL_BlitSurface.
    use :src-rect SDL_Rect to blit only a portion of the SRC to the DST surface
    Use :dst-rect SDL_Rect to position the SRC on the DST surface."
     (sdl-cffi::sdl-upper-Blit src src-rect
 			      dst dst-rect)
-    (when update-p
-      (update-surface dst :template dst-rect :clipping-p t))
+    (when update
+      (update-surface dst :template dst-rect :clipping t))
   dst-rect)
 
-(defun fill-surface (surface color &key (template nil) (update-p nil) (clipping-p nil))
+(defun fill-surface (surface color &key (template nil) (update nil) (clipping nil))
   "fill the entire surface with the specified RGB/A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
-   Use :update-p to call SDL_UpdateRect, using :template if provided. This allows for a 
+   Use :update to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update.
-*Note*: `TEMPLATE` is clipped to the surface `SURFACE`, when `CLIPPING-P` is `T`."
+*Note*: `TEMPLATE` is clipped to the surface `SURFACE`, when `CLIPPING` is `T`."
   (if template
-      (progn (if clipping-p
+      (progn (if clipping
 		 (setf template (clip-to-surface template surface)))
 	     (sdl-cffi::sdl-Fill-Rect surface template color))
       (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))
-  (when update-p
+  (when update
     (if template
 	(update-surface surface
 			:template template
-			:clipping-p nil)
+			:clipping nil)
 	(sdl-cffi::SDL-Update-Rect surface 0 0 0 0)))
   template)
 

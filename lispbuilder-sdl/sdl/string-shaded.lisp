@@ -18,8 +18,8 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 * `STRING` is the text to render. 
 * `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to 
 `*DEFAULT-FONT*` if unspecified. 
-* `FG-COLOR` color is the text color, of type `SDL-COLOR`
-* `BG-COLOR` color is the background color used to fill the surface, of type `SDL-COLOR`
+* `FG-COLOR` color is the text color, of type `COLOR`
+* `BG-COLOR` color is the background color used to fill the surface, of type `COLOR`
 * `FREE` when `T` will free any exisiting cached surface in `FONT`.
 * `CACHE` when `T` will cache the newly created SURFACE in `FONT`. Any cached surface can be accessed using
 [CACHED-SURFACE](#cached-surface) and can be blitted to a target surface using [DRAW-FONT](#draw-font).
@@ -30,8 +30,12 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Example
 
-    \(RENDER-STRING-SHADED \"Hello World!\" F-COLOR B-COLOR\)"
-  (check-types sdl-color fg-color bg-color)
+    \(RENDER-STRING-SHADED \"Hello World!\" F-COLOR B-COLOR\)
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
+  (check-types color fg-color bg-color)
   (when free
     (free-cached-surface font))
   (let ((surf (convert-surface :surface (create-surface (* (char-width font)
@@ -53,7 +57,11 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Parameters
 
-* `P1` is the `X` and `Y` coordinates to render the text, of type `SDL:POINT`."
+* `P1` is the `X` and `Y` coordinates to render the text, of type `SDL:POINT`.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
   (check-type p1 point)
   (draw-string-shaded-* string (x p1) (y p1) fg-color bg-color
 			:justify justify
@@ -70,8 +78,8 @@ The surface background is filled with `BG-COLOR` so the surface cannot be keyed 
 
 * `STRING` is the text to render. 
 * `X` and `Y` are the `X` and `Y` coordinates, as `INTEGERS`.
-* `FG-COLOR` color is the text color, of type `SDL-COLOR`
-* `BG-COLOR` color is the background color used to fill the surface `SURFACE`, of type `SDL-COLOR`
+* `FG-COLOR` color is the text color, of type `COLOR`
+* `BG-COLOR` color is the background color used to fill the surface `SURFACE`, of type `COLOR`
 * `FONT` is the font face used to render the text. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 
@@ -81,8 +89,12 @@ The surface background is filled with `BG-COLOR` so the surface cannot be keyed 
 
 ##### Example
 
-    \(DRAW-STRING-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE\)"
-  (check-types sdl-color fg-color bg-color)
+    \(DRAW-STRING-SHADED-* \"Hello World!\" 0 0 F-COLOR B-COLOR :SURFACE A-SURFACE\)
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"
+  (check-types color fg-color bg-color)
   (check-type font bitmap-font)
   (unless surface
     (setf surface *default-display*))

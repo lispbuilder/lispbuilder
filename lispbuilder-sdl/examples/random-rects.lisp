@@ -30,7 +30,7 @@
 				     :color (sdl:color :r (random 255)
 						       :g (random 255)
 						       :b (random 255))
-				     :clipping-p nil)
+				     :clipping nil)
 
 		 ;; Optimization; Draw the font each frame,
 		 ;; but only render the font once every 100 frames.
@@ -67,7 +67,7 @@
 ;; 				     :color (sdl:color :r (random 255)
 ;; 						       :g (random 255)
 ;; 						       :b (random 255))
-;; 				     :clipping-p nil)
+;; 				     :clipping nil)
 		 (sdl:update-display))))))
 
 (defun random-box-1 ()
@@ -85,7 +85,7 @@
 	  (:idle ()
 		 (sdl:fill-surface-* (random 255) (random 255) (random 255)
 				     :template (sdl:random-rectangle width height rect)
-				     :update-p t)))))))
+				     :update t)))))))
 
 (defun random-box-2 ()
   (let ((width 320) (height 240))

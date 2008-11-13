@@ -193,8 +193,21 @@
    #:draw-filled-circle-*
 
    #:draw-trigon
-   #:draw-polygon
+   #:draw-filled-trigon
    
+   #:draw-polygon
+   #:draw-filled-polygon
+
+   #:draw-ellipse
+   #:draw-ellipse-*
+   #:draw-filled-ellipse
+   #:draw-filled-ellipse-*
+
+   #:draw-pie
+   #:draw-pie-*
+   #:draw-filled-pie
+   #:draw-filled-pie-*
+  
    ;; events.lisp
    #:with-events
 
@@ -221,6 +234,8 @@
    #:distance
    #:distance-*
    #:rotate-surface
+   #:rotate-surface-xy
+   #:zoom-surface
    #:flood-fill
    #:flood-fill-*
    #:flood-fill-stack
@@ -229,6 +244,7 @@
    ;; surfaces.lisp
    #:sdl-surface
    #:surface
+   #:display-surface
    #:with-surface
    #:with-surface-slots
    #:with-surfaces
@@ -301,11 +317,11 @@
    ;; bitmap-font.lisp
 ;;    #:font
 ;;    #:load-font
+   #:bitmap-font
    #:char-width
    #:char-height
    #:with-default-font
    #:with-font
-   #:draw-string-centered-*
 
 ;;    #:with-load-font   
    #:initialise-default-font
@@ -339,7 +355,6 @@
    #:render-string-solid
    #:draw-string-solid
    #:draw-string-solid-*
-   #:draw-string-centered-*
 
    ;; string-shaded.lisp
    #:render-string-shaded

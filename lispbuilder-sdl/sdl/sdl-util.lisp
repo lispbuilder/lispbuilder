@@ -24,22 +24,45 @@
   (sqrt (+ (expt (- x1 x2) 2) 
 	   (expt (- y1 y2) 2))))
 
-;;; Anthony Fairchild.
-;;; http://article.gmane.org/gmane.lisp.cl-lispbuilder.general/559
-(defun rotate-surface (degrees &key (surface *default-surface*) (free-p nil))
-  "Returns a new `SURFACE` rotated `0`, `90`, `180`, or `270` degrees.
+(defun zoom-surface (zoomx zoomy &key (surface *default-surface*) (free nil) (smooth nil))
+  "Returns a new [SURFACE](#surface) scaled to `ZOOMX` and `ZOOMY`.
 
 ##### Parameters
 
-* `DEGREES` is the number of degrees to rotate the surface. Must be one of `0`, `90`, `180`, or `270` degrees.
-* `SURFACE` is the surface to rotate, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
-* `FREE-P` when not 'NIL' will free the surface `SURFACE`.
-* `KEY-COLOR` when not `NIL` is the color to be used as the transpart pixel.
-`When `KEY-COLOR` is `NIL`, the surface is created without a key color. See
-[SET-COLOR-KEY](#set-color-key) for more detailed information.
-* `ALPHA` when between `0` and `255` will set the level of alpha transparency for the new surface.
-When `ALPHA` is `NIL`, the new surface is created without alpha transparency. See
-[SET-ALPHA](#set-alpha) for more detailed information."
+* `:ZOOMX` and `ZOOMY` are the scaling factors. 
+A negative scaling factor will flip the corresponding axis. 
+_Note_: Flipping is only supported with anti-aliasing turned off.
+* `:SURFACE` is the surface to rotate [SURFACE](#surface).
+* `:FREE` when `T` will free `SURFACE`.
+* `:SMOOTH` when `T` will anti-aliase the new surface.
+
+##### Packages
+
+* Supported in _LISPBUILDER-SDL-GFX_
+* _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
+  nil)
+
+;;; Anthony Fairchild.
+;;; http://article.gmane.org/gmane.lisp.cl-lispbuilder.general/559
+(defun rotate-surface (degrees &key (surface *default-surface*) (free nil) (zoom 1) (smooth nil))
+  "Returns a new [SURFACE](#surface) rotated to `DEGREES`.
+
+##### Parameters
+
+* `DEGREES` is the rotation in degrees. 
+* `:SURFACE` is the surface to rotate [SURFACE](#surface).
+* `:FREE` when `T` will free `SURFACE`.
+* `:ZOOM` is the scaling factor.
+* `:SMOOTH` when `T` will anti-aliase the new surface.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_
+* _LISPBUILDER-SDL_ supports rotations of only `0`, `90`, `180`, or `270` degrees. 
+_LISPBUILDER-SDL-GFX_ supports any rotation.
+* _LISPBUILDER-SDL_ ignores `:SMOOTH`. _LISPBUILDER-SDL-GFX_ supports `:SMOOTH`.
+* _LISPBUILDER-SDL_ ignores `:ZOOM`. _LISPBUILDER-SDL-GFX_ supports `:ZOOM`.
+* _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
   (declare (type fixnum degrees)
  	   (optimize (speed 3)(safety 0)))
   (unless (member degrees '(0 90 180 270))
@@ -47,7 +70,7 @@ When `ALPHA` is `NIL`, the new surface is created without alpha transparency. Se
   (if (= 0 degrees)
       ;; in the case of 0 degrees, just return the surface
       (let ((new-surf (copy-surface :surface surface :all t)))
-	(when free-p
+	(when free
 	  (free surface))
 	new-surf)
       ;; else do rotation
@@ -57,7 +80,7 @@ When `ALPHA` is `NIL`, the new surface is created without alpha transparency. Se
 	     (new-w (if even w h))
 	     (new-h (if even h w)))
 	(declare (type fixnum w h new-w new-h))
-	(with-surfaces ((src surface free-p)
+	(with-surfaces ((src surface free)
 			(dst (make-instance 'surface
 					    :using-surface surface
 					    :width new-w :height new-h
@@ -103,6 +126,26 @@ When `ALPHA` is `NIL`, the new surface is created without alpha transparency. Se
 						   (funcall new-y x y)
 						   (sdl-base::read-pixel src x y))))))
 	  dst))))
+
+(defun rotate-surface-xy (degrees &key (surface *default-surface*) (free nil) (zoomx 1) (zoomy 1) (smooth nil))
+  "Returns a new [SURFACE](#surface) rotated to `DEGREES`.
+
+##### Parameters
+
+* `DEGREES` is the rotation in degrees. 
+* `:SURFACE` is the surface to rotate [SURFACE](#surface).
+* `:FREE` when `T` will free `SURFACE`.
+* `:ZOOMX` and `ZOOMY` are the the scaling factors.
+A negative scaling factor will flip the corresponding axis. 
+_Note_: Flipping is only supported with anti-aliasing turned off.
+* `:SMOOTH` when `T` will anti-aliase the new surface.
+
+##### Packages
+
+* Supported in _LISPBUILDER-SDL-GFX_
+* _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
+  nil)
+
 
 ;;; Anthony Fairchild.
 ;;; http://article.gmane.org/gmane.lisp.cl-lispbuilder.general/587
