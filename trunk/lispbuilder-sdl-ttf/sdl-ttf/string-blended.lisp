@@ -18,7 +18,7 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 
 * `TEXT` is the text to render, of type `STRING`.
 * `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default. 
-* `COLOR` is the color used to render the `TEXT`, of type `SDL:SDL-COLOR`
+* `COLOR` is the color used to render the `TEXT`, of type `SDL:COLOR`, or `SDL:COLOR-A`
 * `FREE` when `T` will free the existing cached `SURFACE` in `FONT`.
 * `CACHE` when `T` will cache the newly created `SURFACE` in `FONT`.
 
@@ -30,7 +30,7 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 
     \(DRAW-STRING-BLENDED \"Hello World!\" :FONT *DEFAULT-FONT* :COLOR A-COLOR\)"
   (check-type font font)
-  (check-type color sdl:sdl-color)
+  (check-type color sdl:color)
   (when free
     (sdl:free-cached-surface font))
   (let ((surf 
@@ -68,7 +68,7 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 * `X` and `Y` are the x and y coordinates of the `TEXT`, as `INTEGER`s.
 * `FONT` is a `FONT` object.  Binds to `\*DEFAULT-FONT\*` by default. 
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. 
-* `COLOR` is the color used to render `TEXT`, of type `SDL:SDL-COLOR`
+* `COLOR` is the color used to render `TEXT`, of type `SDL:COLOR` or `SDL:COLOR-A`.
 
 ##### Returns
 
