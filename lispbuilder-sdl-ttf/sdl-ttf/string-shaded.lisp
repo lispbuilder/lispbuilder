@@ -16,8 +16,8 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 ##### Parameters
 
 * `TEXT` is the text to render, of type `STRING`.
-* `FG-COLOR` is the foreground color of the `TEXT`, of type `SDL:SDL-COLOR`
-* `BG-COLOR` is the background color of the `TEXT`, of type `SDL:SDL-COLOR`
+* `FG-COLOR` is the foreground color of the `TEXT`, of type `SDL:COLOR`
+* `BG-COLOR` is the background color of the `TEXT`, of type `SDL:COLOR`
 * `FONT` is a `FONT` object.  Binds to \*`DEFAULT-FONT\*` by default. 
 * `FREE` when `T` will free the existing cached `SURFACE` in `FONT`.
 * `CACHE` when `T` will cache the newly created `SURFACE` in `FONT`.
@@ -30,7 +30,7 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 
 \(DRAW-STRING-SHADED \"Hello World!\" fg-col bg-col  :FONT *DEFAULT-FONT* :COLOR A-COLOR\)"
   (check-type font font)
-  (sdl:check-types sdl:sdl-color fg-color bg-color)
+  (sdl:check-types sdl:color fg-color bg-color)
   (when free
     (sdl:free-cached-surface font))
   (let ((surf
@@ -65,8 +65,8 @@ onto surface `SURFACE`, using the Shaded mode.
 
 * `TEXT` is the text to render, of type `STRING`.
 * `X` and `Y` are the x and y coordinates of the `TEXT`, as `INTEGER`s.
-* `FG-COLOR` is the foreground color of the `TEXT`, of type `SDL:SDL-COLOR`
-* `BG-COLOR` is the background color of the `TEXT`, of type `SDL:SDL-COLOR`
+* `FG-COLOR` is the foreground color of the `TEXT`, of type `SDL:COLOR`
+* `BG-COLOR` is the background color of the `TEXT`, of type `SDL:COLOR`
 * `FONT` is a `FONT` object.  Binds to `\*DEFAULT-FONT\*` by default. 
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. 
 
