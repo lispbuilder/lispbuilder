@@ -5,6 +5,13 @@
 
 (in-package #:lispbuilder-sdl-gfx-cffi)
 
+(defun return-true-to-1 (value) (if value 1 0))
+(defun return-int-to-double (value) (coerce value 'double-float))
+
+(defctype true-to-1 (:wrapper :int :to-c return-true-to-1))
+(defctype int-to-double (:wrapper :double :to-c return-int-to-double))
+
+
 (defconstant FPS-UPPER-LIMIT 200)
 
 (defconstant FPS-LOWER-LIMIT 1)
@@ -49,45 +56,45 @@
 
 (defcfun ("rotozoomSurface" rotozoomSurface) :pointer
   (src sdl-cffi::sdl-surface)
-  (angle :double)
-  (zoom :double)
-  (smooth :int))
+  (angle int-to-double)
+  (zoom int-to-double)
+  (smooth true-to-1))
 
 (defcfun ("rotozoomSurfaceXY" rotozoomSurfaceXY) :pointer
   (src sdl-cffi::sdl-surface)
-  (angle :double)
-  (zoomx :double)
-  (zoomy :double)
-  (smooth :int))
+  (angle int-to-double)
+  (zoomx int-to-double)
+  (zoomy int-to-double)
+  (smooth true-to-1))
 
 (defcfun ("rotozoomSurfaceSize" rotozoomSurfaceSize) :void
   (width :int)
   (height :int)
-  (angle :double)
-  (zoom :double)
+  (angle int-to-double)
+  (zoom int-to-double)
   (dstwidth :pointer)
   (dstheight :pointer))
 
 (defcfun ("rotozoomSurfaceSizeXY" rotozoomSurfaceSizeXY) :void
   (width :int)
   (height :int)
-  (angle :double)
-  (zoomx :double)
-  (zoomy :double)
+  (angle int-to-double)
+  (zoomx int-to-double)
+  (zoomy int-to-double)
   (dstwidth :pointer)
   (dstheight :pointer))
 
 (defcfun ("zoomSurface" zoomSurface) :pointer
   (src sdl-cffi::sdl-surface)
-  (zoomx :double)
-  (zoomy :double)
-  (smooth :int))
+  (zoomx int-to-double)
+  (zoomy int-to-double)
+  (smooth true-to-1))
 
 (defcfun ("zoomSurfaceSize" zoomSurfaceSize) :void
   (width :int)
   (height :int)
-  (zoomx :double)
-  (zoomy :double)
+  (zoomx int-to-double)
+  (zoomy int-to-double)
   (dstwidth :pointer)
   (dstheight :pointer))
 

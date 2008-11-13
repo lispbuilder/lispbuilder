@@ -1,7 +1,7 @@
 
 (in-package :lispbuilder-sdl-gfx)
 
-(defclass font (sdl::sdl-font sdl::foreign-object)
+(defclass bitmap-font (sdl::sdl-font sdl::foreign-object)
   ((font-width :reader font-width :initform nil :initarg :width)
    (font-height :reader font-height :initform nil :initarg :height)
    ;; (font-data :reader font-data :initform nil :initarg :data)
@@ -10,8 +10,8 @@
    :gc t
     :free #'cffi:foreign-free)
   (:documentation
-   "A `FONT` object manages the resources for the font. These resources include 
-any cached surface as well as the foreign array containing the font data.
+   "A `BITMAP-FONT` object manages the resources for the font. These resources include 
+any cached surface as well as the foreign array containing the bitmap-font data.
 
 The cached surface is created by a call to any of the RENDER-STRING* functions. 
 Use [DRAW-FONT](#draw-font), [DRAW-FONT-AT](#draw-font-at) 
@@ -34,8 +34,6 @@ Returns a new `FONT`, or `NIL` if unsuccessful."
   font)
 
 (defun initialise-font (font-definition)
-  "Creates a new `FONT` object from the font data in `FONT-DEFINITION`.
-Returns a new `FONT`, or `NIL` if unsuccessful."
   (let ((data (cffi:foreign-alloc :unsigned-char
 				  :initial-contents (loop for i in (sdl::font-definition-data font-definition)
 						       collect i))))
@@ -45,12 +43,6 @@ Returns a new `FONT`, or `NIL` if unsuccessful."
 		   :fp data)))
   
 (defun initialise-default-font (&optional (font-definition sdl:*font-8x8*))
-  "Creates a new `FONT` object from the font definition in `FONT-DEFINITION`.
-Sets the font `FONT` as the default font to be used for subsequent font rendering or drawing
-operations. 
-
-Binds the symbol `\*DEFAULT-FONT\*` to font. Functions that take a `FONT` argument use `\*DEFAULT-FONT\*` 
-unless otherwise specified. Returns a new `FONT`, or `NIL` if unsuccessful."
   (set-default-font (initialise-font font-definition)))
 
 ;; (defmethod free-font ((font font))

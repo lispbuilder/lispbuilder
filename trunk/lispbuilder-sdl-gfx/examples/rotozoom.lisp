@@ -15,13 +15,11 @@
 
     ;; Load the image to be rotated.
     (let* ((alien-image (sdl:load-image (sdl:create-path "lisp.bmp" *bmp-path*)
-				  :color-key-at (sdl:point :x 0 :y 0)))
+					:color-key-at (sdl:point :x 0 :y 0)))
 	   ;; Pre-render the rotated images.
 	   (rotos (loop
 		     for angle from 360 above 0 by 5
-		     collecting (sdl-gfx:roto-zoom-surface (coerce angle 'double-float)
-							   1.0d0
-							   1 :surface alien-image))))
+		     collecting (sdl-gfx:rotate-surface angle :smooth t :surface alien-image))))
       
       (let ((rotated-image rotos))
 	

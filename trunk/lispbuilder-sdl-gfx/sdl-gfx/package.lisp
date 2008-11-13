@@ -150,6 +150,10 @@
    #:with-curve
    #:with-shape
 
+   #:rotate-surface
+   #:rotate-surface-xy
+   #:zoom-surface
+
    ;;; font.lisp
    #:font
    #:free-font
