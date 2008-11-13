@@ -338,8 +338,7 @@
       (draw-fps "Calculating FPS....." 10 50 sdl-gfx:*default-font* sdl:*default-display* t)
       
       (sdl:with-surface (grid (sdl:create-surface (sdl:width sdl:*default-display*)
-						  (sdl:height sdl:*default-display*)
-						  :surface sdl:*default-display*) t)
+						  (sdl:height sdl:*default-display*)) t)
 	(draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)
