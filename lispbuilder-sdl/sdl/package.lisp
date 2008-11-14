@@ -254,12 +254,15 @@
    #:with-locked-surface
    #:with-locked-surfaces
    #:clear-color-key
-   #:alpha-enabled?
+   #:enable-alpha
+   #:alpha-enabled-p
    #:alpha
-   #:color-key-enabled?
+   #:color-key-enabled-p
+   #:enable-color-key
    #:color-key
-   #:pixel-alpha-enabled?
-   #:rle-accel-enabled?
+   #:pixel-alpha-enabled-p
+   #:rle-accel-enabled-p
+   #:enable-rle-accel
    #:clip-rect
    #:clear-clip-rect
    #:get-clip-rect
@@ -321,10 +324,12 @@
 ;;    #:font
 ;;    #:load-font
    #:bitmap-font
+   #:sdl-bitmap-font
+   #:gfx-bitmap-font
    #:char-width
    #:char-height
-   #:with-default-font
-   #:with-font
+   #:set-default-font
+   #:default-font-p
 
 ;;    #:with-load-font   
    #:initialise-default-font
@@ -422,7 +427,11 @@
    #:key-repeat-delay
    #:key-repeat-interval
    #:get-key-state
-   
+
+   ;; font.lisp
+   #:with-default-font
+   #:with-font
+
    ;; Imports from lispbuilder-sdl-base  
    #:with-events
    #:push-quit-event

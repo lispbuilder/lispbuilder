@@ -4,23 +4,19 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defgeneric r (color)
-  (:documentation "Returns the red color component of the object."))
-(defgeneric g (color)
-  (:documentation "Returns the green color component the object."))
-(defgeneric b (color)
-  (:documentation "Returns the blue color component of the object."))
-(defgeneric a (color)
-  (:documentation "Returns the alpha color component of the object."))
+(defgeneric r (color))
+(defgeneric g (color))
+(defgeneric b (color))
+(defgeneric a (color))
 
 (defgeneric (setf r) (value color)
-  (:documentation "Sets the red color component of the object."))
+  (:documentation "Sets/Returns the red color component of the object."))
 (defgeneric (setf g) (value color)
-  (:documentation "Sets the green color component of the object."))
+  (:documentation "Sets/Returns the green color component of the object."))
 (defgeneric (setf b) (value color)
-  (:documentation "Sets the blue color component of the object."))
+  (:documentation "Sets/Returns the blue color component of the object."))
 (defgeneric (setf a) (value color)
-  (:documentation "Sets the alpha color component of the object."))
+  (:documentation "Sets/Returns the alpha color component of the object."))
 
 (defgeneric pack-color (color)
   (:documentation "Packs [COLOR](#color) or [COLOR-A](#color-a) into a four byte `INTEGER`."))
@@ -97,44 +93,29 @@ where position is of type `POINT`."))
 `X` and `Y` are `KEY`word parameters having default values of `0` if unspecified."))
 
 
-(defgeneric width (obj)
-  (:documentation "Returns the width of the object, as an `INTEGER`. 
-When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
-
-(defgeneric height (obj)
-  (:documentation "Returns the height of the object, as an `INTEGER`.
-When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
-
-(defgeneric x (obj)
-  (:documentation "Returns the `X` coordinate of the object, as an `INTEGER`.
-When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
-
-(defgeneric y (obj)
-  (:documentation "Returns the `Y` coordinate of the object, as an `INTEGER`.
-When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
-
-(defgeneric x2 (obj)
-  (:documentation "Returns `\(+ X WIDTH\)` of the object, as an `INTEGER`."))
-(defgeneric y2 (obj)
-  (:documentation "Returns `\(+ Y HEIGHT\)` of the object, as an `INTEGER`."))
-
+(defgeneric width (obj))
+(defgeneric height (obj))
+(defgeneric x (obj))
+(defgeneric y (obj))
+(defgeneric x2 (obj))
+(defgeneric y2 (obj))
 
 (defgeneric (setf width) (value obj)
-  (:documentation "Sets the width of the object."))
+  (:documentation "Sets/Returns the width of the object, as an `INTEGER`."))
 (defgeneric (setf height) (value obj)
-  (:documentation "Sets the height of the object."))
+  (:documentation "Sets/Returns the height of the object, as an `INTEGER`."))
 
 (defgeneric (setf x) (value obj)
-  (:documentation "Sets the `X` `INTEGER` coordinate of the object.
-When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
+  (:documentation "Sets/Returns the `X` coordinate of the object, as an `INTEGER`."))
 (defgeneric (setf y) (value obj)
-  (:documentation "Sets the `Y` `INTEGER` coordinate of the object.
-When `OBJ` is a [FONT](#font), use the cached [SURFACE](#surface)."))
+  (:documentation "Sets/Returns the `Y` coordinate of the object, as an `INTEGER`."))
 
 (defgeneric (setf x2) (value obj)
-  (:documentation "Sets the WIDTH of the object to `\(- X2 X\)`"))
+  (:documentation "Returns `\(+ X WIDTH\)` of the object, as an `INTEGER`.
+Sets the WIDTH of the object to `\(- X2 X\)`"))
 (defgeneric (setf y2) (value obj)
-  (:documentation "Sets the HEIGHT of the object to `\(- Y2 Y\)`"))
+  (:documentation "Returns `\(+ Y HEIGHT\)` of the object, as an `INTEGER`.
+Sets the HEIGHT of the object to `\(- Y2 Y\)`"))
 
 (defgeneric draw-font (&key font surface)
   (:documentation "Blit the cached [SURFACE](#surface) in [font](#FONT) to 
@@ -248,3 +229,48 @@ Returns `NIL` if the image cannot be determined \(The *magic number* is not supp
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-IMAGE_"))
+
+(defgeneric alpha-enabled-p (surface))
+(defgeneric (setf alpha-enabled-p) (value surface)
+  (:documentation "Manage alpha blending for a `SURFACE`. 
+Returns `T` when alpha blending is enabled for `SURFACE`, and `NIL` when disabled.
+Enable surface alpha blending for when `T`. Disable surface alpha blending when `NIL`. 
+A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha blending."))
+
+(defgeneric alpha (surface))
+(defgeneric (setf alpha) (value surface)
+  (:documentation "Manages per-surface alpha. 
+Returns the per-surface alpha value. 0 is transparent, and 255 is opaque.
+Sets the per-surface alpha value. 0 is transparent, and 255 is opaque. 
+
+*Note*: The per-surface alpha value of 128 is considered a special case and is optimised, so it's much faster than other per-surface values.
+*Note*: A surface need not have an alpha channel to use alpha blending.
+*Note*: When blitting, the presence or absence of [SDL-SRC-ALPHA](#sdl-src-alpha) is relevant only on the source surface, not the destination. 
+*Note*: Per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used if available."))
+
+(defgeneric color-key-enabled-p (surface))
+(defgeneric (setf color-key-enabled-p) (value surface)
+  (:documentation "Manages colorkeying for a `SURFACE`.
+Returns `T` when color keying is enabled, and `NIL` when color keying is disabled.
+Enables color keying when `T`. Disable color keying when `NIL`"))
+
+(defgeneric pixel-alpha-enabled-p (surface)
+  (:documentation "Returns `T` if a pixel alpha component \(RGBA\) is available, or `NIL` if unavailable \(RGB\).
+*Note*: The pixel alpha component differs from the surface alpha component which is 
+retrieved using [ALPHA-ENABLED-P](#alpha-enabled-p)."))
+
+(defgeneric rle-accel-enabled-p (surface))
+(defgeneric (setf rle-accel-enabled-p) (value surface)
+  (:documentation "Manages RLE acceleration for a `SURFACE`.
+Returns `T` if RLE acceleration is enabled, and `NIL` when RLE is disabled.
+Enables RLE blit acceleration when `T`, disables RLE acceleration when `NIL`. 
+RLE acceleration can substantially speed up blitting of images with large horizontal runs 
+of transparent pixels (i.e., pixels that match the key color)."))
+
+(defgeneric clip-rect (surface))
+(defgeneric (setf clip-rect) (value surface)
+  (:documentation "Manages the clipping `RECTANGLE` for a`SURFACE`.
+Returns the clipping `RECTANGLE` for `SURFACE`.
+Sets the clipping [RECTANGLE](#rectangle) for the `SURFACE`. Removes the clipping rectangle when `NIL`.
+When `SURFACE` is the destination of a blit, only the area within the clipping rectangle is 
+drawn into."))

@@ -1,6 +1,31 @@
 
 (in-package :lispbuilder-sdl)
 
+(defmethod _render-string-solid_ :around ((string string) (font bitmap-font) (color color) free cache)
+  (when free
+    (free-cached-surface font))
+  (call-next-method))
+
+(defmethod _render-string-solid_ ((string string) (font bitmap-font) (color color) free cache)
+  (let ((surf (convert-surface :surface (create-surface (* (char-width font)
+							   (length string))
+							(char-height font)
+							:color-key (any-color-but-this color)
+							:type :hw)
+			       :free t)))
+    (_draw-string-solid-*_ string 0 0 :LEFT surf font color)
+    (when cache
+      (setf (cached-surface font) surf))
+    surf))
+
+(defmethod _draw-string-solid-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font sdl-bitmap-font) (color color))
+  (case justify
+    (:left (draw-string-left-justify-* string x y color nil :surface surface :font font))
+    (:right (draw-string-right-justify-* string x y color nil :surface surface :font font))
+    (:center (draw-string-centered-* string x y color nil :surface surface :font font))
+    (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER")))
+  surface)
+
 (defun render-string-solid (string &key
 			    (font *default-font*)
 			    (color *default-color*)
@@ -33,21 +58,7 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_"
-  (when free
-    (free-cached-surface font))
-  (let ((surf (convert-surface :surface (create-surface (* (char-width font)
-							   (length string))
-							(char-height font)
-							:color-key (any-color-but-this color)
-							:type :hw)
-			       :free t)))
-    (draw-string-solid-* string 0 0
-			 :font font
-			 :surface surf
-			 :color color)
-    (when cache
-      (setf (cached-surface font) surf))
-    surf))
+  (_render-string-solid_ string font color free cache))
 
 (defun draw-string-solid (string p1 &key
 			  (justify :left)
@@ -63,12 +74,7 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_"
-  (check-type p1 point)
-  (draw-string-solid-* string (x p1) (y p1)
-		       :justify justify
-		       :surface surface
-		       :font font
-		       :color color))
+  (_draw-string-solid-*_ string (x p1) (y p1) justify (if surface surface *default-display*) font color))
 
 (defun draw-string-solid-* (string x y &key
 			    (justify :left)
@@ -97,13 +103,4 @@ The text is keyed onto `SURFACE`.
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_"
-  (check-type color color)
-  (check-type font bitmap-font)
-  (unless surface
-    (setf surface *default-display*))
-  (case justify
-    (:left (draw-string-left-justify-* string x y color nil :surface surface :font font))
-    (:right (draw-string-right-justify-* string x y color nil :surface surface :font font))
-    (:center (draw-string-centered-* string x y color nil :surface surface :font font))
-    (otherwise (error ":JUSTIFY must be one of :LEFT, :RIGHT or :CENTER")))
-  surface)
+  (_draw-string-solid-*_ string x y justify (if surface surface *default-display*) font color))

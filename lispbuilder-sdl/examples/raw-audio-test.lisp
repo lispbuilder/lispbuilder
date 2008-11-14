@@ -25,7 +25,7 @@
 (defun raw-audio-test ()
   ;; Configure Lispworks to allow
   ;; callbacks from foreign threads
-  #+lispworks(system:setup-for-alien-threads)
+   #+(and lispworks (not lispworks5.1)) (system:setup-for-alien-threads)
 
   ;; Initialize SDL
   (sdl:with-init (sdl:sdl-init-video sdl:sdl-init-audio)

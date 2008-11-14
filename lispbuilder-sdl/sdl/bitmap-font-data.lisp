@@ -1,11 +1,19 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defstruct font-definition
-  width height data)
+(defclass font-definition ()
+  ((char-width :accessor char-width :initform nil :initarg :width)
+   (char-height :accessor char-height :initform nil :initarg :height)
+   (char-pitch :reader char-pitch :initform nil :initarg :pitch)
+   (char-size :reader char-size :initform nil :initarg :size)
+   (data :accessor data :initform nil :initarg :data)))
+
+(defmethod initialize-instance :after ((fd font-definition) &key &allow-other-keys)
+  (setf (slot-value fd 'char-pitch) (truncate (/ (+ (char-width fd) 7) 8)))
+  (setf (slot-value fd 'char-size) (* (char-pitch fd) (char-height fd))))
 
 (defparameter *font-8x8*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 8
    :height 8
    :data '(0 0 0 0 0 0 0 0 126 129 165 129 189 153 129 126 126 255 219 255 195 231 255
@@ -99,7 +107,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-5x7*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 5
    :height 7
    :data '(0 168 0 136 0 168 0 0 32 112 248 112 32 0 168 80 168 80 168 80 168 160 224 160
@@ -177,7 +185,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-5x8*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 5
    :height 8
    :data '(0 160 16 128 16 128 80 0 0 0 32 112 248 112 32 0 80 168 80 168 80 168 80 168
@@ -263,7 +271,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x9*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 6
    :height 9
    :data '(0 40 64 8 64 8 80 0 0 0 0 48 120 252 120 48 0 0 84 168 84 168 84 168 84 168 84
@@ -352,7 +360,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x10*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 6
    :height 10
    :data '(0 168 0 136 0 136 0 168 0 0 0 0 32 112 248 112 32 0 0 0 168 84 168 84 168 84
@@ -456,7 +464,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x12*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 6
    :height 12
    :data '(0 0 0 168 0 136 0 136 0 168 0 0 0 0 0 0 32 112 248 112 32 0 0 0 168 84 168 84
@@ -574,7 +582,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x13*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 6
    :height 13
    :data '(0 0 168 0 136 0 136 0 136 0 168 0 0 0 0 0 0 32 112 248 112 32 0 0 0 0 168 84
@@ -703,7 +711,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x13B*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 6
    :height 13
    :data '(0 168 168 0 136 136 0 136 136 0 168 168 0 0 0 0 0 48 120 252 120 48 0 0 0 0
@@ -835,7 +843,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-6x13O*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 6
    :height 13
    :data '(0 0 84 0 68 0 68 0 136 0 168 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -956,7 +964,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x13*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 7
    :height 13
    :data '(0 0 172 0 132 0 132 0 132 0 212 0 0 0 0 0 0 16 56 124 254 124 56 16 0 0 170 84
@@ -1083,7 +1091,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x13B*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 7
    :height 13
    :data '(0 84 84 0 68 68 0 68 68 0 84 84 0 0 0 0 0 0 48 120 252 120 48 0 0 0 84 170 84
@@ -1215,7 +1223,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x13O*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 7
    :height 13
    :data '(0 0 86 0 66 0 66 0 132 0 212 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -1336,7 +1344,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x14*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 7
    :height 14
    :data '(0 180 132 0 132 132 0 132 132 0 132 180 0 0 0 0 48 48 120 120 252 252 120 120
@@ -1474,7 +1482,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-7x14B*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 7
    :height 14
    :data '(0 180 132 0 132 132 0 132 132 0 132 180 0 0 0 0 48 48 120 120 252 252 120 120
@@ -1617,7 +1625,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-8x13*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 8
    :height 13
    :data '(0 0 170 0 130 0 130 0 130 0 170 0 0 0 0 0 16 56 124 254 124 56 16 0 0 0 170 85
@@ -1736,7 +1744,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-8x13B*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 8
    :height 13
    :data '(0 170 170 0 130 130 0 130 130 0 170 170 0 0 0 0 16 56 124 254 124 56 16 0 0 0
@@ -1870,7 +1878,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-8x13O*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 8
    :height 13
    :data '(0 0 85 0 65 0 65 0 130 0 170 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
@@ -1989,7 +1997,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-9x15*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 9
    :height 15
    :data '(0 0 0 0 109 0 1 0 64 0 65 0 1 0 64 0 65 0 1 0 64 0 91 0 0 0 0 0 0 0 0 0 0 0 0
@@ -2216,7 +2224,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-9x15B*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 9
    :height 15
    :data '(0 0 219 0 219 0 0 0 195 0 195 0 0 0 195 0 195 0 0 0 219 0 219 0 0 0 0 0 0 0 0
@@ -2459,7 +2467,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-9x18*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 9
    :height 18
    :data '(0 0 0 0 0 0 0 0 109 0 1 0 64 0 65 0 1 0 64 0 65 0 1 0 64 0 91 0 0 0 0 0 0 0 0
@@ -2725,7 +2733,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-9x18B*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 9
    :height 18
    :data '(0 0 0 0 0 0 0 0 109 0 1 0 64 0 65 0 1 0 64 0 65 0 1 0 64 0 91 0 0 0 0 0 0 0 0
@@ -3001,7 +3009,7 @@
 * Also supported in _LISPBUILDER-SDL-GFX_")
 
 (defparameter *font-10x20*
-  (make-font-definition
+  (make-instance 'font-definition
    :width 10
    :height 20
    :data '(0 0 0 0 0 0 115 128 64 128 64 128 0 0 0 0 64 128 64 128 64 128 0 0 0 0 64 128
