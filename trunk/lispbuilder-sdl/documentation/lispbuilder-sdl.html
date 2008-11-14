@@ -204,6 +204,7 @@
 	          <li><a href="#a"><code>a</code></a></li>
 	          <li><a href="#all-integers?"><code>all-integers?</code></a></li>
 	          <li><a href="#alpha"><code>alpha</code></a></li>
+	          <li><a href="#alpha-enabled-p"><code>alpha-enabled-p</code></a></li>
 	          <li><a href="#any-color-but-this"><code>any-color-but-this</code></a></li>
 	          <li><a href="#average-fps"><code>average-fps</code></a></li>
 	          <li><a href="#b"><code>b</code></a></li>
@@ -228,6 +229,7 @@
 	          <li><a href="#color-*"><code>color-*</code></a></li>
 	          <li><a href="#color-a"><code>color-a</code></a></li>
 	          <li><a href="#color-key"><code>color-key</code></a></li>
+	          <li><a href="#color-key-enabled-p"><code>color-key-enabled-p</code></a></li>
 	          <li><a href="#color="><code>color=</code></a></li>
 	          <li><a href="#convert-surface"><code>convert-surface</code></a></li>
 	          <li><a href="#convert-to-display-format"><code>convert-to-display-format</code></a></li>
@@ -281,8 +283,11 @@
 	          <li><a href="#draw-surface-at-*"><code>draw-surface-at-*</code></a></li>
 	          <li><a href="#draw-trigon"><code>draw-trigon</code></a></li>
 	          <li><a href="#draw-vline"><code>draw-vline</code></a></li>
+	          <li><a href="#enable-alpha"><code>enable-alpha</code></a></li>
+	          <li><a href="#enable-color-key"><code>enable-color-key</code></a></li>
 	          <li><a href="#enable-key-repeat"><code>enable-key-repeat</code></a></li>
 	          <li><a href="#enable-key-repeat-p"><code>enable-key-repeat-p</code></a></li>
+	          <li><a href="#enable-rle-accel"><code>enable-rle-accel</code></a></li>
 	          <li><a href="#enable-unicode"><code>enable-unicode</code></a></li>
 	          <li><a href="#enable-unicode-p"><code>enable-unicode-p</code></a></li>
 	          <li><a href="#fill-surface"><code>fill-surface</code></a></li>
@@ -323,6 +328,7 @@
 	          <li><a href="#map-color-*"><code>map-color-*</code></a></li>
 	          <li><a href="#num-joysticks"><code>num-joysticks</code></a></li>
 	          <li><a href="#pack-color"><code>pack-color</code></a></li>
+	          <li><a href="#pixel-alpha-enabled-p"><code>pixel-alpha-enabled-p</code></a></li>
 	          <li><a href="#point"><code>point</code></a></li>
 	          <li><a href="#point-*"><code>point-*</code></a></li>
 	          <li><a href="#position-*"><code>position-*</code></a></li>
@@ -346,6 +352,7 @@
 	          <li><a href="#render-string-shaded"><code>render-string-shaded</code></a></li>
 	          <li><a href="#render-string-solid"><code>render-string-solid</code></a></li>
 	          <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a></li>
+	          <li><a href="#rle-accel-enabled-p"><code>rle-accel-enabled-p</code></a></li>
 	          <li><a href="#rotate-surface"><code>rotate-surface</code></a></li>
 	          <li><a href="#rotate-surface-xy"><code>rotate-surface-xy</code></a></li>
 	          <li><a href="#rwops"><code>rwops</code></a></li>
@@ -1753,11 +1760,37 @@
 <br><a class=none><tt>(setf (</tt><b>alpha</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the per-surface alpha value. 0 is transparent, and 255 is opaque. </p>
+
 
 </blockquote>
 
 <!-- End of entry for ALPHA -->
+
+
+<!-- Entry for ALPHA-ENABLED-P -->
+
+<p><br>[Generic accessor]<br><a class=none name='alpha-enabled-p'><b>alpha-enabled-p</b> <i>surface</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>alpha-enabled-p</b> <i>surface</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for ALPHA-ENABLED-P -->
+
+
+<!-- Entry for ALPHA-ENABLED-P -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>alpha-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>alpha-enabled-p</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for ALPHA-ENABLED-P -->
 
 
 <!-- Entry for ANY-COLOR-BUT-THIS -->
@@ -2047,7 +2080,7 @@
 <br><a class=none><tt>(setf (</tt><b>clip-rect</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the clipping <code>RECTANGLE</code> for <code>SURFACE</code>. </p>
+
 
 </blockquote>
 
@@ -2121,11 +2154,37 @@
 <br><a class=none><tt>(setf (</tt><b>color-key</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
-<p>Returns the current color key (transparent pixel) as <a href="#color">COLOR</a>. </p>
+
 
 </blockquote>
 
 <!-- End of entry for COLOR-KEY -->
+
+
+<!-- Entry for COLOR-KEY-ENABLED-P -->
+
+<p><br>[Generic accessor]<br><a class=none name='color-key-enabled-p'><b>color-key-enabled-p</b> <i>surface</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>color-key-enabled-p</b> <i>surface</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for COLOR-KEY-ENABLED-P -->
+
+
+<!-- Entry for COLOR-KEY-ENABLED-P -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>color-key-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>color-key-enabled-p</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for COLOR-KEY-ENABLED-P -->
 
 
 <!-- Entry for COLOR= -->
@@ -3024,6 +3083,30 @@
 <!-- End of entry for DRAW-VLINE -->
 
 
+<!-- Entry for ENABLE-ALPHA -->
+
+<p><br>[Function]<br><a class=none name='enable-alpha'><b>enable-alpha</b> <i>value <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Enable surface alpha blending for when <code>T</code>. Disable surface alpha blending when <code>NIL</code>.  A <code>SURFACE</code> need not have a pixel alpha component (RGBA) to use surface alpha blending. </p>
+
+</blockquote>
+
+<!-- End of entry for ENABLE-ALPHA -->
+
+
+<!-- Entry for ENABLE-COLOR-KEY -->
+
+<p><br>[Function]<br><a class=none name='enable-color-key'><b>enable-color-key</b> <i>value <tt>&amp;key</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Enables color keying when <code>T</code>. Disable color keying when <code>NIL</code></p>
+
+</blockquote>
+
+<!-- End of entry for ENABLE-COLOR-KEY -->
+
+
 <!-- Entry for ENABLE-KEY-REPEAT -->
 
 <p><br>[Function]<br><a class=none name='enable-key-repeat'><b>enable-key-repeat</b> <i>delay interval</i> =&gt; <i>result</i></a>
@@ -3046,6 +3129,30 @@
 </blockquote>
 
 <!-- End of entry for ENABLE-KEY-REPEAT-P -->
+
+
+<!-- Entry for ENABLE-RLE-ACCEL -->
+
+<p><br>[Generic function]<br><a class=none name='enable-rle-accel'><b>enable-rle-accel</b> <i>value <tt>&amp;key</tt></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for ENABLE-RLE-ACCEL -->
+
+
+<!-- Entry for ENABLE-RLE-ACCEL -->
+
+<p><br>[Method]<br><a class=none><b>enable-rle-accel</b> <i>value <tt>&amp;key</tt></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Enables RLE blit acceleration when <code>T</code>, disables RLE acceleration when <code>NIL</code>.  RLE acceleration can substantially speed up blitting of images with large horizontal runs  of transparent pixels (i.e., pixels that match the key color). </p>
+
+</blockquote>
+
+<!-- End of entry for ENABLE-RLE-ACCEL -->
 
 
 <!-- Entry for ENABLE-UNICODE -->
@@ -3599,6 +3706,30 @@
 <!-- End of entry for PACK-COLOR -->
 
 
+<!-- Entry for PIXEL-ALPHA-ENABLED-P -->
+
+<p><br>[Generic function]<br><a class=none name='pixel-alpha-enabled-p'><b>pixel-alpha-enabled-p</b> <i>surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for PIXEL-ALPHA-ENABLED-P -->
+
+
+<!-- Entry for PIXEL-ALPHA-ENABLED-P -->
+
+<p><br>[Method]<br><a class=none><b>pixel-alpha-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns <code>T</code> if a pixel alpha component (RGBA) is available, or <code>NIL</code> if unavailable (RGB). <EM>Note</EM>: The pixel alpha component differs from the surface alpha component which is  retrieved using <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for PIXEL-ALPHA-ENABLED-P -->
+
+
 <!-- Entry for POINT -->
 
 <p><br>[Function]<br><a class=none name='point'><b>point</b> <i><tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
@@ -3926,6 +4057,32 @@
 </blockquote>
 
 <!-- End of entry for RETURN-SUB-SYSTEMS-OF-STATUS -->
+
+
+<!-- Entry for RLE-ACCEL-ENABLED-P -->
+
+<p><br>[Generic accessor]<br><a class=none name='rle-accel-enabled-p'><b>rle-accel-enabled-p</b> <i>surface</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>rle-accel-enabled-p</b> <i>surface</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for RLE-ACCEL-ENABLED-P -->
+
+
+<!-- Entry for RLE-ACCEL-ENABLED-P -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>rle-accel-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>rle-accel-enabled-p</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for RLE-ACCEL-ENABLED-P -->
 
 
 <!-- Entry for ROTATE-SURFACE -->

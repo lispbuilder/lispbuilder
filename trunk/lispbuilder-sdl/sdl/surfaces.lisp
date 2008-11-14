@@ -263,11 +263,8 @@ Free using [FREE](#free)."))
   surface)
 
 (defmethod alpha-enabled-p ((surface sdl-surface))
-  "Returns `T` when alpha blending is enabled for `SURFACE`, and `NIL` when disabled"
   (1/0->T/NIL (sdl-base::alpha-enabled-p (fp surface))))
 (defmethod (setf alpha-enabled-p) (value (surface sdl-surface))
-  "Enable surface alpha blending for when `T`. Disable surface alpha blending when `NIL`. 
-A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha blending."
   (setf (sdl-base::alpha-enabled-p (fp surface)) value))
 (defun enable-alpha (value &key (surface *default-surface*))
   "Enable surface alpha blending for when `T`. Disable surface alpha blending when `NIL`. 
@@ -275,35 +272,27 @@ A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha 
   (setf (alpha-enabled-p surface) value))
 
 (defmethod alpha ((surface sdl-surface))
-  "Returns the per-surface alpha value. 0 is transparent, and 255 is opaque."
   (sdl-base::alpha (fp surface)))
 (defmethod (setf alpha) (value (surface sdl-surface))
-  "Sets the per-surface alpha value. 0 is transparent, and 255 is opaque. 
-
-*Note*: The per-surface alpha value of 128 is considered a special case and is optimised, so it's much faster than other per-surface values.
-*Note*: A surface need not have an alpha channel to use alpha blending.
-*Note*: When blitting, the presence or absence of [SDL-SRC-ALPHA](#sdl-src-alpha) is relevant only on the source surface, not the destination. 
-*Note*: Per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used if available."
   (setf (sdl-base::alpha (fp surface)) value))
 
 (defmethod color-key-enabled-p ((surface sdl-surface))
-  "Returns `T` when color keying is enabled, and `NIL` when color keying is disabled."
   (1/0->T/NIL (sdl-base::color-key-enabled-p (fp surface))))
 (defmethod (setf color-key-enabled-p) (value (surface sdl-surface))
-  "Enables color keying when `T`. Disable color keying when `NIL`"
   (setf (sdl-base::color-key-enabled-p (fp surface)) value))
 (defun enable-color-key (value &key (surface *default-surface*))
   "Enables color keying when `T`. Disable color keying when `NIL`"
   (setf (color-key-enabled-p surface) value))
 
 (defmethod color-key ((surface sdl-surface))
-  "Returns the current color key \(transparent pixel\) as [COLOR](#color)."
   (multiple-value-bind (r g b)
       (sdl-base::map-pixel (sdl-base::color-key (fp surface))
 			   (fp surface))
     (color :r r :g g :b b)))
 (defmethod (setf color-key) (value (surface sdl-surface))
-  "Set the \(RGB\) [COLOR](#color) key \(transparent pixel\)."
+  "Manages the colorkey for a `SURFACE`.
+Returns the current color key \(transparent pixel\) as [COLOR](#color).
+Set the \(RGB\) [COLOR](#color) key \(transparent pixel\)."
   (setf (sdl-base::color-key (fp surface)) (map-color value surface)))
 
 (defun clear-color-key (&key (surface *default-surface*))
@@ -312,32 +301,21 @@ A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha 
   (setf (color-key-enabled-p surface) nil))
 
 (defmethod pixel-alpha-enabled-p ((surface sdl-surface))
-  "Returns `T` if a pixel alpha component \(RGBA\) is available, or `NIL` if unavailable \(RGB\).
-*Note*: The pixel alpha component differs from the surface alpha component which is 
-retrieved using [ALPHA-ENABLED-P](#alpha-enabled-p)."
   (1/0->T/NIL (sdl-base::pixel-alpha-enabled-p (fp surface))))
 
 (defmethod rle-accel-enabled-p ((surface sdl-surface))
-  "Returns `T` if RLE acceleration is enabled, and `NIL` when RLE is disabled."
   (1/0->T/NIL (sdl-base::rle-accel-enabled-p (fp surface))))
 (defmethod (setf rle-accel-enabled-p) (value (surface sdl-surface))
-  "Enables RLE blit acceleration when `T`, disables RLE acceleration when `NIL`. 
-RLE acceleration can substantially speed up blitting of images with large horizontal runs 
-of transparent pixels (i.e., pixels that match the key color)."
   (setf (sdl-base::rle-accel-enabled-p (fp surface)) value))
-(defmethod enable-rle-accel (value &key (surface *default-surface*))
+(defun enable-rle-accel (value &key (surface *default-surface*))
   "Enables RLE blit acceleration when `T`, disables RLE acceleration when `NIL`. 
 RLE acceleration can substantially speed up blitting of images with large horizontal runs 
 of transparent pixels (i.e., pixels that match the key color)."
   (setf (rle-accel-enabled-p surface) value))
 
 (defmethod clip-rect ((surface sdl-surface))
-  "Returns the clipping `RECTANGLE` for `SURFACE`."
   (get-clip-rect :surface surface))
 (defmethod (setf clip-rect) (value (surface sdl-surface))
-  "Sets the clipping [RECTANGLE](#rectangle) for the `SURFACE`. Removes the clipping rectangle when `NIL`.
-When `SURFACE` is the destination of a blit, only the area within the clipping rectangle is 
-drawn into."
   (set-clip-rect value :surface surface))
 
 (defun clear-clip-rect (&optional (surface *default-surface*))
