@@ -8,10 +8,8 @@
   (let ((grayvalues (sdl:cast-to-int (/ 255 num)))
 	(steps (sdl:cast-to-int (/ size num))))
 
-    
-    (sdl:with-color (col (sdl:color))
-      (dotimes (i num)
-	(sdl:set-color-* col :r (* i grayvalues) :g (* i grayvalues) :b (* i grayvalues))
+    (dotimes (i num)
+      (sdl:with-color (col (sdl:color :r (* i grayvalues) :g (* i grayvalues) :b (* i grayvalues)))
 	(sdl-gfx:draw-filled-ellipse-* xloc yloc (- size (* i steps)) (- size (* i steps))
 				       :surface sdl:*default-display*)))))
 

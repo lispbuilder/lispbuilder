@@ -335,7 +335,7 @@
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
       
       (sdl-gfx:initialise-default-font)
-      (draw-fps "Calculating FPS....." 10 50 sdl-gfx:*default-font* sdl:*default-display* t)
+      (draw-fps "Calculating FPS....." 10 50 sdl:*default-font* sdl:*default-display* t)
       
       (sdl:with-surface (grid (sdl:create-surface (sdl:width sdl:*default-display*)
 						  (sdl:height sdl:*default-display*)) t)
@@ -362,7 +362,7 @@
 		 (render-loop manager meta-balls meta-color sdl:*default-display*)
 
 		 (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
-			   10 50 sdl-gfx:*default-font* sdl:*default-display*
+			   10 50 sdl:*default-font* sdl:*default-display*
 			   (funcall 100-frames-p))
 		 
 		 (sdl:update-display)))))))

@@ -51,7 +51,7 @@
       (sdl:clear-display (sdl:color))
 
       (sdl-gfx:initialise-default-font)
-      (draw-fps "Calculating FPS....." 10 150 sdl-gfx:*default-font* sdl:*default-display* t)
+      (draw-fps "Calculating FPS....." 10 150 sdl:*default-font* sdl:*default-display* t)
       
       (sdl:with-events ()
 	(:quit-event () t)
@@ -77,7 +77,7 @@
 	       (move-to-y *r4* (- *height* mouse-y) 50)
 
 	       (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
-			 10 150 sdl-gfx:*default-font* sdl:*default-display*
+			 10 150 sdl:*default-font* sdl:*default-display*
 			 (funcall 100-frames-p))
 		 
 	       (sdl:update-display))))))

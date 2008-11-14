@@ -10,12 +10,12 @@
 
 (defun display-font (font name)
   (sdl-gfx:initialise-default-font font)
-  (sdl-gfx:draw-string-solid (format nil "Hello World!!!! : font - ~A" name)
-			     (sdl:point :x 10 :y (incf *current-y*
-						       (+ 2 *prev-font-height*)))
-			     :color (sdl:color :r 255 :g 255 :b 255)
-			     :surface sdl:*default-display*)
-  (setf *prev-font-height* (sdl-gfx:font-height sdl-gfx:*default-font*)))
+  (sdl:draw-string-solid (format nil "Hello World!!!! : font - ~A" name)
+			 (sdl:point :x 10 :y (incf *current-y*
+						   (+ 2 *prev-font-height*)))
+			 :color (sdl:color :r 255 :g 255 :b 255)
+			 :surface sdl:*default-display*)
+  (setf *prev-font-height* (sdl:char-height sdl:*default-font*)))
 
 (defun inbuilt-font ()
   (sdl:with-init ()

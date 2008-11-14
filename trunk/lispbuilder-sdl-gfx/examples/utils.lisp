@@ -11,6 +11,6 @@
 (defun draw-fps (string x y font surface render-p)
   ;; Create a new FPS string when render-p is T
   (when render-p
-    (sdl-gfx:render-string-shaded string sdl:*white* sdl:*black* :font font :cache t :free t))
+    (sdl:render-string-shaded string sdl:*white* sdl:*black* :font font :cache t :free t))
   ;; Draw the string each frame
-  (sdl-gfx:draw-font-at-* x y :font font :surface surface))
+  (sdl:draw-font-at-* x y :font font :surface surface))

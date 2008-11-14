@@ -1,26 +1,21 @@
 
+(in-package :lispbuilder-sdl)
+
+(defmethod _draw-string-solid-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font gfx-bitmap-font) (color color))
+  (unless (default-font-p font)
+    (set-default-font font))
+  (sdl-gfx-cffi::string-color (sdl:fp surface) x y string
+			      (sdl:pack-color color))
+  surface)
+
+(defmethod _draw-string-solid-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font gfx-bitmap-font) (color color-a))
+  (unless (default-font-p font)
+    (set-default-font font))
+  (sdl-gfx-cffi::string-RGBA (sdl:fp surface) x y string
+			     (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color))
+  surface)
+
 (in-package :lispbuilder-sdl-gfx)
-
-
-(defun render-string-solid (string &key
-			    (font *default-font*)
-			    (color sdl:*default-color*)
-			    (free nil)
-			    (cache nil))
-  (when free
-    (sdl:free-cached-surface font))
-  (let ((surf (sdl:convert-surface :surface (sdl:create-surface (* (font-width font)
-								   (length string))
-								(font-height font)
-								:key-color sdl:*black*)
-				   :free-p t)))
-    (draw-string-solid-* string 0 0
-			 :font font
-			 :surface surf
-			 :color color)
-    (when cache
-      (setf (sdl:cached-surface font) surf))
-    surf))
 
 (defun draw-character-solid (c p1 &key
 			     (font *default-font*)
@@ -60,14 +55,14 @@ The character is keyed over `SURFACE`.
 ##### Example
 
     \(DRAW-CHARACTER-SOLID-* \"Hello World!\" 0 0 :SURFACE A-SURFACE :COLOR A-COLOR\)"
-  (check-type font font)
+  (check-type font bitmap-font)
   (unless surface
     (setf surface sdl:*default-display*))
   (check-type surface sdl:sdl-surface)
   (check-type color sdl:color)
 
-  (unless (default-font-p font)
-    (set-default-font font))
+  (unless (sdl:default-font-p font)
+    (sdl:set-default-font font))
   
   (when (typep color 'sdl:color)
     (sdl-gfx-cffi::character-color (sdl:fp surface) x y c
@@ -77,33 +72,3 @@ The character is keyed over `SURFACE`.
 				  (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color)))
   surface)
 
-(defun draw-string-solid (string p1 &key
-			  (font *default-font*)
-			  (surface sdl:*default-surface*)
-			  (color sdl:*default-color*))
-  (check-type p1 sdl:point)
-  (draw-string-solid-* string (sdl:x p1) (sdl:y p1)
-		       :font font
-		       :surface surface
-		       :color color))
-
-(defun draw-string-solid-* (string x y &key
-			    (font *default-font*)
-			    (surface sdl:*default-surface*)
-			    (color sdl:*default-color*))
-  (check-type font font)
-  (unless surface
-    (setf surface sdl:*default-display*))
-  (check-type surface sdl:sdl-surface)
-  (check-type color sdl:color)
-
-  (unless (default-font-p font)
-    (set-default-font font))
-
-  (when (typep color 'sdl:color)
-    (sdl-gfx-cffi::string-color (sdl:fp surface) x y string
-				(sdl:pack-color color)))
-  (when (typep color 'sdl:color-a)
-    (sdl-gfx-cffi::string-RGBA (sdl:fp surface) x y string
-			       (sdl:r color) (sdl:g color) (sdl:b color) (sdl:a color)))
-  surface)
