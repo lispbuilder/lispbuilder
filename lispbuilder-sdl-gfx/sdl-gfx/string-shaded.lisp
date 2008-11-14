@@ -1,23 +1,35 @@
 
-(in-package :lispbuilder-sdl-gfx)
+(in-package :lispbuilder-sdl)
 
-(defun render-string-shaded (string fg-color bg-color &key
-			     (font *default-font*)
-			     (free nil)
-			     (cache nil))
-  (sdl:check-types sdl:color fg-color bg-color)
-  (when free
-    (sdl:free-cached-surface font))
-  (let ((surf (sdl:convert-surface :surface (sdl:create-surface (* (font-width font)
-								   (length string))
-								(font-height font))
-				   :free t)))
-    (draw-string-shaded-* string 0 0 fg-color bg-color
-			  :font font
-			  :surface surf)
-    (when cache 
-      (setf (sdl:cached-surface font) surf))
-    surf))
+(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color color) (bg-color color) justify (surface sdl-surface) (font gfx-bitmap-font))
+  (unless (default-font-p font)
+    (sdl:set-default-font font))
+  
+  (draw-box-* x y
+	      (* (char-width font)
+		 (length string))
+	      (char-height font)
+	      :color bg-color
+	      :surface surface)
+  (sdl-gfx-cffi::string-color (fp surface) x y string
+			      (pack-color fg-color))
+  surface)
+
+(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color color-a) (bg-color color) justify (surface sdl-surface) (font gfx-bitmap-font))
+  (unless (default-font-p font)
+    (sdl:set-default-font font))
+  
+  (draw-box-* x y
+	      (* (char-width font)
+		 (length string))
+	      (char-height font)
+	      :color bg-color
+	      :surface surface)
+  (sdl-gfx-cffi::string-RGBA (fp surface) x y string
+			     (r fg-color) (g fg-color) (b fg-color) (a fg-color))
+  surface)
+
+(in-package :lispbuilder-sdl-gfx)
 
 (defun draw-character-shaded (c p1 fg-color bg-color &key
 			      (font *default-font*)
@@ -60,13 +72,13 @@ The surface background is filled with `BG-COLOR` so the surface cannot be keyed 
   (check-type surface sdl:sdl-surface)
   (sdl:check-types sdl:color fg-color bg-color)
 
-  (unless (default-font-p font)
-    (set-default-font font))
+  (unless (sdl:default-font-p font)
+    (sdl:set-default-font font))
   
   (sdl:draw-box-* x y
-		  (* (font-width font)
+		  (* (sdl:char-width font)
 		     (length c))
-		  (font-height font)
+		  (sdl:char-height font)
 		  :color bg-color
 		  :surface surface)
   
@@ -78,35 +90,4 @@ The surface background is filled with `BG-COLOR` so the surface cannot be keyed 
 				  (sdl:r fg-color) (sdl:g fg-color) (sdl:b fg-color) (sdl:a fg-color)))
   surface)
 
-(defun draw-string-shaded (c p1 fg-color bg-color &key
-			   (font *default-font*)
-			   (surface sdl:*default-surface*))
-  (check-type p1 sdl:point)
-  (draw-string-shaded-* c (sdl:x p1) (sdl:y p1) fg-color bg-color
-			:font font
-			:surface surface))
 
-(defun draw-string-shaded-* (c x y fg-color bg-color &key
-			     (font *default-font*)
-			     (surface sdl:*default-surface*))
-  (unless surface
-    (setf surface sdl:*default-display*))
-  (check-type surface sdl:sdl-surface)
-  (sdl:check-types sdl:color fg-color bg-color)
-
-  (unless (default-font-p font)
-    (set-default-font font))
-  
-  (sdl:draw-box-* x y
-		  (* (font-width font)
-		     (length c))
-		  (font-height font)
-		  :color bg-color
-		  :surface surface)
-  (when (typep fg-color 'sdl:color)
-    (sdl-gfx-cffi::string-color (sdl:fp surface) x y c
-				(sdl:pack-color fg-color)))
-  (when (typep fg-color 'sdl:color-a)
-    (sdl-gfx-cffi::string-RGBA (sdl:fp surface) x y c
-			       (sdl:r fg-color) (sdl:g fg-color) (sdl:b fg-color) (sdl:a fg-color)))
-  surface)

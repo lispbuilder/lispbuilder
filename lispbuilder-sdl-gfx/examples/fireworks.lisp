@@ -13,7 +13,7 @@
 	  (100-frames-p (every-n-frames 500)))
 
       (sdl-gfx:initialise-default-font sdl-gfx:*font-5x7*)
-      (draw-fps "Calculating FPS....." 10 10 sdl-gfx:*default-font* sdl:*default-surface* t)
+      (draw-fps "Calculating FPS....." 10 10 sdl:*default-font* sdl:*default-surface* t)
       
       (sdl:WITH-EVENTS ()
 	(:QUIT-EVENT () T)
@@ -25,7 +25,7 @@
 	 (dim-screen)
 	 (setf world (funcall world))
 	 (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
-		   10 10 sdl-gfx:*default-font* sdl:*default-surface*
+		   10 10 sdl:*default-font* sdl:*default-surface*
 		   (funcall 100-frames-p))
 	 (sdl:UPDATE-DISPLAY))))))
 
