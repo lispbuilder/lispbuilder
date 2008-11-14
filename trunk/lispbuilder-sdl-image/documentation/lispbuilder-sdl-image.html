@@ -3,7 +3,7 @@
   
   <head>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
-    <title>LISPBUILDER-SDL-IMAGE - </title>
+    <title>LISPBUILDER-SDL-IMAGE - a cool library</title>
     <style type="text/css">
       
       body {
@@ -331,7 +331,7 @@
   
   <BODY BGCOLOR=#FFFFFF >
     
-    <h1><a name="top" class=none> LISPBUILDER-SDL-IMAGE - </a></h1>
+    <h1><a name="top" class=none> LISPBUILDER-SDL-IMAGE - a cool library</a></h1>
     
     <blockquote>
       <br>&nbsp;</br><h2><a name=abstract class=abstract>Abstract</a></h2>
@@ -348,7 +348,7 @@
 	TGA, BMP, PNM, PBM, PGM, PPM, XPM, XCF, PCX , GIF, JPG, TIF, LBM and PNG.
       </p>
       <p>
-	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL-IMAGE is version <a href="#download">0.2</a>.
+	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL-IMAGE is version <a href="#download">0.4.2</a>.
       </p>
 <!--       <p> -->
 <!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl-image.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl-image.zip</a>. -->
@@ -403,7 +403,7 @@
       <pre>
   (sdl:with-init ()
     (sdl:window 320 240)
-    (sdl:draw-surface (sdl-image:load-image "lisp.tga" :image-type :TGA :force t))
+    (sdl:draw-surface (sdl-image:load-image "lisp.bmp"))
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event (sdl:update-display))))
@@ -518,9 +518,13 @@
 	    <a href="http://sourceforge.net/project/showfiles.php?group_id=159740">LISPBUILDER-SDL repository on SourceForge.</a>
 	  </li>
 	  <li>
-	    <font color=red>The Edi Weitz 'Starter Pack' Version:</font> The stable version of Lispbuilder, 
-	    suitable for the installation of installation LISPBUILDER-SDL-IMAGE using the Lisp Starter Pack from Edi Weitz is can be downloaded from 
-	    <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl-image.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl-image.zip</a>.
+	    <font color=red>'Lisp Starter Pack':</font> The 
+	    <a href="http://www.balooga.com/lispbuilder/config.lisp">config.lisp</a> file for use 
+	    with the <a href="http://weitz.de/starter-pack/">Lisp Starter Pack</a> 
+	    from Edi Weitz.
+<!-- 	    <font color=red>The Edi Weitz 'Starter Pack' Version:</font> The stable version of Lispbuilder,  -->
+<!-- 	    suitable for the installation of installation LISPBUILDER-SDL-IMAGE using the Lisp Starter Pack from Edi Weitz is can be downloaded from  -->
+<!-- 	    <a href="http://www.balooga.com/lispbuilder/lispbuilder-sdl-image.zip">http://www.balooga.com/lispbuilder/lispbuilder-sdl-image.zip</a>. -->
 	  </li>
 	</ul>
 	
@@ -534,7 +538,7 @@
 	  for Usage instructions.
 	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="examples">Running Examples in LISPBUILDER-SDL-IMAGE-EXAMPLES</a></h2>
+	<br>&nbsp;</br><h2><a class=none name="examples">Running the Examples</a></h2>
 	<p>Enter the following at the REPL to load the examples in the 
 	  LISPBUILDER-SDL-IMAGE-EXAMPLES package:</p>
 	<pre>
@@ -569,9 +573,7 @@
 <p><br>[Generic function]<br><a class=none name='image-p'><b>image-p</b> <i>source image-type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>T</code> if the source <code>SOURCE</code> contains an image of type <code>IMAGE-TYPE</code>. Returns <code>NIL</code> otherwise.  Attempts to detect the image type using the <EM>magic number</EM> contained in the image if one is available.  <code>NIL</code> is always returned for images of type <code>TGA</code> as a <code>TGA</code> image does not contain a <EM>magic number</EM>. </p><h5>Example </h5>
-<pre><code>(RWOPS-P SOURCE :IMAGE-TYPE :BMP)
-</code></pre>
+
 
 </blockquote>
 
@@ -580,15 +582,10 @@
 
 <!-- Entry for IMAGE-P -->
 
-<p><br>[Method]<br><a class=none><b>image-p</b> <i>(source string) image-type</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>image-p</b> <i>source image-type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>T</code> if the image in the file at location <code>SOURCE</code> is of type <code>IMAGE-TYPE</code>. </p><h5>Parameters </h5>
-<ul><li><code>SOURCE</code> is the filename and path of the file on the drive of type <code>STRING</code>.  </li>
-<li><code>IMAGE-TYPE</code> can be one of <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>.  </li>
-</ul><h5>Examples </h5>
-<pre><code>(IMAGE-P &amp;quot;image.bmp&amp;quot; :IMAGE-TYPE :BMP)
-</code></pre>
+
 
 </blockquote>
 
@@ -600,10 +597,7 @@
 <p><br>[Method]<br><a class=none><b>image-p</b> <i>(source rwops) image-type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>T</code> when the type of image contained in the <code>SDL:RWOPS</code> in the source <code>SOURCE</code> is of the type <code>IMAGE-TYPE</code>. </p><h5>Parameters </h5>
-<ul><li><code>SOURCE</code> is of type <code>SDL:RWOPS</code>. </li>
-<li><code>IMAGE-TYPE</code> must be one of <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>. </li>
-</ul>
+
 
 </blockquote>
 
@@ -615,9 +609,7 @@
 <p><br>[Generic function]<br><a class=none name='image-type-of'><b>image-type-of</b> <i>source</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the type of image in source <code>SOURCE</code>.  Attempts to detect the image type using the <EM>magic number</EM> contained in the image if one is available.  </p><h5>Returns </h5>
-<ul><li>Returns the image type of <code>SOURCE</code> which may be one of  <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>, if the image type can be determined.  Returns <code>NIL</code> if the image cannot be determined (The <EM>magic number</EM> is not supported or the <EM>magic number</EM> is not found).  <code>NIL</code> is always returned for images of type <code>TGA</code> as a <code>TGA</code> image does not contain a <EM>magic number</EM>.  </li>
-</ul>
+
 
 </blockquote>
 
@@ -626,14 +618,10 @@
 
 <!-- Entry for IMAGE-TYPE-OF -->
 
-<p><br>[Method]<br><a class=none><b>image-type-of</b> <i>(source string)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>image-type-of</b> <i>source</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the type of image in the file at location <code>SOURCE</code>. </p><h5>Parameters </h5>
-<ul><li><code>SOURCE</code> is the filename and path of the file on the drive of type <code>STRING</code>.  </li>
-</ul><h5>Example </h5>
-<pre><code>(IMAGE-TYPE-OF &amp;quot;image.bmp&amp;quot;)
-</code></pre>
+
 
 </blockquote>
 
@@ -645,11 +633,7 @@
 <p><br>[Method]<br><a class=none><b>image-type-of</b> <i>(source rwops)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the type of image contained in the <code>SDL:RWOPS</code> in the source <code>SOURCE</code>. </p><h5>Parameters </h5>
-<ul><li><code>SOURCE</code> is of type <code>SDL:RWOPS</code>. </li>
-</ul><h5>Example </h5>
-<pre><code>(IMAGE-TYPE-OF SOURCE)
-</code></pre>
+
 
 </blockquote>
 
@@ -658,10 +642,10 @@
 
 <!-- Entry for LOAD-AND-CONVERT-IMAGE -->
 
-<p><br>[Function]<br><a class=none name='load-and-convert-image'><b>load-and-convert-image</b> <i>source <tt>&amp;rest</tt> named-pairs <tt>&amp;key</tt> image-type force <tt>&amp;allow-other-keys</tt></i> =&gt; <i>result</i></a>
+<p><br>[Function]<br><a class=none name='load-and-convert-image'><b>load-and-convert-image</b> <i>source <tt>&amp;key</tt> color-key alpha color-key-at image-type force <tt>&amp;allow-other-keys</tt></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Loads an image from the filename <code>SOURCE</code> as per <a href="#load-image-*">LOAD-IMAGE-*</a>,   converts this image to the current display format using <code>SDL:CONVERT-SURFACE</code>.  </p><p>Parameters supported are the same as those for <a href="#load-image">LOAD-IMAGE</a> and <code>SDL:CONVERT-IMAGE</code>.  </p>
+<p>Loads an image from the filename <code>SOURCE</code> as per <a href="#load-image-*">LOAD-IMAGE-*</a>,   converts this image to the current display format using <code>CONVERT-SURFACE</code>.  </p><p>Parameters supported are the same as those for <a href="#load-image">LOAD-IMAGE</a> and <code>CONVERT-IMAGE</code>.  </p>
 
 </blockquote>
 
@@ -670,19 +654,10 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Generic function]<br><a class=none name='load-image'><b>load-image</b> <i>source <tt>&amp;key</tt> image-type force free</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='load-image'><b>load-image</b> <i>source <tt>&amp;key</tt></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates and returns a new surface from the source <code>SOURCE</code>. </p><p>Unless <code>:FORCE T</code>, the <EM>magic number</EM> will be used to determine the image type contained in the <code>SDL:RWOPS</code> in <code>SOURCE</code>.  To load an image when the <EM>magic number</EM> is unavailable (image formats such as <code>TGA</code> do not contain a <EM>magic number</EM><code>),  specify the image type using the </code>KEY<code>word </code>IMAGE-TYPE<code>. If the *magic number* is available  and does not match </code>IMAGE-TYPE<code>, then </code>IMAGE-TYPE<code> is ignored.  To load an image as </code>IMAGE-TYPE<code> when the *magic number* is available (effectively ignoring the *magic number*),  specify </code>:FORCE T<code>. It is probably best to avoid using </code>:FORCE T` unless you know what you are doing. </p><h5>Returns </h5>
-<ul><li>Returns a new <code>SDL:SURFACE</code>, or <code>NIL</code> if <code>SOURCE</code> does not contain a valid image or the image type cannot be determined.   All non-magicable image formats, such as <code>TGA</code>, must be specified using <code>iMAGE-TYPE</code>.  To load a TGA image, for example, use <code>:IMAGE-TYPE :TGA</code></li>
-</ul><h5>Example </h5>
-<ul><li>To load a <code>BMP</code> image using the <EM>magic number</EM></li>
-(CREATE-IMAGE-FROM-RWOPS SOURCE)
-<li>To load a <code>TGA</code> image </li>
-(CREATE-IMAGE-FROM-RWOPS SOURCE :IMAGE-TYPE :TGA)
-<li>To load a <code>BMP</code> image as <code>TGA</code></li>
-(CREATE-IMAGE-FROM-RWOPS SOURCE :IMAGE-TYPE :TGA :FORCE T)
-</ul>
+
 
 </blockquote>
 
@@ -691,22 +666,10 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt> image-type force free</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates and returns a new surface from the image in the file at the location <code>SOURCE</code>.  </p><h5>Parameters </h5>
-<ul><li><code>SOURCE</code> is the filename and path of the file on the drive of type <code>STRING</code>.  </li>
-<li><code>IMAGE-TYPE</code> when specified type may be one of <code>NIL</code>, <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TGA</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>.  </li>
-<li><code>FORCE</code> when <code>T</code> will force an image to be loaded as <code>IMAGE-TYPE</code>, ignoring any <EM>magic number</EM> when present in <code>SOURCE</code>.  </li>
-<li><code>FREE</code> is only used when <code>SOURCE</code> is <code>SDL:RWOPS</code>. </li>
-</ul><h5>Example </h5>
-<ul><li>To load a <code>BMP</code> image using the <EM>magic number</EM></li>
-(LOAD-IMAGE &amp;quot;image.bmp&amp;quot;)
-
-(LOAD-IMAGE &amp;quot;image.tga&amp;quot; :IMAGE-TYPE :TGA)
-
-(LOAD-IMAGE &amp;quot;image.bmp&amp;quot; :IMAGE-TYPE :BMP :FORCE T)
-</ul>
+<p>Creates and returns a new surface from the image in the file at the location <code>SOURCE</code>. </p>
 
 </blockquote>
 
@@ -715,15 +678,22 @@
 
 <!-- Entry for LOAD-IMAGE -->
 
-<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source rwops) <tt>&amp;key</tt> image-type force free</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source vector) <tt>&amp;key</tt></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates and returns a new surface from the image contained in the <code>SDL:RWOPS</code> structure in the source <code>SOURCE</code>. </p><h5>Parameters </h5>
-<ul><li><code>SOURCE</code> is of type <code>SDL:RWOPS</code>. </li>
-<li><code>IMAGE-TYPE</code> when specified type may be one of <code>NIL</code>, <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TGA</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>.  </li>
-<li><code>FORCE</code> when <code>T</code> will force an image to be loaded as <code>IMAGE-TYPE</code>, ignoring any <EM>magic number</EM> when present in <code>SOURCE</code>.  </li>
-<li><code>FREE</code> when <code>T</code> will automatically free the <code>SDL:RWOPS</code> in <code>SOURCE</code>. </li>
-</ul>
+<p>Creates and returns a new surface from the image contained in the byte VECTOR in <code>SOURCE</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for LOAD-IMAGE -->
+
+
+<!-- Entry for LOAD-IMAGE -->
+
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source rwops) <tt>&amp;key</tt></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Creates and returns a new surface from the image contained in the <code>RWOPS</code> structure in the source <code>SOURCE</code>. </p>
 
 </blockquote>
 
@@ -732,9 +702,18 @@
 
 <ul>
   <li>
-    Documentation prepared using Edi Weitz's  
-    <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+    Documentation prepared using:
   </li>
+  <ul>
+    <li>
+      Edi Weitz's  
+      <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
+    </li>
+    <li>
+      Gary King's 
+      <a href="http://common-lisp.net/project/cl-markdown/">CL-MARKDOWN</a>.
+      </li>
+  </ul>
 </ul>
 
 <p>

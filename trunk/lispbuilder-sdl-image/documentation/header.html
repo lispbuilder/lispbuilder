@@ -348,7 +348,7 @@
 	TGA, BMP, PNM, PBM, PGM, PPM, XPM, XCF, PCX , GIF, JPG, TIF, LBM and PNG.
       </p>
       <p>
-	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL-IMAGE is version <a href="#download">0.2</a>.
+	<font color=red>Current Version:</font> The current version of LISPBUILDER-SDL-IMAGE is version <a href="#download">0.4.2</a>.
       </p>
 <!--       <p> -->
 <!-- 	<font color=red>Download shortcut:</font> <a href="http://www.balooga.com/lispbuilder/~A.zip">http://www.balooga.com/lispbuilder/~:*~A.zip</a>. -->
@@ -403,7 +403,7 @@
       <pre>
   (sdl:with-init ()
     (sdl:window 320 240)
-    (sdl:draw-surface (sdl-image:load-image "lisp.tga" :image-type :TGA))
+    (sdl:draw-surface (sdl-image:load-image "lisp.bmp"))
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event (sdl:update-display))))
@@ -535,7 +535,7 @@
 	  for Usage instructions.
 	</p>
 	
-	<br>&nbsp;</br><h2><a class=none name="examples">Running Examples in LISPBUILDER-SDL-IMAGE-EXAMPLES</a></h2>
+	<br>&nbsp;</br><h2><a class=none name="examples">Running the Examples</a></h2>
 	<p>Enter the following at the REPL to load the examples in the 
 	  LISPBUILDER-SDL-IMAGE-EXAMPLES package:</p>
 	<pre>
