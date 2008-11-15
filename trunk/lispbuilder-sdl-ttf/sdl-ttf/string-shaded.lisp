@@ -29,7 +29,7 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 ##### Example
 
 \(DRAW-STRING-SHADED \"Hello World!\" fg-col bg-col  :FONT *DEFAULT-FONT* :COLOR A-COLOR\)"
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl:check-types sdl:color fg-color bg-color)
   (when free
     (sdl:free-cached-surface font))

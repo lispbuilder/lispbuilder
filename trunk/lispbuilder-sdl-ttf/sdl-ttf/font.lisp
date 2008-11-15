@@ -1,7 +1,7 @@
 
 (in-package #:lispbuilder-sdl-ttf)
 
-(defclass font (sdl::sdl-font sdl::foreign-object)
+(defclass ttf-font (sdl::font sdl::foreign-object)
   ((font-style :accessor font-style :initform nil :initarg :style)
    (font-encoding :accessor font-encoding :initform nil :initarg :encoding)
    (generation :accessor generation :initform *generation* :initarg :generation))
