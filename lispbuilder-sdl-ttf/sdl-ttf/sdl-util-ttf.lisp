@@ -114,7 +114,7 @@ and `\*DEFAULT-FONT\*` is already bound to a `FONT` when `INITIALISE-DEFAULT-FON
   "Closes the font `FONT` when the `SDL_TTF` font library is intitialized. 
 NOTE: `CLOSE-FONT` does not uninitialise the font library, and does not bind `\*DEFAULT-FONT\*` to `NIL`. Returns `T` 
 if successful, or `NIL` if the font cannot be closed or the `SDL_TTF` font library is not initialized."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl::free font))
 
 ;;; g
@@ -141,7 +141,7 @@ by default.
 ##### Example
 
     \(GET-GLYPH-METRIC UNICODE-CHAR :METRIC :MINX :FONT *DEFAULT-FONT*\)"
-  (check-type font font)
+  (check-type font ttf-font)
   (let ((p-minx (cffi:null-pointer))
 	(p-miny (cffi:null-pointer))
 	(p-maxx (cffi:null-pointer))
@@ -186,7 +186,7 @@ actual width. The height returned is the same as returned using [GET-FONT-HEIGHT
 ##### Returns
 
 * Returns the width or height of the specified `SDL:SURFACE`, or `NIL` upon error."
-  (check-type font font)
+  (check-type font ttf-font)
   (let ((p-w (cffi:null-pointer))
 	(p-h (cffi:null-pointer))
 	(val nil)
@@ -216,7 +216,7 @@ or `NIL` upon error.
 ##### Returns
 
 * Retuns the font style as one or more of: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`"
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-Style (sdl:fp font)))
 
 (defun get-font-height (&key (font *default-font*))
@@ -233,7 +233,7 @@ for line spacing, see [GET-FONT-LINE-SKIP](#get-font-line-skip) as well.
 ##### Returns
 
 * Retuns the height of the `FONT` as an `INTEGER`."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-height (sdl:fp font)))
 
 (defun get-font-ascent (&key (font *default-font*))
@@ -250,7 +250,7 @@ blitting the glyph on the screen.
 ##### Returns
 
 * Returns the ascent of the `FONT` as an `INTEGER`."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-Ascent (sdl:fp font)))
 
 (defun get-font-descent (&key (font *default-font*))
@@ -267,7 +267,7 @@ blitting the glyph on the screen.
 ##### Returns
 
 * Returns the descent of the `FONT` as an `INTEGER`."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-Descent (sdl:fp font)))
 
 (defun get-font-line-skip (&key (font *default-font*))
@@ -281,7 +281,7 @@ This is usually larger than the [GET-FONT-HEIGHT](#get-font-height) of the font.
 ##### Returns
 
 * Returns the pixel height of the `FONT` as an `INTEGER`."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-Line-Skip (sdl:fp font)))
 
 (defun get-font-faces (&key (font *default-font*))
@@ -297,7 +297,7 @@ This is a count of the number of specific fonts (based on size and style and oth
 ##### Returns
 
 * Returns the number of faces in the `FONT` as an `INTEGER`."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-faces (sdl:fp font)))
 
 (defun is-font-face-fixed-width (&key (font *default-font*))
@@ -311,7 +311,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 ##### Returns
 
 * Retuns `T` if `FONT` is of fixed width, and `NIL` otherwise."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-face-is-fixed-width (sdl:fp font)))
 
 (defun get-font-face-family-name (&key (font *default-font*))
@@ -324,7 +324,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 ##### Returns
 
 * Returns the name of the `FONT` face family name as a `STRING`, or `NIL` if unavailable."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-face-Family-Name (sdl:fp font)))
 
 (defun get-font-face-style-name (&key (font *default-font*))
@@ -338,7 +338,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 ##### Returns
 
 * Returns the name of the `FONT` face style as a `STRING`, or `NIL` if unavailable."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Get-Font-face-Style-Name (sdl:fp font)))
 
 
@@ -355,7 +355,7 @@ truetype library if the library is uninitialised.
 ##### Returns
 
 * Returns new `FONT` object if successful, returns `NIL` if unsuccessful."
-  (make-instance 'font :fp (sdl-ttf-cffi::ttf-Open-Font (namestring filename) size)))
+  (make-instance 'ttf-font :fp (sdl-ttf-cffi::ttf-Open-Font (namestring filename) size)))
 
 ;;; s
 
@@ -369,7 +369,7 @@ rendered glyphs, even if there is no change in style, so it may be best to check
 * `FONT` is a `FONT` object. 
 * `STYLE` is a list of one or more: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`. 
 NOTE: Combining `:STYLE-UNDERLINE` with anything  can cause a segfault, other combinations may also do this."
-  (check-type font font)
+  (check-type font ttf-font)
   (sdl-ttf-cffi::ttf-Set-Font-Style (sdl:fp font) style))
 
 (defun create-path (filename)

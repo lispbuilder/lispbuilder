@@ -28,7 +28,7 @@ Use `:CACHE T` to cache the newly created surface in the `FONT` object.
 ##### Example
 
      \(DRAW-STRING-SOLID \"Hello World!\" :FONT *DEFAULT-FONT* :COLOR A-COLOR\)"
-  (check-type font font)
+  (check-type font ttf-font)
   (check-type color sdl:color)
   (when free
     (sdl:free-cached-surface font))
