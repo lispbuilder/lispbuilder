@@ -164,7 +164,7 @@
       ;; Render the initial text.
       ;; We cache the rendered string in the FONT object.
       ;; Drawing the font to the display then involves a fast blit.
-      (draw-cached-string (format nil "Particles Demo: {ESC} = Exit, {P} Add 10 Particles, {L} Remove 10 Particles.")
+      (draw-cached-string (format nil "Particles Demo: {ESC} = Exit, {P} Add 100 Particles, {L} Remove 100 Particles.")
 			  5 5 *font-large* sdl:*default-display* t)
       (draw-cached-string (format nil "Particles: ~d, Framerate: Calculating...." *particle-count*)
 			  5 35 *font-small* sdl:*default-display* t)
