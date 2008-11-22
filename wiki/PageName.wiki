@@ -27,7 +27,7 @@ LISPBUILDER contains several packages that provide the following functionality:
 
 The installation instructions for each package are as follows;
 
-  * [LispbuilderSdl LISPBUILDER-SDL]
+  * [LispbuilderSDL LISPBUILDER-SDL]
   * [LispbuilderNet LISPBUILDER-NET]
   * [LispbuilderWindows LISPBUILDER-WINDOWS]
   * [AWKing, LEXing, YACCing, and REGEXing]
