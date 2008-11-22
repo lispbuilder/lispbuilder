@@ -30,6 +30,10 @@ The _helper_ packages are described below;
       (:video-expose-event (sdl:update-display))))
 }}}
 
+= Compatibility =
+
+|| *Lisp Implementation* || *Win32* || *Linux* || *OS X* || *BSD* || *Comments* ||
+
 = Download & Installation =
 
 == Windows ==
