@@ -7,13 +7,13 @@ LISPBUILDER, or Common Lisp Application Builder is a [http://wiki.alu.org/Garden
 LISPBUILDER contains several packages that provide the following functionality:
 
   * Game development;  
-    ** [LISPBUILDER-SDL]
+    ** [LispbuilderSDL LISPBUILDER-SDL]
 
   * Networking
-    ** [LISPBUILDER-NET]
+    ** [LispbuilderNet LISPBUILDER-NET]
 
   * Win32 specific (windows.h)
-    ** [LISPBUILDER-WINDOWS]
+    ** [LispbuilderWindows LISPBUILDER-WINDOWS]
 
   * Text processing; AWKing, LEXing, YACCing, and REGEXing: 
     ** [http://lispbuilder.svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-clawk/index.html LISPBUILDER-CLAWK]
@@ -27,9 +27,9 @@ LISPBUILDER contains several packages that provide the following functionality:
 
 The installation instructions for each package are as follows;
 
-  * [LISPBUILDER-SDL]
-  * [LISPBUILDER-NET]
-  * [LISPBUILDER-WINDOWS]
+  * [LispbuilderSdl LISPBUILDER-SDL]
+  * [LispbuilderNet LISPBUILDER-NET]
+  * [LispbuilderWindows LISPBUILDER-WINDOWS]
   * [AWKing, LEXing, YACCing, and REGEXing]
 
 = Support =
