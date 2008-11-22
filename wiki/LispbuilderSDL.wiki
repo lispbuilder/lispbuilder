@@ -8,7 +8,7 @@ The goal for LISPBUILDER-SDL is to become a useful resource for the development 
 
 The LISPBUILDER-SDL core functionality includes window and event loop management, support for 2D bitmap and vector graphics, 2D graphical effects such as rotation, color keying and alpha blending, many graphics drawing primitives such as circles, polygons, squares, Bezier and Cuttmull-Rom curves, BMP image support, playback of WAV samples and streaming music, and bitmap font support. 
 
-The core LISPBUILDER-SDL functionality described above can easily be enhanced by adding the optional 'helper' packages that provide additional capabilities such as True-type font support, 3D scene management, physics, character animation, support for loading diverse image formats (jpeg, png, tiff, tga, bmp etc.), a sound mixer, sample and music streaming for mp3 and OGG formats, rendering speed ups for many of the graphics primitives, anti-aliasing support.
+The core LISPBUILDER-SDL functionality described above can easily be enhanced by adding the optional _helper_ packages that provide additional capabilities such as True-type font support, 3D scene management, physics, character animation, support for loading diverse image formats (jpeg, png, tiff, tga, bmp etc.), a sound mixer, sample and music streaming for mp3 and OGG formats, rendering speed ups for many of the graphics primitives, anti-aliasing support.
 
 The _helper_ packages are described below;
 
