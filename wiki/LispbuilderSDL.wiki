@@ -10,7 +10,7 @@ The LISPBUILDER-SDL core functionality includes window and event loop management
 
 The core LISPBUILDER-SDL functionality described above can easily be enhanced by adding the optional 'helper' packages that provide additional capabilities such as True-type font support, 3D scene management, physics, character animation, support for loading diverse image formats (jpeg, png, tiff, tga, bmp etc.), a sound mixer, sample and music streaming for mp3 and OGG formats, rendering speed ups for many of the graphics primitives, anti-aliasing support.
 
-The 'helper' packages are described below;
+The _helper_ packages are described below;
 
   * *lispbuilder-sdl-gfx*: 2D graphical effects such as zooming, rotation, circles, polygons and squares, using SDL_gfx
   * *lispbuilder-sdl-image*: Support for multople image formats such as PNG and JPG, using SDL_image
