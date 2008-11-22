@@ -1,13 +1,31 @@
 #summary Create interactive games using LISPBUILDER-SDL and Common Lisp
 
+= Overview =
+
+The goal for LISPBUILDER-SDL is to become a useful resource for the development of games in Lisp.  LISPBUILDER-SDL provides a set of bindings and Lispy abstractions to graphics, sound, physics, character animation and 3D libraries allowing development of interactive application and games in Common Lisp. 
+
 = Introduction =
 
-Add your content here.
+The LISPBUILDER-SDL core functionality includes window and event loop management, support for 2D bitmap and vector graphics, 2D graphical effects such as rotation, color keying and alpha blending, many graphics drawing primitives such as circles, polygons, squares, Bezier and Cuttmull-Rom curves, BMP image support, playback of WAV samples and streaming music, and bitmap font support. 
 
+The core LISPBUILDER-SDL functionality described above can easily be enhanced by adding the optional 'helper' packages that provide additional capabilities such as True-type font support, 3D scene management, physics, character animation, support for loading diverse image formats (jpeg, png, tiff, tga, bmp etc.), a sound mixer, sample and music streaming for mp3 and OGG formats, rendering speed ups for many of the graphics primitives, anti-aliasing support.
 
-= Details =
+The 'helper' packages are described below;
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+*lispbuilder-sdl-gfx*: 2D graphical effects such as zooming, rotation, circles, polygons and squares, using SDL_gfx
+*lispbuilder-sdl-image*: Support for multople image formats such as PNG and JPG, using SDL_image
+*lispbuilder-sdl-mixer*: Sound mixing, using SDL_mixer a multi-channel audio mixer library
+*lispbuilder-sdl-ttf*: True-type font rendering, using SDL_ttf
+*lispbuilder-sdl-net*: Networking, using SDL_net a cross-platform, blocking network library
+
+= Example Code =
+
+{{{
+(sdl:with-init ()
+  (sdl:window 320 240)
+  (sdl:draw-surface (load-image "lisp.bmp"))
+  (sdl:update-display)
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:video-expose-event (sdl:update-display))))
+}}}
