@@ -1,5 +1,7 @@
 #summary Welcome to the lispbuilder wiki
 
+<wiki:toc max_depth="3" />
+
 = Introduction =
 
 LISPBUILDER, or Common Lisp Application Builder is a [http://wiki.alu.org/Gardeners_Projects Common Lisp Gardeners] Project.
@@ -41,4 +43,3 @@ Send support questions to the [http://www.lispniks.com/mailman/listinfo/applicat
   * [http://wiki.alu.org/Application_Builder/ The Application Builder page] on the ALU's (Association of Lisp Users) wiki.
   * [http://www.lispniks.com/mailman/listinfo/application-builder LISPBUILER mailing list].
   * [http://wiki.alu.org/Gardeners_Projects Common Lisp Gardeners]
-
