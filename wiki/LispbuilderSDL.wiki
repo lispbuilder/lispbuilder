@@ -36,6 +36,8 @@ The _helper_ packages are described below;
 
 = Download & Installation =
 
+The latest version can always be obtained using [http://subversion.tigris.org/ Subversion]. Use the instructions to sync to the latest version by clicking the *Source* tab above.
+
 == Windows ==
 
 === Windows For Common Lisp Newbies ===
@@ -46,4 +48,9 @@ The _helper_ packages are described below;
 
 == Linux ==
 
+These instructions have been tested under Ubuntu 2.6.24, CFFI version 
+
 == BSD ==
+
+
+
