@@ -14,8 +14,8 @@
   (last 0)
   (world 1000))
 
-(setf *fps-average* (make-fps-average)
-      *time-scale* (make-time-scale))
+;;;; (setf *fps-average* (make-fps-average)
+;;;;       *time-scale* (make-time-scale))
 
 
 (defun average-fps (fps-average)
@@ -46,7 +46,8 @@
   (setf (time-scale-last time-scale) current-ticks))
 
 (defclass fps-manager ()
-  ())
+  ((fps-average :reader fps-average :initform (make-fps-average))
+   (time-scale :reader time-scale :initform (make-time-scale))))
 
 (defgeneric (setf target-frame-rate) (rate fpsmngr)
   (:documentation "Set the target frame rate for the game loop.
@@ -91,8 +92,7 @@ not calculated"))
 	  nil)
       (setf (slot-value fpsmngr 'frame-rate) rate)))
 
-(defmethod init-fps-manager ((fpsmanager fps-fixed))
-  nil)
+(defmethod init-fps-manager ((fpsmanager fps-fixed)) nil)
 
 (defmethod process-timestep ((fpsmngr fps-fixed) &optional fn)
   (let ((current-ticks 0) (target-ticks 0))
@@ -102,8 +102,8 @@ not calculated"))
     (when (> (target-frame-rate fpsmngr) -1)
       (setf current-ticks (sdl-cffi::sdl-get-ticks))
 
-      (update-average-fps-window *fps-average* current-ticks)
-      (calculate-time-scale *time-scale* current-ticks)
+      (update-average-fps-window (fps-average fpsmngr) current-ticks)
+      (calculate-time-scale (time-scale fpsmngr) current-ticks)
       
       ;; Delay game loop, if necessary
       (when (> (target-frame-rate fpsmngr) 0)
@@ -111,27 +111,27 @@ not calculated"))
 	(setf target-ticks (+ (last-ticks fpsmngr)
 			      (* (frame-count fpsmngr)
 				 (rate-ticks fpsmngr))))
-	(if (<= current-ticks target-ticks)
-	    (sdl-cffi::sdl-delay (round (- target-ticks current-ticks)))
-	    (progn
-	      (setf (frame-count fpsmngr) 0
-		    (last-ticks fpsmngr) current-ticks)))))))
+        (if (<= current-ticks target-ticks)
+          (sdl-cffi::sdl-delay (round (- target-ticks current-ticks)))
+          (progn
+            (setf (frame-count fpsmngr) 0
+                  (last-ticks fpsmngr) current-ticks)))))))
     
 ;;;; --------------------------
 ;;;; Lock timestep to Specified Rate
 ;;;; From http://www.gaffer.org/game-physics/fix-your-timestep/
 
 (defclass fps-timestep (fps-manager)
-  ((accumulator :accessor accumulator :initform 0 :initarg accumulator)
-   (current-time :accessor current-time :initform 0 :initarg current-time)
-   (new-time :accessor new-time :initform 0 :initarg new-time)
-   (delta-time :accessor delta-time :initform 0 :initarg delta-time)
-   (max-delta-time :accessor max-delta-time :initform 25 :initarg max-delta-time)
-   (previous-state :accessor previous-state :initform 0.0 :initarg previous-state)
-   (current-state :accessor current-state :initform 0.0 :initarg current-state)
-   (alpha :accessor alpha :initform 0.0 :initarg alpha)
-   (a-time :accessor a-time :initform 0 :initarg a-time)
-   (d-time :accessor d-time :initform 10 :initarg d-time)))
+  ((accumulator :accessor accumulator :initform 0 :initarg :accumulator)
+   (current-time :accessor current-time :initform 0 :initarg :current-time)
+   (new-time :accessor new-time :initform 0 :initarg :new-time)
+   (delta-time :accessor delta-time :initform 0 :initarg :delta-time)
+   (max-delta-time :accessor max-delta-time :initform 25 :initarg :max-delta-time)
+   (previous-state :accessor previous-state :initform 0.0 :initarg :previous-state)
+   (current-state :accessor current-state :initform 0.0 :initarg :current-state)
+;;;;    (alpha :accessor alpha :initform 0.0 :initarg :alpha)
+   (a-time :accessor a-time :initform 0 :initarg :a-time)
+   (d-time :accessor d-time :initform 10 :initarg :d-time)))
 
 (defmethod init-fps-manager ((fpsmngr fps-timestep))
   (setf (current-time fpsmngr) (sdl-cffi::sdl-get-ticks)

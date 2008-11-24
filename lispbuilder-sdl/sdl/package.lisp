@@ -15,8 +15,7 @@
 		lispbuilder-sdl-base::push-user-event
 		
 		lispbuilder-sdl-base::*default-fpsmanager*
-		lispbuilder-sdl-base::*fps-average*
-
+                
 		lispbuilder-sdl-base::1/0->t/nil)
   (:import-from #:lispbuilder-sdl-cffi
 		lispbuilder-sdl-cffi::sdl-get-ticks
