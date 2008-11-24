@@ -23,7 +23,7 @@ LISPBUILDER contains several packages that provide the following functionality:
     ** [http://lispbuilder.svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-regex/index.html LISPBUILDER-REGEX]
     ** [http://lispbuilder.svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-yacc/index.html LISPBUILDER-YACC]
 
-*NOTE*: The packages above can be used separately. There is no need to install all LISPBUILDER packages if, for example, you only want [LISPBUILDER-SDL].
+*NOTE*: The packages above can be used separately. There is no need to install all LISPBUILDER packages if, for example, you only want [LispbuilderSDL LISPBUILDER-SDL].
 
 = Download & Installation =
 
