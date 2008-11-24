@@ -1,5 +1,7 @@
 #summary Create interactive games using LISPBUILDER-SDL and Common Lisp
 
+<wiki:toc max_depth="3" />
+
 = Overview =
 
 The goal for LISPBUILDER-SDL is to become a useful resource for the development of games in Lisp.  LISPBUILDER-SDL provides a set of bindings and Lispy abstractions to graphics, sound, physics, character animation and 3D libraries allowing development of interactive application and games in Common Lisp. 
