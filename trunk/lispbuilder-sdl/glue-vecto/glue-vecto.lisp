@@ -6,7 +6,7 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defun vecto->surface (src-image dst-surface x y &key (pixel-alpha t) (surface-alpha 255))
+(defun vecto->surface (src-image dst-surface x y &key (pixel-alpha t) (alpha 255))
   (check-type dst-surface sdl-surface)
   (unless (and (<= (vecto::width src-image)
 		   (width dst-surface))
@@ -16,7 +16,7 @@
   (sdl:with-surface (temp-surf (sdl:create-surface (vecto::width src-image)
 						   (vecto::height src-image)
 						   :pixel-alpha pixel-alpha
-						   :surface-alpha surface-alpha))
+						   :alpha alpha))
     (let ((fp-to-surf (fp temp-surf)))
       (sdl-base::with-pixel (px fp-to-surf)
 	(let ((image-data (vecto::image-data src-image)))
