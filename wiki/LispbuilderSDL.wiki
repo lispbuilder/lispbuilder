@@ -33,6 +33,12 @@ The _helper_ packages are described below;
 = Compatibility =
 
 || *Lisp Implementation* || *Win32* || *Linux* || *OS X* || *BSD* || *Comments* ||
+|| SBCL || Working || Working || NA || Working || Win32 version is single threaded||
+|| Lispworks || Working || Working || Working || ?? || ||
+|| Allegro || Working || ?? || ?? || ?? || ||
+|| CMUCL || NA || No || ?? || ?? || ||
+|| CLISP || Working || Working || ?? || ?? || ||
+|| Clozure CL || ?? || ?? || ?? || ?? || ||
 
 = Download & Installation =
 
@@ -51,6 +57,4 @@ The latest version can always be obtained using [http://subversion.tigris.org/ S
 These instructions have been tested under Ubuntu 2.6.24, CFFI version 
 
 == BSD ==
-
-
 
