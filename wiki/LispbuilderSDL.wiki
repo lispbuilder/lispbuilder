@@ -67,6 +67,8 @@ The following instructions apply to the [http://www.weitz.de/starter-pack/#use E
 
 The `LISPBUILDER-SDL` packages rely on several external dynamic linked libraries that are not included as part of the `LISPBUILDER-SDL` distribution. These libraries must be installed prior to loading any of the `LISPBUILDER-SDL` packages. Additional information on the dependencies for a package as well as the download & installation procedures are are [DownloadInstallation described here].
 
-= Using LISPBUILDER-SDL =
+= LISPBUILDER-SDL User Manual =
+
+[UsingLispbuilderSDL LISPBUILDER-SDL User Manual]
 
 = LISPBUILDER-SDL API Reference & Dictionary =
