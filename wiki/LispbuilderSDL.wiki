@@ -10,15 +10,7 @@ The goal for LISPBUILDER-SDL is to become a useful resource for the development 
 
 The LISPBUILDER-SDL core functionality includes window and event loop management, support for 2D bitmap and vector graphics, 2D graphical effects such as rotation, color keying and alpha blending, many graphics drawing primitives such as circles, polygons, squares, Bezier and Cuttmull-Rom curves, BMP image support, playback of WAV samples and streaming music, and bitmap font support. 
 
-The core LISPBUILDER-SDL functionality described above can easily be enhanced by adding the optional _helper_ packages that provide additional capabilities such as True-type font support, 3D scene management, physics, character animation, support for loading diverse image formats (jpeg, png, tiff, tga, bmp etc.), a sound mixer, sample and music streaming for mp3 and OGG formats, rendering speed ups for many of the graphics primitives, and anti-aliasing support.
-
-The _helper_ packages are described below;
-
-  * *lispbuilder-sdl-gfx*: 2D graphical effects such as zooming, rotation, circles, polygons and squares, using [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]
-  * *lispbuilder-sdl-image*: Support for multople image formats such as PNG and JPG, using [http://www.libsdl.org/projects/SDL_image/ SDL_image]
-  * *lispbuilder-sdl-mixer*: Sound mixing, using [http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer] a multi-channel audio mixer library
-  * *lispbuilder-sdl-ttf*: True-type font rendering, using [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]
-  * *lispbuilder-sdl-net*: Networking, using SDL_net a cross-platform, blocking network library
+The core LISPBUILDER-SDL functionality described above can be enhanced by using [optionalPackages optional packages] that provide additional capabilities such as True-type font support, 3D scene management, physics, character animation, support for loading diverse image formats (jpeg, png, tiff, tga, bmp etc.), a sound mixer, sample and music streaming for mp3 and OGG formats, rendering speed ups for many of the graphics primitives, and anti-aliasing support.
 
 = Example Code =
 
@@ -41,6 +33,17 @@ The _helper_ packages are described below;
 || CLISP || Working || Working || ?? || ?? || ||
 || Clozure CL || ?? || ?? || ?? || ?? || ||
 
+= Dependencies =
+
+== External Libraries ==
+
+[http://www.libsdl.org/ libSDL] must be installed in order for LISPBUILDER-SDL work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/ libSDL]. Linux users should use their package managers to install the RPM's or DEBs.
+
+== Common Lisp Packages ==
+
+ * ASDF: ASDF is already installed for users of SBCL, OpenMCL, ECL or ACL, or Lispworks using Edi Weitz's Lisp Starter Pack. Otherwise, please refer to http://cclan.cvs.sourceforge.net/viewvc/*checkout*/cclan/asdf/README?revision=1.40 ASDF README] for installation instructions.
+ * CFFI: Automatically installed when using ASDF-INSTALL, or Edi Weitz's Starter Pack. Otherwise, please refer to the official installation instructions.
+
 = Download & Installation =
 
 The latest version can always be obtained using [http://subversion.tigris.org/ Subversion]. Use the instructions to sync to the latest version by clicking the *Source* tab above.
@@ -58,3 +61,33 @@ The latest version can always be obtained using [http://subversion.tigris.org/ S
 These instructions have been tested under Ubuntu 2.6.24, CFFI version 
 
 == BSD ==
+
+= Optional Packages =
+
+  * *lispbuilder-sdl-gfx*: 2D graphical effects such as zooming, rotation, circles, polygons and squares, using [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]
+  * *lispbuilder-sdl-image*: Support for multople image formats such as PNG and JPG, using [http://www.libsdl.org/projects/SDL_image/ SDL_image]
+  * *lispbuilder-sdl-mixer*: Sound mixing, using [http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer] a multi-channel audio mixer library
+  * *lispbuilder-sdl-ttf*: True-type font rendering, using [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]
+  * *lispbuilder-sdl-net*: Networking, using [http://www.libsdl.org/projects/SDL_net/ SDL_net] a cross-platform, blocking network library
+
+== lispbuilder-sdl-gfx ==
+
+* [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx] must be installed in order for LISPBUILDER-SDL-GFX work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]. Linux users should use their package managers to install the RPM's or DEBs.
+
+== lispbuilder-sdl-image ==
+
+* [http://www.libsdl.org/projects/SDL_image/ SDL_image] must be installed in order for LISPBUILDER-SDL-IMAGE work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/projects/SDL_image/ SDL_image]. Linux users should use their package managers to install the RPM's or DEBs.
+
+== lispbuilder-sdl-mixer ==
+
+* [http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer] must be installed in order for LISPBUILDER-SDL-IMAGE work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer]. Linux users should use their package managers to install the RPM's or DEBs.
+
+== lispbuilder-sdl-ttf ==
+
+* [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] must be installed in order for LISPBUILDER-SDL-TTF work. A glue library is also necessary. Windows users can use Edi Weitz's Lisp Starter Pack to install both these libraries. Otherwise, Windows/Mac users should download and install the [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] from [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]. Linux users should use their package managers to install the RPM's or DEBs. The glue library must be built as follows;
+
+ * make
+
+== lispbuilder-sdl-net ==
+
+* [http://www.libsdl.org/projects/SDL_net/ SDL_net] must be installed in order for LISPBUILDER-SDL-NET work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/projects/SDL_net/ SDL_net]. Linux users should use their package managers to install the RPM's or DEBs.
