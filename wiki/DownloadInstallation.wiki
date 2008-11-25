@@ -33,7 +33,69 @@ This creates an instance of `NSApplication` that serves as a bridge between `SDL
 
 == Linux ==
 
-These instructions have been tested under Ubuntu 2.6.24, CFFI version 
+These instructions have been tested with the following version of Ubuntu and SBCL. Please open an issue or just email the project maintainers if you have difficulties with other versions. 
+
+Ubuntu 2.6.24 using SBCL 1.0.15
+
+If you don't have SBCL then install that first. You should get slime and emacs too. 
+
+{{{
+sudo apt-get install sbcl slime emacs
+}}}
+
+Once that is installed open up emacs. You need to add the following your .emacs to have SBCL and SLIME work. You'll need to change the path of slime from the one below, to where the slime package installs. In my case I just download the latest version of slime to that folder. 
+
+{{{
+(add-to-list 'load-path "~/slime/")
+(load "slime.el")
+(slime-setup)
+(setq inferior-lisp-program "sbcl")
+}}}
+
+Once in emacs just type M-x slime to get sbcl running. 
+
+Now we need to install some dependencies. Lispbuilder-SDL uses CFFI; a portable way to interface with other programs. If SBCL installed correctly then you need to type the following to install CFFI using ASDF:
+
+{{{
+(require 'asdf)
+(require 'asdf-install)
+(asdf-install :cffi)
+}}}
+
+If everything is OK you should see a text menu:
+
+{{{
+CL-USER> (asdf-install:install :cffi)
+Install where?
+1) System-wide install: 
+   System in /usr/local/lib/sbcl/site-systems/
+   Files in /usr/local/lib/sbcl/site/ 
+2) Personal installation: 
+   System in /home/justinhj/.sbcl/systems/
+   Files in /home/justinhj/.sbcl/site/ 
+}}}
+
+I usually install just for me by hitting 2. If everything is ok, ASDF-INSTALL will go the cliki web site and download the latest release of the CFFI package. It is dependent on babel , alexandria, trivial-features.
+
+If you get GPG errors whilst it downloads, you either hit 0 to ignore, which is a potential security risk, or go to [http://www.cliki.net/ASDF-Install and GPG] to find out about GPG.
+
+Now you need to get the latest lispbuilder from svn. See [http://code.google.com/p/lispbuilder/source/checkout]
+
+As a final step, at runtime we need to tell ASDF where the lisbuilder code is, and load it up.
+
+{{{
+(pushnew "/home/justinhj/lispbuilder/trunk/lispbuilder-sdl/" asdf:*central-registry* :test #'equal)
+(pushnew "/home/justinhj/lispbuilder/trunk/lispbuilder-sdl-mixer/" asdf:*central-registry* :test #'equal)
+
+(asdf:oos 'asdf:load-op 'lispbuilder-sdl)
+(asdf:oos 'asdf:load-op 'lispbuilder-sdl-examples)
+}}}
+
+If that all works you can now try an example:
+
+{{{
+(lispbuilder-sdl-examples:mandelbrot)
+}}}
 
 == BSD ==
 
