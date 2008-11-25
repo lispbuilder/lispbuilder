@@ -85,13 +85,12 @@ The SDL display surface needs to be updated once per game loop, as described in 
 
 = Default Keyword Arguments =
 
-Many of the functions and macros defined in lispbuilder accept one or more keyword arguments. For example the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rect DRAW-RECT] accepts `:COLOR` and `:SURFACE` keyword arguments that are bound to the symbols [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*] respectively. The objects that are bound to these symbols will be used unless the keyword arguments are overriden by the developer. 
+Many of the functions and macros defined in lispbuilder accept one or more keyword arguments. For example the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE] accepts `:COLOR` and `:SURFACE` keyword arguments that are bound to the symbols [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*] respectively. The objects that are bound to these symbols will be used unless the keyword arguments are overriden by the developer. 
 
-The definition for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rect DRAW-RECT] is as follows:
+The definition for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE] is as follows:
 
 {{{
-draw-rect rect &key (rectangle *default-rectangle*) 
-                    (surface *default-surface*) 
+draw-rectangle rect &key (surface *default-surface*) 
                     (color *default-color*)
                     update-p clipping-p 
 }}}
@@ -99,13 +98,13 @@ draw-rect rect &key (rectangle *default-rectangle*)
 So for example,
 
 {{{
-(draw-rect :rectangle #(0 0 100 100) :COLOR (COLOR 0 0 0) :SURFACE *default-surface*)
+(draw-rectangle #(0 0 100 100) :COLOR (COLOR 0 0 0) :SURFACE *default-surface*)
 }}}
 
 Will render a black rectangle onto the display. However;
 
 {{{
-(sdl:draw-rect :rectangle #(0 0 100 100)
+(sdl:draw-rectangle #(0 0 100 100))
 }}}
 
 Will render a rectangle of the color that is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] onto surface that is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*].
@@ -116,8 +115,8 @@ The following example shows how the macro [http://lispbuilder.googlecode.com/svn
 
 {{{
 (sdl:with-color ((COLOR 0 0 0))
-  (sdl:draw-rect :rectangle (rectangle 0 0 50 50)
-  (sdl:draw-rect :rectangle (rectangle 50 50 100 100))
+  (sdl:draw-rectangle (rectangle 0 0 50 50)
+  (sdl:draw-rectangle (rectangle 50 50 100 100))
 }}}
 
 Here two black rectangles are rendered onto a surface, taking advantage of the default keyword [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*]. 
@@ -130,8 +129,8 @@ But default keyword arguments have an added advantage other than keystroke savin
     (sdl:fill-surface)
     (sdl:with-color (#(0 0 0))
       (sdl:with-color (#(255 255 255))
-	  (sdl:draw-rect :rectangle #(10 10 200 200)))
-      (sdl:draw-rect :rectangle #(40 40 200 100)))))
+	  (sdl:draw-rectangle #(10 10 200 200)))
+      (sdl:draw-rectangle #(40 40 200 100)))))
 }}}
 
 This code performs the following hand-waving:
@@ -139,7 +138,7 @@ This code performs the following hand-waving:
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-display WITH-DISPLAY] binds the global symbols [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-display* *DEFAULT-DISPLAY*] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*] to the display surface.
  * Each call to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] creates a new *local* variable [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] and binds this to the specified color. This local variable [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] is valid only within the scope of [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR].  Each new [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] in effect 'shadows' the previous [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*].
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#fill-surface FILL-SURFACE] takes as keyword arguments `:COLOR` and `:SURFACE`, where `:COLOR` is bound to the local [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*]  and `:SURFACE` is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*].
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rect DRAW-RECT] takes as keyword arguments `:COLOR` and `:SURFACE`, where `:COLOR` is bound to the local [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] and `:SURFACE` is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*].
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE] takes as keyword arguments `:COLOR` and `:SURFACE`, where `:COLOR` is bound to the local [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] and `:SURFACE` is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*].
 
 And thanks to the wonders of Lisp indentation we are able to visualize the color stack directly in the code making debugging a lot easier. 
 
