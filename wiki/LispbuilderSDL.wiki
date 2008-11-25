@@ -99,7 +99,7 @@ To build the glue library:
  # If the build is successful, the `lispbuilder-sdl-ttf-glue` library will be found in `LISPBUILDER-SDL-TTF/BUILD/`.
  # Copy or move the file `LISPBUILDER-SDL-TTF/BUILD/lispbuilder-sdl-ttf-glue.dll` to `LISPBUILDER-SDL-TTF/BIN/lispbuilder-sdl-ttf-glue.dll`
 
-=== Linux Build Instructions
+=== Linux Build Instructions ===
 
 To rebuild the glue library:
  
