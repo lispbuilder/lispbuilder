@@ -3,3 +3,5 @@
 Adding pictures, video...
 
 http://code.google.com/p/lispbuilder/source/browse/trunk/documentation/openrm1.jpg
+
+http://lispbuilder.googlecode.com/svn/trunk/documentation/sdl-alien.png
