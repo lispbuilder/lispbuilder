@@ -91,7 +91,10 @@ Many of the functions and macros defined in lispbuilder accept one or more keywo
 The definition for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rect DRAW-RECT] is as follows:
 
 {{{
-draw-rect rect &key update-p clipping-p (rectangle *default-rectangle*) (surface *default-surface*) (color *default-color*)
+draw-rect rect &key (rectangle *default-rectangle*) 
+                    (surface *default-surface*) 
+                    (color *default-color*)
+                    update-p clipping-p 
 }}}
 
 So for example,
