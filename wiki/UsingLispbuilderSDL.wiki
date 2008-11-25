@@ -105,7 +105,7 @@ Additional functions that operate on rectangles are as follows:
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-position GET-POSITION]
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#rectangle-* RECTANGLE-*] 
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-rectangle GET-RECTANGLE]
-* [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-rectangle SET-RECTANGLE]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-rectangle SET-RECTANGLE]
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-box DRAW-BOX]
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE]
 
