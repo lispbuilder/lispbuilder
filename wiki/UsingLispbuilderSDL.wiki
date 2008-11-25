@@ -299,15 +299,16 @@ The the current state of the cursor is returned using [http://lispbuilder.google
 Putting this all together, we can write short example showing a white rectangle that follows the users mouse movements within an SDL Window. Exit the example by closing the window or pressing the Esc key on the keyboard.
 
 {{{
-;; Initialise SDL and the Video subsystem
-(WITH-INIT (SDL-INIT-VIDEO) 
+(WITH-INIT ()               ; Initialise SDL and the Video subsystem
   (WINDOW 320 240)          ; Open a window, 320 x 240
 
   (SETF (FRAME-RATE) 30)    ; Lock the frame rate to 30 fps
-  (WITH-EVENTS ()
-    (:QUIT-EVENT () T)      ; Absolutely have to handle the :QUIT-EVENT
 
-    (:KEY-DOWN-EVENT (:KEY key) (WHEN (KEY= key :SDL-KEY-ESCAPE) (PUSH-QUIT-EVENT)))
+  (WITH-EVENTS ()
+    (:QUIT-EVENT () T)      ; Absolutely have to handle the :QUIT-EVENT,
+                            ; or the application will not exit.
+    (:KEY-DOWN-EVENT (:KEY key) 
+      (WHEN (KEY= key :SDL-KEY-ESCAPE) (PUSH-QUIT-EVENT)))
 
     (:MOUSE-MOTION-EVENT (:X mouse-x :Y mouse-y)
       (CLEAR-DISPLAY *black*)
