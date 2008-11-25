@@ -103,9 +103,9 @@ To build the glue library:
 
 To rebuild the glue library:
  
-# In the `LISPBUILDER-SDL-TTF/` directory, execute `make` to create the glue library.
-# If the build is successful, the `lispbuilder-sdl-ttf-glue` library will be found in the `LISPBUILDER-SDL-TTF/BUILD/` directory.
-# In the `LISPBUILDER-SDL-TTF/` directory, execute `make install_ttf` to install the `lispbuilder-sdl-ttf-glue` library to the default library search path.
+ # In the `LISPBUILDER-SDL-TTF/` directory, execute `make` to create the glue library.
+ # If the build is successful, the `lispbuilder-sdl-ttf-glue` library will be found in the `LISPBUILDER-SDL-TTF/BUILD/` directory.
+ # In the `LISPBUILDER-SDL-TTF/` directory, execute `make install_ttf` to install the `lispbuilder-sdl-ttf-glue` library to the default library search path.
 
 == lispbuilder-sdl-net ==
 
