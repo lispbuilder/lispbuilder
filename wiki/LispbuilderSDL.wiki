@@ -86,7 +86,7 @@ These instructions have been tested under Ubuntu 2.6.24, CFFI version
 
 == lispbuilder-sdl-ttf ==
 
- * [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] must be installed in order for LISPBUILDER-SDL-TTF work. Windows users can use Edi Weitz's Lisp Starter Pack to install  this library. Otherwise, Windows/Mac users should download and install [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] from [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]. Linux users should use their package managers to install the RPM's or DEBs. 
+ * [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] must be installed in order for LISPBUILDER-SDL-TTF work. Windows users can use Edi Weitz's Lisp Starter Pack to install  this library. Otherwise, Windows/Mac users should download and install [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] from [http://www.libsdl.org/projects/SDL_ttf/ here]. Linux users should use their package managers to install the RPM's or DEBs. 
  * In addition a glue library `lispbuilder-sdl-ttf-glue` must also be installed in the library search path. `lispbuilder-sdl-ttf-glue` wraps the font rendering functions in [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] as these functions require struct passing by value; CFFI only supports passing structs by reference. Windows users can use Edi Weitz's Lisp Starter Pack to install the glue library. Otherwise the glue library must be built as follows;
 
 === Windows Build Instructions ===
