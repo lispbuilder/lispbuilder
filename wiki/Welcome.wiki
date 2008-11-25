@@ -18,10 +18,10 @@ LISPBUILDER contains several packages that provide the following functionality:
     ** [LispbuilderWindows LISPBUILDER-WINDOWS]
 
   * Text processing; AWKing, LEXing, YACCing, and REGEXing: 
-    ** [http://lispbuilder.svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-clawk/index.html LISPBUILDER-CLAWK]
-    ** [http://lispbuilder.svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-lexer/index.html LISPBUILDER-LEXER]
-    ** [http://lispbuilder.svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-regex/index.html LISPBUILDER-REGEX]
-    ** [http://lispbuilder.svn.sourceforge.net/viewvc/*checkout*/lispbuilder/trunk/lispbuilder-yacc/index.html LISPBUILDER-YACC]
+    ** [http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-clawk/index.html LISPBUILDER-CLAWK]
+    ** [http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-lexer/index.html LISPBUILDER-LEXER]
+    ** [http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-regex/index.html LISPBUILDER-REGEX]
+    ** [http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-yacc/index.html LISPBUILDER-YACC]
 
 *NOTE*: The packages above can be used separately. There is no need to install all LISPBUILDER packages if, for example, you only want [LispbuilderSDL LISPBUILDER-SDL].
 
