@@ -92,7 +92,7 @@ LISPBUILDER-SDL supports [http://lispbuilder.googlecode.com/svn/trunk/documentat
 
 A new rectangle is created by the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#rectangle RECTANGLE]. The function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#rectangle-from-edges RECTANGLE-FROM-EDGES] will create a new rectangle from the specified top left and bottom right coordinates. The function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#rectangle-from-midpoint-* RECTANGLE-FROM-MIDPOINT-*] will create a new rectangle from midpoint.
 
-The macros [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-rectangle WITH-RECTANGLE] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-rectangle WITH-RECTANGLEs] will create a new rectangle and free this rectangle when it goes out of scope. 
+The macros [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-rectangle WITH-RECTANGLE] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-rectangle WITH-RECTANGLE]s will create a new rectangle and free this rectangle when it goes out of scope. 
 
 The rectangle position and width and height can be inspected and modified using the following functions: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#x X], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#y Y], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#width WIDTH] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#height HEIGHT]. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#x2 X2] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#y2 Y2] will return the `(+ x width)` and `(+ y height)` of the rectangle respectively.
 
@@ -106,12 +106,12 @@ Additional functions that operate on rectangles are as follows:
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#rectangle-* RECTANGLE-*] 
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-rectangle GET-RECTANGLE]
 * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-rectangle SET-RECTANGLE]
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-box DRAW-BOX 
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-box DRAW-BOX]
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE]
 
 === Color ===
 
-Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#color COLOR]</a> to create a new `RGB` or `RGBA` color. 
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#color COLOR] to create a new `RGB` or `RGBA` color. 
 
 `RGB/A` color componets can be manipulated using the functions [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#r R], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#g G], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#b B], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#a A], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-color SET-COLOR] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-color-* SET-COLOR-*]. Compare colors using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#color= COLOR=].
 
