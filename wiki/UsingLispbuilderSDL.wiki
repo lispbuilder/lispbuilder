@@ -125,12 +125,10 @@ But default keyword arguments have an added advantage other than keystroke savin
 
 {{{
 (sdl:with-surface (*default-display*)
-  (sdl:with-color (#(100 100 100))
-    (sdl:fill-surface)
-    (sdl:with-color (#(0 0 0))
-      (sdl:with-color (#(255 255 255))
-	  (sdl:draw-rectangle #(10 10 200 200)))
-      (sdl:draw-rectangle #(40 40 200 100)))))
+  (sdl:with-color (#(0 0 0))
+    (sdl:with-color (#(255 255 255))
+      (sdl:draw-rectangle #(10 10 200 200)))
+    (sdl:draw-rectangle #(40 40 200 100))))
 }}}
 
 This code performs the following hand-waving:
