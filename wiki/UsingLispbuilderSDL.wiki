@@ -73,7 +73,7 @@ In addition to handling events, [http://lispbuilder.googlecode.com/svn/trunk/doc
 To unlock the frame rate effectively running the game loop as fast as the CPU will allow set the FRAME-RATE to `0`; 
 
 {{{
-(SETF (SDL:FRAME-RATE) NIL)
+(SETF (SDL:FRAME-RATE) 0)
 }}}
 
 The SDL display surface needs to be updated once per game loop, as described in the section [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html SDL Display].
@@ -98,74 +98,57 @@ The rectangle position and width and height can be inspected and modified using 
 
 Additional functions that operate on rectangles are as follows:
 
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html POINT-*]
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html GET-POINT]
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html SET-POINT
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html POSITION]
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html GET-POSITION]
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html RECTANGLE-*] 
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html GET-RECTANGLE]
-* [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html SET-RECTANGLE]
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html DRAW-BOX 
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html DRAW-RECTANGLE]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-point-* POINT-*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-point GET-POINT]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-point SET-POINT]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#position POSITION]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-position GET-POSITION]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#rectangle-* RECTANGLE-*] 
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-rectangle GET-RECTANGLE]
+* [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-rectangle SET-RECTANGLE]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-box DRAW-BOX 
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE]
 
 === Color ===
-	<p>
-	  A new SDL color is created by <a href="#color">COLOR</a>, returning either a new RGB or RGBA color. 
-	</p>
-	<p>
-	  RGB/A color componets can be manipulated using the functions <a href="#r">R</a>, <a href="#g">G</a>, 
-	  <a href="#b">B</a>, <a href="#a">A</a>, <a href="#set-color">SET-COLOR</a> and 
-	  <a href="#set-color-*">SET-COLOR-*</a>. Two colors may be compared using <a href="#color=">COLOR=</a>.
-	</p>
-	<p>
-	  Functions that accept a color parameter will most likely bind color to 
-	  <a href="#*default-color*">*DEFAULT-COLOR*</a> when unspecified. The macro
-	  <a href="#with-font">WITH-COLOR</a> will bind a color to <a href="#*default-color*">*DEFAULT-COLOR*</a> 
-	  within the scope of this macro. When <a href="#*default-color*">*DEFAULT-COLOR*</a> is bound to a color, 
-	  all subsequent drawing functions will use this implied color while it remains in scope.
-	</p>
-	<p>
-	  Additional functions that operate on colors are as follows:
-	  <ul>
-	    <li><a href="#color-*">COLOR-*</a></li>
-	    <li><a href="#any-color-but-this">ANY-COLOR-BUT-THIS</a></li>
-	    <li><a href="#map-color">MAP-COLOR</a></li>
-	    <li><a href="#pack-color">PACK-COLOR</a></li>
-	  </ul>
-	</p>
-	<p>
-	  LISPBULDER-SDL contains several predefined colors; <a href="#*black*">*BLACK*</a>, 
-	  <a href="#*white*">*WHITE*</a>, <a href="#*red*">*RED*</a>, <a href="#*green*">*GREEN*</a>,
-	  <a href="#*blue*">*BLUE*</a>, <a href="#*yellow*">*YELLOW*</a>, <a href="#*cyan*">*CYAN*</a>,
-	  <a href="#*magenta*">*MAGENTA*</a>.
-	</p>
 
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#color COLOR]</a> to create a new `RGB` or `RGBA` color. 
 
-	<h3><a class=none name="devdraw">Drawing</a></h3>
-	<p>
-	  LISPBUILDER-SDL provides low-level drawing support for several primitives. Most primitives can be drawn
-	  with or without alpha transparency. In addition, the filled primitives can be drawn with a single pixel 
-	  outline (or stroke) that is a different color to the fill color.
-	  <ul>
-     	    <li>Blitting Surfaces: <a href="#draw-surface">DRAW-SURFACE</a> and
-	    <a href="#blit-surface">BLIT-SURFACE</a></li>
-	    <li>Bezier and Cutmull-Rom Curves: <a href="#draw-bezier">DRAW-BEZIER</a>, 
-	      <a href="#draw-shape">DRAW-SHAPE</a>, <a href="#with-bezier">WITH-BEZIER</a>, 
-	      <a href="#with-curve">WITH-CURVE</a> and <a href="#draw-curve">DRAW-CURVE</a>.</li>
-	    <li>Boxes and Rectangles: <a href="#draw-box">DRAW-BOX</a>, 
-	      <a href="#draw-rectangle">DRAW-RECTANGLE</a></li>
-	    <li>Circles: <a href="#draw-circle">DRAW-CIRCLE</a> and 
-	      <a href="#draw-filled-circle">DRAW-FILLED-CIRCLE</a></li>
-	    <li>Lines: <a href="#draw-hline">DRAW-HLINE</a>, <a href="#draw-vline">DRAW-VLINE</a> and
-   	      <a href="#draw-line">DRAW-LINE</a></li>
-	    <li>Points: <a href="#draw-point">DRAW-POINT</a></li>
-       	    <li>Polygons and Triangles: <a href="#draw-polygon">DRAW-POLYGON</a>,
-	      <a href="#draw-trigon">DRAW-TRIGON</a> and <a href="#with-shape">WITH-SHAPE</a></li>
-       	    <li>Filling Surfaces with Color: <a href="#fill-surface">FILL-SURFACE</a></li>
-	    <li>Filling Arbitrary Shapes with Color: <a href="#flood-fill">FLOOD-FILL</a></li>
-	  </ul>
-	</p>
+`RGB/A` color componets can be manipulated using the functions [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#r R], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#g G], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#b B], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#a A], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-color SET-COLOR] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-color-* SET-COLOR-*]. Compare colors using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#color= COLOR=].
+
+Functions that accept a color parameter will most likely bind color to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] if unspecified. The macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] will bind a color to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] within the scope of this macro. When [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] is bound to a color, all subsequent drawing functions will use this implied color while it remains in scope.
+
+Additional functions that operate on colors are as follows:
+
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#color-*" COLOR-*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#any-color-but-this ANY-COLOR-BUT-THIS]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#map-color MAP-COLOR]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#pack-color PACK-COLOR]
+
+LISPBULDER-SDL also predefined several colors; 
+
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*black* *BLACK*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*white* *WHITE*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*red* *RED*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*green* *GREEN*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*blue* *BLUE*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*yellow* *YELLOW*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*cyan* *CYAN*]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*magenta* *MAGENTA*]
+
+== Drawing ==
+
+LISPBUILDER-SDL provides low-level drawing support for several primitives. Most primitives can be drawn with or without alpha transparency. In addition, the filled primitives can be drawn with a single pixel outline (or stroke) that is a different color to the fill color.
+
+ * Blitting Surfaces: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-surface DRAW-SURFACE] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#blit-surface BLIT-SURFACE]
+ * Bezier and Cutmull-Rom Curves: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-bezier DRAW-BEZIER], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-shape DRAW-SHAPE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-bezier WITH-BEZIER], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-curve WITH-CURVE] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-curve DRAW-CURVE].
+* Boxes and Rectangles: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-box DRAW-BOX], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE].
+ * Circles: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-circle DRAW-CIRCLE] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle DRAW-FILLED-CIRCLE].
+ * Lines: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-hline DRAW-HLINE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-vline DRAW-VLINE] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-line DRAW-LINE].
+ * Points: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-point DRAW-POINT].
+ * Polygons and Triangles: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-polygon DRAW-POLYGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-trigon DRAW-TRIGON] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-shape WITH-SHAPE].
+ * Filling Surfaces with Color: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#fill-surface FILL-SURFACE]
+ * Filling Arbitrary Shapes with Color: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#flood-fill FLOOD-FILL]
+
 	<p>
 	  Drawing functions require a target surface and color. LISPBUILDER-SDL uses defaults for both 
 	  target surface (<a href="#*default-surface*">*DEFAULT-SURFACE*</a>) and color 
