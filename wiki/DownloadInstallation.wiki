@@ -1,0 +1,33 @@
+#summary LISPBUILDER-SDL Download and Installation for OSD X, Linux, BSD and Windows Alternate
+
+<wiki:toc max_depth="3" />
+
+= Dependencies =
+
+== External Libraries ==
+
+[http://www.libsdl.org/ libSDL] must be installed in order for LISPBUILDER-SDL work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/ libSDL]. Linux users should use their package managers to install the RPM's or DEBs.
+
+== Common Lisp Packages ==
+
+ * ASDF: ASDF is already installed for users of SBCL, OpenMCL, ECL, ACL, or Lispworks using Edi Weitz's Lisp Starter Pack. Otherwise, please refer to [http://cclan.cvs.sourceforge.net/viewvc/*checkout*/cclan/asdf/README?revision=1.40 ASDF README] for installation instructions.
+ * CFFI: Automatically installed when using [http://www.cliki.net/ASDF-Install ASDF-INSTALL], or Edi Weitz's Starter Pack. Otherwise, please refer to the [http://common-lisp.net/project/cffi official installation instructions].
+
+= Download & Installation =
+
+The latest version can always be obtained using [http://subversion.tigris.org/ Subversion]. Use the instructions to sync to the latest version by clicking the *Source* tab above.
+
+== Windows ==
+
+=== Windows For Common Lisp Newbies ===
+
+
+=== Windows Technical ===
+
+== OS X ==
+
+== Linux ==
+
+These instructions have been tested under Ubuntu 2.6.24, CFFI version 
+
+== BSD ==
