@@ -1,0 +1,5 @@
+#summary Page for playing with wiki syntax
+
+Adding pictures, video...
+
+http://code.google.com/p/lispbuilder/source/browse/trunk/documentation/openrm1.jpg
