@@ -72,3 +72,5 @@ The `LISPBUILDER-SDL` packages rely on several external dynamic linked libraries
 [UsingLispbuilderSDL LISPBUILDER-SDL User Guide]
 
 = LISPBUILDER-SDL API Reference & Dictionary =
+
+http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/lispbuilder-sdl.html
