@@ -6,7 +6,7 @@
 == Initialisation of SDL ==
 
 The SDL library and SDL subsystems must be initialized prior to use. This is handled automatically when using the macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WITH-INIT]. 
-[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WITH-INIT<] also uninitialises the SDL library upon exit.
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WITH-INIT] also uninitialises the SDL library upon exit.
 
 More detailed information on the LISPBUILDER-SDL initialisation process can be found in the documentation for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WITH-INIT].
 
