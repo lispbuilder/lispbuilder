@@ -47,8 +47,8 @@ http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-al
 The following instructions are copied from [http://www.weitz.de/starter-pack/#use Edi Weitz's Lisp Starter Pack]
 
  # Start `Lispworks`.
- # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `Lisp Libraries` within `My Documents` folder. LispWorks will now compile the libraries libraries.
- # Execute the following at the `REPL` when compilation is `DONE`.
+ # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `"Lisp Libraries"` within `"My Documents"` folder. LispWorks will now compile the libraries libraries.
+ # Execute the following in the Lispworks `"Listener"` window when compilation is `DONE`.
   ** `(ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL-EXAMPLES)`
  # Run one of the examples to verify that the installation was successful;
   ** `(SDL-EXAMPLES:PARTICLES)`
