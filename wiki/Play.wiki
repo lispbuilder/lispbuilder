@@ -2,6 +2,12 @@
 
 Adding pictures, video...
 
-http://code.google.com/p/lispbuilder/source/browse/trunk/documentation/openrm1.jpg
+Note that when linking URL's you need to refer to the URL from the SVN trunk folders, not from the browse system, which does not return the correct mime type.
+
+BAD "http://code.google.com/p/lispbuilder/source/browse/trunk/documentation/openrm1.jpg"
+
+GOOD "http://lispbuilder.googlecode.com/svn/trunk/documentation/sdl-alien.png"
+
+See :
 
 http://lispbuilder.googlecode.com/svn/trunk/documentation/sdl-alien.png
