@@ -23,6 +23,8 @@ The core LISPBUILDER-SDL functionality described above can be enhanced by using 
       (:video-expose-event (sdl:update-display))))
 }}}
 
+http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-alien.png
+
 = Compatibility =
 
 || *Lisp Implementation* || *Win32* || *Linux* || *OS X* || *BSD* || *Comments* ||
@@ -41,8 +43,8 @@ The core LISPBUILDER-SDL functionality described above can be enhanced by using 
 
 == Common Lisp Packages ==
 
- * ASDF: ASDF is already installed for users of SBCL, OpenMCL, ECL or ACL, or Lispworks using Edi Weitz's Lisp Starter Pack. Otherwise, please refer to http://cclan.cvs.sourceforge.net/viewvc/*checkout*/cclan/asdf/README?revision=1.40 ASDF README] for installation instructions.
- * CFFI: Automatically installed when using ASDF-INSTALL, or Edi Weitz's Starter Pack. Otherwise, please refer to the official installation instructions.
+ * ASDF: ASDF is already installed for users of SBCL, OpenMCL, ECL, ACL, or Lispworks using Edi Weitz's Lisp Starter Pack. Otherwise, please refer to [http://cclan.cvs.sourceforge.net/viewvc/*checkout*/cclan/asdf/README?revision=1.40 ASDF README] for installation instructions.
+ * CFFI: Automatically installed when using [http://www.cliki.net/ASDF-Install ASDF-INSTALL], or Edi Weitz's Starter Pack. Otherwise, please refer to the [http://common-lisp.net/project/cffi official installation instructions].
 
 = Download & Installation =
 
@@ -84,9 +86,26 @@ These instructions have been tested under Ubuntu 2.6.24, CFFI version
 
 == lispbuilder-sdl-ttf ==
 
-[http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] must be installed in order for LISPBUILDER-SDL-TTF work. A glue library is also necessary. Windows users can use Edi Weitz's Lisp Starter Pack to install both these libraries. Otherwise, Windows/Mac users should download and install the [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] from [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]. Linux users should use their package managers to install the RPM's or DEBs. The glue library must be built as follows;
+ * [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] must be installed in order for LISPBUILDER-SDL-TTF work. Windows users can use Edi Weitz's Lisp Starter Pack to install  this library. Otherwise, Windows/Mac users should download and install [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] from [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]. Linux users should use their package managers to install the RPM's or DEBs. 
+ * In addition a glue library `lispbuilder-sdl-ttf-glue` must also be installed in the library search path. `lispbuilder-sdl-ttf-glue` wraps the font rendering functions in [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] as these functions require struct passing by value; CFFI only supports passing structs by reference. Windows users can use Edi Weitz's Lisp Starter Pack to install the glue library. Otherwise the glue library must be built as follows;
 
- * make
+=== Windows Build Instructions ===
+
+To build the glue library:
+
+ # A working installation of MingW is required. 
+ # Make sure that the path to the include files for `SDL` and `SDL_TTF` are specified correctly in `LISPBUILDER-SDL-TTF/Makefile.mingw`. Do this by modifying the line `SDL_TTF_CFLAGS=$(CFLAGS) -ISDL-1.2.11/include -ISDL_ttf-2.0.8`.
+ # In the `LISPBUILDER-SDL-TTF/` directory, execute `make` to create the glue library.
+ # If the build is successful, the `lispbuilder-sdl-ttf-glue` library will be found in `LISPBUILDER-SDL-TTF/BUILD/`.
+ # Copy or move the file `LISPBUILDER-SDL-TTF/BUILD/lispbuilder-sdl-ttf-glue.dll` to `LISPBUILDER-SDL-TTF/BIN/lispbuilder-sdl-ttf-glue.dll`
+
+=== Linux Build Instructions
+
+To rebuild the glue library:
+ 
+# In the `LISPBUILDER-SDL-TTF/` directory, execute `make` to create the glue library.
+# If the build is successful, the `lispbuilder-sdl-ttf-glue` library will be found in the `LISPBUILDER-SDL-TTF/BUILD/` directory.
+# In the `LISPBUILDER-SDL-TTF/` directory, execute `make install_ttf` to install the `lispbuilder-sdl-ttf-glue` library to the default library search path.
 
 == lispbuilder-sdl-net ==
 
