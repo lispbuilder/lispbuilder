@@ -47,41 +47,15 @@ http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-al
 The following instructions are copied from [http://www.weitz.de/starter-pack/#use Edi Weitz's Lisp Starter Pack]
 
  # Start `Lispworks`.
- # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `"Lisp Libraries"` within `"My Documents"` folder. LispWorks will now compile the libraries libraries.
+ # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `"Lisp Libraries"` within `"My Documents"` folder. Lispworks will now compile the libraries libraries.
  # Execute the following in the Lispworks `"Listener"` window when compilation is `DONE`.
   ** `(ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL-EXAMPLES)`
  # Run one of the examples to verify that the installation was successful;
   ** `(SDL-EXAMPLES:PARTICLES)`
 
-= Dependencies =
+= Download & Installation for OS X, Linux, BSD and Windows Alternate = 
 
-== External Libraries ==
-
-[http://www.libsdl.org/ libSDL] must be installed in order for LISPBUILDER-SDL work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/ libSDL]. Linux users should use their package managers to install the RPM's or DEBs.
-
-== Common Lisp Packages ==
-
- * ASDF: ASDF is already installed for users of SBCL, OpenMCL, ECL, ACL, or Lispworks using Edi Weitz's Lisp Starter Pack. Otherwise, please refer to [http://cclan.cvs.sourceforge.net/viewvc/*checkout*/cclan/asdf/README?revision=1.40 ASDF README] for installation instructions.
- * CFFI: Automatically installed when using [http://www.cliki.net/ASDF-Install ASDF-INSTALL], or Edi Weitz's Starter Pack. Otherwise, please refer to the [http://common-lisp.net/project/cffi official installation instructions].
-
-= Download & Installation =
-
-The latest version can always be obtained using [http://subversion.tigris.org/ Subversion]. Use the instructions to sync to the latest version by clicking the *Source* tab above.
-
-== Windows ==
-
-=== Windows For Common Lisp Newbies ===
-
-
-=== Windows Technical ===
-
-== OS X ==
-
-== Linux ==
-
-These instructions have been tested under Ubuntu 2.6.24, CFFI version 
-
-== BSD ==
+[DownloadInstallation Described here].
 
 = Optional Packages =
 
