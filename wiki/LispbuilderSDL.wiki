@@ -45,6 +45,8 @@ http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-al
 
 = Windows: Download & Installation for Newbies =
 
+The LISPBUILDER-SDL package relies on the external [http://www.libsdl.org/ libSDL] dynamic linked library. [http://www.libsdl.org/ libSDL] is downloaded and installed automatically using the procedure describe below.
+
  # Download & install [http://www.lispworks.com/downloads/index.html Lispworks Personal Edition].
  # Download & install [http://www.weitz.de/starter-pack/ Edi Weitz's Lisp Starter Pack].
  # Download [http://www.balooga.com/lispbuilder/config.lisp config.lisp] to the same location as the Lisp Starter Pack. _Note:_ `LispStarterPack.exe` and `config.lisp` must be in the same directory.
@@ -63,4 +65,4 @@ The following instructions apply to the [http://www.weitz.de/starter-pack/#use E
 
 = Download & Installation for OS X, Linux, BSD and Windows Alternate = 
 
-The download & installation procedures for LISPBUILDER-SDL and the Optional Packages are [DownloadInstallation described here].
+The `LISPBUILDER-SDL` packages rely on several external dynamic linked libraries that are not included as part of the `LISPBUILDER-SDL` distribution. These libraries must be installed prior to loading any of the `LISPBUILDER-SDL` packages. Additional information on the dependencies for a package as well as the download & installation procedures are are [DownloadInstallation described here].
