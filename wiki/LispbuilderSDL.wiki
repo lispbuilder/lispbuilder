@@ -42,9 +42,9 @@ http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-al
  # Download [http://www.balooga.com/lispbuilder/config.lisp config.lisp] to the same location as the Lisp Starter Pack. _Note:_ `LispStarterPack.exe` and `config.lisp` must be in the same directory.
  # Run `LispStarterPack.exe` and select the `LISPBUILDER-*` packages. The packages will be downloaded and installed into (in `XP` at least) `My Documents\Lisp Libraries`.
 
-= Using LISPBUILDER-SDL =
+= Windows: Using LISPBUILDER-SDL =
 
-The following instructions are copied from [http://www.weitz.de/starter-pack/#use Edi Weitz's Lisp Starter Pack]
+The following instructions apply to the [http://www.weitz.de/starter-pack/#use Edi Weitz's Lisp Starter Pack] above.
 
  # Start `Lispworks`.
  # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `"Lisp Libraries"` within `"My Documents"` folder. Lispworks will now compile the libraries libraries.
