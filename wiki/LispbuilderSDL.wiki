@@ -53,7 +53,7 @@ The following instructions apply to the [http://www.weitz.de/starter-pack/#use E
  # Run one of the examples to verify that the installation was successful;
   ** `(SDL-EXAMPLES:PARTICLES)`
 
-= Download & Installation for OS X, Linux, BSD and Windows Alternate = 
+= Download & Installation if LISPBUILDER-SDL for OS X, Linux, BSD and Windows Alternate = 
 
 [DownloadInstallation Described here].
 
@@ -65,41 +65,6 @@ The following instructions apply to the [http://www.weitz.de/starter-pack/#use E
   * *lispbuilder-sdl-ttf*: True-type font rendering, using [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]
   * *lispbuilder-sdl-net*: Networking, using [http://www.libsdl.org/projects/SDL_net/ SDL_net] a cross-platform, blocking network library.
 
-== lispbuilder-sdl-gfx ==
+= Download & Installation of the Optional Packages for OS X, Linux, BSD and Windows Alternate = 
 
-[http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx] must be installed in order for LISPBUILDER-SDL-GFX work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]. Linux users should use their package managers to install the RPM's or DEBs.
-
-== lispbuilder-sdl-image ==
-
-[http://www.libsdl.org/projects/SDL_image/ SDL_image] must be installed in order for LISPBUILDER-SDL-IMAGE work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/projects/SDL_image/ SDL_image]. Linux users should use their package managers to install the RPM's or DEBs.
-
-== lispbuilder-sdl-mixer ==
-
-[http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer] must be installed in order for LISPBUILDER-SDL-IMAGE work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer]. Linux users should use their package managers to install the RPM's or DEBs.
-
-== lispbuilder-sdl-ttf ==
-
- * [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] must be installed in order for LISPBUILDER-SDL-TTF work. Windows users can use Edi Weitz's Lisp Starter Pack to install  this library. Otherwise, Windows/Mac users should download and install [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] from [http://www.libsdl.org/projects/SDL_ttf/ here]. Linux users should use their package managers to install the RPM's or DEBs. 
- * In addition a glue library `lispbuilder-sdl-ttf-glue` must also be installed in the library search path. `lispbuilder-sdl-ttf-glue` wraps the font rendering functions in [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf] as these functions require struct passing by value; CFFI only supports passing structs by reference. Windows users can use Edi Weitz's Lisp Starter Pack to install the glue library. Otherwise the glue library must be built as follows;
-
-=== Windows Build Instructions ===
-
-To build the glue library:
-
- # A working installation of MingW is required. 
- # Make sure that the path to the include files for `SDL` and `SDL_TTF` are specified correctly in `LISPBUILDER-SDL-TTF/Makefile.mingw`. Do this by modifying the line `SDL_TTF_CFLAGS=$(CFLAGS) -ISDL-1.2.11/include -ISDL_ttf-2.0.8`.
- # In the `LISPBUILDER-SDL-TTF/` directory, execute `make` to create the glue library.
- # If the build is successful, the `lispbuilder-sdl-ttf-glue` library will be found in `LISPBUILDER-SDL-TTF/BUILD/`.
- # Copy or move the file `LISPBUILDER-SDL-TTF/BUILD/lispbuilder-sdl-ttf-glue.dll` to `LISPBUILDER-SDL-TTF/BIN/lispbuilder-sdl-ttf-glue.dll`
-
-=== Linux Build Instructions ===
-
-To rebuild the glue library:
- 
- # In the `LISPBUILDER-SDL-TTF/` directory, execute `make` to create the glue library.
- # If the build is successful, the `lispbuilder-sdl-ttf-glue` library will be found in the `LISPBUILDER-SDL-TTF/BUILD/` directory.
- # In the `LISPBUILDER-SDL-TTF/` directory, execute `make install_ttf` to install the `lispbuilder-sdl-ttf-glue` library to the default library search path.
-
-== lispbuilder-sdl-net ==
-
-[http://www.libsdl.org/projects/SDL_net/ SDL_net] must be installed in order for LISPBUILDER-SDL-NET work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/projects/SDL_net/ SDL_net]. Linux users should use their package managers to install the RPM's or DEBs.
+[DownloadInstallation#Download_&_Installation_of_LISPBUILDER-SDL Described here].
