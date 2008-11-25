@@ -57,7 +57,7 @@ The LISPBUILDER-SDL package relies on the external [http://www.libsdl.org/ libSD
 The following instructions apply to the [http://www.weitz.de/starter-pack/#use Edi Weitz's Lisp Starter Pack] above.
 
  # Start `Lispworks`.
- # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `"Lisp Libraries"` within `"My Documents"` folder. Lispworks will now compile the libraries libraries.
+ # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `"Lisp Libraries"` within the `"My Documents"` folder. Lispworks will now compile the packages.
  # Execute the following in the Lispworks `"Listener"` window when compilation is `DONE`.
   ** `(ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL-EXAMPLES)`
  # Run one of the examples to verify that the installation was successful;
