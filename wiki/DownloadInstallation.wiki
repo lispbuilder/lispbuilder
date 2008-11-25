@@ -21,6 +21,8 @@ The latest version can always be obtained using [http://subversion.tigris.org/ S
 
 == Windows ==
 
+*TBD*
+
 == OS X ==
 
 In addition to downloading and installing `LISPBUILDER-SDL`, you need to install the `SDL` framework [http://www.libsdl.org/ available here]. To use `SDL` you first need to compile the OS-X specific helper library located in `"lispbuilder-sdl/cocoahelper`"; just cd to this directory and type `"make"`. Then before trying to run any `SDL` programs you need to load the cocoahelper package: 
