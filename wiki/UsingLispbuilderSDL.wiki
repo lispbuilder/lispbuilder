@@ -97,7 +97,7 @@ draw-rect rect &key update-p clipping-p (rectangle *default-rectangle*) (surface
 So for example,
 
 {{{
-(draw-rect :rectangle #(0 0 100 100) :COLOR (COLOR 0 0 0) :SURFACE display-surface)
+(draw-rect :rectangle #(0 0 100 100) :COLOR (COLOR 0 0 0) :SURFACE *default-surface*)
 }}}
 
 Will render a black rectangle onto the display. However;
