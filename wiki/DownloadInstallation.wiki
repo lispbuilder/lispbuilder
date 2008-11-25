@@ -19,11 +19,6 @@ The latest version can always be obtained using [http://subversion.tigris.org/ S
 
 == Windows ==
 
-=== Windows For Common Lisp Newbies ===
-
-
-=== Windows Technical ===
-
 == OS X ==
 
 == Linux ==
