@@ -25,7 +25,7 @@ More detailed information can be found in in the documentation for [http://lispb
   (WINDOW 320 240))
 }}}
 
-== Handling Events and the Game Loop ==
+= Handling Events and the Game Loop =
 
 LISPBUILDER-SDL provides the [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro that simplifies the game loop and handling of SDL events. Event handlers are defined by specifying the event type a well as an optional list of fields specific to that event.
 
