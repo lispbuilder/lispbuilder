@@ -6,12 +6,14 @@
 
 == External Libraries ==
 
-[http://www.libsdl.org/ libSDL] must be installed in order for LISPBUILDER-SDL work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/ libSDL]. Linux users should use their package managers to install the RPM's or DEBs.
+The `LISPBUILDER-SDL` packages rely on several external dynamic linked libraries. These libraries are not included in the `LISPBIULDER-SDL` packages unless installation is via the Lisp Starter Kit. These libraries must be installed prior to loading any of the `LISPBUILDER-SDL` packages. 
+
+ * LISPBUILDER-SDL requires [http://www.libsdl.org/ libSDL] to work. Use your OS's package manager to download & install the libraries from [http://www.libsdl.org/ libSDL], or download and plave the binaries in your library search path.
 
 == Common Lisp Packages ==
 
- * ASDF: ASDF is already installed for users of SBCL, OpenMCL, ECL, ACL, or Lispworks using Edi Weitz's Lisp Starter Pack. Otherwise, please refer to [http://cclan.cvs.sourceforge.net/viewvc/*checkout*/cclan/asdf/README?revision=1.40 ASDF README] for installation instructions.
- * CFFI: Automatically installed when using [http://www.cliki.net/ASDF-Install ASDF-INSTALL], or Edi Weitz's Starter Pack. Otherwise, please refer to the [http://common-lisp.net/project/cffi official installation instructions].
+ * *ASDF* is pre-installed for users of SBCL, OpenMCL, ECL, ACL, or Lispworks using Edi Weitz's Lisp Starter Pack. Otherwise, please refer to [http://cclan.cvs.sourceforge.net/viewvc/*checkout*/cclan/asdf/README?revision=1.40 ASDF README] for installation instructions.
+ * *CFFI* can be automatically downloaded and installed when using [http://www.cliki.net/ASDF-Install ASDF-INSTALL]. Otherwise, please refer to the [http://common-lisp.net/project/cffi official installation instructions].
 
 = Download & Installation of LISPBUILDER-SDL =
 
@@ -27,7 +29,7 @@ In addition to downloading and installing `LISPBUILDER-SDL`, you need to install
 (asdf:operate 'asdf:load-op :cocoahelper)
 }}}
 
-This creates an instance of `NSApplication` that serves as a bridge between `SDL` and Cocoa, similiar to that used by the Python project Pygame. If this is successful, you should see the icon for a generic OS-X ap appear in your dock. Many of the `LISPBUILDER-SDL` packages rely on one or more external dynamic linked libraries that are not included in the lispbuilder packages. These libraries must be installed prior to loading any of the `LISPBUILDER` packages.
+This creates an instance of `NSApplication` that serves as a bridge between `SDL` and Cocoa, similiar to that used by the Python project Pygame. If this is successful, you should see the icon for a generic OS-X ap appear in your dock.
 
 == Linux ==
 
