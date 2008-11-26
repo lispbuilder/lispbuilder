@@ -24,9 +24,9 @@ More detailed information on the LISPBUILDER-SDL initialisation process can be f
 
 = Creation of the Display Window =
 
-A window must be created to display any kind of output. A window of a specific pixel width and height is created using the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WINDOW]. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WINDOW] takes additional keyword parameters to set the requested video mode, color bit depth, the window title and the icon title.
+A window must be created to display any kind of output. A window of a specific pixel width and height is created using the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW]. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] takes additional keyword parameters to set the requested video mode, color bit depth, the window title and the icon title.
 	  
-More detailed information can be found in in the documentation for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WINDOW].
+More detailed information can be found in in the documentation for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW].
 
 {{{
 (WITH-INIT (SDL-INIT-VIDEO)
