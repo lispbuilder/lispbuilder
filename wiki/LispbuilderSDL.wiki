@@ -54,6 +54,7 @@ Send support questions to the [http://www.lispniks.com/mailman/listinfo/applicat
 || CMUCL || NA || No || ?? || ?? || ||
 || CLISP || Working || Working || ?? || ?? || ||
 || Clozure CL || ?? || ?? || ?? || ?? || ||
+|| ECL || ?? || ?? || ?? || ?? || ||
 
 = Windows: Download & Installation for Newbies =
 
