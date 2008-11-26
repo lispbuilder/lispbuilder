@@ -403,11 +403,13 @@ Finally, if the target surface is the display then [http://lispbuilder.googlecod
 
 LISPBUILDER-SDL contains several bitmap fonts of different sizes and faces (italics/bolded). See [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT] for the complete list of built-in fonts. 
 
+Use [UsingLispbuilderSDL#LISPBUILDER-SDL-TTF LISPBUILDER-SDL-TTF] to load and render True-Type fonts.
+
+A FONT may be bound to *DEFAULT-FONT* by using INITIALISE-DEFAULT-FONT, WITH-OPEN-FONT, or WITH-DEFAULT-FONT. All functions that take a &KEYword or &OPTIONAL FONT argument accept *DEFAULT-FONT* unless a FONT is specified. This makes calling functions a bit easier as the :FONT parameter need not be explicitely passed. For example: (GET-FONT-SIZE "TEXT" :SIZE :W), compared to (GET-FONT-SIZE "TEXT" :SIZE :W :FONT ANY-FONT)
+
 == Font Initialisation ==
 
-Fonts are initialised using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT]. The resouces allocated to a font are freed by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#free-font  FREE-FONT]. A font must be initialised prior to use.
-
-LISPBUILDER-SDL provides the macros [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-default-font WITH-DEFAULT-FONT] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-font WITH-FONT] for the above functions that bind [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] to font within the scope of the macro.
+LISPBUILDER-SDL has the concept of a [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*]. Fonts are initialised and assigned to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-open-font WITH-OPEN-FONT]. The resouces allocated to a font are freed by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#free FREE]. A font must be initialised prior to use.
 
 == Rendering Text ==
 
