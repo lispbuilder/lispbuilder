@@ -71,10 +71,12 @@ The following instructions apply to the [http://www.weitz.de/starter-pack/#use E
 
  # Start `Lispworks`.
  # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `"Lisp Libraries"` within the `"My Documents"` folder. Lispworks will now compile the packages.
- # Execute the following in the Lispworks `"Listener"` window when compilation is `DONE`.
+ # Execute the following in the Lispworks `"Listener"` (the REPL) window when compilation is `DONE`.
   ** `(ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL-EXAMPLES)`
  # Run one of the examples to verify that the installation was successful;
   ** `(SDL-EXAMPLES:PARTICLES)`
+
+ASDF will take care of loading the `CFFI` and `:LISPBUILDER-SDL` dependencies. The `SDL.dll` library will also be loaded into the Lisp image at this time.
 
 = Download & Installation for OS X, Linux, BSD and Windows Alternate = 
 
