@@ -86,4 +86,4 @@ The `LISPBUILDER-SDL` packages rely on several external dynamic linked libraries
 
 = LISPBUILDER-SDL API Reference & Dictionary =
 
-[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#dictionary LISPBUILDER-SDL API Reference]
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#contents LISPBUILDER-SDL API Reference]
