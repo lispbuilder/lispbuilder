@@ -12,14 +12,6 @@ The LISPBUILDER-SDL core functionality includes window and event loop management
 
 The core LISPBUILDER-SDL functionality described above can be enhanced by using [optionalPackages#Optional_Packages optional packages] that provide additional capabilities such as True-type font support, 3D scene management, physics, character animation, support for loading diverse image formats (jpeg, png, tiff, tga, bmp etc.), a sound mixer, sample and music streaming for mp3 and OGG formats, rendering speed ups for many of the graphics primitives, and anti-aliasing support.
 
-= Optional Packages =
-
-  * *lispbuilder-sdl-gfx*: 2D graphical effects such as zooming, rotation, circles, polygons and squares, using [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]
-  * *lispbuilder-sdl-image*: Support for multople image formats such as PNG and JPG, using [http://www.libsdl.org/projects/SDL_image/ SDL_image]
-  * *lispbuilder-sdl-mixer*: Sound mixing, using [http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer] a multi-channel audio mixer library
-  * *lispbuilder-sdl-ttf*: True-type font rendering, using [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]
-  * *lispbuilder-sdl-net*: Networking, using [http://www.libsdl.org/projects/SDL_net/ SDL_net] a cross-platform, blocking network library.
-
 = Screenshots =
 
 http://lispbuilder.googlecode.com/svn/trunk/documentation/sdl-gfx-examples_functions.png
