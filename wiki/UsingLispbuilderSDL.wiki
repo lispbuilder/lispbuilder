@@ -403,7 +403,7 @@ Finally, if the target surface is the display then [http://lispbuilder.googlecod
 
 LISPBUILDER-SDL contains several bitmap fonts of different sizes and faces (italics/bolded). See [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT] for the complete list of built-in fonts. 
 
-Use [http://code.google.com/p/lispbuilder/w/edit/UsingLispbuilderSDL#LISPBUILDER-SDL-TTF LISPBUILDER-SDL-TTF] to load and render True-Type fonts.
+Use [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#LISPBUILDER-SDL-TTF LISPBUILDER-SDL-TTF] to load and render True-Type fonts.
 
 == Font Initialisation ==
 
