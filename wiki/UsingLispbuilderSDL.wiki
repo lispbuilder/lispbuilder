@@ -287,7 +287,7 @@ The following examples are contained in the package `LISPBUILDER-SDL-TTF-EXAMPLE
 (SDL-TTF-EXAMPLES:FONT-EXAMPLE)
 }}}
 
-=== Using LISPBUILDER-SDL-GFX ===
+=== Using LISPBUILDER-SDL-TTF ===
 
 The `LISPBUILDER-SDL-TTF` APIs have the same signature as the `LISPBUILDER-TTF` versions. See the [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#contents LISPBUILDER-SDL API Reference] for the APIs supported by `LISPBUILDER-SDL-TTF`.
 
