@@ -195,8 +195,8 @@ The following examples are contained in the package `LISPBUILDER-SDL-IMAGE-EXAMP
 The `LISPBUILDER-SDL-IMAGE` APIs have the same signature as the `LISPBUILDER-SDL` versions. 
 
  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#load-image LOAD-IMAGE]
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#load-image-p IMAGE-P]
- * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#load-image-type-of IMAGE-TYPE-OF]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#image-p IMAGE-P]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#image-type-of IMAGE-TYPE-OF]
 
 _Note_ that external libraries must be installed for JPG, PNG and TIFF support: 
 
