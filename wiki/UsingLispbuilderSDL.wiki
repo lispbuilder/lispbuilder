@@ -2,7 +2,15 @@
 
 <wiki:toc max_depth="3" />
 
-= Initialisation =
+= Loading LISPBUILDER-SDL =
+
+After [http://code.google.com/p/lispbuilder/wiki/DownloadInstallation#Download_&_Installation_of_LISPBUILDER-SDL installation] is complete, `LISPBUILDER-SDL` can be loaded as follows;
+
+{{{
+(ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL)
+}}}
+
+= Initialization =
 
 The SDL library and subsystems must be initialized prior to use. This is handled automatically when using the macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WITH-INIT]. 
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WITH-INIT] also uninitialises the SDL library upon exit.
@@ -139,6 +147,66 @@ This code performs the following hand-waving:
 
 And thanks to the wonders of Lisp indentation we are able to visualize the color stack directly in the code making debugging a lot easier. 
 
+= Optional Packages =
+
+The LISPBUILDER-SDL core functionality can be extended by using one or more of the following packages;
+
+  * *lispbuilder-sdl-gfx*: 2D graphical effects such as zooming, rotation, circles, polygons and squares, using [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]
+  * *lispbuilder-sdl-image*: Support for multople image formats such as PNG and JPG, using [http://www.libsdl.org/projects/SDL_image/ SDL_image]
+  * *lispbuilder-sdl-mixer*: Sound mixing, using [http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer] a multi-channel audio mixer library
+  * *lispbuilder-sdl-ttf*: True-type font rendering, using [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]
+  * *lispbuilder-sdl-net*: Networking, using [http://www.libsdl.org/projects/SDL_net/ SDL_net] a cross-platform, blocking network library.
+
+== LISPBUILDER-SDL-IMAGE ==
+
+=== Overview ===
+
+`LISPBUILDER-SDL-IMAGE` supports the following image formats: TGA, BMP, PNM, PBM, PGM, PPM, XPM, XCF, PCX , GIF, JPG, TIF, LBM and PNG
+
+`LISPBUILDER-SDL-IMAGE` will attempt to detect the image type and load an image using the Magic Number in the image file. For image formats that have no magic number such as targa (.TGA), [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#load-image LOAD-IMAGE] allows the image type to be specified as a parameter. 
+
+Functions and symbols exported from the LISPBUILDER-SDL-IMAGE package are accessible using the LISPBUILDER-SDL-IMAGE: prefix or the shorter form SDL-IMAGE: nickname. 
+
+=== Loading LISPBUILDER-SDL-IMAGE ===
+
+After [http://code.google.com/p/lispbuilder/wiki/DownloadInstallation#lispbuilder-sdl-image installation] is complete, `LISPBUILDER-SDL-IMAGE` can be loaded by entering the following at the `REPL`;
+
+{{{
+(ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL-IMAGE)
+}}}
+
+=== Loading LISPBUILDER-SDL-IMAGE Examples ===
+
+Enter the following at the REPL to load the examples in the `LISPBUILDER-SDL-IMAGE-EXAMPLES package`;
+
+{{{
+(asdf:operate 'asdf:load-op :lispbuilder-sdl-image-examples)
+}}}
+	
+
+The following examples are contained in the package `LISPBUILDER-SDL-IMAGE-EXAMPLES`: 
+
+{{{
+(SDL-IMAGE-EXAMPLES:IMAGE-EXAMPLE)
+}}}
+
+=== Using LISPBUILDER-SDL-IMAGE ===
+
+The `LISPBUILDER-SDL-IMAGE` APIs have the same signature as the `LISPBUILDER-SDL` versions. 
+
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#load-image LOAD-IMAGE]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#load-image-p IMAGE-P]
+ * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#load-image-type-of IMAGE-TYPE-OF]
+
+_Note_ that external libraries must be installed for JPG, PNG and TIFF support: 
+
+ * JPG support requires the JPEG library:
+    ** http://www.ijg.org/
+ * PNG support requires the PNG library, and the ZLib library:
+    ** http://www.libpng.org/pub/png/libpng.html, and 
+    ** http://www.gzip.org/zlib/
+ * TIFF support requires the TIFF library:
+    ** ftp://ftp.sgi.com/graphics/tiff/
 
 = Primitives =
 
