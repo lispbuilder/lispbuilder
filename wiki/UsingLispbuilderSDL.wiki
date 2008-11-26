@@ -262,7 +262,9 @@ _Note_ that external libraries must be installed for JPG, PNG and TIFF support:
 
 `LISPBUILDER-SDL-TTF` provides support for the loading and rendering of True-Type fonts. 
 
-Functions and symbols exported from the LISPBUILDER-SDL-TTF package are accessible using the LISPBUILDER-SDL-TTF: prefix or the shorter form SDL-TTF: nickname. 
+Functions and symbols exported from the LISPBUILDER-SDL-TTF package are accessible using the `LISPBUILDER-SDL-TTF:` prefix or the shorter form `SDL-TTF:` nickname. 
+
+The TrueType library is automatically initialized and uninitialized by the `LISPBUILDER-SDL` package. The functions [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-ttf INIT-TTF] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-ttf QUIT-TTF] are added to the lists [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*external-init-on-startup* *EXTERNAL-INIT-ON-STARTUP*] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*external-quit-on-exit* *EXTERNAL-QUIT-ON-EXIT*]. `LISPBUILDER-SDL` iterates over these lists in calls to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl INIT-SDL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-sdl QUIT-SDL] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT] in order to initialize or uninitialize any external libraries such as `LISPBUILDER-SDL-TTF`.
 
 === Loading LISPBUILDER-SDL-TTF ===
 
