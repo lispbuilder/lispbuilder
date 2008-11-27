@@ -1,7 +1,7 @@
 
 (in-package :lispbuilder-sdl)
 
-(defmethod _render-string-shaded_ :around ((string string) (fg-color color) (bg-color color) (font bitmap-font) free cache)
+(defmethod _render-string-shaded_ :around ((string string) (fg-color color) (bg-color color) (font font) free cache)
   (when free
     (free-cached-surface font))
   (call-next-method))
