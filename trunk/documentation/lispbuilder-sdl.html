@@ -3,7 +3,7 @@
 
   <head>
     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
-      <title>LISPBUILDER-SDL - API Reference</title>
+      <title>LISPBUILDER-SDL - a cool library</title>
       <style type=\"text/css\">
 	pre { padding:5px; background-color:#e0e0e0 }
 	h3, h4 { text-decoration: underline; }
@@ -35,7 +35,7 @@
     
     <body bgcolor=white>
       
-      <h3> LISPBUILDER-SDL - API Reference</h3>
+      <h3> LISPBUILDER-SDL - a cool library</h3>
     
       <blockquote>
 	<br>&nbsp;</br><h3><a name=abstract class=none>Abstract</a></h3>
@@ -211,6 +211,8 @@
 	          <li><a href="#draw-rectangle"><code>draw-rectangle</code></a></li>
 	          <li><a href="#draw-rectangle-*"><code>draw-rectangle-*</code></a></li>
 	          <li><a href="#draw-shape"><code>draw-shape</code></a></li>
+	          <li><a href="#draw-string-blended"><code>draw-string-blended</code></a></li>
+	          <li><a href="#draw-string-blended-*"><code>draw-string-blended-*</code></a></li>
 	          <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a></li>
 	          <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a></li>
 	          <li><a href="#draw-string-solid"><code>draw-string-solid</code></a></li>
@@ -286,6 +288,7 @@
 	          <li><a href="#rectangle-from-edges"><code>rectangle-from-edges</code></a></li>
 	          <li><a href="#rectangle-from-edges-*"><code>rectangle-from-edges-*</code></a></li>
 	          <li><a href="#rectangle-from-midpoint-*"><code>rectangle-from-midpoint-*</code></a></li>
+	          <li><a href="#render-string-blended"><code>render-string-blended</code></a></li>
 	          <li><a href="#render-string-shaded"><code>render-string-shaded</code></a></li>
 	          <li><a href="#render-string-solid"><code>render-string-solid</code></a></li>
 	          <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a></li>
@@ -1981,6 +1984,30 @@
 <!-- End of entry for DRAW-SHAPE -->
 
 
+<!-- Entry for DRAW-STRING-BLENDED -->
+
+<p><br>[Function]<br><a class=none name='draw-string-blended'><b>draw-string-blended</b> <i>string p1 <tt>&amp;key</tt> justify surface font color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#draw-string-blended-*">DRAW-STRING-BLENDED-*</a>. </p><h5>Parameters</h5><ul><li><code>P1</code> is the <code>X</code> and <code>X</code> coordinates to render the text, of type <code>POINT</code>.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-STRING-BLENDED -->
+
+
+<!-- Entry for DRAW-STRING-BLENDED-* -->
+
+<p><br>[Function]<br><a class=none name='draw-string-blended-*'><b>draw-string-blended-*</b> <i>string x y <tt>&amp;key</tt> justify surface font color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Draw text <code>STRING</code> at location <code>X</code> <code>Y</code> using font <code>FONT</code> with color <code>COLOR</code> onto surface <code>SURFACE</code>. The text is keyed onto <code>SURFACE</code>. </p><h5>Parameters</h5><ul><li><code>STRING</code> is the text to render.</li><li><code>X</code> and <code>Y</code> are the <code>X</code> and <code>Y</code> position coordinates, as <code>INTEGERS</code>.</li><li><code>FONT</code> is the font face used to render the string. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.</li><li><code>SURFACE</code> is the target surface, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified.</li><li><code>COLOR</code> color is the text color, of type <code>COLOR</code>.</li></ul><h5>Returns</h5><ul><li>Returns the surface <code>SURFACE</code>.</li></ul><h5>Example</h5><pre><code>(DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR) </code></pre><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-STRING-BLENDED-* -->
+
+
 <!-- Entry for DRAW-STRING-SHADED -->
 
 <p><br>[Function]<br><a class=none name='draw-string-shaded'><b>draw-string-shaded</b> <i>string p1 fg-color bg-color <tt>&amp;key</tt> justify surface font</i> =&gt; <i>result</i></a>
@@ -2010,7 +2037,7 @@
 <p><br>[Function]<br><a class=none name='draw-string-solid'><b>draw-string-solid</b> <i>string p1 <tt>&amp;key</tt> justify surface font color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>See <a href="#draw-string-solid-*">DRAW-STRING-SOLID-*</a>. </p><h5>Parameters</h5><ul><li><code>P1</code> is the <code>X</code> and <code>X</code> coordinates to render the text, of type <code>POINT</code>.</li></ul><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
+<p>See <a href="#draw-string-solid-*">DRAW-STRING-SOLID-*</a>. </p><h5>Parameters</h5><ul><li><code>P1</code> is the <code>X</code> and <code>X</code> coordinates to render the text, of type <code>POINT</code>.</li></ul><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em>, and <em>LISPBUILDER-SDL-TTF</em></li></ul>
 
 </blockquote>
 
@@ -2022,7 +2049,7 @@
 <p><br>[Function]<br><a class=none name='draw-string-solid-*'><b>draw-string-solid-*</b> <i>string x y <tt>&amp;key</tt> justify surface font color</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw text <code>STRING</code> at location <code>X</code> <code>Y</code> using font <code>FONT</code> with color <code>COLOR</code> onto surface <code>SURFACE</code>. The text is keyed onto <code>SURFACE</code>. </p><h5>Parameters</h5><ul><li><code>STRING</code> is the text to render.</li><li><code>X</code> and <code>Y</code> are the <code>X</code> and <code>Y</code> position coordinates, as <code>INTEGERS</code>.</li><li><code>FONT</code> is the font face used to render the string. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.</li><li><code>SURFACE</code> is the target surface, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified.</li><li><code>COLOR</code> color is the text color, of type <code>COLOR</code>.</li></ul><h5>Returns</h5><ul><li>Returns the surface <code>SURFACE</code>.</li></ul><h5>Example</h5><pre><code>(DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
+<p>Draw text <code>STRING</code> at location <code>X</code> <code>Y</code> using font <code>FONT</code> with color <code>COLOR</code> onto surface <code>SURFACE</code>. The text is keyed onto <code>SURFACE</code>. </p><h5>Parameters</h5><ul><li><code>STRING</code> is the text to render.</li><li><code>X</code> and <code>Y</code> are the <code>X</code> and <code>Y</code> position coordinates, as <code>INTEGERS</code>.</li><li><code>FONT</code> is the font face used to render the string. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.</li><li><code>SURFACE</code> is the target surface, of type <code>SDL-SURFACE</code>. Bound to <code>*DEFAULT-SURFACE*</code> if unspecified.</li><li><code>COLOR</code> color is the text color, of type <code>COLOR</code>.</li></ul><h5>Returns</h5><ul><li>Returns the surface <code>SURFACE</code>.</li></ul><h5>Example</h5><pre><code>(DRAW-STRING-SOLID-* &quot;Hello World!&quot; 0 0 :SURFACE A-SURFACE :COLOR A-COLOR) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em>, and <em>LISPBUILDER-SDL-TTF</em></li></ul>
 
 </blockquote>
 
@@ -2960,6 +2987,18 @@
 <!-- End of entry for RECTANGLE-FROM-MIDPOINT-* -->
 
 
+<!-- Entry for RENDER-STRING-BLENDED -->
+
+<p><br>[Function]<br><a class=none name='render-string-blended'><b>render-string-blended</b> <i>string <tt>&amp;key</tt> font color free cache</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>COLOR</code> to a new <code>SURFACE</code>. The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is transparent and therefore can be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters</h5><ul><li><code>STRING</code> is the text to render.</li><li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.</li><li><code>COLOR</code> color is the text color, of type <code>COLOR</code>.</li><li><code>FREE</code> when <code>T</code> will free any exisitng cached surface in <code>FONT</code>.</li><li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. Any cached surface can be accessed using <a href="#cached-surface">CACHED-SURFACE</a> and can be blitted to a target surface using <a href="#draw-font">DRAW-FONT</a>. </li></ul><h5>Returns</h5><ul><li>Returns a new cached surface <code>SDL-SURFACE</code>.</li></ul><h5>Example</h5><pre><code>(DRAW-STRING-SOLID &quot;Hello World!&quot; :COLOR A-COLOR) </code></pre><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for RENDER-STRING-BLENDED -->
+
+
 <!-- Entry for RENDER-STRING-SHADED -->
 
 <p><br>[Function]<br><a class=none name='render-string-shaded'><b>render-string-shaded</b> <i>string fg-color bg-color <tt>&amp;key</tt> font free cache</i> =&gt; <i>result</i></a>
@@ -2977,7 +3016,7 @@
 <p><br>[Function]<br><a class=none name='render-string-solid'><b>render-string-solid</b> <i>string <tt>&amp;key</tt> font color free cache</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>COLOR</code> to a new <code>SURFACE</code>. The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is transparent and therefore can be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters</h5><ul><li><code>STRING</code> is the text to render.</li><li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.</li><li><code>COLOR</code> color is the text color, of type <code>COLOR</code>.</li><li><code>FREE</code> when <code>T</code> will free any exisitng cached surface in <code>FONT</code>.</li><li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. Any cached surface can be accessed using <a href="#cached-surface">CACHED-SURFACE</a> and can be blitted to a target surface using <a href="#draw-font">DRAW-FONT</a>. </li></ul><h5>Returns</h5><ul><li>Returns a new cached surface <code>SDL-SURFACE</code>.</li></ul><h5>Example</h5><pre><code>(DRAW-STRING-SOLID &quot;Hello World!&quot; :COLOR A-COLOR) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
+<p>Render the string <code>STRING</code> using font <code>FONT</code> with text color <code>COLOR</code> to a new <code>SURFACE</code>. The dimensions of the new surface are height == <code>FONT</code> height, and width == <code>FONT</code> width * <code>STRING</code> length. The surface background is transparent and therefore can be keyed over other surfaces. Use <code>:CACHE T</code> to cache the new surface in the <code>FONT</code> object. When <code>:FREE T</code> any exisiting cached surface in <code>FONT</code> is automatically freed. When <code>:FREE NIL</code> the caller is responsible for freeing any existing cached surface in <code>FONT</code>. </p><h5>Parameters</h5><ul><li><code>STRING</code> is the text to render.</li><li><code>FONT</code> is the font face used to render the <code>STRING</code>. Of type <code>FONT</code>.  Bound to <code>*DEFAULT-FONT*</code> if unspecified.</li><li><code>COLOR</code> color is the text color, of type <code>COLOR</code>.</li><li><code>FREE</code> when <code>T</code> will free any exisitng cached surface in <code>FONT</code>.</li><li><code>CACHE</code> when <code>T</code> will cache the newly created SURFACE in <code>FONT</code>. Any cached surface can be accessed using <a href="#cached-surface">CACHED-SURFACE</a> and can be blitted to a target surface using <a href="#draw-font">DRAW-FONT</a>. </li></ul><h5>Returns</h5><ul><li>Returns a new cached surface <code>SDL-SURFACE</code>.</li></ul><h5>Example</h5><pre><code>(DRAW-STRING-SOLID &quot;Hello World!&quot; :COLOR A-COLOR) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em>, and <em>LISPBUILDER-SDL-TTF</em></li></ul>
 
 </blockquote>
 
@@ -4050,7 +4089,7 @@
 <p><br>[Macro]<br><a class=none name='with-font'><b>with-font</b> <i>(font font-definition) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets <code>*DEFAULT-FONT*</code> to a new <a href="#bitmap-font">BITMAP-FONT</a> in <code>FONT</code> within the scope of <code>WITH-FONT</code>. Frees <code>FONT</code> when <code>WITH-FONT</code> goes out of scope. </p><h5>Example</h5><pre><code>(WITH-FONT (new-font *font-8x8*)  
+<p>Sets <code>*DEFAULT-FONT*</code> to a new <a href="#bitmap-font">BITMAP-FONT</a> in <code>FONT</code> within the scope of <code>WITH-FONT</code>. Frees <code>FONT</code> when <code>WITH-FONT</code> goes out of scope, and sets <code>*DEFAULT-FONT* to </code>NIL. </p><h5>Example</h5><pre><code>(WITH-FONT (new-font *font-8x8*)  
     (DRAW-CHARACTER-SHADED-* &quot;Hello World!&quot; 0 0 F-COLOR B-COLOR)) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
 
 </blockquote>
