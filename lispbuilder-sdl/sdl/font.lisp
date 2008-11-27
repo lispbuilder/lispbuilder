@@ -57,7 +57,7 @@ Free using [FREE](#free)."))
 
 (defmacro with-font ((font font-definition) &body body)
   "Sets `\*DEFAULT-FONT\*` to a new [BITMAP-FONT](#bitmap-font) in `FONT` within the scope of `WITH-FONT`.
-Frees `FONT` when `WITH-FONT` goes out of scope.
+Frees `FONT` when `WITH-FONT` goes out of scope, and sets `\*DEFAULT-FONT\* to `NIL.
 
 ##### Example
 
@@ -70,5 +70,6 @@ Frees `FONT` when `WITH-FONT` goes out of scope.
   `(let ((,font (initialise-font ,font-definition)))
      (with-default-font (,font)
        ,@body)
-     (free ,font)))
-
+     (free ,font)
+     (when (eq *default-font* ,font)
+       (setf *default-font* nil))))

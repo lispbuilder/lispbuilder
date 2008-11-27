@@ -368,6 +368,11 @@
    #:draw-string-shaded
    #:draw-string-shaded-*
 
+   ;; string-blended.lisp
+   #:render-string-blended
+   #:draw-string-blended
+   #:draw-string-blended-*
+   
    ;; pixel.lisp
    #:bit-depth
    

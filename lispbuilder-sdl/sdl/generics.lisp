@@ -274,3 +274,4 @@ Returns the clipping `RECTANGLE` for `SURFACE`.
 Sets the clipping [RECTANGLE](#rectangle) for the `SURFACE`. Removes the clipping rectangle when `NIL`.
 When `SURFACE` is the destination of a blit, only the area within the clipping rectangle is 
 drawn into."))
+

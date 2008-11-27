@@ -59,7 +59,7 @@ The above can be shortened by setting `\*DEFAULT-COLOR\*` to `\*BLACK\*`.
 and swap the `SDL` video buffers otherwise.")
 
 (defvar *default-font* nil
-      "Functions that accept the `KEY`word parameter `FONT` will most likely bind to the 
+  "Functions that accept the `KEY`word parameter `FONT` will most likely bind to the 
 symbol `\*DEFAULT-FONT*\` by default if `FONT` is not specified. 
 
 A font is bound to `\*DEFAULT-FONT*\` by the following; [WITH-DEFAULT-FONT](#with-default-font), 

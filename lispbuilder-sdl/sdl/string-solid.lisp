@@ -1,7 +1,7 @@
 
 (in-package :lispbuilder-sdl)
 
-(defmethod _render-string-solid_ :around ((string string) (font bitmap-font) (color color) free cache)
+(defmethod _render-string-solid_ :around ((string string) (font font) (color color) free cache)
   (when free
     (free-cached-surface font))
   (call-next-method))
@@ -27,10 +27,10 @@
   surface)
 
 (defun render-string-solid (string &key
-			    (font *default-font*)
-			    (color *default-color*)
-			    (free nil)
-			    (cache nil))
+                                   (font *default-font*)
+                                   (color *default-color*)
+                                   (free nil)
+                                   (cache nil))
   "Render the string `STRING` using font `FONT` with text color `COLOR` to a new `SURFACE`. 
 The dimensions of the new surface are height == `FONT` height, and width == `FONT` width * `STRING` length.
 The surface background is transparent and therefore can be keyed over other surfaces.
@@ -57,14 +57,14 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Packages
 
-* Also supported in _LISPBUILDER-SDL-GFX_"
+* Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"
   (_render-string-solid_ string font color free cache))
 
 (defun draw-string-solid (string p1 &key
-			  (justify :left)
-			  (surface *default-surface*)
-			  (font *default-font*)
-			  (color *default-color*))
+                                 (justify :left)
+                                 (surface *default-surface*)
+                                 (font *default-font*)
+                                 (color *default-color*))
   "See [DRAW-STRING-SOLID-*](#draw-string-solid-*).
 
 ##### Parameters
@@ -73,14 +73,14 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Packages
 
-* Also supported in _LISPBUILDER-SDL-GFX_"
+* Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"
   (_draw-string-solid-*_ string (x p1) (y p1) justify (if surface surface *default-display*) font color))
 
 (defun draw-string-solid-* (string x y &key
-			    (justify :left)
-			    (surface *default-surface*)
-			    (font *default-font*)
-			    (color *default-color*))
+                                   (justify :left)
+                                   (surface *default-surface*)
+                                   (font *default-font*)
+                                   (color *default-color*))
   "Draw text `STRING` at location `X` `Y` using font `FONT` with color `COLOR` onto surface `SURFACE`.
 The text is keyed onto `SURFACE`.
 
@@ -102,5 +102,5 @@ The text is keyed onto `SURFACE`.
 
 ##### Packages
 
-* Also supported in _LISPBUILDER-SDL-GFX_"
+* Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"
   (_draw-string-solid-*_ string x y justify (if surface surface *default-display*) font color))
