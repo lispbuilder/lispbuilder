@@ -241,6 +241,16 @@
 	          <li><a href="#free-cached-surface"><code>free-cached-surface</code></a></li>
 	          <li><a href="#g"><code>g</code></a></li>
 	          <li><a href="#get-clip-rect"><code>get-clip-rect</code></a></li>
+	          <li><a href="#get-font-ascent"><code>get-font-ascent</code></a></li>
+	          <li><a href="#get-font-descent"><code>get-font-descent</code></a></li>
+	          <li><a href="#get-font-face-family-name"><code>get-font-face-family-name</code></a></li>
+	          <li><a href="#get-font-face-style-name"><code>get-font-face-style-name</code></a></li>
+	          <li><a href="#get-font-faces"><code>get-font-faces</code></a></li>
+	          <li><a href="#get-font-height"><code>get-font-height</code></a></li>
+	          <li><a href="#get-font-line-skip"><code>get-font-line-skip</code></a></li>
+	          <li><a href="#get-font-size"><code>get-font-size</code></a></li>
+	          <li><a href="#get-font-style"><code>get-font-style</code></a></li>
+	          <li><a href="#get-glyph-metric"><code>get-glyph-metric</code></a></li>
 	          <li><a href="#get-key-state"><code>get-key-state</code></a></li>
 	          <li><a href="#get-native-window"><code>get-native-window</code></a></li>
 	          <li><a href="#get-point"><code>get-point</code></a></li>
@@ -256,6 +266,7 @@
 	          <li><a href="#initialise-font"><code>initialise-font</code></a></li>
 	          <li><a href="#initialize-on-startup"><code>initialize-on-startup</code></a></li>
 	          <li><a href="#initialized-sub-systems-p"><code>initialized-sub-systems-p</code></a></li>
+	          <li><a href="#is-font-face-fixed-width"><code>is-font-face-fixed-width</code></a></li>
 	          <li><a href="#is-valid-ptr"><code>is-valid-ptr</code></a></li>
 	          <li><a href="#key-repeat-delay"><code>key-repeat-delay</code></a></li>
 	          <li><a href="#key-repeat-interval"><code>key-repeat-interval</code></a></li>
@@ -339,6 +350,7 @@
 	          <li><a href="#set-color"><code>set-color</code></a></li>
 	          <li><a href="#set-color-*"><code>set-color-*</code></a></li>
 	          <li><a href="#set-default-font"><code>set-default-font</code></a></li>
+	          <li><a href="#set-font-style"><code>set-font-style</code></a></li>
 	          <li><a href="#set-gl-attribute"><code>set-gl-attribute</code></a></li>
 	          <li><a href="#set-point"><code>set-point</code></a></li>
 	          <li><a href="#set-point-*"><code>set-point-*</code></a></li>
@@ -2274,7 +2286,7 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>rectangle-array</i> =&gt; <i>result</i></a>
+<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>foreign-object</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>rectangle-array</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
@@ -2369,6 +2381,127 @@
 </blockquote>
 
 <!-- End of entry for GET-CLIP-RECT -->
+
+
+<!-- Entry for GET-FONT-ASCENT -->
+
+<p><br>[Function]<br><a class=none name='get-font-ascent'><b>get-font-ascent</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the maximum pixel ascent of all glyphs of font <code>FONT</code>. This can also be interpreted as the distance from the top of the font to the baseline. It could be used when drawing an individual glyph relative to a top point, by combining it with the glyph&#039;s maxy metric to resolve the top of the rectangle used when blitting the glyph on the screen. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Returns the ascent of the <code>FONT</code> as an <code>INTEGER</code>.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-ASCENT -->
+
+
+<!-- Entry for GET-FONT-DESCENT -->
+
+<p><br>[Function]<br><a class=none name='get-font-descent'><b>get-font-descent</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the maximum pixel descent of all glyphs of font <code>FONT</code>. This can also be interpreted as the distance from the baseline to the bottom of the font. It could be used when drawing an individual glyph relative to a bottom point, by combining it with the glyph’s maxy metric to resolve the top of the rectangle used when blitting the glyph on the screen. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Returns the descent of the <code>FONT</code> as an <code>INTEGER</code>.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-DESCENT -->
+
+
+<!-- Entry for GET-FONT-FACE-FAMILY-NAME -->
+
+<p><br>[Function]<br><a class=none name='get-font-face-family-name'><b>get-font-face-family-name</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the current font face family name of font <code>FONT</code> or <code>NIL</code> if the information is unavailable. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Returns the name of the <code>FONT</code> face family name as a <code>STRING</code>, or <code>NIL</code> if unavailable.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-FACE-FAMILY-NAME -->
+
+
+<!-- Entry for GET-FONT-FACE-STYLE-NAME -->
+
+<p><br>[Function]<br><a class=none name='get-font-face-style-name'><b>get-font-face-style-name</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the current font face style name of font <code>FONT</code>, or <code>NIL</code> if the information is unavailable. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Returns the name of the <code>FONT</code> face style as a <code>STRING</code>, or <code>NIL</code> if unavailable.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-FACE-STYLE-NAME -->
+
+
+<!-- Entry for GET-FONT-FACES -->
+
+<p><br>[Function]<br><a class=none name='get-font-faces'><b>get-font-faces</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the number of faces &#039;sub-fonts&#039; available in the font <code>FONT</code>. This is a count of the number of specific fonts (based on size and style and other  typographical features perhaps) contained in the font itself. It seems to be a useless  fact to know, since it can’t be applied in any other <code>SDL_TTF</code> functions. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Returns the number of faces in the <code>FONT</code> as an <code>INTEGER</code>.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-FACES -->
+
+
+<!-- Entry for GET-FONT-HEIGHT -->
+
+<p><br>[Function]<br><a class=none name='get-font-height'><b>get-font-height</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the maximum pixel height of all glyphs of font <code>FONT</code>. Use this height for rendering text as close together vertically as possible, though adding at least one pixel height to it will space it so they can&#039;t touch. Remember that <code>SDL_TTF</code> doesn&#039;t handle multiline printing so you are responsible for line spacing, see <a href="#get-font-line-skip">GET-FONT-LINE-SKIP</a> as well. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Retuns the height of the <code>FONT</code> as an <code>INTEGER</code>.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-HEIGHT -->
+
+
+<!-- Entry for GET-FONT-LINE-SKIP -->
+
+<p><br>[Function]<br><a class=none name='get-font-line-skip'><b>get-font-line-skip</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the recommended pixel height of a rendered line of text of the font <code>FONT</code>. This is usually larger than the <a href="#get-font-height">GET-FONT-HEIGHT</a> of the font. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Returns the pixel height of the <code>FONT</code> as an <code>INTEGER</code>.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-LINE-SKIP -->
+
+
+<!-- Entry for GET-FONT-SIZE -->
+
+<p><br>[Function]<br><a class=none name='get-font-size'><b>get-font-size</b> <i>text <tt>&amp;key</tt> size font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Calculates and returns the resulting <code>SIZE</code> of the <code>SDL:SURFACE</code> that is required to render the text <code>TEXT</code>, or <code>NIL</code> on error. No actual rendering is performed, however correct kerning is calculated for the actual width. The height returned is the same as returned using <a href="#get-font-height">GET-FONT-HEIGHT</a>. </p><h5>Parameters</h5><ul><li><code>TEXT</code> is the string to size, of type <code>STRING</code>.</li><li><code>SIZE</code> must be one of; <code>:W</code> for the text width or <code>:H</code> for the text height.</li><li><code>FONT</code> is the font used to calculate the size of the <code>TEXT</code>. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Returns the width or height of the specified <code>SDL:SURFACE</code>, or <code>NIL</code> upon error.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-SIZE -->
+
+
+<!-- Entry for GET-FONT-STYLE -->
+
+<p><br>[Function]<br><a class=none name='get-font-style'><b>get-font-style</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the rendering style of the font <code>FONT</code>. If no style is set then <code>:STYLE-NORMAL</code> is returned, or <code>NIL</code> upon error. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binfs to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Retuns the font style as one or more of: <code>:STYLE-NORMAL</code>, <code>:STYLE-BOLD</code>, <code>:STYLE-ITALIC</code>, <code>:STYLE-UNDERLINE</code></li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-FONT-STYLE -->
+
+
+<!-- Entry for GET-GLYPH-METRIC -->
+
+<p><br>[Function]<br><a class=none name='get-glyph-metric'><b>get-glyph-metric</b> <i>ch <tt>&amp;key</tt> metric font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the glyph metrics <code>METRIC</code> for the character <code>CH</code>, or <code>NIL</code> upon error. </p><h5>Parameters</h5><ul><li><code>CH</code> is a UNICODE chararacter specified as an <code>INTEGER</code>.</li><li><code>FONT</code> is a <code>FONT</code> object from which to retrieve the glyph metrics of the character <code>CH</code>. Binds to <code>*DEFAULT-FONT*</code> by default. </li><li><code>METRIC</code> is a <code>KEY</code>word argument and may be one of; <code>:MINX</code>, for the minimum <code>X</code> offset.<br />
+<code>:MAXX</code>, for the maximum <code>X</code> offset. <code>:MINY</code>, for the minimum <code>Y</code> offset. <code>:MAXY</code>, for the maximum <code>Y</code> offset. <code>:ADVANCE</code>, for the advance offset. </li></ul><h5>Returns</h5><ul><li>Returns the glyph metric as an <code>INTEGER</code>.</li></ul><h5>Example</h5><pre><code>(GET-GLYPH-METRIC UNICODE-CHAR :METRIC :MINX :FONT *DEFAULT-FONT*) </code></pre><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for GET-GLYPH-METRIC -->
 
 
 <!-- Entry for GET-KEY-STATE -->
@@ -2588,6 +2721,18 @@
 </blockquote>
 
 <!-- End of entry for INITIALIZED-SUB-SYSTEMS-P -->
+
+
+<!-- Entry for IS-FONT-FACE-FIXED-WIDTH -->
+
+<p><br>[Function]<br><a class=none name='is-font-face-fixed-width'><b>is-font-face-fixed-width</b> <i><tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns <code>T</code> if the font face is of a fixed width, or <code>NIL</code> otherwise. Fixed width fonts are monospace, meaning every character that exists in the font is the same width. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object. Binds to <code>*DEFAULT-FONT*</code> by default.</li></ul><h5>Returns</h5><ul><li>Retuns <code>T</code> if <code>FONT</code> is of fixed width, and <code>NIL</code> otherwise.</li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for IS-FONT-FACE-FIXED-WIDTH -->
 
 
 <!-- Entry for IS-VALID-PTR -->
@@ -3624,6 +3769,18 @@
 <!-- End of entry for SET-DEFAULT-FONT -->
 
 
+<!-- Entry for SET-FONT-STYLE -->
+
+<p><br>[Function]<br><a class=none name='set-font-style'><b>set-font-style</b> <i>style <tt>&amp;key</tt> font</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the rendering style <code>STYLE</code> of font <code>FONT</code>. This will flush the internal cache of previously rendered glyphs, even if there is no change in style, so it may be best to check the  current style using <a href="#get-font-style">GET-FONT-STYLE</a> first. </p><h5>Parameters</h5><ul><li><code>FONT</code> is a <code>FONT</code> object.</li><li><code>STYLE</code> is a list of one or more: <code>:STYLE-NORMAL</code>, <code>:STYLE-BOLD</code>, <code>:STYLE-ITALIC</code>, <code>:STYLE-UNDERLINE</code>. NOTE: Combining <code>:STYLE-UNDERLINE</code> with anything  can cause a segfault, other combinations may also do this. </li></ul><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for SET-FONT-STYLE -->
+
+
 <!-- Entry for SET-GL-ATTRIBUTE -->
 
 <p><br>[Function]<br><a class=none name='set-gl-attribute'><b>set-gl-attribute</b> <i>attribute value</i> =&gt; <i>result</i></a>
@@ -4003,7 +4160,7 @@
 <blockquote><br>
 
 <p>Sets <code>*DEFAULT-FONT*</code> to <code>FONT</code> within the scope of <code>WITH-DEFAULT-FONT</code>. </p><h5>Example</h5><pre><code>(WITH-DEFAULT-FONT (new-font)  
-    (DRAW-CHARACTER-SHADED-* &quot;Hello World!&quot; 0 0 F-COLOR B-COLOR)) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
+    (DRAW-CHARACTER-SHADED-* &quot;Hello World!&quot; 0 0 F-COLOR B-COLOR)) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em> and <em>LISPBUILDER-SDL-TTF</em></li></ul>
 
 </blockquote>
 

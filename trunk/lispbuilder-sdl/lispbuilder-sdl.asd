@@ -40,18 +40,20 @@
 	     (:file "image")
 	     (:file "drawing-primitives")
 	     (:file "font")
-	     ;; 	       (:file "simple-font")
+             ;; (:file "simple-font")
 	     (:file "bitmap-font")	       
 	     (:file "string-solid")
              (:file "string-shaded")
              (:file "string-blended")
 	     (:file "keys")
 	     (:file "sdl-util")
-	     ;; (:file "cffi-finalizers")
-	     (:file "default-colors")
-	     ;;	       (:static-file "font.bmp")
-	     )
+	     (:file "default-colors"))
 	    :serial t)
+   (:module "assets"
+	      :components
+	      ((:file "globals")
+	       (:static-file "bitstream-vera-copyright")
+	       (:static-file "Vera.ttf")))
    (:module "documentation"
 	    :components
 	    ((:html-file "lispbuilder-sdl")
