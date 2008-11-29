@@ -20,16 +20,20 @@ Returns the current *GENERATION* if this library is already initialized and `NIL
       *generation*
       nil))
 
-;; (defmacro with-init (() &body body)
-;;   "Initialises the truetype font library. Will exit if the libary cannot be initialised. 
-;; The truetype library must be initialized prior to using functions in the LISPBUILDER-SDL-TTF package.
-;; The truetype library may be initialized explicitely using this WITH-INIT macro or implicitely by adding the 
-;; function INIT-TTF to sdl:*external-init-on-startup*.
-;; LISPBUILDER-SDL does not have to be initialized prior initialization of the library."
-;;   `(unwind-protect
-;; 	(when (init-ttf)
-;; 	  ,@body)
-;;      (quit-ttf)))
+(defun open-font (filename size)
+  "Creates a new `FONT` from the file loaded at the location specified by `FILENAME`. 
+NOTE: Does not bind the new `FONT` to `\*DEFAULT-FONT\*`. Does not attempt to initialize the `SDL_TTF` 
+truetype library if the library is uninitialised. 
+
+##### Parameters
+
+* `FILENAME` is the name of the truetype font to be loaded, of type `STRING` 
+* `SIZE` is the size of the `FONT`, as an `INTEGER`. 
+
+##### Returns
+
+* Returns new `FONT` object if successful, returns `NIL` if unsuccessful."
+  (make-instance 'ttf-font :fp (sdl-ttf-cffi::ttf-Open-Font (namestring filename) size)))
 
 (defmacro with-open-font ((font-name size) &body body)
   "This is a convenience macro that will first attempt to initialize the truetype font library and if successful, 
@@ -45,16 +49,12 @@ Binds `FONT` to a shadowed instance of `\*DEFAULT-FONT\*` valid within the scope
 * `FONT-NAME` is the file name of the truetype font to be opened, of type `STRING`.
 * `SIZE` is the `INTEGER` point size of the font."
   (let ((font (gensym "font-")))
-    `(let* ((,font (initialise-font ,font-name ,size))
-	    (*default-font* ,font))
-       (when ,font
-	 ,@body
-	 (sdl::free ,font)))))
-
-(defmacro with-default-font ((font) &body body)
-  "Binds `FONT` to `\*DEFAULT-FONT\*` within the scope of `WITH-DEFAULT-FONT`."
-  `(let ((*default-font* ,font))
-     ,@body))
+    `(let* ((,font (initialise-font ,font-name ,size)))
+       (sdl:with-default-font (,font)
+         ,@body)
+       (sdl:free ,font)
+       (when (eq sdl:*default-font* ,font)
+         (setf sdl:*default-font* nil)))))
 
 ;;; Functions
 
@@ -89,59 +89,33 @@ Automatically initialises the `SDL_TTF` truetype font library if the library is 
     (init-ttf))
   (open-font filename size))
 
-(defun initialise-default-font (&key (free t) (filename (create-path "Vera.ttf")) (size 32))
+(defun initialise-default-font (&key (filename (merge-pathnames "Vera.ttf" sdl:*default-font-path*)) (size 32))
   "Creates a new `FONT` object that is loaded from the file at location `FILENAME`, and binds this to the symbol 
 `\*DEFAULT-FONT\*`. Although several truetype fonts may used within a single SDL application, only a single 
-`FONT` may be bound to the symbol `*\DEFAULT-FONT\*` at any one time. Generates an `ERROR` if `FREE` is `NIL` 
-and `\*DEFAULT-FONT\*` is already bound to a `FONT` when `INITIALISE-DEFAULT-FONT` is called.
+`FONT` may be bound to the symbol `*\DEFAULT-FONT\*` at any one time.
 
 ##### Parameters
 
-* `FREE` when set to `T` will automatically free any font that is already bound to `*\DEFAULT-FONT\*`.
 * `FILENAME` is the optional file name of the font, as a STRING. Default value is `Vera.ttf`.
 * `SIZE` is the `INTEGER` point size of the new `FONT`.
 
 ##### Returns
 
 * Returns a new `FONT`, or `NIL` if unsuccessful."
-  (when *default-font*
-    (if free
-	(sdl::free *default-font*)
-	(error "INITIALISE-DEFAULT-FONT; *default-font* is already bound to a FONT.")))
-  (setf *default-font* (initialise-font filename size)))
+  (set-default-font (initialise-font filename size)))
 
-(defun close-font (&key font *default-font*)
+(defun close-font (&key font sdl:*default-font*)
   "Closes the font `FONT` when the `SDL_TTF` font library is intitialized. 
 NOTE: `CLOSE-FONT` does not uninitialise the font library, and does not bind `\*DEFAULT-FONT\*` to `NIL`. Returns `T` 
 if successful, or `NIL` if the font cannot be closed or the `SDL_TTF` font library is not initialized."
   (check-type font ttf-font)
-  (sdl::free font))
+  (sdl:free font))
 
 ;;; g
 
-(defun get-Glyph-Metric (ch &key metric (font *default-font*))
-  "Returns the glyph metrics `METRIC` for the character `CH`, or `NIL` upon error. 
+(in-package #:lispbuilder-sdl-ttf)
 
-##### Parameters
-
-* `CH` is a UNICODE chararacter specified as an `INTEGER`.
-* `FONT` is a `FONT` object from which to retrieve the glyph metrics of the character `CH`. Binds to `*\DEFAULT-FONT\*` 
-by default.
-* `METRIC` is a `KEY`word argument and may be one of; 
-`:MINX`, for the minimum `X` offset.  
-`:MAXX`, for the maximum `X` offset. 
-`:MINY`, for the minimum `Y` offset. 
-`:MAXY`, for the maximum `Y` offset. 
-`:ADVANCE`, for the advance offset. 
-
-##### Returns
-
-* Returns the glyph metric as an `INTEGER`.
-
-##### Example
-
-    \(GET-GLYPH-METRIC UNICODE-CHAR :METRIC :MINX :FONT *DEFAULT-FONT*\)"
-  (check-type font ttf-font)
+(defmethod _get-Glyph-Metric_ ((font ttf-font) ch metric)
   (let ((p-minx (cffi:null-pointer))
 	(p-miny (cffi:null-pointer))
 	(p-maxx (cffi:null-pointer))
@@ -158,39 +132,25 @@ by default.
 	(:advance (setf p-advance advance)))
       (setf r-val (sdl-ttf-cffi::ttf-Glyph-Metrics font ch p-minx p-maxx p-miny p-maxy p-advance))
       (if r-val
-	  (cond
-	    ((sdl:is-valid-ptr p-minx)
-	     (setf val (cffi:mem-aref p-minx :int)))
-	    ((sdl:is-valid-ptr miny)
-	     (setf val (cffi:mem-aref p-miny :int)))
-	    ((sdl:is-valid-ptr maxx)
-	     (setf val (cffi:mem-aref p-maxx :int)))
-	    ((sdl:is-valid-ptr maxy)
-	     (setf val (cffi:mem-aref p-maxy :int)))
-	    ((sdl:is-valid-ptr advance)
-	     (setf val (cffi:mem-aref p-advance :int))))
-	  (setf val r-val)))
+        (cond
+         ((sdl:is-valid-ptr p-minx)
+          (setf val (cffi:mem-aref p-minx :int)))
+         ((sdl:is-valid-ptr miny)
+          (setf val (cffi:mem-aref p-miny :int)))
+         ((sdl:is-valid-ptr maxx)
+          (setf val (cffi:mem-aref p-maxx :int)))
+         ((sdl:is-valid-ptr maxy)
+          (setf val (cffi:mem-aref p-maxy :int)))
+         ((sdl:is-valid-ptr advance)
+          (setf val (cffi:mem-aref p-advance :int))))
+        (setf val r-val)))
     val))
 
-(defun get-Font-Size (text &key size (font *default-font*))
-  "Calculates and returns the resulting `SIZE` of the `SDL:SURFACE` that is required to render the 
-text `TEXT`, or `NIL` on error. No actual rendering is performed, however correct kerning is calculated for the 
-actual width. The height returned is the same as returned using [GET-FONT-HEIGHT](#get-font-height). 
-
-##### Parameters
-
-* `TEXT` is the string to size, of type `STRING`. 
-* `SIZE` must be one of; `:W` for the text width or `:H` for the text height.
-* `FONT` is the font used to calculate the size of the `TEXT`. Binds to `\*DEFAULT-FONT\*` by default.
-
-##### Returns
-
-* Returns the width or height of the specified `SDL:SURFACE`, or `NIL` upon error."
-  (check-type font ttf-font)
+(defmethod _get-Font-Size_ ((font ttf-font) text size)
   (let ((p-w (cffi:null-pointer))
 	(p-h (cffi:null-pointer))
 	(val nil)
-	(r-val nil))
+        (r-val nil))
     (cffi:with-foreign-objects ((w :int) (h :int))
       (case size
 	(:w (setf p-w w))
@@ -205,172 +165,37 @@ actual width. The height returned is the same as returned using [GET-FONT-HEIGHT
 	  (setf val r-val)))
     val))
 
-(defun get-font-style (&key (font *default-font*))
-  "Returns the rendering style of the font `FONT`. If no style is set then `:STYLE-NORMAL` is returned, 
-or `NIL` upon error.
-  
-##### Parameters
-
-* `FONT` is a `FONT` object. Binfs to `\*DEFAULT-FONT\*` by default. 
-
-##### Returns
-
-* Retuns the font style as one or more of: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`"
-  (check-type font ttf-font)
+(defmethod _get-font-style_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-Style (sdl:fp font)))
 
-(defun get-font-height (&key (font *default-font*))
-  "Returns the maximum pixel height of all glyphs of font `FONT`. 
-Use this height for rendering text as close together vertically as possible, 
-though adding at least one pixel height to it will space it so they can't touch. 
-Remember that `SDL_TTF` doesn't handle multiline printing so you are responsible 
-for line spacing, see [GET-FONT-LINE-SKIP](#get-font-line-skip) as well. 
-
-##### Parameters
-
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default. 
-
-##### Returns
-
-* Retuns the height of the `FONT` as an `INTEGER`."
-  (check-type font ttf-font)
+(defmethod _get-font-height_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-height (sdl:fp font)))
 
-(defun get-font-ascent (&key (font *default-font*))
-  "Returns the maximum pixel ascent of all glyphs of font `FONT`. 
-This can also be interpreted as the distance from the top of the font to the baseline. 
-It could be used when drawing an individual glyph relative to a top point, 
-by combining it with the glyph's maxy metric to resolve the top of the rectangle used when 
-blitting the glyph on the screen. 
-
-##### Parameters
-
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default.
-
-##### Returns
-
-* Returns the ascent of the `FONT` as an `INTEGER`."
-  (check-type font ttf-font)
+(defmethod _get-font-ascent_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-Ascent (sdl:fp font)))
 
-(defun get-font-descent (&key (font *default-font*))
-  "Returns the maximum pixel descent of all glyphs of font `FONT`. 
-This can also be interpreted as the distance from the baseline to the bottom of the font. 
-It could be used when drawing an individual glyph relative to a bottom point, 
-by combining it with the glyph’s maxy metric to resolve the top of the rectangle used when 
-blitting the glyph on the screen. 
-
-##### Parameters
-
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default.
-
-##### Returns
-
-* Returns the descent of the `FONT` as an `INTEGER`."
-  (check-type font ttf-font)
+(defmethod _get-font-descent_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-Descent (sdl:fp font)))
 
-(defun get-font-line-skip (&key (font *default-font*))
-  "Returns the recommended pixel height of a rendered line of text of the font `FONT`. 
-This is usually larger than the [GET-FONT-HEIGHT](#get-font-height) of the font. 
-
-##### Parameters
-
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default.
-
-##### Returns
-
-* Returns the pixel height of the `FONT` as an `INTEGER`."
-  (check-type font ttf-font)
+(defmethod _get-font-line-skip_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-Line-Skip (sdl:fp font)))
 
-(defun get-font-faces (&key (font *default-font*))
-  "Returns the number of faces 'sub-fonts' available in the font `FONT`. 
-This is a count of the number of specific fonts (based on size and style and other
- typographical features perhaps) contained in the font itself. It seems to be a useless
- fact to know, since it can’t be applied in any other `SDL_TTF` functions.
-
-##### Parameters
-
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default.
-
-##### Returns
-
-* Returns the number of faces in the `FONT` as an `INTEGER`."
-  (check-type font ttf-font)
+(defmethod _get-font-faces_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-faces (sdl:fp font)))
 
-(defun is-font-face-fixed-width (&key (font *default-font*))
-  "Returns `T` if the font face is of a fixed width, or `NIL` otherwise. 
-Fixed width fonts are monospace, meaning every character that exists in the font is the same width. 
-
-##### Parameters
-
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default.
-
-##### Returns
-
-* Retuns `T` if `FONT` is of fixed width, and `NIL` otherwise."
-  (check-type font ttf-font)
+(defmethod _is-font-face-fixed-width_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-face-is-fixed-width (sdl:fp font)))
 
-(defun get-font-face-family-name (&key (font *default-font*))
-  "Returns the current font face family name of font `FONT` or `NIL` if the information is unavailable. 
-
-##### Parameters
-
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default.
-
-##### Returns
-
-* Returns the name of the `FONT` face family name as a `STRING`, or `NIL` if unavailable."
-  (check-type font ttf-font)
+(defmethod _get-font-face-family-name_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-face-Family-Name (sdl:fp font)))
 
-(defun get-font-face-style-name (&key (font *default-font*))
-  "Returns the current font face style name of font `FONT`, or `NIL` if the information is unavailable. 
-
-
-##### Parameters
-
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default.
-
-##### Returns
-
-* Returns the name of the `FONT` face style as a `STRING`, or `NIL` if unavailable."
-  (check-type font ttf-font)
+(defmethod _get-font-face-style-name_ ((font ttf-font))
   (sdl-ttf-cffi::ttf-Get-Font-face-Style-Name (sdl:fp font)))
-
-
-(defun open-font (filename size)
-  "Creates a new `FONT` from the file loaded at the location specified by `FILENAME`. 
-NOTE: Does not bind the new `FONT` to `\*DEFAULT-FONT\*`. Does not attempt to initialize the `SDL_TTF` 
-truetype library if the library is uninitialised. 
-
-##### Parameters
-
-* `FILENAME` is the name of the truetype font to be loaded, of type `STRING` 
-* `SIZE` is the size of the `FONT`, as an `INTEGER`. 
-
-##### Returns
-
-* Returns new `FONT` object if successful, returns `NIL` if unsuccessful."
-  (make-instance 'ttf-font :fp (sdl-ttf-cffi::ttf-Open-Font (namestring filename) size)))
 
 ;;; s
 
-(defun set-font-style (style &key (font *default-font*))
-  "Sets the rendering style `STYLE` of font `FONT`. This will flush the internal cache of previously 
-rendered glyphs, even if there is no change in style, so it may be best to check the
- current style using [GET-FONT-STYLE](#get-font-style) first. 
-
-##### Parameters
-
-* `FONT` is a `FONT` object. 
-* `STYLE` is a list of one or more: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`. 
-NOTE: Combining `:STYLE-UNDERLINE` with anything  can cause a segfault, other combinations may also do this."
-  (check-type font ttf-font)
+(defmethod _set-font-style_ ((font ttf-font) style)
   (sdl-ttf-cffi::ttf-Set-Font-Style (sdl:fp font) style))
 
 (defun create-path (filename)
-  (namestring (merge-pathnames filename *default-font-path*)))
+  (namestring (merge-pathnames filename sdl:*default-font-path*)))

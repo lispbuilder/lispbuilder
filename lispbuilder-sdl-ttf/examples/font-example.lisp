@@ -12,16 +12,13 @@
     (sdl:fill-surface sdl:*white* :surface sdl:*default-display*)
     (unless (sdl-ttf:initialise-default-font)
       (error "FONT-EXAMPLE: Cannot initialize the default font."))
-    (sdl-ttf:draw-string-solid-* "Text UTF8 - Solid" 0 50
-				 :color sdl:*black*
-				 :surface sdl:*default-display*)
-    (sdl-ttf:draw-string-shaded-* "Text UTF8 - Shaded" 0 150
-				  sdl:*black*
-				  sdl:*yellow*
-				  :surface sdl:*default-display*)
-    (sdl-ttf:draw-string-blended-* "Text UTF8 - Blended" 0 250
-				   :color sdl:*black*
-				   :surface sdl:*default-display*)
+    (sdl:draw-string-solid-* "Text UTF8 - Solid" 0 50
+                             :color sdl:*black*)
+    (sdl:draw-string-shaded-* "Text UTF8 - Shaded" 0 150
+                              sdl:*black*
+                              sdl:*yellow*)
+    (sdl:draw-string-blended-* "Text UTF8 - Blended" 0 250
+                               :color sdl:*black*)
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl:update-display))

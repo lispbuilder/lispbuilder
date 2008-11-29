@@ -26,9 +26,7 @@
 	     (:file "sdl-util-ttf" :depends-on ("font" "globals" "package"))
 	     (:file "string-solid" :depends-on ("sdl-util-ttf"))
 	     (:file "string-shaded" :depends-on ("sdl-util-ttf"))
-	     (:file "string-blended" :depends-on ("sdl-util-ttf"))
-	     (:static-file "bitstream-vera-copyright")
-	     (:static-file "Vera.ttf")))
+	     (:file "string-blended" :depends-on ("sdl-util-ttf"))))
    (:module "documentation"
 	    :components
 	    ((:html-file "header")

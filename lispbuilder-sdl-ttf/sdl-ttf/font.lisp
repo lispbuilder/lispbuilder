@@ -20,3 +20,8 @@ The `FONT` object maintains the most recent surface `SDL:SURFACE` created by a c
 or [DRAW-FONT-AT-*](#draw-font-at-*) to draw the cached surface.
 
 Prior to the first call to a `RENDER-STRING*` function, the cached surface is `NIL`."))
+
+(defmethod set-default-font ((font ttf-font))
+  (setf sdl:*default-font* font)
+  font)
+
