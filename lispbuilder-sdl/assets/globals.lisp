@@ -1,10 +1,12 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defvar *default-ttf-path* (make-pathname :host (pathname-host #.(or *compile-file-truename*
+;(defvar *font-path* (merge-pathnames "font.bmp" (or *load-truename* *default-pathname-defaults*)))
+(defvar *default-font-path* (make-pathname :host (pathname-host #.(or *compile-file-truename*
 								      *load-truename*))
 					   :directory (pathname-directory #.(or *compile-file-truename*
 										*load-truename*)))
-  "The path to the default Truetype font, `\"Bitstream Vera\"`")
+  "The path to any fonts used in teh `LISPBUILDER-SDL` packages.")
 
-(defvar *default-ttf* (merge-pathnames "Vera.ttf" *default-ttf-path*))
+(defvar *default-ttf* (merge-pathnames "Vera.ttf" *default-font-path*))
+

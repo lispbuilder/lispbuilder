@@ -375,7 +375,10 @@
    
    ;; pixel.lisp
    #:bit-depth
-   
+
+   ;; assets/globals.lisp
+   #:*default-ttf*
+
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
    #:sdl-opengl
@@ -435,6 +438,18 @@
    ;; font.lisp
    #:with-default-font
    #:with-font
+   #:set-font-style
+   #:get-Glyph-Metric
+   #:get-Font-Size
+   #:get-font-style
+   #:get-font-height
+   #:get-font-ascent
+   #:get-font-descent
+   #:get-font-line-skip
+   #:get-font-faces
+   #:is-font-face-fixed-width
+   #:get-font-face-family-name
+   #:get-font-face-style-name
 
    ;; Imports from lispbuilder-sdl-base  
    #:with-events

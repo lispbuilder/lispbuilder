@@ -12,10 +12,4 @@
     ((:module "glue-cl-vectors"
 	      :components
 	      ((:file "package" :depends-on ("glue-cl-vectors"))
-	       (:file "glue-cl-vectors")))
-     (:module "assets"
-	      :components
-	      ((:file "package" :depends-on ("globals"))
-	       (:file "globals")
-	       (:static-file "bitstream-vera-copyright")
-	       (:static-file "Vera.ttf")))))
+	       (:file "glue-cl-vectors")))))
