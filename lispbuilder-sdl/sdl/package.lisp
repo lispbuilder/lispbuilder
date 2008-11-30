@@ -92,6 +92,18 @@
    #:quit-sdl
    #:sdl-init-on-startup
 
+   ;; input-util.lisp
+   #:initialise-input-util
+   #:update-input-util
+   #:quit-input-util
+   #:key-pressed-p 
+   #:key-released-p 
+   #:key-held-p
+   #:key-held-time
+   #:key-released-time
+   #:handle-key-up
+   #:handle-key-down
+
    ;;generics.lisp
    #:fp
    #:fp-position
