@@ -22,6 +22,9 @@
    #:flood-fill-stack
    #:flood-fill-stack-timed
 
+   ;; input-util.lisp
+   #:sdl-input
+
    ;; line-drawing.lisp
    #:line-drawing
 
