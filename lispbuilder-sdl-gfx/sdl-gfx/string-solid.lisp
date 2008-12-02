@@ -1,14 +1,14 @@
 
 (in-package :lispbuilder-sdl)
 
-(defmethod _draw-string-solid-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font gfx-bitmap-font) (color color))
+(defmethod _draw-string-solid-*_ ((string string) (x integer) (y integer) justify (surface sdl:sdl-surface) (font gfx-bitmap-font) (color sdl:color))
   (unless (default-font-p font)
     (set-default-font font))
   (sdl-gfx-cffi::string-color (sdl:fp surface) x y string
 			      (sdl:pack-color color))
   surface)
 
-(defmethod _draw-string-solid-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font gfx-bitmap-font) (color color-a))
+(defmethod _draw-string-solid-*_ ((string string) (x integer) (y integer) justify (surface sdl:sdl-surface) (font gfx-bitmap-font) (color sdl:color-a))
   (unless (default-font-p font)
     (set-default-font font))
   (sdl-gfx-cffi::string-RGBA (sdl:fp surface) x y string
@@ -18,7 +18,7 @@
 (in-package :lispbuilder-sdl-gfx)
 
 (defun draw-character-solid (c p1 &key
-			     (font *default-font*)
+			     (font sdl:*default-font*)
 			     (surface sdl:*default-surface*)
 			     (color sdl:*default-color*))
   "See [DRAW-CHARACTER-SOLID-*](#draw-character-solid-*).
@@ -34,7 +34,7 @@ of type `SDL:POINT`."
 			  :color color))
 
 (defun draw-character-solid-* (c x y &key
-			       (font *default-font*)
+			       (font sdl:*default-font*)
 			       (surface sdl:*default-surface*)
 			       (color sdl:*default-color*))
   "Draw character `C` at location `X` `Y` using font `FONT` with text color `COLOR` onto surface `SURFACE`.
