@@ -10,17 +10,10 @@
    
    ;; globals.lisp
    #:*generation*
-   
-   ;; font.lisp
-   #:ttf-font
-
+     
    ;; sdl-util-ttf.lisp
    #:is-init
-   #:with-open-font
    #:init-ttf
    #:quit-ttf
-   #:initialise-font
-   #:initialise-default-font
    #:close-font
-   #:open-font
-   ))
+   #:open-font))

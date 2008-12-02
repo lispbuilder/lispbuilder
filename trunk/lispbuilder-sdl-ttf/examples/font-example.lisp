@@ -10,7 +10,7 @@
     (sdl:window 320 300 :title-caption "SDL-TTF Font Example" :icon-caption "SDL-TTF Font Example")
     (setf (sdl:frame-rate) 5)
     (sdl:fill-surface sdl:*white* :surface sdl:*default-display*)
-    (unless (sdl-ttf:initialise-default-font)
+    (unless (sdl:initialise-default-font sdl:*ttf-font-vera*)
       (error "FONT-EXAMPLE: Cannot initialize the default font."))
     (sdl:draw-string-solid-* "Text UTF8 - Solid" 0 50
                              :color sdl:*black*)
