@@ -64,7 +64,6 @@
    #:*default-position*
    #:*default-rectangle*
    #:*default-font*
-   #:*default-font-path*
 
    #:*default-surface*
    #:*default-color*
@@ -77,6 +76,9 @@
    #:*external-quit-on-exit*
 
    #:*opengl-context*
+
+   #:*default-font-path*
+   #:*default-simple-font*
 
    ;; init.lisp
    #:with-init
@@ -370,6 +372,13 @@
    #:*font-9x18B*
    #:*font-10x20*
 
+   ;; simple-font-data.lisp
+   #:*simple-font-4x5*
+
+   ;; simple-font.lisp
+   #:simple-font-definition
+   #:create-simple-font-definition
+   
    ;; string-solid.lisp
    #:render-string-solid
    #:draw-string-solid
@@ -389,7 +398,9 @@
    #:bit-depth
 
    ;; assets/globals.lisp
+   #:*default-font-path*
    #:*default-ttf*
+   #:*default-simple-font*
 
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
