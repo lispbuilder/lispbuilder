@@ -1,7 +1,7 @@
 
 (in-package :lispbuilder-sdl)
 
-(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color color) (bg-color color) justify (surface sdl-surface) (font gfx-bitmap-font))
+(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color sdl:color) (bg-color sdl:color) justify (surface sdl:sdl-surface) (font gfx-bitmap-font))
   (unless (default-font-p font)
     (sdl:set-default-font font))
   
@@ -15,7 +15,7 @@
 			      (pack-color fg-color))
   surface)
 
-(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color color-a) (bg-color color) justify (surface sdl-surface) (font gfx-bitmap-font))
+(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color sdl:color-a) (bg-color sdl:color) justify (surface sdl:sdl-surface) (font gfx-bitmap-font))
   (unless (default-font-p font)
     (sdl:set-default-font font))
   
@@ -32,7 +32,7 @@
 (in-package :lispbuilder-sdl-gfx)
 
 (defun draw-character-shaded (c p1 fg-color bg-color &key
-			      (font *default-font*)
+			      (font sdl:*default-font*)
 			      (surface sdl:*default-surface*))
   "See [DRAW-CHARACTER-SHADED-*](#draw-character-shaded-*).
 
@@ -45,7 +45,7 @@
 			   :surface surface))
 
 (defun draw-character-shaded-* (c x y fg-color bg-color &key
-				(font *default-font*)
+				(font sdl:*default-font*)
 				(surface sdl:*default-surface*))
   "Draw the character `C` at location `X` `Y` using font `FONT` with text color `FG-COLOR` and background color `BG-COLOR`
 onto surface `SURFACE`. 
