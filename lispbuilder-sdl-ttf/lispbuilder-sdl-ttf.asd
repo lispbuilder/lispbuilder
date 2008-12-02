@@ -20,13 +20,16 @@
   ((:module "sdl-ttf"
 	    :components
 	    ((:file "package")
-	     (:file "generics" :depends-on ("package"))
-	     (:file "globals" :depends-on ("package"))
-	     (:file "font" :depends-on ("package" "generics" "globals"))
-	     (:file "sdl-util-ttf" :depends-on ("font" "globals" "package"))
-	     (:file "string-solid" :depends-on ("sdl-util-ttf"))
-	     (:file "string-shaded" :depends-on ("sdl-util-ttf"))
-	     (:file "string-blended" :depends-on ("sdl-util-ttf"))))
+	     (:file "generics")
+	     (:file "globals")
+             (:file "ttf-font-definition")
+             (:file "ttf-font-data")
+	     (:file "font")
+	     (:file "sdl-util-ttf")
+	     (:file "string-solid")
+	     (:file "string-shaded")
+	     (:file "string-blended"))
+            :serial t)
    (:module "documentation"
 	    :components
 	    ((:html-file "header")
