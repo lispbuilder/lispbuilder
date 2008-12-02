@@ -63,7 +63,8 @@
    #:setup-and-draw
 
    ;; simple-font-demo.lisp
-   #:simple-font-demo
+   #:simple-font-demo-1
+   #:simple-font-demo-2
 
    ;; inbuilt-font.lisp
    #:inbuilt-fonts

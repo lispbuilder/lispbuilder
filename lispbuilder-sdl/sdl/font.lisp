@@ -3,10 +3,16 @@
 (in-package :lispbuilder-sdl)
 
 (defclass font ()
-  ((cached-surface :accessor cached-surface :initform nil))
+  ((definition
+    :reader font-definition
+    :initform (error "Set :DEFINITION for FONT must no be NIL.")
+    :initarg :font-definition)
+   (cached-surface
+    :accessor cached-surface
+    :initform nil))
   (:documentation
-   "The generic SDL font class. All fonts in `LISPBUILDER-SDL` inherit from this class.
-Free using [FREE](#free)."))
+   "The generic SDL font class. All fonts in `LISPBUILDER-SDL` inherit from
+this class. Free using [FREE](#free)."))
 
 (defmethod width ((font font))
   (width (cached-surface font)))

@@ -16,7 +16,7 @@
       (setf (cached-surface font) surf))
     surf))
 
-(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color color) (bg-color color) justify (surface sdl-surface) (font sdl-bitmap-font))
+(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color color) (bg-color color) justify (surface sdl-surface) (font bitmap-font))
   (case justify
     (:left (draw-string-left-justify-* string x y fg-color bg-color :surface surface :font font))
     (:right (draw-string-right-justify-* string x y fg-color bg-color :surface surface :font font))

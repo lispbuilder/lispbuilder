@@ -275,3 +275,22 @@ Sets the clipping [RECTANGLE](#rectangle) for the `SURFACE`. Removes the clippin
 When `SURFACE` is the destination of a blit, only the area within the clipping rectangle is 
 drawn into."))
 
+(defgeneric initialise-font (font-definition)
+  (:documentation "Returns a new [SDL-BITMAP-FONT](#sdl-bitmap-font) initialized from `FONT-DEFINITION` data, or `NIL` 
+if the font cannot be created. `FONT-DEFINITION` must be one of the following built-in fonts: 
+`*FONT-10X20*`, `*FONT-5X7*`, `*FONT-5X8*`, `*FONT-6X10*`, `*FONT-6X12*`, `*FONT-6X13*`, 
+`*FONT-6X13B*`, `*FONT-6X13O*`, `*FONT-6X9*`, `*FONT-7X13*`, `*FONT-7X13B*`, `*FONT-7X13O*`, 
+`*FONT-7X14*`, `*FONT-7X14B*`, `*FONT-8X13*`, `*FONT-8X13B*`, `*FONT-8X13O*`, `*FONT-8X8*`, 
+`*FONT-9X15*`, `*FONT-9X15B*`, `*FONT-9X18*` OR `*FONT-9X18B*`.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_"))
+
+(defgeneric set-default-font (font)
+  (:documentation
+   "Sets the font `FONT` as the default font to be used for subsequent
+font rendering or drawing operations. Binds the symbol `\*DEFAULT-FONT\*` to font. 
+Functions that take a `FONT` argument use `\*DEFAULT-FONT\*` unless
+otherwise specified.
+Returns a new `FONT`, or `NIL` if unsuccessful."))
