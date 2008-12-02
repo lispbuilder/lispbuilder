@@ -2,8 +2,7 @@
 (in-package #:lispbuilder-sdl)
 
 (defclass simple-font-definition (bitmap-font-definition)
-  ((filename :accessor filename :initform nil :initarg :filename)
-   (color-key :accessor color-key :initform nil :initarg :color-key)
+  ((color-key :accessor color-key :initform nil :initarg :color-key)
    (character-map :accessor character-map :initform nil :initarg :character-map)
    (pad-x :accessor pad-x :initform 0 :initarg :pad-x)
    (pad-y :accessor pad-y :initform 0 :initarg :pad-y)))
