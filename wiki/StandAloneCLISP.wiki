@@ -20,7 +20,7 @@ This is a how-to for building a distributable game(standalone executable) using 
 ... lots of loading text ...
 0 errors, 0 warnings
 NIL
-[2]> (sdl-examples:squashed)
+[2]> (sdl-examples:mandelbrot)
 NIL
 }}}
 
@@ -29,15 +29,15 @@ NIL
 {{{
 [3]> (ext:make-dir  "C:\\appz\\")
 T
-[4]> (ext:make-dir  "C:\\appz\\squashed\\")
+[4]> (ext:make-dir  "C:\\appz\\mandelbrot\\")
 T
 }}}
 
  * Create a main entry point for your game.  We will simply used the Squashed game as an example.  Create the `SQUASHED-MAIN` function:
 
 {{{
-[5]> (defun squashed-main ()
-       "Squashed: main entry function"
+[5]> (defun mandelbrot-main ()
+       "Mandelbrot: main entry function"
 
         (cffi:define-foreign-library sdl
           (t (:default "SDL")))
@@ -45,16 +45,16 @@ T
         (cffi:use-foreign-library sdl)
 
         (sdl:with-init ()
-          (sdl-examples:squashed))
+          (sdl-examples:mandelbrot))
           (ext:quit))
-SQUASHED-MAIN
+MANDELBROT-MAIN
 }}}
 
  * Next, create the standalone executable. *** One important thing to note here is you must call `SAVEINITMEM` from the CLISP prompt and not `SLIME`.  If you do it from SLIME you will get a socket error in your executable. ***
 
 {{{
-[6]> (ext:saveinitmem "c:\\appz\\squashed\\squashed.exe"
-                 :init-function #'squashed-main
+[6]> (ext:saveinitmem "c:\\appz\\mandelbrot\\mandelbrot.exe"
+                 :init-function #'mandelbrot-main
                  :NORC t
                  :script t
                  :executable t
@@ -66,18 +66,18 @@ SQUASHED-MAIN
  * Copy other support files to the distribution directory:
 
 {{{
-[7]> (ext:copy-file "C:\\clisp-2.41\\full\\*.dll" "C:\\appz\\squashed\\")
+[7]> (ext:copy-file "C:\\clisp-2.41\\full\\*.dll" "C:\\appz\\mandelbrot\\")
 ((#P"C:\\clisp-2.41\\full\\libiconv-2.dll"
-  #P"C:\\appz\\squashed\\libiconv-2.dll" 1410765)
- (#P"C:\\clisp-2.41\\full\\libintl-8.dll" #P"C:\\appz\\squashed\\libintl-8.dll"
+  #P"C:\\appz\\mandelbrot\\libiconv-2.dll" 1410765)
+ (#P"C:\\clisp-2.41\\full\\libintl-8.dll" #P"C:\\appz\\mandelbrot\\libintl-8.dll"
   1888606)
- (#P"C:\\clisp-2.41\\full\\readline5.dll" #P"C:\\appz\\squashed\\readline5.dll"
+ (#P"C:\\clisp-2.41\\full\\readline5.dll" #P"C:\\appz\\mandelbrot\\readline5.dll"
   229888))
 
-[8]> (ext:copy-file "C:\\windows\\system32\\SDL.dll" "C:\\appz\\squashed\\")
-((#P"C:\\WINDOWS\\system32\\SDL.dll" #P"C:\\appz\\squashed\\SDL.dll" 258048))
+[8]> (ext:copy-file "C:\\windows\\system32\\SDL.dll" "C:\\appz\\mandelbrot\\")
+((#P"C:\\WINDOWS\\system32\\SDL.dll" #P"C:\\appz\\mandelbrot\\SDL.dll" 258048))
 }}}
 
- * Try running `C:\appz\squashed\squashed.exe`.  If it runs then you can now distribute the files located in C:\appz\squashed\.  Note that the CLISP console is present when running the game.  To hide the console screen take a look [http://www.frank-buss.de/lisp/clisp.html here].
+ * Try running `C:\appz\mandelbrot\mandelbrot.exe`.  If it runs then you can now distribute the files located in C:\appz\mandelbrot\.  Note that the CLISP console is present when running the game.  To hide the console screen take a look [http://www.frank-buss.de/lisp/clisp.html here].
 
  * Now go make some games!
