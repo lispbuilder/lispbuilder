@@ -21,6 +21,11 @@ The latest version can always be obtained using [http://subversion.tigris.org/ S
 
 == Windows ==
 
+This section describes the installation and use of LISPBUILDER-SDL and _helper_ packages using the two major Open Source Common Lisp development environments for Windows.
+
+ * [http://www.sbcl.org/ SBCL], and 
+ * [http://clisp.cons.org/ CLISP]
+
 === CFFI ===
 
  * [http://common-lisp.net/project/cffi/tarballs/?M=D CFFI]
