@@ -1,4 +1,4 @@
-# LISPBUILDER-SDL Windows SBCL installation
+#summary LISPBUILDER-SDL Windows SBCL installation
 
 = Overview =
 
