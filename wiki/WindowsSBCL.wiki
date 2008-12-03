@@ -6,19 +6,28 @@
 
 This section describes the installation and configuration of SBCL and LISPBUILDER-SDL for Windows. Installation of Emacs is not covered.
 
-#sidebar TableOfContents
-  * [Articles HOWTO articles]
-    * [ArticlesXSS Web security]
-    * [ArticlesDom DOM manipulation]
-    * [ArticlesStyle CSS and style]
-    * [ArticlesTips Tips and tricks]
-  * [DOMReference DOM reference]
-  * [HTMLElements HTML reference]
-  * [CSSReference CSS reference]
+A summary of the process is as follows;
+
+ * Create a directory structure
+ * Install SBCL
+ * Install CFFI & CFFI dependencies
+ * Install LISPBUILDER-SDL & dependencies
+ * Create the SBCL sbclrc file
+ * Create a SBCL startup batch file
+ * Optionally install rlwrap
+
+= Directory Structure =
+
+Create the following directories in the root directory:
+
+{{{
+C:\sblc\
+C:\sbcl\site\
+}}}
 
 = SBCL =
 
-Download [http://www.sbcl.org/ SBCL] for Windows from the following location;
+Download [http://www.sbcl.org/ SBCL] for Windows;
 
  * [http://www.sbcl.org/platform-table.html Latest version of SBCL for Win32]
 
@@ -30,7 +39,7 @@ C:\sblc\
 
 = CFFI =
 
-Download the latest version of [http://common-lisp.net/project/cffi/ CFFI] from the following location;
+Download the latest version of [http://common-lisp.net/project/cffi/ CFFI];
 
  * [http://common-lisp.net/project/cffi/tarballs/?M=D CFFI]
 
@@ -45,77 +54,67 @@ Extract these packages to the following directories;
 {{{
 C:\sbcl\site\cffi\
 C:\sbcl\site\alexandria\
-C:\sbcl\site\babel_0.3.0\
-C:\sbcl\site\trivial-features_0.3\
+C:\sbcl\site\babel\
+C:\sbcl\site\trivial-features\
 }}}
 
 = LISPBUILDER-SDL & Binaries =
 
-Download `LISPBUILDER-SDL` from *source*, or *downloads* above.
-Download _win32-lispbuilder-sdl-binaries.tgz_ from *source*, or *downloads* above.
+ * SVN, or PACKAGE
+
+Download `LISPBUILDER-SDL` from *source*, or *downloads* above. Install to;
+
+{{{
+C:\sbcl\site\lispbuilder-sdl\
+}}}
+
+Download the required SDL binaries;
+
+ * _win32-lispbuilder-sdl-binaries.tgz_ from *source*, or *downloads* above, or
+ * SDL from packaged libraries, or the [www.libsdl.org official site]
 
 Install to the following directory;
 
 {{{
-C:\sbcl\site\lispbiulder-sdl\
+C:\sbcl\site\lispbuilder-sdl\
 }}}
 
-Don
+= sbclrc =
 
+Create a new `sbclrc` file in; 
 
 {{{
-(require :asdf)
-(pushnew "F:\\sbcl\\site\\trivial-features_0.3\\" asdf:*central-registry* :test 'equal)  
-(pushnew "F:\\sbcl\\site\\alexandria\\" asdf:*central-registry* :test 'equal)    
-(pushnew "F:\\sbcl\\site\\babel_0.3.0\\" asdf:*central-registry* :test 'equal)     
-(pushnew "F:\\sbcl\\site\\cffi\\" asdf:*central-registry* :test 'equal)     
-(asdf:operate 'asdf:load-op :cffi)
+C:\sbcl\
 }}}
 
-=== LISPBUILDER-SDL ===
-
- * SVN, or PACKAGE
- * SDL from packaged libraries, or the [www.libsdl.org official site]
-
-{{{
-(pushnew "F:\\sbcl\\site\\lispbuilder-sdl\\" asdf:*central-registry* :test 'equal)
-(asdf:operate 'asdf:load-op :lispbuilder-sdl)
-(asdf:operate 'asdf:load-op :lispbuilder-sdl-binaries)
-}}}
-
-
-=== sbclrc ===
+Add the following to the `sbclrc` file above;
 
 {{{
 (require :asdf)
  
 ;;load cffi
-(pushnew "F:\\sbcl\\site\\trivial-features_0.3\\" asdf:*central-registry* :test 'equal)  
-(pushnew "F:\\sbcl\\site\\alexandria\\" asdf:*central-registry* :test 'equal)    
-(pushnew "F:\\sbcl\\site\\babel_0.3.0\\" asdf:*central-registry* :test 'equal)     
-(pushnew "F:\\sbcl\\site\\cffi\\" asdf:*central-registry* :test 'equal)     
+(pushnew "C:\\sbcl\\site\\trivial-features\\" asdf:*central-registry* :test 'equal)  
+(pushnew "C:\\sbcl\\site\\alexandria\\" asdf:*central-registry* :test 'equal)    
+(pushnew "C:\\sbcl\\site\\babel\\" asdf:*central-registry* :test 'equal)     
+(pushnew "C:\\sbcl\\site\\cffi\\" asdf:*central-registry* :test 'equal)     
 (asdf:operate 'asdf:load-op :cffi)
  
 ;; load lispbuilder-sdl
-(pushnew "F:\\sbcl\\site\\lispbuilder-sdl\\" asdf:*central-registry* :test 'equal)
+(pushnew "C:\\sbcl\\site\\lispbuilder-sdl\\" asdf:*central-registry* :test 'equal)
 (asdf:operate 'asdf:load-op :lispbuilder-sdl)
 (asdf:operate 'asdf:load-op :lispbuilder-sdl-binaries)
 }}}
 
-=== sbcl.bat ===
+= Starting SBCL =
 
 {{{
-F:\sbcl\sbcl.exe  --core "F:\sbcl\sbcl.core" --sysinit "F:\sbcl\sbclrc"
+sbcl --sysinit "C:\sbcl\sbclrc"
 }}}
 
-=== Starting SBCL ===
+= rlwrap =
+
+[http://utopia.knoware.nl/~hlub/uck/rlwrap/ rlwrap] is a readline wrapper, that makes using SBCL from the REPL somewhat bearable. It requires installing [http://www.cygwin.com/ cygwin] and selecting the rlwrap package.
 
 {{{
-sbcl.bat
-}}}
-
- * [http://www.cygwin.com/ rlwrap] a readline wrapper, described [http://utopia.knoware.nl/~hlub/uck/rlwrap/ here]. Makes using SBCL from the REPL somewhat bearable.
-
-{{{
-> rlwrap sbcl.bat
+> rlwrap sbcl --sysinit "C:\sbcl\sbclrc"
 }}}
