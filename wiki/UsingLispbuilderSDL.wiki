@@ -606,3 +606,11 @@ Run the examples by entering any of the following at the REPL:
 	  (SDL-EXAMPLES:VERTICES)
 	  (SDL-EXAMPLES:WIDTH-HEIGHT)
 }}}
+
+= Creating Standalone Executables =
+
+Tutorials for creating standalone executables using the various Common Lisp development environments;
+
+ * [StandAloneCLISP CLISP executable]
+ * [StandAloneSBCL SBCL executable]
+ * [StandAloneLispworks Lispworks executable]
