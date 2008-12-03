@@ -4,7 +4,7 @@
 
 = Introduction =
 
- * Tutorial #1: Anthony Faitchild's CLISP HOWTO
+ * Tutorial #1: Anthony Fairchild's CLISP HOWTO
 
 
 = Tutorial #1 =
