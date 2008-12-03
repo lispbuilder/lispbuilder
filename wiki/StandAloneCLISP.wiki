@@ -67,6 +67,7 @@ MANDELBROT-MAIN
 
 {{{
 [7]> (ext:copy-file "C:\\clisp-2.41\\full\\*.dll" "C:\\appz\\mandelbrot\\")
+
 ((#P"C:\\<CLISP installation directory>\\full\\libiconv-2.dll"
   #P"C:\\appz\\mandelbrot\\libiconv-2.dll" 1410765)
  (#P"C:\\<CLISP installation directory>\\full\\libintl-8.dll" #P"C:\\appz\\mandelbrot\\libintl-8.dll"
@@ -75,6 +76,7 @@ MANDELBROT-MAIN
   229888))
 
 [8]> (ext:copy-file "C:\\windows\\system32\\SDL.dll" "C:\\appz\\mandelbrot\\")
+
 ((#P"C:\\WINDOWS\\system32\\SDL.dll" #P"C:\\appz\\mandelbrot\\SDL.dll" 258048))
 }}}
 
