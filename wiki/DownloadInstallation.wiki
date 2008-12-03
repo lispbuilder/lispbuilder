@@ -2,13 +2,20 @@
 
 <wiki:toc max_depth="3" />
 
+= Overview =
+
+The most commonly used Common Lisp development environments are the Open Source: 
+
+ * [http://www.sbcl.org/ SBCL], and 
+ * [http://clisp.cons.org/ CLISP]
+
+This section describes how to set up a working installation of these systems for Windows, OS X and Linux such that the examples in `LISPBUILDER-SDL` and _helper_ will load and run.
+
 = Dependencies =
 
 == External Libraries ==
 
 The `LISPBUILDER-SDL` packages rely on several external dynamic linked libraries. These libraries are not included in the `LISPBIULDER-SDL` packages unless installation is via the Lisp Starter Kit. These libraries must be installed prior to loading any of the `LISPBUILDER-SDL` packages. 
-
- * LISPBUILDER-SDL requires [http://www.libsdl.org/ libSDL] to work. Use your OS's package manager to download & install the libraries from [http://www.libsdl.org/ libSDL], or download and plave the binaries in your library search path.
 
 == Common Lisp Packages ==
 
@@ -21,77 +28,11 @@ The latest version can always be obtained using [http://subversion.tigris.org/ S
 
 == Windows ==
 
-This section describes the installation and use of LISPBUILDER-SDL and _helper_ packages using the two major Open Source Common Lisp development environments for Windows.
+ * Windows/SBCL
+ * Windows/CLISP
 
- * [http://www.sbcl.org/ SBCL], and 
- * [http://clisp.cons.org/ CLISP]
+== OS X ==
 
-=== CFFI ===
-
- * [http://common-lisp.net/project/cffi/tarballs/?M=D CFFI]
- * [http://www.cliki.net/Alexandria ALEXANDRIA]
- * [http://www.cliki.net/trivial-features TRIVIAL-FEATURES]
- * [http://www.cliki.net/Babel BABEL]
-
-{{{
-(require :asdf)
-(pushnew "F:\\sbcl\\site\\trivial-features_0.3\\" asdf:*central-registry* :test 'equal)  
-(pushnew "F:\\sbcl\\site\\alexandria\\" asdf:*central-registry* :test 'equal)    
-(pushnew "F:\\sbcl\\site\\babel_0.3.0\\" asdf:*central-registry* :test 'equal)     
-(pushnew "F:\\sbcl\\site\\cffi\\" asdf:*central-registry* :test 'equal)     
-(asdf:operate 'asdf:load-op :cffi)
-}}}
-
-=== LISPBUILDER-SDL ===
-
- * SVN, or PACKAGE
- * SDL from packaged libraries, or the [www.libsdl.org official site]
-
-{{{
-(pushnew "F:\\sbcl\\site\\lispbuilder-sdl\\" asdf:*central-registry* :test 'equal)
-(asdf:operate 'asdf:load-op :lispbuilder-sdl)
-(asdf:operate 'asdf:load-op :lispbuilder-sdl-binaries)
-}}}
-
-=== SBCL ===
-
- * [http://www.sbcl.org/platform-table.html Latest version of SBCL for Win32]
-
-=== sbclrc ===
-
-{{{
-(require :asdf)
- 
-;;load cffi
-(pushnew "F:\\sbcl\\site\\trivial-features_0.3\\" asdf:*central-registry* :test 'equal)  
-(pushnew "F:\\sbcl\\site\\alexandria\\" asdf:*central-registry* :test 'equal)    
-(pushnew "F:\\sbcl\\site\\babel_0.3.0\\" asdf:*central-registry* :test 'equal)     
-(pushnew "F:\\sbcl\\site\\cffi\\" asdf:*central-registry* :test 'equal)     
-(asdf:operate 'asdf:load-op :cffi)
- 
-;; load lispbuilder-sdl
-(pushnew "F:\\sbcl\\site\\lispbuilder-sdl\\" asdf:*central-registry* :test 'equal)
-(asdf:operate 'asdf:load-op :lispbuilder-sdl)
-(asdf:operate 'asdf:load-op :lispbuilder-sdl-binaries)
-}}}
-
-=== sbcl.bat ===
-
-{{{
-F:\sbcl\sbcl.exe  --core "F:\sbcl\sbcl.core" --sysinit "F:\sbcl\sbclrc"
-}}}
-
-=== Starting SBCL ===
-
-{{{
-sbcl.bat
-}}}
-
- * [http://www.cygwin.com/ rlwrap] a readline wrapper, described [http://utopia.knoware.nl/~hlub/uck/rlwrap/ here]. Makes using SBCL from the REPL somewhat bearable.
-
-{{{
-> rlwrap sbcl.bat
-}}}
 
 == OS X ==
 
