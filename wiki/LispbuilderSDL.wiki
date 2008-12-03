@@ -12,7 +12,7 @@ The LISPBUILDER-SDL core functionality includes window and event loop management
 
 The core LISPBUILDER-SDL functionality described above can be enhanced by using [optionalPackages#Optional_Packages optional packages] that provide additional capabilities such as True-type font support, 3D scene management, physics, character animation, support for loading diverse image formats (jpeg, png, tiff, tga, bmp etc.), a sound mixer, sample and music streaming for mp3 and OGG formats, rendering speed ups for many of the graphics primitives, and anti-aliasing support.
 
-In addition, it is possible to [StandAlone create standalone executables].
+In addition, it is possible to [UsingLispbuilderSDL#Creating_Standalone_Executables create standalone executables].
 
 = Screenshots =
 
