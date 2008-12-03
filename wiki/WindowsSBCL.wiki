@@ -1,8 +1,12 @@
 #summary LISPBUILDER-SDL Windows SBCL installation
 
+<wiki:toc max_depth="3" />
+
 = Overview =
 
-This section describes the installation and configuration of SBCL and LISPBUILDER-SDL for Windows. Installation of Emacs is not covered at all.
+This section describes the installation and configuration of SBCL and LISPBUILDER-SDL for Windows. Installation of Emacs is not covered.
+
+#sidebar TableOfContents
 
 = SBCL =
 
