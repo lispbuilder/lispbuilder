@@ -1,4 +1,4 @@
-#LISPBUILDER-SDL Windows SBCL installation
+# LISPBUILDER-SDL Windows SBCL installation
 
 = Overview =
 
@@ -107,4 +107,3 @@ sbcl.bat
 {{{
 > rlwrap sbcl.bat
 }}}
-
