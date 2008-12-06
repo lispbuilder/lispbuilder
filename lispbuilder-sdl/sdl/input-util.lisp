@@ -19,7 +19,13 @@
 	      (make-key-status :status 'unknown :time 0.0 :prev-time 0.0)))))
 
 (defun initialise-input-util()
-  "set up the input system"
+  "Initialises the input util system. This just creates the data structure that key press information 
+is stored in, and maintains a global variable to track initialisation status.
+
+##### Parameters
+
+##### Returns
+"
   (unless *input-util-initialised*
     (setf *input-util-initialised* t)
     (setf *key-status-table* (make-hash-table))))
@@ -31,11 +37,25 @@
 		 (key-status-time status) (key-status-prev-time status)))))
 
 (defun update-input-util(time)
+  "This must be called once for each time period you are updating the application, in order 
+to update keypress information. 
+
+##### Parameters
+* `TIME` is the time in seconds this update represents
+
+##### Returns
+"
 ;  (debug-view-keys)
   (loop for key-status being the hash-values of *key-status-table* do
        (incf (key-status-time key-status) time)))
 
 (defun quit-input-util()
+  "This is called when you quit your app to free up the key information data
+
+##### Parameters
+
+##### Returns
+"
   (setf *input-util-initialised* nil)
   (setf *key-status-table* nil))
 
