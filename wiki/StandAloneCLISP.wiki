@@ -1,4 +1,5 @@
 #summary Creating standalone executables in CLISP
+#sidebar TableOfContents
 
 <wiki:toc max_depth="3" />
 
