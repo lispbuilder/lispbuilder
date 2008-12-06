@@ -1,4 +1,5 @@
 #summary LISPBUILDER-SDL User Guide
+#sidebar TableOfContents
 
 <wiki:toc max_depth="3" />
 
