@@ -8,11 +8,11 @@
     :description "lispbuilder-sdl-cffi: Basic Lisp wrapper for the SDL library."
     :long-description
     "The lispbuilder-sdl-cffi package uses CFFI to provide a very low-level set of Lisp bindings to the SDL library."
-    :version "0.9"
+    :version "0.9.7"
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi)
+    :depends-on (cffi #+(or mswindows win32)lispbuilder-sdl-binaries)
     :components
     ((:module "cffi"
 	      :components

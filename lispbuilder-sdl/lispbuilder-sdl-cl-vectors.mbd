@@ -1,0 +1,13 @@
+
+(in-package :sysdef-user)
+
+(mb::with-provider (:url "/home/bin/central-registry/lispbuilder-sdl/")
+  (mb::define-system :lispbuilder-sdl-cl-vectors ()
+    (:version 0 0 1)
+    (:documentation "CL-VECTORS v0.1.3 glue for LISPBUILDER-SDL")
+    (:needs :cl-paths-ttf :cl-aa-misc :cl-vectors :zpb-ttf :lispbuilder-sdl)
+    (:components
+     ("glue-cl-vectors" module 
+                        (:components 
+                         "package"
+                         "glue-cl-vectors")))))

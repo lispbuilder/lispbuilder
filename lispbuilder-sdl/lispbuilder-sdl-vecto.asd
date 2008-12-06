@@ -13,4 +13,3 @@
 	    :components
 	    ((:file "package" :depends-on ("glue-vecto"))
 	     (:file "glue-vecto")))))
-

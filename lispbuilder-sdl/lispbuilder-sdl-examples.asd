@@ -7,7 +7,7 @@
 (defsystem lispbuilder-sdl-examples
     :description "Examples for the lispbuilder-sdl package."
     :version "0.9.2"
-    :depends-on (cffi lispbuilder-sdl)
+    :depends-on (lispbuilder-sdl)
     :components
     ((:module "examples"
 	      :components

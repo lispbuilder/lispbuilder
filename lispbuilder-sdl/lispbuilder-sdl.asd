@@ -10,11 +10,11 @@
   "lispbuilder-sdl uses CFFI to be highly compatible across lisp 
     implementations. It includes a selection of utilities to assist  
     game programming in Common Lisp."
-  :version "0.9.6"
+  :version "0.9.7"
   :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>, Luke J Crook <luke@balooga.com>"
   :licence "MIT"
-  :depends-on (cffi trivial-garbage lispbuilder-sdl-cffi lispbuilder-sdl-base)
+  :depends-on (cffi trivial-garbage lispbuilder-sdl-base)
   :perform (load-op :after (op lispbuilder-sdl)
 		    (pushnew :lispbuilder-sdl *features*))
   :components

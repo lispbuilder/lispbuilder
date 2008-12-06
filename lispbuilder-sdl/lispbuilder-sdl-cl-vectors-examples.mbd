@@ -1,0 +1,13 @@
+
+(in-package :sysdef-user)
+
+(mb::with-provider (:url "/home/bin/central-registry/lispbuilder-sdl/")
+  (mb::define-system :lispbuilder-sdl-cl-vectors-examples ()
+    (:version 0 0 1)
+    (:documentation "Examples for the LISPBUILDER-SDL-CL-VECTORS package.")
+    (:needs :lispbuilder-sdl-cl-vectors)
+    (:components
+     ("examples" module 
+                 (:components 
+                  "package"
+                  "cl-vectors")))))
