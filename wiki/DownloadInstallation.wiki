@@ -1,4 +1,5 @@
 #summary LISPBUILDER-SDL Download and Installation for OSD X, Linux, BSD and Windows Alternate
+#sidebar TableOfContents
 
 <wiki:toc max_depth="3" />
 
