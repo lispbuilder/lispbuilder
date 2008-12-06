@@ -1,7 +1,7 @@
 
 (in-package :sysdef-user)
 
-(mb::with-provider (:url "/home/bin/central-registry/lispbuilder-sdl/")
+(mb::with-provider (:url "http://www.balooga.com/lispbuilder/")
   (mb::define-system :lispbuilder-sdl ()
     (:author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>")
     (:maintainer "Luke J Crook <luke@balooga.com>")
