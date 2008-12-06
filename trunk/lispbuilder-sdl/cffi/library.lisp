@@ -2,10 +2,16 @@
 
 (in-package #:lispbuilder-sdl-cffi)
 
+;;#+win32(eval-when (:compile-toplevel :load-toplevel :execute)
+;;         (pushnew (merge-pathnames "../bin/"
+;;                                   (directory-namestring (or *load-truename* *default-pathname-defaults*)))
+;;                  cffi:*foreign-library-directories*
+;;                  :test #'equal))
+
 #+win32(eval-when (:compile-toplevel :load-toplevel :execute)
-		  (pushnew (merge-pathnames "../bin/" (directory-namestring (or *load-truename* *default-pathname-defaults*)))
-			   cffi:*foreign-library-directories*
-			   :test #'equal))
+         (pushnew sdl-bin:*dll-path*
+                  cffi:*foreign-library-directories*
+                  :test #'equal))
 
 ;; This is where FINK installs SDL.
 #+darwin (pushnew #P"/sw/lib/" cffi:*foreign-library-directories*

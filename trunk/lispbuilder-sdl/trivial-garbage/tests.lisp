@@ -7,7 +7,8 @@
 ;;; warranty.
 
 (defpackage #:trivial-garbage-tests
-  (:use #:cl #:trivial-garbage #:regression-test))
+  (:use #:cl #:trivial-garbage #:regression-test)
+  (:nicknames #:tg-tests))
 
 (in-package #:trivial-garbage-tests)
 
@@ -23,7 +24,7 @@
 
 ;;;; Weak Hashtables
 
-#+(or :sbcl :corman)
+#+(or sbcl corman scl)
 (progn
   (pushnew 'hashtables.weak-key.1 rt::*expected-failures*)
   (pushnew 'hashtables.weak-key.2 rt::*expected-failures*))
@@ -40,7 +41,7 @@
               (hash-table-weakness ht)))
   t :key)
 
-#+(or :sbcl :cmu :corman)
+#+(or sbcl cmu corman scl)
 (pushnew 'hashtables.weak-value.1 rt::*expected-failures*)
 
 (deftest hashtables.weak-value.1
@@ -55,52 +56,60 @@
 
 ;;;; Finalizers
 ;;;
-;;; These tests are, of course, not very reliable. And they way they're
-;;; written doesn't help either. :-/
+;;; These tests are, of course, not very reliable.
 
-(defparameter *finalized?* nil)
-
-(defun setup-finalizers (count &optional remove)
-  (setq *finalized?* (make-list count))
-  (let ((obj (copy-seq "xpto")))
-    (dotimes (i count)
-      (let ((i i))
-        (finalize obj
-                  (lambda ()
-                    ;;(assert (null *finalized?*))
-                    (setf (nth i *finalized?*) t)))))
-    (when remove
-      (cancel-finalization obj)))
-  (gc :full t))
-
-(defun do-it-to-it (setup-function &rest args)
-  (apply setup-function args)
-  (gc :full t))
-
-(deftest finalizers.1
-    (progn
-      (do-it-to-it #'setup-finalizers 1)
-      (gc :full t)
-      (car *finalized?*))
-  t)
-
-(deftest finalizers.2
-    (progn
-      (do-it-to-it #'setup-finalizers 1 t)
-      (gc :full t)
-      (car *finalized?*))
+(defun dummy (x)
+  (declare (ignore x))
   nil)
 
+(defun test-finalizers-aux (count extra-action)
+  (let ((cons (list 0))
+        (obj (string (gensym))))
+    (dotimes (i count)
+      (finalize obj (lambda () (incf (car cons)))))
+    (when extra-action
+      (cancel-finalization obj)
+      (when (eq extra-action :add-again)
+        (dotimes (i count)
+          (finalize obj (lambda () (incf (car cons)))))))
+    (setq obj (gensym))
+    (setq obj (dummy obj))
+    cons))
+
+(defvar *result*)
+
+;;; I don't really understand this, but it seems to work, and stems
+;;; from the observation that typing the code in sequence at the REPL
+;;; achieves the desired result. Superstition at its best.
+(defmacro voodoo (string)
+  `(funcall
+    (compile nil `(lambda ()
+                    (eval (let ((*package* (find-package :tg-tests)))
+                            (read-from-string ,,string)))))))
+
+(defun test-finalizers (count &optional remove)
+  (gc :full t)
+  (voodoo (format nil "(setq *result* (test-finalizers-aux ~S ~S))"
+                  count remove))
+  (voodoo "(gc :full t)")
+  (voodoo "(car *result*)"))
+
+(deftest finalizers.1
+    (test-finalizers 1)
+  1)
+
+(deftest finalizers.2
+    (test-finalizers 1 t)
+  0)
+
 (deftest finalizers.3
-    (progn
-      (do-it-to-it #'setup-finalizers 3)
-      (gc :full t)
-      *finalized?*)
-  (t t t))
+    (test-finalizers 5)
+  5)
 
 (deftest finalizers.4
-    (progn
-      (do-it-to-it #'setup-finalizers 3 t)
-      (gc :full t)
-      *finalized?*)
-  (nil nil nil))
+    (test-finalizers 5 t)
+  0)
+
+(deftest finalizers.5
+    (test-finalizers 5 :add-again)
+  5)

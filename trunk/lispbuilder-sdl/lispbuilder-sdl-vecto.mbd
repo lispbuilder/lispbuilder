@@ -1,0 +1,13 @@
+
+(in-package :sysdef-user)
+
+(mb::with-provider (:url "/home/bin/central-registry/lispbuilder-sdl/")
+  (mb::define-system :lispbuilder-sdl-vecto ()
+    (:version 0 0 1)
+    (:documentation "VECTO v1.0.2 glue for LISPBUILDER-SDL")
+    (:needs :lispbuilder-sdl-cl-vectors :vecto :lispbuilder-sdl)
+    (:components
+     ("glue-vecto" module 
+            (:components 
+             "package"
+             "glue-vecto")))))
