@@ -608,6 +608,42 @@ Run the examples by entering any of the following at the REPL:
 	  (SDL-EXAMPLES:WIDTH-HEIGHT)
 }}}
 
+= Using OpenGL =
+
+Example of using `LISPBUILDER-SDL` and [http://common-lisp.net/project/cl-opengl/ CL-OPENGL]
+
+{{{
+(asdf:operate 'asdf:load-op :cl-opengl)
+
+(defun opengl-test-1 ()
+  (sdl:with-init ()
+    (sdl:window 250 250
+		:flags sdl-cffi::sdl-opengl
+		:title-caption "Hello Window"
+		:icon-caption "Hello Window")
+    (gl:clear-color 0 0 0 0)
+    ;; Initialize viewing values.
+    (gl:matrix-mode :projection)
+    (gl:load-identity)
+    (gl:ortho 0 1 0 1 -1 1)
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:idle ()
+	     (gl:clear :color-buffer-bit)
+	     ;; Draw white polygon (rectangle) with corners at
+	     ;; (0.25, 0.25, 0.0) and (0.75, 0.75, 0.0).
+	     (gl:color 1 1 1)
+	     (gl:with-primitive :polygon
+	       (gl:vertex 0.25 0.25 0)
+	       (gl:vertex 0.75 0.25 0)
+	       (gl:vertex 0.75 0.75 0)
+	       (gl:vertex 0.25 0.75 0))
+	     ;; Start processing buffered OpenGL routines.
+	     (gl:flush)
+	     (sdl-cffi::sdl-gl-swap-buffers)))))
+}}}
+
+
 = Creating Standalone Executables =
 
 Tutorials for creating standalone executables using the various Common Lisp development environments;
