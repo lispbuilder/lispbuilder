@@ -101,8 +101,8 @@
    #:key-pressed-p 
    #:key-released-p 
    #:key-held-p
-   #:key-held-time
-   #:key-released-time
+   #:key-time-in-current-state
+   #:key-time-in-previous-state
    #:handle-key-up
    #:handle-key-down
 

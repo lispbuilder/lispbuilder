@@ -12,6 +12,8 @@
 (defstruct key-status status time prev-time)
 
 (defun get-or-create-key-status(key)
+  "gets the status of a key. if the key has never been pressed it creates
+a new status (unknown state) and adds that to the hash table"
   (let ((status (gethash key *key-status-table*)))
     (if (key-status-p status)
 	status
@@ -60,36 +62,101 @@ to update keypress information.
   (setf *key-status-table* nil))
 
 (defun handle-key-up(key)
+  "You must call this when a key up event occurs
+
+##### Parameters
+* `KEY` is the SDL key definition for the key that is now up (for example :SDL-KEY-ESCAPE)
+##### Returns
+"
   (let ((status (get-or-create-key-status key)))
     (setf (key-status-status status) 'released)
     (setf (key-status-prev-time status) (key-status-time status))
     (setf (key-status-time status) 0.0)))
 
 (defun handle-key-down(key)
+  "You must call this when a key up event occurs
+
+##### Parameters
+* `KEY` is the SDL key definition for the key that is now down (for example :SDL-KEY-ESCAPE)
+##### Returns
+"
   (let ((status (get-or-create-key-status key)))
     (setf (key-status-status status) 'pressed)
     (setf (key-status-prev-time status) (key-status-time status))
     (setf (key-status-time status) 0.0)))
 
 (defun key-held-p(key)
+  "Returns true if a key is currently held, which means it has either
+just been pressed, or it has been pressed and held for a while.
+
+##### Parameters
+* `KEY` is the SDL key definition (for example :SDL-KEY-ESCAPE)
+##### Returns
+True if the key is held
+"
   (let ((status (gethash key *key-status-table*)))
     (if (key-status-p status)
 	(equal 'pressed (key-status-status status))
 	nil)))
 
-(defun key-held-time(key)
+(defun key-time-in-current-state(key)
+  "Returns time a key has been in current state
+
+##### Parameters
+* `KEY` is the SDL key definition (for example :SDL-KEY-ESCAPE)
+##### Returns
+Time key is in current state
+"
   (let ((status (gethash key *key-status-table*)))
     (if (key-status-p status)
 	(key-status-time status)
 	0.0)))
 
+(defun key-time-in-previous-state(key)
+  "Returns time key was in a previous state
+
+##### Parameters
+* `KEY` is the SDL key definition (for example :SDL-KEY-ESCAPE)
+##### Returns
+Time key was in previous state
+"
+  (let ((status (gethash key *key-status-table*)))
+    (if (key-status-p status)
+	(key-status-prev-time status)
+	0.0)))
+
+
 (defun key-pressed-p(key)
+  "Returns true if a key has just been pressed
+
+##### Parameters
+* `KEY` is the SDL key definition (for example :SDL-KEY-ESCAPE)
+##### Returns
+True if the key was just pressed
+"
   (let ((status (gethash key *key-status-table*)))
     (if (and (key-status-p status)
 	     (eq (key-status-status status) 'pressed)
 	     (= 0.0 (key-status-time status)))
 	t
 	nil)))
+
+(defun key-released-p(key)
+  "Returns true if a key has just been released
+
+##### Parameters
+* `KEY` is the SDL key definition (for example :SDL-KEY-ESCAPE)
+##### Returns
+True if the key was just pressed
+"
+  (let ((status (gethash key *key-status-table*)))
+    (if (and (key-status-p status)
+	     (eq (key-status-status status) 'released)
+	     (= 0.0 (key-status-time status)))
+	t
+	nil)))
+
+
 
 
 	

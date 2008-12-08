@@ -11,9 +11,11 @@
 (defun get-key-status-as-string(key)
   (if (sdl:key-pressed-p key)
       "Pressed"
-      (if (sdl:key-held-p key)
-	  "Held"
-	  "Not Held")))
+      (if (sdl:key-released-p key)
+	  "Released"
+	  (if (sdl:key-held-p key)
+	      "Held"
+	      "Not Held"))))
   
 (defun sdl-input()
   (sdl:with-init ()
@@ -32,18 +34,36 @@
 		       (sdl:handle-key-up key))
 	
 	(:idle ()
-	       (sdl:update-input-util 0.016)
+	       ;; simple text print out for press and releases
+	       (if (sdl:key-pressed-p :SDL-KEY-A)
+		   (format t "A pressed~%"))
+		   
+	       (if (sdl:key-released-p :SDL-KEY-A)
+		   (format t "A released~%"))
+
+	       ;; update input system
+
+	       (sdl:update-input-util (min 0.016 (/ 1.0 (sdl:average-fps))))
+
        	       ;; fill the background
 	       (sdl:clear-display (sdl:color :r #x00 :g #x00 :b #x00))
+
 	       ;; draw A key status 
-	       (sdl:draw-string-solid-* (format nil "A key time : ~06,2f" (sdl:key-held-time :SDL-KEY-A))
-					20 20
-					:color sdl:*white* :font font :justify :left)
 	       (sdl:draw-string-solid-* (format nil "A key state : ~a" (get-key-status-as-string :SDL-KEY-A))
 					20 40 
 					:color sdl:*white* :font font :justify :left)
 
+	       (sdl:draw-string-solid-* (format nil "A key time : ~06,2f" (sdl:key-time-in-current-state :SDL-KEY-A))
+					20 60
+					:color sdl:*white* :font font :justify :left)
+
+	       (sdl:draw-string-solid-* (format nil "A key previous time : ~06,2f" (sdl:key-time-in-previous-state :SDL-KEY-A))
+					20 80
+					:color sdl:*white* :font font :justify :left)
+
 	       (sdl:update-display)))
       (sdl:quit-input-util))))
+
+
 
 
