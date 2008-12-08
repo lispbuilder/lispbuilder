@@ -2,10 +2,15 @@
 
 (in-package #:lispbuilder-sdl-ttf-cffi) 
 
+;;#+win32(eval-when (:compile-toplevel :load-toplevel :execute)
+;;  (pushnew (merge-pathnames "../bin/" (directory-namestring (or *load-truename* *default-pathname-defaults*)))
+;;	   cffi:*foreign-library-directories*
+;;	   :test #'equal))
+
 #+win32(eval-when (:compile-toplevel :load-toplevel :execute)
-  (pushnew (merge-pathnames "../bin/" (directory-namestring (or *load-truename* *default-pathname-defaults*)))
-	   cffi:*foreign-library-directories*
-	   :test #'equal))
+         (pushnew sdl-ttf-bin:*dll-path*
+                  cffi:*foreign-library-directories*
+                  :test #'equal))
 
 (cffi:define-foreign-library zlib1
   (:windows "zlib1.dll")
