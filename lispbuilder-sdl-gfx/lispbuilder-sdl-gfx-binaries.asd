@@ -6,7 +6,8 @@
 
 (defsystem lispbuilder-sdl-gfx-binaries
   :description "lispbuilder-sdl-gfx-binaries: The windows binary for the SDL_gfx v2.0.13 library"
-  :version "2.0.13"
+  :version "1.2.12"
+  ;; 2.0.13
   :author "Andreas Schiffler <aschiffler@appwares.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>"
   :licence "LGPL"
