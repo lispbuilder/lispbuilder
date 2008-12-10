@@ -46,7 +46,7 @@ Send support questions to the [http://www.lispniks.com/mailman/listinfo/applicat
 || SBCL || Working || Working || Working || Working || Win32 version is single threaded||
 || Lispworks || Working || Working || Working || ?? || ||
 || Allegro || Working || ?? || ?? || ?? || ||
-|| CMUCL || NA || No || ?? || ?? || ||
+|| CMUCL || NA || Yes || ?? || ?? || ||
 || CLISP || Working || Working || Working || Working || ||
 || Clozure CL || ?? || ?? || ?? || ?? || ||
 || ECL || ?? || ?? || ?? || ?? || ||
