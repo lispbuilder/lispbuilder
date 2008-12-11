@@ -6,11 +6,11 @@
 
 ;;; Add INIT-TTF to LISPBUILDER-SDL's external initialization list.
 ;;; Functions in this list are called within the macro SDL:WITH-INIT, and the function SDL:INIT-SDL 
-(pushnew 'init-ttf sdl:*external-init-on-startup*)
+(pushnew 'init-ttf sdl:*external-init-subsystems-on-startup*)
 
 ;;; Add the QUIT-TTF to LISPBUILDER-SDL's external uninitialization list.
 ;;; Functions in this list are called when the macro SDL:WITH-INIT exits, and the function SDL:QUIT-SDL 
-(pushnew 'quit-ttf sdl:*external-quit-on-exit*)
+(pushnew 'quit-ttf sdl:*external-quit-subsystems-on-exit*)
 
 (defun is-init ()
   "Queries the initialization status of the `SDL_TTF` truetype library. 
