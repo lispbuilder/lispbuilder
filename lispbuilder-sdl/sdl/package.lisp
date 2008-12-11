@@ -72,8 +72,8 @@
 
    #:*sdl-initialized*
 
-   #:*external-init-on-startup*
-   #:*external-quit-on-exit*
+   #:*external-init-subsystems-on-startup*
+   #:*external-quit-subsystems-on-exit*
 
    #:*opengl-context*
 
@@ -82,17 +82,17 @@
 
    ;; init.lisp
    #:with-init
-   #:initialize-on-startup
+   #:initialize-subsystems-on-startup
+   #:quit-subsystems-on-exit
+   #:init-on-startup
    #:quit-on-exit
-   #:list-sub-systems
-   #:return-sub-systems-of-status
-   #:init-sub-systems
-   #:quit-sub-systems
-   #:sdl-quit-on-exit
-   #:initialized-sub-systems-p
+   #:list-subsystems
+   #:return-subsystems-of-status
+   #:init-subsystems
+   #:quit-subsystems
+   #:initialized-subsystems-p
    #:init-sdl
    #:quit-sdl
-   #:sdl-init-on-startup
 
    ;; input-util.lisp
    #:initialise-input-util

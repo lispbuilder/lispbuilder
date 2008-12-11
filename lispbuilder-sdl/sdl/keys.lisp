@@ -54,8 +54,9 @@ SDL-DEFAULT-REPEAT-DELAY and SDL-DEFAULT-REPEAT-INTERVAL respectively."
 
 (defun key-repeat-interval ()
     "Returns the current key repeat interval, in milliseconds."
-  (multiple-value-bind (delay interval)
+  (multiple-value-bind (delay interval)    
       (enable-key-repeat-p)
+    (declare (ignore delay))
     interval))
 
 (defun get-key-state (key)

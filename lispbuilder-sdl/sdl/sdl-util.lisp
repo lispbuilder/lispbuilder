@@ -40,6 +40,7 @@ _Note_: Flipping is only supported with anti-aliasing turned off.
 
 * Supported in _LISPBUILDER-SDL-GFX_
 * _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
+  (declare (ignore zoomx zoomy surface free smooth))
   nil)
 
 ;;; Anthony Fairchild.
@@ -63,7 +64,8 @@ _LISPBUILDER-SDL-GFX_ supports any rotation.
 * _LISPBUILDER-SDL_ ignores `:SMOOTH`. _LISPBUILDER-SDL-GFX_ supports `:SMOOTH`.
 * _LISPBUILDER-SDL_ ignores `:ZOOM`. _LISPBUILDER-SDL-GFX_ supports `:ZOOM`.
 * _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
-  (declare (type fixnum degrees)
+  (declare (ignore zoom smooth)
+           (type fixnum degrees)
  	   (optimize (speed 3)(safety 0)))
   (unless (member degrees '(0 90 180 270))
     (error "ERROR, ROTATE-SURFACE: degrees ~A is not one of 0, 90, 180 or 270" degrees))
@@ -144,6 +146,7 @@ _Note_: Flipping is only supported with anti-aliasing turned off.
 
 * Supported in _LISPBUILDER-SDL-GFX_
 * _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
+  (declare (ignore degrees surface free zoomx zoomy smooth))
   nil)
 
 

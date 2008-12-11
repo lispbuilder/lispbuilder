@@ -23,20 +23,24 @@ or the contents of rectangle SRC if specified."
 (defmacro with-rectangle ((var &optional rectangle (free-p t)) &body body)
   (let ((mbody (gensym "mbody-")))
     `(let ((,mbody nil))
-      ,(if (or rectangle (atom var))
-	   `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (rect-x ,var))
-			      (,(intern (string-upcase (format nil "~A.y" var))) (rect-y ,var))
-			      (,(intern (string-upcase (format nil "~A.w" var))) (rect-w ,var))
-			      (,(intern (string-upcase (format nil "~A.h" var))) (rect-h ,var)))
-	     ,(if rectangle
-		  `(let ((,var ,rectangle))
-		    (setf ,mbody (progn ,@body))
-		    (when ,free-p
-		      (cffi:foreign-free ,var)))
-		  `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
-		    (setf ,mbody (progn ,@body))))
+       ,(if (or rectangle (atom var))
+          `(symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (rect-x ,var))
+                             (,(intern (string-upcase (format nil "~A.y" var))) (rect-y ,var))
+                             (,(intern (string-upcase (format nil "~A.w" var))) (rect-w ,var))
+                             (,(intern (string-upcase (format nil "~A.h" var))) (rect-h ,var)))
+             (declare (ignorable ,(intern (string-upcase (format nil "~A.x" var)))
+                                 ,(intern (string-upcase (format nil "~A.y" var)))
+                                 ,(intern (string-upcase (format nil "~A.w" var)))
+                                 ,(intern (string-upcase (format nil "~A.h" var)))))
+             ,(if rectangle
+                `(let ((,var ,rectangle))
+                   (setf ,mbody (progn ,@body))
+                   (when ,free-p
+                     (cffi:foreign-free ,var)))
+                `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
+                   (setf ,mbody (progn ,@body))))
 	     ,mbody)
-	   (error "VAR must be a symbol or variable, not a function.")))))
+          (error "VAR must be a symbol or variable, not a function.")))))
 
 (defmacro with-rectangles (bindings &body body)
   (if bindings

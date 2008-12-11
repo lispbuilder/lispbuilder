@@ -268,7 +268,8 @@ is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)
     \(sdl:with-init \(\)
       \(sdl:video-driver-name\)\)
     >> \"windib\""
-  (let ((string-return-val (cffi:with-foreign-pointer-as-string (str 100 str-size)
+  (let* ((str-size 0)
+         (string-return-val (cffi:with-foreign-pointer-as-string (str 100 str-size)
 			     (sdl-cffi::sdl-video-driver-name str str-size))))
     (if (equal string-return-val "")
 	nil
