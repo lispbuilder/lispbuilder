@@ -71,10 +71,10 @@
 (cffi:defcfun ("SDL_Init" SDL-Init) :int
   (flags :unsigned-int))
 
-(cffi:defcfun ("SDL_InitSubSystem" SDL-Init-Sub-System) :int
+(cffi:defcfun ("SDL_InitSubSystem" SDL-Init-SubSystem) :int
   (flags :unsigned-int))
 
-(cffi:defcfun ("SDL_QuitSubSystem" SDL-Quit-Sub-System) :void
+(cffi:defcfun ("SDL_QuitSubSystem" SDL-Quit-SubSystem) :void
   (flags :unsigned-int))
 
 (cffi:defcfun ("SDL_WasInit" SDL-Was-Init) :unsigned-int

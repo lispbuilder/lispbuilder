@@ -88,15 +88,15 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 ;; (defvar *renderer* nil)
 ;; (defvar *quit* nil)
 
-(defvar *sdl-initialized* nil)
-(defvar *sdl-init-on-startup* nil)
-(defvar *sdl-quit-on-exit* nil)
-(defvar *initialize-on-startup* (logior SDL-INIT-VIDEO))
-(defvar *quit-on-exit* (logior SDL-INIT-VIDEO))
+(defvar *initialized* nil)
+(defvar *init-on-startup* nil)
+(defvar *quit-on-exit* nil)
+(defvar *initialize-subsystems-on-startup* (logior SDL-INIT-VIDEO))
+(defvar *quit-subsystems-on-exit* (logior SDL-INIT-VIDEO))
 
-(defvar *external-init-on-startup* nil
+(defvar *external-init-subsystems-on-startup* nil
   "The list of functions that are called from [INIT-SDL](#init-sdl).")
-(defvar *external-quit-on-exit* nil
+(defvar *external-quit-subsystems-on-exit* nil
   "The list of functions that are called from [QUIT-SDL](#quit-sdl).")
 
 (defvar *default-font-path* (make-pathname

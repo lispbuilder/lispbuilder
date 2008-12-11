@@ -294,3 +294,33 @@ font rendering or drawing operations. Binds the symbol `\*DEFAULT-FONT\*` to fon
 Functions that take a `FONT` argument use `\*DEFAULT-FONT\*` unless
 otherwise specified.
 Returns a new `FONT`, or `NIL` if unsuccessful."))
+
+(defgeneric _set-font-style_ (font style))
+(defgeneric _get-glyph-metric_ (font ch metric))
+(defgeneric _get-font-size_ (font text size))
+(defgeneric _get-font-style_ (font))
+(defgeneric _get-font-height_ (font))
+(defgeneric _get-font-ascent_ (font))
+(defgeneric _get-font-descent_ (font))
+(defgeneric _get-font-line-skip_ (font))
+(defgeneric _get-font-faces_ (font))
+(defgeneric _is-font-face-fixed-width_ (font))
+(defgeneric _get-font-face-family-name_ (font))
+(defgeneric _get-font-face-style-name_ (font))
+
+(defgeneric _render-string-solid_ (string font color free cache))
+(defgeneric _draw-string-solid-*_ (string x y justify surface font color))
+
+(defgeneric _render-string-shaded_ (string fg-color bg-color font free cache))
+(defgeneric _draw-string-shaded-*_ (string x y fg-color bg-color justify surface font))
+
+(defgeneric _render-string-blended_ (string font color free cache))
+(defgeneric _draw-string-blended-*_ (string x y justify color surface font))
+
+(defgeneric char-width (font))
+(defgeneric char-height (font))
+(defgeneric char-pitch (font))
+(defgeneric char-size (font))
+(defgeneric char-data (font))
+
+

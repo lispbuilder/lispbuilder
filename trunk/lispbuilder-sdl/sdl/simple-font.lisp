@@ -17,6 +17,7 @@
                                              (+ start-x pad-x
                                                 (* i width) ix)
                                              (+ start-y pad-y iy))
+                     (declare (ignore rgba))
                      (unless (and (equal (sdl:r color-key) r)
                                   (equal (sdl:g color-key) g)
                                   (equal (sdl:b color-key) b))

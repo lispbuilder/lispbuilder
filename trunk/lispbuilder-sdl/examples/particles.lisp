@@ -40,6 +40,9 @@
 (defvar *font-large* nil)
 (defvar *font-small* nil)
 
+(defvar *mouse-x* (/ *screen-width* 2))
+(defvar *mouse-y* (/ *screen-height* 2))
+
 ;;; ----------------------------------------------------------------------
 ;;;  Functions for rendering the current FPS to the screen.
 ;;; ----------------------------------------------------------------------
@@ -83,7 +86,8 @@
 ;;;  and give it a random velocity.
 ;;; ----------------------------------------------------------------------
 (defun init-particle (p)
-  (let ((hx (/ *screen-width* 2)) (hy (/ *screen-height* 2)))
+  (let ((hx (- *mouse-x* (/ (sdl:width *particle-img*) 2)))
+        (hy (- *mouse-y* (/ (sdl:height *particle-img*) 2))))
     (let ((vel (make-vec2 :x (rand-range -1.0 1.0) :y (rand-range -1.0 1.0))))
       (vec2-normalize vel)
       (let ((sp (rand-range *particle-speed-min* *particle-speed-max*)))
@@ -190,6 +194,9 @@
 			   ((sdl:key= k :sdl-key-l)
 			    (remove-particles))))
 
+        (:mouse-motion-event (:x x :y y)
+         (setf *mouse-x* x
+               *mouse-y* y))
 	;; Application is quitting
 	(:quit-event () t)
 

@@ -18,6 +18,7 @@
 		      `(,var ,var))))
 	   (symbol-macrolet ((w (surf-w ,var))
 			     (h (surf-h ,var)))
+             (declare (ignorable w h))
 	     (setf ,body-value (progn ,@body)))
 	   (when ,free
 	     (sdl-cffi::sdl-Free-Surface ,var))

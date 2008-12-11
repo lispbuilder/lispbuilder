@@ -40,7 +40,7 @@
   nil)
 
 (defmethod initialize-instance :around ((surface sdl-surface) &key)
-  (unless (initialized-sub-systems-p)
+  (unless (initialized-subsystems-p)
     (error "ERROR: The SDL library must be initialized prior to use."))
   (call-next-method))
 

@@ -390,7 +390,8 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 
 * Also supported in _LISPBUILDER-SDL-GFX_
 * `:AA` not supported in _LISPBUILDER-SDL_"
-  (declare (type fixnum x0 y0 x1 y1))
+  (declare (ignore aa)
+           (type fixnum x0 y0 x1 y1))
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
@@ -776,7 +777,8 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
     (sdl-base::check-bounds 0 (- (height surface) 1) y))
   (sdl-base::with-pixel (surf (fp surface))
     (multiple-value-bind (rgba r g b a)
-	(sdl-base::read-pixel surf x y)
+        (sdl-base::read-pixel surf x y)
+      (declare (ignore rgba))
       (color :r r :g g :b b :a a))))
 
 (defun draw-filled-circle (p1 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
@@ -906,6 +908,7 @@ is blitted to `SURFACE`.
 
 * Also supported in _LISPBUILDER-SDL-GFX_
 * `:AA` ignored in _LISPBUILDER-SDL_"
+  (declare (ignore aa))
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
@@ -1012,6 +1015,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 
 * Also supported in _LISPBUILDER-SDL-GFX_
 * `:AA` ignored in _LISPBUILDER-SDL_"
+  (declare (ignore aa))
   (check-types point p1 p2 p3)
    (unless surface
     (setf surface *default-display*))
@@ -1037,6 +1041,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 
 * Also supported in _LISPBUILDER-SDL-GFX_
 * `:AA` ignored in _LISPBUILDER-SDL_"
+  (declare (ignore aa))
   (check-type vertices (and list (not null)) "POINTs must be a LIST of POINTs")
   (unless surface
     (setf surface *default-display*))
@@ -1055,6 +1060,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore p1 rx ry surface color aa))
   nil)
 
 (defun draw-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (aa nil))
@@ -1071,6 +1077,7 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore x y rx ry surface color aa))
   nil)
   
 (defun draw-filled-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -1083,6 +1090,7 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore p1 rx ry surface color))
   nil)
 
 (defun draw-filled-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -1098,6 +1106,7 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore x y rx ry surface color))
   nil)
 
 (defun draw-pie (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -1110,6 +1119,7 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore p1 rad start end surface color))
   nil)
 
 
@@ -1129,6 +1139,7 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore x y rad start end surface color))
   nil)
 
 (defun draw-filled-pie (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -1141,6 +1152,7 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore p1 rad start end surface color))
   nil)
 
 (defun draw-filled-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -1158,6 +1170,7 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore x y rad start end surface color))
   nil)
 
 (defun draw-filled-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
@@ -1172,6 +1185,7 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore p1 p2 p3 surface color))
   nil)
 
 
@@ -1187,5 +1201,6 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignore vertices surface color))
   nil)
 
