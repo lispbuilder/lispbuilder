@@ -49,7 +49,7 @@ Additional SDL subsystems can be uninitialized by calling [QUIT-SUBSYSTEMS-ON-EX
 
 The SDL library is initialised only:
 * If the library is not yet already initialized, or  
-* [INIT-ON-STARTUP](#init-on-startup) is `T`.
+* [REINIT-ON-STARTUP](#reinit-on-startup) is `T`.
 
 The SDL library is uninitialised only:
 * When [QUIT-ON-EXIT](#quit-on-exit) is `T`.
@@ -95,14 +95,10 @@ specified in `FLAGS`.
       ....\)"
   `(block nil
      (unwind-protect
-	  (when (init-sdl)
-	    ,(when flags
-		   `(initialize-subsystems-on-startup ,@flags))
-	    (init-subsystems)
+	  (when (init-sdl :flags ',flags)
+;	    (init-subsystems (initialize-subsystems-on-startup ,@flags))
 	    ,@body)
-       ,(when flags
-	      `(quit-subsystems-on-exit ,@flags))
-       (quit-subsystems)
+;       (quit-subsystems (quit-subsystems-on-exit ,@flags))
        (quit-sdl))))
 
 (defun initialize-subsystems-on-startup (&rest flags)
@@ -223,7 +219,7 @@ Returns `NIL` otherwise."
   *quit-on-exit*)
 (defun set-quit-on-exit (val)
   (if val
-      (setf *init-on-startup* val
+      (setf *reinit-on-startup* val
 	    *quit-on-exit* val)
       (setf *quit-on-exit* val)))
 (defsetf quit-on-exit set-quit-on-exit)
@@ -232,12 +228,12 @@ Returns `NIL` otherwise."
   "Returns a list of the initialized SDL subsystems."
   (list-subsystems (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
 
-(defun init-sdl (&optional (init (init-on-startup)))
+(defun init-sdl (&key (flags nil) (init (reinit-on-startup)))
   "Initalizes the SDL library when the `OPTIONAL` parameter `INIT` is `T`, or 
-the value returned by [INIT-ON-STARTUP](#init-on-startup) is `T`."
+the value returned by [REINIT-ON-STARTUP](#reinit-on-startup) is `T`."
   (let ((initialized? (if (or init
 			      (not *initialized*))
-			  (if (sdl-base::init-sdl :flags nil)
+			  (if (sdl-base::init-sdl :flags flags)
 			      (setf *initialized* t)
 			      nil)
 			  t)))
@@ -249,16 +245,16 @@ the value returned by [INIT-ON-STARTUP](#init-on-startup) is `T`."
 (defun quit-sdl (&optional (quit (quit-subsystems-on-exit)))
   "Uninitalizes the SDL library when the `OPTIONAL` parameter `QUIT` is `T`, or 
 the value returned by [QUIT-SUBSYSTEMS-ON-EXIT](#quit-subsystems-on-exit) is `T`."
+  (dolist (fn *external-quit-subsystems-on-exit*)
+    (funcall fn))
   (when quit
     (setf *initialized* nil)
-    (sdl-cffi::SDL-Quit))
-  (dolist (fn *external-quit-subsystems-on-exit*)
-    (funcall fn)))
+    (sdl-cffi::SDL-Quit)))
 
-(defun init-on-startup ()
-    "Returns `T` if the SDL library must be initialised in [INIT-SDL](#init-sdl), or [WITH-INIT](#with-init). 
-Returns `NIL` otherwise."
-  *init-on-startup*)
-(defun set-init-on-startup (val)
-  (setf *init-on-startup* val))
-(defsetf init-on-startup set-init-on-startup)
+(defun reinit-on-startup ()
+    "Returns `T` if the SDL library must be reinitialised using
+[INIT-SDL](#init-sdl), or [WITH-INIT](#with-init). Returns `NIL` otherwise."
+  *reinit-on-startup*)
+(defun set-reinit-on-startup (val)
+  (setf *reinit-on-startup* val))
+(defsetf reinit-on-startup set-reinit-on-startup)

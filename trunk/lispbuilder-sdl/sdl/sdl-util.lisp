@@ -71,7 +71,7 @@ _LISPBUILDER-SDL-GFX_ supports any rotation.
     (error "ERROR, ROTATE-SURFACE: degrees ~A is not one of 0, 90, 180 or 270" degrees))
   (if (= 0 degrees)
       ;; in the case of 0 degrees, just return the surface
-      (let ((new-surf (copy-surface :surface surface :all t)))
+      (let ((new-surf (copy-surface :surface surface)))
 	(when free
 	  (free surface))
 	new-surf)

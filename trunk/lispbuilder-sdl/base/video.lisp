@@ -49,7 +49,7 @@
 
 ;; cl-sdl "cl-sdl.lisp"
 (defun clear-display (surface color)
-  (fill-surface surface color :clipping-p nil)
+  (fill-surface surface color :clipping nil)
   surface)
 
 (defun video-pixel-format ()

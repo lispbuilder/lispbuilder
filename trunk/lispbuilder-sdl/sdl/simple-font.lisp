@@ -12,7 +12,7 @@
                (dotimes (iy height)
                  (setf mask #x80)                       
                  (dotimes (ix width)
-                   (multiple-value-bind (rbga r g b)
+                   (multiple-value-bind (rgba r g b)
                        (sdl-base::read-pixel pix
                                              (+ start-x pad-x
                                                 (* i width) ix)
