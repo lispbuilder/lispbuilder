@@ -30,6 +30,7 @@
 	 (sdl:UPDATE-DISPLAY))))))
 
 (defun dim-screen ()
+  ;;(sdl:fill-surface (sdl:color :r 0 :g 0 :b 0 :a 20))
   (sdl:draw-box-* 0 0 *width* *height* 
 		  :color (sdl:color :r 0 :g 0 :b 0 :a 20)
 		  :alpha 255))

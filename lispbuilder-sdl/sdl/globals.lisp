@@ -89,7 +89,7 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 ;; (defvar *quit* nil)
 
 (defvar *initialized* nil)
-(defvar *init-on-startup* nil)
+(defvar *reinit-on-startup* nil)
 (defvar *quit-on-exit* nil)
 (defvar *initialize-subsystems-on-startup* (logior SDL-INIT-VIDEO))
 (defvar *quit-subsystems-on-exit* (logior SDL-INIT-VIDEO))
