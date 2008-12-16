@@ -15,7 +15,7 @@ Free using [FREE](#free)."))
 	(make-instance 'rwops :fp rwops)
 	nil)))
 
-(defmethod create-RWops-from-byte-array (array)
+(defun create-RWops-from-byte-array (array)
   "Creates and returns a new `RWOPS` object from the Lisp array `ARRAY`."
   (let* ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array))
 	 (rwops (make-instance 'rwops :fp (sdl-cffi::sdl-rw-from-mem mem-array (length array)))))
@@ -31,7 +31,7 @@ Free using [FREE](#free)."))
       (read-sequence content str)
       content)))
 
-(defmethod load-image-from-byte-sequence (array)
+(defun load-image-from-byte-sequence (array)
   (let* ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array))
 	 (surf (make-instance 'surface :fp (sdl-cffi::sdl-load-bmp-rw (sdl-cffi::sdl-rw-from-mem mem-array (length array)) 1))))
     surf))

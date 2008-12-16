@@ -107,6 +107,8 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 
 (defvar *default-simple-font* (merge-pathnames "font.bmp" *default-font-path*))
 
+(defvar *default-ttf-font* (merge-pathnames "vera.ttf" *default-font-path*))
+
 
 ;; (declaim (INLINE renderer))
 ;; (defun renderer ()
