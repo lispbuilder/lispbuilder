@@ -40,6 +40,7 @@
 	       (:file "fireworks" :depends-on ("package"))
 	       (:file "raw-audio-test" :depends-on ("package"))
 	       (:file "input-util" :depends-on ("package"))
+               (:file "functional-geometry" :depends-on ("package"))
 	       
 	       (:static-file "lisp.bmp")
 	       (:static-file "sdl.bmp")
