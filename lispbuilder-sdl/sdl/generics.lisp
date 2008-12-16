@@ -248,6 +248,7 @@ Sets the per-surface alpha value. 0 is transparent, and 255 is opaque.
 *Note*: When blitting, the presence or absence of [SDL-SRC-ALPHA](#sdl-src-alpha) is relevant only on the source surface, not the destination. 
 *Note*: Per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used if available."))
 
+
 (defgeneric color-key-enabled-p (surface))
 (defgeneric (setf color-key-enabled-p) (value surface)
   (:documentation "Manages colorkeying for a `SURFACE`.
@@ -322,5 +323,7 @@ Returns a new `FONT`, or `NIL` if unsuccessful."))
 (defgeneric char-pitch (font))
 (defgeneric char-size (font))
 (defgeneric char-data (font))
+(defgeneric font-data (font))
 
+(defgeneric free-cached-surface (font))
 

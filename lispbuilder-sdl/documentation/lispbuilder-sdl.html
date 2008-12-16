@@ -1,431 +1,376 @@
-<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html> 
 
-  <head>
-    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
-      <title>LISPBUILDER-SDL - a cool library</title>
-      <style type=\"text/css\">
-	pre { padding:5px; background-color:#e0e0e0 }
-	h3, h4 { text-decoration: underline; }
-	a { text-decoration: none; padding: 1px 2px 1px 2px; }
-	a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
-	a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
-	a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
-	a.none { text-decoration: none; padding: 0; }
-	a.none:visited { text-decoration: none; padding: 0; } 
-	a.none:hover { text-decoration: none; border: none; padding: 0; } 
-	a.none:focus { text-decoration: none; border: none; padding: 0; } 
-	a.noborder { text-decoration: none; padding: 0; } 
-	a.noborder:visited { text-decoration: none; padding: 0; } 
-	a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
-	a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
-	pre.none { padding:5px; background-color:#ffffff }
-	/* code for examples, code and pathnames*/
-      
-	div.code, div.path {
-	color: black;
-	}
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>LISPBUILDER-SDL - API Reference</title>
+  <style type="text/css">
+  pre { padding:5px; background-color:#e0e0e0 }
+  h3, h4 { text-decoration: underline; }
+  a { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
+  a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+  a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
+  a.none { text-decoration: none; padding: 0; }
+  a.none:visited { text-decoration: none; padding: 0; } 
+  a.none:hover { text-decoration: none; border: none; padding: 0; } 
+  a.none:focus { text-decoration: none; border: none; padding: 0; } 
+  a.noborder { text-decoration: none; padding: 0; } 
+  a.noborder:visited { text-decoration: none; padding: 0; } 
+  a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
+  a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+  pre.none { padding:5px; background-color:#ffffff }
+  </style>
+</head>
 
-	div.repl {
-	color: Green;
-	}      
+<body bgcolor=white>
 
-      </style>
-    </head>
-    
-    <body bgcolor=white>
-      
-      <h3> LISPBUILDER-SDL - a cool library</h3>
-    
-      <blockquote>
-	<br>&nbsp;</br><h3><a name=abstract class=none>Abstract</a></h3>
-      
-      <p>
-	LISPBUILDER-SDL comprises several of packages that allow game development using Common Lisp. 
-	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for  
-	<a href="http://www.libsdl.org">SDL</a> and other graphics, sound, physics, character animation 
-	and 3D libraries. LISPBUILDER-SDL core functionality includes 
-	window and event management, 2D graphics, 3D graphics using OpenGL and sound support.
-	The goal for the LISPBUILDER-SDL project is to become a useful resource for the development of games in Lisp.
-      </p>
+<h2> LISPBUILDER-SDL - API Reference</h2>
 
-      <p>
-	<a href="http://www.libsdl.org">SDL</a> provides the low-level 2D rendering support.
-	LISPBUILDER-SDL adds 2D graphical effects such as rotation, 
-	rendering circles, polygons, squares, Bezier and Cuttmull-Rom curves as well as bitmap font support.
-	Additional packages provide native C drawing functions, True Type font rendering, 
-	loading of multiple image formats, a sound mixer and networking support.
-	The lispbuilder packages are meant to work together with each package providing a specific core set of 
-	functionality. For example, an image that is loaded by lispbuilder-sdl-image may be rotated using 
-	lispbuilder-sdl-gfx. Text may be rendered to a surface using lispbuilder-sdl-ttf and finally blitted to
-	the display using lispbuilder-sdl.
-      </p>
-      
-	<p>
-	  The code comes with
-	  a <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a> so you can basically 
-	  do with it whatever you want.
-	</p>
-	
-	<p>
-	  <font color=red>Download shortcut:</font> <a href="http://lispbuilder.googlecode.com/files/lispbuilder-sdl.tgz">http://lispbuilder.googlecode.com/files/lispbuilder-sdl.tgz</a>.
-	</p>
+<blockquote>
+<br>&nbsp;<br><h3><a name=abstract class=none>Abstract</a></h3>
 
-    </blockquote>
+The code comes with
+a <a
+href="http://www.opensource.org/licenses/bsd-license.php">BSD-style
+license</a> so you can basically do with it whatever you want.
 
-    <br>&nbsp;</br><h3><a class=none name="examplesimple">Simple Example</a></h3>
-    <div class="example">
-      <pre>
-	<img src="sdl-alien.png" width="200" height="167" title="Alien Technology" alt="Alien Technology" align=right border=0 vspace=10 hspace=10/>
-(sdl:with-init ()
-  (sdl:window 320 240)
-  (sdl:draw-surface (load-image "lisp.bmp"))
-  (sdl:update-display)
-    (sdl:with-events ()
-      (:quit-event () t)
-      (:video-expose-event (sdl:update-display))))
-      </pre>
-    </div>
-    
-    <br>&nbsp;</br><h3><a class=none name="contents">Contents</a></h3>
-      <ol>
-	<li><a href="#top">LISPBUILDER-SDL</a></li>
-	<ol>
-	  <li><a href="#abstract">Abstract</a></li>
-	  <li><a href="#download">Download</a></li>
-	  <li><a href="#support">Support</a></li>
-	  <li><a href="#license">License</a></li>
-	  <li><a href="#dictionary">The LISPBUILDER-SDL dictionary</a></li>
-	  <ul>
-	          <li><a href="#*black*"><code>*black*</code></a></li>
-	          <li><a href="#*blue*"><code>*blue*</code></a></li>
-	          <li><a href="#*cyan*"><code>*cyan*</code></a></li>
-	          <li><a href="#*default-color*"><code>*default-color*</code></a></li>
-	          <li><a href="#*default-display*"><code>*default-display*</code></a></li>
-	          <li><a href="#*default-font*"><code>*default-font*</code></a></li>
-	          <li><a href="#*default-font-path*"><code>*default-font-path*</code></a></li>
-	          <li><a href="#*default-position*"><code>*default-position*</code></a></li>
-	          <li><a href="#*default-rectangle*"><code>*default-rectangle*</code></a></li>
-	          <li><a href="#*default-surface*"><code>*default-surface*</code></a></li>
-	          <li><a href="#*external-init-on-startup*"><code>*external-init-on-startup*</code></a></li>
-	          <li><a href="#*external-quit-on-exit*"><code>*external-quit-on-exit*</code></a></li>
-	          <li><a href="#*font-10x20*"><code>*font-10x20*</code></a></li>
-	          <li><a href="#*font-5x7*"><code>*font-5x7*</code></a></li>
-	          <li><a href="#*font-5x8*"><code>*font-5x8*</code></a></li>
-	          <li><a href="#*font-6x10*"><code>*font-6x10*</code></a></li>
-	          <li><a href="#*font-6x12*"><code>*font-6x12*</code></a></li>
-	          <li><a href="#*font-6x13*"><code>*font-6x13*</code></a></li>
-	          <li><a href="#*font-6x13b*"><code>*font-6x13b*</code></a></li>
-	          <li><a href="#*font-6x13o*"><code>*font-6x13o*</code></a></li>
-	          <li><a href="#*font-6x9*"><code>*font-6x9*</code></a></li>
-	          <li><a href="#*font-7x13*"><code>*font-7x13*</code></a></li>
-	          <li><a href="#*font-7x13b*"><code>*font-7x13b*</code></a></li>
-	          <li><a href="#*font-7x13o*"><code>*font-7x13o*</code></a></li>
-	          <li><a href="#*font-7x14*"><code>*font-7x14*</code></a></li>
-	          <li><a href="#*font-7x14b*"><code>*font-7x14b*</code></a></li>
-	          <li><a href="#*font-8x13*"><code>*font-8x13*</code></a></li>
-	          <li><a href="#*font-8x13b*"><code>*font-8x13b*</code></a></li>
-	          <li><a href="#*font-8x13o*"><code>*font-8x13o*</code></a></li>
-	          <li><a href="#*font-8x8*"><code>*font-8x8*</code></a></li>
-	          <li><a href="#*font-9x15*"><code>*font-9x15*</code></a></li>
-	          <li><a href="#*font-9x15b*"><code>*font-9x15b*</code></a></li>
-	          <li><a href="#*font-9x18*"><code>*font-9x18*</code></a></li>
-	          <li><a href="#*font-9x18b*"><code>*font-9x18b*</code></a></li>
-	          <li><a href="#*green*"><code>*green*</code></a></li>
-	          <li><a href="#*magenta*"><code>*magenta*</code></a></li>
-	          <li><a href="#*opengl-context*"><code>*opengl-context*</code></a></li>
-	          <li><a href="#*red*"><code>*red*</code></a></li>
-	          <li><a href="#*sdl-initialized*"><code>*sdl-initialized*</code></a></li>
-	          <li><a href="#*white*"><code>*white*</code></a></li>
-	          <li><a href="#*yellow*"><code>*yellow*</code></a></li>
-	          <li><a href="#a"><code>a</code></a></li>
-	          <li><a href="#all-integers?"><code>all-integers?</code></a></li>
-	          <li><a href="#alpha"><code>alpha</code></a></li>
-	          <li><a href="#alpha-enabled-p"><code>alpha-enabled-p</code></a></li>
-	          <li><a href="#any-color-but-this"><code>any-color-but-this</code></a></li>
-	          <li><a href="#average-fps"><code>average-fps</code></a></li>
-	          <li><a href="#b"><code>b</code></a></li>
-	          <li><a href="#bit-depth"><code>bit-depth</code></a></li>
-	          <li><a href="#bitmap-font"><code>bitmap-font</code></a></li>
-	          <li><a href="#blit-surface"><code>blit-surface</code></a></li>
-	          <li><a href="#cached-surface"><code>cached-surface</code></a></li>
-	          <li><a href="#cast"><code>cast</code></a></li>
-	          <li><a href="#cast-all-to-int"><code>cast-all-to-int</code></a></li>
-	          <li><a href="#cast-to-int"><code>cast-to-int</code></a></li>
-	          <li><a href="#catmull-rom-spline"><code>catmull-rom-spline</code></a></li>
-	          <li><a href="#char-height"><code>char-height</code></a></li>
-	          <li><a href="#char-width"><code>char-width</code></a></li>
-	          <li><a href="#check-types"><code>check-types</code></a></li>
-	          <li><a href="#clear-cell"><code>clear-cell</code></a></li>
-	          <li><a href="#clear-clip-rect"><code>clear-clip-rect</code></a></li>
-	          <li><a href="#clear-color-key"><code>clear-color-key</code></a></li>
-	          <li><a href="#clear-display"><code>clear-display</code></a></li>
-	          <li><a href="#clip-rect"><code>clip-rect</code></a></li>
-	          <li><a href="#color"><code>color</code></a></li>
-	          <li><a href="#color"><code>color</code></a></li>
-	          <li><a href="#color-*"><code>color-*</code></a></li>
-	          <li><a href="#color-a"><code>color-a</code></a></li>
-	          <li><a href="#color-key"><code>color-key</code></a></li>
-	          <li><a href="#color-key-enabled-p"><code>color-key-enabled-p</code></a></li>
-	          <li><a href="#color="><code>color=</code></a></li>
-	          <li><a href="#convert-surface"><code>convert-surface</code></a></li>
-	          <li><a href="#convert-to-display-format"><code>convert-to-display-format</code></a></li>
-	          <li><a href="#copy-channel-to-alpha"><code>copy-channel-to-alpha</code></a></li>
-	          <li><a href="#copy-point"><code>copy-point</code></a></li>
-	          <li><a href="#copy-surface"><code>copy-surface</code></a></li>
-	          <li><a href="#create-list-if-not"><code>create-list-if-not</code></a></li>
-	          <li><a href="#create-path"><code>create-path</code></a></li>
-	          <li><a href="#create-rwops-from-file"><code>create-rwops-from-file</code></a></li>
-	          <li><a href="#create-surface"><code>create-surface</code></a></li>
-	          <li><a href="#disable-key-repeat"><code>disable-key-repeat</code></a></li>
-	          <li><a href="#display-surface"><code>display-surface</code></a></li>
-	          <li><a href="#distance"><code>distance</code></a></li>
-	          <li><a href="#distance-*"><code>distance-*</code></a></li>
-	          <li><a href="#draw-bezier"><code>draw-bezier</code></a></li>
-	          <li><a href="#draw-box"><code>draw-box</code></a></li>
-	          <li><a href="#draw-box-*"><code>draw-box-*</code></a></li>
-	          <li><a href="#draw-circle"><code>draw-circle</code></a></li>
-	          <li><a href="#draw-circle-*"><code>draw-circle-*</code></a></li>
-	          <li><a href="#draw-curve"><code>draw-curve</code></a></li>
-	          <li><a href="#draw-ellipse"><code>draw-ellipse</code></a></li>
-	          <li><a href="#draw-ellipse-*"><code>draw-ellipse-*</code></a></li>
-	          <li><a href="#draw-filled-circle"><code>draw-filled-circle</code></a></li>
-	          <li><a href="#draw-filled-circle-*"><code>draw-filled-circle-*</code></a></li>
-	          <li><a href="#draw-filled-ellipse"><code>draw-filled-ellipse</code></a></li>
-	          <li><a href="#draw-filled-ellipse-*"><code>draw-filled-ellipse-*</code></a></li>
-	          <li><a href="#draw-filled-pie"><code>draw-filled-pie</code></a></li>
-	          <li><a href="#draw-filled-pie-*"><code>draw-filled-pie-*</code></a></li>
-	          <li><a href="#draw-filled-polygon"><code>draw-filled-polygon</code></a></li>
-	          <li><a href="#draw-filled-trigon"><code>draw-filled-trigon</code></a></li>
-	          <li><a href="#draw-font"><code>draw-font</code></a></li>
-	          <li><a href="#draw-font-at"><code>draw-font-at</code></a></li>
-	          <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a></li>
-	          <li><a href="#draw-hline"><code>draw-hline</code></a></li>
-	          <li><a href="#draw-line"><code>draw-line</code></a></li>
-	          <li><a href="#draw-line-*"><code>draw-line-*</code></a></li>
-	          <li><a href="#draw-pie"><code>draw-pie</code></a></li>
-	          <li><a href="#draw-pie-*"><code>draw-pie-*</code></a></li>
-	          <li><a href="#draw-pixel"><code>draw-pixel</code></a></li>
-	          <li><a href="#draw-pixel-*"><code>draw-pixel-*</code></a></li>
-	          <li><a href="#draw-polygon"><code>draw-polygon</code></a></li>
-	          <li><a href="#draw-rectangle"><code>draw-rectangle</code></a></li>
-	          <li><a href="#draw-rectangle-*"><code>draw-rectangle-*</code></a></li>
-	          <li><a href="#draw-shape"><code>draw-shape</code></a></li>
-	          <li><a href="#draw-string-blended"><code>draw-string-blended</code></a></li>
-	          <li><a href="#draw-string-blended-*"><code>draw-string-blended-*</code></a></li>
-	          <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a></li>
-	          <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a></li>
-	          <li><a href="#draw-string-solid"><code>draw-string-solid</code></a></li>
-	          <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a></li>
-	          <li><a href="#draw-surface"><code>draw-surface</code></a></li>
-	          <li><a href="#draw-surface-at"><code>draw-surface-at</code></a></li>
-	          <li><a href="#draw-surface-at-*"><code>draw-surface-at-*</code></a></li>
-	          <li><a href="#draw-trigon"><code>draw-trigon</code></a></li>
-	          <li><a href="#draw-vline"><code>draw-vline</code></a></li>
-	          <li><a href="#enable-alpha"><code>enable-alpha</code></a></li>
-	          <li><a href="#enable-color-key"><code>enable-color-key</code></a></li>
-	          <li><a href="#enable-key-repeat"><code>enable-key-repeat</code></a></li>
-	          <li><a href="#enable-key-repeat-p"><code>enable-key-repeat-p</code></a></li>
-	          <li><a href="#enable-rle-accel"><code>enable-rle-accel</code></a></li>
-	          <li><a href="#enable-unicode"><code>enable-unicode</code></a></li>
-	          <li><a href="#enable-unicode-p"><code>enable-unicode-p</code></a></li>
-	          <li><a href="#fill-surface"><code>fill-surface</code></a></li>
-	          <li><a href="#fill-surface-*"><code>fill-surface-*</code></a></li>
-	          <li><a href="#flood-fill"><code>flood-fill</code></a></li>
-	          <li><a href="#flood-fill-*"><code>flood-fill-*</code></a></li>
-	          <li><a href="#flood-fill-stack"><code>flood-fill-stack</code></a></li>
-	          <li><a href="#flood-fill-stack-*"><code>flood-fill-stack-*</code></a></li>
-	          <li><a href="#fp"><code>fp</code></a></li>
-	          <li><a href="#frame-rate"><code>frame-rate</code></a></li>
-	          <li><a href="#free"><code>free</code></a></li>
-	          <li><a href="#free-cached-surface"><code>free-cached-surface</code></a></li>
-	          <li><a href="#g"><code>g</code></a></li>
-	          <li><a href="#get-clip-rect"><code>get-clip-rect</code></a></li>
-	          <li><a href="#get-font-ascent"><code>get-font-ascent</code></a></li>
-	          <li><a href="#get-font-descent"><code>get-font-descent</code></a></li>
-	          <li><a href="#get-font-face-family-name"><code>get-font-face-family-name</code></a></li>
-	          <li><a href="#get-font-face-style-name"><code>get-font-face-style-name</code></a></li>
-	          <li><a href="#get-font-faces"><code>get-font-faces</code></a></li>
-	          <li><a href="#get-font-height"><code>get-font-height</code></a></li>
-	          <li><a href="#get-font-line-skip"><code>get-font-line-skip</code></a></li>
-	          <li><a href="#get-font-size"><code>get-font-size</code></a></li>
-	          <li><a href="#get-font-style"><code>get-font-style</code></a></li>
-	          <li><a href="#get-glyph-metric"><code>get-glyph-metric</code></a></li>
-	          <li><a href="#get-key-state"><code>get-key-state</code></a></li>
-	          <li><a href="#get-native-window"><code>get-native-window</code></a></li>
-	          <li><a href="#get-point"><code>get-point</code></a></li>
-	          <li><a href="#get-position"><code>get-position</code></a></li>
-	          <li><a href="#get-rectangle"><code>get-rectangle</code></a></li>
-	          <li><a href="#get-surface-rect"><code>get-surface-rect</code></a></li>
-	          <li><a href="#height"><code>height</code></a></li>
-	          <li><a href="#image-p"><code>image-p</code></a></li>
-	          <li><a href="#image-type-of"><code>image-type-of</code></a></li>
-	          <li><a href="#init-sdl"><code>init-sdl</code></a></li>
-	          <li><a href="#init-sub-systems"><code>init-sub-systems</code></a></li>
-	          <li><a href="#initialise-default-font"><code>initialise-default-font</code></a></li>
-	          <li><a href="#initialise-font"><code>initialise-font</code></a></li>
-	          <li><a href="#initialize-on-startup"><code>initialize-on-startup</code></a></li>
-	          <li><a href="#initialized-sub-systems-p"><code>initialized-sub-systems-p</code></a></li>
-	          <li><a href="#is-font-face-fixed-width"><code>is-font-face-fixed-width</code></a></li>
-	          <li><a href="#is-valid-ptr"><code>is-valid-ptr</code></a></li>
-	          <li><a href="#key-repeat-delay"><code>key-repeat-delay</code></a></li>
-	          <li><a href="#key-repeat-interval"><code>key-repeat-interval</code></a></li>
-	          <li><a href="#key="><code>key=</code></a></li>
-	          <li><a href="#list-modes"><code>list-modes</code></a></li>
-	          <li><a href="#list-sub-systems"><code>list-sub-systems</code></a></li>
-	          <li><a href="#load-image"><code>load-image</code></a></li>
-	          <li><a href="#map-color"><code>map-color</code></a></li>
-	          <li><a href="#map-color-*"><code>map-color-*</code></a></li>
-	          <li><a href="#num-joysticks"><code>num-joysticks</code></a></li>
-	          <li><a href="#pack-color"><code>pack-color</code></a></li>
-	          <li><a href="#pixel-alpha-enabled-p"><code>pixel-alpha-enabled-p</code></a></li>
-	          <li><a href="#point"><code>point</code></a></li>
-	          <li><a href="#point-*"><code>point-*</code></a></li>
-	          <li><a href="#position-*"><code>position-*</code></a></li>
-	          <li><a href="#push-quit-event"><code>push-quit-event</code></a></li>
-	          <li><a href="#push-user-event"><code>push-user-event</code></a></li>
-	          <li><a href="#query-cursor"><code>query-cursor</code></a></li>
-	          <li><a href="#quit-on-exit"><code>quit-on-exit</code></a></li>
-	          <li><a href="#quit-sdl"><code>quit-sdl</code></a></li>
-	          <li><a href="#quit-sub-systems"><code>quit-sub-systems</code></a></li>
-	          <li><a href="#r"><code>r</code></a></li>
-	          <li><a href="#random+1"><code>random+1</code></a></li>
-	          <li><a href="#random-rectangle"><code>random-rectangle</code></a></li>
-	          <li><a href="#read-pixel"><code>read-pixel</code></a></li>
-	          <li><a href="#read-pixel-*"><code>read-pixel-*</code></a></li>
-	          <li><a href="#rectangle"><code>rectangle</code></a></li>
-	          <li><a href="#rectangle"><code>rectangle</code></a></li>
-	          <li><a href="#rectangle-*"><code>rectangle-*</code></a></li>
-	          <li><a href="#rectangle-from-edges"><code>rectangle-from-edges</code></a></li>
-	          <li><a href="#rectangle-from-edges-*"><code>rectangle-from-edges-*</code></a></li>
-	          <li><a href="#rectangle-from-midpoint-*"><code>rectangle-from-midpoint-*</code></a></li>
-	          <li><a href="#render-string-blended"><code>render-string-blended</code></a></li>
-	          <li><a href="#render-string-shaded"><code>render-string-shaded</code></a></li>
-	          <li><a href="#render-string-solid"><code>render-string-solid</code></a></li>
-	          <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a></li>
-	          <li><a href="#rle-accel-enabled-p"><code>rle-accel-enabled-p</code></a></li>
-	          <li><a href="#rotate-surface"><code>rotate-surface</code></a></li>
-	          <li><a href="#rotate-surface-xy"><code>rotate-surface-xy</code></a></li>
-	          <li><a href="#rwops"><code>rwops</code></a></li>
-	          <li><a href="#save-image"><code>save-image</code></a></li>
-	          <li><a href="#sdl-any-format"><code>sdl-any-format</code></a></li>
-	          <li><a href="#sdl-async-blit"><code>sdl-async-blit</code></a></li>
-	          <li><a href="#sdl-bitmap-font"><code>sdl-bitmap-font</code></a></li>
-	          <li><a href="#sdl-doublebuf"><code>sdl-doublebuf</code></a></li>
-	          <li><a href="#sdl-fullscreen"><code>sdl-fullscreen</code></a></li>
-	          <li><a href="#sdl-get-ticks"><code>sdl-get-ticks</code></a></li>
-	          <li><a href="#sdl-hw-accel"><code>sdl-hw-accel</code></a></li>
-	          <li><a href="#sdl-hw-palette"><code>sdl-hw-palette</code></a></li>
-	          <li><a href="#sdl-hw-surface"><code>sdl-hw-surface</code></a></li>
-	          <li><a href="#sdl-init-audio"><code>sdl-init-audio</code></a></li>
-	          <li><a href="#sdl-init-cdrom"><code>sdl-init-cdrom</code></a></li>
-	          <li><a href="#sdl-init-eventthread"><code>sdl-init-eventthread</code></a></li>
-	          <li><a href="#sdl-init-everything"><code>sdl-init-everything</code></a></li>
-	          <li><a href="#sdl-init-joystick"><code>sdl-init-joystick</code></a></li>
-	          <li><a href="#sdl-init-noparachute"><code>sdl-init-noparachute</code></a></li>
-	          <li><a href="#sdl-init-on-startup"><code>sdl-init-on-startup</code></a></li>
-	          <li><a href="#sdl-init-timer"><code>sdl-init-timer</code></a></li>
-	          <li><a href="#sdl-init-video"><code>sdl-init-video</code></a></li>
-	          <li><a href="#sdl-iyuv-overlay"><code>sdl-iyuv-overlay</code></a></li>
-	          <li><a href="#sdl-joystick-name"><code>sdl-joystick-name</code></a></li>
-	          <li><a href="#sdl-no-frame"><code>sdl-no-frame</code></a></li>
-	          <li><a href="#sdl-opengl"><code>sdl-opengl</code></a></li>
-	          <li><a href="#sdl-pre-alloc"><code>sdl-pre-alloc</code></a></li>
-	          <li><a href="#sdl-quit-on-exit"><code>sdl-quit-on-exit</code></a></li>
-	          <li><a href="#sdl-resizable"><code>sdl-resizable</code></a></li>
-	          <li><a href="#sdl-rle-accel"><code>sdl-rle-accel</code></a></li>
-	          <li><a href="#sdl-rle-accel-ok"><code>sdl-rle-accel-ok</code></a></li>
-	          <li><a href="#sdl-src-alpha"><code>sdl-src-alpha</code></a></li>
-	          <li><a href="#sdl-src-color-key"><code>sdl-src-color-key</code></a></li>
-	          <li><a href="#sdl-surface"><code>sdl-surface</code></a></li>
-	          <li><a href="#sdl-sw-surface"><code>sdl-sw-surface</code></a></li>
-	          <li><a href="#sdl-uyvy-overlay"><code>sdl-uyvy-overlay</code></a></li>
-	          <li><a href="#sdl-wm-grab-input"><code>sdl-wm-grab-input</code></a></li>
-	          <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a></li>
-	          <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a></li>
-	          <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a></li>
-	          <li><a href="#set-cell"><code>set-cell</code></a></li>
-	          <li><a href="#set-cell-*"><code>set-cell-*</code></a></li>
-	          <li><a href="#set-clip-rect"><code>set-clip-rect</code></a></li>
-	          <li><a href="#set-color"><code>set-color</code></a></li>
-	          <li><a href="#set-color-*"><code>set-color-*</code></a></li>
-	          <li><a href="#set-default-font"><code>set-default-font</code></a></li>
-	          <li><a href="#set-font-style"><code>set-font-style</code></a></li>
-	          <li><a href="#set-gl-attribute"><code>set-gl-attribute</code></a></li>
-	          <li><a href="#set-point"><code>set-point</code></a></li>
-	          <li><a href="#set-point-*"><code>set-point-*</code></a></li>
-	          <li><a href="#set-position"><code>set-position</code></a></li>
-	          <li><a href="#set-position-*"><code>set-position-*</code></a></li>
-	          <li><a href="#set-rectangle"><code>set-rectangle</code></a></li>
-	          <li><a href="#set-rectangle-*"><code>set-rectangle-*</code></a></li>
-	          <li><a href="#set-surface"><code>set-surface</code></a></li>
-	          <li><a href="#set-surface-*"><code>set-surface-*</code></a></li>
-	          <li><a href="#show-cursor"><code>show-cursor</code></a></li>
-	          <li><a href="#surface"><code>surface</code></a></li>
-	          <li><a href="#surface-info"><code>surface-info</code></a></li>
-	          <li><a href="#time-scale"><code>time-scale</code></a></li>
-	          <li><a href="#to-degree"><code>to-degree</code></a></li>
-	          <li><a href="#to-radian"><code>to-radian</code></a></li>
-	          <li><a href="#update-display"><code>update-display</code></a></li>
-	          <li><a href="#update-surface"><code>update-surface</code></a></li>
-	          <li><a href="#update-surface-*"><code>update-surface-*</code></a></li>
-	          <li><a href="#video-dimensions"><code>video-dimensions</code></a></li>
-	          <li><a href="#video-driver-name"><code>video-driver-name</code></a></li>
-	          <li><a href="#video-info"><code>video-info</code></a></li>
-	          <li><a href="#video-memory"><code>video-memory</code></a></li>
-	          <li><a href="#width"><code>width</code></a></li>
-	          <li><a href="#window"><code>window</code></a></li>
-	          <li><a href="#with-bezier"><code>with-bezier</code></a></li>
-	          <li><a href="#with-color"><code>with-color</code></a></li>
-	          <li><a href="#with-curve"><code>with-curve</code></a></li>
-	          <li><a href="#with-default-font"><code>with-default-font</code></a></li>
-	          <li><a href="#with-events"><code>with-events</code></a></li>
-	          <li><a href="#with-font"><code>with-font</code></a></li>
-	          <li><a href="#with-foreign-color-copy"><code>with-foreign-color-copy</code></a></li>
-	          <li><a href="#with-init"><code>with-init</code></a></li>
-	          <li><a href="#with-locked-surface"><code>with-locked-surface</code></a></li>
-	          <li><a href="#with-locked-surfaces"><code>with-locked-surfaces</code></a></li>
-	          <li><a href="#with-point"><code>with-point</code></a></li>
-	          <li><a href="#with-rectangle"><code>with-rectangle</code></a></li>
-	          <li><a href="#with-rectangles"><code>with-rectangles</code></a></li>
-	          <li><a href="#with-shape"><code>with-shape</code></a></li>
-	          <li><a href="#with-surface"><code>with-surface</code></a></li>
-	          <li><a href="#with-surface-slots"><code>with-surface-slots</code></a></li>
-	          <li><a href="#with-surfaces"><code>with-surfaces</code></a></li>
-	          <li><a href="#within-range"><code>within-range</code></a></li>
-	          <li><a href="#within-range-*"><code>within-range-*</code></a></li>
-	          <li><a href="#x"><code>x</code></a></li>
-	          <li><a href="#x2"><code>x2</code></a></li>
-	          <li><a href="#y"><code>y</code></a></li>
-	          <li><a href="#y2"><code>y2</code></a></li>
-	          <li><a href="#zoom-surface"><code>zoom-surface</code></a></li>
-	        </ul>
-	  <li><a href="#ack">Acknowledgements</a></li>
-	</ol>
-      </div>      
-      
-	
-      <br>&nbsp;</br><h3><a class=none name="download">Download</a></h3>
+<p>
+<font color=red>Download shortcut:</font> <a href="http://weitz.de/files/lispbuilder-sdl.tar.gz">http://weitz.de/files/lispbuilder-sdl.tar.gz</a>.
+</blockquote>
 
-	<p>
-	  <font color=red>Current Version:</font> The latest stable version of LISPBUILDER-SDL, together with this documentation can be downloaded from 
-	  <a href="http://lispbuilder.googlecode.com/files/lispbuilder-sdl.tgz">http://lispbuilder.googlecode.com/files/lispbuilder-sdl.tgz</a>.
-	</p>
-		
-	<br>&nbsp;</br><h3><a class=none name="support">Documentation, Support & Mailing Lists</a></h3>
-	
-	See the `LISPBUILDER-SDL` documentation at <a href="http://lispbuilder.googlecode.com">lispbuilder.googlecode.com</a>.
+<br>&nbsp;<br><h3><a class=none name="contents">Contents</a></h3>
+<ol>
+  <li><a href="#download">Download</a>
+  <li><a href="#dictionary">The LISPBUILDER-SDL dictionary</a>
+    <ol>
+      <li><a href="#*black*"><code>*black*</code></a>
+      <li><a href="#*blue*"><code>*blue*</code></a>
+      <li><a href="#*cyan*"><code>*cyan*</code></a>
+      <li><a href="#*default-color*"><code>*default-color*</code></a>
+      <li><a href="#*default-display*"><code>*default-display*</code></a>
+      <li><a href="#*default-font*"><code>*default-font*</code></a>
+      <li><a href="#*default-font-path*"><code>*default-font-path*</code></a>
+      <li><a href="#*default-position*"><code>*default-position*</code></a>
+      <li><a href="#*default-rectangle*"><code>*default-rectangle*</code></a>
+      <li><a href="#*default-simple-font*"><code>*default-simple-font*</code></a>
+      <li><a href="#*default-surface*"><code>*default-surface*</code></a>
+      <li><a href="#*external-init-on-startup*"><code>*external-init-on-startup*</code></a>
+      <li><a href="#*external-quit-on-exit*"><code>*external-quit-on-exit*</code></a>
+      <li><a href="#*font-10x20*"><code>*font-10x20*</code></a>
+      <li><a href="#*font-5x7*"><code>*font-5x7*</code></a>
+      <li><a href="#*font-5x8*"><code>*font-5x8*</code></a>
+      <li><a href="#*font-6x10*"><code>*font-6x10*</code></a>
+      <li><a href="#*font-6x12*"><code>*font-6x12*</code></a>
+      <li><a href="#*font-6x13*"><code>*font-6x13*</code></a>
+      <li><a href="#*font-6x13b*"><code>*font-6x13b*</code></a>
+      <li><a href="#*font-6x13o*"><code>*font-6x13o*</code></a>
+      <li><a href="#*font-6x9*"><code>*font-6x9*</code></a>
+      <li><a href="#*font-7x13*"><code>*font-7x13*</code></a>
+      <li><a href="#*font-7x13b*"><code>*font-7x13b*</code></a>
+      <li><a href="#*font-7x13o*"><code>*font-7x13o*</code></a>
+      <li><a href="#*font-7x14*"><code>*font-7x14*</code></a>
+      <li><a href="#*font-7x14b*"><code>*font-7x14b*</code></a>
+      <li><a href="#*font-8x13*"><code>*font-8x13*</code></a>
+      <li><a href="#*font-8x13b*"><code>*font-8x13b*</code></a>
+      <li><a href="#*font-8x13o*"><code>*font-8x13o*</code></a>
+      <li><a href="#*font-8x8*"><code>*font-8x8*</code></a>
+      <li><a href="#*font-9x15*"><code>*font-9x15*</code></a>
+      <li><a href="#*font-9x15b*"><code>*font-9x15b*</code></a>
+      <li><a href="#*font-9x18*"><code>*font-9x18*</code></a>
+      <li><a href="#*font-9x18b*"><code>*font-9x18b*</code></a>
+      <li><a href="#*green*"><code>*green*</code></a>
+      <li><a href="#*magenta*"><code>*magenta*</code></a>
+      <li><a href="#*opengl-context*"><code>*opengl-context*</code></a>
+      <li><a href="#*red*"><code>*red*</code></a>
+      <li><a href="#*sdl-initialized*"><code>*sdl-initialized*</code></a>
+      <li><a href="#*simple-font-4x5*"><code>*simple-font-4x5*</code></a>
+      <li><a href="#*white*"><code>*white*</code></a>
+      <li><a href="#*yellow*"><code>*yellow*</code></a>
+      <li><a href="#a"><code>a</code></a>
+      <li><a href="#all-integers?"><code>all-integers?</code></a>
+      <li><a href="#alpha"><code>alpha</code></a>
+      <li><a href="#alpha-enabled-p"><code>alpha-enabled-p</code></a>
+      <li><a href="#any-color-but-this"><code>any-color-but-this</code></a>
+      <li><a href="#average-fps"><code>average-fps</code></a>
+      <li><a href="#b"><code>b</code></a>
+      <li><a href="#bit-depth"><code>bit-depth</code></a>
+      <li><a href="#bitmap-font"><code>bitmap-font</code></a>
+      <li><a href="#blit-surface"><code>blit-surface</code></a>
+      <li><a href="#cached-surface"><code>cached-surface</code></a>
+      <li><a href="#cast"><code>cast</code></a>
+      <li><a href="#cast-all-to-int"><code>cast-all-to-int</code></a>
+      <li><a href="#cast-to-int"><code>cast-to-int</code></a>
+      <li><a href="#catmull-rom-spline"><code>catmull-rom-spline</code></a>
+      <li><a href="#char-height"><code>char-height</code></a>
+      <li><a href="#char-width"><code>char-width</code></a>
+      <li><a href="#check-types"><code>check-types</code></a>
+      <li><a href="#clear-cell"><code>clear-cell</code></a>
+      <li><a href="#clear-clip-rect"><code>clear-clip-rect</code></a>
+      <li><a href="#clear-color-key"><code>clear-color-key</code></a>
+      <li><a href="#clear-display"><code>clear-display</code></a>
+      <li><a href="#clip-rect"><code>clip-rect</code></a>
+      <li><a href="#color"><code>color</code></a>
+      <li><a href="#color"><code>color</code></a>
+      <li><a href="#color-*"><code>color-*</code></a>
+      <li><a href="#color-a"><code>color-a</code></a>
+      <li><a href="#color-key"><code>color-key</code></a>
+      <li><a href="#color-key-enabled-p"><code>color-key-enabled-p</code></a>
+      <li><a href="#color="><code>color=</code></a>
+      <li><a href="#convert-surface"><code>convert-surface</code></a>
+      <li><a href="#convert-to-display-format"><code>convert-to-display-format</code></a>
+      <li><a href="#copy-channel-to-alpha"><code>copy-channel-to-alpha</code></a>
+      <li><a href="#copy-point"><code>copy-point</code></a>
+      <li><a href="#copy-surface"><code>copy-surface</code></a>
+      <li><a href="#create-list-if-not"><code>create-list-if-not</code></a>
+      <li><a href="#create-path"><code>create-path</code></a>
+      <li><a href="#create-rwops-from-file"><code>create-rwops-from-file</code></a>
+      <li><a href="#create-simple-font-definition"><code>create-simple-font-definition</code></a>
+      <li><a href="#create-surface"><code>create-surface</code></a>
+      <li><a href="#disable-key-repeat"><code>disable-key-repeat</code></a>
+      <li><a href="#display-surface"><code>display-surface</code></a>
+      <li><a href="#distance"><code>distance</code></a>
+      <li><a href="#distance-*"><code>distance-*</code></a>
+      <li><a href="#draw-bezier"><code>draw-bezier</code></a>
+      <li><a href="#draw-box"><code>draw-box</code></a>
+      <li><a href="#draw-box-*"><code>draw-box-*</code></a>
+      <li><a href="#draw-circle"><code>draw-circle</code></a>
+      <li><a href="#draw-circle-*"><code>draw-circle-*</code></a>
+      <li><a href="#draw-curve"><code>draw-curve</code></a>
+      <li><a href="#draw-ellipse"><code>draw-ellipse</code></a>
+      <li><a href="#draw-ellipse-*"><code>draw-ellipse-*</code></a>
+      <li><a href="#draw-filled-circle"><code>draw-filled-circle</code></a>
+      <li><a href="#draw-filled-circle-*"><code>draw-filled-circle-*</code></a>
+      <li><a href="#draw-filled-ellipse"><code>draw-filled-ellipse</code></a>
+      <li><a href="#draw-filled-ellipse-*"><code>draw-filled-ellipse-*</code></a>
+      <li><a href="#draw-filled-pie"><code>draw-filled-pie</code></a>
+      <li><a href="#draw-filled-pie-*"><code>draw-filled-pie-*</code></a>
+      <li><a href="#draw-filled-polygon"><code>draw-filled-polygon</code></a>
+      <li><a href="#draw-filled-trigon"><code>draw-filled-trigon</code></a>
+      <li><a href="#draw-font"><code>draw-font</code></a>
+      <li><a href="#draw-font"><code>draw-font</code></a>
+      <li><a href="#draw-font-at"><code>draw-font-at</code></a>
+      <li><a href="#draw-font-at-*"><code>draw-font-at-*</code></a>
+      <li><a href="#draw-hline"><code>draw-hline</code></a>
+      <li><a href="#draw-line"><code>draw-line</code></a>
+      <li><a href="#draw-line-*"><code>draw-line-*</code></a>
+      <li><a href="#draw-pie"><code>draw-pie</code></a>
+      <li><a href="#draw-pie-*"><code>draw-pie-*</code></a>
+      <li><a href="#draw-pixel"><code>draw-pixel</code></a>
+      <li><a href="#draw-pixel-*"><code>draw-pixel-*</code></a>
+      <li><a href="#draw-polygon"><code>draw-polygon</code></a>
+      <li><a href="#draw-rectangle"><code>draw-rectangle</code></a>
+      <li><a href="#draw-rectangle-*"><code>draw-rectangle-*</code></a>
+      <li><a href="#draw-shape"><code>draw-shape</code></a>
+      <li><a href="#draw-string-blended"><code>draw-string-blended</code></a>
+      <li><a href="#draw-string-blended-*"><code>draw-string-blended-*</code></a>
+      <li><a href="#draw-string-shaded"><code>draw-string-shaded</code></a>
+      <li><a href="#draw-string-shaded-*"><code>draw-string-shaded-*</code></a>
+      <li><a href="#draw-string-solid"><code>draw-string-solid</code></a>
+      <li><a href="#draw-string-solid-*"><code>draw-string-solid-*</code></a>
+      <li><a href="#draw-surface"><code>draw-surface</code></a>
+      <li><a href="#draw-surface-at"><code>draw-surface-at</code></a>
+      <li><a href="#draw-surface-at-*"><code>draw-surface-at-*</code></a>
+      <li><a href="#draw-trigon"><code>draw-trigon</code></a>
+      <li><a href="#draw-vline"><code>draw-vline</code></a>
+      <li><a href="#enable-alpha"><code>enable-alpha</code></a>
+      <li><a href="#enable-color-key"><code>enable-color-key</code></a>
+      <li><a href="#enable-key-repeat"><code>enable-key-repeat</code></a>
+      <li><a href="#enable-key-repeat-p"><code>enable-key-repeat-p</code></a>
+      <li><a href="#enable-rle-accel"><code>enable-rle-accel</code></a>
+      <li><a href="#enable-unicode"><code>enable-unicode</code></a>
+      <li><a href="#enable-unicode-p"><code>enable-unicode-p</code></a>
+      <li><a href="#fill-surface"><code>fill-surface</code></a>
+      <li><a href="#fill-surface-*"><code>fill-surface-*</code></a>
+      <li><a href="#flood-fill"><code>flood-fill</code></a>
+      <li><a href="#flood-fill-*"><code>flood-fill-*</code></a>
+      <li><a href="#flood-fill-stack"><code>flood-fill-stack</code></a>
+      <li><a href="#flood-fill-stack-*"><code>flood-fill-stack-*</code></a>
+      <li><a href="#fp"><code>fp</code></a>
+      <li><a href="#frame-rate"><code>frame-rate</code></a>
+      <li><a href="#free"><code>free</code></a>
+      <li><a href="#free-cached-surface"><code>free-cached-surface</code></a>
+      <li><a href="#g"><code>g</code></a>
+      <li><a href="#get-clip-rect"><code>get-clip-rect</code></a>
+      <li><a href="#get-font-ascent"><code>get-font-ascent</code></a>
+      <li><a href="#get-font-descent"><code>get-font-descent</code></a>
+      <li><a href="#get-font-face-family-name"><code>get-font-face-family-name</code></a>
+      <li><a href="#get-font-face-style-name"><code>get-font-face-style-name</code></a>
+      <li><a href="#get-font-faces"><code>get-font-faces</code></a>
+      <li><a href="#get-font-height"><code>get-font-height</code></a>
+      <li><a href="#get-font-line-skip"><code>get-font-line-skip</code></a>
+      <li><a href="#get-font-size"><code>get-font-size</code></a>
+      <li><a href="#get-font-style"><code>get-font-style</code></a>
+      <li><a href="#get-glyph-metric"><code>get-glyph-metric</code></a>
+      <li><a href="#get-key-state"><code>get-key-state</code></a>
+      <li><a href="#get-native-window"><code>get-native-window</code></a>
+      <li><a href="#get-point"><code>get-point</code></a>
+      <li><a href="#get-position"><code>get-position</code></a>
+      <li><a href="#get-rectangle"><code>get-rectangle</code></a>
+      <li><a href="#get-surface-rect"><code>get-surface-rect</code></a>
+      <li><a href="#handle-key-down"><code>handle-key-down</code></a>
+      <li><a href="#handle-key-up"><code>handle-key-up</code></a>
+      <li><a href="#height"><code>height</code></a>
+      <li><a href="#image-p"><code>image-p</code></a>
+      <li><a href="#image-type-of"><code>image-type-of</code></a>
+      <li><a href="#init-sdl"><code>init-sdl</code></a>
+      <li><a href="#init-sub-systems"><code>init-sub-systems</code></a>
+      <li><a href="#initialise-default-font"><code>initialise-default-font</code></a>
+      <li><a href="#initialise-font"><code>initialise-font</code></a>
+      <li><a href="#initialise-input-util"><code>initialise-input-util</code></a>
+      <li><a href="#initialize-on-startup"><code>initialize-on-startup</code></a>
+      <li><a href="#initialized-sub-systems-p"><code>initialized-sub-systems-p</code></a>
+      <li><a href="#is-font-face-fixed-width"><code>is-font-face-fixed-width</code></a>
+      <li><a href="#is-valid-ptr"><code>is-valid-ptr</code></a>
+      <li><a href="#key-held-p"><code>key-held-p</code></a>
+      <li><a href="#key-held-time"><code>key-held-time</code></a>
+      <li><a href="#key-pressed-p"><code>key-pressed-p</code></a>
+      <li><a href="#key-repeat-delay"><code>key-repeat-delay</code></a>
+      <li><a href="#key-repeat-interval"><code>key-repeat-interval</code></a>
+      <li><a href="#key="><code>key=</code></a>
+      <li><a href="#list-modes"><code>list-modes</code></a>
+      <li><a href="#list-sub-systems"><code>list-sub-systems</code></a>
+      <li><a href="#load-image"><code>load-image</code></a>
+      <li><a href="#map-color"><code>map-color</code></a>
+      <li><a href="#map-color-*"><code>map-color-*</code></a>
+      <li><a href="#num-joysticks"><code>num-joysticks</code></a>
+      <li><a href="#pack-color"><code>pack-color</code></a>
+      <li><a href="#pixel-alpha-enabled-p"><code>pixel-alpha-enabled-p</code></a>
+      <li><a href="#point"><code>point</code></a>
+      <li><a href="#point-*"><code>point-*</code></a>
+      <li><a href="#position-*"><code>position-*</code></a>
+      <li><a href="#push-quit-event"><code>push-quit-event</code></a>
+      <li><a href="#push-user-event"><code>push-user-event</code></a>
+      <li><a href="#query-cursor"><code>query-cursor</code></a>
+      <li><a href="#quit-input-util"><code>quit-input-util</code></a>
+      <li><a href="#quit-on-exit"><code>quit-on-exit</code></a>
+      <li><a href="#quit-sdl"><code>quit-sdl</code></a>
+      <li><a href="#quit-sub-systems"><code>quit-sub-systems</code></a>
+      <li><a href="#r"><code>r</code></a>
+      <li><a href="#random+1"><code>random+1</code></a>
+      <li><a href="#random-rectangle"><code>random-rectangle</code></a>
+      <li><a href="#read-pixel"><code>read-pixel</code></a>
+      <li><a href="#read-pixel-*"><code>read-pixel-*</code></a>
+      <li><a href="#rectangle"><code>rectangle</code></a>
+      <li><a href="#rectangle"><code>rectangle</code></a>
+      <li><a href="#rectangle-*"><code>rectangle-*</code></a>
+      <li><a href="#rectangle-from-edges"><code>rectangle-from-edges</code></a>
+      <li><a href="#rectangle-from-edges-*"><code>rectangle-from-edges-*</code></a>
+      <li><a href="#rectangle-from-midpoint-*"><code>rectangle-from-midpoint-*</code></a>
+      <li><a href="#render-string-blended"><code>render-string-blended</code></a>
+      <li><a href="#render-string-shaded"><code>render-string-shaded</code></a>
+      <li><a href="#render-string-solid"><code>render-string-solid</code></a>
+      <li><a href="#return-sub-systems-of-status"><code>return-sub-systems-of-status</code></a>
+      <li><a href="#rle-accel-enabled-p"><code>rle-accel-enabled-p</code></a>
+      <li><a href="#rotate-surface"><code>rotate-surface</code></a>
+      <li><a href="#rotate-surface-xy"><code>rotate-surface-xy</code></a>
+      <li><a href="#rwops"><code>rwops</code></a>
+      <li><a href="#save-image"><code>save-image</code></a>
+      <li><a href="#sdl-any-format"><code>sdl-any-format</code></a>
+      <li><a href="#sdl-async-blit"><code>sdl-async-blit</code></a>
+      <li><a href="#sdl-bitmap-font"><code>sdl-bitmap-font</code></a>
+      <li><a href="#sdl-doublebuf"><code>sdl-doublebuf</code></a>
+      <li><a href="#sdl-fullscreen"><code>sdl-fullscreen</code></a>
+      <li><a href="#sdl-get-ticks"><code>sdl-get-ticks</code></a>
+      <li><a href="#sdl-hw-accel"><code>sdl-hw-accel</code></a>
+      <li><a href="#sdl-hw-palette"><code>sdl-hw-palette</code></a>
+      <li><a href="#sdl-hw-surface"><code>sdl-hw-surface</code></a>
+      <li><a href="#sdl-init-audio"><code>sdl-init-audio</code></a>
+      <li><a href="#sdl-init-cdrom"><code>sdl-init-cdrom</code></a>
+      <li><a href="#sdl-init-eventthread"><code>sdl-init-eventthread</code></a>
+      <li><a href="#sdl-init-everything"><code>sdl-init-everything</code></a>
+      <li><a href="#sdl-init-joystick"><code>sdl-init-joystick</code></a>
+      <li><a href="#sdl-init-noparachute"><code>sdl-init-noparachute</code></a>
+      <li><a href="#sdl-init-on-startup"><code>sdl-init-on-startup</code></a>
+      <li><a href="#sdl-init-timer"><code>sdl-init-timer</code></a>
+      <li><a href="#sdl-init-video"><code>sdl-init-video</code></a>
+      <li><a href="#sdl-iyuv-overlay"><code>sdl-iyuv-overlay</code></a>
+      <li><a href="#sdl-joystick-name"><code>sdl-joystick-name</code></a>
+      <li><a href="#sdl-no-frame"><code>sdl-no-frame</code></a>
+      <li><a href="#sdl-opengl"><code>sdl-opengl</code></a>
+      <li><a href="#sdl-pre-alloc"><code>sdl-pre-alloc</code></a>
+      <li><a href="#sdl-quit-on-exit"><code>sdl-quit-on-exit</code></a>
+      <li><a href="#sdl-resizable"><code>sdl-resizable</code></a>
+      <li><a href="#sdl-rle-accel"><code>sdl-rle-accel</code></a>
+      <li><a href="#sdl-rle-accel-ok"><code>sdl-rle-accel-ok</code></a>
+      <li><a href="#sdl-src-alpha"><code>sdl-src-alpha</code></a>
+      <li><a href="#sdl-src-color-key"><code>sdl-src-color-key</code></a>
+      <li><a href="#sdl-surface"><code>sdl-surface</code></a>
+      <li><a href="#sdl-sw-surface"><code>sdl-sw-surface</code></a>
+      <li><a href="#sdl-uyvy-overlay"><code>sdl-uyvy-overlay</code></a>
+      <li><a href="#sdl-wm-grab-input"><code>sdl-wm-grab-input</code></a>
+      <li><a href="#sdl-yuy2-overlay"><code>sdl-yuy2-overlay</code></a>
+      <li><a href="#sdl-yv12-overlay"><code>sdl-yv12-overlay</code></a>
+      <li><a href="#sdl-yvyu-overlay"><code>sdl-yvyu-overlay</code></a>
+      <li><a href="#set-cell"><code>set-cell</code></a>
+      <li><a href="#set-cell-*"><code>set-cell-*</code></a>
+      <li><a href="#set-clip-rect"><code>set-clip-rect</code></a>
+      <li><a href="#set-color"><code>set-color</code></a>
+      <li><a href="#set-color-*"><code>set-color-*</code></a>
+      <li><a href="#set-default-font"><code>set-default-font</code></a>
+      <li><a href="#set-font-style"><code>set-font-style</code></a>
+      <li><a href="#set-gl-attribute"><code>set-gl-attribute</code></a>
+      <li><a href="#set-point"><code>set-point</code></a>
+      <li><a href="#set-point-*"><code>set-point-*</code></a>
+      <li><a href="#set-position"><code>set-position</code></a>
+      <li><a href="#set-position-*"><code>set-position-*</code></a>
+      <li><a href="#set-rectangle"><code>set-rectangle</code></a>
+      <li><a href="#set-rectangle-*"><code>set-rectangle-*</code></a>
+      <li><a href="#set-surface"><code>set-surface</code></a>
+      <li><a href="#set-surface-*"><code>set-surface-*</code></a>
+      <li><a href="#show-cursor"><code>show-cursor</code></a>
+      <li><a href="#simple-font-definition"><code>simple-font-definition</code></a>
+      <li><a href="#surface"><code>surface</code></a>
+      <li><a href="#surface-info"><code>surface-info</code></a>
+      <li><a href="#time-scale"><code>time-scale</code></a>
+      <li><a href="#to-degree"><code>to-degree</code></a>
+      <li><a href="#to-radian"><code>to-radian</code></a>
+      <li><a href="#update-display"><code>update-display</code></a>
+      <li><a href="#update-input-util"><code>update-input-util</code></a>
+      <li><a href="#update-surface"><code>update-surface</code></a>
+      <li><a href="#update-surface-*"><code>update-surface-*</code></a>
+      <li><a href="#video-dimensions"><code>video-dimensions</code></a>
+      <li><a href="#video-driver-name"><code>video-driver-name</code></a>
+      <li><a href="#video-info"><code>video-info</code></a>
+      <li><a href="#video-memory"><code>video-memory</code></a>
+      <li><a href="#width"><code>width</code></a>
+      <li><a href="#window"><code>window</code></a>
+      <li><a href="#with-bezier"><code>with-bezier</code></a>
+      <li><a href="#with-color"><code>with-color</code></a>
+      <li><a href="#with-curve"><code>with-curve</code></a>
+      <li><a href="#with-default-font"><code>with-default-font</code></a>
+      <li><a href="#with-events"><code>with-events</code></a>
+      <li><a href="#with-font"><code>with-font</code></a>
+      <li><a href="#with-foreign-color-copy"><code>with-foreign-color-copy</code></a>
+      <li><a href="#with-init"><code>with-init</code></a>
+      <li><a href="#with-locked-surface"><code>with-locked-surface</code></a>
+      <li><a href="#with-locked-surfaces"><code>with-locked-surfaces</code></a>
+      <li><a href="#with-point"><code>with-point</code></a>
+      <li><a href="#with-rectangle"><code>with-rectangle</code></a>
+      <li><a href="#with-rectangles"><code>with-rectangles</code></a>
+      <li><a href="#with-shape"><code>with-shape</code></a>
+      <li><a href="#with-surface"><code>with-surface</code></a>
+      <li><a href="#with-surface-slots"><code>with-surface-slots</code></a>
+      <li><a href="#with-surfaces"><code>with-surfaces</code></a>
+      <li><a href="#within-range"><code>within-range</code></a>
+      <li><a href="#within-range-*"><code>within-range-*</code></a>
+      <li><a href="#x"><code>x</code></a>
+      <li><a href="#x2"><code>x2</code></a>
+      <li><a href="#y"><code>y</code></a>
+      <li><a href="#y2"><code>y2</code></a>
+      <li><a href="#zoom-surface"><code>zoom-surface</code></a>
+    </ol>
+  <li><a href="#ack">Acknowledgements</a>
+</ol>
 
-	<br>&nbsp;</br><h3><a class=none name="license">License</a></h3>
-	<p>
-	  LISPBUILDER-SDL is distributed under the 
-	  <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
-	</p>
-	  
-      <br>&nbsp;</br><h3><a class=none name="dictionary">The LISPBUILDER-SDL dictionary</a></h3>
-	  
-	
-	
+<br>&nbsp;<br><h3><a class=none name="download">Download</a></h3>
+
+LISPBUILDER-SDL together with this documentation can be downloaded from <a
+href="http://weitz.de/files/lispbuilder-sdl.tar.gz">http://weitz.de/files/lispbuilder-sdl.tar.gz</a>. The
+current version is 0.1.0.
+
+<br>&nbsp;<br><h3><a class=none name="dictionary">The LISPBUILDER-SDL dictionary</a></h3>
+
 
 
 <!-- Entry for *BLACK* -->
@@ -520,7 +465,7 @@
 <p><br>[Special variable]<br><a class=none name='*default-font-path*'><b>*default-font-path*</b></a>
 <blockquote><br>
 
-<p>The path to any fonts used in teh <code>LISPBUILDER-SDL</code> packages. </p>
+
 
 </blockquote>
 
@@ -549,6 +494,18 @@
 </blockquote>
 
 <!-- End of entry for *DEFAULT-RECTANGLE* -->
+
+
+<!-- Entry for *DEFAULT-SIMPLE-FONT* -->
+
+<p><br>[Special variable]<br><a class=none name='*default-simple-font*'><b>*default-simple-font*</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for *DEFAULT-SIMPLE-FONT* -->
 
 
 <!-- Entry for *DEFAULT-SURFACE* -->
@@ -916,6 +873,18 @@
 <!-- End of entry for *SDL-INITIALIZED* -->
 
 
+<!-- Entry for *SIMPLE-FONT-4X5* -->
+
+<p><br>[Special variable]<br><a class=none name='*simple-font-4x5*'><b>*simple-font-4x5*</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for *SIMPLE-FONT-4X5* -->
+
+
 <!-- Entry for *WHITE* -->
 
 <p><br>[Special variable]<br><a class=none name='*white*'><b>*white*</b></a>
@@ -955,7 +924,8 @@
 
 <!-- Entry for A -->
 
-<p><br>[Method]<br><a class=none><b>a</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>a</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>a</b> <i>(color color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1004,7 +974,8 @@
 
 <!-- Entry for ALPHA -->
 
-<p><br>[Method]<br><a class=none><b>alpha</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>alpha</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>alpha</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1029,7 +1000,8 @@
 
 <!-- Entry for ALPHA-ENABLED-P -->
 
-<p><br>[Method]<br><a class=none><b>alpha-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>alpha-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>alpha-enabled-p</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1045,6 +1017,18 @@
 <blockquote><br>
 
 <p>Returns a new color that is different to <code>COLOR</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for ANY-COLOR-BUT-THIS -->
+
+
+<!-- Entry for ANY-COLOR-BUT-THIS -->
+
+<p><br>[Method]<br><a class=none><b>any-color-but-this</b> <i>color</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
 
 </blockquote>
 
@@ -1078,7 +1062,8 @@
 
 <!-- Entry for B -->
 
-<p><br>[Method]<br><a class=none><b>b</b> <i>(color color)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>b</b> <i>(color color)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>b</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1200,8 +1185,8 @@
 
 <!-- Entry for CHAR-HEIGHT -->
 
-<p><br>[Generic accessor]<br><a class=none name='char-height'><b>char-height</b> <i>sdl-bitmap-font</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>char-height</b> <i>font-definition</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Generic accessor]<br><a class=none name='char-height'><b>char-height</b> <i>bitmap-font-definition</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>char-height</b> <i>bitmap-font-definition</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1213,7 +1198,7 @@
 
 <!-- Entry for CHAR-HEIGHT -->
 
-<p><br>[Method]<br><a class=none><b>char-height</b> <i>(sdl-bitmap-font sdl-bitmap-font)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>char-height</b> <i>(bitmap-font-definition bitmap-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -1225,8 +1210,8 @@
 
 <!-- Entry for CHAR-HEIGHT -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>char-height</b> <i>(sdl-bitmap-font font-definition)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>char-height</b> <i>(font-definition font-definition)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Specialized accessor]<br><a class=none><b>char-height</b> <i>(bitmap-font-definition bitmap-font-definition)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>char-height</b> <i>(bitmap-font-definition bitmap-font-definition)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1238,8 +1223,8 @@
 
 <!-- Entry for CHAR-WIDTH -->
 
-<p><br>[Generic accessor]<br><a class=none name='char-width'><b>char-width</b> <i>sdl-bitmap-font</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>char-width</b> <i>font-definition</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Generic accessor]<br><a class=none name='char-width'><b>char-width</b> <i>bitmap-font-definition</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>char-width</b> <i>bitmap-font-definition</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1251,7 +1236,7 @@
 
 <!-- Entry for CHAR-WIDTH -->
 
-<p><br>[Method]<br><a class=none><b>char-width</b> <i>(sdl-bitmap-font sdl-bitmap-font)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>char-width</b> <i>(bitmap-font-definition bitmap-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 
@@ -1263,8 +1248,8 @@
 
 <!-- Entry for CHAR-WIDTH -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>char-width</b> <i>(sdl-bitmap-font font-definition)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>char-width</b> <i>(font-definition font-definition)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Specialized accessor]<br><a class=none><b>char-width</b> <i>(bitmap-font-definition bitmap-font-definition)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>char-width</b> <i>(bitmap-font-definition bitmap-font-definition)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1349,7 +1334,8 @@
 
 <!-- Entry for CLIP-RECT -->
 
-<p><br>[Method]<br><a class=none><b>clip-rect</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>clip-rect</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>clip-rect</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1395,6 +1381,30 @@
 <!-- End of entry for COLOR-* -->
 
 
+<!-- Entry for COLOR-* -->
+
+<p><br>[Method]<br><a class=none><b>color-*</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for COLOR-* -->
+
+
+<!-- Entry for COLOR-* -->
+
+<p><br>[Method]<br><a class=none><b>color-*</b> <i>(color color)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for COLOR-* -->
+
+
 <!-- Entry for COLOR-A -->
 
 <p><br>[Standard class]<br><a class=none name='color-a'><b>color-a</b></a>
@@ -1409,8 +1419,8 @@
 
 <!-- Entry for COLOR-KEY -->
 
-<p><br>[Generic accessor]<br><a class=none name='color-key'><b>color-key</b> <i>surface</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>color-key</b> <i>surface</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Generic accessor]<br><a class=none name='color-key'><b>color-key</b> <i>simple-font-definition</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>color-key</b> <i>simple-font-definition</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1422,8 +1432,21 @@
 
 <!-- Entry for COLOR-KEY -->
 
-<p><br>[Specialized accessor]<br><a class=none><b>color-key</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
-<br><a class=none><tt>(setf (</tt><b>color-key</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<p><br>[Specialized accessor]<br><a class=none><b>color-key</b> <i>(simple-font-definition simple-font-definition)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>color-key</b> <i>(simple-font-definition simple-font-definition)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for COLOR-KEY -->
+
+
+<!-- Entry for COLOR-KEY -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>color-key</b> <i>(simple-font-definition sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>color-key</b> <i>(simple-font-definition sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1448,7 +1471,8 @@
 
 <!-- Entry for COLOR-KEY-ENABLED-P -->
 
-<p><br>[Method]<br><a class=none><b>color-key-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>color-key-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>color-key-enabled-p</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -1464,6 +1488,42 @@
 <blockquote><br>
 
 <p>Returns <code>T</code> if the <code>RGB</code>&lt;-&gt;<code>RGB</code> or <code>RGBA</code>&lt;-&gt;<code>RGBA</code> color components in <code>COLOR1</code> and <code>COLOR2</code> match. Returns <code>NIL</code> otherwise. </p>
+
+</blockquote>
+
+<!-- End of entry for COLOR= -->
+
+
+<!-- Entry for COLOR= -->
+
+<p><br>[Method]<br><a class=none><b>color=</b> <i>(color1 color-a) (color2 color-a)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for COLOR= -->
+
+
+<!-- Entry for COLOR= -->
+
+<p><br>[Method]<br><a class=none><b>color=</b> <i>(color1 color) (color2 color)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for COLOR= -->
+
+
+<!-- Entry for COLOR= -->
+
+<p><br>[Method]<br><a class=none><b>color=</b> <i>color1 color2</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
 
 </blockquote>
 
@@ -1564,6 +1624,18 @@
 </blockquote>
 
 <!-- End of entry for CREATE-RWOPS-FROM-FILE -->
+
+
+<!-- Entry for CREATE-SIMPLE-FONT-DEFINITION -->
+
+<p><br>[Function]<br><a class=none name='create-simple-font-definition'><b>create-simple-font-definition</b> <i>width height char-map color-key filename <tt>&amp;key</tt> pad-x pad-y</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for CREATE-SIMPLE-FONT-DEFINITION -->
 
 
 <!-- Entry for CREATE-SURFACE -->
@@ -1837,6 +1909,18 @@
 <!-- End of entry for DRAW-FONT -->
 
 
+<!-- Entry for DRAW-FONT -->
+
+<p><br>[Function]<br><a class=none name='draw-font'><b>draw-font</b> <i><tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for DRAW-FONT -->
+
+
 <!-- Entry for DRAW-FONT-AT -->
 
 <p><br>[Generic function]<br><a class=none name='draw-font-at'><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
@@ -1849,12 +1933,36 @@
 <!-- End of entry for DRAW-FONT-AT -->
 
 
+<!-- Entry for DRAW-FONT-AT -->
+
+<p><br>[Method]<br><a class=none><b>draw-font-at</b> <i>position <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for DRAW-FONT-AT -->
+
+
 <!-- Entry for DRAW-FONT-AT-* -->
 
 <p><br>[Generic function]<br><a class=none name='draw-font-at-*'><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#draw-font">DRAW-FONT</a>.  The cached surface is rendered at poisition <code>X</code> and <code>Y</code>. </p><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em>, and <em>LISPBUILDER-SDL-TTF</em></li></ul>
+
+</blockquote>
+
+<!-- End of entry for DRAW-FONT-AT-* -->
+
+
+<!-- Entry for DRAW-FONT-AT-* -->
+
+<p><br>[Method]<br><a class=none><b>draw-font-at-*</b> <i>x y <tt>&amp;key</tt> font surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
 
 </blockquote>
 
@@ -2286,11 +2394,62 @@
 
 <!-- Entry for FP -->
 
-<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>foreign-object</i> =&gt; <i>result</i></a>
+<p><br>[Generic accessor]<br><a class=none name='fp'><b>fp</b> <i>rectangle-array</i> =&gt; <i>result</i></a>
 <br><a class=none><tt>(setf (</tt><b>fp</b> <i>rectangle-array</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the foreign pointer in FOREIGN-OBJECT </p>
+
+</blockquote>
+
+<!-- End of entry for FP -->
+
+
+<!-- Entry for FP -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array rectangle-array)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array rectangle-array)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FP -->
+
+
+<!-- Entry for FP -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array color-a)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FP -->
+
+
+<!-- Entry for FP -->
+
+<p><br>[Specialized accessor]<br><a class=none><b>fp</b> <i>(rectangle-array color)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FP -->
+
+
+<!-- Entry for FP -->
+
+<p><br>[Method]<br><a class=none><b>fp</b> <i>(rectangle-array foreign-object)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
 
 </blockquote>
 
@@ -2316,6 +2475,42 @@
 <blockquote><br>
 
 <p>The general explicit cleanup method for the FOREIGN-OBJECT wrapper class. Objects that subclass FOREIGN-OBJECT should specify an :AFTER method on FREE to clean up any additional fields, if necessary. </p>
+
+</blockquote>
+
+<!-- End of entry for FREE -->
+
+
+<!-- Entry for FREE -->
+
+<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object display-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Freeing the display surface is not a valid operation. </p>
+
+</blockquote>
+
+<!-- End of entry for FREE -->
+
+
+<!-- Entry for FREE -->
+
+<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object color)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for FREE -->
+
+
+<!-- Entry for FREE -->
+
+<p><br>[Method]<br><a class=none><b>free</b> <i>(foreign-object foreign-object)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
 
 </blockquote>
 
@@ -2361,7 +2556,8 @@
 
 <!-- Entry for G -->
 
-<p><br>[Method]<br><a class=none><b>g</b> <i>(color color)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>g</b> <i>(color color)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>g</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -2540,9 +2736,69 @@
 <!-- End of entry for GET-POINT -->
 
 
+<!-- Entry for GET-POINT -->
+
+<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the <code>POINT</code> position coordinates of <code>SURFACE</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for GET-POINT -->
+
+
+<!-- Entry for GET-POINT -->
+
+<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object rectangle)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of rectangle <code>RECTANGLE</code> as a <code>POINT</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for GET-POINT -->
+
+
+<!-- Entry for GET-POINT -->
+
+<p><br>[Method]<br><a class=none><b>get-point</b> <i>(object vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the point <code>POINT</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for GET-POINT -->
+
+
 <!-- Entry for GET-POSITION -->
 
 <p><br>[Generic function]<br><a class=none name='get-position'><b>get-position</b> <i>object</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#get-POINT">GET-POINT</a> </p>
+
+</blockquote>
+
+<!-- End of entry for GET-POSITION -->
+
+
+<!-- Entry for GET-POSITION -->
+
+<p><br>[Method]<br><a class=none><b>get-position</b> <i>(object sdl-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#get-point">GET-POINT</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for GET-POSITION -->
+
+
+<!-- Entry for GET-POSITION -->
+
+<p><br>[Method]<br><a class=none><b>get-position</b> <i>(object rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#get-POINT">GET-POINT</a> </p>
@@ -2564,6 +2820,18 @@
 <!-- End of entry for GET-RECTANGLE -->
 
 
+<!-- Entry for GET-RECTANGLE -->
+
+<p><br>[Method]<br><a class=none><b>get-rectangle</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the rectangle <code>RECTANGLE</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for GET-RECTANGLE -->
+
+
 <!-- Entry for GET-SURFACE-RECT -->
 
 <p><br>[Function]<br><a class=none name='get-surface-rect'><b>get-surface-rect</b> <i><tt>&amp;key</tt> surface rectangle</i> =&gt; <i>result</i></a>
@@ -2574,6 +2842,30 @@
 </blockquote>
 
 <!-- End of entry for GET-SURFACE-RECT -->
+
+
+<!-- Entry for HANDLE-KEY-DOWN -->
+
+<p><br>[Function]<br><a class=none name='handle-key-down'><b>handle-key-down</b> <i>key</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for HANDLE-KEY-DOWN -->
+
+
+<!-- Entry for HANDLE-KEY-UP -->
+
+<p><br>[Function]<br><a class=none name='handle-key-up'><b>handle-key-up</b> <i>key</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for HANDLE-KEY-UP -->
 
 
 <!-- Entry for HEIGHT -->
@@ -2615,7 +2907,8 @@
 
 <!-- Entry for HEIGHT -->
 
-<p><br>[Method]<br><a class=none><b>height</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>height</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>height</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the <code>INTEGER</code> height of the rectangle <code>RECTANGLE</code>. </p>
@@ -2689,7 +2982,7 @@
 
 <!-- Entry for INITIALISE-FONT -->
 
-<p><br>[Function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>font-definition</i> =&gt; <i>result</i></a>
+<p><br>[Generic function]<br><a class=none name='initialise-font'><b>initialise-font</b> <i>font-definition</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns a new <a href="#sdl-bitmap-font">SDL-BITMAP-FONT</a> initialized from <code>FONT-DEFINITION</code> data, or <code>NIL</code> if the font cannot be created. <code>FONT-DEFINITION</code> must be one of the following built-in fonts: <code>*FONT-10X20*</code>, <code>*FONT-5X7*</code>, <code>*FONT-5X8*</code>, <code>*FONT-6X10*</code>, <code>*FONT-6X12*</code>, <code>*FONT-6X13*</code>, <code>*FONT-6X13B*</code>, <code>*FONT-6X13O*</code>, <code>*FONT-6X9*</code>, <code>*FONT-7X13*</code>, <code>*FONT-7X13B*</code>, <code>*FONT-7X13O*</code>, <code>*FONT-7X14*</code>, <code>*FONT-7X14B*</code>, <code>*FONT-8X13*</code>, <code>*FONT-8X13B*</code>, <code>*FONT-8X13O*</code>, <code>*FONT-8X8*</code>, <code>*FONT-9X15*</code>, <code>*FONT-9X15B*</code>, <code>*FONT-9X18*</code> OR <code>*FONT-9X18B*</code>. </p><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
@@ -2697,6 +2990,42 @@
 </blockquote>
 
 <!-- End of entry for INITIALISE-FONT -->
+
+
+<!-- Entry for INITIALISE-FONT -->
+
+<p><br>[Method]<br><a class=none><b>initialise-font</b> <i>(font-definition simple-font-definition)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for INITIALISE-FONT -->
+
+
+<!-- Entry for INITIALISE-FONT -->
+
+<p><br>[Method]<br><a class=none><b>initialise-font</b> <i>(font-definition bitmap-font-definition)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for INITIALISE-FONT -->
+
+
+<!-- Entry for INITIALISE-INPUT-UTIL -->
+
+<p><br>[Function]<br><a class=none name='initialise-input-util'><b>initialise-input-util</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Initialises the input util system. This just creates the data structure that key press information is stored in, and maintains a global variable to track initialisation status. </p><h5>Parameters</h5><h5>Returns</h5>
+
+</blockquote>
+
+<!-- End of entry for INITIALISE-INPUT-UTIL -->
 
 
 <!-- Entry for INITIALIZE-ON-STARTUP -->
@@ -2745,6 +3074,42 @@
 </blockquote>
 
 <!-- End of entry for IS-VALID-PTR -->
+
+
+<!-- Entry for KEY-HELD-P -->
+
+<p><br>[Function]<br><a class=none name='key-held-p'><b>key-held-p</b> <i>key</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for KEY-HELD-P -->
+
+
+<!-- Entry for KEY-HELD-TIME -->
+
+<p><br>[Function]<br><a class=none name='key-held-time'><b>key-held-time</b> <i>key</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for KEY-HELD-TIME -->
+
+
+<!-- Entry for KEY-PRESSED-P -->
+
+<p><br>[Function]<br><a class=none name='key-pressed-p'><b>key-pressed-p</b> <i>key</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for KEY-PRESSED-P -->
 
 
 <!-- Entry for KEY-REPEAT-DELAY -->
@@ -2819,6 +3184,42 @@
 <!-- End of entry for LOAD-IMAGE -->
 
 
+<!-- Entry for LOAD-IMAGE -->
+
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source string) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a new <code>SURFACE</code> from the file at location <code>FILENAME</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for LOAD-IMAGE -->
+
+
+<!-- Entry for LOAD-IMAGE -->
+
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source vector) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a new <code>SURFACE</code> from the byte array in <code>SOURCE</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for LOAD-IMAGE -->
+
+
+<!-- Entry for LOAD-IMAGE -->
+
+<p><br>[Method]<br><a class=none><b>load-image</b> <i>(source rwops) <tt>&amp;key</tt> color-key alpha image-type force free-rwops color-key-at</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns a new <code>SURFACE</code> from the <code>RWOPS</code> in <code>SOURCE</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for LOAD-IMAGE -->
+
+
 <!-- Entry for MAP-COLOR -->
 
 <p><br>[Generic function]<br><a class=none name='map-color'><b>map-color</b> <i>color <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
@@ -2831,12 +3232,48 @@
 <!-- End of entry for MAP-COLOR -->
 
 
+<!-- Entry for MAP-COLOR -->
+
+<p><br>[Method]<br><a class=none><b>map-color</b> <i>(color color-a) <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for MAP-COLOR -->
+
+
+<!-- Entry for MAP-COLOR -->
+
+<p><br>[Method]<br><a class=none><b>map-color</b> <i>(color color) <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for MAP-COLOR -->
+
+
 <!-- Entry for MAP-COLOR-* -->
 
 <p><br>[Generic function]<br><a class=none name='map-color-*'><b>map-color-*</b> <i>r g b a <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Maps the color specified by the <code>R</code>, <code>G</code>, <code>B</code>, and <code>A</code> color components to the pixel format of <a href="#surface">SURFACE</a> and returns the pixel value that best approximates the color value of the surface. If <code>A</code> is not <code>NIL</code> then the color is assumed to contain an alpha component. See <a href="#map-color">MAP-COLOR</a> for more details. </p>
+
+</blockquote>
+
+<!-- End of entry for MAP-COLOR-* -->
+
+
+<!-- Entry for MAP-COLOR-* -->
+
+<p><br>[Method]<br><a class=none><b>map-color-*</b> <i>(r integer) (g integer) (b integer) a <tt>&amp;optional</tt> surface</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
 
 </blockquote>
 
@@ -2867,12 +3304,48 @@
 <!-- End of entry for PACK-COLOR -->
 
 
+<!-- Entry for PACK-COLOR -->
+
+<p><br>[Method]<br><a class=none><b>pack-color</b> <i>(color color-a)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for PACK-COLOR -->
+
+
+<!-- Entry for PACK-COLOR -->
+
+<p><br>[Method]<br><a class=none><b>pack-color</b> <i>(color color)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for PACK-COLOR -->
+
+
 <!-- Entry for PIXEL-ALPHA-ENABLED-P -->
 
 <p><br>[Generic function]<br><a class=none name='pixel-alpha-enabled-p'><b>pixel-alpha-enabled-p</b> <i>surface</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Returns <code>T</code> if a pixel alpha component (RGBA) is available, or <code>NIL</code> if unavailable (RGB). <em>Note</em>: The pixel alpha component differs from the surface alpha component which is retrieved using <a href="#alpha-enabled-p">ALPHA-ENABLED-P</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for PIXEL-ALPHA-ENABLED-P -->
+
+
+<!-- Entry for PIXEL-ALPHA-ENABLED-P -->
+
+<p><br>[Method]<br><a class=none><b>pixel-alpha-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
 
 </blockquote>
 
@@ -2903,12 +3376,84 @@
 <!-- End of entry for POINT-* -->
 
 
+<!-- Entry for POINT-* -->
+
+<p><br>[Method]<br><a class=none><b>point-*</b> <i>(point sdl-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the <code>X</code> and <code>Y</code> position coordinates of <code>SURFACE</code> as a spread. </p>
+
+</blockquote>
+
+<!-- End of entry for POINT-* -->
+
+
+<!-- Entry for POINT-* -->
+
+<p><br>[Method]<br><a class=none><b>point-*</b> <i>(point rectangle)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code> as a spread.   The <code>RESULT</code> is <code>(VALUES X Y)</code> </p>
+
+</blockquote>
+
+<!-- End of entry for POINT-* -->
+
+
+<!-- Entry for POINT-* -->
+
+<p><br>[Method]<br><a class=none><b>point-*</b> <i>(point vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the <code>X</code> and <code>Y</code> coordinates of the point <code>POINT</code> as a spread. </p>
+
+</blockquote>
+
+<!-- End of entry for POINT-* -->
+
+
 <!-- Entry for POSITION-* -->
 
 <p><br>[Generic function]<br><a class=none name='position-*'><b>position-*</b> <i>obj</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>See <a href="#point-*">POINT-*</a> </p>
+
+</blockquote>
+
+<!-- End of entry for POSITION-* -->
+
+
+<!-- Entry for POSITION-* -->
+
+<p><br>[Method]<br><a class=none><b>position-*</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#position">POSITION</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for POSITION-* -->
+
+
+<!-- Entry for POSITION-* -->
+
+<p><br>[Method]<br><a class=none><b>position-*</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#point-*">POINT-*</a> </p>
+
+</blockquote>
+
+<!-- End of entry for POSITION-* -->
+
+
+<!-- Entry for POSITION-* -->
+
+<p><br>[Method]<br><a class=none><b>position-*</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#point-*">POINT-*</a>. </p>
 
 </blockquote>
 
@@ -2949,6 +3494,18 @@
 </blockquote>
 
 <!-- End of entry for QUERY-CURSOR -->
+
+
+<!-- Entry for QUIT-INPUT-UTIL -->
+
+<p><br>[Function]<br><a class=none name='quit-input-util'><b>quit-input-util</b> <i></i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>This is called when you quit your app to free up the key information data </p><h5>Parameters</h5><h5>Returns</h5>
+
+</blockquote>
+
+<!-- End of entry for QUIT-INPUT-UTIL -->
 
 
 <!-- Entry for QUIT-ON-EXIT -->
@@ -3002,7 +3559,8 @@
 
 <!-- Entry for R -->
 
-<p><br>[Method]<br><a class=none><b>r</b> <i>(color color)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>r</b> <i>(color color)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>r</b> <i>(color color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -3090,6 +3648,30 @@
 <blockquote><br>
 
 <p>Returns the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates of the object as a spread. The <code>RESULT</code> is <code>(VALUES X Y WIDTH HEIGHT)</code> </p>
+
+</blockquote>
+
+<!-- End of entry for RECTANGLE-* -->
+
+
+<!-- Entry for RECTANGLE-* -->
+
+<p><br>[Method]<br><a class=none><b>rectangle-*</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the fields <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> from <code>SURFACE</code> as a spread. </p>
+
+</blockquote>
+
+<!-- End of entry for RECTANGLE-* -->
+
+
+<!-- Entry for RECTANGLE-* -->
+
+<p><br>[Method]<br><a class=none><b>rectangle-*</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Returns the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates of the rectangle <code>RECTANGLE</code> as a spread. The <code>RESULT</code> is <code>(VALUES X Y WIDTH HEIGHT)</code> </p>
 
 </blockquote>
 
@@ -3195,7 +3777,8 @@
 
 <!-- Entry for RLE-ACCEL-ENABLED-P -->
 
-<p><br>[Method]<br><a class=none><b>rle-accel-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>rle-accel-enabled-p</b> <i>(surface sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>rle-accel-enabled-p</b> <i>(surface sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -3733,6 +4316,18 @@
 <!-- End of entry for SET-COLOR -->
 
 
+<!-- Entry for SET-COLOR -->
+
+<p><br>[Method]<br><a class=none><b>set-color</b> <i>(dst color) (src color)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SET-COLOR -->
+
+
 <!-- Entry for SET-COLOR-* -->
 
 <p><br>[Generic function]<br><a class=none name='set-color-*'><b>set-color-*</b> <i>color <tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
@@ -3745,12 +4340,24 @@
 <!-- End of entry for SET-COLOR-* -->
 
 
+<!-- Entry for SET-COLOR-* -->
+
+<p><br>[Method]<br><a class=none><b>set-color-*</b> <i>(color color) <tt>&amp;key</tt> r g b a</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SET-COLOR-* -->
+
+
 <!-- Entry for SET-DEFAULT-FONT -->
 
 <p><br>[Generic function]<br><a class=none name='set-default-font'><b>set-default-font</b> <i>font</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-
+<p>Sets the font <code>FONT</code> as the default font to be used for subsequent font rendering or drawing operations. Binds the symbol <code>*DEFAULT-FONT*</code> to font. Functions that take a <code>FONT</code> argument use <code>*DEFAULT-FONT*</code> unless otherwise specified. Returns a new <code>FONT</code>, or <code>NIL</code> if unsuccessful. </p>
 
 </blockquote>
 
@@ -3759,10 +4366,10 @@
 
 <!-- Entry for SET-DEFAULT-FONT -->
 
-<p><br>[Method]<br><a class=none><b>set-default-font</b> <i>(font sdl-bitmap-font)</i> =&gt; <i>result</i></a>
+<p><br>[Method]<br><a class=none><b>set-default-font</b> <i>(font bitmap-font)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets the font <code>FONT</code> as the default font to be used for subsequent font rendering or drawing operations. Binds the symbol <code>*DEFAULT-FONT*</code> to font. Functions that take a <code>FONT</code> argument use <code>*DEFAULT-FONT*</code> unless otherwise specified. Returns a new <code>FONT</code>, or <code>NIL</code> if unsuccessful. </p>
+
 
 </blockquote>
 
@@ -3805,12 +4412,84 @@
 <!-- End of entry for SET-POINT -->
 
 
+<!-- Entry for SET-POINT -->
+
+<p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst sdl-surface) (src vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the <code>POINT</code> position coordinates of <code>SURFACE</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POINT -->
+
+
+<!-- Entry for SET-POINT -->
+
+<p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst rectangle) (src vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Copies the <code>X</code> and <code>Y</code> coordinates to the destination rectangle <code>RECTANGLE</code> from the source point <code>POSITION</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POINT -->
+
+
+<!-- Entry for SET-POINT -->
+
+<p><br>[Method]<br><a class=none><b>set-point</b> <i>(dst vector) (src vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the destination point <code>DST</code> to the coordinates in the source point <code>SRC</code>. Returns the destination point <code>DST</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POINT -->
+
+
 <!-- Entry for SET-POINT-* -->
 
 <p><br>[Generic function]<br><a class=none name='set-point-*'><b>set-point-*</b> <i>obj <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Sets the <code>X</code> and <code>Y</code> coordinates of the object <code>OBJ</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POINT-* -->
+
+
+<!-- Entry for SET-POINT-* -->
+
+<p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj sdl-surface) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the <code>X</code> and <code>Y</code> position coordinates of <code>SURFACE</code>. <code>X</code> and <code>Y</code> are integers. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POINT-* -->
+
+
+<!-- Entry for SET-POINT-* -->
+
+<p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj rectangle) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POINT-* -->
+
+
+<!-- Entry for SET-POINT-* -->
+
+<p><br>[Method]<br><a class=none><b>set-point-*</b> <i>(obj vector) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the point <code>POINT</code> to <code>X</code> and <code>Y</code>. </p>
 
 </blockquote>
 
@@ -3829,6 +4508,42 @@
 <!-- End of entry for SET-POSITION -->
 
 
+<!-- Entry for SET-POSITION -->
+
+<p><br>[Method]<br><a class=none><b>set-position</b> <i>(dst sdl-surface) (src vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#set-point">SET-POINT</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POSITION -->
+
+
+<!-- Entry for SET-POSITION -->
+
+<p><br>[Method]<br><a class=none><b>set-position</b> <i>(dst rectangle) (src vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code> from the point <code>POSITION</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POSITION -->
+
+
+<!-- Entry for SET-POSITION -->
+
+<p><br>[Method]<br><a class=none><b>set-position</b> <i>(dst vector) (src vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#set-point">SET-POINT</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POSITION -->
+
+
 <!-- Entry for SET-POSITION-* -->
 
 <p><br>[Generic function]<br><a class=none name='set-position-*'><b>set-position-*</b> <i>obj <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
@@ -3841,9 +4556,57 @@
 <!-- End of entry for SET-POSITION-* -->
 
 
+<!-- Entry for SET-POSITION-* -->
+
+<p><br>[Method]<br><a class=none><b>set-position-*</b> <i>(obj sdl-surface) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#set-point-*">SET-POINT-*</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POSITION-* -->
+
+
+<!-- Entry for SET-POSITION-* -->
+
+<p><br>[Method]<br><a class=none><b>set-position-*</b> <i>(obj rectangle) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the <code>X</code> and <code>Y</code> coordinates of the rectangle <code>RECTANGLE</code>. <code>X</code> and <code>Y</code> are <code>KEY</code>word parameters. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POSITION-* -->
+
+
+<!-- Entry for SET-POSITION-* -->
+
+<p><br>[Method]<br><a class=none><b>set-position-*</b> <i>(obj vector) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#set-point-*">SET-POINT-*</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-POSITION-* -->
+
+
 <!-- Entry for SET-RECTANGLE -->
 
 <p><br>[Generic function]<br><a class=none name='set-rectangle'><b>set-rectangle</b> <i>dst src</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Copies the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates to the destination rectangle <code>DST</code> from the source rectangle <code>SRC</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-RECTANGLE -->
+
+
+<!-- Entry for SET-RECTANGLE -->
+
+<p><br>[Method]<br><a class=none><b>set-rectangle</b> <i>(dst rectangle) (src rectangle)</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Copies the <code>X</code>, <code>Y</code>, <code>WIDTH</code> and <code>HEIGHT</code> coordinates to the destination rectangle <code>DST</code> from the source rectangle <code>SRC</code>. </p>
@@ -3865,12 +4628,36 @@
 <!-- End of entry for SET-RECTANGLE-* -->
 
 
+<!-- Entry for SET-RECTANGLE-* -->
+
+<p><br>[Method]<br><a class=none><b>set-rectangle-*</b> <i>(rectangle rectangle) <tt>&amp;key</tt> x y w h</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>Sets the coordinates of the rectangle <code>RECTANGLE</code> to the specified <code>X</code>, <code>Y</code> , width <code>W</code> and height <code>HEIGHT</code> coordinates. <code>X</code>, <code>Y</code>, <code>W</code> and <code>H</code> are <code>KEY</code>word parameters of type <code>INTEGER</code>. Returns the rectangle <code>RECTANGLE</code> as RESULT. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-RECTANGLE-* -->
+
+
 <!-- Entry for SET-SURFACE -->
 
 <p><br>[Generic function]<br><a class=none name='set-surface'><b>set-surface</b> <i>surface position</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
 <p>Sets the coordinates of the surface SURFACE to <code>POSITION</code>, where position is of type <code>POINT</code>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-SURFACE -->
+
+
+<!-- Entry for SET-SURFACE -->
+
+<p><br>[Method]<br><a class=none><b>set-surface</b> <i>(surface sdl-surface) (position vector)</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#set-point">SET-POINT</a>. </p>
 
 </blockquote>
 
@@ -3889,6 +4676,18 @@
 <!-- End of entry for SET-SURFACE-* -->
 
 
+<!-- Entry for SET-SURFACE-* -->
+
+<p><br>[Method]<br><a class=none><b>set-surface-*</b> <i>(surface sdl-surface) <tt>&amp;key</tt> x y</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>See <a href="#set-point-*">SET-POINT-*</a>. </p>
+
+</blockquote>
+
+<!-- End of entry for SET-SURFACE-* -->
+
+
 <!-- Entry for SHOW-CURSOR -->
 
 <p><br>[Function]<br><a class=none name='show-cursor'><b>show-cursor</b> <i>state</i> =&gt; <i>result</i></a>
@@ -3899,6 +4698,18 @@
 </blockquote>
 
 <!-- End of entry for SHOW-CURSOR -->
+
+
+<!-- Entry for SIMPLE-FONT-DEFINITION -->
+
+<p><br>[Standard class]<br><a class=none name='simple-font-definition'><b>simple-font-definition</b></a>
+<blockquote><br>
+
+
+
+</blockquote>
+
+<!-- End of entry for SIMPLE-FONT-DEFINITION -->
 
 
 <!-- Entry for SURFACE -->
@@ -3971,6 +4782,18 @@
 </blockquote>
 
 <!-- End of entry for UPDATE-DISPLAY -->
+
+
+<!-- Entry for UPDATE-INPUT-UTIL -->
+
+<p><br>[Function]<br><a class=none name='update-input-util'><b>update-input-util</b> <i>time</i> =&gt; <i>result</i></a>
+<blockquote><br>
+
+<p>This must be called once for each time period you are updating the application, in order to update keypress information. </p><h5>Parameters</h5><ul><li><code>TIME</code> is the time in seconds this update represents</li></ul><h5>Returns</h5>
+
+</blockquote>
+
+<!-- End of entry for UPDATE-INPUT-UTIL -->
 
 
 <!-- Entry for UPDATE-SURFACE -->
@@ -4085,7 +4908,8 @@
 
 <!-- Entry for WIDTH -->
 
-<p><br>[Method]<br><a class=none><b>width</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>width</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>width</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the <code>INTEGER</code> width of the rectangle <code>RECTANGLE</code>. </p>
@@ -4447,7 +5271,8 @@
 
 <!-- Entry for X -->
 
-<p><br>[Method]<br><a class=none><b>x</b> <i>(obj font)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(obj font)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -4459,7 +5284,8 @@
 
 <!-- Entry for X -->
 
-<p><br>[Method]<br><a class=none><b>x</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the <code>X</code> position coordinate of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
@@ -4471,7 +5297,8 @@
 
 <!-- Entry for X -->
 
-<p><br>[Method]<br><a class=none><b>x</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the <code>X</code> position coordinate of the rectangle <code>RECTANGLE</code> as an <code>INTEGER</code>. </p>
@@ -4483,7 +5310,8 @@
 
 <!-- Entry for X -->
 
-<p><br>[Method]<br><a class=none><b>x</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>x</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>x</b> <i>(obj vector)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the <code>X</code> coordindate of the point <code>POINT</code> as an <code>INTEGER</code>. </p>
@@ -4508,7 +5336,8 @@
 
 <!-- Entry for X2 -->
 
-<p><br>[Method]<br><a class=none><b>x2</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>x2</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>x2</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Sets the WIDTH of the rectangle <code>RECTANGLE</code> to <code>(- X2 X)</code> </p>
@@ -4533,7 +5362,8 @@
 
 <!-- Entry for Y -->
 
-<p><br>[Method]<br><a class=none><b>y</b> <i>(obj font)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(obj font)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj font)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 
@@ -4545,7 +5375,8 @@
 
 <!-- Entry for Y -->
 
-<p><br>[Method]<br><a class=none><b>y</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(obj sdl-surface)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj sdl-surface)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the <code>Y</code> position coordinate of <code>SURFACE</code> as an <code>INTEGER</code>. </p>
@@ -4557,7 +5388,8 @@
 
 <!-- Entry for Y -->
 
-<p><br>[Method]<br><a class=none><b>y</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the <code>Y</code> position coordinate of the rectangle <code>RECTANGLE</code> as an <code>INTEGER</code>. </p>
@@ -4569,7 +5401,8 @@
 
 <!-- Entry for Y -->
 
-<p><br>[Method]<br><a class=none><b>y</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>y</b> <i>(obj vector)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>y</b> <i>(obj vector)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns the <code>Y</code> coordindate of the point <code>POINT</code> as an <code>INTEGER</code>. </p>
@@ -4594,7 +5427,8 @@
 
 <!-- Entry for Y2 -->
 
-<p><br>[Method]<br><a class=none><b>y2</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<p><br>[Specialized accessor]<br><a class=none><b>y2</b> <i>(obj rectangle)</i> =&gt; <i>result</i></a>
+<br><a class=none><tt>(setf (</tt><b>y2</b> <i>(obj rectangle)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
 <blockquote><br>
 
 <p>Returns <code>(+ Y HEIGHT)</code> of the rectangle <code>RECTANGLE</code>. </p>
@@ -4616,61 +5450,14 @@
 <!-- End of entry for ZOOM-SURFACE -->
 
 
-<!-- Entry for (SETF FP) -->
-
-<p><br>[Method]<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array rectangle-array)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for (SETF FP) -->
-
-
-<!-- Entry for (SETF FP) -->
-
-<p><br>[Method]<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color-a)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for (SETF FP) -->
-
-
-<!-- Entry for (SETF FP) -->
-
-<p><br>[Method]<br><a class=none><tt>(setf (</tt><b>fp</b> <i>(rectangle-array color)</i><tt>)</tt> <i>value</i><tt>)</tt></a>
-<blockquote><br>
-
-
-
-</blockquote>
-
-<!-- End of entry for (SETF FP) -->
 <br>&nbsp;<br><h3><a class=none name="ack">Acknowledgements</a></h3>
 
-<ul>
-  <li>
-    Documentation prepared using:
-  </li>
-  <ul>
-    <li>
-      Edi Weitz's  
-      <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
-    </li>
-    <li>
-      Gary King's 
-      <a href="http://common-lisp.net/project/cl-markdown/">CL-MARKDOWN</a>.
-      </li>
-  </ul>
-</ul>
-
 <p>
-  <a href="index.html">BACK</a>
+This documentation was prepared with <a href="http://weitz.de/documentation-template/">DOCUMENTATION-TEMPLATE</a>.
 </p>
-  
+<p>
+$Header: /usr/local/cvsrep/documentation-template/output.lisp,v 1.14 2008/05/29 08:23:37 edi Exp $
+<p><a href="http://weitz.de/index.html">BACK TO MY HOMEPAGE</a>
+
 </body>
 </html>

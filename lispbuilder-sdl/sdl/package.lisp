@@ -79,6 +79,8 @@
 
    #:*default-font-path*
    #:*default-simple-font*
+   #:*default-ttf-font*
+   
 
    ;; init.lisp
    #:with-init

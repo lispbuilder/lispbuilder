@@ -51,7 +51,7 @@
     (sdl:fill-surface (sdl:color :r 255 :g 255 :b 255))
 
     (vecto:with-canvas (:width 90 :height 90)
-      (let ((font (vecto:get-font sdl:*default-ttf*))
+      (let ((font (vecto:get-font sdl:*default-ttf-font*))
 	    (step (/ pi 7)))
 	(vecto:set-font font 40)
 	(vecto:translate 45 45)
