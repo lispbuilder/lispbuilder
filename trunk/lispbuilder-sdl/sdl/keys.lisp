@@ -23,7 +23,9 @@ Returns the previous unicode translation state."
   "Enables the keyboard repeat rate. DELAY specifies how long the key must be pressed before it begins repeating, 
 it then repeats at the speed specified by INTERVAL. Both DELAY and INTERVAL are expressed in milliseconds.
 Setting DELAY or INTERVAL to NIL will set the default values of 
-SDL-DEFAULT-REPEAT-DELAY and SDL-DEFAULT-REPEAT-INTERVAL respectively."
+SDL-DEFAULT-REPEAT-DELAY and SDL-DEFAULT-REPEAT-INTERVAL respectively.
+_NOTE_: `ENABLE-KEY-REPEAT` must be called after the SDL library has been
+initialized to have an effect."
   (unless delay
     (setf delay sdl-cffi::SDL-DEFAULT-REPEAT-DELAY))
   (unless interval
