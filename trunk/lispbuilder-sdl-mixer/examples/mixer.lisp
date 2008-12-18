@@ -42,27 +42,38 @@
 
 (defun clean-up ()
   (when *music*
+    (format t "\(sdl-mixer:Halt-Music\)~%")
     (sdl-mixer:Halt-Music)
     (sdl:Free *music*)
     (setf *music* nil))
   (when *sample*
+    (format t "\(sdl-mixer:Halt-Sample\)~%")
     (sdl-mixer:Halt-sample :channel t)
     (sdl-mixer:Free *sample*)
     (setf *sample* nil))
   (when *mixer-opened*
+    (format t "\(sdl-mixer:Close-Audio\)~%")
     (sdl-mixer:Close-Audio t)
     (setf *mixer-opened* nil)))
 
-(sdl-mixer:register-sample-finished
- (lambda (channel)
-   (declare (ignore channel))
-   (setf *sample-status* (format nil "Samples playing: ~A..." (sdl-mixer:sample-playing-p nil)))
-   (sdl:clear-display sdl:*black*)))
+(defun sample-finished-action ()
+;  (sdl-mixer:register-sample-finished
+;   (lambda (channel)
+;     (declare (ignore channel))
+;     (setf *sample-status* (format nil "Samples playing: NIL..."))
+;     (sdl:clear-display sdl:*black*)))
+  )
+
+(defun music-finished-action ()
+;  (sdl-mixer:register-music-finished
+;   (lambda ()
+;     (format t "MUSIC finished.~%")))
+  )
 
 (defun mixer()
   "Demonstrates music file basic playback"
   (sdl:with-init (sdl:sdl-init-video sdl:sdl-init-audio)
-    (setf (sdl:sdl-quit-on-exit) t)
+    (setf (sdl:quit-on-exit) nil)
 
     (sdl:window 400 50
 		:title-caption "Sample & Music playback"
@@ -76,13 +87,16 @@
     (when *mixer-opened*
       (setf *status* "Opened Audio Mixer.")
       (setf *music* (sdl-mixer:load-music (sdl:create-path *music-file* *audio-path*)))
-      (setf *sample* (sdl-mixer:load-sample (sdl:create-path *sample-file* *audio-path*)))      
+      (setf *sample* (sdl-mixer:load-sample (sdl:create-path *sample-file* *audio-path*)))
+      (music-finished-action)
+      (sample-finished-action)
       (play-music)
       (play-sample))
 
     (sdl:with-events ()
       (:quit-event ()
 		   (clean-up)
+                   (format t "Done cleaning up.~%")
 		   t)
       (:key-down-event (:key key)
 		       (when *mixer-opened*
