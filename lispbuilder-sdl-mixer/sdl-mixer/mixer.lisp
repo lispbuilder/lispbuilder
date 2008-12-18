@@ -4,7 +4,7 @@
 
 ;; Configure Lispworks to allow
 ;; callbacks from foreign threads
-#+lispworks(system:setup-for-alien-threads)
+#+(and lispworks (not lispworks5.1)) (system:setup-for-alien-threads)
 
 ;;;; Add documentation strings for defconstants in cffi/sdl-mixer.lisp
 (setf (documentation '+default-format+ 'variable)
@@ -154,20 +154,29 @@ Increase `CHUNKSIZE` to decrease CPU resources, if sound skips or if playing mus
 
 * `T` on success and `NIL` on failure."
   ;; Make sure that SDL is initialized with SDL:SDL-INIT-AUDIO
-  (when (= 0 (sdl:return-sub-systems-of-status SDL:SDL-INIT-AUDIO t))
+  (when (= 0 (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t))
     (error "OPEN-AUDIO: SDL must be initialized with SDL:SDL-INIT-AUDIO prior to calling OPEN-AUDIO."))
   (if (= 0 (sdl-mixer-cffi::open-audio frequency format channels chunksize))
-      t
-      nil))
+    (progn
+      ;; Register the music finished callback
+      ;;(register-music-finished nil)
+      ;; Register the sample finished callback
+      ;;(register-sample-finished nil)
+      t)
+    nil))
 
 (defun close-audio (&optional (all nil))
   "Attempts to close the audio device. The audio device can be opened multiple times by [OPEN-AUDIO](#open-audio) 
 and to properly close the audio device, [CLOSE-AUDIO](#close-audio) should be called the same number of times. 
 Optionally `ALL` when `T` will forcibly close the audio device, no matter how many times the device was opened."
+  ;; Unregister the music finished callback
+  ;;(unregister-music-finished)
+  ;; Unregister the sample finished callback
+  ;;(unregister-sample-finished)
   (if (and all (audio-opened-p))
-      (dotimes (i (audio-opened-p))
-	(sdl-mixer-cffi::close-audio))
-      (sdl-mixer-cffi::close-audio)))
+    (dotimes (i (query-spec))
+      (sdl-mixer-cffi::close-audio))
+    (sdl-mixer-cffi::close-audio)))
 
 (defun play-music (music &key
 		   (loop nil)
@@ -328,7 +337,8 @@ When `FADE` is `NIL` or `0` the fade effect is immediate. Default is `NIL`.
 (defun query-spec ()
    (cffi:with-foreign-objects ((frequency :pointer) (format :pointer) (channels :pointer))
      (let ((opened? (sdl-mixer-cffi::query-spec frequency format channels)))
-       (unless (= 0 opened?)
+       (if (= 0 opened?)
+         opened?
 	 (values opened?
 		 (cffi:mem-aref frequency :int)
 		 (cffi:mem-aref format :unsigned-int)
@@ -546,7 +556,7 @@ NOTE: Samples will continue playing when `NUM-CHANNELS` is `0`."
 Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   (allocate-channels 0))
 
-(cffi:defcallback channel-finished-proc :pointer
+(cffi:defcallback channel-finished-proc :void
     ((channel :int))
   "Called when any channel finishes playback or is halted. `CHANNEL` contains the channel number that has finished."
   (when *channel-finished*
@@ -570,12 +580,13 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   (sdl-mixer-cffi::channel-finished (cffi:null-pointer)))
 
 
-(cffi:defcallback music-finished-proc :pointer
-    ()
-  "Called when music finishes playback or is halted."
-  (when *music-finished*
-    (funcall *music-finished*))
-  (cffi:null-pointer))
+(cffi:defcallback music-finished-proc :void
+                  ()
+                  "Called when music finishes playback or is halted."
+                  (when *music-finished*
+                    (funcall *music-finished*))
+                  ;;(cffi:null-pointer)
+                  )
 
 (defun register-music-finished (func)
   "Sets the callback that is executed when [MUSIC](#music) finishes playback or is halted.
@@ -594,12 +605,14 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   (sdl-mixer-cffi::hook-music-finished (cffi:null-pointer)))
 
 
-(cffi:defcallback fill-audio-buffer :pointer ((user-data :pointer)
-					      (stream :pointer)
-					      (len :int))
+(cffi:defcallback fill-audio-buffer :void
+    ((user-data :pointer)
+     (stream :pointer)
+     (len :int))
   (when *audio-buffer*
     (funcall *audio-buffer* user-data stream len))
-  (cffi:null-pointer))
+  ;;(cffi:null-pointer)
+  )
 
 (defun register-music-mixer (func)
     "Sets the callback that is executed to fill the music audio output buffer.
