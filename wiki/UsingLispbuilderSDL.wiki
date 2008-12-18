@@ -11,6 +11,8 @@ After [http://code.google.com/p/lispbuilder/wiki/DownloadInstallation#Download_&
 (ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL)
 }}}
 
+Or if you are using SLIME, then `,`, `l`, `LISPBUILDER-SDL`
+
 = Initialization =
 
 The SDL library and subsystems must be initialized prior to use. This is handled automatically when using the macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html WITH-INIT]. 
