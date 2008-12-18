@@ -11,7 +11,7 @@ After [http://code.google.com/p/lispbuilder/wiki/DownloadInstallation#Download_&
 (ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL)
 }}}
 
-Or if you are using SLIME, then `,`, `l`, `LISPBUILDER-SDL`
+Or if you are using SLIME, enter `,` then `l` then `LISPBUILDER-SDL`
 
 = Initialization =
 
