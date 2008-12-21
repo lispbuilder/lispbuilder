@@ -88,7 +88,9 @@
   "returns four times the p, layouted in a square and rotated"
   (quartet p (rot (rot (rot p))) (rot p) (rot (rot p))))
 
-(defun plot (p)
+; Justinhj, note, this needs to be made cross platform but for now
+; just disable on non-windows
+#+win32(defun plot (p)
   " saves a picture as postscript and shows it"
   (with-open-file (s "c:/tmp/test.ps" 
                      :direction :output :if-exists :supersede)
