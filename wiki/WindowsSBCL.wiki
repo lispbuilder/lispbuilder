@@ -22,7 +22,7 @@ A summary of the process is as follows;
 Create the following directories in the root directory:
 
 {{{
-C:\sblc\
+C:\sbcl\
 C:\sbcl\site\
 }}}
 
@@ -35,7 +35,7 @@ Download [http://www.sbcl.org/ SBCL] for Windows;
 Install [http://www.sbcl.org/ SBCL] to the following directory;
 
 {{{
-C:\sblc\
+C:\sbcl\
 }}}
 
 = CFFI =
