@@ -88,23 +88,6 @@
   "returns four times the p, layouted in a square and rotated"
   (quartet p (rot (rot (rot p))) (rot p) (rot (rot p))))
 
-; Justinhj, note, this needs to be made cross platform but for now
-; just disable on non-windows
-#+win32(defun plot (p)
-  " saves a picture as postscript and shows it"
-  (with-open-file (s "c:/tmp/test.ps" 
-                     :direction :output :if-exists :supersede)
-    (format s "500 500 scale~%")
-    (format s ".1 .1 translate~%")
-    (format s "0 setlinewidth~%")
-    (format s "0 0 moveto 1 0 lineto 1 1 lineto 0 1 lineto 0 0 lineto~%")
-    (dolist (line (funcall p '(0 0) '(1 0) '(0 1)))
-      (destructuring-bind ((x0 y0) (x1 y1)) line
-        (format s "~D ~D moveto ~D ~D lineto~%" (float x0) (float y0) (float x1) (float y1))))
-    (format s "stroke~%")
-    (format s "showpage~%"))
-  (sys:call-system "c:/gs/gs7.05/bin/gswin32.exe -g800x800 c:/tmp/test.ps"))
-
 ;; defines part p of the fish
 (defparameter *p* 
   (grid 16 16 
