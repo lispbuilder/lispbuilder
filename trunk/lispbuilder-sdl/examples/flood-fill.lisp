@@ -57,7 +57,8 @@
 	(:video-expose-event () (sdl:update-display))))))
 
 (defun flood-fill-stack ()
-  (let ((width 200) (height 200))
+  (let ((width 200) (height 200)
+	(100-frames-p (every-n-frames 100)))
     (sdl:with-init ()
       (sdl:window width height :title-caption "Flood Fill")
       (setf (sdl:frame-rate) 15)

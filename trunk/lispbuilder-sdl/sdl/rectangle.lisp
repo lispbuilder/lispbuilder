@@ -87,8 +87,10 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 
     \(WITH-RECTANGLE \(a-rect \(RECTANGLE :x 0 :y 0 :w 100 :h 100\)\)
         ...\)"
-  (let ((body-value (gensym "body-value-")))
+  (let ((body-value (gensym "body-value-"))
+	(free-value (gensym "free-value-")))
     `(let* ((,body-value nil)
+	    (,free-value ,free)
 	    (,@(if rectangle
 		   `(,var ,rectangle)
 		   `(,var ,var)))
@@ -102,7 +104,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 			     ,(intern (string-upcase (format nil "~A.w" var)))
 			     ,(intern (string-upcase (format nil "~A.h" var)))))
 	 (setf ,body-value (progn ,@body))
-	 (when ,free
+	 (when ,free-value
 	   (free ,var))
 	 ,body-value))))
 

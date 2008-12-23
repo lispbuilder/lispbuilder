@@ -248,12 +248,17 @@ Sets the per-surface alpha value. 0 is transparent, and 255 is opaque.
 *Note*: When blitting, the presence or absence of [SDL-SRC-ALPHA](#sdl-src-alpha) is relevant only on the source surface, not the destination. 
 *Note*: Per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used if available."))
 
-
 (defgeneric color-key-enabled-p (surface))
 (defgeneric (setf color-key-enabled-p) (value surface)
   (:documentation "Manages colorkeying for a `SURFACE`.
 Returns `T` when color keying is enabled, and `NIL` when color keying is disabled.
 Enables color keying when `T`. Disable color keying when `NIL`"))
+
+(defgeneric color-key (surface))
+(defgeneric (setf color-key) (value surface)
+  (:documentation   "Manages the colorkey for a `SURFACE`.
+Returns the current color key \(transparent pixel\) as [COLOR](#color).
+Set the \(RGB\) [COLOR](#color) key \(transparent pixel\)."))
 
 (defgeneric pixel-alpha-enabled-p (surface)
   (:documentation "Returns `T` if a pixel alpha component \(RGBA\) is available, or `NIL` if unavailable \(RGB\).
