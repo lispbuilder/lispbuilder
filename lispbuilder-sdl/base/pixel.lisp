@@ -115,10 +115,7 @@
 			(declare (type fixnum x y))
 			(setf (mem-aref pixel-address :unsigned-int (the fixnum (/ (the fixnum (offset x y)) 4))) color)))
 		 (otherwise (error "generate-write-pixel, bpp not 1, 2, 3 or 4")))))
-      (let ((write-pixel-fn (generate-write-pixel-fn bpp)))      
-	#'(lambda (x y color)
-	    (declare (type fixnum x y))
-	    (funcall write-pixel-fn x y color))))))
+      (generate-write-pixel-fn bpp))))
 
 (defun generate-read-pixel (surface)
   (let* ((format (pixel-format surface))
@@ -156,8 +153,8 @@
       (let ((read-pixel-fn (generate-read-pixel-fn bpp)))
 	#'(lambda (x y)
 	    (declare (type fixnum x y))
-	    (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char)
-					(a :unsigned-char))
+	    (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char)
+                                        (b :unsigned-char) (a :unsigned-char))
 	      (let ((px (funcall read-pixel-fn x y)))
 		(sdl-cffi::SDL-Get-RGBA px format r g b a)
 		(values px
