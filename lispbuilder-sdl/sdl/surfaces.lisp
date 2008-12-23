@@ -114,12 +114,14 @@ Free using [FREE](#free)."))
 (defmacro with-surface ((var &optional surface (free t))
 			&body body)
   (let ((surface-ptr (gensym "surface-prt-"))
-	(body-value (gensym "body-value-")))
+	(body-value (gensym "body-value-"))
+	(free-value (gensym "free-value-")))
     `(let* ((,@(if surface
 		   `(,var ,surface)
 		   `(,var ,var)))
 	    (*default-surface* ,var)
-	    (,body-value nil))
+	    (,body-value nil)
+	    (,free-value ,free))
        (symbol-macrolet ((,(intern (string-upcase (format nil "~A.width" var))) (width ,var))
 			 (,(intern (string-upcase (format nil "~A.height" var))) (height ,var))
 			 (,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
@@ -130,7 +132,7 @@ Free using [FREE](#free)."))
                                     ,(intern (string-upcase (format nil "~A.y" var)))))
 	 (sdl-base::with-surface (,surface-ptr (fp ,var) nil)
 	   (setf ,body-value (progn ,@body))))
-       (when ,free
+       (when ,free-value
 	 (free ,var))
        ,body-value)))
 
@@ -290,9 +292,6 @@ A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha 
 			   (fp surface))
     (color :r r :g g :b b)))
 (defmethod (setf color-key) (value (surface sdl-surface))
-  "Manages the colorkey for a `SURFACE`.
-Returns the current color key \(transparent pixel\) as [COLOR](#color).
-Set the \(RGB\) [COLOR](#color) key \(transparent pixel\)."
   (setf (sdl-base::color-key (fp surface)) (map-color value surface)))
 
 (defun clear-color-key (&key (surface *default-surface*))

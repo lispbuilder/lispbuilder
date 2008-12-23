@@ -18,16 +18,44 @@
 ;; 		 ,@body))))
 ;; 	(error "Var must be a symbol or variable, not a function."))))
 
+(defstruct pixels
+  (fp-reader #'(lambda () nil) :type function)
+  (fp-writer #'(lambda () nil) :type function)
+  fp-data
+  bpp
+  pitch)
+
+(defun read-pixel (pixels x y)
+  (declare (ignore pixels x y))
+  (error "READ-PIXEL only valid within WITH-PIXEL/S."))
+
+(defun write-pixel (pixels x y color)
+  (declare (ignore pixels x y color))
+  (error "WRITE-PIXEL only valid within WITH-PIXEL/S."))
+
+(defun pixel-data (pixels)
+  (declare (ignore pixels))
+  (error "PIXEL-DATA only valid within WITH-PIXEL/S."))
+
+(defun pixel-bpp (pixels)
+  (declare (ignore pixels))
+  (error "PIXEL-BPP only valid within WITH-PIXEL/S."))
+
+(defun pixel-pitch (pixels)
+  (declare (ignore pixels))
+  (error "PIXEL-PITCH only valid within WITH-PIXEL/S."))
+
 (defmacro with-pixel ((var surface) &body body)
-  (let ((surface-fp (gensym "surface-fp-")))
+  (let ((surface-fp (gensym "surface-fp-"))
+	(pixel-def (gensym "pixels-def-")))
     `(let ((,surface-fp ,surface))
        (with-locked-surface (,surface-fp)
-	 (let ((,var (make-pixels)))
-	   (setf (pixels-fp-writer ,var) (generate-write-pixel ,surface-fp)
-		 (pixels-fp-reader ,var) (generate-read-pixel ,surface-fp)
-		 (pixels-fp-data ,var) (foreign-slot-value ,surface-fp 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels)
-		 (pixels-bpp ,var) (foreign-slot-value (pixel-format ,surface-fp) 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel)
-		 (pixels-pitch ,var) (foreign-slot-value ,surface-fp 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch))
+	 (let* ((,pixel-def (make-pixels :fp-reader (generate-read-pixel ,surface-fp)
+					 :fp-writer (generate-write-pixel ,surface-fp)
+					 :fp-data (foreign-slot-value ,surface-fp 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels)
+					 :bpp (foreign-slot-value (pixel-format ,surface-fp) 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel)
+					 :pitch (foreign-slot-value ,surface-fp 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch)))
+		(,var ,pixel-def))
 	   (labels ((write-pixel (pixels x y color)
 		      (funcall (pixels-fp-writer pixels) x y color))
 		    (read-pixel (pixels x y)
@@ -51,30 +79,6 @@
       `(with-pixel (,@(car bindings))
 	 ,(return-with-pixels (cdr bindings) body))
       `(progn ,@body)))
-
-(defstruct pixels
-  fp-reader fp-writer fp-data
-  bpp pitch)
-
-(defun read-pixel (pixels x y)
-  (declare (ignore pixels x y))
-  (error "READ-PIXEL only valid within WITH-PIXEL/S."))
-
-(defun write-pixel (pixels x y color)
-  (declare (ignore pixels x y color))
-  (error "WRITE-PIXEL only valid within WITH-PIXEL/S."))
-
-(defun pixel-data (pixels)
-  (declare (ignore pixels))
-  (error "PIXEL-DATA only valid within WITH-PIXEL/S."))
-
-(defun pixel-bpp (pixels)
-  (declare (ignore pixels))
-  (error "PIXEL-BPP only valid within WITH-PIXEL/S."))
-
-(defun pixel-pitch (pixels)
-  (declare (ignore pixels))
-  (error "PIXEL-PITCH only valid within WITH-PIXEL/S."))
 
 (defun generate-write-pixel (surface)
   (let* ((format (pixel-format surface))
