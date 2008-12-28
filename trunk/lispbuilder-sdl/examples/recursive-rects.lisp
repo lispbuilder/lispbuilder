@@ -34,10 +34,10 @@
 	   (>= min-size h))
 	  (sdl:draw-box (sdl:rectangle-from-edges-* x1 y1 x2 y2) 
 			:surface surface_ptr
-			:color (sdl:color :r (random 255)
-					  :g (random 255)
-					  :b (random 255)
-					  :a (random 255))
+			:color (sdl:color :r (* 16 (random 16))
+					  :g 0
+					  :b 0
+					  :a 255)
 			:clipping nil)
 	  (progn
 	    (draw-recursive-rects surface_ptr x1 y1 sx sy min-size (1+ level))
