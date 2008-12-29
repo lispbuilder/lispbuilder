@@ -104,3 +104,9 @@ This is SBCL X.Y.Z, an implementation of ANSI Common Lisp.
 
 * (sdl-examples:mandelbrot)
 }}}
+
+= Emacs and SLIME =
+
+If you don't already have an editor you use for Lisp code, [http://www.gnu.org/software/emacs/ Emacs] and [http://common-lisp.net/project/slime/ SLIME] are a good combination.
+
+Note: There is a bug in the current version of SBCL (1.0.22 as of the time of writing) which causes SLIME to misbehave. A description of the problem, and a workaround, can be found in the [http://article.gmane.org/gmane.lisp.slime.devel/7991 slime-devel archives].
