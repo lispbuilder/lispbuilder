@@ -24,10 +24,10 @@ Download [http://www.sbcl.org/ SBCL] for Windows;
 Install SBCL to the default directory; from now on this directory will be denoted as:
 
 {{{
-%SBCL_HOME%
+[SBCL_HOME]
 }}}
 
-Note: Here, %SBCL_HOME% means to insert the installation directory (e.g. "C:\Program Files\Steel Bank Common Lisp\X.Y.Z\"), not the literal text "%SBCL_HOME%".
+Note: Here, `[SBCL_HOME]` means to insert the installation directory (e.g. "C:\Program Files\Steel Bank Common Lisp\X.Y.Z\"), not the literal text "`[SBCL_HOME]`".
 
 Wherever you put SBCL, it is important to set the environment variables SBCL_HOME and PATH. Fortunately, the installer automatically does this for SBCL_HOME. Unfortunately, the installer _doesn't_ do this for PATH, so you'll need to do that yourself. Searching ([http://www.google.com/search?hl=en&q=windows+set+PATH+variable&btnG=Search google]) should provide instructions on how to change PATH. (Add "Vista" to the search terms if you use Vista, since Vista has its own way of doing things.)
 
@@ -48,10 +48,10 @@ The latest version of CFFI has three dependencies that must also be downloaded;
 Extract these packages to the following directories;
 
 {{{
-%SBCL_HOME%\site\cffi\
-%SBCL_HOME%\site\alexandria\
-%SBCL_HOME%\site\babel\
-%SBCL_HOME%\site\trivial-features\
+[SBCL_HOME]\site\cffi\
+[SBCL_HOME]\site\alexandria\
+[SBCL_HOME]\site\babel\
+[SBCL_HOME]\site\trivial-features\
 }}}
 
 = LISPBUILDER-SDL and Binaries =
@@ -61,7 +61,7 @@ Extract these packages to the following directories;
 Download `LISPBUILDER-SDL` from *source*, or *downloads* above. Install to;
 
 {{{
-%SBCL_HOME%\site\lispbuilder-sdl\
+[SBCL_HOME]\site\lispbuilder-sdl\
 }}}
 
 Download the required SDL binaries;
@@ -72,7 +72,7 @@ Download the required SDL binaries;
 Install to the following directory;
 
 {{{
-%SBCL_HOME%\site\lispbuilder-sdl\
+[SBCL_HOME]\site\lispbuilder-sdl\
 }}}
 
 = SBCL System Initialization File =
@@ -80,7 +80,7 @@ Install to the following directory;
 Create a new `sbclrc` file; 
 
 {{{
-%SBCL_HOME%\sbclrc
+[SBCL_HOME]\sbclrc
 }}}
 
 Add the following to the `sbclrc` file above;
@@ -89,14 +89,14 @@ Add the following to the `sbclrc` file above;
 (require :asdf)
 
 ;; put all subdirectories of SBCL_HOME\site\ into asdf:*central-registry*
-(pushnew "%SBCL_HOME%\\site\\*\\" asdf:*central-registry* :test 'equal)
+(pushnew "[SBCL_HOME]\\site\\*\\" asdf:*central-registry* :test 'equal)
  
 ;; load lispbuilder-sdl
 (asdf:operate 'asdf:load-op :lispbuilder-sdl)
 (asdf:operate 'asdf:load-op :lispbuilder-sdl-binaries)
 }}}
 
-Note that you'll have to double up the backslashes in %SBCL_HOME% to avoid confusing SBCL.
+Note that you'll have to double up the backslashes in `[SBCL_HOME]` to avoid confusing SBCL.
 
 = Starting SBCL =
 
@@ -111,5 +111,5 @@ Assuming PATH and SBCL_HOME are set correctly,
 [http://utopia.knoware.nl/~hlub/uck/rlwrap/ rlwrap] is a readline wrapper, that makes using SBCL from the REPL somewhat bearable. It requires installing [http://www.cygwin.com/ cygwin] and selecting the rlwrap package.
 
 {{{
-> rlwrap sbcl --sysinit "%SBCL_HOME%\sbclrc"
+> rlwrap sbcl
 }}}
