@@ -1,0 +1,134 @@
+#summary LISPBUILDER-SDL Windows CLISP installation
+#sidebar TableOfContents
+
+= Overview =
+
+This section describes the installation and configuration of CLISP and LISPBUILDER-SDL for Windows.
+
+A summary of the process is as follows;
+
+<wiki:toc max_depth="3" />
+
+= Install  CLISP =
+
+Download [http://clisp.cons.org/ CLISP] for Windows;
+
+ * [http://sourceforge.net/project/platformdownload.php?group_id=1355 Latest version of CLISP for various OSes (including Windows)]
+
+Install CLISP to the default directory; from now on this directory will be denoted as:
+
+{{{
+[CLISP]
+}}}
+
+Note: Here, `[CLISP]` means to insert the installation directory (e.g. "C:\Program Files\clisp-X.Y\"), not the literal text "`[CLISP]`".
+
+Wherever you put CLISP, it is important to set the environment variable PATH. Fortunately, the installer automatically does this, so just make sure to check the option in the installer.
+
+Also note that in order for these changes to take effect, you may need to restart your computer.
+
+= Install ASDF =
+
+[http://common-lisp.net/project/asdf/ ASDF] is a system which assists with compiling and loading libraries. Since it does not come with CLISP by default, download it from
+
+ * http://cclan.cvs.sourceforge.net/*checkout*/cclan/asdf/asdf.lisp
+
+And place the file in
+
+{{{
+[CLISP]\site\asdf.lisp
+}}}
+
+= Install CFFI and Dependencies =
+
+Download the latest version of [http://common-lisp.net/project/cffi/ CFFI];
+
+ * [http://common-lisp.net/project/cffi/tarballs/?M=D CFFI]
+
+The latest version of CFFI has three dependencies that must also be downloaded;
+
+ * [http://www.cliki.net/Alexandria ALEXANDRIA]
+ * [http://www.cliki.net/Babel BABEL]
+ * [http://www.cliki.net/trivial-features TRIVIAL-FEATURES]
+
+Extract these packages to the following directories;
+
+{{{
+[CLISP]\site\cffi\
+[CLISP]\site\alexandria\
+[CLISP]\site\babel\
+[CLISP]\site\trivial-features\
+}}}
+
+= Install LISPBUILDER-SDL and Binaries =
+
+Download `LISPBUILDER-SDL` from [http://code.google.com/p/lispbuilder/source/checkout source] (requires SVN), or [http://code.google.com/p/lispbuilder/downloads/list downloads] above. Install to;
+
+{{{
+[CLISP]\site\lispbuilder-sdl\
+}}}
+
+Download the required SDL binaries;
+
+ * _win32-lispbuilder-sdl-binaries.tgz_ from [http://code.google.com/p/lispbuilder/downloads/list downloads] above, or
+ * SDL from the [http://www.libsdl.org official site] or another package
+
+Install to the following directory;
+
+{{{
+[CLISP]\site\lispbuilder-sdl\
+}}}
+
+= Create an CLISP User Initialization File =
+
+Create a new `.clisprc.lisp` file in your home directory; 
+
+{{{
+[HOME]\.clisprc.lisp
+}}}
+
+Where `[HOME]` is your home directory. If you are unaware which directory CLISP thinks is your home directory, start CLISP and execute;
+
+{{{
+> clisp
+...
+Welcome to GNU CLISP X.Y (YYYY-MM-DD) <http://clisp.cons.org/>
+...
+[1]> (user-homedir-pathname)
+#P"C:\\Documents and Settings\\Your Name\\"
+}}}
+
+Add the following to the `.clisprc.lisp` file above;
+
+{{{
+(load (compile-file "[CLISP]\site\asdf.lisp"))
+
+;; put all subdirectories of [CLISP]\site\ into asdf:*central-registry*
+(pushnew "[CLISP]\\site\\*\\" asdf:*central-registry* :test 'equal)
+ 
+;; load lispbuilder-sdl
+(asdf:operate 'asdf:load-op :lispbuilder-sdl)
+(asdf:operate 'asdf:load-op :lispbuilder-sdl-binaries)
+}}}
+
+Note that you'll have to double up the backslashes in `[CLISP]` to avoid confusing CLISP.
+
+= Try the Examples =
+
+To make sure your configuration works, start CLISP and try one of the examples;
+
+{{{
+> clisp
+...
+Welcome to GNU CLISP X.Y (YYYY-MM-DD) <http://clisp.cons.org/>
+...
+
+* (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+...
+
+* (sdl-examples:mandelbrot)
+}}}
+
+= Emacs and SLIME =
+
+If you don't already have an editor you use for Lisp code, [http://www.gnu.org/software/emacs/ Emacs] and [http://common-lisp.net/project/slime/ SLIME] are a good combination.
