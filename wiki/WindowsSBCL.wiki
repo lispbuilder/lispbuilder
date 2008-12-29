@@ -3,7 +3,7 @@
 
 = Overview =
 
-This section describes the installation and configuration of SBCL and LISPBUILDER-SDL for Windows. Installation of Emacs is not covered.
+This section describes the installation and configuration of SBCL and LISPBUILDER-SDL for Windows.
 
 A summary of the process is as follows;
 
