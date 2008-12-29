@@ -52,7 +52,7 @@ Extract these packages to the following directories;
 
  * SVN, or PACKAGE
 
-Download `LISPBUILDER-SDL` from *source*, or *downloads* above. Install to;
+Download `LISPBUILDER-SDL` from [http://code.google.com/p/lispbuilder/source/checkout source], or [http://code.google.com/p/lispbuilder/downloads/list downloads] above. Install to;
 
 {{{
 [SBCL_HOME]\site\lispbuilder-sdl\
@@ -60,8 +60,8 @@ Download `LISPBUILDER-SDL` from *source*, or *downloads* above. Install to;
 
 Download the required SDL binaries;
 
- * _win32-lispbuilder-sdl-binaries.tgz_ from *source*, or *downloads* above, or
- * SDL from packaged libraries, or the [www.libsdl.org official site]
+ * _win32-lispbuilder-sdl-binaries.tgz_ from [http://code.google.com/p/lispbuilder/downloads/list downloads] above, or
+ * SDL from packaged libraries, or the [http://www.libsdl.org official site]
 
 Install to the following directory;
 
