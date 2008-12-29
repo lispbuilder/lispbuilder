@@ -133,7 +133,7 @@ If that all works you can now try an example:
 
 To build the glue library:
 
- # A working installation of MingW is required. 
+ # A working installation of MingGW is required. 
  # Make sure that the path to the include files for `SDL` and `SDL_TTF` are specified correctly in `LISPBUILDER-SDL-TTF/Makefile.mingw`. Do this by modifying the line `SDL_TTF_CFLAGS=$(CFLAGS) -ISDL-1.2.11/include -ISDL_ttf-2.0.8`.
  # In the `LISPBUILDER-SDL-TTF/` directory, execute `make` to create the glue library.
  # If the build is successful, the `lispbuilder-sdl-ttf-glue` library will be found in `LISPBUILDER-SDL-TTF/BUILD/`.
