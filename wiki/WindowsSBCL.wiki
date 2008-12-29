@@ -1,21 +1,15 @@
 #summary LISPBUILDER-SDL Windows SBCL installation
 #sidebar TableOfContents
 
-<wiki:toc max_depth="3" />
-
 = Overview =
 
 This section describes the installation and configuration of SBCL and LISPBUILDER-SDL for Windows. Installation of Emacs is not covered.
 
 A summary of the process is as follows;
 
- * Install SBCL
- * Install CFFI and dependencies
- * Install LISPBUILDER-SDL and dependencies
- * Create an SBCL system initialization file
- * Optionally install rlwrap
+<wiki:toc max_depth="3" />
 
-= SBCL =
+= Install  SBCL =
 
 Download [http://www.sbcl.org/ SBCL] for Windows;
 
@@ -33,7 +27,7 @@ Wherever you put SBCL, it is important to set the environment variables SBCL_HOM
 
 Also note that in order for these changes to take effect, you may need to restart your computer.
 
-= CFFI =
+= Install CFFI and Dependencies =
 
 Download the latest version of [http://common-lisp.net/project/cffi/ CFFI];
 
@@ -54,7 +48,7 @@ Extract these packages to the following directories;
 [SBCL_HOME]\site\trivial-features\
 }}}
 
-= LISPBUILDER-SDL and Binaries =
+= Install LISPBUILDER-SDL and Binaries =
 
  * SVN, or PACKAGE
 
@@ -75,7 +69,7 @@ Install to the following directory;
 [SBCL_HOME]\site\lispbuilder-sdl\
 }}}
 
-= SBCL System Initialization File =
+= Create an SBCL System Initialization File =
 
 Create a new `sbclrc` file; 
 
@@ -104,12 +98,4 @@ Assuming PATH and SBCL_HOME are set correctly,
 
 {{{
 > sbcl
-}}}
-
-= rlwrap =
-
-[http://utopia.knoware.nl/~hlub/uck/rlwrap/ rlwrap] is a readline wrapper, that makes using SBCL from the REPL somewhat bearable. It requires installing [http://www.cygwin.com/ cygwin] and selecting the rlwrap package.
-
-{{{
-> rlwrap sbcl
 }}}
