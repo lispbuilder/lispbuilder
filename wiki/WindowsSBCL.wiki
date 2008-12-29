@@ -90,10 +90,17 @@ Add the following to the `sbclrc` file above;
 
 Note that you'll have to double up the backslashes in `[SBCL_HOME]` to avoid confusing SBCL.
 
-= Starting SBCL =
+= Try the Examples =
 
-Assuming PATH and SBCL_HOME are set correctly,
+To make sure your configuration works, start SBCL and try one of the examples;
 
 {{{
 > sbcl
+This is SBCL X.Y.Z, an implementation of ANSI Common Lisp.
+...
+
+* (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+...
+
+* (sdl-examples:mandelbrot)
 }}}
