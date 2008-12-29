@@ -29,11 +29,8 @@ The latest version can always be obtained using [http://subversion.tigris.org/ S
 
 == Windows ==
 
- * Windows/SBCL
- * Windows/CLISP
-
-== OS X ==
-
+ * [WindowsSBCL Windows/SBCL]
+ * [WindowsCLISP Windows/CLISP]
 
 == OS X ==
 
