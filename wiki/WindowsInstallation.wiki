@@ -1,6 +1,7 @@
 #summary LISPBUILDER-SDL Windows alternate installation
 #sidebar TableOfContents
 
-See WindowsSBCL for installing SBCL on Windows.
+ * See [WindowsSBCL Windows/SBCL] for installing SBCL on Windows.
+ * See [WindowsCLISP Windows/CLISP] for installing CLISP on Windows.
 
 Other OS and compiler implementations are forthcoming.
