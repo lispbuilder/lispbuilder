@@ -11,7 +11,7 @@ This page describes the installation and configuration of SBCL and LISPBUILDER-S
 
 Download [http://www.sbcl.org/ SBCL] for Windows;
 
- * [http://www.sbcl.org/platform-table.html Latest version of SBCL for various operating systems (including Windows)]
+ * [http://www.sbcl.org/platform-table.html SBCL binaries for various OSes (including Windows)]
 
 Install SBCL to the default directory; from now on this directory will be denoted as:
 
