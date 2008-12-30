@@ -87,7 +87,7 @@ Create a new `.clisprc.lisp` file in your home directory;
 [HOME]\.clisprc.lisp
 }}}
 
-Where `[HOME]` is your home directory. If you are unaware which directory CLISP thinks is your home directory, start CLISP and execute;
+If you are unaware which directory CLISP considers your home directory, start CLISP and execute;
 
 {{{
 > clisp
