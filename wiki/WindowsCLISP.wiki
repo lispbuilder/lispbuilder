@@ -5,7 +5,7 @@
 
 = Overview =
 
-This section describes the installation and configuration of CLISP and LISPBUILDER-SDL for Windows.
+This page describes the installation and configuration of CLISP and LISPBUILDER-SDL for Windows.
 
 = Install  CLISP =
 
