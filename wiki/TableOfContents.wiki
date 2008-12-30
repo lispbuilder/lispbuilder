@@ -1,9 +1,6 @@
 #summary Sidebar Table of Contents
 
-  * [Welcome Welcome]
-
-=== LISPBUILDER-SDL ===
-
-  * [LispbuilderSDL Home]
+ * [Welcome Welcome]
+ * [LispbuilderSDL LISPBUILDER-SDL]
   * [UsingLispbuilderSDL User Guide]
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#contents Reference]
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#contents API Reference]
