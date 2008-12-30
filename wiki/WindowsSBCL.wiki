@@ -80,8 +80,9 @@ Add the following to the `sbclrc` file above;
 {{{
 (require :asdf)
 
-;; put all subdirectories of SBCL_HOME\site\ into asdf:*central-registry*
-(pushnew "[SBCL]\\site\\*\\" asdf:*central-registry* :test 'equal)
+;; put all subdirectories of [SBCL]\site\ into asdf:*central-registry*
+(dolist (dir (directory "[SBCL]\\site\\*\\"))
+  (pushnew dir asdf:*central-registry* :test #'equal))
  
 ;; load lispbuilder-sdl
 (asdf:operate 'asdf:load-op :lispbuilder-sdl)
