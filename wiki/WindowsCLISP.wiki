@@ -11,7 +11,7 @@ This page describes the installation and configuration of CLISP and LISPBUILDER-
 
 Download [http://clisp.cons.org/ CLISP] for Windows;
 
- * [http://sourceforge.net/project/platformdownload.php?group_id=1355 Latest version of CLISP for various OSes (including Windows)]
+ * [http://sourceforge.net/project/platformdownload.php?group_id=1355 CLISP sources and binaries for Windows]
 
 Install CLISP to the default directory; from now on this directory will be denoted as:
 
