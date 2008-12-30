@@ -104,7 +104,8 @@ Add the following to the `.clisprc.lisp` file above;
 (load (compile-file "[CLISP]\\site\\asdf.lisp"))
 
 ;; put all subdirectories of [CLISP]\site\ into asdf:*central-registry*
-(pushnew "[CLISP]\\site\\*\\" asdf:*central-registry* :test 'equal)
+(dolist (dir (directory "[CLISP]\\site\\*\\"))
+  (pushnew dir asdf:*central-registry* :test #'equal))
  
 ;; load lispbuilder-sdl
 (asdf:operate 'asdf:load-op :lispbuilder-sdl)
