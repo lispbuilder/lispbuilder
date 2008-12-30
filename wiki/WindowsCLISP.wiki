@@ -101,7 +101,7 @@ Welcome to GNU CLISP X.Y (YYYY-MM-DD) <http://clisp.cons.org/>
 Add the following to the `.clisprc.lisp` file above;
 
 {{{
-(load (compile-file "[CLISP]\site\asdf.lisp"))
+(load (compile-file "[CLISP]\\site\\asdf.lisp"))
 
 ;; put all subdirectories of [CLISP]\site\ into asdf:*central-registry*
 (pushnew "[CLISP]\\site\\*\\" asdf:*central-registry* :test 'equal)
