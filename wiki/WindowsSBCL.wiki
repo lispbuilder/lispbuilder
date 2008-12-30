@@ -1,13 +1,11 @@
 #summary LISPBUILDER-SDL Windows SBCL installation
 #sidebar TableOfContents
 
+<wiki:toc max_depth="3" />
+
 = Overview =
 
-This section describes the installation and configuration of SBCL and LISPBUILDER-SDL for Windows.
-
-A summary of the process is as follows;
-
-<wiki:toc max_depth="3" />
+This page describes the installation and configuration of SBCL and LISPBUILDER-SDL for Windows.
 
 = Install  SBCL =
 
