@@ -1,13 +1,11 @@
 #summary LISPBUILDER-SDL Windows CLISP installation
 #sidebar TableOfContents
 
+<wiki:toc max_depth="3" />
+
 = Overview =
 
 This section describes the installation and configuration of CLISP and LISPBUILDER-SDL for Windows.
-
-A summary of the process is as follows;
-
-<wiki:toc max_depth="3" />
 
 = Install  CLISP =
 
