@@ -70,7 +70,7 @@ Now we need to install some dependencies. Lispbuilder-SDL uses CFFI; a portable 
 {{{
 (require 'asdf)
 (require 'asdf-install)
-(asdf-install :cffi)
+(asdf-install:install :cffi)
 }}}
 
 If everything is OK you should see a text menu:
