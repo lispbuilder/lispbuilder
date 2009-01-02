@@ -21,10 +21,6 @@ Install SBCL to the default directory; from now on this directory will be denote
 
 Note: Here, `[SBCL]` means to insert the installation directory (e.g. "C:\Program Files\Steel Bank Common Lisp\X.Y.Z\"), not the literal text "`[SBCL]`".
 
-Wherever you put SBCL, it is important to set the environment variables SBCL_HOME and PATH. Fortunately, the installer automatically does this for SBCL_HOME. Unfortunately, the installer _doesn't_ do this for PATH, so you'll need to do that yourself. Searching ([http://www.google.com/search?hl=en&q=windows+set+PATH+variable&btnG=Search google]) should provide instructions on how to change PATH. (Add "Vista" to the search terms if you use Vista, since Vista has its own way of doing things.)
-
-Also note that in order for these changes to take effect, you may need to restart your computer.
-
 = Install CFFI and Dependencies =
 
 Download the latest version of [http://common-lisp.net/project/cffi/ CFFI];
