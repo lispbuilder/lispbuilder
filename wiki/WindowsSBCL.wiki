@@ -29,7 +29,7 @@ Also note that in order for these changes to take effect, you may need to restar
 
 Download the latest version of [http://common-lisp.net/project/cffi/ CFFI];
 
- * [http://common-lisp.net/project/cffi/releases/?M=D CFFI]
+ * [http://common-lisp.net/project/cffi/releases/?M=D Official release tarballs]
 
 The latest version of CFFI has three dependencies that must also be downloaded;
 
