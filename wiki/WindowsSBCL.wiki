@@ -46,6 +46,8 @@ Extract these packages to the following directories;
 [SBCL]\site\trivial-features\
 }}}
 
+If you do not already have a program which can extract tar.gz files (necessary for extracting the above packages), [http://www.7-zip.org/ 7-Zip] is a good option.
+
 = Install LISPBUILDER-SDL and Binaries =
 
 Download `LISPBUILDER-SDL` from [http://code.google.com/p/lispbuilder/source/checkout source] (requires SVN), or [http://code.google.com/p/lispbuilder/downloads/list downloads] above. Install to;
