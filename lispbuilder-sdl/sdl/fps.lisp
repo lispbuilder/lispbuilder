@@ -27,3 +27,13 @@ See [WITH-EVENTS](#with-events), and [AVERAGE-FPS](#average-fps)."
   "Returns the average frame rate of the event loop calculated over a sliding window of 100 frames."
   (sdl-base::average-fps (sdl-base::fps-average fpsmanager)))
 
+(defun frame-time (&optional (fpsmanager sdl-base::*default-fpsmanager*))
+  "Returns how long current frame time is"
+  (sdl:time-scale))
+
+
+
+
+
+
+

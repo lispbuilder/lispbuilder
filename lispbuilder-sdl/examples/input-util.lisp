@@ -22,7 +22,7 @@
     (let ((font (sdl:initialise-default-font sdl:*font-10x20*)))
       (sdl:initialise-input-util)
       (sdl:window *window-x* *window-y*)
-      (setf (sdl:frame-rate) 0)
+      (setf (sdl:frame-rate) 30)
       (sdl:with-events ()
 	(:quit-event () t)
 	
@@ -42,8 +42,7 @@
 		   (format t "A released~%"))
 
 	       ;; update input system
-
-	       (sdl:update-input-util (min 0.016 (/ 1.0 (sdl:average-fps))))
+	       (sdl:update-input-util (sdl:frame-time))
 
        	       ;; fill the background
 	       (sdl:clear-display (sdl:color :r #x00 :g #x00 :b #x00))
