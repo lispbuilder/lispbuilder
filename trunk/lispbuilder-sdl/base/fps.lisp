@@ -1,4 +1,3 @@
-
 (in-package #:lispbuilder-sdl-base)
 
 (defstruct fps-average
@@ -13,10 +12,6 @@
   (delta 0)
   (last 0)
   (world 1000))
-
-;;;; (setf *fps-average* (make-fps-average)
-;;;;       *time-scale* (make-time-scale))
-
 
 (defun average-fps (fps-average)
   (cond

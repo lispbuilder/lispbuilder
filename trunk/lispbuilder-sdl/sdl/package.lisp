@@ -448,6 +448,7 @@
    ;; fps.lisp
    #:frame-rate
    #:average-fps
+   #:frame-time
    #:time-scale
 
    ;; keys.lisp
