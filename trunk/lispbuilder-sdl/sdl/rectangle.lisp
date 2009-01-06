@@ -95,6 +95,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 		   `(,var ,rectangle)
 		   `(,var ,var)))
 	    (*default-rectangle* ,var))
+       (declare (ignorable ,free-value))
        (symbol-macrolet ((,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
 			 (,(intern (string-upcase (format nil "~A.y" var))) (y ,var))
 			 (,(intern (string-upcase (format nil "~A.w" var))) (width ,var))
@@ -104,9 +105,13 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 			     ,(intern (string-upcase (format nil "~A.w" var)))
 			     ,(intern (string-upcase (format nil "~A.h" var)))))
 	 (setf ,body-value (progn ,@body))
-	 (when ,free-value
-	   (free ,var))
-	 ,body-value))))
+	 ,(if free
+	      `(progn
+		 (when ,free-value
+		   (free ,var)
+		   ,body-value))
+	      `(progn
+		 ,body-value))))))
 
 (defmacro with-rectangles (bindings &body body)
   "A convenience macro that binds multiple rectangles as per [WITH-RECTANGLE](#with-rectangle).

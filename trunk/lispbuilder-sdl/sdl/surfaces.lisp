@@ -122,6 +122,7 @@ Free using [FREE](#free)."))
 	    (*default-surface* ,var)
 	    (,body-value nil)
 	    (,free-value ,free))
+       (declare (ignorable ,free-value))
        (symbol-macrolet ((,(intern (string-upcase (format nil "~A.width" var))) (width ,var))
 			 (,(intern (string-upcase (format nil "~A.height" var))) (height ,var))
 			 (,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
@@ -132,9 +133,13 @@ Free using [FREE](#free)."))
                                     ,(intern (string-upcase (format nil "~A.y" var)))))
 	 (sdl-base::with-surface (,surface-ptr (fp ,var) nil)
 	   (setf ,body-value (progn ,@body))))
-       (when ,free-value
-	 (free ,var))
-       ,body-value)))
+       ,(if free
+          `(progn
+	     (when ,free-value
+	       (free ,var))
+	     ,body-value)
+	  `(progn
+	     ,body-value)))))
 
 (defmacro with-surface-slots ((var &optional surface)
 			      &body body)

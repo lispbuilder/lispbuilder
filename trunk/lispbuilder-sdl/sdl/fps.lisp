@@ -2,7 +2,9 @@
 (in-package #:lispbuilder-sdl)
 
 
-(defun (setf frame-rate) (rate &optional (fpsmanager sdl-base::*default-fpsmanager*))
+(defun (setf frame-rate) (rate
+                          &optional
+                          (fpsmanager sdl-base::*default-fpsmanager*))
   (setf (sdl-base::target-frame-rate fpsmanager) rate))
 
 ;;;; (defun (setf frame-rate) (rate &optional fpsmanager)
@@ -21,19 +23,13 @@ See [WITH-EVENTS](#with-events), and [AVERAGE-FPS](#average-fps)."
   (sdl-base::target-frame-rate fpsmanager))
 
 (defun time-scale (&optional (fpsmanager sdl-base::*default-fpsmanager*))
-  (sdl-base::time-scale-tscale (sdl-base::time-scale fpsmanager)))
+  (sdl-base::tscale (sdl-base::time-scale fpsmanager)))
 
 (defun average-fps (&optional (fpsmanager sdl-base::*default-fpsmanager*))
-  "Returns the average frame rate of the event loop calculated over a sliding window of 100 frames."
+  "Returns the average frame rate of the event loop calculated over a sliding window
+of 'n' frames."
   (sdl-base::average-fps (sdl-base::fps-average fpsmanager)))
 
 (defun frame-time (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   "Returns how long current frame time is"
-  (sdl:time-scale))
-
-
-
-
-
-
-
+  (sdl-base::tscale (sdl-base::time-scale fpsmanager)))

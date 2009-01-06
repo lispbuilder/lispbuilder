@@ -90,7 +90,7 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 
 (defvar *initialized* nil)
 (defvar *reinit-on-startup* nil)
-(defvar *quit-on-exit* nil)
+(defvar *quit-on-exit* t)
 (defvar *initialize-subsystems-on-startup* (logior SDL-INIT-VIDEO))
 (defvar *quit-subsystems-on-exit* (logior SDL-INIT-VIDEO))
 
@@ -99,11 +99,12 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 (defvar *external-quit-subsystems-on-exit* nil
   "The list of functions that are called from [QUIT-SDL](#quit-sdl).")
 
-(defvar *default-font-path* (make-pathname
-                             :host (pathname-host #.(or *compile-file-truename*
-                                                        *load-truename*))
-                             :directory (pathname-directory #.(or *compile-file-truename*
-                                                                  *load-truename*))))
+(defvar *default-font-path*
+  (make-pathname
+   :host (pathname-host #.(or *compile-file-truename*
+                              *load-truename*))
+   :directory (pathname-directory #.(or *compile-file-truename*
+                                        *load-truename*))))
 
 (defvar *default-simple-font* (merge-pathnames "font.bmp" *default-font-path*))
 

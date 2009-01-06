@@ -7,9 +7,10 @@
 
 (defun bezier ()
   (let ((width 200) (height 200))
-    (sdl:with-init ()
+    (sdl:with-init (sdl:sdl-init-video)
       (sdl:window width height :title-caption "Bezier, from Processing.org")
       (setf (sdl:frame-rate) 5)
+      
       (sdl:clear-display (sdl:color :r 0 :g 0 :b 0))
       (sdl:with-color (a-col (sdl:color :r 255 :g 255 :b 255))
 	(loop for i from 0 to 100 by 10
