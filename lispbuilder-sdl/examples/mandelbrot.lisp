@@ -41,45 +41,48 @@
 									   (mod (* 2 (the fixnum c)) 256))))))))))
 
 (defun mandelbrot 
-    (&optional (width *mandelbrot-width*) (height *mandelbrot-height*) (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
+       (&optional (width *mandelbrot-width*) (height *mandelbrot-height*)
+                  (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
   "main program to draw navigate mandelbrot set"
   (let ((cx 0) (cy 0) (step 30)
 	(frames-p (every-n-frames 5)))
     (sdl:with-init ()
-      (sdl:window width height :title-caption "Mandelbrot" :icon-caption "Mandelbrot")
+      (sdl:window width height
+                  :title-caption "Mandelbrot"
+                  :icon-caption "Mandelbrot")
       (setf (sdl:frame-rate) -1)
       (sdl:with-events ()
 	(:idle ()
-	       (if (>= cx width)
-		   (and (setf cx 0) (incf cy step)))
-	       (if (< cy height)
-		   (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1))
-	       (incf cx step)
-	       (when (funcall frames-p)
-		 (sdl:update-display)))
+         (if (>= cx width)
+           (and (setf cx 0) (incf cy step)))
+         (if (< cy height)
+           (update-mandelbrot-draw width height cx cy step step x0 y0 x1 y1))
+         (incf cx step)
+         (when (funcall frames-p)
+           (sdl:update-display)))
 	(:quit-event () t)
 	(:mouse-button-down-event (:x x :y y)
-					; set the new center point
-				  (let* ((old-width (- x1 x0))
-					 (old-height (- y1 y0))
-					 (x-ratio (/ (float x) width))
-					 (y-ratio (/ (float y) height))
-					 (new-width (* old-width *zoom-ratio*))
-					 (new-height (* old-height *zoom-ratio*))
-					 (new-mid-x (+ x0 (* x-ratio old-width)))
-					 (new-mid-y (+ y0 (* y-ratio old-height))))
-				    (setf x0 
-					  (- new-mid-x (/ new-width 2.0)))
-				    (setf y0
-					  (- new-mid-y (/ new-height 2.0)))
-				    (setf x1
-					  (+ x0 new-width))
-				    (setf y1
-					  (+ y0 new-height)))
-				  (setf cx 0)
-				  (setf cy 0)
-				  (clear-screen))
+         ;; set the new center point
+         (let* ((old-width (- x1 x0))
+                (old-height (- y1 y0))
+                (x-ratio (/ (float x) width))
+                (y-ratio (/ (float y) height))
+                (new-width (* old-width *zoom-ratio*))
+                (new-height (* old-height *zoom-ratio*))
+                (new-mid-x (+ x0 (* x-ratio old-width)))
+                (new-mid-y (+ y0 (* y-ratio old-height))))
+           (setf x0 
+                 (- new-mid-x (/ new-width 2.0)))
+           (setf y0
+                 (- new-mid-y (/ new-height 2.0)))
+           (setf x1
+                 (+ x0 new-width))
+           (setf y1
+                 (+ y0 new-height)))
+         (setf cx 0)
+         (setf cy 0)
+         (clear-screen))
 	(:key-down-event (:key key)
-			 (if (sdl:key= key :SDL-KEY-ESCAPE)
-			     (sdl:push-quit-event)))
+         (if (sdl:key= key :SDL-KEY-ESCAPE)
+           (sdl:push-quit-event)))
 	(:video-expose-event () (sdl:update-display))))))

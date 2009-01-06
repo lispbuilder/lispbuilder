@@ -1,49 +1,5 @@
 (in-package #:lispbuilder-sdl-base)
 
-(defstruct fps-average
-  (index 0)
-  (window (make-array 250 :initial-element 0 :element-type 'fixnum))
-  (last-ticks 0)
-  (calculated? nil)
-  (window-size 100))
-
-(defstruct time-scale
-  (tscale 0)
-  (delta 0)
-  (last 0)
-  (world 1000))
-
-(defun average-fps (fps-average)
-  (cond
-    ((fps-average-calculated? fps-average)
-     (fps-average-calculated? fps-average))
-    (t
-     (let ((window (fps-average-window fps-average))
-	   (average 1)
-	   (window-size (fps-average-window-size fps-average)))
-       (dotimes (i window-size)
-	 (incf average (aref window i)))
-       (setf (fps-average-calculated? fps-average) (/ 1000 (/ average window-size)))))))
-
-(defun update-average-fps-window (fps-average current-ticks)
-  (setf (aref (fps-average-window fps-average) (fps-average-index fps-average))
-	(the fixnum (- current-ticks (fps-average-last-ticks fps-average))))
-  (incf (fps-average-index fps-average))
-  (when (>= (fps-average-index fps-average) (fps-average-window-size fps-average))
-    (setf (fps-average-index fps-average) 0
-	  (fps-average-calculated? fps-average) nil))
-  (setf (fps-average-last-ticks fps-average) current-ticks))
-
-(defun calculate-time-scale (time-scale current-ticks)
-  (setf (time-scale-tscale time-scale) (/ (setf (time-scale-delta time-scale) (- current-ticks
-										 (time-scale-last time-scale)))
-					  (time-scale-world time-scale)))
-  (setf (time-scale-last time-scale) current-ticks))
-
-(defclass fps-manager ()
-  ((fps-average :reader fps-average :initform (make-fps-average))
-   (time-scale :reader time-scale :initform (make-time-scale))))
-
 (defgeneric (setf target-frame-rate) (rate fpsmngr)
   (:documentation "Set the target frame rate for the game loop.
 RATE > 0 will lock the game loop to the specified frame rate, and
@@ -57,10 +13,71 @@ not calculated"))
 (defgeneric process-timestep (fpsmngr &optional fn)
   (:documentation "Manages the timestep. Called once per game loop."))
 
-(defmethod (setf target-frame-rate) (rate fpsmngr)
-  (error "FPSMNGR cannot be NIL."))
+(defclass fps-average ()
+  ((index :accessor index :initform 0)
+   (window :accessor average-window :initform nil)
+   (last-ticks :accessor last-ticks :initform 0)
+   (calculated :accessor average-fps :initform 0)))
 
+(defclass time-scale ()
+  ((tscale :accessor tscale :initform 0)
+   (delta :accessor time-delta :initform 0)
+   (time-last :accessor time-last :initform 0)
+   (world :accessor world :initform 1000)))
 
+(defmethod update-fps-window ((self fps-average) current-ticks)
+  (with-accessors ((index index) (average-window average-window)
+                   (last-ticks last-ticks) (average-fps average-fps)) self
+    (if (< index (length average-window))
+      (progn
+        (setf (svref average-window index) current-ticks)
+        (incf index))
+      (setf index 0
+            average-fps (/ 1000
+                           (/ (loop for i from 1 below (length average-window)
+                                    for j from 0 below (length average-window)
+                                    summing (- (svref average-window i)
+                                               (svref average-window j)) into total
+                                    finally (return total))
+                              (length average-window)))))
+    (setf last-ticks current-ticks)))
+
+(defun calculate-time-scale (time-scale current-ticks)
+  (with-accessors ((tscale tscale) (time-delta time-delta)
+                   (time-last time-last) (world world)) time-scale
+    (setf tscale (/ (setf time-delta (- current-ticks time-last))
+                    world))
+    (setf time-last current-ticks)))
+
+(defclass fps-manager ()
+  ((fps-average :reader fps-average :initform (make-instance 'fps-average))
+   (time-scale :reader time-scale :initform (make-instance 'time-scale)))
+  (:default-initargs
+   :average-window 200
+   :target-frame-rate 30))
+
+(defmethod initialize-instance :after ((self fps-manager)
+                                       &key
+                                       average-window
+                                       target-frame-rate
+                                       &allow-other-keys)
+  (when average-window
+    (setf (average-window (fps-average self)) (make-array average-window
+                                                          :initial-element 0)))
+  (when target-frame-rate
+    (setf (target-frame-rate self) target-frame-rate)))
+
+(defmethod (setf target-frame-rate) (rate (self fps-manager)) nil)
+
+(defmethod (setf target-frame-rate) :around (rate (self fps-manager))
+  (let ((window (average-window (fps-average self))))
+    (when (and rate (> rate 0))
+      (let ((inverse-rate (truncate (/ 1000.0 rate))))
+        (loop for i from 0 below (length window)
+              for j = 0 then (incf j inverse-rate) do
+              (setf (svref window i) j))))
+    (setf (index (fps-average self)) (length window)))
+  (call-next-method))
 
 ;;;; --------------------------
 ;;;; Lock the game loop to a specified rate
@@ -75,17 +92,17 @@ not calculated"))
    (upper-limit :accessor upper-limit :initform 200 :initarg upper-limit)
    (lower-limit :accessor lower-limit :initform 1 :initarg lower-limit)))
 
-(defmethod (setf target-frame-rate) (rate (fpsmngr fps-fixed))
+(defmethod (setf target-frame-rate) (rate (self fps-fixed))
   (if (> rate 0)
-      (if (and (>= rate (lower-limit fpsmngr))
-	       (<= rate (upper-limit fpsmngr)))
+      (if (and (>= rate (lower-limit self))
+	       (<= rate (upper-limit self)))
 	  (progn
-	    (setf (frame-count fpsmngr) 0)
-	    (setf (slot-value fpsmngr 'frame-rate) rate)
-	    (setf (rate-ticks fpsmngr) (/ 1000.0 rate))
+	    (setf (frame-count self) 0)
+	    (setf (slot-value self 'frame-rate) rate)
+	    (setf (rate-ticks self) (/ 1000.0 rate))
 	    t)
 	  nil)
-      (setf (slot-value fpsmngr 'frame-rate) rate)))
+      (setf (slot-value self 'frame-rate) rate)))
 
 (defmethod init-fps-manager ((fpsmanager fps-fixed)) nil)
 
@@ -97,7 +114,7 @@ not calculated"))
     (when (> (target-frame-rate fpsmngr) -1)
       (setf current-ticks (sdl-cffi::sdl-get-ticks))
 
-      (update-average-fps-window (fps-average fpsmngr) current-ticks)
+      (update-fps-window (fps-average fpsmngr) current-ticks)
       (calculate-time-scale (time-scale fpsmngr) current-ticks)
       
       ;; Delay game loop, if necessary
@@ -107,7 +124,7 @@ not calculated"))
 			      (* (frame-count fpsmngr)
 				 (rate-ticks fpsmngr))))
         (if (<= current-ticks target-ticks)
-          (sdl-cffi::sdl-delay (round (- target-ticks current-ticks)))
+          (sdl-cffi::sdl-delay (truncate (- target-ticks current-ticks)))
           (progn
             (setf (frame-count fpsmngr) 0
                   (last-ticks fpsmngr) current-ticks)))))))

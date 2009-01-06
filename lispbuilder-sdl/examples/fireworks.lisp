@@ -7,13 +7,15 @@
 
 (defun fireworks ()
   (sdl:WITH-INIT ()
-    (sdl:WINDOW *width* *height* :title-caption "Fireworks" :icon-caption "Fireworks")
+    (sdl:WINDOW *width* *height*
+                :title-caption "Fireworks" :icon-caption "Fireworks")
     (setf (sdl:frame-rate) 0)
     (let ((world (make-world))
-	  (100-frames-p (every-n-frames 500)))
+	  (100-frames-p (every-n-frames 200)))
 
       (sdl:initialise-default-font sdl:*font-5x7*)
-      (draw-fps "Calculating FPS....." 10 10 sdl:*default-font* sdl:*default-surface* t)
+      (draw-fps "Calculating FPS....."
+                10 10 sdl:*default-font* sdl:*default-surface* t)
       
       (sdl:WITH-EVENTS ()
 	(:QUIT-EVENT () T)

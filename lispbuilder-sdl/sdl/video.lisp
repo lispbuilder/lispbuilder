@@ -15,7 +15,9 @@
       t
       nil))
 
-(defun window (width height &key (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption)
+(defun window (width height &key
+                     (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption
+                     (fps (make-instance 'sdl-base::fps-fixed)))
   "Creates a new SDL window of pixel width `WIDTH` and height `HEIGHT` using SDL_SetVideoMode.
 
 Use `SDL-SW-SURFACE` if you plan on doing per-pixel manipulations, or blit surfaces with alpha channels, 
@@ -68,6 +70,7 @@ will be released automatically by SDL.
     (when surf
       (setf *default-display* (make-instance 'display-surface :fp surf))
       (setf *opengl-context* (surface-info *default-display* sdl-opengl)))
+    (setf sdl-base::*default-fpsmanager* fps)
     *default-display*))
 
 

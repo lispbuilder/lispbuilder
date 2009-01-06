@@ -23,12 +23,12 @@
 	   ,@body)
       (sdl-cffi::SDL-Quit))))
 
-(defun init-sdl (&key (flags sdl-cffi::SDL-INIT-VIDEO))
+(defun init-sdl (&key (flags nil))
   (if (equal 0 (sdl-cffi::SDL-Init (set-flags flags)))
       t
       nil))
 
-(defun was-init? (&key (flags sdl-cffi::SDL-INIT-VIDEO))
+(defun init-p (&key (flags))
   (if (equal (set-flags flags)
 	     (sdl-cffi::sdl-was-init (set-flags flags)))
       t

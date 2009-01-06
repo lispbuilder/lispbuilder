@@ -49,41 +49,43 @@
   (let ((mouse-x 0) (mouse-y 0)
 	(100-frames-p (every-n-frames 100)))
     (sdl:with-init ()
-      (sdl:window *objects-width* *objects-height* :title-caption "Objects, from Processing.org")
+      (sdl:window *objects-width* *objects-height*
+                  :title-caption "Objects, from Processing.org")
       (setf (sdl:frame-rate) 60)
 
       (sdl:clear-display (sdl:color))
 
       (sdl:initialise-default-font sdl:*font-5x7*)
-      (draw-fps "Calculating FPS....." 10 150 sdl:*default-font* sdl:*default-surface* t)
+      (draw-fps "Calculating FPS....."
+                10 150 sdl:*default-font* sdl:*default-surface* t)
 
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))
 	(:mouse-motion-event (:x x :y y)
-			     (setf mouse-x x
-				   mouse-y y))
+         (setf mouse-x x
+               mouse-y y))
 	(:idle ()
-	       (sdl:clear-display sdl:*black*)
-	       (display *r1*)
-	       (display *r2*)
-	       (display *r3*)
-	       (display *r4*)
+         (sdl:clear-display sdl:*black*)
+         (display *r1*)
+         (display *r2*)
+         (display *r3*)
+         (display *r4*)
 	       
-	       (move-to-x *r1* (- mouse-x (/ *objects-width* 2)) 30)
-	       (move-to-x *r2* (mod (+ mouse-x (* *objects-width* 0.05)) *objects-width*) 20)
-	       (move-to-x *r3* (/ mouse-x 4) 40)
-	       (move-to-x *r4* (- mouse-x (/ *objects-width* 2)) 50)
+         (move-to-x *r1* (- mouse-x (/ *objects-width* 2)) 30)
+         (move-to-x *r2* (mod (+ mouse-x (* *objects-width* 0.05)) *objects-width*) 20)
+         (move-to-x *r3* (/ mouse-x 4) 40)
+         (move-to-x *r4* (- mouse-x (/ *objects-width* 2)) 50)
 	       
-	       (move-to-y *r1* (+ mouse-y (* *objects-height* 0.1)) 30)
-	       (move-to-y *r2* (+ mouse-y (* *objects-height* 0.025)) 20)
-	       (move-to-y *r3* (- mouse-y (* *objects-height* 0.025)) 40)
-	       (move-to-y *r4* (- *objects-height* mouse-y) 50)
+         (move-to-y *r1* (+ mouse-y (* *objects-height* 0.1)) 30)
+         (move-to-y *r2* (+ mouse-y (* *objects-height* 0.025)) 20)
+         (move-to-y *r3* (- mouse-y (* *objects-height* 0.025)) 40)
+         (move-to-y *r4* (- *objects-height* mouse-y) 50)
 
-	       ;; Optimization; Draw the font each frame,
-	       ;; but only render the font once every 100 frames.
-	       (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
-			 10 150 sdl:*default-font* sdl:*default-surface*
-			 (funcall 100-frames-p))
+         ;; Optimization; Draw the font each frame,
+         ;; but only render the font once every 100 frames.
+         (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
+                   10 150 sdl:*default-font* sdl:*default-surface*
+                   (funcall 100-frames-p))
 
-	       (sdl:update-display))))))
+         (sdl:update-display))))))

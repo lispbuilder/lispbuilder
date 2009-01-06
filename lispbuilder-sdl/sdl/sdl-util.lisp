@@ -339,7 +339,7 @@ bit of ram."
         (let ((y1)
               (span-left)
               (span-right))
-          (when (not (ff-push x y)) (return-from flood-fill-stack-* nil))
+          (unless (ff-push x y) (return-from flood-fill-stack-* nil))
           (loop
              :while (not (ff-empty-p))
              :do (multiple-value-bind (x y)(ff-pop)
@@ -359,7 +359,7 @@ bit of ram."
                                           (> x 0)
                                           (= (sdl-base::read-pixel pixels (- x 1) y1)
                                              old-color))
-                                     (progn (when (not (ff-push (- x 1) y1))
+                                     (progn (unless (ff-push (- x 1) y1)
                                               (return-from flood-fill-stack-* nil))
                                             (setf span-left T))
                                      (if (and span-left
@@ -371,7 +371,7 @@ bit of ram."
                                           (< x (1- w))
                                           (= (sdl-base::read-pixel pixels (+ x 1) y1)
                                              old-color))
-                                     (progn (when (not (ff-push (+ x 1) y1))
+                                     (progn (unless (ff-push (+ x 1) y1)
                                               (return-from flood-fill-stack-* nil))
                                             (setf span-right T))
                                      (when (and span-right

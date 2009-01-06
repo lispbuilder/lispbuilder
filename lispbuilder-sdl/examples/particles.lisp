@@ -217,10 +217,10 @@
 
 	 ;; Display text.
 	 (draw-cached-string "" 5 5 *font-large* sdl:*default-display* nil)
-	 (if (= (truncate (sdl:average-fps)) previous-average)
-	     (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil)
+         (if (= (truncate (sdl:average-fps)) previous-average)
+           (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil)
 	     (draw-cached-string (format nil "Particles: ~d, Framerate: ~f ftime: ~2f" *particle-count* (truncate (sdl:average-fps)) *ftime*)
-				 5 35 *font-small* sdl:*default-display* t))     
+                               5 35 *font-small* sdl:*default-display* t))
 	 
 	 (setf previous-average (truncate (sdl:average-fps)))
 	
