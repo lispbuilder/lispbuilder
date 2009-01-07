@@ -39,7 +39,7 @@
 	(len-cvt :int)
 	(len-mult :int)
 	(len-ratio :double)
-	(filters :pointer)
+	(filters :pointer :count 10)
 	(filter-index :int))
 
 (cffi:defcfun ("SDL_AudioInit" SDL-Audio-Init) :int
