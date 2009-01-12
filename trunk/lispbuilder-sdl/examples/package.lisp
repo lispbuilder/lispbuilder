@@ -107,6 +107,9 @@
    ;; functional-geometry
    #:fishes
 
+   ;; audio-mixer
+   #:mixer-test
+
    ;; The following are only defined in the
    ;; LISPBUILDER-SDL-CL-VECTORS-EXAMPLES package.
    ;; cl-vectors.lisp
