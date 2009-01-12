@@ -53,6 +53,8 @@
      (:file "keys")
      (:file "sdl-util")
      (:file "default-colors")
+     (:file "audio")
+     (:file "mixer")
      (:static-file "bitstream-vera-copyright")
      (:static-file "Vera.ttf"))
     :serial t)

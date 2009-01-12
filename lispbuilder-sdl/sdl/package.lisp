@@ -81,7 +81,20 @@
    #:*default-simple-font*
    #:*default-ttf-font*
    
-
+   #:*mixer*
+   #:*managed-audio*
+   #:+DEFAULT-FORMAT+
+   #:+CHANNELS+
+   #:+DEFAULT-FREQUENCY+
+   #:+DEFAULT-CHANNELS+
+   #:+MAX-VOLUME+
+   #:+DEFAULT-SAMPLE-BUFFER+
+   #:+CHANNEL-POST+
+   #:+MAX-AUDIO-16+
+   #:+MIN-AUDIO-16+
+   #:+MAX-AUDIO-8+
+   #:+MIN-AUDIO-8+
+   
    ;; init.lisp
    #:with-init
    #:initialize-subsystems-on-startup
@@ -399,6 +412,56 @@
    ;; pixel.lisp
    #:bit-depth
 
+   ;; audio.lisp
+   #:audio-spec
+   #:print-object
+   #:sample-frequency
+   #:audio-format
+   #:output-channels
+   #:audio-silence
+   #:audio-buffer-size
+   #:audio-buffer-size-calculated
+   #:spec-callback
+   #:spec-user-data
+   #:audio-cvt
+   #:audio-buffer
+   #:audio
+   #:audio-buffer-handle
+   #:audio-remaining
+   #:audio-position
+   #:audio-paused-p
+   #:volume
+   #:callback-finished
+   #:copy-audio
+   #:audio-length
+   #:register-audio-finished
+   #:unregister-audio-finished
+   #:audio-finished-callback
+   #:resume-audio
+   #:halt-sample
+   #:rewind-audio
+   #:audio-playing-p
+   #:audio-playable-p
+   #:audio-opened-p
+   #:mixer
+   #:requested-sample-frequency
+   #:requested-audio-format
+   #:requested-output-channels
+   #:requested-audio-buffer-size
+   #:audio-spec
+   #:mixer-opened-p
+   #:output-audio-buffer-size
+   #:output-buffer
+   #:audio-volume
+   #:open-audio
+   #:play-audio
+   #:pause-audio
+   #:close-audio
+   #:load-sample
+   #:build-audio-cvt
+   #:load-audio
+   #:default-fill-audio-buffer
+   
    ;; assets/globals.lisp
    #:*default-font-path*
    #:*default-ttf*
