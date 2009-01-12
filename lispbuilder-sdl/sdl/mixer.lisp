@@ -98,7 +98,7 @@
   ;; Make sure that SDL is initialized with SDL:SDL-INIT-AUDIO,
   ;; If not, then initialize it and add it to the list of subsystems to quit on
   ;; sdl exit.
-  (when (= 0 (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t))
+  (when (= (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t) 0)
     (sdl:initialize-subsystems-on-startup (logior
                                            sdl::*initialize-subsystems-on-startup*
                                            SDL:SDL-INIT-AUDIO))
@@ -318,6 +318,7 @@
     (when (and audio-buffer (audio-opened-p))
       (build-audio-cvt audio-buffer *mixer*))))
 
+
 (cffi:defcallback default-fill-audio-buffer
     :pointer ((user-data :pointer)
               (stream :pointer)
@@ -346,13 +347,16 @@
             (let* ((len (if (> len (audio-remaining audio))
                           (audio-remaining audio)
                           len))
-                   (buffer (audio-buffer audio)))
+                   (buffer (audio-buffer audio))
+                   (volume (audio-volume audio)))
               (loop for i from 0 below len
                     for j = (audio-position audio) then (1+ j)
                     do (incf (aref output i)
-                             (aref buffer j)))
+                             (adjust-volume (aref buffer j) volume)))
               (incf (audio-position audio) len)
               (decf (audio-remaining audio) len)))))
+      ;; Sample finished playing, then remove.
+      
       ;; Set mixer volume limits.
       (let ((max-audioval (if (= 2 (element-size (audio-format *mixer*)))
                             +max-audio-16+
@@ -363,14 +367,13 @@
         (loop for val across output
               for x = 0 then (+ x 2)
               for y = 1 then (+ x 1)
-              for scr1 = (adjust-volume val master-volume) do
-              (progn
-                ;; Clamp output buffer to allowable limits
-                (cond
-                 ((> scr1 max-audioval)
-                  (setf scr1 max-audioval))
-                 ((< scr1 min-audioval)
-                  (setf scr1 min-audioval)))
-                (setf (mem-aref stream :unsigned-char x) (logand scr1 #xFF)
-                      (mem-aref stream :unsigned-char y) (logand (ash scr1 -8) #xFF)))))))
+              for adjusted = (adjust-volume val master-volume)
+              for clamped = (cond
+                             ((> adjusted max-audioval)
+                              max-audioval)
+                             ((< adjusted min-audioval)
+                              min-audioval)
+                             (t adjusted)) do
+              (setf (mem-aref stream :unsigned-char x) (logand clamped #xFF)
+                    (mem-aref stream :unsigned-char y) (logand (ash clamped -8) #xFF))))))
     (cffi:null-pointer))

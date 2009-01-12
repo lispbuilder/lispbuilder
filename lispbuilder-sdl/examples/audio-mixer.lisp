@@ -15,7 +15,7 @@
     (sdl:window 400 20 :title-caption "WAV playback" :icon-caption "WAV playback")
     (setf (sdl:frame-rate) 5)
     (sdl:initialise-default-font)
-    
+       
     ;; Open the audio device
     (unless (sdl:open-audio)
       (setf *status* "FAILED to open Audio device."))

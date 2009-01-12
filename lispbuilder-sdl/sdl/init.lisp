@@ -100,7 +100,7 @@ specified in `FLAGS`.
            ;; Initialize only subsystems not already initalized.
            (init-subsystems)
            ,@body)
-       (when (= 1 (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t))
+       (when (> (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t) 0)
          (close-audio))
        ;; Close only initialized subsystems.
        (quit-subsystems)
