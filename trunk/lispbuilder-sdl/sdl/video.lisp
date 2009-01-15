@@ -60,6 +60,16 @@ will be released automatically by SDL.
 
     \(WINDOW 320 240 :TITLE-CAPTION \"Random-Rects\" :ICON-CAPTION \"Random-Rects\"
                      :FLAGS \'(SDL-DOUBLEBUF SDL-FULLSCREEN\)\)"
+  (when (= (sdl:return-subsystems-of-status SDL:SDL-INIT-VIDEO t) 0)
+    (sdl:initialize-subsystems-on-startup (logior
+                                           sdl::*initialize-subsystems-on-startup*
+                                           SDL:SDL-INIT-VIDEO))
+    (sdl:quit-subsystems-on-exit (logior
+                                  sdl::*quit-subsystems-on-exit*
+                                  SDL:SDL-INIT-VIDEO))
+    ;; Initialize the subsystems in sdl::*initialize-subsystems-on-startup*
+    ;; that are not yet initialized.
+    (sdl:init-subsystems))
   (let ((surf (sdl-base::set-screen width height
 				    :bpp bpp
 				    :flags flags
@@ -279,3 +289,7 @@ is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)
 
 (defun set-gl-attribute (attribute value)
   (sdl-cffi::sdl-gl-set-attribute attribute value))
+
+(defun set-caption (window-caption icon-caption)
+  "Sets the caption text for window bar, and icon."
+  (sdl-cffi::sdl-wm-set-caption window-caption icon-caption))

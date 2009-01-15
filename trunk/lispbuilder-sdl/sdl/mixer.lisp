@@ -27,7 +27,13 @@
     :accessor output-buffer)
    (volume
     :accessor audio-volume
-    :initarg :audio-volume))
+    :initarg :audio-volume)
+   (loop
+    :accessor loop-p
+    :initform nil
+    :initarg :loop)
+   (pause
+    :initform nil))
   (:default-initargs
    :audio-format +DEFAULT-FORMAT+
    :sample-frequency +DEFAULT-FREQUENCY+
@@ -155,80 +161,127 @@
               (audio-buffer-size *mixer*)))
       *mixer*)))
 
-(defun audio-opened-p ()
-  (when *mixer*
-    (slot-value *mixer* 'mixer-opened-p)))
+(defmethod _play-audio_ ((self mixer) &key loop pos)
+  (declare (ignore loop pos))
+  (when (audio-opened-p)
+    (sdl-cffi::sdl-pause-audio 0)
+    (setf (slot-value self 'pause) nil)))
 
-(defun play-audio (&optional obj)
+(defun play-audio (&optional obj &key loop pos)
   (unless obj
     (setf obj *mixer*))
-  (_play-audio_ obj))
+  (_play-audio_ obj :loop loop :pos pos))
 
-(defmethod _play-audio_ ((self mixer))
-  (sdl-cffi::sdl-pause-audio 0))
+(defmethod _pause-audio_ ((self mixer))
+  (when (audio-opened-p)
+    (sdl-cffi::sdl-pause-audio 1)
+    (setf (slot-value self 'pause) t)))
 
 (defun pause-audio (&optional obj)
   (unless obj
     (setf obj *mixer*))
   (_pause-audio_ obj))
 
-(defmethod _pause-audio_ ((self mixer))
-  (sdl-cffi::sdl-pause-audio 1))
+(defun resume-audio (&optional obj)
+  (unless obj
+    (setf obj *mixer*))
+  (_resume-audio_ obj))
+
+(defmethod _resume-audio_ ((self mixer))
+  (play-audio self))
+
+(defmethod _audio-paused-p_ ((self mixer))
+  (when (audio-opened-p)
+    (slot-value self 'pause)))
+
+(defun audio-paused-p (&optional obj)
+  (unless obj
+    (setf obj *mixer*))
+  (_audio-paused-p_ obj))
+
+(defun audio-opened-p ()
+  (when *mixer*
+    (mixer-opened-p *mixer*)))
+
+(defmethod _audio-playing-p_ ((self mixer))
+  (when (and (audio-opened-p)
+             (not (audio-paused-p self)))
+    (let ((num (length *managed-audio*)))
+      (if (> num 0) num nil))))
+
+(defmethod audio-playing-p (&optional obj)
+  (unless obj
+    (setf obj *mixer*))
+  (_audio-playing-p_ obj))
 
 (defun close-audio ()
-  (when (audio-opened-p)
-    ;; Pause the audio stream
-    (pause-audio)
-    ;; Lock the audio device to halt all callbacks
-    (sdl-cffi::sdl-lock-audio)
-    ;; Close the audio device
-    (sdl-cffi::sdl-close-audio)
-    (setf (slot-value *mixer* 'mixer-opened-p) nil)
-    (setf *managed-audio* nil)))
+  ;; Pause the audio stream
+  (pause-audio)
+  ;; Lock the audio device to halt all callbacks
+  (sdl-cffi::sdl-lock-audio)
+  ;; Close the audio device
+  (sdl-cffi::sdl-close-audio)
+  (setf (slot-value *mixer* 'mixer-opened-p) nil)
+  (setf *managed-audio* nil))
 
 (defun load-sample (filename)
   (let ((spec (make-instance 'audio-spec))
-        (sample-handle (cffi:foreign-alloc :pointer)))
-    (cffi:with-foreign-object (sample-length :pointer)
-      (unless (cffi:null-pointer-p (sdl-cffi::sdl-load-wav filename
-                                                           (audio-spec spec)
-                                                           sample-handle
-                                                           sample-length))
-        ;; Determine the format of the audio buffer
-        ;; We are going to save the buffer in this format to save on storage,
-        ;; and reduce bit-fiddling later on.
-        (let* ((wave (cffi:mem-aref sample-handle :pointer))
-               (buff (cond
-                      ((or (= (audio-format spec) sdl-cffi::AUDIO-U8)
-                           (= (audio-format spec) sdl-cffi::AUDIO-S8))
-                       (loop repeat (cffi:mem-aref sample-length :unsigned-int)
-                             for byte = 0 then (1+ byte)
-                             collect (cffi:mem-aref wave :unsigned-char byte)))
-                      ((or (= (audio-format spec) sdl-cffi::AUDIO-U16LSB)
-                           (= (audio-format spec) sdl-cffi::AUDIO-S16LSB))
-                       (loop repeat (/ (cffi:mem-aref sample-length :unsigned-int) 2)
-                             for byte-1 = 0 then (+ 2 byte-1)
-                             for byte-2 = 1 then (1+ byte-1)
-                             collect (logior (ash (cffi:mem-aref wave :unsigned-char byte-2) 8)
-                                             (cffi:mem-aref wave :unsigned-char byte-1))))
-                      ((or (= (audio-format spec) sdl-cffi::AUDIO-U16MSB)
-                           (= (audio-format spec) sdl-cffi::AUDIO-S16MSB))
-                       (loop repeat (/ (cffi:mem-aref sample-length :unsigned-int) 2)
-                             for byte-1 = 0 then (+ 2 byte-1)
-                             for byte-2 = 1 then (1+ byte-1)
-                             collect (logior (ash (cffi:mem-aref wave :unsigned-char byte-1) 8)
-                                             (cffi:mem-aref wave :unsigned-char byte-2)))))))
-          (sdl-cffi::sdl-free-wav wave)
-          (make-instance 'audio
-                         :audio-buffer-handle
-                         (make-instance 'audio-buffer
-                                        :audio-buffer (make-array
-                                                       (length buff)
-                                                       :element-type (from-sdl-type
-                                                                      (audio-format spec))
-                                                       :initial-contents buff)
-                                        :audio-length (length buff)
-                                        :audio-spec spec)))))))
+        (sample-handle (cffi:foreign-alloc :pointer))
+        (sample-length (cffi:foreign-alloc :pointer)))
+    (unless (cffi:null-pointer-p (sdl-cffi::sdl-load-wav filename
+                                                         (fp spec)
+                                                         sample-handle
+                                                         sample-length))
+      ;; Determine the format of the audio buffer
+      ;; We are going to save the buffer in this format to save on storage,
+      ;; and reduce bit-fiddling later on.
+      (let* ((wave (cffi:mem-aref sample-handle :pointer))
+             (buff (cond
+                    ((= (audio-format spec) sdl-cffi::AUDIO-U8)
+                     (loop repeat (cffi:mem-aref sample-length :unsigned-int)
+                           for byte = 0 then (1+ byte)
+                           collect (cffi:mem-aref wave :unsigned-char byte)))
+                    ((= (audio-format spec) sdl-cffi::AUDIO-S8)
+                     (loop repeat (cffi:mem-aref sample-length :unsigned-int)
+                           for byte = 0 then (1+ byte)
+                           collect (to-s8 (cffi:mem-aref wave :unsigned-char byte))))
+                    ((= (audio-format spec) sdl-cffi::AUDIO-U16LSB)
+                     (loop repeat (/ (cffi:mem-aref sample-length :unsigned-int) 2)
+                           for byte-1 = 0 then (+ 2 byte-1)
+                           for byte-2 = 1 then (1+ byte-1)
+                           collect (logior (ash (cffi:mem-aref wave :unsigned-char byte-2) 8)
+                                           (cffi:mem-aref wave :unsigned-char byte-1))))
+                    ((= (audio-format spec) sdl-cffi::AUDIO-S16LSB)
+                     (loop repeat (/ (cffi:mem-aref sample-length :unsigned-int) 2)
+                           for byte-1 = 0 then (+ 2 byte-1)
+                           for byte-2 = 1 then (1+ byte-1)
+                           collect (to-s16 (logior (ash (cffi:mem-aref wave :unsigned-char byte-2) 8)
+                                                   (cffi:mem-aref wave :unsigned-char byte-1)))))
+                    ((= (audio-format spec) sdl-cffi::AUDIO-U16MSB)
+                     (loop repeat (/ (cffi:mem-aref sample-length :unsigned-int) 2)
+                           for byte-1 = 0 then (+ 2 byte-1)
+                           for byte-2 = 1 then (1+ byte-1)
+                           collect (logior (ash (cffi:mem-aref wave :unsigned-char byte-1) 8)
+                                           (cffi:mem-aref wave :unsigned-char byte-2))))
+                    ((= (audio-format spec) sdl-cffi::AUDIO-S16MSB)
+                     (loop repeat (/ (cffi:mem-aref sample-length :unsigned-int) 2)
+                           for byte-1 = 0 then (+ 2 byte-1)
+                           for byte-2 = 1 then (1+ byte-1)
+                           collect (to-s16 (logior (ash (cffi:mem-aref wave :unsigned-char byte-1) 8)
+                                           (cffi:mem-aref wave :unsigned-char byte-2))))))))
+        (sdl-cffi::sdl-free-wav wave)
+        (cffi:foreign-free sample-handle)
+        (cffi:foreign-free sample-length)
+        (make-instance 'audio
+                       :audio-buffer-handle
+                       (make-instance 'audio-buffer
+                                      :audio-buffer (make-array
+                                                     (length buff)
+                                                     :element-type (from-sdl-type
+                                                                    (audio-format spec))
+                                                     :initial-contents buff)
+                                      :audio-length (length buff)
+                                      :audio-spec spec))))))
 
 (defmethod build-audio-cvt ((audio audio) (mixer mixer))
   (cffi:with-foreign-object (audio-cvt 'sdl-cffi::sdl-audio-cvt)
@@ -250,55 +303,136 @@
                                                           sdl-cffi::len-mult))
               sdl-cffi::len-cvt (* (audio-length audio) sdl-cffi::len-mult))
 
+        ;; Write the AUDIO to the SDL-AUDIO-CVT buffer for conversion.
+        ;; The SDL-AUDIO-CVT takes uint* buffer, so perform coversion
+        ;; if necessary.
+        (cond
+         ((= (audio-format audio) sdl-cffi::AUDIO-U8)
+          (loop for val across (audio-buffer audio)
+                for i = 0 then (1+ i) do
+                (setf (cffi:mem-aref sdl-cffi::buf :unsigned-char i) val)))
+         ((= (audio-format audio) sdl-cffi::AUDIO-S8)
+          (loop for val across (audio-buffer audio)
+                for i = 0 then (1+ i) do
+                (setf (cffi:mem-aref sdl-cffi::buf :unsigned-char i)
+                      (from-s8 val))))
+         ((= (audio-format audio) sdl-cffi::AUDIO-U16LSB)
+          (loop for val across (audio-buffer audio)
+                for x = 0 then (+ x 2)
+                for y = 1 then (+ x 1) do
+                (setf (mem-aref sdl-cffi::buf :unsigned-char x) (logand val #xFF)
+                      (mem-aref sdl-cffi::buf :unsigned-char y) (logand (ash val -8)
+                                                                 #xFF))))
+         ((= (audio-format audio) sdl-cffi::AUDIO-S16LSB)
+          (loop for val across (audio-buffer audio)
+                for x = 0 then (+ x 2)
+                for y = 1 then (+ x 1)
+                for uval = (from-s16 val) do
+                (setf (mem-aref sdl-cffi::buf :unsigned-char x) (logand uval #xFF)
+                      (mem-aref sdl-cffi::buf :unsigned-char y) (logand (ash uval -8)
+                                                                 #xFF))))
+         ((= (audio-format audio) sdl-cffi::AUDIO-U16MSB)
+          (loop for val across (audio-buffer audio)
+                for x = 0 then (+ x 2)
+                for y = 1 then (+ x 1) do
+                (setf (mem-aref sdl-cffi::buf :unsigned-char y) (logand val #xFF)
+                      (mem-aref sdl-cffi::buf :unsigned-char x) (logand (ash val -8)
+                                                                 #xFF))))
+         ((= (audio-format audio) sdl-cffi::AUDIO-S16MSB)
+          (loop for val across (audio-buffer audio)
+                for x = 0 then (+ x 2)
+                for y = 1 then (+ x 1)
+                for uval = (from-s16 val) do
+                (setf (mem-aref sdl-cffi::buf :unsigned-char y) (logand uval #xFF)
+                      (mem-aref sdl-cffi::buf :unsigned-char x) (logand (ash uval -8)
+                                                                 #xFF)))))
+        
         ;; Need to fix this to convert from source format to destination format.
         ;; Assumes source is uint8 right now.
-        (dotimes (i (audio-length audio))
-          (setf (cffi:mem-aref sdl-cffi::buf :unsigned-char i)
-                    (aref (audio-buffer audio) i)))
+        ;(dotimes (i (audio-length audio))
+        ;  (setf (cffi:mem-aref sdl-cffi::buf :unsigned-char i)
+        ;        (aref (audio-buffer audio) i)))
         
         (when (> (sdl-cffi::sdl-convert-audio audio-cvt) -1)
-          (let* ((buff (cond
-                        ;; U16LSB or S16LSB
-                        ((lsb-p (audio-format mixer))
-                         (loop repeat (calculated-buffer-length
-                                       sdl-cffi::len-cvt
-                                       sdl-cffi::AUDIO-U8
-                                       (audio-format mixer))
-                               for byte-1 = 0 then (+ 2 byte-1)
-                               for byte-2 = 1 then (1+ byte-1)
-                               collect (to-s16 (logior (ash (cffi:mem-aref sdl-cffi::buf
-                                                                   :unsigned-char byte-2) 8)
-                                               (cffi:mem-aref sdl-cffi::buf
-                                                              :unsigned-char byte-1)))))
-                        ;; U16MSB or S16MSB
-                        ((msb-p (audio-format mixer))
-                         (loop repeat (calculated-buffer-length sdl-cffi::len-cvt
-                                                                sdl-cffi::AUDIO-U8
-                                                                (audio-format mixer))
-                               for byte-1 = 0 then (+ 2 byte-1)
-                               for byte-2 = 1 then (1+ byte-1)
-                               collect (logior (ash (cffi:mem-aref sdl-cffi::buf
-                                                                   :unsigned-char byte-1) 8)
-                                               (cffi:mem-aref sdl-cffi::buf
-                                                              :unsigned-char byte-2))))
-                        ;; Assume u8 or s8
-                        (t
-                         (loop repeat (calculated-buffer-length
-                                       sdl-cffi::len-cvt
-                                       sdl-cffi::AUDIO-U8
-                                       (audio-format mixer))
-                               for byte = 0 then (1+ byte)
-                               collect (cffi:mem-aref sdl-cffi::buf
-                                                      :unsigned-char byte))))))
-            (sdl-cffi::sdl-free-wav sdl-cffi::buf)
+          (let* ((cvt-buffer
+                  (make-pointer
+                   (pointer-address (foreign-slot-value audio-cvt
+                                                        'sdl-cffi::sdl-audio-cvt
+                                                        'sdl-cffi::buf))))
+                 (buffer
+                  (cond
+                   ((= (audio-format mixer) sdl-cffi::AUDIO-U16LSB)
+                    (loop repeat (calculated-buffer-length
+                                  sdl-cffi::len-cvt
+                                  sdl-cffi::AUDIO-U8
+                                  (audio-format mixer))
+                          for byte-1 = 0 then (+ 2 byte-1)
+                          for byte-2 = 1 then (1+ byte-1)
+                          collect (logior (ash (cffi:mem-aref cvt-buffer
+                                                              :unsigned-char byte-2) 8)
+                                          (cffi:mem-aref cvt-buffer
+                                                         :unsigned-char byte-1))))
+                   ((= (audio-format mixer) sdl-cffi::AUDIO-S16LSB)
+                    (loop repeat (calculated-buffer-length
+                                  sdl-cffi::len-cvt
+                                  sdl-cffi::AUDIO-U8
+                                  (audio-format mixer))
+                          for byte-1 = 0 then (+ 2 byte-1)
+                          for byte-2 = 1 then (1+ byte-1)
+                          collect (to-s16 (logior (ash (cffi:mem-aref cvt-buffer
+                                                                      :unsigned-char byte-2) 8)
+                                                  (cffi:mem-aref cvt-buffer
+                                                                 :unsigned-char byte-1)))))
+                   ((= (audio-format mixer) sdl-cffi::AUDIO-U16MSB)
+                    (loop repeat (calculated-buffer-length sdl-cffi::len-cvt
+                                                           sdl-cffi::AUDIO-U8
+                                                           (audio-format mixer))
+                          for byte-1 = 0 then (+ 2 byte-1)
+                          for byte-2 = 1 then (1+ byte-1)
+                          collect (logior (ash (cffi:mem-aref cvt-buffer
+                                                              :unsigned-char byte-1) 8)
+                                          (cffi:mem-aref cvt-buffer
+                                                         :unsigned-char byte-2))))
+                   ((= (audio-format mixer) sdl-cffi::AUDIO-S16MSB)
+                    (loop repeat (calculated-buffer-length sdl-cffi::len-cvt
+                                                           sdl-cffi::AUDIO-U8
+                                                           (audio-format mixer))
+                          for byte-1 = 0 then (+ 2 byte-1)
+                          for byte-2 = 1 then (1+ byte-1)
+                          collect (to-s16 (logior (ash (cffi:mem-aref cvt-buffer
+                                                                      :unsigned-char byte-1) 8)
+                                                  (cffi:mem-aref cvt-buffer
+                                                                 :unsigned-char byte-2)))))
+                   ((= (audio-format mixer) sdl-cffi::AUDIO-U8)
+                    (loop repeat (calculated-buffer-length
+                                  sdl-cffi::len-cvt
+                                  sdl-cffi::AUDIO-U8
+                                  (audio-format mixer))
+                          for byte = 0 then (1+ byte)
+                          collect (cffi:mem-aref cvt-buffer
+                                                 :unsigned-char byte)))
+                   ((= (audio-format mixer) sdl-cffi::AUDIO-S8)
+                    (loop repeat (calculated-buffer-length
+                                  sdl-cffi::len-cvt
+                                  sdl-cffi::AUDIO-U8
+                                  (audio-format mixer))
+                          for byte = 0 then (1+ byte)
+                          collect (to-s8 (cffi:mem-aref cvt-buffer
+                                                 :unsigned-char byte)))))))
+            (sdl-cffi::sdl-free-wav
+             (make-pointer
+              (pointer-address
+               (foreign-slot-pointer audio-cvt
+                                     'sdl-cffi::sdl-audio-cvt
+                                     'sdl-cffi::buf))))
             (make-instance 'audio
                            :audio-buffer-handle
                            (make-instance 'audio-buffer
                                           :audio-buffer
-                                          (make-array (length buff)
+                                          (make-array (length buffer)
                                                       :element-type (from-sdl-type
                                                                      (audio-format mixer))
-                                                      :initial-contents buff)
+                                                      :initial-contents buffer)
                                           :audio-length
                                           (calculated-buffer-length
                                            (sdl:cast-to-int
@@ -314,9 +448,10 @@
                                           (output-channels mixer)))))))))
 
 (defun load-audio (filename)
-  (let ((audio-buffer (load-sample filename)))
+  (when (audio-opened-p)
+    (let ((audio-buffer (load-sample filename)))
     (when (and audio-buffer (audio-opened-p))
-      (build-audio-cvt audio-buffer *mixer*))))
+      (build-audio-cvt audio-buffer *mixer*)))))
 
 
 (cffi:defcallback default-fill-audio-buffer
@@ -324,56 +459,52 @@
               (stream :pointer)
               (len :int))
   (declare (ignore user-data))
-  ;; The callback is asking for an amount of 'len' uint8 bytes.
-  ;; Have to convert this to the mixer format, as this is what all the audio
-  ;; buffers will be in.
-  (let ((len (calculated-buffer-length len sdl-cffi::audio-u8
-                                       (audio-format *mixer*))))
-    ;; If the callback function is asking for more data than the existing output
-    ;; buffer, then create a new output buffer of the requested length.
-    (if (/= len (length (output-buffer *mixer*)))
-      (setf (output-buffer *mixer*) (make-array len
-                                                :initial-element
-                                                (audio-silence (audio-spec *mixer*))
-                                                :element-type 'fixnum))
-      ;; Write silence to the output buffer
-      (overwrite-all (output-buffer *mixer*) (audio-silence (audio-spec *mixer*))))
-    (let ((output (output-buffer *mixer*))
-          (master-volume (audio-volume *mixer*)))
-      (dolist (audio *managed-audio*)
-        (when (audio-playable-p audio)
-          ;; Play audio only when audio remains in the sample.
-          (when (> (audio-remaining audio) 0)
-            (let* ((len (if (> len (audio-remaining audio))
-                          (audio-remaining audio)
-                          len))
-                   (buffer (audio-buffer audio))
-                   (volume (audio-volume audio)))
-              (loop for i from 0 below len
-                    for j = (audio-position audio) then (1+ j)
-                    do (incf (aref output i)
-                             (adjust-volume (aref buffer j) volume)))
-              (incf (audio-position audio) len)
-              (decf (audio-remaining audio) len)))))
-      ;; Sample finished playing, then remove.
-      
-      ;; Set mixer volume limits.
-      (let ((max-audioval (if (= 2 (element-size (audio-format *mixer*)))
-                            +max-audio-16+
-                            +max-audio-8+))
-            (min-audioval (if (= 2 (element-size (audio-format *mixer*)))
-                            +min-audio-16+
-                            +min-audio-8+)))
-        (loop for val across output
-              for x = 0 then (+ x 2)
-              for y = 1 then (+ x 1)
-              for adjusted = (adjust-volume val master-volume)
-              for clamped = (cond
-                             ((> adjusted max-audioval)
-                              max-audioval)
-                             ((< adjusted min-audioval)
-                              min-audioval)
-                             (t adjusted)) do
-              (setf (mem-aref stream :unsigned-char x) (logand clamped #xFF)
-                    (mem-aref stream :unsigned-char y) (logand (ash clamped -8) #xFF))))))
+  (unless (slot-value *mixer* 'pause)
+    ;; The callback is asking for an amount of 'len' uint8 bytes.
+    ;; Have to convert this to the mixer format, as this is what all the audio
+    ;; buffers will be in.
+    (let ((len (calculated-buffer-length len sdl-cffi::audio-u8
+                                         (audio-format *mixer*))))
+      ;; If the callback function is asking for more data than the existing output
+      ;; buffer, then create a new output buffer of the requested length.
+      (if (/= len (length (output-buffer *mixer*)))
+        (setf (output-buffer *mixer*) (make-array len
+                                                  :initial-element
+                                                  (audio-silence (audio-spec *mixer*))
+                                                  :element-type 'fixnum))
+        ;; Write silence to the output buffer
+        (overwrite-all (output-buffer *mixer*) (audio-silence (audio-spec *mixer*))))
+      (let ((output (output-buffer *mixer*)))
+        (dolist (audio *managed-audio*)
+          (unless (audio-paused-p audio)
+            ;; Play audio only when audio remains in the sample.
+            (fill-output-buffer output audio)))
+
+        ;; Removed from *managed-audio* list if sample is finished.
+        (dolist (obj (remove nil (loop for buffer in *managed-audio*
+                                       collect (remove-audio-p
+                                                buffer))))
+          (setf *managed-audio* (remove obj *managed-audio*)
+                (remove-audio-p obj) nil))
+
+        ;; Set mixer volume limits.
+        (let ((master-volume (audio-volume *mixer*))
+              (max-audioval (if (= 2 (element-size (audio-format *mixer*)))
+                              +max-audio-16+
+                              +max-audio-8+))
+              (min-audioval (if (= 2 (element-size (audio-format *mixer*)))
+                              +min-audio-16+
+                              +min-audio-8+)))
+          (loop for val across output
+                for x = 0 then (+ x 2)
+                for y = 1 then (+ x 1)
+                for adjusted = (adjust-volume val master-volume)
+                for clamped = (cond
+                               ((> adjusted max-audioval)
+                                max-audioval)
+                               ((< adjusted min-audioval)
+                                min-audioval)
+                               (t adjusted)) do
+                (setf (mem-aref stream :unsigned-char x) (logand clamped #xFF)
+                      (mem-aref stream :unsigned-char y) (logand (ash clamped -8) #xFF)))))))
     (cffi:null-pointer))

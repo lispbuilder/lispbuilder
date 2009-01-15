@@ -16,6 +16,7 @@
 (defun adjust-volume (sample volume)
   (sdl:cast-to-int (/ (* sample volume) +max-volume+)))
 
+(declaim (inline adjust-volume-8))
 (defun adjust-volume-u8 (sample volume)
   (sdl:cast-to-int (+ (/ (* (- sample 128) volume) +max-volume+) 128)))
 
@@ -70,8 +71,25 @@
             (= format sdl-cffi::AUDIO-S16MSB))
     t))
 
+(declaim (inline to-s16))
 (defun to-s16 (x)
   (- x (* 2 (logand x #x8000))))
+
+(declaim (inline to-s8))
+(defun to-s8 (x)
+  (- x (* 2 (logand x #x80))))
+
+(declaim (inline from-s16))
+(defun from-s16 (x)
+  (if (< x 0)
+    (+ x 65536)
+    x))
+
+(declaim (inline from-s8))
+(defun from-s8 (x)
+  (if (< x 0)
+    (+ x 256)
+    x))
 
 (defclass audio-spec (sdl::foreign-object)()
   (:default-initargs
@@ -186,16 +204,26 @@
     :accessor audio-position
     :initform 0)
    (pause
-    :accessor audio-paused-p
     :initform nil)
    (volume
     :accessor audio-volume
     :initform +max-volume+
     :initarg :audio-volume)
+   (play-count
+    :accessor play-count
+    :initform 1
+    :initarg :play-count)
+   (loop
+    :accessor loop-p
+    :initform nil
+    :initarg :loop)
    (callback-finished
     :accessor callback-finished
     :initform nil
-    :initarg :callback-finished)))
+    :initarg :callback-finished)
+   (remove-p
+    :accessor remove-audio-p
+    :initform nil)))
 
 (defmethod initialize-instance :after ((self audio)
                                        &key start &allow-other-keys)
@@ -234,39 +262,94 @@
 (defmethod audio-finished-callback ((self audio))
   (funcall (callback-finished self)))
 
-(defmethod _play-audio_ ((self audio))
-  (if (find self *managed-audio*)
-    (resume-audio self)
-    (pushnew self *managed-audio*)))
+(defmethod _play-audio_ ((self audio) &key loop pos)
+  "Plays `AUDIO` from start if not already playing or halted.
+Rewinds and plays `AUDIO` if paused or halted."
+  (declare (ignore pos loop))
+  (unless (find self *managed-audio*)
+    (pushnew self *managed-audio*))
+  (setf (slot-value self 'loop) loop)
+  (when (numberp (slot-value self 'loop))
+    (setf (play-count self) loop))
+  (rewind-audio self)
+  (resume-audio self))
+
+(defmethod rewind-audio ((self audio) &optional (pos 0))
+  "Rewind to start of `AUDIO`. Safe to use on halted, paused or currently
+playing music. Does not resume or begin playback of halted or paused music."
+  (declare (ignore pos))
+    (setf (audio-remaining self) (audio-length self)
+          (audio-position self) pos))
 
 (defmethod _pause-audio_ ((self audio))
-  (when (audio-playing-p self)
-    (setf (audio-paused-p self) t)))
+  "Pauses playback of `AUDIO`. Only `AUDIO` that is actively playing will be paused.
+You may halt a paused sample."
+  (when (find self *managed-audio*)
+    (setf (slot-value self 'pause) t)))
 
-(defmethod resume-audio ((self audio))
-  (when (audio-playing-p self)
-    (setf (audio-paused-p self) nil)))
+(defmethod _resume-audio_ ((self audio))
+  "Resumes playback of `AUDIO`. Only paused `AUDIO` will be resumed."
+  (when (find self *managed-audio*)
+    (setf (slot-value self 'pause) nil)))
 
-(defmethod halt-sample ((self audio) &optional (ignore-callback nil))
-  (setf *managed-audio* (remove self *managed-audio*))
+(defmethod halt-audio ((self audio) &optional (ignore-callback nil))
+  "Stops playback of `AUDIO`."
+  (when (find self *managed-audio*)
+    (setf (remove-audio-p self) t))
   (unless ignore-callback
     (audio-finished-callback self)))
 
-(defmethod rewind-audio ((self audio) &optional (pos 0))
-  (declare (ignore pos))
-  (setf (audio-remaining self) (audio-length self)
-        (audio-position self) pos))
+(defmethod audio-halted-p ((self audio))
+  "Returns `T` if `AUDIO` is currently halted, or `NIL` otherwise."
+  (not (find self *managed-audio*)))
 
-(defmethod audio-playing-p ((self audio))
-  (if (> (audio-remaining self) 0)
-    t
-    nil))
+(defmethod _audio-paused-p_ ((self audio))
+  (when (find self *managed-audio*)
+    (slot-value self 'pause)))
 
-(defmethod audio-playable-p ((self audio))
-  (if (and (> (audio-remaining self) 0)
-           (not (audio-paused-p self)))
-    self
-    nil))
+(defmethod _audio-playing-p_ ((self audio))
+  "Returns `T` if `AUDIO` is currently playing or is paused,
+or `NIL` if `AUDIO` is halted."
+  (when (or (not (audio-halted-p self))
+            (audio-paused-p self))
+    t))
+
+(defmethod post-process ((self audio))
+  ;; Determine if sample is complete.
+  (let ((complete nil))
+    (if (loop-p self)
+      (when (numberp (play-count self))
+        (decf (play-count self))
+        (if (<= (play-count self) 0)
+          (setf complete t)))
+      (setf complete t))
+    (if complete
+      (setf (remove-audio-p self) self)
+      (rewind-audio self))
+    complete))
+
+(defun fill-output-buffer (output audio &key len)
+  (unless len
+    (setf len (length output)))
+  ;; Fill the output buffer with data from the audio buffer.
+  (let ((quit nil))
+    (loop until quit
+          until (<= len 0) do
+          (progn
+            (if (> (audio-remaining audio) 0)
+              (let* ((length (if (> len (audio-remaining audio))
+                               (audio-remaining audio)
+                               len))
+                     (buffer (audio-buffer audio))
+                     (volume (audio-volume audio)))
+                (loop for i from 0 below length
+                      for j = (audio-position audio) then (1+ j)
+                      do (incf (aref output i)
+                               (adjust-volume (aref buffer j) volume)))
+                (incf (audio-position audio) length)
+                (decf (audio-remaining audio) length)
+                (decf len length))
+              (setf quit (post-process audio)))))))
 
 (defmethod print-object ((obj audio) stream)
   (print-unreadable-object (obj stream :type t)
