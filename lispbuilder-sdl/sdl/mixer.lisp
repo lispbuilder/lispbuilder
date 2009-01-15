@@ -14,7 +14,6 @@
     :reader audio-spec
     :initform (make-instance 'audio-spec))
    (callback
-    :initform nil
     :initarg :callback)
    (mixer-opened-p
     :initform nil
@@ -41,7 +40,8 @@
    :output-channels +DEFAULT-CHANNELS+
    :audio-buffer-size +DEFAULT-SAMPLE-BUFFER+
    :volume +MAX-VOLUME+
-   :user-data (cffi:null-pointer)))
+   :user-data (cffi:null-pointer)
+   :callback (cffi:callback default-fill-audio-buffer)))
 
 (defmethod initialize-instance :after ((self mixer)
                                        &key
@@ -200,7 +200,8 @@
   (_audio-paused-p_ obj))
 
 (defun audio-opened-p ()
-  (when *mixer*
+  (when (and (> (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t) 0)
+             *mixer*)
     (mixer-opened-p *mixer*)))
 
 (defmethod _audio-playing-p_ ((self mixer))
@@ -216,12 +217,13 @@
 
 (defun close-audio ()
   ;; Pause the audio stream
-  (pause-audio)
+  (when (audio-opened-p)
+    (pause-audio)
+    (setf (slot-value *mixer* 'mixer-opened-p) nil))
   ;; Lock the audio device to halt all callbacks
-  (sdl-cffi::sdl-lock-audio)
+  ;; (sdl-cffi::sdl-lock-audio)
   ;; Close the audio device
   (sdl-cffi::sdl-close-audio)
-  (setf (slot-value *mixer* 'mixer-opened-p) nil)
   (setf *managed-audio* nil))
 
 (defun load-sample (filename)
@@ -468,15 +470,17 @@
       ;; If the callback function is asking for more data than the existing output
       ;; buffer, then create a new output buffer of the requested length.
       (if (/= len (length (output-buffer *mixer*)))
-        (setf (output-buffer *mixer*) (make-array len
-                                                  :initial-element
-                                                  (audio-silence (audio-spec *mixer*))
-                                                  :element-type 'fixnum))
+        (setf (output-buffer *mixer*)
+              (make-array len
+                          :initial-element 
+                          (audio-silence (audio-spec *mixer*))
+                          :element-type 'fixnum))
         ;; Write silence to the output buffer
-        (overwrite-all (output-buffer *mixer*) (audio-silence (audio-spec *mixer*))))
+        (overwrite-all (output-buffer *mixer*)
+                       (audio-silence (audio-spec *mixer*))))
       (let ((output (output-buffer *mixer*)))
         (dolist (audio *managed-audio*)
-          (unless (audio-paused-p audio)
+          (unless (slot-value audio 'pause)
             ;; Play audio only when audio remains in the sample.
             (fill-output-buffer output audio)))
 

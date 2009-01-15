@@ -34,14 +34,6 @@
       t
       nil))
 
-(defun key= (key1 key2)
-  (eq key1 key2))
-
-(defun modifier= (mod key)
-  "Returns t if the keypress modifier 'mod' is equal to the specified 'key'.
-   (cffi:foreign-enum-value 'SDLMod key)."
-  (equal mod (cffi:foreign-enum-value 'sdl-cffi::SDL-Mod key)))
-
 (defun set-flags (&rest keyword-args)
   (if (listp (first keyword-args))
       (let ((keywords 

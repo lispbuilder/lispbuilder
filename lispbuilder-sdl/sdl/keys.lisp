@@ -76,3 +76,35 @@ For example: \(GET-KEY-STATE :SDL-KEY-F1\)"
 		   1)
 	    t
 	    nil))))
+
+(defun key= (key1 key2)
+  (eq key1 key2))
+
+(defun modifier= (mod key)
+  "Returns `MOD` if all of the modifiers in `MOD` exactly match `KEY`, or
+returns `NIL` otherwise. `MOD` may be a list of modifiers, or a single modifier."
+  ;; Make mod a list, if not already.
+  (when (= (length (modifier-p key))
+           (length (modifier-p key mod)))
+    mod))
+
+(defun modifier-p (key &optional
+                       (mods (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)))
+  "Returns a list of the modifiers in `KEY` that match `MODS`,
+or `NIL` if no modifiers match.
+By default, `MODS` is the list of valid modifiers."
+  ;; Make mod a list, if not already.
+  (unless (listp mods)
+    (setf mods (list mods)))
+  (remove nil
+          (loop for modifier in mods
+                collect (when (/= (logand
+                                   (cffi:foreign-enum-value 'sdl-cffi::SDL-Mod modifier)
+                                   key)
+                                  0)
+                          modifier))))
+
+(defun modifier-in (mod key)
+  "Returns `MOD` if one or more of the modifiers in `MOD` is in `KEY`,
+or returns `NIL otherwise. `MOD` may be a list of modifiers, or a single modifier."
+  (modifier-p key mod))

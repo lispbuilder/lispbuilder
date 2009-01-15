@@ -2,7 +2,7 @@
 ;;;; Additional changes by Luke Crook
 
 (in-package #:lispbuilder-sdl-examples)
-		     
+
 (defun show-score (score)
   (sdl:set-caption (format nil "Squashed - Score: ~a" score) "Squashed"))
 
@@ -17,7 +17,7 @@
 
 (defun squashed ()
   "Squashed: main entry function"
-  (sdl:with-init ()
+  (sdl:with-init (sdl:sdl-init-video sdl:sdl-init-audio)
     (sdl:window 640 480)
     (setf (sdl:frame-rate) 30)
     ;; Open the audio mixer. Use a smaller buffer for lower latency.
@@ -65,9 +65,11 @@
            (when (> levelticks 200)
              (decf levelticks 100))
            ;; Play one of the squashed sound effects.
-           (sdl:play-audio (sdl:copy-audio (nth (random 3) squash-effects))))
+           (sdl:play-audio (sdl:copy-audio (nth (random 3) squash-effects)))
+	   )
          ;; Play the swatting sound effect.
-         (sdl:play-audio (sdl:copy-audio swat-effect)))
+         (sdl:play-audio (sdl:copy-audio swat-effect))
+	 )
         (:idle ()
          (sdl:with-surface (disp sdl:*default-display*)
            ;; fill the background with white
