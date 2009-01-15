@@ -9,7 +9,6 @@
   (:import-from #:lispbuilder-sdl-base
 		lispbuilder-sdl-base::with-events
 		lispbuilder-sdl-base::push-quit-event
-		lispbuilder-sdl-base::key=
 
 		lispbuilder-sdl-base::is-valid-ptr
 		lispbuilder-sdl-base::push-user-event
@@ -524,6 +523,10 @@
    #:key-repeat-delay
    #:key-repeat-interval
    #:get-key-state
+   #:key=
+   #:modifier=
+   #:modifier-p
+   #:modifier-in
 
    ;; font.lisp
    #:with-default-font

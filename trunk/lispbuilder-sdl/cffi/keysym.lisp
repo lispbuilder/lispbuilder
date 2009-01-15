@@ -255,7 +255,7 @@
 (cffi:defcstruct SDL-key-sym
 	(scancode :unsigned-char)
 	(sym SDL-Key)
-	(mod SDL-Mod)
+	(mod :int) ;SDL-Mod
 	(unicode :unsigned-short))
 
 (cl:defconstant SDL-ALL-HOTKEYS #xFFFFFFFF)
@@ -278,10 +278,10 @@
 (cffi:defcfun ("SDL_GetKeyState" SDL-Get-Key-State) :pointer
   (numkeys :pointer))
 
-(cffi:defcfun ("SDL_GetModState" SDL-Get-Mod-State) Sdl-Mod)
+(cffi:defcfun ("SDL_GetModState" SDL-Get-Mod-State) :int) ;Sdl-Mod
 
 (cffi:defcfun ("SDL_SetModState" SDL-Set-Mod-State) :void
-  (modstate Sdl-Mod))
+  (modstate :int)) ;Sdl-Mod
 
 (cffi:defcfun ("SDL_GetKeyName" SDL-Get-Key-Name) :string
   (key Sdl-Key))

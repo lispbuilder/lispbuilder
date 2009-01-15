@@ -12,11 +12,11 @@
                  (cffi:make-pointer (cffi:pointer-address
                                      (cffi:mem-aref obj-fp :pointer)))))))
 
-(declaim (inline adjust-volume))
+;(declaim (inline adjust-volume))
 (defun adjust-volume (sample volume)
   (sdl:cast-to-int (/ (* sample volume) +max-volume+)))
 
-(declaim (inline adjust-volume-8))
+;(declaim (inline adjust-volume-8))
 (defun adjust-volume-u8 (sample volume)
   (sdl:cast-to-int (+ (/ (* (- sample 128) volume) +max-volume+) 128)))
 
@@ -71,21 +71,21 @@
             (= format sdl-cffi::AUDIO-S16MSB))
     t))
 
-(declaim (inline to-s16))
+;(declaim (inline to-s16))
 (defun to-s16 (x)
   (- x (* 2 (logand x #x8000))))
 
-(declaim (inline to-s8))
+;(declaim (inline to-s8))
 (defun to-s8 (x)
   (- x (* 2 (logand x #x80))))
 
-(declaim (inline from-s16))
+;(declaim (inline from-s16))
 (defun from-s16 (x)
   (if (< x 0)
     (+ x 65536)
     x))
 
-(declaim (inline from-s8))
+;(declaim (inline from-s8))
 (defun from-s8 (x)
   (if (< x 0)
     (+ x 256)
@@ -265,9 +265,11 @@
 (defmethod _play-audio_ ((self audio) &key loop pos)
   "Plays `AUDIO` from start if not already playing or halted.
 Rewinds and plays `AUDIO` if paused or halted."
-  (declare (ignore pos loop))
+  (declare (ignore pos))
   (unless (find self *managed-audio*)
-    (pushnew self *managed-audio*))
+    (sdl-cffi::sdl-lock-audio)
+    (pushnew self *managed-audio*)
+    (sdl-cffi::sdl-unlock-audio))
   (setf (slot-value self 'loop) loop)
   (when (numberp (slot-value self 'loop))
     (setf (play-count self) loop))
@@ -277,9 +279,8 @@ Rewinds and plays `AUDIO` if paused or halted."
 (defmethod rewind-audio ((self audio) &optional (pos 0))
   "Rewind to start of `AUDIO`. Safe to use on halted, paused or currently
 playing music. Does not resume or begin playback of halted or paused music."
-  (declare (ignore pos))
-    (setf (audio-remaining self) (audio-length self)
-          (audio-position self) pos))
+  (setf (audio-remaining self) (audio-length self)
+        (audio-position self) pos))
 
 (defmethod _pause-audio_ ((self audio))
   "Pauses playback of `AUDIO`. Only `AUDIO` that is actively playing will be paused.
