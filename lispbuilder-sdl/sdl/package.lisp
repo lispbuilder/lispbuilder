@@ -343,6 +343,7 @@
    #:video-memory
    #:video-dimensions
    #:set-gl-attribute
+   #:set-caption
    
    ;; rwops.lisp
    #:rwops

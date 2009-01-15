@@ -1,32 +1,40 @@
 ;;;; (C) 2006 Jonathan Heusser, minor changes by Frank Buss
+;;;; Additional changes by Luke Crook
 
 (in-package #:lispbuilder-sdl-examples)
 		     
 (defun show-score (score)
-  (sdl-cffi::sdl-wm-set-caption (format nil "Squashed - Score: ~a" score) "Squashed"))
+  (sdl:set-caption (format nil "Squashed - Score: ~a" score) "Squashed"))
+
+(defun load-image (filename)
+  (sdl:convert-surface :surface
+                       (sdl:load-image (sdl:create-path filename *bmp-path*)
+                                       :color-key (sdl:color :r 255 :g 255 :b 255))
+                       :free t))
+
+(defun load-audio (filename)
+  (sdl:load-audio (sdl:create-path filename *audio-path*)))
 
 (defun squashed ()
   "Squashed: main entry function"
   (sdl:with-init ()
     (sdl:window 640 480)
     (setf (sdl:frame-rate) 30)
-    (let ((bug (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "squashed/bug.bmp" *bmp-path*)
-							     :color-key (sdl:color :r 255 :g 255 :b 255))
-				    :free t))
-	  (racket (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "squashed/racket.bmp" *bmp-path*)
-								:color-key (sdl:color :r 255 :g 255 :b 255))
-				       :free t))
-	  (blood (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "squashed/blood.bmp" *bmp-path*)
-							       :color-key (sdl:color :r 255 :g 255 :b 255))
-				      :free t))
-	  (squash (sdl:convert-surface :surface (sdl:load-image (sdl:create-path "squashed/squash.bmp" *bmp-path*)
-								:color-key (sdl:color :r 255 :g 255 :b 255))
-				       :free t))
+    ;; Open the audio mixer. Use a smaller buffer for lower latency.
+    (sdl:open-audio :audio-buffer-size 1024)
+    (let ((bug (load-image "squashed/bug.bmp"))
+	  (racket (load-image "squashed/racket.bmp"))
+	  (blood (load-image "squashed/blood.bmp"))
+	  (squash (load-image "squashed/squash.bmp"))
 	  (levelticks 1000)
 	  (last-squash-tick 0)
 	  (lasttick 0)
 	  (score 0)
-	  (bug? t) (racket? t) (blood? nil) (squash? nil) (squashed? nil))
+	  (bug? t) (racket? t) (blood? nil) (squash? nil) (squashed? nil)
+          (swat-effect (load-audio "squashed/bookclose2.wav"))
+          (squash-effects (list (load-audio "squashed/splat1a.wav")
+                                (load-audio "squashed/splat2a.wav")
+                                (load-audio "squashed/splat3a.wav"))))
 
       (sdl:set-position-* bug :x (random 640) :y (random 480))
       (sdl:set-position-* racket :x 100 :y 100)
@@ -34,43 +42,49 @@
       
       (show-score score)
       (sdl:show-cursor nil)
+      (sdl:play-audio)
       (sdl:with-events ()
-		       (:quit-event () t)
-		       (:key-down-event (:key key)
-					(when (eq key :sdl-key-escape) (sdl:push-quit-event)))
-		       (:mouse-motion-event (:x x :y y)
-					    (sdl:set-position-* racket :x x :y y))
-		       (:mouse-button-down-event (:x x :y y)
-						 ;; check if squashed
-						 (when (sdl:within-range (sdl:get-point racket)
-									 (sdl:get-point bug)
-									 17)
-						   (setf squashed? t
-							 bug? nil
-							 blood? t
-							 squash? t)
-						   (sdl:set-position-* blood :x x :y y)
-						   (setf last-squash-tick (sdl-cffi::SDL-Get-Ticks))
-						   (show-score (incf score))
-					; increase the bug jumping speed
-						   (when (> levelticks 200)
-						     (decf levelticks 100))))
-		       (:idle ()
-			      (sdl:with-surface (disp sdl:*default-display*)
-				;; fill the background white
-				(sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
-				;; draw images
-				(if squashed?
-				    (if (> (- (sdl-cffi::SDL-Get-Ticks) last-squash-tick) 700)
-					(setf squashed? nil
-					      squash? nil
-					      blood? nil
-					      bug? t))
-				    (when (> (sdl-cffi::SDL-Get-Ticks) (+ lasttick levelticks))
-				      (setf lasttick (sdl-cffi::SDL-Get-Ticks))
-				      (sdl:set-position-* bug :x (random 640) :y (random 480))))
-				(when squash? (sdl:draw-surface squash))
-				(when bug? (sdl:draw-surface bug))
-				(when blood? (sdl:draw-surface blood))
-				(when racket? (sdl:draw-surface racket))
-				(sdl:update-display)))))))
+        (:quit-event () t)
+        (:key-down-event (:key key)
+         (when (sdl:key= key :sdl-key-escape) (sdl:push-quit-event)))
+        (:mouse-motion-event (:x x :y y)
+         (sdl:set-position-* racket :x x :y y))
+        (:mouse-button-down-event (:x x :y y)
+         ;; check if squashed
+         (when (sdl:within-range (sdl:get-point racket)
+                                 (sdl:get-point bug)
+                                 17)
+           (setf squashed? t
+                 bug? nil
+                 blood? t
+                 squash? t)
+           (sdl:set-position-* blood :x x :y y)
+           (setf last-squash-tick (sdl-cffi::SDL-Get-Ticks))
+           (show-score (incf score))
+           ;; increase the bug jumping speed
+           (when (> levelticks 200)
+             (decf levelticks 100))
+           ;; Play one of the squashed sound effects.
+           (sdl:play-audio (sdl:copy-audio (nth (random 3) squash-effects))))
+         ;; Play the swatting sound effect.
+         (sdl:play-audio (sdl:copy-audio swat-effect)))
+        (:idle ()
+         (sdl:with-surface (disp sdl:*default-display*)
+           ;; fill the background with white
+           (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
+           ;; draw images
+           (if squashed?
+             (if (> (- (sdl-cffi::SDL-Get-Ticks) last-squash-tick) 700)
+               (setf squashed? nil
+                     squash? nil
+                     blood? nil
+                     bug? t))
+             (when (> (sdl-cffi::SDL-Get-Ticks) (+ lasttick levelticks))
+               (setf lasttick (sdl-cffi::SDL-Get-Ticks))
+               (sdl:set-position-* bug :x (random 640) :y (random 480))))
+           (when squash?
+             (sdl:draw-surface squash))
+           (when bug? (sdl:draw-surface bug))
+           (when blood? (sdl:draw-surface blood))
+           (when racket? (sdl:draw-surface racket))
+           (sdl:update-display)))))))

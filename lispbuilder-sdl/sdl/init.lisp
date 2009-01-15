@@ -211,7 +211,9 @@ already initialized.
 `SDL-INIT-NOPARACHUTE`.
 
 `INIT-SUBSYSTEMS` can be called only after SDL is succesfully initialized by [INIT-SDL](#init-sdl)."
-  (sdl-cffi::sdl-init-subsystem (return-subsystems-of-status flags nil)))
+  (when (= -1
+           (sdl-cffi::sdl-init-subsystem (return-subsystems-of-status flags nil)))
+    (error "ERROR: Could not open the specified subsystems.")))
 
 (defun quit-subsystems (&optional (flags *quit-subsystems-on-exit*))
   "Uninitializes only the SDL subsystems specified in the `FLAGS` that are
