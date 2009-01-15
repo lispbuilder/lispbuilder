@@ -684,14 +684,16 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
 
 (defun draw-surface-at-* (src x y &key (surface *default-surface*))
   "Draws the source surface to the destination surface at position X and Y.
- See [BLIT-SURFACE](#blit-surface)"
+ See [BLIT-SURFACE](#blit-surface).
+*Note*: Modifies the position of `SRC` as a side-effect."
   (setf (x src) x
 	(y src) y)
   (draw-surface src :surface surface))
 
 (defun draw-surface-at (src point &key (surface *default-surface*))
     "Draws the source surface to the destination surface at position POINT.
- See [BLIT-SURFACE](#blit-surface)."
+ See [BLIT-SURFACE](#blit-surface).
+*Note*: Modifies the position of `SRC` as a side-effect."
   (set-surface src point)
   (blit-surface src surface))
 
