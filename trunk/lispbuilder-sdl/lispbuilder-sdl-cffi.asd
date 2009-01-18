@@ -24,6 +24,7 @@
 	       (:file "endian")
 	       (:file "version")
 	       (:file "stdinc")
+               (:file "mutex")
 	       (:file "timer")
 	       (:file "error")
 	       (:file "rwops")
@@ -37,6 +38,7 @@
 	       (:file "syswm")
 	       (:file "video")
 	       (:file "sdl")
+               #+(or mswindows win32)(:file "glue")
 	       (:file "documentation"))
 	      :serial t)
      (:module "build"

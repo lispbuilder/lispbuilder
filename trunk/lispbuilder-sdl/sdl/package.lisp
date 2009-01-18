@@ -7,12 +7,9 @@
   (:nicknames #:sdl)
   (:documentation "The main package of `lispbuilder-sdl'.")
   (:import-from #:lispbuilder-sdl-base
-		lispbuilder-sdl-base::with-events
-		lispbuilder-sdl-base::push-quit-event
 
 		lispbuilder-sdl-base::is-valid-ptr
-		lispbuilder-sdl-base::push-user-event
-		
+	
 		lispbuilder-sdl-base::*default-fpsmanager*
                 
 		lispbuilder-sdl-base::1/0->t/nil)
@@ -240,6 +237,9 @@
   
    ;; events.lisp
    #:with-events
+   #:new-event
+   #:push-quit-event
+   #:push-user-event
 
    ;; image.lisp
    #:load-image

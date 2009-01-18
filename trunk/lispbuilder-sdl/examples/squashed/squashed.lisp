@@ -42,6 +42,7 @@
       
       (show-score score)
       (sdl:show-cursor nil)
+      ;;#+(and lispworks)(sdl:play-audio)
       (sdl:play-audio)
       (sdl:with-events ()
         (:quit-event () t)
@@ -65,9 +66,11 @@
            (when (> levelticks 200)
              (decf levelticks 100))
            ;; Play one of the squashed sound effects.
+           #+(and lispworks)(sdl:play-audio (sdl:copy-audio (nth (random 3) squash-effects)))
            (sdl:play-audio (sdl:copy-audio (nth (random 3) squash-effects)))
 	   )
          ;; Play the swatting sound effect.
+         #+(and lispworks)(sdl:play-audio (sdl:copy-audio swat-effect))
          (sdl:play-audio (sdl:copy-audio swat-effect))
 	 )
         (:idle ()
