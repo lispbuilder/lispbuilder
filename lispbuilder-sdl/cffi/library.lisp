@@ -8,13 +8,13 @@
 ;;                  cffi:*foreign-library-directories*
 ;;                  :test #'equal))
 
-#+win32(eval-when (:compile-toplevel :load-toplevel :execute)
-         (pushnew sdl-bin:*dll-path*
-                  cffi:*foreign-library-directories*
-                  :test #'equal))
+#+(or mswindows win32)(eval-when (:compile-toplevel :load-toplevel :execute)
+                        (pushnew sdl-bin:*dll-path*
+                                 cffi:*foreign-library-directories*
+                                 :test #'equal))
 
 ;; This is where FINK installs SDL.
-#+darwin (pushnew #P"/sw/lib/" cffi:*foreign-library-directories*
+#+darwin(pushnew #P"/sw/lib/" cffi:*foreign-library-directories*
 	             :test #'equal)
 
 (cffi:define-foreign-library sdl
@@ -27,4 +27,8 @@
 	      "libSDL.so"
 	      "libSDL")))
 
+#+(or mswindows win32)(cffi:define-foreign-library sdl-glue
+         (:windows "lispbuilder-sdl-glue.dll"))
+
 (cffi:use-foreign-library sdl)
+#+(or mswindows win32)(cffi:use-foreign-library sdl-glue)

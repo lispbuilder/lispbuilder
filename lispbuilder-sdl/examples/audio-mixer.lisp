@@ -4,19 +4,15 @@
 (defparameter *status* "")
 
 (defun mixer-test ()
-  ;; Configure Lispworks to allow
-  ;; callbacks from foreign threads
-  #+(and lispworks (not lispworks5.1)) (system:setup-for-alien-threads)
   (let ((sample nil))
-
     ;; Initialize SDL
     (sdl:with-init ()
       (sdl:window 400 20 :title-caption "WAV playback" :icon-caption "WAV playback")
-      (setf (sdl:frame-rate) 5)
+      (setf (sdl:frame-rate) 30)
       (sdl:initialise-default-font)
        
       ;; Open the audio device. Use a smaller buffer size to reduce latency
-      (unless (sdl:open-audio :audio-buffer-size 2048)
+      (unless (sdl:open-audio)
         (setf *status* "FAILED to open Audio device."))
      
       (when (sdl:audio-opened-p)
@@ -44,6 +40,10 @@
                                     (sdl:audio-playing-p)))
              (setf *status* "Audio complete. Press SPACE to restart.")))
          (sdl:clear-display sdl:*black*)
+         (sdl:draw-filled-circle (sdl:point :x (random 200) :y (random 10))
+                                 (random 40)
+                                 :color (sdl:any-color-but-this sdl:*black*)
+                                 :surface sdl:*default-display*)
          (sdl:draw-string-solid *status* (sdl:point) :color sdl:*white*)
          (sdl:update-display))))))
 

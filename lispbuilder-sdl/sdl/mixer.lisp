@@ -114,6 +114,11 @@
     ;; Initialize the subsystems in sdl::*initialize-subsystems-on-startup*
     ;; that are not yet initialized.
     (sdl:init-subsystems))
+
+  ;; Configure Lispworks to allow
+  ;; callbacks from unknown foreign threads
+  #+(and lispworks (not lispworks5.1))(system:setup-for-alien-threads)
+ 
   (setf *mixer* (make-instance 'mixer
                                :audio-volume volume
                                :audio-format format
@@ -138,19 +143,26 @@
                                    'sdl-cffi::SDL-Audio-Spec
                                    'sdl-cffi::channels)
           (requested-output-channels *mixer*))
-    ;; Set the output buffer size
+    ;; Set the output buffer size.
+    ;; In Windows this is not used as audio is handled
+    ;; by the glue library.
     (setf (cffi:foreign-slot-value requested-audio-spec
                                    'sdl-cffi::sdl-Audio-Spec
                                    'sdl-cffi::samples)
           (requested-audio-buffer-size *mixer*))
-    ;; Set the callback function, if not specified
+    ;; Set the callback function
     (setf (cffi:foreign-slot-value requested-audio-spec
                                    'sdl-cffi::SDL-Audio-Spec
                                    'sdl-cffi::callback)
           (slot-value *mixer* 'callback))
   
-    (if (eql -1 (sdl-cffi::sdl-open-audio requested-audio-spec
-                                          (sdl:fp (audio-spec *mixer*))))
+    (if (eql -1
+             #+(or mswindows win32)
+             (sdl-cffi::sdl-glue-SDL-Open-Audio requested-audio-spec
+                                                   (sdl:fp (audio-spec *mixer*)))
+             #-(or mswindows win32)
+             (sdl-cffi::SDL-Open-Audio requested-audio-spec
+                                       (sdl:fp (audio-spec *mixer*))))
       (setf (slot-value *mixer* 'mixer-opened-p) nil)
       (setf (slot-value *mixer* 'mixer-opened-p) t))
     (when (mixer-opened-p *mixer*)
@@ -221,9 +233,10 @@
     (pause-audio)
     (setf (slot-value *mixer* 'mixer-opened-p) nil))
   ;; Lock the audio device to halt all callbacks
-  ;; (sdl-cffi::sdl-lock-audio)
+  #-(or mswindows win32)(sdl-cffi::sdl-lock-audio)
   ;; Close the audio device
-  (sdl-cffi::sdl-close-audio)
+  #+(or mswindows win32)(sdl-cffi::sdl-glue-sdl-close-audio)
+  #-(or mswindows win32)(sdl-cffi::sdl-close-audio)
   (setf *managed-audio* nil))
 
 (defun load-sample (filename)
@@ -455,16 +468,13 @@
     (when (and audio-buffer (audio-opened-p))
       (build-audio-cvt audio-buffer *mixer*)))))
 
-
-(cffi:defcallback default-fill-audio-buffer
-    :pointer ((user-data :pointer)
-              (stream :pointer)
-              (len :int))
-  (declare (ignore user-data))
+(defun fill-audio-buffer (stream len)
   (unless (slot-value *mixer* 'pause)
     ;; The callback is asking for an amount of 'len' uint8 bytes.
     ;; Have to convert this to the mixer format, as this is what all the audio
     ;; buffers will be in.
+    ;;(format t "stream: ~A, len: ~A~%" stream len)
+    ;;(force-output t)
     (let ((len (calculated-buffer-length len sdl-cffi::audio-u8
                                          (audio-format *mixer*))))
       ;; If the callback function is asking for more data than the existing output
@@ -510,5 +520,42 @@
                                 min-audioval)
                                (t adjusted)) do
                 (setf (mem-aref stream :unsigned-char x) (logand clamped #xFF)
-                      (mem-aref stream :unsigned-char y) (logand (ash clamped -8) #xFF)))))))
-    (cffi:null-pointer))
+                      (mem-aref stream :unsigned-char y) (logand (ash clamped -8) #xFF))))))))
+
+;(defun process-audio ()
+;  (if *mixer*
+;    (progn
+;      (format t "In PROCESS-AUDIO~%")
+;      (let ((fill? (sdl-cffi::SDL-glue-SDL-Require-Buffer-Fill)))
+;        (format t "  fill?: ~A : " fill?)
+;        (if (= fill? 1)
+;          (progn
+;            (format t "Require Buffer Fill : ")
+;            (let ((stream (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer))
+;                  (len (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer-length)))
+;              (format t "len == ~A~%" len)
+;              (fill-audio-buffer stream
+;                                 len)
+;              (sdl-cffi::SDL-glue-SDL-Buffer-Filled))
+;            (format t "Buffer Filled~%~%")
+;            (force-output t))
+;          (progn
+;            (format t "Buffer Full~%~%")
+;            (force-output t)))))
+;      (format t "*mixer* not yet initialized~%")))
+
+#+(or mswindows win32)
+(defun process-audio ()
+  (when (and *mixer*
+             (= (sdl-cffi::SDL-glue-SDL-Require-Buffer-Fill) 1))
+    (fill-audio-buffer (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer)
+                       (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer-length))
+    (sdl-cffi::SDL-glue-SDL-Buffer-Filled)))
+
+(cffi:defcallback default-fill-audio-buffer
+    :pointer ((user-data :pointer)
+              (stream :pointer)
+              (len :int))
+  (declare (ignore user-data))
+  (fill-audio-buffer stream len)
+  (cffi:null-pointer))

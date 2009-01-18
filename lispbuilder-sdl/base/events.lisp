@@ -5,7 +5,7 @@
 ;; This file contains some useful functions for using SDL from Common lisp
 ;; using sdl.lisp (the CFFI wrapper)
 
-(in-package #:lispbuilder-sdl-base)
+(in-package #:lispbuilder-sdl)
 
 
 (defun new-event (&optional (event-type :SDL-NO-EVENT))

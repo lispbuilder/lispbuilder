@@ -267,9 +267,7 @@
 Rewinds and plays `AUDIO` if paused or halted."
   (declare (ignore pos))
   (unless (find self *managed-audio*)
-    (sdl-cffi::sdl-lock-audio)
-    (pushnew self *managed-audio*)
-    (sdl-cffi::sdl-unlock-audio))
+    (pushnew self *managed-audio*))
   (setf (slot-value self 'loop) loop)
   (when (numberp (slot-value self 'loop))
     (setf (play-count self) loop))

@@ -20,7 +20,7 @@
 	       (:file "globals")
 	       (:file "util")
 	       (:file "fps")
-	       (:file "events")
+               ;;(:file "events")
 	       (:file "pixel")
 	       (:file "rectangle")
 	       (:file "surfaces")

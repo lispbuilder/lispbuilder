@@ -50,3 +50,12 @@
 (defmethod free-translated-object (ptr (name (eql 'sdl-string)) free-p)
   (if free-p
       (cffi:foreign-string-free ptr)))
+
+(defctype return->=0-as-t (:wrapper :int :from-c return-val->=0-as-t))
+;;(defctype return->=0-as-nil (:wrapper :int :from-c return-val->=0-as-nil))
+
+(defun return-val->=0-as-t (value)
+  (if (>= value 0) t nil))
+
+;;(defun return-val->=0-as-nil (value)
+;;  (if (= value 0) nil t))

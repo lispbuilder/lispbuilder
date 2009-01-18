@@ -14,12 +14,6 @@
    #:is-valid-ptr
    #:to-int
 
-   
-   ;; events.lisp
-   #:new-event
-   #:push-quitevent
-   #:with-events
-
    ;; rectangle.lisp
    #:with-rectangle
    #:rect-x
