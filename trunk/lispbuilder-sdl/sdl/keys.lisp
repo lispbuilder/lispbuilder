@@ -84,8 +84,9 @@ For example: \(GET-KEY-STATE :SDL-KEY-F1\)"
   "Returns `MOD` if all of the modifiers in `MOD` exactly match `KEY`, or
 returns `NIL` otherwise. `MOD` may be a list of modifiers, or a single modifier."
   ;; Make mod a list, if not already.
-  (when (= (length (modifier-p key))
-           (length (modifier-p key mod)))
+  (when (and (> (length (modifier-p key)) 0)
+             (= (length (modifier-p key))
+                (length (modifier-p key mod))))
     mod))
 
 (defun modifier-p (key &optional
