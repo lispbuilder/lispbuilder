@@ -27,8 +27,11 @@
 	      "libSDL.so"
 	      "libSDL")))
 
-#+(or mswindows win32)(cffi:define-foreign-library sdl-glue
-         (:windows "lispbuilder-sdl-glue.dll"))
+(cffi:define-foreign-library sdl-glue
+  (:windows "lispbuilder-sdl-glue.dll"))
 
 (cffi:use-foreign-library sdl)
-#+(or mswindows win32)(cffi:use-foreign-library sdl-glue)
+
+#+(or mswindows win32)(when (handler-case (cffi:use-foreign-library sdl-glue)
+                              (load-foreign-library-error () nil))
+                        (pushnew :lispbuilder-sdl-audio *features*))
