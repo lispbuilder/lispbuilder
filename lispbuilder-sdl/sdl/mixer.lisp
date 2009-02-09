@@ -157,10 +157,10 @@
           (slot-value *mixer* 'callback))
   
     (if (eql -1
-             #+(or mswindows win32)
+             #+lispbuilder-sdl-audio
              (sdl-cffi::sdl-glue-SDL-Open-Audio requested-audio-spec
                                                    (sdl:fp (audio-spec *mixer*)))
-             #-(or mswindows win32)
+             #-lispbuilder-sdl-audio
              (sdl-cffi::SDL-Open-Audio requested-audio-spec
                                        (sdl:fp (audio-spec *mixer*))))
       (setf (slot-value *mixer* 'mixer-opened-p) nil)
@@ -233,10 +233,10 @@
     (pause-audio)
     (setf (slot-value *mixer* 'mixer-opened-p) nil))
   ;; Lock the audio device to halt all callbacks
-  #-(or mswindows win32)(sdl-cffi::sdl-lock-audio)
-  ;; Close the audio device
-  #+(or mswindows win32)(sdl-cffi::sdl-glue-sdl-close-audio)
-  #-(or mswindows win32)(sdl-cffi::sdl-close-audio)
+  #+lispbuilder-sdl-audio(sdl-cffi::sdl-glue-sdl-close-audio)
+  #-lispbuilder-sdl-audio(progn
+                           (sdl-cffi::sdl-lock-audio)
+                           (sdl-cffi::sdl-close-audio))
   (setf *managed-audio* nil))
 
 (defun load-sample (filename)
@@ -544,7 +544,7 @@
 ;            (force-output t)))))
 ;      (format t "*mixer* not yet initialized~%")))
 
-#+(or mswindows win32)
+#+lispbuilder-sdl-audio
 (defun process-audio ()
   (when (and *mixer*
              (= (sdl-cffi::SDL-glue-SDL-Require-Buffer-Fill) 1))

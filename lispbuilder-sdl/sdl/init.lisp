@@ -121,7 +121,9 @@ subsequent calls to [INIT-SUBSYSTEMS](#init-subsystems).
 ##### Example
 
     \(INITIALIZE-SUBSYSTEMS-ON-STARTUP SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM\)"
-  (setf *initialize-subsystems-on-startup* (apply #'logior flags)))
+  (setf *initialize-subsystems-on-startup* (apply #'logior
+                                                  (if flags flags
+                                                    (list sdl-init-video)))))
 
 (defun quit-subsystems-on-exit (&rest flags)
     "Sets one or more SDL subsystems that must be uninitialized in 
@@ -255,3 +257,5 @@ Returns `NIL` otherwise."
   (when quit
     (sdl-cffi::SDL-Quit)))
 
+(defun register-physics (fn)
+  (setf (sdl-base::ps-fn *default-fpsmanager*) fn))
