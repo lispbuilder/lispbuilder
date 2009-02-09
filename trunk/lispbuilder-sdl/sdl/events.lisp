@@ -841,6 +841,7 @@ The contents of the event are completely up to the programmer.
 	   (,idle-func nil))
 
        (setf ,idle-func (lambda ()
+                          (declare (ignorable render-state))
 			  ,@(remove nil 
 				    (mapcar #'(lambda (event)
 						(cond
@@ -930,7 +931,7 @@ The contents of the event are completely up to the programmer.
 :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :SYS-WM-EVENT, :QUIT-EVENT, :USER-EVENT or :IDLE." (first event)))))
 				     events))))
 	    (unless ,quit
-              #+(or mswindows win32)(process-audio)
+              #+lispbuilder-sdl-audio(process-audio)
 	      (sdl-base::process-timestep sdl-base::*default-fpsmanager*
                                           ,idle-func)))
        (cffi:foreign-free ,sdl-event))))
