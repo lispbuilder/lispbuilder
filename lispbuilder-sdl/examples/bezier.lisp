@@ -7,7 +7,7 @@
 
 (defun bezier ()
   (let ((width 200) (height 200))
-    (sdl:with-init (sdl:sdl-init-video)
+    (sdl:with-init ()
       (sdl:window width height :title-caption "Bezier, from Processing.org")
       (setf (sdl:frame-rate) 5)
       
