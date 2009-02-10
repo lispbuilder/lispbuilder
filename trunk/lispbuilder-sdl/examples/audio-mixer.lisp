@@ -1,8 +1,10 @@
 
 (in-package #:sdl-examples)
 
+#+lispbuilder-sdl-audio
 (defparameter *status* "")
 
+#+lispbuilder-sdl-audio
 (defun mixer-test ()
   (let ((sample nil))
     ;; Initialize SDL
