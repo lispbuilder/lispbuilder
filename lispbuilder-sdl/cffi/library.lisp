@@ -32,6 +32,6 @@
 
 (cffi:use-foreign-library sdl)
 
-#+(or mswindows win32)(when (handler-case (cffi:use-foreign-library sdl-glue)
-                              (load-foreign-library-error () nil))
-                        (pushnew :lispbuilder-sdl-audio *features*))
+(when (handler-case (cffi:use-foreign-library sdl-glue)
+        (load-foreign-library-error () nil))
+  (pushnew :lispbuilder-sdl-audio *features*))
