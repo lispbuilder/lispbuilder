@@ -159,7 +159,7 @@
     (if (eql -1
              #+lispbuilder-sdl-audio
              (sdl-cffi::sdl-glue-SDL-Open-Audio requested-audio-spec
-                                                   (sdl:fp (audio-spec *mixer*)))
+                                                (sdl:fp (audio-spec *mixer*)))
              #-lispbuilder-sdl-audio
              (sdl-cffi::SDL-Open-Audio requested-audio-spec
                                        (sdl:fp (audio-spec *mixer*))))
