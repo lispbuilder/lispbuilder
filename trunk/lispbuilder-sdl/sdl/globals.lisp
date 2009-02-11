@@ -99,16 +99,8 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 (defvar *external-quit-subsystems-on-exit* nil
   "The list of functions that are called from [QUIT-SDL](#quit-sdl).")
 
-(defvar *default-font-path*
-  (make-pathname
-   :host (pathname-host #.(or *compile-file-truename*
-                              *load-truename*))
-   :directory (pathname-directory #.(or *compile-file-truename*
-                                        *load-truename*))))
-
-(defvar *default-simple-font* (merge-pathnames "font.bmp" *default-font-path*))
-
-(defvar *default-ttf-font* (merge-pathnames "vera.ttf" *default-font-path*))
+(defparameter *default-ttf-font*
+  (merge-pathnames "vera.ttf" *default-asset-path*))
 
 (defvar *mixer* nil)
 (defvar *managed-audio* nil)
