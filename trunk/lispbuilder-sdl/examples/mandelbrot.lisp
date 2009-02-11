@@ -50,9 +50,9 @@
       (sdl:window width height
                   :title-caption "Mandelbrot"
                   :icon-caption "Mandelbrot")
-      (setf (sdl:frame-rate) -1)
+      (setf (sdl:frame-rate) nil)
       (sdl:with-events ()
-	(:idle ()
+        (:idle ()
          (if (>= cx width)
            (and (setf cx 0) (incf cy step)))
          (if (< cy height)
@@ -86,3 +86,5 @@
          (if (sdl:key= key :SDL-KEY-ESCAPE)
            (sdl:push-quit-event)))
 	(:video-expose-event () (sdl:update-display))))))
+
+

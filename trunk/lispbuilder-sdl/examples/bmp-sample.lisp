@@ -11,7 +11,7 @@
     (sdl:window 320 320 :title-caption "Simple BMP example" :icon-caption "Simple BMP example")
     (sdl:fill-surface sdl:*white* :surface sdl:*default-display*)  
     
-    (let* ((img-1 (sdl:load-image (sdl:create-path "lisp.bmp" *bmp-path*)
+    (let* ((img-1 (sdl:load-image (sdl:create-path "lisp.bmp" sdl:*default-asset-path*)
 				  :color-key-at #(0 0)))
 	   (img-2 (sdl:copy-surface :surface img-1))
 	   (img-3 (sdl:copy-surface :cell (sdl:rectangle :x 10 :y 10 :w 100 :h 100) :surface img-1))

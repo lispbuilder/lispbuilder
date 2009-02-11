@@ -42,7 +42,8 @@
 				(wav-buffer-handle :pointer)
 				(wav-buffer-length :pointer))
       ;; Open the WAV file
-      (if (cffi:null-pointer-p (sdl-cffi::sdl-load-wav (sdl:create-path *wav-file* *audio-path*)
+      (if (cffi:null-pointer-p (sdl-cffi::sdl-load-wav (sdl:create-path *wav-file*
+                                                                        sdl:*default-asset-path*)
                                                        audio-spec-desired
 						       wav-buffer-handle
 						       wav-buffer-length))

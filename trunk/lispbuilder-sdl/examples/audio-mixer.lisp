@@ -2,11 +2,9 @@
 (in-package #:sdl-examples)
 
 #+lispbuilder-sdl-audio
-(defparameter *status* "")
-
-#+lispbuilder-sdl-audio
 (defun mixer-test ()
-  (let ((sample nil))
+  (let ((sample nil)
+        (status ""))
     ;; Initialize SDL
     (sdl:with-init ()
       (sdl:window 400 20 :title-caption "WAV playback" :icon-caption "WAV playback")
@@ -15,11 +13,12 @@
        
       ;; Open the audio device. Use a smaller buffer size to reduce latency
       (unless (sdl:open-audio)
-        (setf *status* "FAILED to open Audio device."))
+        (setf status "FAILED to open Audio device."))
      
       (when (sdl:audio-opened-p)
         ;; Open the WAV file
-        (setf sample (sdl:load-audio (sdl:create-path *wav-file* *audio-path*)))
+        (setf sample (sdl:load-audio (sdl:create-path *wav-file*
+                                                      sdl:*default-asset-path*)))
       
         ;; Start playing the audio stream
         (when sample
@@ -38,15 +37,15 @@
         (:idle ()
          (when (sdl:audio-opened-p)
            (if (sdl:audio-playing-p)
-             (setf *status* (format nil "Number of audio samples playing: ~d"
+             (setf status (format nil "Number of audio samples playing: ~d"
                                     (sdl:audio-playing-p)))
-             (setf *status* "Audio complete. Press SPACE to restart.")))
+             (setf status "Audio complete. Press SPACE to restart.")))
          (sdl:clear-display sdl:*black*)
          (sdl:draw-filled-circle (sdl:point :x (random 200) :y (random 10))
                                  (random 40)
                                  :color (sdl:any-color-but-this sdl:*black*)
                                  :surface sdl:*default-display*)
-         (sdl:draw-string-solid *status* (sdl:point) :color sdl:*white*)
+         (sdl:draw-string-solid status (sdl:point) :color sdl:*white*)
          (sdl:update-display))))))
 
 ;(let ((num #(25 50)))
