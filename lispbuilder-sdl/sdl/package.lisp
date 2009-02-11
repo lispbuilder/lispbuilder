@@ -6,51 +6,55 @@
   (:use #:cl #:cffi)
   (:nicknames #:sdl)
   (:documentation "The main package of `lispbuilder-sdl'.")
+
   (:import-from #:lispbuilder-sdl-base
+   lispbuilder-sdl-base::is-valid-ptr
+   lispbuilder-sdl-base::*default-fpsmanager*              
+   lispbuilder-sdl-base::1/0->t/nil
+   lispbuilder-sdl-base::fps-fixed
+   lispbuilder-sdl-base::fps-unlocked)
 
-		lispbuilder-sdl-base::is-valid-ptr
-	
-		lispbuilder-sdl-base::*default-fpsmanager*
-                
-		lispbuilder-sdl-base::1/0->t/nil)
   (:import-from #:lispbuilder-sdl-cffi
-		lispbuilder-sdl-cffi::sdl-get-ticks
+   lispbuilder-sdl-cffi::sdl-get-ticks
 
-		lispbuilder-sdl-cffi::sdl-init-everything
-		lispbuilder-sdl-cffi::sdl-init-video
-		lispbuilder-sdl-cffi::sdl-init-cdrom
-		lispbuilder-sdl-cffi::sdl-init-audio 
-		lispbuilder-sdl-cffi::sdl-init-timer
-		lispbuilder-sdl-cffi::sdl-init-joystick
-		lispbuilder-sdl-cffi::sdl-init-eventthread
-		lispbuilder-sdl-cffi::sdl-init-noparachute
+   lispbuilder-sdl-cffi::sdl-init-everything
+   lispbuilder-sdl-cffi::sdl-init-video
+   lispbuilder-sdl-cffi::sdl-init-cdrom
+   lispbuilder-sdl-cffi::sdl-init-audio 
+   lispbuilder-sdl-cffi::sdl-init-timer
+   lispbuilder-sdl-cffi::sdl-init-joystick
+   lispbuilder-sdl-cffi::sdl-init-eventthread
+   lispbuilder-sdl-cffi::sdl-init-noparachute
 
-		lispbuilder-sdl-cffi::sdl-sw-surface
-		lispbuilder-sdl-cffi::sdl-hw-surface
-		lispbuilder-sdl-cffi::sdl-async-blit
-		lispbuilder-sdl-cffi::sdl-any-format
-		lispbuilder-sdl-cffi::sdl-hw-palette
-		lispbuilder-sdl-cffi::sdl-doublebuf
-		lispbuilder-sdl-cffi::sdl-fullscreen
-		lispbuilder-sdl-cffi::sdl-opengl
-		lispbuilder-sdl-cffi::sdl-resizable
-		lispbuilder-sdl-cffi::sdl-no-frame
-		lispbuilder-sdl-cffi::sdl-hw-accel
-		lispbuilder-sdl-cffi::sdl-src-color-key
-		lispbuilder-sdl-cffi::sdl-rle-accel-ok
-		lispbuilder-sdl-cffi::sdl-rle-accel
-		lispbuilder-sdl-cffi::sdl-src-alpha
-		lispbuilder-sdl-cffi::sdl-pre-alloc
-		lispbuilder-sdl-cffi::sdl-yv12-overlay
-		lispbuilder-sdl-cffi::sdl-iyuv-overlay
-		lispbuilder-sdl-cffi::sdl-yuy2-overlay
-		lispbuilder-sdl-cffi::sdl-uyvy-overlay
-		lispbuilder-sdl-cffi::sdl-yvyu-overlay
+   lispbuilder-sdl-cffi::sdl-sw-surface
+   lispbuilder-sdl-cffi::sdl-hw-surface
+   lispbuilder-sdl-cffi::sdl-async-blit
+   lispbuilder-sdl-cffi::sdl-any-format
+   lispbuilder-sdl-cffi::sdl-hw-palette
+   lispbuilder-sdl-cffi::sdl-doublebuf
+   lispbuilder-sdl-cffi::sdl-fullscreen
+   lispbuilder-sdl-cffi::sdl-opengl
+   lispbuilder-sdl-cffi::sdl-resizable
+   lispbuilder-sdl-cffi::sdl-no-frame
+   lispbuilder-sdl-cffi::sdl-hw-accel
+   lispbuilder-sdl-cffi::sdl-src-color-key
+   lispbuilder-sdl-cffi::sdl-rle-accel-ok
+   lispbuilder-sdl-cffi::sdl-rle-accel
+   lispbuilder-sdl-cffi::sdl-src-alpha
+   lispbuilder-sdl-cffi::sdl-pre-alloc
+   lispbuilder-sdl-cffi::sdl-yv12-overlay
+   lispbuilder-sdl-cffi::sdl-iyuv-overlay
+   lispbuilder-sdl-cffi::sdl-yuy2-overlay
+   lispbuilder-sdl-cffi::sdl-uyvy-overlay
+   lispbuilder-sdl-cffi::sdl-yvyu-overlay
 
-		lispbuilder-sdl-cffi::Num-Joysticks
-		lispbuilder-sdl-cffi::SDL-Joystick-Name
-		lispbuilder-sdl-cffi::SDL-WM-GRAB-INPUT
-		)
+   lispbuilder-sdl-cffi::Num-Joysticks
+   lispbuilder-sdl-cffi::SDL-Joystick-Name
+   lispbuilder-sdl-cffi::SDL-WM-GRAB-INPUT)
+
+  (:import-from #:lispbuilder-sdl-assets
+   lispbuilder-sdl-assets::*default-asset-path*)
+
   (:export
 
    ;; globals.lisp
@@ -73,7 +77,7 @@
 
    #:*opengl-context*
 
-   #:*default-font-path*
+   ;;#:*default-font-path*
    #:*default-simple-font*
    #:*default-ttf-font*
    
@@ -343,14 +347,15 @@
    #:video-dimensions
    #:set-gl-attribute
    #:set-caption
+   #:render-state
    
    ;; rwops.lisp
    #:rwops
    #:create-RWops-from-file
 
    ;; bitmap-font.lisp
-;;    #:font
-;;    #:load-font
+   ;;    #:font
+   ;;    #:load-font
    #:bitmap-font
    #:sdl-bitmap-font
    #:gfx-bitmap-font
@@ -359,7 +364,7 @@
    #:set-default-font
    #:default-font-p
 
-;;    #:with-load-font   
+   ;;    #:with-load-font   
    #:initialise-default-font
    #:initialise-font
    
@@ -463,9 +468,7 @@
    #:default-fill-audio-buffer
    
    ;; assets/globals.lisp
-   #:*default-font-path*
-   #:*default-ttf*
-   #:*default-simple-font*
+   ;;#:*default-font-path*
 
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
@@ -513,6 +516,7 @@
    #:average-fps
    #:frame-time
    #:time-scale
+   #:register-physics
 
    ;; keys.lisp
    #:enable-unicode-p
@@ -545,6 +549,7 @@
    #:get-font-face-style-name
 
    ;; Imports from lispbuilder-sdl-base  
+   #:*default-fpsmanager*
    #:with-events
    #:push-quit-event
    #:key=
@@ -552,6 +557,10 @@
 
    #:is-valid-ptr
    #:push-user-event
-   ))
+   #:fps-fixed
+   #:fps-timestep
+
+   ;; Imports from lispbuilder-sdl-assets
+   #:*default-asset-path*))
 
 
