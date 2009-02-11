@@ -42,18 +42,5 @@
 	       (:file "input-util" :depends-on ("package"))
                (:file "functional-geometry" :depends-on ("package"))
                (:file "audio-mixer" :depends-on ("package"))
-	       
-	       (:static-file "lisp.bmp")
-	       (:static-file "sdl.bmp")
-	       (:static-file "particle.bmp")
-	       (:static-file "particle-alpha.bmp")
-	       
- 	       (:module "squashed"
-		:components
-		((:file "squashed")
-		 (:static-file "blood.bmp")
-		 (:static-file "bug.bmp")
-		 (:static-file "racket.bmp")
-		 (:static-file "squash.bmp"))))
-	      :serial t ;; Make sure we load "examples" before "squashed"
-	      )))
+               (:file "squashed" :depends-on ("package")))
+               :serial t)))

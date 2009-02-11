@@ -14,9 +14,9 @@
   :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>, Luke J Crook <luke@balooga.com>"
   :licence "MIT"
-  :depends-on (cffi trivial-garbage lispbuilder-sdl-base)
+  :depends-on (cffi trivial-garbage lispbuilder-sdl-base lispbuilder-sdl-assets)
   :perform (load-op :after (op lispbuilder-sdl)
-		    (pushnew :lispbuilder-sdl *features*))
+                    (pushnew :lispbuilder-sdl *features*))
   :components
   ((:module "sdl"
     :components
