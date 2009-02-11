@@ -38,7 +38,7 @@
 	       (:file "syswm")
 	       (:file "video")
 	       (:file "sdl")
-               #+(or mswindows win32)(:file "glue")
+               (:file "glue")
 	       (:file "documentation"))
 	      :serial t)
      (:module "build"
