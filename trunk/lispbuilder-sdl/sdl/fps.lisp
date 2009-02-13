@@ -23,7 +23,8 @@ See [WITH-EVENTS](#with-events), and [AVERAGE-FPS](#average-fps)."
   (sdl-base::target-frame-rate fpsmanager))
 
 (defun time-scale (&optional (fpsmanager sdl-base::*default-fpsmanager*))
-  (sdl-base::tscale (sdl-base::time-scale fpsmanager)))
+  (sdl-base::calculate-time-scale (sdl-base::time-scale fpsmanager)
+                                  (sdl-base::delta-ticks fpsmanager)))
 
 (defun average-fps (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   "Returns the average frame rate of the event loop calculated over a sliding window
@@ -32,4 +33,5 @@ of 'n' frames."
 
 (defun frame-time (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   "Returns how long current frame time is"
-  (sdl-base::tscale (sdl-base::time-scale fpsmanager)))
+  (sdl-base::calculate-time-scale (sdl-base::time-scale fpsmanager)
+                                  (sdl-base::delta-ticks fpsmanager)))

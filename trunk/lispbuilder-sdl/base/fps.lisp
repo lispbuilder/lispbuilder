@@ -48,7 +48,7 @@ not calculated"))
    (last-ticks :accessor last-ticks :initform (sdl-cffi::sdl-get-ticks))
    (delta-ticks :accessor delta-ticks :initform 0))
   (:default-initargs
-   :average-window 200
+   :average-window 60
    :target-frame-rate 30))
 
 (defclass fps-fixed (fps-manager)
@@ -63,19 +63,21 @@ not calculated"))
 (defclass fps-unlocked (fps-manager)
   ((fps-ticks
     :accessor fps-ticks
+    :type integer
     :initform 0
     :initarg :time)
    (dt
     :accessor dt
-    :initform 20.0
+    :initform 10
     :initarg :dt)
    (max-dt
     :accessor max-dt
-    :initform 1000
+    :initform 100  
     :initarg :max-dt)
    (accumulator
     :accessor accumulator
-    :initform 0.0
+    :type integer
+    :initform 0
     :initarg :accumulator)
    (physics-hook-function
     :accessor ps-fn
@@ -116,15 +118,13 @@ not calculated"))
   (slot-value self 'target-frame-rate))
 
 (defmethod process-timestep :around ((self fps-manager) &optional fn)
-  (with-slots (current-ticks delta-ticks last-ticks time-scale fps-average) self
+  (with-slots (current-ticks delta-ticks last-ticks fps-average) self
     (setf current-ticks (sdl-cffi::sdl-get-ticks)
           delta-ticks (- current-ticks last-ticks))
-    (calculate-time-scale time-scale delta-ticks)
-    (update-fps-window fps-average current-ticks))
+    (update-fps-window fps-average current-ticks)
   
-  (call-next-method)
+    (call-next-method)
   
-  (with-slots (current-ticks last-ticks) self
     (setf last-ticks current-ticks)))
 
 (defmethod process-timestep ((self fps-manager) &optional fn)
@@ -163,8 +163,4 @@ not calculated"))
               (funcall physics-hook-function fps-ticks dt))
             (incf fps-ticks dt)
             (decf accumulator dt)))))
-
-
-    
-
 
