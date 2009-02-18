@@ -9,46 +9,41 @@ frame rate over a number of frames.
 RATE < 0 will unlock the frame rate. The average frane rate is 
 not calculated"))
 
-(defgeneric process-timestep (fpsmngr &optional fn)
+(defgeneric process-timestep (fpsmngr fn)
   (:documentation "Manages the timestep. Called once per game loop."))
 
-(defclass fps-average ()
-  ((index :accessor index :initform 0)
-   (window :accessor average-window :initform nil)
-   (calculated :accessor average-fps :initform 0)))
+(defmethod average-fps ((self fps-manager))
+  (with-slots (not-through-p) self
+    (if not-through-p
+      not-through-p
+      (let ((window-length (1- (length (average-window self)))))
+        (loop repeat window-length
+              with window = (average-window self)
+              with index = (index self)
+              with i-start = (if (< index window-length) (1+ index) 0)
+              with j-start = (if (< i-start window-length) (1+ i-start) 0)
+              for i = i-start then (if (< i window-length) (1+ i) 0)
+              for j = j-start then (if (< j window-length) (1+ j) 0)
+              summing (- (svref window j)
+                         (svref window i)) into total
+              finally (return (/ 1000 (/ total window-length))))))))
 
-(defmethod update-fps-window ((self fps-average) current-ticks)
-  (with-accessors ((index index) (average-window average-window)
-                   (average-fps average-fps)) self
-    (if (< index (length average-window))
-      (progn
-        (setf (svref average-window index) current-ticks)
-        (incf index))
-      (setf index 0
-            average-fps (/ 1000
-                           (/ (loop for i from 1 below (length average-window)
-                                    for j from 0 below (length average-window)
-                                    summing (- (svref average-window i)
-                                               (svref average-window j)) into total
-                                    finally (return total))
-                              (length average-window)))))))
-
-(defclass time-scale ()
-  ((tscale :accessor tscale :initform 0)
-   (world :accessor world :initform 1000)))
-
-(defun calculate-time-scale (time-scale delta-ticks)
-  (with-slots (tscale world) time-scale
+(defun calculate-time-scale (fps-manager delta-ticks)
+  (with-slots (tscale world) fps-manager
     (setf tscale (/ delta-ticks world))))
 
 (defclass fps-manager ()
-  ((time-scale :reader time-scale :initform (make-instance 'time-scale))
-   (fps-average :reader fps-average :initform (make-instance 'fps-average))
+  ((tscale :accessor tscale :initform 0)
+   (world :accessor world :initform 1000)
+   (index :accessor index :initform 0)
+   (window :accessor average-window :initform nil)
+   (not-through-p :accessor not-through-p :initform nil)
+   ;;(calculated :accessor average-fps :initform 0)
    (current-ticks :accessor current-ticks :initform (sdl-cffi::sdl-get-ticks))
    (last-ticks :accessor last-ticks :initform (sdl-cffi::sdl-get-ticks))
    (delta-ticks :accessor delta-ticks :initform 0))
   (:default-initargs
-   :average-window 60
+   :window 60
    :target-frame-rate 30))
 
 (defclass fps-fixed (fps-manager)
@@ -58,7 +53,7 @@ not calculated"))
    (delay-ticks :accessor delay-ticks :initform (sdl-cffi::sdl-get-ticks))
    (upper-limit :accessor upper-limit :initform 1000 :initarg :upper-limit)
    (lower-limit :accessor lower-limit :initform 1 :initarg :lower-limit)
-   (max-delta :accessor max-delta :initform 2000 :initarg :max-delta)))
+   (max-delta :accessor max-delta :initform 500 :initarg :max-delta)))
 
 (defclass fps-unlocked (fps-manager)
   ((fps-ticks
@@ -88,46 +83,45 @@ not calculated"))
 
 (defmethod initialize-instance :after ((self fps-manager)
                                        &key
-                                       average-window
+                                       window
                                        target-frame-rate
                                        &allow-other-keys)
-  (when average-window
-    (setf (average-window (fps-average self)) (make-array average-window
-                                                          :initial-element 0)))
+  (when window
+    (setf (average-window self) (make-array window :initial-element 0)))
   (when target-frame-rate
     (setf (target-frame-rate self) target-frame-rate)))
 
-(defmethod (setf target-frame-rate) (rate (self fps-manager))
-  (let ((window (average-window (fps-average self))))
-    (when (and (numberp rate) (> rate 0))
-      (let ((inverse-rate (truncate (/ 1000 rate))))
-        (loop for i from 0 below (length window)
-              for j = 0 then (incf j inverse-rate) do
-              (setf (svref window i) j))))
-    (setf (index (fps-average self)) (length window))))
+(defmethod (setf target-frame-rate) :after (rate (self fps-manager))
+  (setf (not-through-p self) rate))
 
-(defmethod (setf target-frame-rate) :around (rate (self fps-fixed))
+(defmethod (setf target-frame-rate) (rate (self fps-fixed))
   (if (and (numberp rate) (> rate 0))
     (when (and (>= rate (lower-limit self))
 	       (<= rate (upper-limit self)))
       (setf (frame-count self) 0
-            (rate-ticks self) (truncate (/ 1000 rate))
-            (slot-value self 'target-frame-rate) rate))
-    (setf (slot-value self 'target-frame-rate) rate))
-  (call-next-method)
-  (slot-value self 'target-frame-rate))
+            (rate-ticks self) (truncate (/ 1000 rate)))))
+  (setf (slot-value self 'target-frame-rate) rate))
 
-(defmethod process-timestep :around ((self fps-manager) &optional fn)
-  (with-slots (current-ticks delta-ticks last-ticks fps-average) self
+(defmethod process-timestep :around ((self fps-manager) fn)
+  (with-slots (current-ticks delta-ticks last-ticks index window not-through-p)
+      self
+    
     (setf current-ticks (sdl-cffi::sdl-get-ticks)
           delta-ticks (- current-ticks last-ticks))
-    (update-fps-window fps-average current-ticks)
+
+    (setf (svref window index) current-ticks)
+    (when not-through-p
+      (when (>= index (1- (length window)))
+        (setf not-through-p nil)))
   
     (call-next-method)
+
+    (unless (< (incf index) (length window))
+      (setf index 0))
   
     (setf last-ticks current-ticks)))
 
-(defmethod process-timestep ((self fps-manager) &optional fn)
+(defmethod process-timestep ((self fps-manager) fn)
   (when fn (funcall fn)))
 
 ;;;; --------------------------
@@ -135,14 +129,14 @@ not calculated"))
 ;;;; This is a reimplementation of the algorithm for SDL_gfx
 ;;;; From http://www.ferzkopp.net/joomla/content/view/19/14/
 
-(defmethod process-timestep :after ((self fps-fixed) &optional fn)
+(defmethod process-timestep :after ((self fps-fixed) fn)
   (with-slots (target-frame-rate frame-count rate-ticks current-ticks delay-ticks
                                  max-delta) self
     ;; Delay game loop, if necessary
     (when (and target-frame-rate (> target-frame-rate 0))
       (incf frame-count)
-      (let* ((target-ticks (+ delay-ticks (* frame-count rate-ticks)))
-             (delta (truncate (- target-ticks current-ticks))))
+      (let ((delta (truncate (- (+ delay-ticks (* frame-count rate-ticks))
+                                current-ticks))))
         (if (> delta 0)
           (sdl-cffi::sdl-delay (if (> delta max-delta) max-delta delta))
           (setf frame-count 0
@@ -152,15 +146,13 @@ not calculated"))
 ;;;; Lock timestep to Specified Rate
 11;;;; From http://www.gaffer.org/game-physics/fix-your-timestep/
 
-(defmethod process-timestep :before ((self fps-unlocked) &optional fn)
+(defmethod process-timestep :before ((self fps-unlocked) fn)
   (with-slots (fps-ticks delta-ticks dt max-dt accumulator physics-hook-function)
       self
-    (incf accumulator (if (> delta-ticks max-dt)
-                        max-dt delta-ticks))
+    (incf accumulator (if (> delta-ticks max-dt) max-dt delta-ticks))
     (loop until (< accumulator dt) do
           (progn
             (when physics-hook-function
               (funcall physics-hook-function fps-ticks dt))
             (incf fps-ticks dt)
             (decf accumulator dt)))))
-
