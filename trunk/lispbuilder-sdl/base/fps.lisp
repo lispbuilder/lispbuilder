@@ -12,26 +12,6 @@ not calculated"))
 (defgeneric process-timestep (fpsmngr fn)
   (:documentation "Manages the timestep. Called once per game loop."))
 
-(defmethod average-fps ((self fps-manager))
-  (with-slots (not-through-p) self
-    (if not-through-p
-      not-through-p
-      (let ((window-length (1- (length (average-window self)))))
-        (loop repeat window-length
-              with window = (average-window self)
-              with index = (index self)
-              with i-start = (if (< index window-length) (1+ index) 0)
-              with j-start = (if (< i-start window-length) (1+ i-start) 0)
-              for i = i-start then (if (< i window-length) (1+ i) 0)
-              for j = j-start then (if (< j window-length) (1+ j) 0)
-              summing (- (svref window j)
-                         (svref window i)) into total
-              finally (return (/ 1000 (/ total window-length))))))))
-
-(defun calculate-time-scale (fps-manager delta-ticks)
-  (with-slots (tscale world) fps-manager
-    (setf tscale (/ delta-ticks world))))
-
 (defclass fps-manager ()
   ((tscale :accessor tscale :initform 0)
    (world :accessor world :initform 1000)
@@ -91,11 +71,35 @@ not calculated"))
   (when target-frame-rate
     (setf (target-frame-rate self) target-frame-rate)))
 
+(defmethod average-fps ((self fps-manager))
+  (with-slots (not-through-p) self
+    (if not-through-p
+      not-through-p
+      (let ((window-length (1- (length (average-window self)))))
+        (loop :repeat window-length
+              :with window = (average-window self)
+              :with index = (index self)
+              :with i-start = (if (< index window-length) (1+ index) 0)
+              :with j-start = (if (< i-start window-length) (1+ i-start) 0)
+              :for i = i-start :then (if (< i window-length) (1+ i) 0)
+              :for j = j-start :then (if (< j window-length) (1+ j) 0)
+              :summing (- (svref window j)
+                          (svref window i)) :into total
+              :finally (return (/ 1000 (/ total window-length))))))))
+
+(defun calculate-time-scale (fps-manager delta-ticks)
+  (with-slots (tscale world) fps-manager
+    (setf tscale (/ delta-ticks world))))
+
 (defmethod (setf target-frame-rate) :after (rate (self fps-manager))
+  (if (and (numberp rate) (zerop rate))
+    (setf rate nil))
   (setf (not-through-p self) rate))
 
 (defmethod (setf target-frame-rate) (rate (self fps-fixed))
-  (if (and (numberp rate) (> rate 0))
+  (if (and (numberp rate) (zerop rate))
+    (setf rate nil))
+  (if (numberp rate)
     (when (and (>= rate (lower-limit self))
 	       (<= rate (upper-limit self)))
       (setf (frame-count self) 0
@@ -133,7 +137,7 @@ not calculated"))
   (with-slots (target-frame-rate frame-count rate-ticks current-ticks delay-ticks
                                  max-delta) self
     ;; Delay game loop, if necessary
-    (when (and target-frame-rate (> target-frame-rate 0))
+    (when target-frame-rate
       (incf frame-count)
       (let ((delta (truncate (- (+ delay-ticks (* frame-count rate-ticks))
                                 current-ticks))))
