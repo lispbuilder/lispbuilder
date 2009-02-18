@@ -133,7 +133,7 @@
 ;;;  'Main' function.
 ;;; ----------------------------------------------------------------------
 (defun particles ()
-  (let ((previous-average 0))
+  (let ((frames-p (every-n-frames 200)))
 
     (sdl:with-init ()
       ;; Create a window
@@ -222,13 +222,12 @@
 
 	 ;; Display text.
 	 (draw-cached-string "" 5 5 *font-large* sdl:*default-display* nil)
-         (if (= (truncate (sdl:average-fps)) previous-average)
-           (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil)
+         
+         (if (funcall frames-p)
            (draw-cached-string (format nil "Particles: ~d, Framerate: ~f ftime: ~2f"
                                        *particle-count* (truncate (sdl:average-fps)) *ftime*)
-                               5 35 *font-small* sdl:*default-display* t))
-	 
-	 (setf previous-average (truncate (sdl:average-fps)))
+                               5 35 *font-small* sdl:*default-display* t)
+           (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
 	
 	 ;; Flip back/front buffers
 	 (sdl:update-display)
@@ -237,7 +236,7 @@
 	 (setf *ftime* (sdl:time-scale)))))))
 
 (defun particles-unlocked ()
-  (let ((previous-average 0))
+  (let ((frames-p (every-n-frames 200)))
 
     (sdl:with-init ()
       ;; Create a window
@@ -328,14 +327,12 @@
 
 	 ;; Display text.
          (draw-cached-string "" 5 5 *font-large* sdl:*default-display* nil)
-         (if (= (truncate (sdl:average-fps)) previous-average)
-           (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil)
+         (if (funcall frames-p)
            (draw-cached-string (format nil "Particles: ~d, Framerate: ~f ftime: ~2f"
                                        *particle-count*
                                        (truncate (sdl:average-fps)) *ftime*)
-                               5 35 *font-small* sdl:*default-display* t))
-	 
-	 (setf previous-average (truncate (sdl:average-fps)))
-
+                               5 35 *font-small* sdl:*default-display* t)
+           (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
+	
 	 ;; Flip back/front buffers
 	 (sdl:update-display))))))
