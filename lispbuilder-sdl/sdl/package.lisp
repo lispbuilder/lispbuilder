@@ -65,6 +65,10 @@
    #:*default-rectangle*
    #:*default-font*
 
+   #:*default-font-path*
+   #:*default-audio-path*
+   #:*default-image-path*
+   
    #:*default-surface*
    #:*default-color*
    #:*default-position*

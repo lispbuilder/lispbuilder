@@ -102,6 +102,11 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 (defparameter *default-ttf-font*
   (merge-pathnames "vera.ttf" *default-asset-path*))
 
+(defparameter *default-font-path* *default-asset-path*)
+(defparameter *default-image-path* *default-asset-path*)
+(defparameter *default-audio-path* *default-asset-path*)
+
+
 (defvar *mixer* nil)
 (defvar *managed-audio* nil)
 
