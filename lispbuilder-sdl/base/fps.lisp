@@ -92,18 +92,22 @@ not calculated"))
     (setf tscale (/ delta-ticks world))))
 
 (defmethod (setf target-frame-rate) :around (rate (self fps-manager))
-  (if (and (numberp rate) (zerop rate))
-    (setf rate nil))
-  (setf (not-through-p self) rate)
-  (call-next-method))
+   (with-slots (target-frame-rate) self
+    (if (and (numberp rate) (zerop rate))
+      ;; Zero is the same as NIL
+      (setf target-frame-rate nil)
+      (setf target-frame-rate rate))
+    (setf (not-through-p self) target-frame-rate)
+    (call-next-method)
+    target-frame-rate))
 
 (defmethod (setf target-frame-rate) (rate (self fps-fixed))
-  (if (numberp rate)
-    (when (and (>= rate (lower-limit self))
-	       (<= rate (upper-limit self)))
-      (setf (frame-count self) 0
-            (rate-ticks self) (truncate (/ 1000 rate)))))
-  (setf (slot-value self 'target-frame-rate) rate))
+  (with-slots (target-frame-rate) self
+    (if (numberp target-frame-rate)
+      (when (and (>= target-frame-rate (lower-limit self))
+                 (<= target-frame-rate (upper-limit self)))
+        (setf (frame-count self) 0
+              (rate-ticks self) (truncate (/ 1000 target-frame-rate)))))))
 
 (defmethod process-timestep :around ((self fps-manager) fn)
   (with-slots (current-ticks delta-ticks last-ticks index window not-through-p)
