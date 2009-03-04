@@ -111,7 +111,17 @@
 	    surface
 	    (error "ERROR, LOAD-IMAGE: file ~A, not found" source))))))
 
-(defun load-and-convert-image (source &key color-key alpha (color-key-at nil) image-type force &allow-other-keys)
+(defmethod load-image ((source pathname) &key color-key alpha (image-type nil) (force nil) (free-rwops nil) (color-key-at nil))
+  "Returns a new `SURFACE` from the file at location `PATHNAME`."
+  (load-image (namestring source)
+              :color-key color-key
+              :alpha alpha
+              :image-type image-type
+              :force force
+              :free-rwops free-rwops
+              :color-key-at color-key-at))
+
+(defmethod load-and-convert-image ((source string) &key color-key alpha (color-key-at nil) image-type force &allow-other-keys)
   "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*), 
  converts this image to the current display format using `CONVERT-SURFACE`. 
 
@@ -125,6 +135,19 @@ Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `CO
 						      :color-key-at color-key-at)
 		       :free t
 		       :inherit t))
+
+(defmethod load-and-convert-image ((source pathname) &key color-key alpha (color-key-at nil) image-type force &allow-other-keys)
+  "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*), 
+ converts this image to the current display format using `CONVERT-SURFACE`. 
+
+Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `CONVERT-IMAGE`. "
+  (load-and-convert-image (namestring source)
+                          :color-key color-key
+                          :alpha alpha
+                          :color-key-at color-key-at
+                          :image-type image-type
+                          :force force))
+
 
 ;; (defun load-and-convert-image (source &rest named-pairs &key image-type force &allow-other-keys)
 ;;   "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*), 
