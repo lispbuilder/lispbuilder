@@ -13,7 +13,7 @@
        :trivial-features
        :alexandria)
 
-(:cffi "TRIVIAL-GARBAGE."
+(:trivial-garbage "TRIVIAL-GARBAGE."
        "http://common-lisp.net/~loliveira/tarballs/trivial-garbage/trivial-garbage_latest.tar.gz")
 
 (:cl-vectors "cl-vectors."
