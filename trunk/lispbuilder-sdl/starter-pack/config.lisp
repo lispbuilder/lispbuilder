@@ -13,6 +13,9 @@
        :trivial-features
        :alexandria)
 
+(:cffi "TRIVIAL-GARBAGE."
+       "http://common-lisp.net/~loliveira/tarballs/trivial-garbage/trivial-garbage_latest.tar.gz")
+
 (:cl-vectors "cl-vectors."
 	     "http://projects.tuxee.net/cl-vectors/files/cl-vectors-0.1.3.tar.gz")
 
@@ -43,7 +46,8 @@
 
 (:lispbuilder-sdl "lispbuilder-sdl."
 		  "http://www.balooga.com/lispbuilder/lispbuilder-sdl.tgz"
-		  :cffi
+		  :trivial-garbage
+                  :cffi
 		  :lispbuilder-sdl-binaries
 		  :vecto)
 
