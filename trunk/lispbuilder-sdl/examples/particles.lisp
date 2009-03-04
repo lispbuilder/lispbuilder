@@ -218,7 +218,7 @@
          (dolist (p *particles*)
            (let ((pos (particle-pos p)))
              (sdl:draw-surface-at-* *particle-img*
-				    (round (vec2-x pos)) (round (vec2-y pos)))))
+                                    (round (vec2-x pos)) (round (vec2-y pos)))))
 
 	 ;; Display text.
 	 (draw-cached-string "" 5 5 *font-large* sdl:*default-display* nil)

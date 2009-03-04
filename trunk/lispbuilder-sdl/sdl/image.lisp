@@ -37,6 +37,16 @@
 		    :free-rwops t)
 	(error "File ~A does not exist." file))))
 
+(defmethod load-image ((filename pathname) &key color-key alpha image-type force free-rwops (color-key-at nil))
+  "Returns a new `SURFACE` from the file at location `PATHNAME`."
+  (load-image (namestring filename)
+              :color-key color-key
+              :alpha alpha
+              :image-type image-type
+              :force force
+              :free-rwops free-rwops
+              :color-key-at color-key-at))
+
 (defun save-image (surface filename)
   "Saves the `SURFACE` as a `BMP` image to a file at location `FILENAME`."
   (check-type surface sdl-surface)
