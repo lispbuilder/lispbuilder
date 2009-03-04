@@ -91,14 +91,13 @@ not calculated"))
   (with-slots (tscale world) fps-manager
     (setf tscale (/ delta-ticks world))))
 
-(defmethod (setf target-frame-rate) :after (rate (self fps-manager))
+(defmethod (setf target-frame-rate) :around (rate (self fps-manager))
   (if (and (numberp rate) (zerop rate))
     (setf rate nil))
-  (setf (not-through-p self) rate))
+  (setf (not-through-p self) rate)
+  (call-next-method))
 
 (defmethod (setf target-frame-rate) (rate (self fps-fixed))
-  (if (and (numberp rate) (zerop rate))
-    (setf rate nil))
   (if (numberp rate)
     (when (and (>= rate (lower-limit self))
 	       (<= rate (upper-limit self)))

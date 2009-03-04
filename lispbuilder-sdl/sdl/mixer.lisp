@@ -239,7 +239,9 @@
                            (sdl-cffi::sdl-close-audio))
   (setf *managed-audio* nil))
 
-(defun load-sample (filename)
+(defgeneric load-sample (filename))
+
+(defmethod load-sample ((filename string))
   (let ((spec (make-instance 'audio-spec))
         (sample-handle (cffi:foreign-alloc :pointer))
         (sample-length (cffi:foreign-alloc :pointer)))
@@ -297,6 +299,9 @@
                                                      :initial-contents buff)
                                       :audio-length (length buff)
                                       :audio-spec spec))))))
+
+(defmethod load-sample ((filename pathname))
+  (load-sample (namestring filename)))
 
 (defmethod build-audio-cvt ((audio audio) (mixer mixer))
   (cffi:with-foreign-object (audio-cvt 'sdl-cffi::sdl-audio-cvt)

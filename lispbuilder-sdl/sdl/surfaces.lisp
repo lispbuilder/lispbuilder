@@ -674,7 +674,8 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
     (setf surface *default-display*))
   (check-types sdl-surface source surface)
   (sdl-base::blit-surface (fp source) (fp surface)
-			  (fp (current-cell :surface source)) (fp (position-rect source)))
+                          (fp (current-cell :surface source))
+                          (fp (position-rect source)))
   source)
 
 (defun draw-surface (src &key (surface *default-surface*))
