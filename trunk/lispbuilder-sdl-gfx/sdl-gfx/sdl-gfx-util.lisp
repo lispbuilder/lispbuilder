@@ -20,7 +20,7 @@
 		(add-vertex-* (x y)
 		  (add-vertex (sdl:point :x x :y y))))
 	 ,@body)
-       (draw-bezier ,point-list :segments ,segments))))
+       (draw-bezier ,point-list :segments ,segments :style ,style))))
 
 (defmacro with-curve ((&optional (style :solid) (segments 10)) &body body)
   (let ((point-list (gensym "point-list-")))
@@ -414,6 +414,7 @@
     poly-surface))
 
 (defun draw-bezier (vertices &key (surface sdl:*default-surface*) (color sdl:*default-color*) (segments 20) (style nil))
+  (declare (ignorable style))
   (check-type vertices (and list (not null)) "Vertices must be a LIST of SDL:POINTs")
   (unless surface
     (setf surface sdl:*default-display*))
@@ -432,10 +433,12 @@
 
 ;;; r
 
-(defun rotate-surface (degrees &key (surface *default-surface*) (free nil) (zoom 1) (smooth nil))
+(defun rotate-surface (degrees &key (surface sdl:*default-surface*) (free nil) (zoom 1) (smooth nil))
+  (declare (ignorable free))
   (roto-zoom-surface degrees zoom smooth :surface surface))
 
-(defun rotate-surface-xy (degrees &key (surface *default-surface*) (free nil) (zoomx 1) (zoomy 1) (smooth nil))
+(defun rotate-surface-xy (degrees &key (surface sdl:*default-surface*) (free nil) (zoomx 1) (zoomy 1) (smooth nil))
+  (declare (ignorable free))
   (roto-zoom-xy degrees zoomx zoomy smooth :surface surface))
 
 (defun roto-zoom-surface (angle zoom smooth &key (surface sdl:*default-surface*))
@@ -459,6 +462,7 @@
 ;;; z
 
 (defun zoom-surface (zoomx zoomy &key (surface sdl:*default-surface*) (smooth nil) (free nil))
+  (declare (ignorable free))
   (check-type surface sdl:surface)
   (make-instance 'sdl:surface :fp (sdl-gfx-cffi::zoomSurface (sdl:fp surface) zoomx zoomy smooth)))
 
