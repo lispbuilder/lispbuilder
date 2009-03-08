@@ -92,15 +92,15 @@ Maintain references to both of these objects until the music can be freed."
 	    rwops)))
 
 (defmethod load-sample ((filepath STRING))
-    "Loads the sample file at location `FILEPATH`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
+  "Loads the sample file at location `FILEPATH`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
 Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
   (let ((file (namestring filepath)))
     (if (and (stringp file) (probe-file file))
-	(let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV file)))
-	  (if (sdl-base:is-valid-ptr chunk-fp)
-	      (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
-	      (error "Cannot load ~A." file)))
-	(error "Sample file ~A does not exist." file))))
+      (let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV file)))
+        (if (sdl-base:is-valid-ptr chunk-fp)
+          (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
+          (error "Cannot load ~A." file)))
+      (error "Sample file ~A does not exist." file))))
 
 (defmethod load-sample ((rwops sdl:RWOPS))
   "Loads the sample from `RWOPS`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
@@ -119,16 +119,16 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
     chunk))
 
 (defun sample-from-channel (channel)
-      "Returns currently playing or most recently played sample on `CHANNEL` as a new [CHUNK](#chunk) object, 
+  "Returns currently playing or most recently played sample on `CHANNEL` as a new [CHUNK](#chunk) object, 
 or `NIL` if `CHANNEL` is not allocated or `CHANNEL` has not yet played out any samples.
 NOTE: The sample may already have been freed and therefore the pointer to the foreign object in [CHUNK](#chunk) may not be valid."
   (let ((chunk-fp (sdl-mixer-cffi::get-chunk channel)))
     (if (sdl-base:is-valid-ptr chunk-fp)
-	(make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp :gc nil)
-	nil)))
+      (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp :gc nil)
+      nil)))
 
 (defun open-audio (&key
-		   (frequency +DEFAULT-FREQUENCY+)
+                   (frequency +DEFAULT-FREQUENCY+)
 		   (format +DEFAULT-FORMAT+)
 		   (channels +DEFAULT-CHANNELS+)
 		   (chunksize +DEFAULT-SAMPLE-BUFFER+))
@@ -159,9 +159,9 @@ Increase `CHUNKSIZE` to decrease CPU resources, if sound skips or if playing mus
   (if (= 0 (sdl-mixer-cffi::open-audio frequency format channels chunksize))
     (progn
       ;; Register the music finished callback
-      ;;(register-music-finished nil)
+      ;(register-music-finished nil)
       ;; Register the sample finished callback
-      ;;(register-sample-finished nil)
+      ;(register-sample-finished nil)
       t)
     nil))
 
@@ -170,9 +170,10 @@ Increase `CHUNKSIZE` to decrease CPU resources, if sound skips or if playing mus
 and to properly close the audio device, [CLOSE-AUDIO](#close-audio) should be called the same number of times. 
 Optionally `ALL` when `T` will forcibly close the audio device, no matter how many times the device was opened."
   ;; Unregister the music finished callback
-  ;;(unregister-music-finished)
+  ;(register-music-finished nil)
   ;; Unregister the sample finished callback
-  ;;(unregister-sample-finished)
+  ;(register-sample-finished nil)
+  (format t "audio-opened-p: ~A,  query-spec: ~A~%" (audio-opened-p) (query-spec))
   (if (and all (audio-opened-p))
     (dotimes (i (query-spec))
       (sdl-mixer-cffi::close-audio))
@@ -430,11 +431,14 @@ Returns the number of samples playing or paused when `CHANNEL` is `T` or `NIL`."
 	nil)))
 
 (defun music-playing-p ()
-  "Returns `T` if music is currently playing or is paused, or `NIL` if music is halted."
+  "Returns `T` if music is currently playing, or `NIL` if music is halted
+or paused."
   (let ((playing? (sdl-mixer-cffi::playing-music)))
     (if (= 0 playing?)
-	nil
-	playing?)))
+      nil
+      (if (music-paused-p)
+        nil
+        playing?))))
 (defun music-halted-p ()
   "Returns `T` if music is currently halted, or `NIL` otherwise."
   (let ((playing? (sdl-mixer-cffi::playing-music)))
@@ -556,12 +560,19 @@ NOTE: Samples will continue playing when `NUM-CHANNELS` is `0`."
 Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   (allocate-channels 0))
 
-(cffi:defcallback channel-finished-proc :void
-    ((channel :int))
+(cffi:defcallback channel-finished-proc :void ((channel :int))
   "Called when any channel finishes playback or is halted. `CHANNEL` contains the channel number that has finished."
   (when *channel-finished*
     (funcall *channel-finished* channel))
-  (cffi:null-pointer))
+  ;(cffi:null-pointer)
+  )
+
+(defun register-sample-finished-callback (&optional cb)
+  (unless cb
+    (setf cb (cffi:callback channel-finished-proc)))
+  (sdl-mixer-cffi::channel-finished cb))
+(defun unregister-sample-finished-callback ()
+  (sdl-mixer-cffi::channel-finished (cffi:null-pointer)))
 
 (defun register-sample-finished (func)
   "Sets the callback that is executed when a sample [CHUNK](#chunk) finishes playback or is halted.
@@ -572,21 +583,24 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
     \(REGISTER-SAMPLE-FINISHED 
         \(lambda \(channel\)
           \(FORMAT T \"SAMPLE FINISHED ON CHANNEL: ~A\" channel\)\)\)"
-  (setf *channel-finished* func)
-  (sdl-mixer-cffi::channel-finished (cffi:callback channel-finished-proc)))
+  (setf *channel-finished* func))
 (defun unregister-sample-finished ()
   "Removes the callback function set by [REGISTER-SAMPLE-FINISHED](#register-sample-finished)."
-  (setf *channel-finished* nil)
-  (sdl-mixer-cffi::channel-finished (cffi:null-pointer)))
+  (setf *channel-finished* nil))
 
+(cffi:defcallback music-finished-proc :void ()
+  "Called when music finishes playback or is halted."
+  (when *music-finished*
+    (funcall *music-finished*))
+  ;;(cffi:null-pointer)
+  )
 
-(cffi:defcallback music-finished-proc :void
-                  ()
-                  "Called when music finishes playback or is halted."
-                  (when *music-finished*
-                    (funcall *music-finished*))
-                  ;;(cffi:null-pointer)
-                  )
+(defun register-music-finished-callback (&optional cb)
+  (unless cb
+    (setf cb (cffi:callback music-finished-proc)))
+  (sdl-mixer-cffi::hook-music-finished cb))
+(defun unregister-music-finished-callback ()
+  (sdl-mixer-cffi::hook-music-finished (cffi:null-pointer)))
 
 (defun register-music-finished (func)
   "Sets the callback that is executed when [MUSIC](#music) finishes playback or is halted.
@@ -597,13 +611,10 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
     \(REGISTER-MUSIC-FINISHED 
         \(lambda \(\)
           \(FORMAT T \"MUSIC FINISHED\"\)\)\)"
-  (setf *music-finished* func)
-  (sdl-mixer-cffi::hook-music-finished (cffi:callback music-finished-proc)))
+  (setf *music-finished* func))
 (defun unregister-music-finished ()
   "Removes the callback function set by set by [REGISTER-MUSIC-FINISHED](#register-music-finished)."
-  (setf *music-finished* nil)
-  (sdl-mixer-cffi::hook-music-finished (cffi:null-pointer)))
-
+  (setf *music-finished* nil))
 
 (cffi:defcallback fill-audio-buffer :void
     ((user-data :pointer)
