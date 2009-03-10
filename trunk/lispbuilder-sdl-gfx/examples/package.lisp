@@ -20,4 +20,5 @@
            #:vertices
            #:metaballs
            #:rotozoom
+           #:zoom
            #:fireworks))
