@@ -1,4 +1,5 @@
 #summary Contributors
+#sidebar TableOfContentsSDL
 
 
   * _Developers:_ - Frank Buss, Justin Heyes-Jones, Luke J Crook.
