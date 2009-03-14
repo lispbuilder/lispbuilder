@@ -28,11 +28,6 @@ In addition, it is possible to [UsingLispbuilderSDL#Creating_Standalone_Executab
 
 http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-alien.png
 
-
-= LISPBUILDER-SDL User Guide =
-
-[UsingLispbuilderSDL LISPBUILDER-SDL User Guide]
-
 = LISPBUILDER-SDL API Reference & Dictionary =
 
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#contents LISPBUILDER-SDL API Reference]
