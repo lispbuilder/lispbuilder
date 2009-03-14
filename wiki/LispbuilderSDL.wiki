@@ -39,15 +39,6 @@ http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-al
 || Clozure CL || ?? || ?? || ?? || ?? || ||
 || ECL || ?? || ?? || ?? || ?? || ||
 
-= Projects using LISPBUILDER-SDL =
-
- * [http://sourceforge.net/projects/latrunculi/ Latrunculi]
- * [http://code.google.com/p/lisp-game-engine/ Lisp-Game-Engine]
- * [http://dto.github.com/notebook/rlx.html RLX: a cross-platform graphical roguelike engine]
- * [http://purevirtual.com/~anthony/jigsaw-puzzle/index.html Jigsaw Puzzle Game], and [http://anthonyf.wordpress.com/2006/12/27/a-lispy-jigsaw-puzzle-game/]
- * [http://cses.ucsd.edu/cses/wiki/index.php?pagename=LRPG LRPG (Lisp Role Playing Game)]
- * [http://www.ludumdare.com/compo/2007/12/16/working-title-ruckus/ Ruckus: Entry into the Ludumdare '07 compo]
-
 = Windows: Download & Installation for Newbies =
 
 The LISPBUILDER-SDL package relies on the external [http://www.libsdl.org/ libSDL] dynamic linked library. [http://www.libsdl.org/ libSDL] is downloaded and installed automatically using the procedure describe below.
