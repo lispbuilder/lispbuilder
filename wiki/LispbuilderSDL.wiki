@@ -28,16 +28,6 @@ In addition, it is possible to [UsingLispbuilderSDL#Creating_Standalone_Executab
 
 http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-alien.png
 
-= Compatibility =
-
-|| *Lisp Implementation* || *Win32* || *Linux* || *OS X* || *BSD* || *Comments* ||
-|| SBCL || Working || Working || Working || Working || Win32 version is single threaded||
-|| Lispworks || Working || Working || Working || ?? || ||
-|| Allegro || Working || ?? || ?? || ?? || ||
-|| CMUCL || NA || Yes || ?? || ?? || ||
-|| CLISP || Working || Working || Working || Working || ||
-|| Clozure CL || ?? || ?? || ?? || ?? || ||
-|| ECL || ?? || ?? || ?? || ?? || ||
 
 = LISPBUILDER-SDL User Guide =
 
