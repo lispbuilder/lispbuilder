@@ -1,5 +1,5 @@
 #summary Create interactive games using LISPBUILDER-SDL and Common Lisp
-#sidebar TableOfContents
+#sidebar TableOfContentsSDL
 
 <wiki:toc max_depth="3" />
 
