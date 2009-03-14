@@ -1,4 +1,6 @@
 #summary Community
+#sidebar TableOfContentsSDL
+
 
 = Mailing List =
 
