@@ -1,5 +1,16 @@
 #summary Download & Installation
 
+= Compatibility =
+
+|| *Lisp Implementation* || *Win32* || *Linux* || *OS X* || *BSD* || *Comments* ||
+|| SBCL || Working || Working || Working || Working || Win32 version is single threaded||
+|| Lispworks || Working || Working || Working || ?? || ||
+|| Allegro || Working || ?? || ?? || ?? || ||
+|| CMUCL || NA || Yes || ?? || ?? || ||
+|| CLISP || Working || Working || Working || Working || ||
+|| Clozure CL || ?? || ?? || ?? || ?? || ||
+|| ECL || ?? || ?? || ?? || ?? || ||
+
 = Windows: Download & Installation for Newbies =
 
 The LISPBUILDER-SDL package relies on the external [http://www.libsdl.org/ libSDL] dynamic linked library. [http://www.libsdl.org/ libSDL] is downloaded and installed automatically using the procedure describe below.
