@@ -1,4 +1,5 @@
 #summary Download & Installation
+#sidebar TableOfContentsSDL
 
 = Compatibility =
 
