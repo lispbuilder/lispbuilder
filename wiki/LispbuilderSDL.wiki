@@ -28,10 +28,6 @@ In addition, it is possible to [UsingLispbuilderSDL#Creating_Standalone_Executab
 
 http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-alien.png
 
-= Support =
-
-Send support questions to the [http://www.lispniks.com/mailman/listinfo/application-builder LISPBUILDER mailing list].
-
 = Compatibility =
 
 || *Lisp Implementation* || *Win32* || *Linux* || *OS X* || *BSD* || *Comments* ||
