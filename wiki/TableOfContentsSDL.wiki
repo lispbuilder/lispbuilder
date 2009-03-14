@@ -8,5 +8,5 @@
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#contents API Reference Manual]
  * [Community Community]
  * [License License]
- * [Credits Credits]
+ * [Contributors Contributors]
  * [Faq Faq]
