@@ -1,7 +1,7 @@
 #summary Sidebar Table of Contents
 
  * [LispbuilderSDL Home]
- * [Download Download]
+ * [DownloadInstallation Download & Installation]
  * [Screenshots Screenshots]
  * [Documentation Documentation]
  * [Community Community]
