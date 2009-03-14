@@ -1,4 +1,6 @@
 #summary LISPBUILDER-SDL License Information
+#sidebar TableOfContentsSDL
+
 
 LISPBUILDER-SDL is distributed under the [http://en.wikipedia.org/wiki/MIT_License MIT-style license].
 
