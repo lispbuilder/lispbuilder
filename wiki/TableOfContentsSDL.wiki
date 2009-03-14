@@ -3,7 +3,9 @@
  * [LispbuilderSDL Home]
  * [DownloadInstallationIntro Download & Installation]
  * [Screenshots Screenshots]
- * [Documentation Documentation]
+ * Documentation
+  * [UsingLispbuilderSDL LISPBUILDER-SDL User Guide]
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#contents LISPBUILDER-SDL API Reference]
  * [Community Community]
  * [License License]
  * [Credits Credits]
