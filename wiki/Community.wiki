@@ -1,0 +1,17 @@
+#summary Community
+
+= Mailing List =
+
+Send support questions to the [http://www.lispniks.com/mailman/listinfo/application-builder LISPBUILDER mailing list].
+
+= Wiki =
+
+You are [http://code.google.com/p/lispbuilder/wiki/LispbuilderSDL reading it]. Note that wiki is only editable for logged in project members. 
+
+= Chat =
+
+From time to time, project members are availabe on the IRC-channel, #lisp. 
+
+= Bugs and Features =
+
+Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system] to report bugs and request features.
