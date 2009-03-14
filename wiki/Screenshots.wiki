@@ -1,4 +1,6 @@
 #summary Screenshots for LISPBUILDER-SDL
+#sidebar TableOfContentsSDL
+
 
 http://lispbuilder.googlecode.com/svn/trunk/documentation/sdl-gfx-examples_functions.png
 
