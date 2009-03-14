@@ -1,6 +1,6 @@
 #summary Sidebar Table of Contents
 
- * [Home Home]
+ * [Home LispbuilderSDL]
  * [Dowload Download]
  * [Screenshots Screenshots]
  * [Documentation Documentation]
