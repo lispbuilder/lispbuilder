@@ -42,5 +42,6 @@
 	       (:file "input-util" :depends-on ("package"))
                (:file "functional-geometry" :depends-on ("package"))
                (:file "audio-mixer" :depends-on ("package"))
-               (:file "squashed" :depends-on ("package")))
+               (:file "squashed" :depends-on ("package"))
+               (:file "keys" :depends-on ("package")))
                :serial t)))

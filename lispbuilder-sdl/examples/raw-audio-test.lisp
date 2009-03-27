@@ -48,7 +48,8 @@
 						       wav-buffer-handle
 						       wav-buffer-length))
 	  (setf *file-found* nil
-		*status* (format nil "FAILED to load \"~A\"." (sdl:create-path *wav-file* *audio-path*)))
+		*status* (format nil "FAILED to load \"~A\"."
+                                 (sdl:create-path *wav-file* sdl:*default-asset-path*)))
 	  (setf *file-found* t))
 
       (when *file-found*

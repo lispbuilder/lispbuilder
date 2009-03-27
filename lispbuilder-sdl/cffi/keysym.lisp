@@ -278,7 +278,7 @@
 (cffi:defcfun ("SDL_GetKeyState" SDL-Get-Key-State) :pointer
   (numkeys :pointer))
 
-(cffi:defcfun ("SDL_GetModState" SDL-Get-Mod-State) :int) ;Sdl-Mod
+(cffi:defcfun ("SDL_GetModState" SDL-Get-Mod-State) :int)
 
 (cffi:defcfun ("SDL_SetModState" SDL-Set-Mod-State) :void
   (modstate :int)) ;Sdl-Mod
