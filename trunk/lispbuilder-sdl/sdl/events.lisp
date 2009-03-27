@@ -49,27 +49,27 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 
 
 (defun expand-activeevent (sdl-event params forms)
-    (let ((keyword-list nil)
+  (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:gain
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::gain)))
-				 (:state
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::gain)))
+                                 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::state)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::state)))
 				 (otherwise
 				  (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
-  `((eql (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type :SDL-ACTIVE-EVENT)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type))
+    `((eql (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type :SDL-ACTIVE-EVENT)
+           (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type))
       (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
 					     (second key))
 					 keyword-list))
@@ -80,38 +80,52 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Keyboard-Event 'sdl-cffi::state)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Keyboard-Event 'sdl-cffi::state)))
 				 (:scancode
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
-											 'sdl-cffi::sdl-keyboard-event
-											 'sdl-cffi::keysym)
-							      'sdl-cffi::sdl-key-sym 'sdl-cffi::scancode)))
+                                    (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+                                                                                        'sdl-cffi::sdl-keyboard-event
+                                                                                        'sdl-cffi::keysym)
+                                                             'sdl-cffi::sdl-key-sym 'sdl-cffi::scancode)))
 				 (:key
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
-											 'sdl-cffi::sdl-keyboard-event
-											 'sdl-cffi::keysym)
-							      'sdl-cffi::sdl-key-sym 'sdl-cffi::sym)))
-				 (:mod `(,(intern (format nil "~A" (second key)) :keyword)
-					  (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
-											      'sdl-cffi::sdl-keyboard-event
-											      'sdl-cffi::keysym)
-								   'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)))
+                                    (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+                                                                                        'sdl-cffi::sdl-keyboard-event
+                                                                                        'sdl-cffi::keysym)
+                                                             'sdl-cffi::sdl-key-sym 'sdl-cffi::sym)))
+                                 (:mod
+                                  `(,(intern (format nil "~A" (second key)) :keyword)
+                                    (cffi:foreign-slot-value (cffi:foreign-slot-pointer
+                                                              ,sdl-event
+                                                              'sdl-cffi::sdl-keyboard-event
+                                                              'sdl-cffi::keysym)
+                                                             'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)))
+                                 (:mod-key
+                                  `(,(intern (format nil "~A" (second key)) :keyword)
+                                    (let ((mod-state (cffi:foreign-slot-value (cffi:foreign-slot-pointer
+                                                                               ,sdl-event
+                                                                               'sdl-cffi::sdl-keyboard-event
+                                                                               'sdl-cffi::keysym)
+                                                                              'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)))
+                                      (remove nil (loop for key in (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)
+                                                        collect (when (> (logand mod-state
+                                                                                 (foreign-enum-value 'sdl-cffi::sdl-mod key))
+                                                                         0)
+                                                                  key))))))
 				 (:unicode
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
-											 'sdl-cffi::sdl-keyboard-event
-											 'sdl-cffi::keysym)
-							      'sdl-cffi::sdl-key-sym 'sdl-cffi::unicode)))
+                                    (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+                                                                                        'sdl-cffi::sdl-keyboard-event
+                                                                                        'sdl-cffi::keysym)
+                                                             'sdl-cffi::sdl-key-sym 'sdl-cffi::unicode)))
 				 (otherwise
 				  (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
@@ -128,39 +142,52 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Keyboard-Event 'sdl-cffi::state)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Keyboard-Event 'sdl-cffi::state)))
 				 (:scancode
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
-											 'sdl-cffi::sdl-keyboard-event
-											 'sdl-cffi::keysym)
-							      'sdl-cffi::sdl-key-sym 'sdl-cffi::scancode)))
+                                    (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+                                                                                        'sdl-cffi::sdl-keyboard-event
+                                                                                        'sdl-cffi::keysym)
+                                                             'sdl-cffi::sdl-key-sym 'sdl-cffi::scancode)))
 				 (:key
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
-											 'sdl-cffi::sdl-keyboard-event
-											 'sdl-cffi::keysym)
-							      'sdl-cffi::sdl-key-sym 'sdl-cffi::sym)))
-				 (:mod
+                                    (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+                                                                                        'sdl-cffi::sdl-keyboard-event
+                                                                                        'sdl-cffi::keysym)
+                                                             'sdl-cffi::sdl-key-sym 'sdl-cffi::sym)))
+                                 (:mod
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
-											 'sdl-cffi::sdl-keyboard-event
-											 'sdl-cffi::keysym)
-							      'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)))
+                                    (cffi:foreign-slot-value (cffi:foreign-slot-pointer
+                                                                               ,sdl-event
+                                                                               'sdl-cffi::sdl-keyboard-event
+                                                                               'sdl-cffi::keysym)
+                                                                              'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)))
+                                 (:mod-key
+				  `(,(intern (format nil "~A" (second key)) :keyword)
+                                    (let ((mod-state (cffi:foreign-slot-value (cffi:foreign-slot-pointer
+                                                                               ,sdl-event
+                                                                               'sdl-cffi::sdl-keyboard-event
+                                                                               'sdl-cffi::keysym)
+                                                                              'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)))
+                                      (remove nil (loop for key in (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)
+                                                        collect (when (> (logand mod-state
+                                                                                 (foreign-enum-value 'sdl-cffi::sdl-mod key))
+                                                                         0)
+                                                                  key))))))
 				 (:unicode
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
-											 'sdl-cffi::sdl-keyboard-event
-											 'sdl-cffi::keysym)
-							      'sdl-cffi::sdl-key-sym 'sdl-cffi::unicode)))
+                                    (cffi:foreign-slot-value (cffi:foreign-slot-pointer ,sdl-event
+                                                                                        'sdl-cffi::sdl-keyboard-event
+                                                                                        'sdl-cffi::keysym)
+                                                             'sdl-cffi::sdl-key-sym 'sdl-cffi::unicode)))
 				 (otherwise
 				  (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
@@ -178,27 +205,27 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::state)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::state)))
 				 (:x
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::x))) 
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::x))) 
 				 (:y
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::y)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::y)))
 				 (:x-rel
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::xrel)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::xrel)))
 				 (:y-rel
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::yrel)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::yrel)))
 				 (otherwise
 				  (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
@@ -215,24 +242,24 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button)))
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::state)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::state)))
 				 (:x
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::x)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::x)))
 				 (:y
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::y)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::y)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -248,24 +275,24 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button)))
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::state)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::state)))
 				 (:x
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::x)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::x)))
 				 (:y
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::y)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::y)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -281,27 +308,27 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::which)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::which)))
 				 (:axis
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::axis)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::axis)))
 				 (:value
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::value)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::value)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
 
-  `((eql (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type :SDL-JOY-AXIS-MOTION-EVENT)
-	 (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type))
+    `((eql (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type :SDL-JOY-AXIS-MOTION-EVENT)
+           (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type))
       (funcall #'(lambda (&key ,@(mapcar #'(lambda (key)
 					     (second key))
 					 keyword-list))
@@ -312,21 +339,21 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which)))
 				 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::button)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::button)))
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::state)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::state)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -342,21 +369,21 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which)))
 				 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::button)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::button)))
 				 (:state
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::state)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::state)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -372,21 +399,21 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::which)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::which)))
 				 (:axis
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::hat)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::hat)))
 				 (:value
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::value)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Hat-Event 'sdl-cffi::value)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -402,24 +429,24 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:which
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::which)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::which)))
 				 (:ball
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::ball)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::ball)))
 				 (:x-rel
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::xrel)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::xrel)))
 				 (:y-rel
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::yrel)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::yrel)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -435,18 +462,18 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:w
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::w)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::w)))
 				 (:h
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::h)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::h)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
 
@@ -480,24 +507,24 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   (let ((keyword-list nil)
 	(keywords nil))
     (do ((keyword params (if (cdr keyword)
-			     (cddr keyword)
-			     nil)))
+                           (cddr keyword)
+                           nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
 				 (:type
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::type)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::type)))
 				 (:code
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::code)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::code)))
 				 (:data1
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data1)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data1)))
 				 (:data2
 				  `(,(intern (format nil "~A" (second key)) :keyword)
-				     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data2)))
+                                    (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data2)))
 				 (otherwise (error "Unknown keyword ~A" (first key)))))
 			   keyword-list))
     
@@ -597,9 +624,9 @@ or restored. A single event can have multiple values set in `STATE`.
 
 ##### Keyboard Events
 
-    \(:KEY-DOWN-EVENT \(:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE\)
+    \(:KEY-DOWN-EVENT \(:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE\)
        &BODY BODY\)
-    \(:KEY-UP-EVENT \(:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE\)
+    \(:KEY-UP-EVENT \(:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE\)
        &BODY BODY\)
 
 A keyboard event generally occurs when a key is released or when a key is pressed. 
@@ -621,8 +648,9 @@ value for `KEY` generally takes the following format: `:SDL-KEY-0` to `:SDL-KEY-
 `SDL-KEY-a` to `SDL-KEY-z` for alpha keys in the range a-z.
 Other keys are generally spelled out, for example `SDL-KEY-PAGEDOWN`, `SDL-KEY-F1` or 
 `SDL-KEY-NUMLOCK` .
-* `MOD` is current state of the keyboard modifiers as explained in SDL_GetModState. 
-One or more of `:SDL-KEY-MOD-NONE, :SDL-KEY-MOD-LSHIFT, :SDL-KEY-MOD-RSHIFT,
+* `MOD` is the keyboard modifier state returned as an `INTEGER`.
+* `MOD-KEY` is the current state of the keyboard modifiers as explained in SDL_GetModState. 
+Returned as a `LIST` of one or more of `:SDL-KEY-MOD-LSHIFT, :SDL-KEY-MOD-RSHIFT,
 :SDL-KEY-MOD-LCTRL, :SDL-KEY-MOD-RCTRL, :SDL-KEY-MOD-LALT, :SDL-KEY-MOD-RALT,
 :SDL-KEY-MOD-LMETA, :SDL-KEY-MOD-RMETA, :SDL-KEY-MOD-NUM, :SDL-KEY-MOD-CAPS,
 :SDL-KEY-MOD-MODE or :SDL-KEY-MOD-RESERVED`.
@@ -801,9 +829,9 @@ The contents of the event are completely up to the programmer.
     \(WITH-EVENTS \(TYPE\)
      \(:ACTIVE-EVENT \(:GAIN GAIN :STATE STATE\) 
         ... \)
-     \(:KEY-DOWN-EVENT \(:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE\)
+     \(:KEY-DOWN-EVENT \(:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE\)
         ... \)
-     \(:KEY-UP-EVENT \(:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE\)
+     \(:KEY-UP-EVENT \(:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE\)
         ...\)
      \(:MOUSE-MOTION-EVENT \(:STATE STATE :X X :Y Y :X-REL X-REL :Y-REL Y-REL\)
         ...\)
@@ -845,93 +873,93 @@ The contents of the event are completely up to the programmer.
 			  ,@(remove nil 
 				    (mapcar #'(lambda (event)
 						(cond
-						  ((eql :idle (first event))
-						   (expand-idle (rest event)))))
+                                                 ((eql :idle (first event))
+                                                  (expand-idle (rest event)))))
 					    events))))
        
        (loop until ,quit do
-	    (loop until ,(case type
-			       (:poll `(= 0 (sdl-cffi::SDL-Poll-Event ,sdl-event)))
-			       (:wait `(or ,quit (= 0 (sdl-cffi::SDL-Wait-Event ,sdl-event))))
-			       (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type))) do
-		 (cond
-		   ,@(remove nil 
-			     (mapcar #'(lambda (event)
-					 (case (first event)
-					   (:active-event
-					    (expand-activeevent sdl-event 
-								(first (rest event)) 
-								(rest (rest event))))
-					   (:key-down-event
-					    (expand-keydown sdl-event 
-							    (first (rest event)) 
-							    (rest (rest event))))
-					   (:key-up-event
-					    (expand-keyup sdl-event 
-							  (first (rest event)) 
-							  (rest (rest event))))
-					   (:mouse-motion-event
-					    (expand-mousemotion sdl-event 
-								(first (rest event)) 
-								(rest (rest event))))
-					   (:mouse-button-down-event
-					    (expand-mousebuttondown sdl-event
-								    (first (rest event)) 
-								    (rest (rest event))))
-					   (:mouse-button-up-event
-					    (expand-mousebuttonup sdl-event 
-								  (first (rest event)) 
-								  (rest (rest event))))
-					   (:joy-axis-motion-event
-					    (expand-joyaxismotion sdl-event 
-								  (first (rest event)) 
-								  (rest (rest event))))
-					   (:joy-button-down-event
-					    (expand-joybuttondown sdl-event 
-								  (first (rest event)) 
-								  (rest (rest event))))
-					   (:joy-button-up-event
-					    (expand-joybuttonup sdl-event 
-								(first (rest event)) 
-								(rest (rest event))))
-					   (:joy-hat-motion-event
-					    (expand-joyhatmotion sdl-event 
-								 (first (rest event)) 
-								 (rest (rest event))))
-					   (:joy-ball-motion-event
-					    (expand-joyballmotion sdl-event 
-								  (first (rest event)) 
-								  (rest (rest event))))
-					   (:video-resize-event
-					    (expand-videoresize sdl-event 
-								(first (rest event)) 
-								(rest (rest event))))
-					   (:video-expose-event
-					    (expand-videoexpose sdl-event 
-								(rest (rest event))))
-					   (:sys-wm-event
-					    (expand-syswmevent sdl-event 
-							       (rest (rest event))))
-					   (:quit-event
-					    (expand-quit sdl-event 
-							 (rest (rest event))
-							 quit))
-					   (:user-event
-					    (expand-userevent sdl-event 
-							      (first (rest event)) 
-							      (rest (rest event))))
-					   (:idle
-					    (if (eql type :wait)
-						(error "WITH-EVENTS; :IDLE is ignored when TYPE is :WAIT.")))
-					   (otherwise
-					    (error
-					     "WITH-EVENTS: EVENTS ~A, must be one or more of; 
+             (loop until ,(case type
+                            (:poll `(= 0 (sdl-cffi::SDL-Poll-Event ,sdl-event)))
+                            (:wait `(or ,quit (= 0 (sdl-cffi::SDL-Wait-Event ,sdl-event))))
+                            (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type))) do
+                   (cond
+                    ,@(remove nil 
+                              (mapcar #'(lambda (event)
+                                          (case (first event)
+                                            (:active-event
+                                             (expand-activeevent sdl-event 
+                                                                 (first (rest event)) 
+                                                                 (rest (rest event))))
+                                            (:key-down-event
+                                             (expand-keydown sdl-event 
+                                                             (first (rest event)) 
+                                                             (rest (rest event))))
+                                            (:key-up-event
+                                             (expand-keyup sdl-event 
+                                                           (first (rest event)) 
+                                                           (rest (rest event))))
+                                            (:mouse-motion-event
+                                             (expand-mousemotion sdl-event 
+                                                                 (first (rest event)) 
+                                                                 (rest (rest event))))
+                                            (:mouse-button-down-event
+                                             (expand-mousebuttondown sdl-event
+                                                                     (first (rest event)) 
+                                                                     (rest (rest event))))
+                                            (:mouse-button-up-event
+                                             (expand-mousebuttonup sdl-event 
+                                                                   (first (rest event)) 
+                                                                   (rest (rest event))))
+                                            (:joy-axis-motion-event
+                                             (expand-joyaxismotion sdl-event 
+                                                                   (first (rest event)) 
+                                                                   (rest (rest event))))
+                                            (:joy-button-down-event
+                                             (expand-joybuttondown sdl-event 
+                                                                   (first (rest event)) 
+                                                                   (rest (rest event))))
+                                            (:joy-button-up-event
+                                             (expand-joybuttonup sdl-event 
+                                                                 (first (rest event)) 
+                                                                 (rest (rest event))))
+                                            (:joy-hat-motion-event
+                                             (expand-joyhatmotion sdl-event 
+                                                                  (first (rest event)) 
+                                                                  (rest (rest event))))
+                                            (:joy-ball-motion-event
+                                             (expand-joyballmotion sdl-event 
+                                                                   (first (rest event)) 
+                                                                   (rest (rest event))))
+                                            (:video-resize-event
+                                             (expand-videoresize sdl-event 
+                                                                 (first (rest event)) 
+                                                                 (rest (rest event))))
+                                            (:video-expose-event
+                                             (expand-videoexpose sdl-event 
+                                                                 (rest (rest event))))
+                                            (:sys-wm-event
+                                             (expand-syswmevent sdl-event 
+                                                                (rest (rest event))))
+                                            (:quit-event
+                                             (expand-quit sdl-event 
+                                                          (rest (rest event))
+                                                          quit))
+                                            (:user-event
+                                             (expand-userevent sdl-event 
+                                                               (first (rest event)) 
+                                                               (rest (rest event))))
+                                            (:idle
+                                             (if (eql type :wait)
+                                               (error "WITH-EVENTS; :IDLE is ignored when TYPE is :WAIT.")))
+                                            (otherwise
+                                             (error
+                                              "WITH-EVENTS: EVENTS ~A, must be one or more of; 
 :ACTIVE-EVENT, :KEY-DOWN-EVENT, :KEY-UP-EVENT, :MOUSE-MOTION-EVENT, :MOUSE-BUTTON-DOWN-EVENT, :MOUSE-BUTTON-UP-EVENT,
 :JOY-AXIS-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :JOY-HAT-MOTION-EVENT, :JOY-BALL-MOTION-EVENT, 
 :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :SYS-WM-EVENT, :QUIT-EVENT, :USER-EVENT or :IDLE." (first event)))))
-				     events))))
-	    (unless ,quit
-              #+lispbuilder-sdl-audio(process-audio)
-	      (sdl-base::process-timestep sdl-base::*default-fpsmanager*
-                                          ,idle-func)))
+                                      events))))
+             (unless ,quit
+               #+lispbuilder-sdl-audio(process-audio)
+               (sdl-base::process-timestep sdl-base::*default-fpsmanager*
+                                           ,idle-func)))
        (cffi:foreign-free ,sdl-event))))

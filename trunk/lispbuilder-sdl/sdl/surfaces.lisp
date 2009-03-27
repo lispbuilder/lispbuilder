@@ -484,17 +484,18 @@ Differences between [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format), [CO
 ** New surface can be filled with the old surface, or the color key or both."
   (check-type surface sdl-surface)
   (let ((surf (make-instance 'surface
-			     :fp (sdl-base::convert-surface-to-display-format (fp surface)
-									      :enable-color-key (if inherit
-												    (color-key-enabled-p surface)
-												    enable-color-key)
-									      :enable-alpha (if inherit
-												(alpha-enabled-p surface)
-												(or enable-alpha pixel-alpha)) 
-									      :pixel-alpha (if inherit
-											       (pixel-alpha-enabled-p surface)
-											       pixel-alpha)
-									      :free nil))))
+                             :fp (sdl-base::convert-surface-to-display-format
+                                  (fp surface)
+                                  :enable-color-key (if inherit
+                                                      (color-key-enabled-p surface)
+                                                      enable-color-key)
+                                  :enable-alpha (if inherit
+                                                  (alpha-enabled-p surface)
+                                                  (or enable-alpha pixel-alpha)) 
+                                  :pixel-alpha (if inherit
+                                                 (pixel-alpha-enabled-p surface)
+                                                 pixel-alpha)
+                                  :free nil))))
     (when free
       (free surface))
     surf))

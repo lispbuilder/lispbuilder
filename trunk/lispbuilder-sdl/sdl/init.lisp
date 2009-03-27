@@ -240,7 +240,7 @@ Returns `NIL` otherwise."
   (list-subsystems (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
 
 (defun init-sdl (&key (flags nil) (init (not (sdl:initialized-subsystems-p))))
-  "Initalizes the SDL library when the `INIT` is `T`."
+  "Initalizes the SDL library when `INIT` is `T`."
   (let ((initialized? (if init
                         (if (sdl-base::init-sdl :flags flags)
                           t

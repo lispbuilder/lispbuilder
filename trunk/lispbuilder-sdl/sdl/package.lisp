@@ -531,10 +531,14 @@
    #:key-repeat-delay
    #:key-repeat-interval
    #:get-key-state
+   #:get-keys-state
+   #:key-state-p
+   #:get-mod-state
+   #:get-mods-state
+   #:mod-state-p
    #:key=
    #:modifier=
    #:modifier-p
-   #:modifier-in
 
    ;; font.lisp
    #:with-default-font

@@ -110,6 +110,9 @@
    ;; audio-mixer
    #:mixer-test
 
+   ;; key-test
+   #:key-test
+
    ;; The following are only defined in the
    ;; LISPBUILDER-SDL-CL-VECTORS-EXAMPLES package.
    ;; cl-vectors.lisp

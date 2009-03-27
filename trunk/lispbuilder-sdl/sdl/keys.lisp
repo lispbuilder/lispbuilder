@@ -62,38 +62,106 @@ initialized to have an effect."
     interval))
 
 (defun get-key-state (key)
-  "Returns the current keypress state of the key KEY.
-Returns T if the SDL-KEY is pressed, returns NIL if SDL-KEY is not pressed.
+  (cffi:with-foreign-object (num-keys :int)
+      (let ((key-states (sdl-cffi::SDL-Get-Key-state num-keys)))
+	(if (= (mem-aref key-states :uint8 (cffi:foreign-enum-value 'sdl-cffi::sdl-key key))
+               1)
+	    t
+	    nil))))
+
+(defun get-keys-state ()
+  (cffi:with-foreign-object (num-keys :int)
+    (let ((key-states (sdl-cffi::SDL-Get-Key-state num-keys)))
+      (remove nil (loop for key in (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-key)
+                        collect (when (= (mem-aref key-states :uint8 (cffi:foreign-enum-value 'sdl-cffi::sdl-key
+                                                                                              key))
+                                         1)
+                                  key))))))
+
+(defun key-state-p (&optional key)
+  "Returns all keys that are currently depressed as a LIST. Or, returns
+Returns KEY if KEY is currently depressed, returns NIL otherwise.
 Note: Use SDL_PumpEvents to update the state array.
 Note: This function gives you the current state after all events have been processed, 
 so if a key or button has been pressed and released before you process events, 
 then the pressed state will never show up in the getstate calls.
-Note: This function doesn't take into account whether shift has been pressed or not.
-For example: \(GET-KEY-STATE :SDL-KEY-F1\)"
-  (cffi:with-foreign-object (num-keys :int)
-      (let ((key-states (sdl-cffi::SDL-Get-Key-state num-keys)))
-	(if (equal (mem-aref key-states :uint8 (foreign-enum-value 'sdl-cffi::sdl-key key)) 
-		   1)
-	    t
-	    nil))))
+Note: This function doesn't take into account whether shift is currently depressed.
+For example: \(KEY-STATE-P :SDL-KEY-F1\)"
+  (if key
+    (get-key-state key)
+    (get-keys-state)))
+
+(defun get-mod-state (key)
+  (if (> (logand (sdl-cffi:sdl-get-mod-state)
+                 (cffi:foreign-enum-value 'sdl-cffi::sdl-mod key))
+         0)
+    key
+    nil))
+
+(defun get-mods-state ()
+  (let ((mod-state (sdl-cffi::SDL-Get-mod-state)))
+    (remove nil (loop for key in (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)
+                      collect (when (> (logand mod-state (cffi:foreign-enum-value 'sdl-cffi::sdl-mod key)) 0)
+                                key)))))
+
+(defun mod-state-p (&optional key)
+  "Returns all modifier keys that are currently depressed as a LIST. Or, returns
+Returns KEY if KEY is currently depressed, returns NIL otherwise.
+Note: Use SDL_PumpEvents to update the state array.
+Note: This function gives you the current state after all events have been processed, 
+so if a key or button has been pressed and released before you process events, 
+then the pressed state will never show up in the getstate calls.
+For example: \(GET-MOD-STATE :SDL-KEY-MOD-LCTRL)"
+  (if key
+    (get-mod-state key)
+    (get-mods-state)))
 
 (defun key= (key1 key2)
   (eq key1 key2))
 
-(defun modifier= (mod key)
-  "Returns `MOD` if all of the modifiers in `MOD` exactly match `KEY`, or
-returns `NIL` otherwise. `MOD` may be a list of modifiers, or a single modifier."
-  ;; Make mod a list, if not already.
-  (when (and (> (length (modifier-p key)) 0)
-             (= (length (modifier-p key))
-                (length (modifier-p key mod))))
-    mod))
+(defgeneric modifier= (mod key)
+  (:documentation "Returns `MOD` only when all of the modifiers in `MOD` exactly match `KEY`, and
+returns `NIL` otherwise. `MOD` may be a list of modifiers, or a single modifier.
 
-(defun modifier-p (key &optional
+##### Example
+
+      \(:KEY-DOWN-EVENT \(:MOD-KEYS MOD-KEYS\)
+          \(SDL:MODIFIER= '(:SDL-KEY-MOD-LCTRL :SDL-KEY-MOD-LALT) MOD-KEYS\)\)"))
+(defmethod modifier= (mod (key list))
+  ;; Make mod a list, if not already.
+  (let ((mod (if (listp mod) mod (list mod))))
+    (if (= (length (intersection mod key))
+           (length mod))
+      mod
+      nil)))
+
+(defmethod modifier= (mod key)
+  ;; Make mod a list, if not already.
+  (let* ((key (modifier-p key mod)))
+    (modifier= mod key)))
+
+(defgeneric modifier-p (key &optional mods)
+  (:documentation "Returns a list of the modifiers in `KEY` that match `MODS`,
+or `NIL` if no modifiers match. By default, `MODS` is the list of valid modifiers.
+
+##### Example 1
+
+      \(:KEY-DOWN-EVENT \(:MOD-KEYS MOD-KEYS\)
+          \(SDL:MODIFIER-P MOD-KEYS '(:SDL-KEY-MOD-LCTRL :SDL-KEY-MOD-LALT)\)\)
+
+##### Example 2
+
+      \(:KEY-DOWN-EVENT \(:MOD-KEYS MOD-KEYS\)
+          \(SDL:MODIFIER-P MOD-KEYS\)\)"))
+(defmethod modifier-p ((key list) &optional
                        (mods (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)))
-  "Returns a list of the modifiers in `KEY` that match `MODS`,
-or `NIL` if no modifiers match.
-By default, `MODS` is the list of valid modifiers."
+  ;; Make mod a list, if not already.
+  (unless (listp mods)
+    (setf mods (list mods)))
+  (intersection key mods))
+
+(defmethod modifier-p (key &optional
+                           (mods (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)))
   ;; Make mod a list, if not already.
   (unless (listp mods)
     (setf mods (list mods)))
@@ -105,7 +173,3 @@ By default, `MODS` is the list of valid modifiers."
                                   0)
                           modifier))))
 
-(defun modifier-in (mod key)
-  "Returns `MOD` if one or more of the modifiers in `MOD` is in `KEY`,
-or returns `NIL otherwise. `MOD` may be a list of modifiers, or a single modifier."
-  (modifier-p key mod))
