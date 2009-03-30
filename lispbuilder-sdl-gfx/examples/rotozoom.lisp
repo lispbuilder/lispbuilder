@@ -14,12 +14,14 @@
     (setf (sdl:frame-rate) 60)
 
     ;; Load the image to be rotated.
-    (let* ((alien-image (sdl:load-image (sdl:create-path "lisp.bmp" *bmp-path*)
+    (let* ((alien-image (sdl:load-image (sdl:create-path "lisp.bmp"
+                                                         sdl:*default-image-path*)
 					:color-key-at (sdl:point :x 0 :y 0)))
 	   ;; Pre-render the rotated images.
 	   (rotos (loop
                    for angle from 360 above 0 by 5
-                   collecting (sdl-gfx:rotate-surface angle :smooth t :surface alien-image))))
+                   collecting (sdl-gfx:rotate-surface angle :smooth t
+                                                      :surface alien-image))))
       
       (let ((rotated-image rotos))
 	
@@ -46,13 +48,15 @@
 (defun zoom ()
   (sdl:with-init ()
     (sdl:window rotozoom-window-width rotozoom-window-height
-		:title-caption "Zoom" :icon-caption "Zoom")
+		:title-caption "Zoom: Press 'Q', 'W', 'A' & 'S'"
+                :icon-caption "Zoom")
 
     (setf (sdl:frame-rate) 30)
     (sdl:enable-key-repeat nil nil)
 
     ;; Load the image to be rotated.
-    (let* ((alien-image (sdl:load-image (sdl:create-path "lisp.bmp" *bmp-path*)
+    (let* ((alien-image (sdl:load-image (sdl:create-path "lisp.bmp"
+                                                         sdl:*default-image-path*)
 					:color-key-at (sdl:point :x 0 :y 0)))
            (zoom-x 1.0) (zoom-y 1.0))
                  

@@ -15,7 +15,7 @@
       (setf (sdl:frame-rate) 0)
       
       (sdl-gfx:initialise-default-font)
-      (draw-fps "Calculating FPS....." 10 50 sdl-gfx:*default-font* sdl:*default-surface* t)
+      (draw-fps "Calculating FPS....." 10 50 sdl:*default-font* sdl:*default-surface* t)
 
       (sdl:with-events ()
 	(:quit-event () t)
@@ -28,7 +28,7 @@
 					       :color (sdl:color :r (random 255) :g (random 255) :b (random 255) :a (random 255))
 					       :surface sdl:*default-display*))
 	       (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
-			 10 50 sdl-gfx:*default-font* sdl:*default-surface*
+			 10 50 sdl:*default-font* sdl:*default-surface*
 			 (funcall 100-frames-p))
 	       (sdl:update-display))))))
 
