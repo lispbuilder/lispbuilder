@@ -5,8 +5,7 @@
 (defpackage #:lispbuilder-sdl-gfx-examples
   (:use #:cl #:cffi)
   (:nicknames #:sdl-gfx-examples)
-  (:export #:*bmp-path*
-           #:inbuilt-font
+  (:export #:inbuilt-font
            #:random-circles
            #:setup-and-draw
            #:width-height
@@ -21,4 +20,4 @@
            #:metaballs
            #:rotozoom
            #:zoom
-           #:fireworks))
+           #:firework))
