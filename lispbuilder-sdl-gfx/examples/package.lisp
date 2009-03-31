@@ -20,4 +20,4 @@
            #:metaballs
            #:rotozoom
            #:zoom
-           #:firework))
+           #:fireworks))
