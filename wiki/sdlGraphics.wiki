@@ -4,7 +4,7 @@
 
 || `RECTANGLE` || Describes an area of width and height with the top left corner of the rectangle located at position x and y. ||
 || `POINT` || Represents an x and y location. ||
-|| `SURFACE` || Represents a drawable object. ||
+|| [SURFACE] || Represents a drawable object. ||
 || `FONT` || A font. ||
 || `COLOR` || Contains RGB or RGBA color information.||
 
@@ -25,4 +25,3 @@
 || `POSITION` || ||
 || `SET-POSITION` || ||
 || `SET-POSITION-*` || ||
-
