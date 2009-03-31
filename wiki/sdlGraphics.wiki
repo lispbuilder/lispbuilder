@@ -2,9 +2,27 @@
 
 = Types =
 
-|| *RECTANGLE* || Describes an area of width and height, with the top left corner lected at position x and y. ||
-|| *SURFACE* || Represents a drawable object. ||
-|| *FONT* || A font. ||
-|| *COLOR* || Contains RGB or RGBA color information.||
+|| `RECTANGLE` || Describes an area of width and height with the top left corner of the rectangle located at position x and y. ||
+|| `POINT` || Represents an x and y location. ||
+|| `SURFACE` || Represents a drawable object. ||
+|| `FONT` || A font. ||
+|| `COLOR` || Contains RGB or RGBA color information.||
 
-= Functions =
+= Functions/Methods/Macros =
+
+|| Function || Args || Description ||
+|| `WITH-POINT` || ||
+|| `POINT` || ||
+|| `COPY-POINT` || ||
+|| `X` || `Object` || Returns the X position of the `Object`. Applies to [POINT], [RECTANGLE], [SURFACE], [FONT]. ||
+|| `SETF X` || `Object` ||
+|| `Y` || ||
+|| `SETF Y` || ||
+|| `POINT-*` || ||
+|| `GET-POINT` || ||
+|| `SET-POINT` || ||
+|| `SET-POINT-*` || ||
+|| `POSITION` || ||
+|| `SET-POSITION` || ||
+|| `SET-POSITION-*` || ||
+
