@@ -869,7 +869,6 @@ The contents of the event are completely up to the programmer.
 	   (,idle-func nil))
 
        (setf ,idle-func (lambda ()
-                          (declare (ignorable render-state))
 			  ,@(remove nil 
 				    (mapcar #'(lambda (event)
 						(cond

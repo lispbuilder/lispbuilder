@@ -1,6 +1,34 @@
 
 (in-package #:sdl)
 
+
+
+(defgeneric audio-spec (audio-spec))
+(defgeneric sample-frequency (audio-spec))
+(defgeneric audio-format (audio-spec))
+(defgeneric output-channels (audio-spec))
+(defgeneric audio-silence (audio-spec))
+(defgeneric audio-buffer-size (audio-spec))
+(defgeneric audio-buffer-size-calculated (audio-spec))
+(defgeneric spec-callback (audio-spec))
+(defgeneric spec-user-data (audio-spec))
+(defgeneric copy-audio (audio-spec))
+(defgeneric register-audio-finished (audio-spec fn))
+(defgeneric unregister-audio-finished (audio-spec))
+(defgeneric audio-finished-callback (audio-spec))
+(defgeneric _play-audio_ (audio &key loop pos))
+(defgeneric rewind-audio (audio &optional pos))
+(defgeneric _pause-audio_ (self))
+(defgeneric _resume-audio_ (self))
+(defgeneric halt-audio (audio &optional ignore-callback))
+(defgeneric audio-halted-p (audio))
+(defgeneric _audio-paused-p_ (audio))
+(defgeneric _audio-playing-p_ (audio))
+(defgeneric post-process (audio))
+
+(defgeneric print-object (obj stream))  
+
+
 (defun wav-free (func-fp type)
   (declare (ignorable type))
   #'(lambda (obj-fp)
@@ -349,6 +377,7 @@ or `NIL` if `AUDIO` is halted."
                 (decf (audio-remaining audio) length)
                 (decf len length))
               (setf quit (post-process audio)))))))
+
 
 (defmethod print-object ((obj audio) stream)
   (print-unreadable-object (obj stream :type t)

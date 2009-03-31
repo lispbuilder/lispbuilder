@@ -1,6 +1,9 @@
 
 (in-package #:sdl)
 
+(defgeneric audio-playing-p (&optional obj))
+(defgeneric build-audio-cvt (audio mixer))
+
 (defclass mixer ()
   ((requested-sample-frequency
     :accessor requested-sample-frequency)

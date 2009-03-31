@@ -71,6 +71,7 @@ not calculated"))
   (when target-frame-rate
     (setf (target-frame-rate self) target-frame-rate)))
 
+(defgeneric average-fps (fps-manager))
 (defmethod average-fps ((self fps-manager))
   (with-slots (not-through-p) self
     (if not-through-p
