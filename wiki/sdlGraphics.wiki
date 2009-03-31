@@ -4,7 +4,7 @@
 
   * *RECTANGLE* Describes an area of width and height, with the top left corner lected at position x and y.
   * *SURFACE* Represents a drawable object.
-FONT A font.
+  * *FONT* A font.
   * *COLOR* Contais RGB or RGBA color information.
 
 = Functions =
