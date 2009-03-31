@@ -1,10 +1,10 @@
-#Describes the graphics capa
+#Describes the graphics capabilities of LISPBUILDER-SDL
 
 = Types =
 
-* RECTANGLE Describes an area of width and height, with the top left corner lected at position x and y.
-* SURFACE Represents a drawable object.
+  * *RECTANGLE* Describes an area of width and height, with the top left corner lected at position x and y.
+  * *SURFACE* Represents a drawable object.
 FONT A font.
-( COLOR Contais RGB or RGBA color information.
+  * *COLOR* Contais RGB or RGBA color information.
 
 = Functions =
