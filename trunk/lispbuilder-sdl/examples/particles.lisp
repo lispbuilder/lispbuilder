@@ -107,8 +107,8 @@
   (let ((pos (particle-pos p)))
     (when (or (< (vec2-x pos) (- 0 (sdl:width *particle-img*)))
               (< (vec2-y pos) (- 0 (sdl:height *particle-img*)))
-              (> (vec2-x pos) *screen-width*)
-              (> (vec2-y pos) *screen-height*))
+              (> (vec2-x pos) (sdl:width sdl:*default-display*))
+              (> (vec2-y pos) (sdl:height sdl:*default-display*)))
       ;; The particle is out of screen, re-init it
       (init-particle p)))
   p)
@@ -130,6 +130,17 @@
 	(setf *particle-count* 0))))
 
 ;;; ----------------------------------------------------------------------
+;;;  Define the callback to be used in the event filter.
+;;; ----------------------------------------------------------------------
+(defun event-filter-callback (sdl-event)
+  (cond
+   ((sdl:event= sdl-event :SDL-VIDEO-RESIZE-EVENT)
+    (sdl:resize-window (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::w)
+                       (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::h))
+    t)
+   (t t)))
+
+;;; ----------------------------------------------------------------------
 ;;;  'Main' function.
 ;;; ----------------------------------------------------------------------
 (defun particles ()
@@ -140,8 +151,11 @@
       (unless (sdl:window *screen-width* *screen-height*
 			  :title-caption "Particles Demo"
 			  :icon-caption "Particles Demo"
-                          :flags sdl:sdl-hw-surface)
+                          :flags '(sdl:sdl-hw-surface sdl:sdl-resizable))
 	(error "~&Unable to create a SDL window~%"))
+
+      ;; Enable event filters using the specified callback.
+      (sdl:enable-event-filters #'event-filter-callback)
 
       ;; Fix the framerate
       (setf (sdl:frame-rate) nil)
@@ -247,6 +261,8 @@
                           :fps (make-instance 'sdl-base::fps-unlocked :dt 10))
 	(error "~&Unable to create a SDL window~%"))
 
+      (sdl::enable-event-filters #'sdl::event-filter-callback)
+      
       ;; Fix the framerate
       (setf (sdl:frame-rate) nil)
       ;; Enable key repeat.

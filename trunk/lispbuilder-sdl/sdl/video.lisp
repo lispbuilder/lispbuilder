@@ -15,62 +15,11 @@
       t
       nil))
 
-(defun window (width height &key
-                     (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption
-                     (fps (make-instance 'sdl-base::fps-fixed)))
-  "Creates a new SDL window of pixel width `WIDTH` and height `HEIGHT` using SDL_SetVideoMode.
-
-Use `SDL-SW-SURFACE` if you plan on doing per-pixel manipulations, or blit surfaces with alpha channels, 
-and require a high framerate. When you use hardware surfaces like `SDL-HW-SURFACE`, SDL copies the surfaces 
-from video memory to system memory when you lock them, and back when you unlock them. This can cause a major 
-performance hit. \(Be aware that you may request a hardware surface, but receive a software surface. 
-Many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN.\) 
-`SDL-HW-SURFACE` is best used when the surfaces you'll be blitting can also be stored in video memory.
-
-*Note:* To control the position on the screen when creating a windowed surface, set the environment variables 
-`SDL_VIDEO_CENTERED=center` or `SDL_VIDEO_WINDOW_POS=x,y`. These may be set using [SDL-PUT-ENV](#sdl-put-env).
-
-##### Parameters
-
-* `WIDTH` the pixel width of the window, of type `INTEGER`.
-* `HEIGHT` the pixel height of the window, of type `INTEGER`.
-If `WIDTH` and `HEIGHT` are both `0`, then the width and height of the current video mode is used 
-\(or the desktop mode, if no mode has been set\).
-* `BPP` the number of bits per pixel. Defaults to `0` which is the current display bits per pixel.
-*Note:* A `BPP` of `24` uses the packed representation of 3 bytes/pixel. 
-For the more common 4 bytes/pixel mode, use a `BPP` of 32.
-* `FLAGS` is a bitmasked logior of one or more of the following; [SDL-SW-SURFACE](#sdl-sw-surface), 
-[SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
-[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
-[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
-[SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable) and [SDL-NO-FRAME](#SDL-NO-FRAME).
-* `TITLE-CAPTION` is the title that appears in the Window title bar, of type `STRING`.
-* `ICON-CAPTION` is the title that appears when the Window is minimized, of type `STRING`.
-
-
-##### Returns
-
-* Returns a new `DISPLAY-SURFACE` if successful, `NIL` if unsuccessful. Whatever flags SDL_SetVideoMode 
-could satisfy are set in the flags member of `SURFACE`.
-The `SURFACE` returned is freed by SDL and should never be freed by the caller.
-This rule includes consecutive calls to `WINDOW` \(i.e. upon resize or resolution change\) - any existing surface 
-will be released automatically by SDL.
-
-##### Example
-
-    \(WINDOW 320 240 :TITLE-CAPTION \"Random-Rects\" :ICON-CAPTION \"Random-Rects\"
-                     :FLAGS \'(SDL-DOUBLEBUF SDL-FULLSCREEN\)\)"
-  (when (= (sdl:return-subsystems-of-status SDL:SDL-INIT-VIDEO t) 0)
-    (sdl:initialize-subsystems-on-startup (logior
-                                           sdl::*initialize-subsystems-on-startup*
-                                           SDL:SDL-INIT-VIDEO))
-    (sdl:quit-subsystems-on-exit (logior
-                                  sdl::*quit-subsystems-on-exit*
-                                  SDL:SDL-INIT-VIDEO))
-    ;; Initialize the subsystems in sdl::*initialize-subsystems-on-startup*
-    ;; that are not yet initialized.
-    (sdl:init-subsystems))
-  (let ((surf (sdl-base::set-screen width height
+(defmethod window (width height &key
+                         (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption
+                         (fps (make-instance 'sdl-base::fps-fixed)))
+  (let ((surf (sdl-base::set-screen (cast-to-int width)
+                                    (cast-to-int height)
 				    :bpp bpp
 				    :flags flags
 				    :title-caption title-caption
@@ -83,6 +32,15 @@ will be released automatically by SDL.
     (setf sdl-base::*default-fpsmanager* fps)
     *default-display*))
 
+(defmethod resize-window (width height)
+  (multiple-value-bind (title-caption icon-caption)
+      (sdl:get-caption)
+    (let ((flags (sdl:surface-info sdl:*default-display*))
+          (bpp (sdl:bit-depth sdl:*default-display*))
+          (fps sdl-base::*default-fpsmanager*))
+      (sdl:window width height
+                  :title-caption title-caption :icon-caption icon-caption
+                  :bpp bpp :flags flags :fps fps))))
 
 (defun update-display (&optional (surface *default-display*))
   "When [OPENGL-CONTEXT](#opengl-context) is `NIL`; `UPDATE-DISPLAY` will flip the SDL video buffers and update 
@@ -262,7 +220,6 @@ Returns `T` if any dimension will support the pixel format and video flags.
 				     (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
 			     modes))))))))
 
-
 (defun query-cursor ()
   "Queries the current state of the cursor. 
 Returns `T` if the cursor is enabled and shown on the display. Returns `NIL` if the cursor 
@@ -293,3 +250,13 @@ is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)
 (defun set-caption (window-caption icon-caption)
   "Sets the caption text for window bar, and icon."
   (sdl-cffi::sdl-wm-set-caption window-caption icon-caption))
+
+(defun get-caption ()
+  "Returns the caption and icon text for the display surface as a spread; \(VALUES title-captio icon caption\)"
+  (cffi:with-foreign-objects ((title-handle :pointer)
+                              (icon-handle :pointer))
+    (sdl-cffi::SDL-WM-Get-Caption title-handle icon-handle)
+    (let ((foreign-title-caption (cffi:mem-aref title-handle :pointer))
+          (foreign-icon-caption (cffi:mem-aref icon-handle :pointer)))
+      (values (cffi:foreign-string-to-lisp foreign-title-caption)
+              (cffi:foreign-string-to-lisp foreign-icon-caption)))))

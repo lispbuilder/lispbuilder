@@ -3,12 +3,13 @@
 
 (defun key-test ()
   (sdl:with-init ()
-    (sdl:window 800 400 :title-caption "Key Test" :icon-caption "Key Test")
+    (sdl:window 800 400
+                :title-caption "Key Test" :icon-caption "Key Test")
     (sdl:initialise-default-font)
     (let ((key-state nil) (key-scancode nil) (key-key nil) (key-mod nil) (key-unicode nil) (key-mod-key nil)
           (key-press-status nil)
           (y-pos 0))
-
+    
       (sdl:enable-unicode t)
 
       (sdl:with-events ()
@@ -20,12 +21,7 @@
                key-key key
                key-mod mod
                key-mod-key mod-key
-               key-unicode unicode)
-         ;(when (eq key :sdl-key-s)
-         ;  (sdl:window 800 320 :title-caption "Key Test" :icon-caption "Key Test"))
-         ;(when (eq key :sdl-key-r)
-         ;  (sdl:window 600 320 :title-caption "Key Test" :icon-caption "Key Test"))
-         )
+               key-unicode unicode))
         (:key-up-event (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE)
          (setf key-press-status :key-up-event
                key-state state
@@ -76,7 +72,8 @@
                                           (if key-press-status
                                             key-press-status
                                             "Press Any Key"))
-                                  (/ (sdl:width sdl:*default-display*) 2)
+                                  (sdl:cast-to-int
+                                   (/ (sdl:width sdl:*default-display*) 2))
                                   (incf y-pos 15)
                                   :color sdl:*white*
                                   :surface sdl:*default-display*
@@ -109,7 +106,8 @@
                                     :surface sdl:*default-display*)
 
            (sdl:draw-string-solid-* (format nil "--- --- ---")
-                                    (/ (sdl:width sdl:*default-display*) 2)
+                                    (sdl:cast-to-int
+                                     (/ (sdl:width sdl:*default-display*) 2))
                                     (incf y-pos 15)
                                     :color sdl:*white*
                                     :surface sdl:*default-display*

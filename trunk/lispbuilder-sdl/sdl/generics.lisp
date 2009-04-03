@@ -332,3 +332,53 @@ Returns a new `FONT`, or `NIL` if unsuccessful."))
 
 (defgeneric free-cached-surface (font))
 
+(defgeneric window (width height &key
+                          (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption
+                          (fps (make-instance 'sdl-base::fps-fixed)))
+  (:documentation
+  "Creates a new SDL window of pixel width `WIDTH` and height `HEIGHT` using SDL_SetVideoMode.
+
+Use `SDL-SW-SURFACE` if you plan on doing per-pixel manipulations, or blit surfaces with alpha channels, 
+and require a high framerate. When you use hardware surfaces like `SDL-HW-SURFACE`, SDL copies the surfaces 
+from video memory to system memory when you lock them, and back when you unlock them. This can cause a major 
+performance hit. \(Be aware that you may request a hardware surface, but receive a software surface. 
+Many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN.\) 
+`SDL-HW-SURFACE` is best used when the surfaces you'll be blitting can also be stored in video memory.
+
+*Note:* To control the position on the screen when creating a windowed surface, set the environment variables 
+`SDL_VIDEO_CENTERED=center` or `SDL_VIDEO_WINDOW_POS=x,y`. These may be set using [SDL-PUT-ENV](#sdl-put-env).
+
+##### Parameters
+
+* `WIDTH` the pixel width of the window, of type `INTEGER`.
+* `HEIGHT` the pixel height of the window, of type `INTEGER`.
+If `WIDTH` and `HEIGHT` are both `0`, then the width and height of the current video mode is used 
+\(or the desktop mode, if no mode has been set\).
+* `BPP` the number of bits per pixel. Defaults to `0` which is the current display bits per pixel.
+*Note:* A `BPP` of `24` uses the packed representation of 3 bytes/pixel. 
+For the more common 4 bytes/pixel mode, use a `BPP` of 32.
+* `FLAGS` is a bitmasked logior of one or more of the following; [SDL-SW-SURFACE](#sdl-sw-surface), 
+[SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
+[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
+[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
+[SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable) and [SDL-NO-FRAME](#SDL-NO-FRAME).
+* `TITLE-CAPTION` is the title that appears in the Window title bar, of type `STRING`.
+* `ICON-CAPTION` is the title that appears when the Window is minimized, of type `STRING`.
+
+
+##### Returns
+
+* Returns a new `DISPLAY-SURFACE` if successful, `NIL` if unsuccessful. Whatever flags SDL_SetVideoMode 
+could satisfy are set in the flags member of `SURFACE`.
+The `SURFACE` returned is freed by SDL and should never be freed by the caller.
+This rule includes consecutive calls to `WINDOW` \(i.e. upon resize or resolution change\) - any existing surface 
+will be released automatically by SDL.
+
+##### Example
+
+    \(WINDOW 320 240 :TITLE-CAPTION \"Random-Rects\" :ICON-CAPTION \"Random-Rects\"
+                     :FLAGS \'(SDL-DOUBLEBUF SDL-FULLSCREEN\)\)"))
+
+(defgeneric resize-window (width height)
+  (:documentation
+   "Resizes the current display to the specified `WIDTH` and `HEIGHT`. The pixel depth, title and icon captions, and surface flags will remain the same"))

@@ -7,6 +7,58 @@
 
 (in-package #:lispbuilder-sdl)
 
+(defun event= (sdl-event event-type &optional event-type-end)
+  "Returns `T` if `SDL-EVENT` is of `EVENT-TYPE`.
+`EVENT-TYPE` must be one of
+:SDL-NO-EVENT, :SDL-ACTIVE-EVENT, :SDL-KEY-DOWN-EVENT, :SDL-KEY-UP-EVENT, :SDL-MOUSE-MOTION-EVENT, 
+:SDL-MOUSE-BUTTON-DOWN-EVENT, :SDL-MOUSE-BUTTON-UP-EVENT, :SDL-JOY-AXIS-MOTION-EVENT, :SDL-JOY-BALL-MOTION-EVENT, 
+:SDL-JOY-HAT-MOTION-EVENT, :SDL-JOY-BUTTON-DOWN-EVENT, :SDL-JOY-BUTTON-UP-EVENT, :SDL-QUIT-EVENT, 
+:SDL-SYS-WM-EVENT, :SDL-VIDEO-RESIZE-EVENT, :SDL-VIDEO-EXPOSE-EVENT, :SDL-USER-EVENT."
+  (if event-type-end
+    (if (and (>= (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
+                 (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type event-type))
+             (< (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
+                (- (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type event-type-end) 1)))
+      t
+      nil)
+    (if (eql (cffi:foreign-enum-value 'sdl-cffi::Sdl-Event-Type event-type)
+             (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type))
+      t
+      nil)))
+
+(cffi:defcallback event-filter
+    :int ((sdl-event sdl-cffi::sdl-event))
+  (when *event-filter-hook*
+    (if (funcall *event-filter-hook* sdl-event)
+      1
+      0)))
+
+(defun set-event-filters (event-filter-hook)
+  "Sets the callback function that handles the event filter. Return `NIL` if the event is to be removed
+from the event queue. Return `T` if the event is to remain on the event queue.
+
+This function is set to the following as default;
+
+  \#'(LAMBDA (SDL-EVENT)
+         \t\)
+"
+  (unless (functionp event-filter-hook)
+    (setf event-filter-hook #'(lambda (sdl-event) (declare (ignore sdl-event)) t)))
+  (setf *event-filter-hook* event-filter-hook))
+
+(defun remove-event-filters ()
+  "Removes any existing event filters. that were set with `SET-EVENT-FILTERS`"
+  (setf *event-filter-hook* #'(lambda (sdl-event) (declare (ignore sdl-event)) t)))
+
+(defun enable-event-filters (&optional event-filter-hook)
+  "Enables event filters."
+  (when (functionp event-filter-hook)
+    (setf *event-filter-hook* event-filter-hook))
+  (sdl-cffi::sdl-set-event-filter (cffi:callback event-filter)))
+
+(defun disable-event-filters ()
+  "Disables event filters."
+  (sdl-cffi::sdl-set-event-filter (cffi:null-pointer)))
 
 (defun new-event (&optional (event-type :SDL-NO-EVENT))
   "Creates a new `SDL_Event` and of `EVENT-TYPE`.
