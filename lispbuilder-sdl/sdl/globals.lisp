@@ -161,3 +161,6 @@ Audio formats are defined in `SDL_audio.h`;
 ;; (defsetf renderer set-renderer)
 ;; (defun set-renderer (renderer)
 ;;   (setf *renderer* renderer))
+
+
+(defparameter *event-filter-hook* #'(lambda (sdl-event) (declare (ignore sdl-event)) t))

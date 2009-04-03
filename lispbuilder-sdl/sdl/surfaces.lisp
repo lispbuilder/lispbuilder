@@ -539,9 +539,10 @@ Use `:FREE` to delete the source `SURFACE`."
       (free surface))
     surf))
 
-(defun copy-surface (&key cell cell-index (surface *default-surface*) color-key alpha pixel-alpha (rle-accel nil) (type :sw) (free nil) (inherit t)
-		     (fill t) (color-key-fill t)
-		     (pixel-format nil))
+(defun copy-surface (&key cell cell-index (surface *default-surface*) color-key alpha pixel-alpha
+                          (rle-accel nil) (type :sw) (free nil) (inherit t)
+                          (fill t) (color-key-fill t)
+                          (pixel-format nil))
   "Returns a copy of `:SURFACE`. 
 
 Use `:COLOR-KEY` or `:ALPHA` to set the key color and surface alpha transparency.
@@ -579,29 +580,29 @@ Use `:FREE` to delete the source `SURFACE`."
 				       :using-surface (when pixel-format surface)
 				       :x x :y y :width width :height height
 				       :enable-color-key (if inherit
-							     (color-key-enabled-p surface)
-							     color-key)
+                                                           (color-key-enabled-p surface)
+                                                           color-key)
 				       :color-key (if (or inherit (eq t color-key))
-						      (color-key surface)
-						      color-key)
+                                                    (color-key surface)
+                                                    color-key)
 				       :enable-alpha (if inherit
-							 (alpha-enabled-p surface)
-							 (or alpha pixel-alpha))
+                                                       (alpha-enabled-p surface)
+                                                       (or alpha pixel-alpha))
 				       :alpha (if (or inherit (eq t alpha))
-							  (alpha surface)
-							  alpha)
+                                                (alpha surface)
+                                                alpha)
 				       :pixel-alpha (if inherit
-							(pixel-alpha-enabled-p surface)
-							pixel-alpha)
+                                                      (pixel-alpha-enabled-p surface)
+                                                      pixel-alpha)
 				       :type type
 				       :rle-accel rle-accel
 				       :bpp (bit-depth surface)))
       (when color-key-fill
 	(if inherit
 	  (if (color-key-enabled-p surface)
-	      (fill-surface (color-key surface) :surface new-surface))
+            (fill-surface (color-key surface) :surface new-surface))
 	  (if color-key
-	      (fill-surface (color-key surface) :surface new-surface))))      
+            (fill-surface (color-key surface) :surface new-surface))))      
       (when fill
 	(if (or cell cell-index)
 	  (sdl-base::blit-surface (fp surface) (fp new-surface)

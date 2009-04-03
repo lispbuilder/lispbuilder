@@ -244,6 +244,11 @@
    #:draw-filled-pie-*
   
    ;; events.lisp
+   #:event=
+   #:set-event-filters
+   #:remove-event-filters
+   #:enable-event-filters
+   #:disable-event-filters
    #:with-events
    #:new-event
    #:push-quit-event
@@ -336,6 +341,7 @@
 
    ;; video.lisp
    #:window
+   #:resize-window
    #:update-display
    #:clear-display
 
@@ -351,6 +357,7 @@
    #:video-dimensions
    #:set-gl-attribute
    #:set-caption
+   #:get-caption
    #:render-state
    
    ;; rwops.lisp
