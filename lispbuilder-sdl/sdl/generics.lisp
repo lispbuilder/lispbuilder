@@ -379,6 +379,6 @@ will be released automatically by SDL.
     \(WINDOW 320 240 :TITLE-CAPTION \"Random-Rects\" :ICON-CAPTION \"Random-Rects\"
                      :FLAGS \'(SDL-DOUBLEBUF SDL-FULLSCREEN\)\)"))
 
-(defgeneric resize-window (width height)
+(defgeneric resize-window (width height &key flags title-caption icon-caption bpp)
   (:documentation
    "Resizes the current display to the specified `WIDTH` and `HEIGHT`. The pixel depth, title and icon captions, and surface flags will remain the same"))
