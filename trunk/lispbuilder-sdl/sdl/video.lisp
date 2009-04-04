@@ -32,14 +32,18 @@
     (setf sdl-base::*default-fpsmanager* fps)
     *default-display*))
 
-(defmethod resize-window (width height)
-  (multiple-value-bind (title-caption icon-caption)
+(defmethod resize-window (width height &key flags title-caption icon-caption bpp)
+  (multiple-value-bind (title icon)
       (sdl:get-caption)
-    (let ((flags (sdl:surface-info sdl:*default-display*))
-          (bpp (sdl:bit-depth sdl:*default-display*))
+    (when title-caption
+      (setf title title-caption))
+    (when icon-caption
+      (setf icon icon-caption ))
+    (let ((flags (if flags flags (sdl:surface-info sdl:*default-display*)))
+          (bpp (if bpp bpp (sdl:bit-depth sdl:*default-display*)))
           (fps sdl-base::*default-fpsmanager*))
       (sdl:window width height
-                  :title-caption title-caption :icon-caption icon-caption
+                  :title-caption title :icon-caption icon
                   :bpp bpp :flags flags :fps fps))))
 
 (defun update-display (&optional (surface *default-display*))

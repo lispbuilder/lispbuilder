@@ -36,7 +36,8 @@ not calculated"))
    (max-delta :accessor max-delta :initform 500 :initarg :max-delta)))
 
 (defclass fps-unlocked (fps-manager)
-  ((fps-ticks
+  ((target-frame-rate :reader target-frame-rate)
+   (fps-ticks
     :accessor fps-ticks
     :type integer
     :initform 0
@@ -93,7 +94,7 @@ not calculated"))
     (setf tscale (/ delta-ticks world))))
 
 (defmethod (setf target-frame-rate) :around (rate (self fps-manager))
-   (with-slots (target-frame-rate) self
+  (with-slots (target-frame-rate) self
     (if (and (numberp rate) (zerop rate))
       ;; Zero is the same as NIL
       (setf target-frame-rate nil)
@@ -109,6 +110,9 @@ not calculated"))
                  (<= target-frame-rate (upper-limit self)))
         (setf (frame-count self) 0
               (rate-ticks self) (truncate (/ 1000 target-frame-rate)))))))
+
+(defmethod (setf target-frame-rate) (rate (self fps-unlocked))
+  nil)
 
 (defmethod process-timestep :around ((self fps-manager) fn)
   (with-slots (current-ticks delta-ticks last-ticks index window not-through-p)
