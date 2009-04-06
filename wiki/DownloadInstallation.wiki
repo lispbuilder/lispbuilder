@@ -59,7 +59,11 @@ Once that is installed open up emacs. You need to add the following your .emacs 
 {{{
 (add-to-list 'load-path "~/slime/")
 (load "slime.el")
+
 (slime-setup)
+OR FOR LATER VERSIONS OF SLIME...
+(slime-setup '(slime-repl))
+
 (setq inferior-lisp-program "sbcl")
 }}}
 
