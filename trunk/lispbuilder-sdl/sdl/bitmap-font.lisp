@@ -241,6 +241,20 @@ onto surface `SURFACE`.
 	 (incf left-x (char-width font))))
   surface)
 
+(defmethod _get-Font-Size_ ((font bitmap-font) text size)
+  (cond
+   ((eq size :w)
+    (* (length text) (char-width font)))
+   ((eq size :h)
+    (char-width font))
+   (t (error "ERROR in GET-FONT-SIZE: :SIZE must be one of :W or :H"))))
+
+(defmethod _get-Font-Height_ ((font bitmap-font))
+  (char-height font))
+
+(defmethod _is-font-face-fixed-width_ ((font bitmap-font))
+  t)
+
 ;; (defun load-font (file-name font-width font-height &optional (path-name ""))
 ;;   "Load and initialise a simple font using a bmp with a strip of fixed width characters mapped by the char-map-string"
 ;;   (let ((font-surface (load-image bmp-file-name bmp-path-name :key-color key-color)))

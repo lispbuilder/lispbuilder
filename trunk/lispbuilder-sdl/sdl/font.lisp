@@ -141,7 +141,7 @@ actual width. The height returned is the same as returned using [GET-FONT-HEIGHT
 
 ##### Packages
 
-* Supported in _LISPBUILDER-SDL-TTF_"
+* Supported in _LISPBUILDER-SDL_, _LISPBUILDER-SDL-GFX_ and _LISPBUILDER-SDL-TTF_"
   (_get-font-size_ font text size))
 
 (defun get-font-style (&key (font sdl:*default-font*))
@@ -178,7 +178,7 @@ for line spacing, see [GET-FONT-LINE-SKIP](#get-font-line-skip) as well.
 
 ##### Packages
 
-* Supported in _LISPBUILDER-SDL-TTF_"
+* Supported in _LISPBUILDER-SDL_, _LISPBUILDER-SDL-GFX_ and _LISPBUILDER-SDL-TTF_"
   (_get-font-height_ font))
 
 (defun get-font-ascent (&key (font sdl:*default-font*))
