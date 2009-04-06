@@ -332,9 +332,7 @@ Returns a new `FONT`, or `NIL` if unsuccessful."))
 
 (defgeneric free-cached-surface (font))
 
-(defgeneric window (width height &key
-                          (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption
-                          (fps (make-instance 'sdl-base::fps-fixed)))
+(defgeneric window (width height &key bpp flags title-caption icon-caption fps)
   (:documentation
   "Creates a new SDL window of pixel width `WIDTH` and height `HEIGHT` using SDL_SetVideoMode.
 

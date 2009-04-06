@@ -70,12 +70,12 @@
                                  'sdl-cffi::SDL-Audio-Spec
                                  'sdl-cffi::userdata) user-data))
 
-(defmethod print-object ((obj mixer) stream)
-  (print-unreadable-object (obj stream :type t)
-    (format stream "frequency: ~A,  format: ~A, channels: ~A, samples: ~A, size: ~A, opened-p: ~A"
-            (sample-frequency obj) (audio-format obj)
-            (output-channels obj) (audio-buffer-size obj)
-            (output-audio-buffer-size obj) (mixer-opened-p obj))))
+;; (defmethod print-kobject ((obj mixer) stream)
+;;   (print-unreadable-object (obj stream :type t)
+;;     (format stream "frequency: ~A,  format: ~A, channels: ~A, samples: ~A, size: ~A, opened-p: ~A"
+;;             (sample-frequency obj) (audio-format obj)
+;;             (output-channels obj) (audio-buffer-size obj)
+;;             (output-audio-buffer-size obj) (mixer-opened-p obj))))
 
 (defmethod sample-frequency ((self mixer))
   (if (mixer-opened-p self)

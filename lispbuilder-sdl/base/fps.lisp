@@ -104,6 +104,7 @@ not calculated"))
     target-frame-rate))
 
 (defmethod (setf target-frame-rate) (rate (self fps-fixed))
+  (declare (ignorable rate))
   (with-slots (target-frame-rate) self
     (if (numberp target-frame-rate)
       (when (and (>= target-frame-rate (lower-limit self))
@@ -112,9 +113,11 @@ not calculated"))
               (rate-ticks self) (truncate (/ 1000 target-frame-rate)))))))
 
 (defmethod (setf target-frame-rate) (rate (self fps-unlocked))
+  (declare (ignorable rate self))
   nil)
 
 (defmethod process-timestep :around ((self fps-manager) fn)
+  (declare (ignorable fn))
   (with-slots (current-ticks delta-ticks last-ticks index window not-through-p)
       self
     
@@ -142,6 +145,7 @@ not calculated"))
 ;;;; From http://www.ferzkopp.net/joomla/content/view/19/14/
 
 (defmethod process-timestep :after ((self fps-fixed) fn)
+  (declare (ignorable fn))
   (with-slots (target-frame-rate frame-count rate-ticks current-ticks delay-ticks
                                  max-delta) self
     ;; Delay game loop, if necessary
@@ -156,9 +160,10 @@ not calculated"))
 
 ;;;; --------------------------
 ;;;; Lock timestep to Specified Rate
-11;;;; From http://www.gaffer.org/game-physics/fix-your-timestep/
+;;;; From http://www.gaffer.org/game-physics/fix-your-timestep/
 
 (defmethod process-timestep :before ((self fps-unlocked) fn)
+  (declare (ignorable fn))
   (with-slots (fps-ticks delta-ticks dt max-dt accumulator physics-hook-function)
       self
     (incf accumulator (if (> delta-ticks max-dt) max-dt delta-ticks))
