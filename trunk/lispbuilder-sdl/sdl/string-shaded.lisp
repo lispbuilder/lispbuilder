@@ -2,11 +2,13 @@
 (in-package :lispbuilder-sdl)
 
 (defmethod _render-string-shaded_ :around ((string string) (fg-color color) (bg-color color) (font font) free cache)
+  (declare (ignore cache))
   (when free
     (free-cached-surface font))
   (call-next-method))
 
 (defmethod _render-string-shaded_ ((string string) (fg-color color) (bg-color color) (font bitmap-font) free cache)
+  (declare (ignore free))
   (let ((surf (convert-surface :surface (create-surface (* (char-width font)
 							   (length string))
 							(char-height font))

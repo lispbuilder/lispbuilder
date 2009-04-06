@@ -26,7 +26,8 @@
 (defgeneric _audio-playing-p_ (audio))
 (defgeneric post-process (audio))
 
-(defgeneric print-object (obj stream))  
+;; (defgeneric print-object (obj stream))
+
 
 
 (defun wav-free (func-fp type)
@@ -125,13 +126,13 @@
    :gc t
    :free #'cffi:foreign-free))
 
-(defmethod print-object ((obj audio-spec) stream)
-  (print-unreadable-object (obj stream :type t)
-    (format stream "frequency: ~A,  format: ~A, channels: ~A, silence: ~A,  samples: ~A, size: ~A"
-            (sample-frequency obj) (audio-format obj)
-            (output-channels obj) (audio-silence obj)
-            (audio-buffer-size obj)
-            (audio-buffer-size-calculated obj))))
+;; (defmethod print-object ((obj audio-spec) stream)
+;;   (print-unreadable-object (obj stream :type t)
+;;     (format stream "frequency: ~A,  format: ~A, channels: ~A, silence: ~A,  samples: ~A, size: ~A"
+;;             (sample-frequency obj) (audio-format obj)
+;;             (output-channels obj) (audio-silence obj)
+;;             (audio-buffer-size obj)
+;;             (audio-buffer-size-calculated obj))))
 
 (defmethod audio-spec ((self audio-spec))
   (sdl:fp self))
@@ -379,10 +380,10 @@ or `NIL` if `AUDIO` is halted."
               (setf quit (post-process audio)))))))
 
 
-(defmethod print-object ((obj audio) stream)
-  (print-unreadable-object (obj stream :type t)
-    (format stream "buffer: ~A,  length: ~A, remaining: ~A, position: ~A,  frequency: ~A, format: ~A, channels: ~A"
-            (audio-buffer obj) (audio-length obj)
-            (audio-remaining obj) (audio-position obj)
-            (sample-frequency obj) (audio-format obj)
-            (output-channels obj))))
+;; (defmethod print-object ((obj audio) stream)
+;;   (print-unreadable-object (obj stream :type t)
+;;     (format stream "buffer: ~A,  length: ~A, remaining: ~A, position: ~A,  frequency: ~A, format: ~A, channels: ~A"
+;;             (audio-buffer obj) (audio-length obj)
+;;             (audio-remaining obj) (audio-position obj)
+;;             (sample-frequency obj) (audio-format obj)
+;;             (output-channels obj))))

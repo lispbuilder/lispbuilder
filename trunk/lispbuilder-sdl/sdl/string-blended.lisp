@@ -2,14 +2,17 @@
 (in-package :lispbuilder-sdl)
 
 (defmethod _render-string-blended_ :around ((string string) (font font) (color color) free cache)
+  (declare (ignore cache))
   (when free
     (free-cached-surface font))
   (call-next-method))
 
 (defmethod _render-string-blended_ ((string string) (font font) (color color) free cache)
+  (declare (ignore string font color free cache))
   nil)
 
 (defmethod _draw-string-blended-*_ ((string string) (x integer) (y integer) justify (color color) (surface sdl-surface) (font font))
+  (declare (ignore string x y justify color surface font))
   nil)
 
 (defun render-string-blended (string &key
