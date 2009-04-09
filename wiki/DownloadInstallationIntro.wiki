@@ -4,13 +4,13 @@
 = Compatibility =
 
 || *Lisp Implementation* || *Win32* || *Linux* || *OS X* || *BSD* || *Comments* ||
-|| SBCL || Working || Working || Working || Working || Win32 version is single threaded||
+|| SBCL || Working || Working || Working || Working || Win32 version is single threaded.||
 || Lispworks || Working || Working || Working || ?? || ||
 || Allegro || Working || ?? || ?? || ?? || ||
 || CMUCL || NA || Yes || ?? || ?? || ||
 || CLISP || Working || Working || Working || Working || ||
 || Clozure CL || ?? || ?? || ?? || ?? || ||
-|| ECL || ?? || ?? || ?? || ?? || ||
+|| ECL || No || Yes || ?? || ?? || Latest ECL for Win32 break when loading ALEXANDRIA.||
 
 = Windows: Download & Installation for Newbies =
 
