@@ -1,101 +1,113 @@
-;;;;; A simple example to verify the correctness of the SDL, OpenRM and ODE FLI definitions for Lispworks.
+;;;;; A version of the JBALLS example in rmdemos.
 ;;;;; Author: Luke J Crook, luke@balooga.com
+;;;;; 02/25/2008
 ;;;;; 
 
 (in-package #:rm-examples)
 
-(defun aux-handle-motion-sdl (node button-state x y width height)
-  (cond
-    ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_LEFT) button-state) 1)
-     (rm::arc node width height x y))
-    ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_RIGHT) button-state) 4)
-     (rm::dolly node width height y))
-    ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_MIDDLE) button-state) 2)
-     (rm::translate node width height x y))))
-  
-(defun aux-handle-buttons-sdl (node button x y width height)
-  (cond
-    ((equal button sdl::sdl_button_left)
-     (rm::reset-arc node width height x y))
-    ((equal button sdl::sdl_button_right)
-     (rm::reset-dolly width height y))
-    ((equal button sdl::sdl_button_middle)
-     (rm::reset-translate width height x y))))
+(defvar *moving-group* nil)
+(defvar *stationary-group* nil)
+(defvar *rotation-direction* nil)
+
+(defclass jballs-window (rm::native-window)()
+  (:default-initargs
+   :width 320
+    :height 240
+    :name "window"))
+
+
+
+(defclass jballs-scene (rm::scene rm::aux-trackball)()
+  (:default-initargs
+   :name "default-scene"
+    :dims :rm-renderpass-3D
+    :opacity :rm-renderpass-opaque
+    :compute-view-from-geometry t
+    :viewport t
+    :compute-bounding-box t
+    :compute-center t
+    :union-all t
+    :camera (make-instance 'rm::camera-3d :defaults t)))
+
+(defclass node (rm::node)()
+  (:default-initargs
+    :compute-bounding-box t
+    :dims :rm-renderpass-3D
+    :opacity :rm-renderpass-opaque))
+
+(defclass sloth (node)()
+  (:default-initargs
+   :name "sloth"
+    :primitives (list (make-instance 'rm::sphere-primitive
+				     :xy/z (rm::v3d 0.0 0.0 0.0)
+				     :radius 1.0
+				     :tesselate 512))))
+
+(defclass floor-quad (node)()
+  (:default-initargs
+   :name "floor"
+    :primitives (list (make-instance 'rm::plane-primitive
+				     :orientation :xz
+				     :xy/z (rm::v3d* '((-3.0 -2.0 -3.0)
+						       (3.0 -2.0 3.0)))))))
+
+(defclass zippy (node)()
+  (:default-initargs
+   :name "zippy"
+    :specular-exponent 10.0
+    :specular-color (rm::c4d 0.9 0.25 0.25 1.0)
+    :primitives (list (make-instance 'rm::sphere-primitive
+				     :rgb/a (rm::c4d 0.9 0.25 0.25 1.0)
+				     :xy/z (rm::v3d 1.5 -1.0 0.0)
+				     :radius 0.25
+				     :tesselate 128))))
+
+(defmethod rm::on-idle ((window jballs-window))
+  (rm::rotate *moving-group*
+	      :direction *rotation-direction*
+	      :reverse (list *stationary-group*))
+  (rm::dispatch-event window rm::on-paint))
 
 (defun jballs ()
-  (let ((width 640) (height 480)
-	(button-state nil)
-	(bounds-display nil))
-    (sdl::with-init ()
-      (sdl::set-window width height :flags sdl::SDL_OPENGL)
-      (sdl::set-framerate 30)
-      (rm::with-init ()
-	(rm::with-rmpipe ((sdl::get-native-window) width height) a-pipe
-	  (let ((root-node (rm::rmrootnode))
-		(my-root (rm::new-node :opacity :opaque))
-		(sloth (rm::new-node :opacity :opaque))
-		(zippy (rm::new-node :opacity :opaque))
-		(floor (rm::new-node :opacity :opaque))
-		(moving-group (rm::new-node :opacity :opaque))
-		(stationary-group (rm::new-node :opacity :opaque)))
-	    (rm::node-add-primitive sloth
-				    (rm::new-sphere-primitive :color #(0.5 0.1 0.0 1.0)
-							      :position #(0.0 0.0 0.0)
-							      :tesselate 512
-							      :radius 1.0))
-	    (rm::node-add-primitive zippy
-				    (rm::new-sphere-primitive :color #(1.0 0.0 0.0 1.0)
-							      :position #(1.5 -1.0 0.0)
-							      :radius 0.25))
-	    (rm::node-add-primitive floor
-				    (rm::new-plane-primitive :color #(0.3 0.9 0.5 1.0)
-							     :subdivisions 20
-							     :vertices (list #(-3.0 -2.0 -3.0)
-									     #(3.0 -2.0 3.0))))
+  (let* ((window (make-instance 'jballs-window))
+	 (stationary-group (make-instance 'node :name "stationary-group"
+					  :children (list (make-instance 'sloth)
+							  (make-instance 'floor-quad))))
+	 (moving-group (make-instance 'node :name "moving-group"
+				      :center (rm::v3d 0.0 0.0 0.0)
+				      :lights (list (make-instance 'rm::point-light
+								   :light-source :rm-light-3
+								   :specular-color (rm::c4d 1.0 0.0 0.0 1.0)
+								   :diffuse-color (rm::c4d 1.0 0.0 0.0 1.0)
+								   :xy/z (rm::v3d 1.5 -1.0 0.0)))
+				      :children (list stationary-group
+						      (make-instance 'zippy))))
+	 (rotation-direction (rm::v3d 0.0 -2.0 0.0)))
+    (setf *moving-group* moving-group
+          *stationary-group* stationary-group
+	  *rotation-direction* rotation-direction)
 
-	    (rm::nodesetcenter moving-group #(0.0 0.0 0.0))
-	    
-	    (rm::add-node stationary-group floor)
-	    (rm::add-node stationary-group sloth)
-	    (rm::add-node moving-group zippy)
 
-	    (rm::with-light ((rm::rmLightNew))
-		(rm::set-light-position #(1.5 -1.0 0.0))
-		(rm::set-light-diffuse-color #(1.0 0.0 0.0 1.0))
-		(rm::set-light-specular-color #(1.0 0.0 0.0 1.0))
-		(rm::set-light-type :point)
-		(rm::set-scene-light moving-group :light3))
+    (make-instance 'jballs-scene
+		   :window window
+		   :children (list moving-group)
+		   :lights (list (make-instance 'rm::directional-light
+						:light-source :rm-light-0
+						:specular-color (rm::c4d 0.7 0.7 0.7 1.0))))
+    
+   (rm::install-timer window 10
+		       #'(lambda (window)
+			   (rm::rotate moving-group
+				       :direction rotation-direction
+				       :reverse (list stationary-group))
+			   (rm::dispatch-event window rm::on-paint)
+			   t))
+    
+    (rm::show-window window)
+    ;; (rm::process-events :poll)
+    (rm::process-events :wait)
+    ;; Attempt to clean up any stray windows
+    (rm::clean-up)))
 
-	    (rm::add-node my-root moving-group)
-	    (rm::add-node moving-group stationary-group)
-	    (rm::add-node root-node
-			  my-root :union t :compute-center t)
 
-	    (rm::NodeSetSceneBackgroundColor my-root #(0.2 0.2 0.3 1.0))
-	    
-	    (rm::set-default-scene my-root width height)
-
-	    (sdl::with-events ()
-	      (:quit () t)
-	      (:keydown (:key key)
-			(cond
-			  ((sdl::key= key :SDLK_ESCAPE)
-			   (sdl::push-quitevent))
-			  ((sdl::key= key :SDLK_A)
-			   (unless bounds-display
-			     ;;Add a bounding box for the nodes.
-			     (rm::node-add-primitive sloth (rm::create-bounds-from-node sloth))
-			     (rm::node-add-primitive zippy (rm::create-bounds-from-node zippy))
-			     (rm::node-add-primitive floor (rm::create-bounds-from-node floor))
-			     (setf bounds-display t)))))
-	      (:mousemotion (:state state :x x :y y)
-			    (aux-handle-motion-sdl my-root state x y width height))
-	      (:mousebuttondown (:button button :x x :y y)
-				(aux-handle-buttons-sdl my-root button x y width height))
-	      (:mousebuttonup ()
-			      (setf button-state nil))
-	      (:idle ()
- 	       (rm::rotate-node moving-group :direction #(0.0 1.0 0.0) :only-this-node t)
-	       (rm::RMFRAME a-pipe root-node)
-	       (sdl::SDL_GL_SwapBuffers)))))))))
 

@@ -15,7 +15,6 @@
 
 ;; (cffi:use-foreign-library GL)
 
-
 #+win32(cffi:define-foreign-library msvcr70
   (:windows "msvcr70.dll"))
 #+win32(cffi:define-foreign-library msvcrtd

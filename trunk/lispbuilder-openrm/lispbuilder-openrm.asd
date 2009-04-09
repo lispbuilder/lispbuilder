@@ -5,28 +5,55 @@
 (in-package #:lispbuilder-openrm-system)
 
 (defsystem lispbuilder-openrm
-    :description "lispbuilder-openrm: OpenRM library wrapper and tools"
-    :long-description
-    "lispbuilder-openrm uses CFFI to be highly compatible across lisp 
+  :description "lispbuilder-openrm: OpenRM library wrapper and tools"
+  :long-description
+  "lispbuilder-openrm uses CFFI to be highly compatible across lisp 
     implementations. It includes a selection of utilities to assist  
     game programming in Common Lisp."
-    :version "0.1"
-    :author "Luke Crook <luke@balooga.com>"
-    :maintainer "Application Builder <application-builder@lispniks.com>"
-    :licence "BSD"
-    :depends-on (cffi trivial-garbage lispbuilder-openrm-cffi)
-    :components
-    ((:module "openrm"
-	      :components
-	      ((:file "package")
-	       (:file "library" :depends-on ("package"))
-	       (:file "openrm" :depends-on ("package" "library"))
-	       (:file "translate" :depends-on ("openrm"))
-	       (:file "util-rm" :depends-on ("openrm" "translate"))
-	       ))
-     (:module "documentation"
-	      :components
-	      ((:html-file "index")
-	       (:doc-file "README")
-	       (:doc-file "COPYING")
-	       (:doc-file "CONTRIBUTORS")))))
+  :version "0.1"
+  :author "Luke Crook <luke@balooga.com>"
+  :maintainer "Application Builder <application-builder@lispniks.com>"
+  :licence "BSD"
+  :depends-on (cffi lispbuilder-openrm-cffi lispbuilder-openrm-base trivial-garbage log5)
+  :perform (load-op :after (op lispbuilder-openrm)
+		    (pushnew :lispbuilder-openrm *features*))
+  :components
+  ((:module "openrm"
+	    :components
+	    ((:file "package")
+	     (:file "log5")
+	     (:file "globals")
+	     (:file "generics")
+	     (:file "util")
+	     (:file "base")
+	     (:file "openrm")
+	     (:file "events")
+	     (:file "color")
+	     (:file "vertex")
+	     (:file "camera")
+	     (:file "pipe")
+	     (:file "primitive")
+	     (:file "procedural-primitives")
+	     (:file "quad-mesh-primitive")
+	     (:file "text-primitive")
+	     (:file "light")
+	     (:file "node")
+	     ;; (:file "meta-node")
+	     ;; (:file "scene-proxy")
+	     (:file "scene")
+	     (:file "rm-aux")
+	     (:file "window")
+	     (:file "rendering")
+	     (:file "image")
+	     (:file "mouse")
+	     ;; (:file "pick")
+             (:file "init")
+             (:file "objects")
+	     (:file "cffi-finalizers"))
+	    :serial t)
+   (:module "documentation"
+	    :components
+	    ((:html-file "index")
+	     (:doc-file "README")
+	     (:doc-file "COPYING")
+	     (:doc-file "CONTRIBUTORS")))))

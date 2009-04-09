@@ -25,10 +25,6 @@
 		    (setf (cffi:foreign-slot-value ,dest ,type ,slot) (cffi:foreign-slot-value ,src ,type ,slot))))
 	      slots)))
 
-(defun is-valid-ptr (pointer)
-  "IS-VALID-PTR <CFFI pointer>
-  Will return T if 'pointer' is a valid <CFFI pointer> and is non-null."
-  (and (cffi:pointerp pointer) (not (cffi:null-pointer-p pointer))))
 
 ;;; w
 
@@ -41,50 +37,6 @@
 	(setf ,body-value (progn ,@body))
 	(if (and ,free-p (is-valid-ptr *default-camera*))
 	    (rmcamera3ddelete *default-camera*)))
-      ,body-value)))
-
-(defmacro with-rmcolor-3d ((color-ptr &optional (free-p t)) &body body)
-  "Create a new color using (rm:rmcolor-3d)"
-  (let ((body-value (gensym "body-value")))
-    `(let ((*default-color* ,color-ptr)
-	   (,body-value nil))
-      (when (is-valid-ptr *default-color*)
-	(setf ,body-value (progn ,@body))
-	(if (and ,free-p (is-valid-ptr *default-color*))
-	    (cffi:foreign-free *default-color*)))
-      ,body-value)))
-
-(defmacro with-rmcolor-4d ((color-ptr &optional (free-p t)) &body body)
-  "Create a new color using (rm:rmcolor-4d)"
-  (let ((body-value (gensym "body-value")))
-    `(let ((*default-color* ,color-ptr)
-	   (,body-value nil))
-      (when (is-valid-ptr *default-color*)
-	(setf ,body-value (progn ,@body))
-	(if (and ,free-p (is-valid-ptr *default-color*))
-	    (cffi:foreign-free *default-color*)))
-      ,body-value)))
-
-(defmacro with-light ((light-ptr &optional (free-p t)) &body body)
-  "Create a new light using (rm:rmLightNew)"
-  (let ((body-value (gensym "body-value")))
-    `(let ((*default-light* ,light-ptr)
-	   (,body-value nil))
-      (when (is-valid-ptr *default-light*)
-	(setf ,body-value (progn ,@body))
-	(if (and ,free-p (is-valid-ptr *default-light*))
-	    (rmLightDelete *default-light*)))
-      ,body-value)))
-
-(defmacro with-rmvertex-3d ((vertex-ptr &optional (free-p t)) &body body)
-  "Create a new color using (rm:rmvertex-3d)"
-  (let ((body-value (gensym "body-value")))
-    `(let ((*default-vertex* ,vertex-ptr)
-	   (,body-value nil))
-      (when (is-valid-ptr *default-vertex*)
-	(setf ,body-value (progn ,@body))
-	(if (and ,free-p (is-valid-ptr *default-vertex*))
-	    (cffi:foreign-free *default-vertex*)))
       ,body-value)))
 
 ;;; End.
@@ -390,12 +342,12 @@
 			    (dotimes (i 4)
 			      (dotimes (j 4)
 				(setf result (cons `(,(intern (string-upcase (format nil "r~D.c~D" i j)))
-						     (cffi:mem-aref
-						      (cffi:foreign-slot-pointer ,matrix 'rm::matrix 'rm::m)
-						      'rm::s-float (+ (* 4 ,i) ,j)))
+						      (cffi:mem-aref
+						       (cffi:foreign-slot-pointer ,matrix 'rm::matrix 'rm::m)
+						       'rm::s-float (+ (* 4 ,i) ,j)))
 						   result))))
 			    result))
-    ,@body))
+     ,@body))
 
 (defun rotate-matrix (matrix direction)
   (let ((x-angle (vertex-x direction)) (y-angle (vertex-y direction)) (z-angle (vertex-z direction)))
@@ -427,9 +379,9 @@
 	(let ((cos (cos (to-radian y-angle)))
 	      (sin (sin (to-radian y-angle))))
 	  (setf r0.c0 cos
-		  r0.c2 sin
-		  r2.c0 (- sin)
-		  r2.c2 cos))
+		r0.c2 sin
+		r2.c0 (- sin)
+		r2.c2 cos))
 	(rm::rmMatrixMultiply matrix work matrix)
 	(rm::rmmatrixidentity work))
       
@@ -449,32 +401,6 @@
 	(rm::rmMatrixMultiply matrix work matrix))))
   matrix)
 
-(defmacro with-init (args &body body)
-  "Attempts to initialize RM using the flags init-flags. 
-    Automatically shuts down SDL using SDL_Quit if unsuccessful.
-    Test for failure using the function INIT-SUCCESS.
-        INIT-SUCCESS returns:
-            T if with-init is successful, 
-            NIL for failure."
-  `(block nil
-    (unwind-protect
-	 (progn
-	   (rm::rmInit)
-	   ,@body)
-      ;(rm::rm_finish)
-      )))
-
-
-;;#define pixeltovp(p,d) ((float)((p) - ((d) >> 1)) / (float)((d) >> 1))
-(defun pixel-to-viewport (pixel dimension)
-  (coerce (/ (- pixel (ash dimension -1))
-	     (ash dimension -1))
-	  'single-float))
-
-(defmacro error-if-not-chill (&body body)
-  `(if (equal ,(cffi:foreign-enum-value 'rm::rmenum :rm_whacked)
-	,@body)
-    (error (format nil "ERROR: ~A returned :rm_whacked~%" ',(first body)))))
 
 ;;; Wrapper functions here
 
@@ -636,53 +562,6 @@
   (rm::rmPrimitiveComputeBoundingBox primitive)
   primitive)
 
-(defun set-primitive-radius (primitive radius)
-  (let ((radius (create-list-if-not radius)))
-    (rm::error-if-not-chill (rm::PrimitiveSetRadii primitive
-						   (length radius)
-						   radius
-						   :RM_COPY_DATA
-						   (cffi:null-pointer))))
-  primitive)
-
-(defun new-sphere-primitive (&key (primitive (rm::PrimitiveNew :rm_spheres))
-			     (radius 1.0) (tesselate 32) (color #(0.0 0.0 0.0 0.0)) (position #(0.0 0.0 0.0)))
-  (let ((tesselate (case tesselate
-		     (8 rm::RM_SPHERES_8)
-		     (32 rm::RM_SPHERES_32)
-		     (128 rm::RM_SPHERES_128)
-		     (512 rm::RM_SPHERES_512)
-		     (otherwise rm::RM_SPHERES_32))))
-    (when radius
-      (set-primitive-radius primitive radius))
-    (when tesselate
-      (rm::error-if-not-chill (rm::rmPrimitiveSetModelFlag primitive tesselate)))
-    (when color
-      (set-primitive-colors primitive color))
-    (when position
-      (set-primitive-position primitive position))
-    (rm::rmPrimitiveComputeBoundingBox primitive)
-    primitive))
-
-(defun new-cone-primitive (&key (primitive (rm::PrimitiveNew :rm_cones))
-			   (radius 1.0) (tesselate 8) (color #(0.0 0.0 0.0 0.0))
-			   (vertices (list #(0.0 0.0 0.0) #(0.0 1.0 0.0))))
-  (let ((tesselate (case tesselate
-		     (4 rm::RM_CONES_4)
-		     (8 rm::RM_CONES_8)
-		     (12 rm::RM_CONES_12)
-		     (16 rm::RM_CONES_16)
-		     (32 rm::RM_CONES_32)
-		     (128 rm::RM_CONES_128)
-		     (otherwise rm::RM_CONES_8))))
-    (set-primitive-radius primitive radius)
-    (rm::error-if-not-chill (rm::rmPrimitiveSetModelFlag primitive tesselate))
-    (set-primitive-vertices primitive vertices)
-    (set-primitive-colors primitive color)
-    (rm::rmPrimitiveComputeBoundingBox primitive)
-    primitive))
-
-
 (defun new-plane-primitive (&key (primitive (rm::primitivenew :rm_quadmesh))
 			    vertices (color #(1.0 1.0 1.0)) (orientation :xz) (subdivisions 20) (sign 1))
   (let ((vmin (first vertices))
@@ -777,17 +656,6 @@
 							    (cffi:null-pointer)))
 	  bbox))))
 
-(defun create-rm-pipe (&key
-		       (target-platform :RM_PIPE_NOPLATFORM)
-		       (processing-mode :RM_PIPE_MULTISTAGE)
-		       (render-opaque3D t)
-		       (render-transparent3D nil)
-		       (render-all2D nil))
-  (let ((pipe (rm::PipeNew target-platform)))
-    (rm::PipeSetRenderPassEnable pipe render-opaque3D render-transparent3D render-all2D)
-    (rm::PipeSetProcessingMode pipe processing-mode)
-    pipe))
-
 (defun set-default-scene (look-node width height)
   (rm::rmNodeUnionAllBoxes look-node)
   (rm::rmNodeComputeCenterFromBoundingBox look-node)
@@ -802,18 +670,6 @@
   (rm::rmDefaultLighting look-node)
   look-node)
 
-(defun new-node (&key (name "") (dims :3d) (opacity :all))
-  (setf dims (case dims
-	       (:3d (cffi:foreign-enum-value 'rm::rmenum :rm_renderpass_3d))
-	       (:2d (cffi:foreign-enum-value 'rm::rmenum :rm_renderpass_2d))
-	       (:all (cffi:foreign-enum-value 'rm::rmenum :rm_renderpass_all))
-	       (otherwise (cffi:foreign-enum-value 'rm::rmenum :rm_renderpass_3d))))
-  (setf opacity (case opacity
-		  (:opaque (cffi:foreign-enum-value 'rm::rmenum :rm_renderpass_opaque))
-		  (:transparent (cffi:foreign-enum-value 'rm::rmenum :rm_renderpass_transparent))
-		  (:all (cffi:foreign-enum-value 'rm::rmenum :rm_renderpass_all))
-		  (otherwise (cffi:foreign-enum-value 'rm::rmenum :rm_renderpass_all))))
-  (rm::rmNodeNew name dims opacity))
 
 (defun node-add-primitive (node &rest primitives)
   (if (consp (first primitives))
@@ -877,18 +733,6 @@
   parent-node)
 
 
-(defmacro with-rmpipe ((hwnd width height) pipe &body body)
-  `(block nil
-    (let ((,pipe (rm::create-rm-pipe)))
-      (if (not (equal ,pipe (cffi:null-pointer)))
-	  (unwind-protect
-	       (progn
-		 (rm::rmPipeSetSwapbuffersFunc ,pipe (cffi:null-pointer))
-		 (rm::rmPipeSetWindow ,pipe ,hwnd ,width ,height)
-		 (rm::rmPipeMakeCurrent ,pipe) ;Make current only after the OpenGL context is created.
-		 ,@body)
-	    (rm::rmPipeDelete ,pipe))
-	  (error "ERROR: with-rmpipe cannot create pipe")))))
 
 (defun point-matrix-transform (node direction)
   (cffi:with-foreign-objects ((m 'rm::matrix) (dir 'rm::rmvertex3d))
@@ -906,4 +750,86 @@
       (rm::NodeSetSpecularColor node specular-color))
   (if specular-exponent
       (rm::NodeSetSpecularExponent node specular-exponent)))
+
+
+
+
+
+
+
+(with-state ()
+  (start (t moving))
+  (squashed ((do-* do-after :ticks wait-after-squashed) moving
+	     (set-frame 0)
+	     (move-to (sdl:random-point max-x max-y))))
+  (moving ((when-event 'squashed-event) squashed
+	   (decf jump-interval 100)
+	   (set-frame 1)
+	   (notify (make-instance 'score-event :points 1) 'score-event)) ; And add to score
+	  (t moving
+	     (if (do-* do-every :ticks jump-interval)
+		 (move-to (sdl:random-point max-x max-y))))))
+
+
+(defstate state ()
+  (with-state ()
+    (:start :moving)
+    (:squashed ()
+	       :moving)
+    (:moving)))
+
+
+(defscript (display-score)
+    (init ((game-score 0)
+	   (display-score-period 1000)))
+  (with-state ()
+    (start (t no-score-graphic
+	      (set-frame 0)
+	      (setf (visible actor) nil)
+	      (show-score game-score)))
+    (no-score-graphic ((when-event 'score-event) show-score-graphic
+		       (show-score (incf game-score (points event)))
+		       (setf (visible actor) t)))
+    (show-score-graphic ((do-* do-after :ticks display-score-period) no-score-graphic
+			 (setf (visible actor) nil)))))
+
+(let ((*function-hash-table* (make-hash-table)))
+  (defun display-score (an-actor)
+    (let ((init (game-score 0))
+	  (display-score-period 1000))
+      (case *current-state*
+	(:start (set-frame 0)
+		(setf (visible-actor) nil)
+		(show-score game-score)
+		:no-score-graphic)
+	(:no-score-graphic (when (event= :score-event)
+			     (show-score (incf game-score (points event)))
+			     (setf (visible actor) t)
+			     :show-score-graphic))
+	(:show-score-graphic (when (do-* do-after :ticks display-score-period)
+			       (setf (visible actor) t)
+			       :no-score-graphic))))))
+
+(defun make-display-score-state (&optional (initial-state :start))
+  (let ((game-score 0)
+	(display-score-period 1000)
+	(current-state initial-state))
+    #'(lambda (obj event)
+	(setf current-state
+	      (case current-state
+		(:start (set-frame 0)
+			(setf (visible-p obj) nil)
+			(show-score game-score)
+			:no-score-graphic)
+		(:no-score-graphic (when (event= :score-event)
+				     (show-score (incf game-score (points event)))
+				     (setf (visible actor) t)
+				     :show-score-graphic))
+		(:show-score-graphic (when (do-* do-after :ticks display-score-period)
+				       (setf (visible actor) t)
+				       :no-score-graphic)))))))
+    
+
+
+
 

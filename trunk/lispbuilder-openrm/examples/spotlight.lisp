@@ -1,139 +1,119 @@
-;;;;; A simple example to verify the correctness of the SDL, OpenRM and ODE FLI definitions for Lispworks.
+;;;;; A version of the SPOTLIGHT demo in rmdemos.
 ;;;;; Author: Luke J Crook, luke@balooga.com
-;;;;; 
+;;;;; 02/25/2008
+;;;;;
 
 (in-package #:rm-examples)
 
-(defun set-spotlight (node &key (direction #(0.0 -1.0 0.0)) (position #(5.0 5.0 5.0)) (color #(0.5 0.5 0.5 1.0))
-		      (exponent 4.0) (cutoff 45) (light :light1))
-  (rm::with-light ((rm::rmLightNew))
-    (rm::set-light-type :spot)
-    (rm::set-light-diffuse-color color)
-    (rm::set-light-specular-color color)
-    (rm::set-light-position position)
-    (rm::set-spot-direction direction)
-    (rm::set-spot-cutoff cutoff)
-    (rm::set-spot-exponent exponent)
-    (rm::set-scene-light node light)))
+(defvar *width* 320)
+(defvar *height* 240)
+(defvar *background-color* (rm::c4d 0.2 0.2 0.3 1.0))
 
-(defun new-spotlight (&key (direction #(0.0 -1.0 0.0)) (position #(5.0 5.0 5.0)) (color #(0.5 0.5 0.5 1.0)) (cutoff 45))
-  (let* ((node (rm::new-node :name "spotlight" :opacity :opaque))
-	 (scale (sin (rm::RM_DEGREES_TO_RADIANS CUTOFF)))
-	 (primitive (rm::new-cone-primitive :radius scale :color color
-					    :vertices (list (vector (rm::vertex-x direction)
-								    (rm::vertex-y direction)
-								    (rm::vertex-z direction))
-							    (vector 0.0 0.0 0.0))
-					    :tesselate 32)))
+(defvar *spot-color* (rm::c4d 0.9 0.5 0.5 1.0))
+(defvar *spot-exponent* 4.0)
+(defvar *spot-xy/z* (rm::v3d 5.0 5.0 5.0))
+(defvar *spot-direction* (rm::v3d 0.0 -1.0 0.0))
 
-    (rm::node-add-primitive node primitive)
-    (rm::set-node-position node position)
-    
-    (rm::NodeSetDiffuseColor node color)
-    (rm::NodeSetSpecularColor node color)
-    (rm::NodeSetAmbientColor node color)
-    node))
+(defvar *arc* nil)
+(defvar *dummy* nil)
+(defvar *spotlight-root* nil)
+(defvar *spotlight-icon* nil)
+(defvar *spotlight* nil)
+
+(defclass spotlight-window (rm::native-window rm::aux-window)()
+  (:default-initargs
+   :width 320
+    :height 240
+    :name "window"
+    :events '(rm::on-mouse-move rm::on-mouse-down)))
+
+(defclass spotlight-scene (rm::scene rm::aux-scene) ()
+  (:default-initargs
+   :name "scene"
+    :dims :rm-renderpass-3d
+    :opacity :rm-renderpass-opaque
+    :background-color *background-color*
+    :camera (make-instance 'camera)
+    :lights (list (make-instance 'rm::arena-light :xy/z (rm::v3d 5.0 7.5 5.0)))))
+  
+(defclass camera (rm::camera-3d) ()
+  (:default-initargs
+   :eye (rm::v3d 5.0 5.0 22.0)
+    :at (rm::v3d 5.0 5.0 0.0)
+    :up-vector (rm::v3d 0.0 1.0 0.0)
+    :hither 5.0
+    :yon 40.0
+    :fov 45.0
+    :aspect-ratio (vector *width* *height*)
+    :projection :rm-projection-perspective))
+
+(defclass spotlight (rm::spotlight) ()
+  (:default-initargs
+   :light-source :rm-light-1
+    :diffuse-color *spot-color*
+    :specular-color *spot-color*
+    :cutoff rm::*default-spot-cutoff*
+    :exponent *spot-exponent*
+    :xy/z *spot-xy/z*
+    :direction *spot-direction*))
+
+(defmethod rm::on-mouse-down ((window spotlight-window) button x y)
+  (when (rm::button= button :button-left)
+    (rm::reset-arc *arc* *dummy* *width* *height* x y))
+  (rm::dispatch-event window rm::on-paint))
+
+(defmethod rm::on-mouse-move ((window spotlight-window) button x y x-rel y-rel)
+  (when (rm::button= button :button-left)
+    (rm::update-arc *arc* *dummy* *width* *height* x y)
+    ;; Rotate spotlight
+    (setf (rm::light *spotlight-root*) (make-instance 'spotlight
+						      :direction (rm::point-direction *dummy* *spot-direction*)))
+    ;; Rotate spotlight-icon
+    (rm::rotate *spotlight-icon* :match *dummy*))
+  (rm::dispatch-event window rm::on-paint))
 
 (defun spotlight ()
-  (let ((width 320) (height 240)
-	(spot-position #(5.0 5.0 5.0))
-	(spot-direction #(0.0 -1.0 0.0))
-	(spot-color #(0.9 0.5 0.5 1.0))
-	(spot-exponent 4.0)
-	(spot-cutoff 45.0))
-    (sdl:with-init ()
-      (sdl:with-display (width height :flags sdl:SDL_OPENGL)
-	(sdl:set-framerate 30)
-	(rm::with-init ()
-	  (rm::with-rmpipe ((sdl::get-native-window) width height) a-pipe
-			   (let ((root-node (rm::rmrootnode))
-				 (obj-root (rm::new-node :opacity :opaque))
-				 (cube-root (rm::new-node :opacity :opaque))
-				 (light-root (rm::new-node :opacity :opaque))
-				 (spot-root nil)
-				 (dummy (rm::new-node :opacity :opaque))
-				 (origin #(0.0 0.0 0.0))
-				 (xzmax #(10.0 0.0 10.0))
-				 (yzmax1 #(0.0 10.0 10.0))
-				 (origin2 #(10.0 0.0 0.0))
-				 (yzmax2 #(10.0 10.0 10.0))
-				 (origin3 #(0.0 10.0 0.0))
-				 (xzmax2 #(10.0 10.0 10.0))
-				 (xymax #(10.0 10.0 10.0)))
+  (rm::with-init ()
+    (setf *spot-direction* (rm::v3d 0.0 -1.0 0.0))
+    (let* ((window (make-instance 'spotlight-window))
+	   (*arc* (make-instance 'rm::arc))
+	   (*dummy* (make-instance 'rm::node))
+	   (spotlight (make-instance 'spotlight))
+	   (quads '((((0.0 0.0 0.0)  (10.0 0.0 10.0))  :xz  1)
+		    (((0.0 10.0 0.0) (10.0 10.0 10.0)) :xz -1)
+		    (((0.0 0.0 0.0)  (0.0 10.0 10.0))  :yz  1)
+		    (((10.0 0.0 0.0) (10.0 10.0 10.0)) :yz -1)
+		    (((0.0 0.0 0.0)  (10.0 10.0 0.0))  :xy  1)))
+	   (spotlight-icon (make-instance 'rm::node :name "spotlight-icon"
+					  :opacity :rm-renderpass-opaque
+					  :xy/z (rm::xy/z spotlight)
+					  :diffuse-color (rm::diffuse-color spotlight)
+					  :specular-color (rm::specular-color spotlight)
+					  :ambient-color (rm::ambient-color spotlight)
+					  :compute-bounding-box t
+					  :primitives (list (make-instance 'rm::cone-primitive
+									   :rgb/a *spot-color*
+									   :radius (rm::cast float (rm::to-radian rm::*default-spot-cutoff*))
+									   :xy/z (rm::v3d* (list *spot-direction*
+												 (rm::v3d 0.0 0.0 0.0)))
+									   :tesselate 32))))
+	   (spotlight-root (make-instance 'rm::node :name "spotlight"
+					  :children (list spotlight-icon
+							  (make-instance 'rm::node :name "quad"
+									 :primitives (loop for (xy/z orientation sign) in quads
+											collecting (make-instance 'rm::plane-primitive
+														  :xy/z (rm::v3d* xy/z)
+														  :orientation orientation
+														  :sign sign
+														  :subdivisions 100))))
+					  :lights (list spotlight))))
+      (make-instance 'spotlight-scene
+		     :window window
+		     :children (list spotlight-root))
+      
+      (setf *spotlight-root* spotlight-root)
+      (setf *spotlight-icon* spotlight-icon)
+      (setf *spotlight* spotlight)
 
-			     (set-spotlight light-root :color spot-color :exponent spot-exponent
-					    :position spot-position :direction spot-direction :cutoff spot-cutoff)
-			     (setf spot-root (new-spotlight :direction spot-direction :color spot-color :cutoff spot-cutoff
-							    :position spot-position))
-	  
-			     (rm::node-add-primitive cube-root
-						     (rm::new-plane-primitive :orientation :xz
-									      :subdivisions 30
-									      :vertices (list origin xzmax)
-									      :sign 1
-									      :color nil)
-
-						     (rm::new-plane-primitive :orientation :xz
-									      :subdivisions 30
-									      :vertices (list origin3 xzmax2)
-									      :sign -1
-									      :color nil)
-
-						     (rm::new-plane-primitive :orientation :yz
-									      :subdivisions 30
-									      :vertices (list origin yzmax1)
-									      :sign 1
-									      :color nil)
-
-						     (rm::new-plane-primitive :orientation :yz
-									      :subdivisions 30
-									      :vertices (list origin2 yzmax2)
-									      :sign -1
-									      :color nil)
-
-						     (rm::new-plane-primitive :orientation :xy
-									      :subdivisions 30
-									      :vertices (list origin xymax)
-									      :sign 1
-									      :color nil))
-
-			     (rm::add-node light-root cube-root)
-			     (rm::add-node light-root spot-root)
-			     (rm::add-node obj-root light-root)
-
-			     (rm::add-node root-node
-					   obj-root :union t :compute-center t)
-    
-			     (rm::NodeSetSceneBackgroundColor obj-root #(0.2 0.2 0.3 1.0))
-	    
-			     (rm::set-default-scene obj-root width height)
-
-			     (sdl::with-events ()
-			       (:quit () t)
-			       (:keydown (:key key)
-					 (if (sdl:key= key :SDLK_ESCAPE)
-					     (sdl:push-quitevent)))
-			       (:mousemotion (:state state :x x :y y)
-					     (cond
-					       ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_LEFT) state) 1)
-						(rm::arc dummy width height x y)
-						(set-spotlight light-root
-							       :direction (rm::point-matrix-transform dummy #(0.0 -1.0 0.0))
-							       :color spot-color)
-						(rm::rotate-node spot-root :match-node dummy))
-					       ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_RIGHT) state) 4)
-						(rm::dolly obj-root width height y))
-					       ((equal (logand (sdl::sdl_button sdl::SDL_BUTTON_MIDDLE) state) 2)
-						(rm::translate obj-root width height x y))))
-			       (:mousebuttondown (:button button :x x :y y)
-						 (cond
-						   ((equal button sdl::sdl_button_left)
-						    (rm::reset-arc dummy width height x y))
-						   ((equal button sdl::sdl_button_right)
-						    (rm::reset-dolly width height y))
-						   ((equal button sdl::sdl_button_middle)
-						    (rm::reset-translate width height x y))))
-			       (:idle ()
-				      (rm::RMFRAME a-pipe root-node)
-				      (sdl::SDL_GL_SwapBuffers))))))))))
-
+      (rm::show-window window)
+      (rm::process-events :wait))))
