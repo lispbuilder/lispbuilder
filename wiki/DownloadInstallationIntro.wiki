@@ -10,7 +10,7 @@
 || CMUCL || NA || Yes || ?? || ?? || ||
 || CLISP || Working || Working || Working || Working || ||
 || Clozure CL || ?? || ?? || ?? || ?? || ||
-|| ECL || No || Yes || ?? || ?? || Latest ECL for Win32 break when loading ALEXANDRIA.||
+|| ECL || No || Yes || ?? || ?? || Latest ECL for Win32 breaks when loading ALEXANDRIA.||
 
 = Windows: Download & Installation for Newbies =
 
