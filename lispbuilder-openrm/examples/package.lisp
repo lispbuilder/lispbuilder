@@ -8,5 +8,9 @@
   (:documentation "Examples for `lispbuilder-openrm'.")
   (:export #:jballs
 	   #:spotlight
+	   #:clrball
+	   #:cones
 	   #:rm-example-1
-	   #:rm-example-2))
+	   #:rm-example-2
+	   #:jballs-sdl
+	   #:image))
