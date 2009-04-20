@@ -651,6 +651,12 @@ Use the following function to set the OpenGL attributes;
 (SDL:SET-GL-ATTRIBUTE <attribute> <value>)
 }}}
 
+Use the following to gain access to OpenGL shaders, etc. Use *after* an OpenGL context is created.
+
+{{{
+(setf cl-opengl-bindings:*gl-get-proc-address* #'sdl-cffi::sdl-gl-get-proc-address)
+}}}
+
 = Creating Standalone Executables =
 
 Tutorials for creating standalone executables using the various Common Lisp development environments;
