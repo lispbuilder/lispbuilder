@@ -20,6 +20,7 @@ Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system]
 
 = Projects using LISPBUILDER-SDL =
 
+ * [http://github.com/sykopomp Common-Worm, and yashmup]
  * [http://sourceforge.net/projects/latrunculi/ Latrunculi]
  * [http://code.google.com/p/lisp-game-engine/ Lisp-Game-Engine]
  * [http://dto.github.com/notebook/rlx.html RLX: a cross-platform graphical roguelike engine]
