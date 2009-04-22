@@ -25,10 +25,10 @@
   (:default-initargs
    :fp (cffi:foreign-alloc 'rm-cffi::rm-vertex-2d)))
 
-(defmethod initialize-instance :around ((self v2d) &key x y)
-  (call-next-method)
-  (when x (setf (cffi:foreign-slot-value (fp self) 'rm-cffi::rm-vertex-2d 'rm-cffi::x) x))
-  (when y (setf (cffi:foreign-slot-value (fp self) 'rm-cffi::rm-vertex-2d 'rm-cffi::y) y)))
+(defmethod initialize-instance :after ((self v2d) &key x y)
+  (let ((fp (fp self)))
+    (when x (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-2d 'rm-cffi::x) x))
+    (when y (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-2d 'rm-cffi::y) y))))
 
 (defclass v2d* (vertex-array)()
   (:default-initargs
@@ -39,11 +39,11 @@
   (:default-initargs
    :fp (cffi:foreign-alloc 'rm-cffi::rm-vertex-3d)))
 
-(defmethod initialize-instance :around ((self v3d) &key x y z)
-  (call-next-method)
-  (when x (setf (cffi:foreign-slot-value (fp self) 'rm-cffi::rm-vertex-3d 'rm-cffi::x) x))
-  (when y (setf (cffi:foreign-slot-value (fp self) 'rm-cffi::rm-vertex-3d 'rm-cffi::y) y))
-  (when z (setf (cffi:foreign-slot-value (fp self) 'rm-cffi::rm-vertex-3d 'rm-cffi::z) z)))
+(defmethod initialize-instance :after ((self v3d) &key x y z)
+  (let ((fp (fp self)))
+    (when x (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-3d 'rm-cffi::x) x))
+    (when y (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-3d 'rm-cffi::y) y))
+    (when z (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-3d 'rm-cffi::z) z))))
 
 (defclass v3d* (vertex-array)()
   (:default-initargs
@@ -62,6 +62,20 @@
 ;;    :free #'(lambda (fp)
 ;; 	     (rm-cffi::rm-vertex-4d-delete fp))))
 
+(defmethod x ((color vector))
+  (svref color 0))
+(defmethod y ((color vector))
+  (svref color 1))
+(defmethod z ((color vector))
+  (when (> (length color) 2)
+    (svref color 2)))
+(defmethod (setf x) (value (color vector))
+  (setf (svref color 0) value))
+(defmethod (setf y) (value (color vector))
+  (setf (svref color 1) value))
+(defmethod (setf z) (value (color vector))
+  (when (> (length color) 2)
+    (setf (svref color 2) value)))
 
 (defmethod x ((vertex v2d))
   (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::x))
@@ -90,13 +104,23 @@
   (setf (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::z)
 	z-val))
 
+
+(defmethod xy/z ((vertex v2d))
+  (vector (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::x)
+          (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::y)))
+(defmethod xy/z ((vertex v3d))
+  (vector (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::x)
+          (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::y)
+          (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::z)))
+
 (defmethod (setf xy/z) ((dims vector float 2) (vertex v2d))
   (setf (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::x) (svref dims 0)
 	(cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::y) (svref dims 1)))
 (defmethod (setf xy/z) ((dims vector float 3) (vertex v3d))
+  (format t "In (dims vector float 3)~%")
   (setf (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::x) (svref dims 0)
 	(cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::y) (svref dims 1)
-	(cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::z) (svref dims 2)))
+        (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::z) (svref dims 2)))
 
 ;; (defmethod x ((vertex v4d))
 ;;   (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-4d 'rm-cffi::x))
@@ -121,21 +145,23 @@
 
 (defun vertex (x y &optional z)
   (if z
-      (make-instance 'v3d :x x :y y :z z)
-      (make-instance 'v2d :x x :y y)))
+    (vector x y z)
+    (vector x y)))
 
 (defun v2d (x y &optional fp)
-  (let ((vertex (if fp
-		    (make-instance 'v2d :fp fp)
-		    (make-instance 'v2d :x x :y y))))
-    (log5:log-for (create) "V2D Created: ~A" (fp vertex))
-    vertex))
+  (if fp
+    (if (pointerp fp)
+      (make-instance 'v2d :fp fp :x x :y y)
+      (error "ERROR - V2D: :FP must be of type rm-cffi::rm-vertex-2d and not ~A" fp))
+    (make-instance 'v2d :x x :y y)))
+
 (defun v3d (x y z &optional fp)
-  (let ((vertex (if fp
-		    (make-instance 'v3d :fp fp)
-		    (make-instance 'v3d :x x :y y :z z))))
-    (log5:log-for (create) "V3D Created: ~A" (fp vertex))
-    vertex))
+  (if fp
+    (if (pointerp fp)
+      (make-instance 'v3d :fp fp :x x :y y :z z)
+      (error "ERROR - V3D: :FP must be of type rm-cffi::rm-vertex-3d and not ~A" fp))
+    (make-instance 'v3d :x x :y y :z z)))
+
 ;; (defun v4d (x y z w &optional fp)
 ;;   (let ((vertex (if fp
 ;; 		    (make-instance 'v4d :fp fp)
@@ -147,77 +173,160 @@
 ;; 	    (w vertex) w))
 ;;     vertex))
 
-
-(defmethod v2d* ((vertex v2d) &optional size)
+(defmethod vertex* ((vertex vector) &optional size)
   (when size
-    (let ((vertex-array (make-instance 'v2d* :size size)))
-      (let ((vertex-array-fp (fp vertex-array))
-	    (2d (cffi:foreign-type-size 'rm-cffi::rm-vertex-2d)))
-	(loop
-	   for i from 0 upto (1- (size vertex-array))
-	   do (progn (setf (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-2d 'rm-cffi::x) (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::x)
-			   (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-2d 'rm-cffi::y) (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::y))
-		     (setf vertex-array-fp (cffi:inc-pointer vertex-array-fp 2d)))))
-      (log5:log-for (create) "V2D Created: ~A" (fp vertex-array))
-      vertex-array)))
-(defmethod v2d* ((vertices list) &optional size)
-  (if (consp vertices)
-      (let ((vertex-array (make-instance 'v2d* :size (length vertices))))
-	(let ((vertex-array-fp (fp vertex-array))
-	      (2d (cffi:foreign-type-size 'rm-cffi::rm-vertex-2d)))
-	  (loop
-	     for i from 0 upto (1- (size vertex-array))
-	     for v in vertices
-	     do (progn (if (consp v)
-			   (setf (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-2d 'rm-cffi::x) (nth 0 v)
-				 (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-2d 'rm-cffi::y) (nth 1 v))
-			   (setf (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-2d 'rm-cffi::x) (cffi:foreign-slot-value (fp v) 'rm-cffi::rm-vertex-2d 'rm-cffi::x)
-				 (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-2d 'rm-cffi::y) (cffi:foreign-slot-value (fp v) 'rm-cffi::rm-vertex-2d 'rm-cffi::y)))
-		       (setf vertex-array-fp (cffi:inc-pointer vertex-array-fp 2d)))))
-	(log5:log-for (create) "V2D* Created: ~A" (fp vertex-array))
-	vertex-array)
-      (when size
-	(let ((vertex-array (make-instance 'v2d* :size size)))
-	  (log5:log-for (create) "V2D* Created: ~A" (fp vertex-array))
-	  vertex-array))))
+    (make-array size :initial-element vertex)))
 
-(defmethod v3d* ((vertex v3d) &optional size)
-  (when size
-    (let ((vertex-array (make-instance 'v3d* :size size)))
-      (let ((vertex-array-fp (fp vertex-array))
-	    (3d (cffi:foreign-type-size 'rm-cffi::rm-vertex-3d)))
-	(loop
-	   for i from 0 upto (1- (size vertex-array))
-	   do (progn (setf (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::x) (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::x)
-			   (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::y) (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::y)
-			   (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::z) (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::z))
-		     (setf vertex-array-fp (cffi:inc-pointer vertex-array-fp 3d)))))
-      (log5:log-for (create) "V3D Created: ~A" (fp vertex-array))
-      vertex-array)))
-(defmethod v3d* ((vertices list) &optional size)
-  (if (consp vertices)
-    (let ((vertex-array (make-instance 'v3d*
-                                       :size (length vertices))))
-      (let ((vertex-array-fp (fp vertex-array))
-            (3d (cffi:foreign-type-size 'rm-cffi::rm-vertex-3d)))
+(defmethod v2d* (size &key initial-element initial-contents)
+  (unless size
+    (when initial-element
+      (error "ERROR - V2D*; SIZE must be specified if :INITIAL-ELEMENT is specified."))
+    (unless initial-contents
+      (error "ERROR - V2D*; SIZE or :INITIAL-CONTENTS must be specified.")))
+  (if size
+    (let* ((vertex-array (make-instance 'v2d* :size size))
+           (fp (fp vertex-array)))
+      (when initial-element
+        (dotimes (i size)
+          (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y) (cffi:mem-aref fp 'rm-cffi::rm-vertex-2d i) rm-cffi::rm-vertex-2d)
+            (setf rm-cffi::x (x initial-element)
+                  rm-cffi::y (y initial-element)))))
+      vertex-array)
+    (let* ((vertex-array (make-instance 'v2d* :size (length initial-contents)))
+           (fp (fp vertex-array)))
+      (if (vectorp initial-contents)
+        ;; Loop over VECTOR
         (loop
-         for i from 0 upto (1- (size vertex-array))
-         for v in vertices
-         do (progn (if (consp v)
-                     (setf (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::x) (nth 0 v)
-                           (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::y) (nth 1 v)
-                           (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::z) (nth 2 v))
-                     (setf (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::x) (cffi:foreign-slot-value (fp v) 'rm-cffi::rm-vertex-3d 'rm-cffi::x)
-                           (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::y) (cffi:foreign-slot-value (fp v) 'rm-cffi::rm-vertex-3d 'rm-cffi::y)
-                           (cffi:foreign-slot-value vertex-array-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::z) (cffi:foreign-slot-value (fp v) 'rm-cffi::rm-vertex-3d 'rm-cffi::z)))
-              (setf vertex-array-fp (cffi:inc-pointer vertex-array-fp 3d)))))
-      (log5:log-for (create) "V3D* Created: ~A" (fp vertex-array))
-      vertex-array) 
-    (when size
-      (let ((vertex-array (make-instance 'v3d* :size size)))
-        (log5:log-for (create) "V3D* Created: ~A" (fp vertex-array))
-        vertex-array))))
+         :for i :from 0 :below (size vertex-array)
+         :for v :across initial-contents
+         :do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y) (cffi:mem-aref fp 'rm-cffi::rm-vertex-2d i) rm-cffi::rm-vertex-2d)
+               (setf rm-cffi::x (x v)
+                     rm-cffi::y (y v))))
+        (loop
+         ;; Loop over LIST
+         :for i :from 0 :below (size vertex-array)
+         :for v :in initial-contents
+         :do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y) (cffi:mem-aref fp 'rm-cffi::rm-vertex-2d i) rm-cffi::rm-vertex-2d)
+               (setf rm-cffi::x (x v)
+                     rm-cffi::y (y v)))))
+      vertex-array)))
 
+(defmethod v3d* (size &key initial-element initial-contents)
+  (unless size
+    (when initial-element
+      (error "ERROR - V3d*; SIZE must be specified if :INITIAL-ELEMENT is specified."))
+    (unless initial-contents
+      (error "ERROR - V3d*; SIZE or :INITIAL-CONTENTS must be specified.")))
+  (if size
+    (let* ((vertex-array (make-instance 'v3d* :size size))
+           (fp (fp vertex-array)))
+      (when initial-element
+        (dotimes (i size)
+          (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
+                                    (cffi:mem-aref fp 'rm-cffi::rm-vertex-3d i) rm-cffi::rm-vertex-3d)
+            (setf rm-cffi::x (x initial-element)
+                  rm-cffi::y (y initial-element)
+                  rm-cffi::z (z initial-element)))))
+      vertex-array)
+    (let* ((vertex-array (make-instance 'v3d* :size (length initial-contents)))
+           (fp (fp vertex-array)))
+      (if (vectorp initial-contents)
+        ;; Loop over VECTOR
+        (loop
+         :for i :from 0 :below (size vertex-array)
+         :for v :across initial-contents
+         :do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
+                                       (cffi:mem-aref fp 'rm-cffi::rm-vertex-3d i) rm-cffi::rm-vertex-3d)
+               (setf rm-cffi::x (x v)
+                     rm-cffi::y (y v)
+                     rm-cffi::z (z v))))
+        (loop
+         ;; Loop over LIST
+         :for i :from 0 :below (size vertex-array)
+         :for v :in initial-contents
+         :do (progn
+               (format t "~a: x = ~A~%" v (x v))
+               (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
+                                       (cffi:mem-aref fp 'rm-cffi::rm-vertex-3d i) rm-cffi::rm-vertex-3d)
+               (setf rm-cffi::x (x v)
+                     rm-cffi::y (y v)
+                     rm-cffi::z (z v))))))
+      vertex-array)))
+
+(defmacro with-copy-vertex-2d-to-foreign ((vertex fp) &body body)
+  (let ((body-value (gensym "body-value")))
+    `(let ((,body-value nil))
+       (cffi:with-foreign-object (,fp 'rm-cffi::rm-vertex-2d)
+         (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y) ,fp rm-cffi::rm-vertex-2d)
+           (setf rm-cffi::x (x ,vertex)
+                 rm-cffi::y (y ,vertex))
+           ,@body)))))
+
+(defmacro with-copy-vertex-3d-to-foreign ((vertex fp) &body body)
+  (let ((body-value (gensym "body-value")))
+    `(let ((,body-value nil))
+       (cffi:with-foreign-object (,fp 'rm-cffi::rm-vertex-3d)
+         (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z) ,fp rm-cffi::rm-vertex-3d)
+           (setf rm-cffi::x (x ,vertex)
+                 rm-cffi::y (y ,vertex)
+                 rm-cffi::z (z ,vertex))
+           ,@body)))))
+
+(defmacro with-copy-vertex-2d-array-to-foreign ((vertex fp) &body body)
+  (let ((i (gensym "i"))
+        (v (gensym "v")))
+    `(cffi:with-foreign-object (,fp 'rm-cffi::rm-vertex-2d (length ,vertex))
+       (loop
+        :for ,i :from 0 :below (length ,vertex)
+        :for ,v :across vertex
+        :do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y)
+                                      (cffi:mem-aref ,fp 'rm-cffi::rm-vertex-2d ,i) rm-cffi::rm-vertex-2d)
+              (setf rm-cffi::x (x ,v)
+                    rm-cffi::y (y ,v))))
+       ,@body)))
+
+(defmacro with-copy-vertex-3d-array-to-foreign ((vertex fp) &body body)
+  (let ((i (gensym "i"))
+        (v (gensym "v")))
+    `(cffi:with-foreign-object (,fp 'rm-cffi::rm-vertex-3d (length ,vertex))
+       (loop
+        :for ,i :from 0 :below (length ,vertex)
+        :for ,v :across vertex
+        :do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
+                                      (cffi:mem-aref ,fp 'rm-cffi::rm-vertex-3d ,i) rm-cffi::rm-vertex-3d)
+              (setf rm-cffi::x (x ,v)
+                    rm-cffi::y (y ,v)
+                    rm-cffi::z (z ,v))))
+       ,@body)))
+
+(defmethod new-vertex-from-foreign-2d-vertex (fp length)
+  (let ((vertex-vector (make-array length)))
+    (dotimes (i length)
+      (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y) (cffi:mem-aref fp 'rm-cffi::rm-vertex-2d i) rm-cffi::rm-vertex-2d)
+        (setf (svref vertex-vector i) (vertex rm-cffi::x rm-cffi::y))))
+    vertex-vector))
+(defmethod new-vertex-from-foreign-3d-vertex (fp length)
+  (let ((vertex-vector (make-array length)))
+    (dotimes (i length)
+      (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z) (cffi:mem-aref fp 'rm-cffi::rm-vertex-3d i) rm-cffi::rm-vertex-3d)
+        (setf (svref vertex-vector i) (vertex rm-cffi::x rm-cffi::y rm-cffi::z))))
+    vertex-vector))
+
+(defmethod new-vertex-from-* ((vertex-array v2d*))
+  (let ((vertex-vector (make-array (size vertex-array)))
+        (fp (fp vertex-array)))
+    (dotimes (i (size vertex-array))
+      (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y) (cffi:mem-aref fp 'rm-cffi::rm-vertex-2d i) rm-cffi::rm-vertex-2d)
+        (setf (svref vertex-vector i) (vertex rm-cffi::x rm-cffi::y))))
+    vertex-vector))
+
+(defmethod new-vertex-from-* ((vertex-array v3d*))
+  (let ((vertex-vector (make-array (size vertex-array)))
+        (fp (fp vertex-array)))
+    (dotimes (i (size vertex-array))
+      (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z) (cffi:mem-aref fp 'rm-cffi::rm-vertex-3d i) rm-cffi::rm-vertex-3d)
+        (setf (svref vertex-vector i) (vertex rm-cffi::x rm-cffi::y rm-cffi::z))))
+    vertex-vector))
 
 (defmethod copy-vertex-to-foreign ((vertex v2d) foreign-pointer &key (index 0))
   (declare (ignore index))
@@ -263,14 +372,19 @@
 ;; 	    rm-base:w (w v))))
 ;;   foreign-pointer)
 
+(defmethod nth-vertex ((self vector) index)
+  (svref self index))
+
 (defmethod nth-vertex ((self v2d*) index)
   (when (>= index (size self))
     (error "NTH-VERTEX, index ~A out of range ~A" index (size self)))
-  (make-instance 'v2d :gc nil :fp (cffi:mem-aref (fp self) 'rm-cffi::rm-vertex-2d index)))
+  (make-instance 'v2d :gc nil :fp (cffi:mem-aref (fp self) 'rm-cffi::rm-vertex-2d index)
+                 :x nil :y nil))
 (defmethod nth-vertex ((self v3d*) index)
   (when (>= index (size self))
     (error "NTH-VERTEX, index ~A out of range ~A" index (size self)))
-  (make-instance 'v3d :gc nil :fp (cffi:mem-aref (fp self) 'rm-cffi::rm-vertex-3d index)))
+  (make-instance 'v3d :gc nil :fp (cffi:mem-aref (fp self) 'rm-cffi::rm-vertex-3d index)
+                 :x nil :y nil :z nil))
 
 (defmethod copy-vertex ((dst v2d) (src v2d) &key (start 0) (end nil))
   (declare (ignore start end))

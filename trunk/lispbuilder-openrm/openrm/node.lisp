@@ -16,6 +16,8 @@
     :initform :rm-renderpass-all
     :initarg :opacity))
   (:default-initargs
+   :traverse t
+   :pick t
    :gc t
    :free (simple-free 'rm-cffi::rm-node-delete 'rm-node)))
 
@@ -23,10 +25,10 @@
   (:default-initargs
    :name "root-node"
    :gc nil
-    :free #'(lambda (node-fp)
-	      (declare (ignore node-fp))
-	      ;; Do Nothing. We should not be here.
-	      nil)))
+   :free #'(lambda (node-fp)
+             (declare (ignore node-fp))
+             ;; Do Nothing. We should not be here.
+             nil)))
 
 (defun free-node (node-fp)
   (when (is-valid-ptr node-fp)
@@ -65,30 +67,30 @@ when subsequently removed from the scene graph and its reference count is zero."
   (setf (slot-value self 'foreign-pointer-to-object) (rm-cffi::rm-root-node)))
 
 (defmethod initialize-instance :around ((self rm-node)
-					&key (traverse t) (pick t) (center nil) (compute-center nil)
-					(bounding-box nil) (normalize-normals nil)
-					(background-color) (unlit-color nil)
-                                        (ambient-color nil) (diffuse-color nil) (specular-color nil)
-					(xy/z nil) (viewport nil) (lights nil) (default-lighting nil)
-					(light-model nil) (specular-exponent nil)
-					(primitives nil) (children nil) (compute-bounding-box nil) (union-all nil)
-                                        (camera nil) compute-view-from-geometry)
+					&key traverse pick center compute-center
+                                        bounding-box normalize-normals
+					background-color unlit-color
+                                        ambient-color diffuse-color specular-color
+					xy/z viewport lights default-lighting
+					light-model specular-exponent
+					primitives children compute-bounding-box union-all
+                                        camera compute-view-from-geometry)
   (unless *initialised*
     (setf *initialised* t)
     (rm-cffi::rm-Init))
-  
+
   (call-next-method)
 
-  (loop for child in (if (listp children) children (list children)) :do
+  (loop :for child :in (if (listp children) children (list children)) :do
         (add-to-node self child))
-  (loop for prim in primitives :do
+  (loop :for prim :in (if (listp primitives) primitives (list primitives)) :do
         (add-to-node self prim))
 
-  (loop for light in lights do
-       (setf (light self) light))
+  (loop :for light :in (if (listp lights) lights (list lights)) :do
+        (setf (light self) light))
   
   (setf (pick-p self) pick)
-  (setf (traverse self) traverse)
+  (setf (traverse-p self) traverse)
   
   (when bounding-box
     (setf (bounding-box self) bounding-box))
@@ -108,8 +110,8 @@ when subsequently removed from the scene graph and its reference count is zero."
     (setf (xy/z self) xy/z))
   (when viewport
     (setf (viewport self) viewport))
-  (when (and default-lighting (not light-model)
-    (assign-default-lighting self)))
+  (when (and default-lighting (not light-model))
+    (assign-default-lighting self))
   (when light-model
     (setf (light-model self) light-model))
   (when specular-exponent
@@ -163,14 +165,16 @@ when subsequently removed from the scene graph and its reference count is zero."
 
 (defmethod remove-child-node ((parent rm-node) (child node))
   "Remove CHILD from PARENT."
-  (log5:log-for (info) "remove-child-node.RM-NODE:PARENT:\(~A:~A\), CHILD:\(~A:~A\)" parent (name parent) child (name child))
+  (log5:log-for (info) "remove-child-node.RM-NODE:PARENT:\(~A:~A\), CHILD:\(~A:~A\)"
+                parent (name parent) child (name child))
   (if (rm-cffi::rm-node-remove-child (fp parent) (fp child))
       child
       nil))
 
 (defmethod remove-sub-tree ((this rm-node) &optional parent)
   "Removes the NODES below THIS from the scene graph."
-  (log5:log-for (info) "remove-sub-tree.RM-NODE: \(~A:~A\) &optional \(~A:~A\)" this (name this) parent (when parent (name parent)))
+  (log5:log-for (info) "remove-sub-tree.RM-NODE: \(~A:~A\) &optional \(~A:~A\)"
+                this (name this) parent (when parent (name parent)))
   (if parent
     (cons (list parent this) (loop for child in (get-children this)
 				appending (remove-sub-tree child this)))
@@ -189,7 +193,8 @@ when subsequently removed from the scene graph and its reference count is zero."
   "Delete everthing in the scene graph, with
 the exception of the root RMnode. Remove cameras and lights from the root node."
   (log5:log-for (free) "DELETE-SCENE-GRAPH")
-  (remove-light (rm-root-node))
+  (assign-default-lighting (rm-root-node))
+  ;(remove-light (rm-root-node))
   (remove-camera (rm-root-node))
   ;; SCENE and WINDOW can both be set to the RM-ROOT-NODE
   ;; therefore to be safe, delete any camera or lights set
@@ -204,9 +209,7 @@ the exception of the root RMnode. Remove cameras and lights from the root node."
              (rm-cffi::rm-node-remove-child (fp (rm-root-node)) (this-fp node))
              (log5:log-for (free) "RM-SUB-TREE-DELETE rooted at: ~A, ~A, ~A"
                            node (get-client-data node) (fp node))
-             (rm-cffi::rm-sub-tree-delete (this-fp node))))
-  ;(rm-cffi::rm-sub-tree-delete (this-fp (rm-root-node)))
-  )
+             (rm-cffi::rm-sub-tree-delete (this-fp node)))))
 
 (defmethod remove-all-primitives ((self rm-node))
   (rm-cffi::rm-Node-Remove-All-Prims (fp self)))
@@ -243,103 +246,184 @@ the exception of the root RMnode. Remove cameras and lights from the root node."
   (rm-cffi::rm-Node-Compute-Center-From-Bounding-Box (fp self)))
 
 (defmethod center ((self rm-node))
-  (let ((v (rm-cffi::rm-vertex-3d-new 0)))
-    (rm-cffi::rm-Node-get-Center (fp self) v)
-    (v3d nil nil nil v)))
+  (rm-base:with-v3d (vertex)
+    (when (rm-cffi::rm-Node-get-Center (fp self) vertex)
+      (vertex rm-base::x rm-base::y rm-base::z))))
+(defmethod center* ((self rm-node))
+  (let ((v (v3d nil nil nil)))
+    (when (rm-cffi::rm-Node-get-Center (fp self) (fp v))
+      v)))
+(defmethod (setf center) ((vertex vector) (self rm-node))
+  (with-copy-vertex-3d-to-foreign (vertex fp)
+    (when (rm-cffi::rm-Node-set-center (fp self) fp)
+      vertex)))
 (defmethod (setf center) ((vertex v3d) (self rm-node))
-  (rm-cffi::rm-Node-set-center (fp self) (fp vertex)))
+  (when (rm-cffi::rm-Node-set-center (fp self) (fp vertex))
+    vertex))
 
 (defmethod compute-bounding-box ((self rm-node))
   (rm-cffi::rm-Node-Compute-Bounding-Box (fp self)))
 
+(defmethod (setf bounding-box-min) ((min vector) (self rm-node))
+  (with-copy-vertex-3d-to-foreign (min fp)
+    (when (rm-cffi::rm-node-Set-Bounding-Box (fp self) fp (cffi:null-pointer))
+      min)))
 (defmethod (setf bounding-box-min) ((min v3d) (self rm-node))
-  (rm-cffi::rm-node-Set-Bounding-Box (fp self) (fp min) (cffi:null-pointer))
-  self)
+  (when (rm-cffi::rm-node-Set-Bounding-Box (fp self) (fp min) (cffi:null-pointer))
+    min))
+(defmethod (setf bounding-box-max) ((max vector) (self rm-node))
+  (with-copy-vertex-3d-to-foreign (max fp)
+    (when (rm-cffi::rm-node-Set-Bounding-Box (fp self) (cffi:null-pointer) fp)
+      max)))
 (defmethod (setf bounding-box-max) ((max v3d) (self rm-node))
-  (rm-cffi::rm-node-Set-Bounding-Box (fp self) (cffi:null-pointer) (fp max))
-  self)
+  (when (rm-cffi::rm-node-Set-Bounding-Box (fp self) (cffi:null-pointer) (fp max))
+    max))
+(defmethod (setf bounding-box) ((bounds vector) (self rm-node))
+  (when (and (setf (bounding-box-min self) (svref bounds 0))
+             (setf (bounding-box-min self) (svref bounds 1)))
+    bounds))
 (defmethod (setf bounding-box) ((bounds v3d*) (self rm-node))
-  (setf (bounding-box-min self) (nth-vertex bounds 0)
-	(bounding-box-max self) (nth-vertex bounds 1))
-  self)
+  (when (and (setf (bounding-box-min self) (nth-vertex bounds 0))
+             (setf (bounding-box-max self) (nth-vertex bounds 1)))
+    bounds))
 
 (defmethod bounding-box-min ((self rm-node))
-  (let ((v (rm-cffi::rm-vertex-3d-new 0)))
+  (rm-base:with-v3d (v)
     (when (rm-cffi::rm-Node-Get-Bounding-Box (fp self) v (cffi:null-pointer))
-      (v3d nil nil nil v))))
+      (vertex rm-base::x rm-base::y rm-base::z))))
+(defmethod bounding-box-min* ((self rm-node))
+  (let ((v (c3d nil nil nil)))
+    (when (rm-cffi::rm-Node-Get-Bounding-Box (fp self) (fp v) (cffi:null-pointer))
+      v)))
 
 (defmethod bounding-box-max ((self rm-node))
-  (let ((v (rm-cffi::rm-vertex-3d-new 0)))
+  (rm-base:with-v3d (v)
     (when (rm-cffi::rm-Node-Get-Bounding-Box (fp self) (cffi:null-pointer) v)
-      (v3d nil nil nil v))))
+      (vertex rm-base::x rm-base::y rm-base::z))))
+(defmethod bounding-box-max* ((self rm-node))
+  (let ((v (v3d nil nil nil)))
+    (when (rm-cffi::rm-Node-Get-Bounding-Box (fp self) (cffi:null-pointer) (fp v))
+      v)))
 
 (defmethod bounding-box ((self rm-node))
-  (let ((bounds (v3d* nil 2)))
-    (if (rm-cffi::rm-Node-Get-Bounding-Box (fp self) (fp (nth-vertex bounds 0)) (fp (nth-vertex bounds 1)))
-	bounds
-	nil)))
+  (cffi:with-foreign-object (bounds 'rm-cffi::rm-vertex-3d 2)
+    (when (rm-cffi::rm-Node-Get-Bounding-Box (fp self)
+                                             (cffi:mem-aref bounds 'rm-cffi::rm-vertex-3d 0)
+                                             (cffi:mem-aref bounds 'rm-cffi::rm-vertex-3d 1))
+      (new-vertex-from-foreign-3d-vertex bounds 2))))
+  
+(defmethod bounding-box* ((self rm-node))
+  (let ((bounds (v3d* 2)))
+    (when (rm-cffi::rm-Node-Get-Bounding-Box (fp self)
+                                             (cffi:mem-aref (fp bounds) 'rm-cffi::rm-vertex-3d 0)
+                                             (cffi:mem-aref (fp bounds) 'rm-cffi::rm-vertex-3d 1))
+      bounds)))
 
+(defmethod (setf background-color) ((color vector) (self rm-node))
+  (with-copy-color-4d-to-foreign (color fp)
+    (when (rm-cffi::rm-Node-Set-Scene-Background-Color (fp self) fp)
+      color)))
 (defmethod (setf background-color) ((color c4d) (self rm-node))
-  (rm-cffi::rm-Node-Set-Scene-Background-Color (fp self) (fp color))
-  self)
+  (when (rm-cffi::rm-Node-Set-Scene-Background-Color (fp self) (fp color))
+    color))
 (defmethod background-color ((self rm-node))
   (rm-base:with-c4d (col)
-    (rm-cffi::rm-node-get-scene-background-color (fp self) col)
-    (color rm-base:r rm-base:g rm-base:b rm-base:a)))
+    (when (rm-cffi::rm-node-get-scene-background-color (fp self) col)
+      (color rm-base:r rm-base:g rm-base:b rm-base:a))))
+(defmethod background-color* ((self rm-node))
+  (let ((col (c4d nil nil nil nil)))
+    (when (rm-cffi::rm-node-get-scene-background-color (fp self) (fp col))
+      col)))
 
 (defmethod (setf normalize-normals) (value (self rm-node))
   (rm-cffi::rm-Node-Set-Normalize-Normals (fp self) value))
 (defmethod normalize-normals ((self rm-node))
   (cffi:with-foreign-object (value 'rm-cffi::rm-enum)
-    (rm-cffi::rm-Node-Get-Normalize-Normals (fp self) value)))
+    (let ((ret (rm-cffi::rm-node-get-normalize-normals (fp self) value)))
+      (values (cffi:mem-aref value 'rm-cffi::rm-enum) ret))))
 
+(defmethod (setf unlit-color) ((color vector) (self rm-node))
+  (with-copy-color-4d-to-foreign (color fp)
+    (when (rm-cffi::rm-Node-Set-Unlit-Color (fp self) fp)
+      color)))
 (defmethod (setf unlit-color) ((color c4d) (self rm-node))
-  (rm-cffi::rm-Node-Set-Unlit-Color (fp self) (fp color)))
+  (when (rm-cffi::rm-Node-Set-Unlit-Color (fp self) (fp color))
+    color))
+
 (defmethod unlit-color ((self rm-node))
   (rm-base:with-c4d (col)
-    (rm-cffi::rm-Node-Get-Unlit-Color (fp self) col)
-    (color rm-base:r rm-base:g rm-base:b rm-base:a)))
+    (when (rm-cffi::rm-Node-Get-Unlit-Color (fp self) col)
+      (color rm-base:r rm-base:g rm-base:b rm-base:a))))
+(defmethod unlit-color* ((self rm-node))
+  (let ((col (c4d nil nil nil nil)))
+    (when (rm-cffi::rm-Node-Get-Unlit-Color (fp self) (fp col))
+      col)))
 
+(defmethod (setf ambient-color) ((color vector) (self rm-node))
+  (with-copy-color-4d-to-foreign (color fp)
+    (when (rm-cffi::rm-Node-Set-Ambient-Color (fp self) fp)
+      color)))
 (defmethod (setf ambient-color) ((color c4d) (self rm-node))
-    (rm-cffi::rm-Node-Set-Ambient-Color (fp self) (fp color)))
+  (when (rm-cffi::rm-Node-Set-Ambient-Color (fp self) (fp color))
+    color))
 (defmethod ambient-color ((self rm-node))
   (rm-base:with-c4d (col)
-    (rm-cffi::rm-Node-Get-Ambient-Color (fp self) col)
-    (color rm-base:r rm-base:g rm-base:b rm-base:a)))
+    (when (rm-cffi::rm-Node-Get-Ambient-Color (fp self) col)
+      (color rm-base:r rm-base:g rm-base:b rm-base:a))))
+(defmethod ambient-color* ((self rm-node))
+  (let ((col (c4d nil nil nil nil)))
+    (when (rm-cffi::rm-Node-Get-Ambient-Color (fp self) (fp col))
+      col)))
 
+(defmethod (setf diffuse-color) ((color vector) (self rm-node))
+  (with-copy-color-4d-to-foreign (color fp)
+    (when (rm-cffi::rm-Node-Set-Diffuse-Color (fp self) fp)
+      color)))
 (defmethod (setf diffuse-color) ((color c4d) (self rm-node))
-  (rm-cffi::rm-Node-Set-Diffuse-Color (fp self) (fp color)))
+  (when (rm-cffi::rm-Node-Set-Diffuse-Color (fp self) (fp color))
+    color))
 (defmethod diffuse-color ((self rm-node))
   (rm-base:with-c4d (col)
-    (rm-cffi::rm-Node-Get-Diffuse-Color (fp self) col)
-    (color rm-base:r rm-base:g rm-base:b rm-base:a)))
+    (when (rm-cffi::rm-node-get-diffuse-color (fp self) col)
+      (color rm-base:r rm-base:g rm-base:b rm-base:a))))
+(defmethod diffuse-color* ((self rm-node))
+  (let ((col (c4d nil nil nil nil)))
+    (when (rm-cffi::rm-Node-Get-Diffuse-Color (fp self) (fp col))
+      col)))
 
+(defmethod (setf specular-color) ((color vector) (self rm-node))
+  (with-copy-color-4d-to-foreign (color fp)
+    (when (rm-cffi::rm-Node-Set-specular-Color (fp self) fp)
+      color)))
 (defmethod (setf specular-color) ((color c4d) (self rm-node))
-  (rm-cffi::rm-Node-Set-specular-Color (fp self) (fp color)))
+  (when (rm-cffi::rm-Node-Set-specular-Color (fp self) (fp color))
+    color))
 (defmethod specular-color ((self rm-node))
   (rm-base:with-c4d (col)
-    (rm-cffi::rm-Node-Get-specular-Color (fp self) col)
-    (color rm-base:r rm-base:g rm-base:b rm-base:a)))
+    (when (rm-cffi::rm-Node-Get-specular-Color (fp self) col)
+      (color rm-base:r rm-base:g rm-base:b rm-base:a))))
+(defmethod specular-color* ((self rm-node))
+  (let ((col (c4d nil nil nil nil)))
+    (when (rm-cffi::rm-Node-Get-specular-Color (fp self) (fp col))
+      col)))
 
 (defmethod (setf specular-exponent) (value (self rm-node))
-  (rm-cffi::rm-Node-Set-Specular-Exponent (fp self) value)
-  self)
+  (when (rm-cffi::rm-Node-Set-Specular-Exponent (fp self) value)
+    value))
 (defmethod specular-exponent ((self rm-node))
   (cffi:with-foreign-object (v :float)
-    (rm-cffi::rm-Node-Get-Specular-Exponent (fp self) v)
-    (cffi:mem-aref v :float)))
+    (when (rm-cffi::rm-Node-Get-Specular-Exponent (fp self) v)
+      (cffi:mem-aref v :float))))
 
-(defmethod (setf traverse) (value (self rm-node))
-  (rm-cffi::rm-Node-Set-Traverse-Enable (fp self) value)
-  self)
-(defmethod traverse ((self rm-node))
-  (rm-cffi::rm-Node-Get-Traverse-Enable (fp self)))
-(defmethod traversep ((self rm-node))
+(defmethod (setf traverse-p) (value (self rm-node))
+  (when (rm-cffi::rm-Node-Set-Traverse-Enable (fp self) value)
+    value))
+(defmethod traverse-p ((self rm-node))
   (rm-cffi::rm-Node-Get-Traverse-Enable (fp self)))
 
 (defmethod (setf pick-p) (value (self rm-node))
-  (rm-cffi::rm-Node-Set-Pick-Enable (fp self) value)
-  self)
+  (when (rm-cffi::rm-Node-Set-Pick-Enable (fp self) value)
+    value))
 (defmethod pick-p ((self rm-node))
   (rm-cffi::rm-Node-Get-Pick-Enable (fp self)))
 
@@ -372,28 +456,52 @@ the exception of the root RMnode. Remove cameras and lights from the root node."
 ;;   (gethash id *rm-objects*))
 
 (defmethod (setf xy/z) ((translate v2d) (node rm-node))
-  (rm-cffi::rm-node-set-translate-vector (fp node) (fp translate)))
+  (rm-base:with-v3d (v3d)
+    (setf rm-base::x (x translate)
+          rm-base::y (y translate)
+          rm-base::z 0.0)
+    (when (rm-cffi::rm-node-set-translate-vector (fp node) v3d)
+      translate)))
 (defmethod (setf xy/z+) ((xyz v2d) (node rm-node))
-  (rm-base:with-v2d (translate)
+  (rm-base:with-v3d (translate)
+    (declare (ignore rm-base::z))
     (when (rm-cffi::rm-Node-Get-Translate-Vector (fp node) translate)
-      (rm-cffi::rm-Node-Set-Translate-Vector (fp node) (rm-base::v2d+ translate (fp xyz))))))
+      (incf rm-base::x (x xyz))
+      (incf rm-base::y (y xyz))
+      (when (rm-cffi::rm-Node-Set-Translate-Vector (fp node) translate)
+        xyz))))
 
 (defmethod xy/z ((node rm-node))
-  (let ((position (v3d 0.0 0.0 0.0)))
+  (rm-base:with-v3d (position)
+    (when (rm-cffi::rm-Node-Get-Translate-Vector (fp node) position)
+      (vertex rm-base:x rm-base:y rm-base:z))))
+(defmethod xy/z* ((node rm-node))
+  (let ((position (v3d nil nil nil)))
     (when (rm-cffi::rm-Node-Get-Translate-Vector (fp node) (fp position))
       position)))
 
+(defmethod (setf xy/z) ((translate list) (node rm-node))
+  (setf (xy/z node) (coerce translate 'vector)))
 (defmethod (setf xy/z) ((translate vector) (node rm-node))
-  (rm-base:with-v3d (v3d)
-    (setf rm-base::x (svref translate 0)
-          rm-base::y (svref translate 1)
-          rm-base::z (svref translate 2))
-    (rm-cffi::rm-node-set-translate-vector (fp node) v3d)))
-
+  (if (> (length translate) 2)
+    (rm-base:with-v3d (v3d)
+      (setf rm-base::x (svref translate 0)
+            rm-base::y (svref translate 1)
+            rm-base::z (svref translate 2))
+      (when (rm-cffi::rm-node-set-translate-vector (fp node) v3d)
+        translate))
+    (rm-base:with-v3d (v3d)
+      (setf rm-base::x (svref translate 0)
+            rm-base::y (svref translate 1)
+            rm-base::z 0.0)
+      (when (rm-cffi::rm-node-set-translate-vector (fp node) v3d)
+        translate))))
 (defmethod (setf xy/z) ((translate v3d) (node rm-node))
-  (rm-cffi::rm-node-set-translate-vector (fp node) (fp translate)))
+  (when (rm-cffi::rm-node-set-translate-vector (fp node) (fp translate))
+    translate))
 (defmethod (setf xy/z+) ((xyz v3d) (node rm-node))
   (rm-base:with-v3d (translate)
+    (declare (ignore rm-base::x rm-base::y rm-base::z))
     (when (rm-cffi::rm-Node-Get-Translate-Vector (fp node) translate)
       (rm-cffi::rm-Node-Set-Translate-Vector (fp node) (rm-base::v3d+ translate (fp xyz))))))
 (defmethod (setf xy/z+) ((xyz vector) (node rm-node))
@@ -402,7 +510,8 @@ the exception of the root RMnode. Remove cameras and lights from the root node."
       (incf rm-base::x (svref xyz 0))
       (incf rm-base::y (svref xyz 1))
       (incf rm-base::z (svref xyz 2))
-      (rm-cffi::rm-Node-Set-Translate-Vector (fp node) translate))))
+      (when (rm-cffi::rm-Node-Set-Translate-Vector (fp node) translate)
+        xyz))))
 
 ;;(defmethod add-scene ((child rm-node) (parent rm-node))
 ;;  nil)
@@ -450,9 +559,8 @@ Returns NIL otherwise."))
 (defmethod (setf viewport) (viewport (self rm-node))
   (if viewport
       (setf (viewport self) #(0.0 0.0 1.0 1.0))
-      (if (rm-cffi::rm-node-set-scene-viewport (fp self) (cffi:null-pointer))
-	  viewport
-	  nil)))
+      (when (rm-cffi::rm-node-set-scene-viewport (fp self) (cffi:null-pointer))
+        viewport)))
 
 (defmethod (setf viewport) ((viewport vector) (self rm-node))
   ;; Modify an existing viewport, if available.
@@ -463,32 +571,28 @@ Returns NIL otherwise."))
         (dotimes (i 4)
           (setf (cffi:mem-aref (cffi:mem-aref fv :pointer) :float i)
                 (svref viewport i)))
-	  (if (rm-cffi::rm-node-set-scene-viewport (fp self)
-                                                   (cffi:mem-aref fv :pointer))
-	      viewport
-	      nil))
+        (when (rm-cffi::rm-node-set-scene-viewport (fp self) (cffi:mem-aref fv :pointer))
+          viewport))
       (progn
         (cffi:with-foreign-object (fv :float 4)
-          (setf (cffi:mem-aref fv :float 0) (svref viewport 0)
-                (cffi:mem-aref fv :float 1) (svref viewport 1)
-                (cffi:mem-aref fv :float 2) (svref viewport 2)
-                (cffi:mem-aref fv :float 3) (svref viewport 3))
-          (if (rm-cffi::rm-node-set-scene-viewport (fp self) fv)
-            viewport
-            nil))))))
+          (dotimes (i 4)
+            (setf (cffi:mem-aref fv :float i) (svref viewport i)))
+          (when (rm-cffi::rm-node-set-scene-viewport (fp self) fv)
+            viewport))))))
 
 (defun print-scene-graph (filename &optional (node (rm::rm-root-node)))
   (rm-cffi::rm-print-scene-graph (rm::fp node) :rm-true filename))
-
 
 ;;;
 ;;; Camera
 
 (defmethod (setf camera) ((camera camera-2d) (node rm-node))
-  (rm-cffi::rm-Node-Set-Scene-Camera-2D (fp node) (fp camera)))
+  (when (rm-cffi::rm-Node-Set-Scene-Camera-2D (fp node) (fp camera))
+    camera))
 
 (defmethod (setf camera) ((camera camera-3d) (node rm-node))
-  (rm-cffi::rm-Node-Set-Scene-Camera-3D (fp node) (fp camera)))
+  (when (rm-cffi::rm-Node-Set-Scene-Camera-3D (fp node) (fp camera))
+    camera))
 
 (defmethod get-camera ((self rm-node) type)
   (cffi:with-foreign-object (c :pointer)
@@ -514,10 +618,11 @@ Returns NIL otherwise."))
   nil)
 
 (defmethod remove-camera-from-node ((self rm-node) (camera camera-2d))
-  (rm-cffi::rm-Node-Set-Scene-Camera-2d (fp self) (cffi:null-pointer)))
-
+  (when (rm-cffi::rm-Node-Set-Scene-Camera-2d (fp self) (cffi:null-pointer))
+    camera))
 (defmethod remove-camera-from-node ((self rm-node) (camera camera-3d))
-  (rm-cffi::rm-Node-Set-Scene-Camera-3d (fp self) (cffi:null-pointer)))
+  (when (rm-cffi::rm-Node-Set-Scene-Camera-3d (fp self) (cffi:null-pointer))
+    camera))
 
 (defmethod remove-camera ((self rm-node))
   (remove-camera-from-node self (camera-p self)))
@@ -538,16 +643,15 @@ Returns NIL otherwise."))
 
 (defmethod get-light ((self rm-node) light-source)
   (cffi:with-foreign-object (l :pointer)
-    (if (rm-cffi::rm-Node-Get-Scene-Light (fp self) light-source l)
-	(let ((fp-light (cffi:mem-aref l :pointer)))
-	  (cond
-	    ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-SPOT)
-	     (make-instance 'spotlight :light-source light-source :fp fp-light))
-	    ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-POINT)
-	     (make-instance 'point-light :light-source light-source :fp fp-light))
-	    ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-DIRECTIONAL)
-	     (make-instance 'directional-light :light-source light-source :fp fp-light))))
-	nil)))
+    (when (rm-cffi::rm-Node-Get-Scene-Light (fp self) light-source l)
+      (let ((fp-light (cffi:mem-aref l :pointer)))
+        (cond
+         ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-SPOT)
+          (make-instance 'spotlight :light-source light-source :fp fp-light))
+         ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-POINT)
+          (make-instance 'point-light :light-source light-source :fp fp-light))
+         ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-DIRECTIONAL)
+          (make-instance 'directional-light :light-source light-source :fp fp-light)))))))
 
 (defmethod light-p ((node rm-node) &optional light-source)
   (if light-source
@@ -557,7 +661,7 @@ Returns NIL otherwise."))
 	(setf lights (remove nil
 			     (loop for l-source in '(:rm-light-0 :rm-light-1 :rm-light-2 :rm-light-3
 						     :rm-light-4 :rm-light-5 :rm-light-6 :rm-light-7)
-				collecting (get-light node l-source))))
+                                   collecting (get-light node l-source))))
 	(rm-cffi::rm-notify-level :rm-notify-full)
 	lights)))
 
@@ -565,7 +669,8 @@ Returns NIL otherwise."))
   (light-p node light-source))
 
 (defmethod (setf light) ((light light) (node rm-node))
-  (rm-cffi::rm-Node-Set-Scene-Light (fp node) (light-source light) (fp light)))
+  (when (rm-cffi::rm-Node-Set-Scene-Light (fp node) (light-source light) (fp light))
+    light))
 
 (defmethod remove-light ((self rm-node) &optional light-source)
   (loop for light in (light-p self light-source)
@@ -574,11 +679,11 @@ Returns NIL otherwise."))
 
 (defmethod light-model ((self rm-node))
   (cffi:with-foreign-object (l :pointer)
-    (if (rm-cffi::rm-Node-Get-Scene-Light-Model (fp self) l)
-	(make-instance 'light-model :fp (cffi:mem-aref l :pointer))
-	nil)))
+    (when (rm-cffi::rm-Node-Get-Scene-Light-Model (fp self) l)
+      (make-instance 'light-model :fp (cffi:mem-aref l :pointer)))))
 (defmethod (setf light-model) ((lm light-model) (self rm-node))
-  (rm-cffi::rm-Node-Set-Scene-Light-Model (fp self) (fp lm)))
+  (when (rm-cffi::rm-Node-Set-Scene-Light-Model (fp self) (fp lm))
+    lm))
 (defmethod (setf light-model) (value (self rm-node))
   (unless value
     (rm-cffi::rm-Node-Set-Scene-Light-Model (fp self) (cffi:null-pointer))))
@@ -596,16 +701,29 @@ Returns NIL otherwise."))
       (rm-cffi::rm-Point-Matrix-Transform (fp src) matrix (fp dst)))
     dst))
 
-(defmethod rotate ((self node) &key (direction nil) (match nil) (reverse nil))
-  (rm-base::rotate-node (this-fp self)
-			:direction (if direction (fp direction) nil) 
-			:match-node (if match (fp match) nil)
-			:reverse-nodes (if (null reverse)
-                                         nil
-                                         (if (listp reverse)
-                                           (loop for node in reverse
-                                                 collect (this-fp node))
-                                           t))))
+(defmethod rotate ((self node) (direction vector) &key (match nil) (reverse nil))
+  (with-copy-vertex-3d-to-foreign (direction fp)
+    (rm-base::rotate-node (this-fp self)
+                          :direction fp 
+                          :match-node (if match (fp match) nil)
+                          :reverse-nodes (if (null reverse)
+                                           nil
+                                           (if (listp reverse)
+                                             (loop for node in reverse
+                                                   collect (this-fp node))
+                                             t)))))
+
+(defmethod rotate ((self node) (direction v3d) &key (match nil) (reverse nil))
+  (with-copy-vertex-3d-to-foreign (direction fp)
+    (rm-base::rotate-node (this-fp self)
+                          :direction (fp direction)
+                          :match-node (if match (fp match) nil)
+                          :reverse-nodes (if (null reverse)
+                                           nil
+                                           (if (listp reverse)
+                                             (loop for node in reverse
+                                                   collect (this-fp node))
+                                             t)))))
 
 ;;;
 ;;;
@@ -635,58 +753,3 @@ Returns NIL otherwise."))
 
 (defun add-primitive (prim &optional (node *default-node*))
   (add-to-node node prim))
-
-(defmacro with-default-node ((a-node) &body body)
-  (let ((node (gensym "node-"))
-	(add-to-parent? (gensym "add-to-parent?-")))
-    `(progn
-       (let ((,node ,a-node)
-	     (,add-to-parent? t))
-	 (let ((*default-node* ,node)
-	       (*parent-node* ,node))
-	   (labels ((set-compute-center-from-bounding-box () (compute-center-from-bounding-box ,node))
-		    (set-compute-bounding-box () (compute-bounding-box ,node))
-		    (set-union-all-boxes () (union-all-boxes ,node))
-		    (set-normalize-normals () (normalize-normals ,node))
-		    (set-bounding-box (bounds &optional (node *default-node*))
-		      (setf (bounding-box node) bounds))
-		    (set-xy/z (vertex &optional (node *default-node*))
-		      (setf (xy/z node) vertex))
-		    (set-center (vertex &optional (node *default-node*))
-		      (setf (center node) vertex))
-		    (set-specular-exponent (exp &optional (node *default-node*))
-		      (setf (specular-exponent node) exp))
-		    (set-specular-color (col &optional (node *default-node*))
-		      (setf (specular-color node) col))
-		    (set-ambient-color (col &optional (node *default-node*))
-		      (setf (ambient-color node) col))
-		    (set-diffuse-color (col &optional (node *default-node*))
-		      (setf (diffuse-color node) col))
-		    (add-this-to-parent (add?)
-		      (if add?
-			  (setf ,add-to-parent? t)
-			  (setf ,add-to-parent? nil)))
-		    (set-light (light &optional (node *default-node*))
-		      (setf (light node) light))
-		    (set-default-camera (&optional (node *default-node*))
-		      (assign-default-camera node)))
-	     (declare (ignorable #'set-compute-center-from-bounding-box
-				 #'set-compute-bounding-box
-				 #'set-union-all-boxes
-				 #'set-normalize-normals
-				 #'set-bounding-box
-				 #'set-xy/z
-				 #'set-center
-				 #'set-specular-exponent
-				 #'set-ambient-color
-				 #'set-specular-color
-				 #'set-diffuse-color
-				 #'add-this-to-parent
-				 #'set-light
-				 #'set-default-camera))
-	     ,@body))
-	 (when (and *parent-node*
-		    ,add-to-parent?)
-	   (add-to-node *parent-node* ,node))))))
-
-

@@ -8,13 +8,6 @@
 			   cffi:*foreign-library-directories*
 			   :test #'equal))
 
-;; (cffi:define-foreign-library GL
-;;   (:darwin (:framework "OpenGL"))
-;;   (:windows "OPENGL32.dll")
-;;   (:unix (:or "libGL")))
-
-;; (cffi:use-foreign-library GL)
-
 #+win32(cffi:define-foreign-library msvcr70
   (:windows "msvcr70.dll"))
 #+win32(cffi:define-foreign-library msvcrtd
@@ -48,6 +41,21 @@
   (:windows "librmv.dll")
   (:unix (:or "librmv" "librmv.so" "librmv.so.1.6")))
 
+;;; From cl-opengl
+;;; http://common-lisp.net/project/cl-opengl/darcs/cl-opengl/glu/library.lisp
+(cffi:define-foreign-library GL
+  (:darwin (:framework "OpenGL"))
+  (:windows "opengl32.dll" :calling-convention :stdcall)
+  (:unix (:or "libGL.so" "libGL.so.2" "libGL.so.1")))
+
+;;; From cl-opengl
+;;; http://common-lisp.net/project/cl-opengl/darcs/cl-opengl/glu/library.lisp
+;;; On darwin GLU is part of the OpenGL framework and thus
+;;; is loaded already by cl-opengl, on which cl-glu depends.
+(define-foreign-library GLU
+  (:windows "glu32.dll") ; XXX?
+  ((:and :unix (:not :darwin)) (:or "libGLU.so.1" "libGLU.so"))
+  ((:not :darwin) (:default "libGLU")))
 
 #+win32(cffi:use-foreign-library msvcr70)
 #+win32(cffi:use-foreign-library msvcrtd)
@@ -60,3 +68,6 @@
 (cffi:use-foreign-library librmaux)
 #+win32(cffi:use-foreign-library librmi)
 (cffi:use-foreign-library librmv)
+
+(cffi:use-foreign-library GL)
+#+win32(cffi:use-foreign-library GLU)

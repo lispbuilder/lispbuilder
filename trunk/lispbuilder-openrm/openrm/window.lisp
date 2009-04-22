@@ -10,7 +10,6 @@
     :accessor scenes
     :initform nil)
    (default-scene
-    :reader default-scene
     :initform nil)
    (width
     :initform 320
@@ -20,7 +19,6 @@
     :initarg :height))
   (:default-initargs
    :node (rm::rm-root-node)
-   :background-color (rm::c4d 0.2 0.2 0.3 1.0)
    :create-context nil))
 
 (defclass window (generic-window event-handler)()
@@ -34,16 +32,9 @@
 
 (defmethod initialize-instance :around ((self generic-window)
 					&key
-                                        (background-color nil)
-                                        (parent nil)
+                                        parent
                                         scene create-context
                                         pipe)
-  (unless *initialised*
-    (setf *initialised* t)
-    (rm-cffi::rm-Init))
-
-  (log5:log-for (info) "")
-
   (call-next-method)
   
   (add-window self)
@@ -64,10 +55,7 @@
   ;;(rm-cffi::rm-pipe-set-window-size (fp (pipe window))
   ;;                             (slot-value window 'width) (slot-value window 'height))
 
-  (pipe-make-current self)
-
-  (when background-color
-    (setf (background-color self) background-color))
+  (pipe-make-current (pipe self))
 
   (when scene
     (dolist (s (if (listp scene) scene (list scene)))
@@ -136,13 +124,13 @@
 (defun default-window ()
   *window*)
 
+(defun default-scene (&optional (window (default-window)))
+  (slot-value window 'default-scene))
+
 (defmethod width ((self window))
   (width (pipe self)))
 (defmethod height ((self window))
   (height (pipe self)))
-
-(defmethod pipe-make-current ((self window))
-  (rm-cffi::rm-Pipe-Make-Current (fp (pipe self))))
 
 (defmethod frame-rate ((self window))
   (frame-rate (pipe self)))
@@ -152,20 +140,17 @@
     (setf (frame-rate (pipe self)) value)
     (setf (frame-rate (pipe self)) -1)))
 
-(defmethod (setf background-color) ((color c4d) (window window))
-  (rm-cffi::rm-Pipe-Set-Scene-Background-Color (fp (pipe window)) (fp color))
-  window)
-(defmethod background-color ((window window))
-  (rm-base:with-c4d (col)
-    (rm-cffi::rm-pipe-get-scene-background-color (fp (pipe window)) col)
-    (color rm-base:r rm-base:g rm-base:b rm-base:a)))
-
 (defmethod (setf dimensions) ((size vector) (self window))
   (setf (dimensions (pipe self)) size))
+(defmethod dimensions ((self window))
+  (dimensions (pipe self)))
 
 (defmethod close-window ((self window)) nil)
 
+
 (defmethod render ((self window))
+  ;;(format t "RENDER: ~A~%" (incf *count*))
+  ;;(force-output t)
   (rm-cffi::rm-frame (fp (pipe self)) (fp self)))
 
 ;;;
@@ -183,3 +168,16 @@ of the WINDOW."
   (setf (dimensions self) (vector width height))
   (call-next-method))
 
+(defmethod print-object ((obj window) stream)
+  (print-unreadable-object (obj stream :type t)
+    (format stream "\(
+:GC-P              ~s
+:COPY-P            ~s
+:WIDTH, HEIGHT     ~s
+:SCENES            ~s
+:DEFAULT-SCENE     ~s
+:PIPE              ~s
+\)"
+            (gc-p obj) (copy-p obj) (dimensions obj)
+            (scenes obj) (default-scene obj) (if (pipe obj) t nil)
+            )))

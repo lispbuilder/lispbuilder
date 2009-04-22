@@ -133,7 +133,7 @@
 
 ;; See "rmtypes.h" below.
 
-(cffi:defcenum rm-enum-wrapper ;;#.(openrm-lispify "RMenum 'enumname)
+(cffi:defcenum rm-enum-wrapper ;;#.(openrm-lispify "RMenum" 'enumname)
 	(#.(openrm-lispify "RM_WHACKED" 'enumvalue :keyword) -1)
 	(#.(openrm-lispify "RM_FALSE" 'enumvalue :keyword) 0)
 	(#.(openrm-lispify "RM_TRUE" 'enumvalue :keyword) 1)

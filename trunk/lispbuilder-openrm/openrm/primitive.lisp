@@ -3,6 +3,7 @@
 
 (defclass primitive (openrm-object) ()
   (:default-initargs
+   :display-list t
    :gc t
    :free (simple-free #'rm-cffi::rm-primitive-delete 'primitive)))
 
@@ -23,11 +24,13 @@
    :fp (rm-cffi::rm-Primitive-New :rm-sprite)))
 
 (defmethod initialize-instance :around ((self primitive) &key
-					(rgb/a nil) (xy/z nil) (normals nil)
-                                        (bounding-box nil) (compute-bounding-box nil)
-					(display-list-p nil) (app-display-list nil))
+                                        rgb/a xy/z normals
+                                        bounding-box compute-bounding-box
+					display-list app-display-list)
   (call-next-method)
- 
+
+  (setf (display-list-p self) display-list)
+  
   (when rgb/a
     (setf (rgb/a self) rgb/a))
   (when xy/z
@@ -36,8 +39,6 @@
     (setf (normals self) normals))
   (when bounding-box
     (setf (bounding-box self) bounding-box))
-  (when display-list-p
-    (setf (display-list-p self) display-list-p))
   (when app-display-list
     (setf (app-display-list self) app-display-list))
    (when compute-bounding-box
@@ -50,6 +51,43 @@
   (when images
     (set-sprites self images)))
 
+(defmethod (setf rgb/a) ((color list) (primitive primitive))
+  (setf (rgb/a primitive) (coerce color 'vector)))
+(defmethod (setf rgb/a) ((color vector) (primitive primitive))
+  (if (vectorp (svref color 0))
+    ;; A color array
+    (if (> (length color) 3)
+      ;; RGBA
+      (with-copy-color-4d-array-to-foreign (color fp)
+        (rm-cffi::rm-Primitive-Set-Color-4D (fp primitive)
+                                            (length color)
+                                            fp
+                                            :rm-copy-data
+                                            (cffi:null-pointer)))
+      ;; RGB
+      (with-copy-color-3d-array-to-foreign (color fp)
+        (rm-cffi::rm-Primitive-Set-Color-3D (fp primitive)
+                                            (length color)
+                                            fp
+                                            :rm-copy-data
+                                            (cffi:null-pointer))))
+    ;; A single color
+    (if (> (length color) 3)
+      ;; RGBA
+      (with-copy-color-4d-to-foreign (color fp)
+        (rm-cffi::rm-Primitive-Set-Color-4D (fp primitive)
+                                            1
+                                            fp
+                                            :rm-copy-data
+                                            (cffi:null-pointer)))
+      ;; RGB
+      (with-copy-color-3d-to-foreign (color fp)
+        (rm-cffi::rm-Primitive-Set-Color-3D (fp primitive)
+                                            1
+                                            fp
+                                            :rm-copy-data
+                                            (cffi:null-pointer)))))
+  color)
 (defmethod (setf rgb/a) ((color c3d) (primitive primitive))
   (rm-cffi::rm-Primitive-Set-Color-3D (fp primitive)
 				      1
@@ -88,14 +126,51 @@
                                         (cffi:callback color-4d-proc)))
   primitive)
 
+(defmethod (setf xy/z) ((vertex list) (primitive primitive))
+  (setf (xy/z primitive) (coerce vertex 'vector)))
+(defmethod (setf xy/z) ((vertex vector) (primitive primitive))
+  (if (vectorp (svref vertex 0))
+    ;; A vertex array
+    (if (> (length vertex) 2)
+      ;; xyz
+      (with-copy-vertex-3d-array-to-foreign (vertex fp)
+        (rm-cffi::rm-primitive-set-vertex-3d (fp primitive)
+                                             (length vertex)
+                                             fp
+                                             :rm-copy-data
+                                             (cffi:null-pointer)))
+      ;; xy
+      (with-copy-vertex-2d-array-to-foreign (vertex fp)
+        (rm-cffi::rm-primitive-set-vertex-2d (fp primitive)
+                                             (length vertex)
+                                             fp
+                                             :rm-copy-data
+                                             (cffi:null-pointer))))
+    ;; A single vertex
+    (if (> (length vertex) 2)
+      ;; xyz
+      (with-copy-vertex-3d-to-foreign (vertex fp)
+        (rm-cffi::rm-primitive-set-vertex-3d (fp primitive)
+                                             1
+                                             fp
+                                             :rm-copy-data
+                                             (cffi:null-pointer)))
+      ;; xy
+      (with-copy-vertex-2d-to-foreign (vertex fp)
+        (rm-cffi::rm-primitive-set-vertex-2d (fp primitive)
+                                             1
+                                             fp
+                                             :rm-copy-data
+                                             (cffi:null-pointer)))))
+  vertex)
 (defmethod (setf xy/z) ((position v2d) (primitive primitive))
   (rm-cffi::rm-Primitive-Set-Vertex-2D (fp primitive)
 				       1
 				       (fp position)
                                        (copy-data position)
                                        (if (copy-p position) 
-					   (cffi:null-pointer)
-					   (cffi:callback vertex-2d-proc)))
+                                         (cffi:null-pointer)
+                                         (cffi:callback vertex-2d-proc)))
   primitive)
 (defmethod (setf xy/z) ((position v3d) (primitive primitive))
   (rm-cffi::rm-Primitive-Set-Vertex-3D (fp primitive)
@@ -103,8 +178,8 @@
 				       (fp position)
                                        (copy-data position)
                                        (if (copy-p position) 
-					   (cffi:null-pointer)
-					   (cffi:callback vertex-3d-proc)))
+                                         (cffi:null-pointer)
+                                         (cffi:callback vertex-3d-proc)))
   primitive)
 (defmethod (setf xy/z) ((position v2d*) (primitive primitive))
   (rm-cffi::rm-Primitive-Set-Vertex-2D (fp primitive)
@@ -112,8 +187,8 @@
 				       (fp position)
                                        (copy-data position)
                                        (if (copy-p position) 
-					   (cffi:null-pointer)
-					   (cffi:callback vertex-2d-proc)))
+                                         (cffi:null-pointer)
+                                         (cffi:callback vertex-2d-proc)))
   primitive)
 (defmethod (setf xy/z) ((position v3d*) (primitive primitive))
   (rm-cffi::rm-Primitive-Set-Vertex-3D (fp primitive)
@@ -124,6 +199,29 @@
 					   (cffi:null-pointer)
 					   (cffi:callback vertex-3d-proc)))
   primitive)
+
+
+(defmethod (setf normals) ((vertex list) (primitive primitive))
+  (setf (normals primitive) (coerce vertex 'vector)))
+(defmethod (setf normals) ((vertex vector) (primitive primitive))
+  (if (vectorp (svref vertex 0))
+    ;; A vertex array
+    ;; xyz
+    (with-copy-vertex-3d-array-to-foreign (vertex fp)
+      (rm-cffi::rm-primitive-set-normal-3d (fp primitive)
+                                           (length vertex)
+                                           fp
+                                           :rm-copy-data
+                                           (cffi:null-pointer)))
+    ;; A single vertex
+    ;; xyz
+    (with-copy-vertex-3d-to-foreign (vertex fp)
+      (rm-cffi::rm-primitive-set-normal-3d (fp primitive)
+                                           1
+                                           fp
+                                           :rm-copy-data
+                                           (cffi:null-pointer))))
+  vertex)
 
 (defmethod (setf normals) ((normal v3d) (primitive primitive))
   (rm-cffi::rm-Primitive-Set-Normal-3d (fp primitive)
@@ -144,14 +242,48 @@
 					   (cffi:callback vertex-3d-proc)))
   primitive)
 
+(defmethod bounding-box-min ((self primitive))
+  (rm-base:with-v3d (v)
+    (when (rm-cffi::rm-primitive-get-bounding-box (fp self) v (cffi:null-pointer))
+      (vertex rm-base::x rm-base::y rm-base::z))))
+(defmethod bounding-box-min* ((self primitive))
+  (let ((v (c3d nil nil nil)))
+    (when (rm-cffi::rm-primitive-get-bounding-box (fp self) (fp v) (cffi:null-pointer))
+      v)))
+
+(defmethod bounding-box-max ((self primitive))
+  (rm-base:with-v3d (v)
+    (when (rm-cffi::rm-primitive-get-bounding-box (fp self) (cffi:null-pointer) v)
+      (vertex rm-base::x rm-base::y rm-base::z))))
+(defmethod bounding-box-max* ((self primitive))
+  (let ((v (v3d nil nil nil)))
+    (when (rm-cffi::rm-primitive-get-bounding-box (fp self) (cffi:null-pointer) (fp v))
+      v)))
+
+(defmethod bounding-box ((self primitive))
+  (cffi:with-foreign-object (bounds 'rm-cffi::rm-vertex-3d 2)
+    (if (rm-cffi::rm-primitive-get-bounding-box (fp self)
+                                                (cffi:mem-aref bounds 'rm-cffi::rm-vertex-3d 0)
+                                                (cffi:mem-aref bounds 'rm-cffi::rm-vertex-3d 1))
+      (new-vertex-from-foreign-3d-vertex bounds 2))))
+  
+(defmethod bounding-box* ((self primitive))
+  (let ((bounds (v3d* 2)))
+    (if (rm-cffi::rm-primitive-get-bounding-box (fp self)
+                                                (cffi:mem-aref (fp bounds) 'rm-cffi::rm-vertex-3d 0)
+                                                (cffi:mem-aref (fp bounds) 'rm-cffi::rm-vertex-3d 1))
+      bounds
+      nil)))
+
+(defmethod (setf bounding-box) ((bounds vector) (self primitive))
+  (cffi:with-foreign-object (bounds 'rm-cffi::rm-vertex-3d 2)
+    (if (rm-cffi::rm-Primitive-Set-Bounding-Box (fp self)
+                                              (cffi:mem-aref bounds 'rm-cffi::rm-vertex-3d 0)
+                                              (cffi:mem-aref bounds 'rm-cffi::rm-vertex-3d 1))
+      (new-vertex-from-foreign-3d-vertex bounds 2))))
 (defmethod (setf bounding-box) ((bounds v3d*) (self primitive))
   (rm-cffi::rm-Primitive-Set-Bounding-Box (fp self) (fp (nth-vertex bounds 0)) (fp (nth-vertex bounds 1)))
-  self)
-(defmethod bounding-box ((self primitive))
-  (let ((bounds (v3d* nil 2)))
-    (if (rm-cffi::rm-Primitive-Get-Bounding-Box (fp self) (fp (nth-vertex bounds 0)) (fp (nth-vertex bounds 1)))
-	bounds
-	nil)))
+  bounds)
 
 (defmethod compute-bounding-box ((self primitive))
   (rm-cffi::rm-Primitive-Compute-Bounding-Box (fp self))
@@ -195,47 +327,4 @@
   ;;(rm-cffi::rm-color-4d-delete data-fp)
   (cffi:null-pointer))
 
-(defmacro with-default-primitive ((prim) &body body)
-  (let ((primitive (gensym "primitive-"))
-	(add-to-parent? (gensym "add-to-parent?-")))
-    `(progn
-       (unless *parent-node*
-	 (error "WITH-DEFAULT-PRIMITIVE valid only within scope of WITH-DEFAULT-NODE."))
-       (let ((,primitive ,prim)
-	     (,add-to-parent? t))
-	 (let ((*default-primitive* ,primitive))
-	   (labels ((set-xy/z (vertex &optional (primitive *default-primitive*))
-		      (setf (xy/z primitive) vertex))
-		    (set-rgb/a (color &optional (primitive *default-primitive*))
-		      (setf (rgb/a primitive) color))
-		    (set-normals (normals &optional (primitive *default-primitive*))
-		      (setf (normals primitive) normals))
-		    (set-radius (radius &optional (primitive *default-primitive*))
-		      (setf (radius primitive) radius))
-		    (set-tesselate (tesselate &optional (primitive *default-primitive*))
-		      (setf (tesselate primitive) tesselate))
-		    (set-bounding-box (bounds &optional (primitive *default-primitive*))
-		      (setf (bounding-box primitive) bounds))
-		    (get-bounding-box (&optional (primitive *default-primitive*))
-		      (bounding-box primitive))
-		    (set-compute-bounding-box (&optional (primitive *default-primitive*))
-		      (compute-bounding-box primitive))
-		    (set-text (value &optional (primitive *default-primitive*))
-		      (setf (text primitive) value))
-		    (set-display-list-p (value &optional (primitive *default-primitive*))
-		      (setf (display-list-p primitive) value))
-		    (set-app-display-list (value &optional (primitive *default-primitive*))
-		      (setf (app-display-list primitive) value))
-		    (add-this-to-parent (add?)
-		      (if add?
-			  (setf ,add-to-parent? t)
-			  (setf ,add-to-parent? nil))))
-	     (declare (ignorable #'set-xy/z #'set-rgb/a #'set-normals #'set-radius #'set-tesselate
-				 #'set-bounding-box #'get-bounding-box #'set-compute-bounding-box
-				 #'set-copy-data #'set-text #'set-display-list-p #'set-app-display-list
-				 #'add-this-to-parent))
-	     ,@body
-	     (when (and *parent-node*
-			,add-to-parent?)
-	       (add-to-node *parent-node* ,primitive))))))))
 

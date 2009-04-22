@@ -12,6 +12,7 @@
 (defmacro with-init ((&optional type) &body body)
   "Attempts to initialize the OpenRM library."
   `(block nil
+     (declare (ignore ,type))
      (unwind-protect
 	  (progn
             (unless *initialised*

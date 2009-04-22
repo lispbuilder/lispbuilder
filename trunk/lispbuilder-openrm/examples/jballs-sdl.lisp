@@ -12,7 +12,7 @@
 (defclass jballs-sdl-window (rm::sdl-window rm::aux-window)()
   (:default-initargs
    :resizable t
-   :width 320 :height 240
+   :width 800 :height 600
    :title-caption "Jballs" :icon-caption "Jballs"
    :name "window"))
 
@@ -34,12 +34,11 @@
    :compute-bounding-box t
    :primitives (list (make-instance 'rm::plane-primitive
                                     :orientation :xz
-                                    :xy/z (rm::v3d* '((-3.0 -2.0 -3.0)
-                                                      (3.0 -2.0 3.0)))))))   
+                                    :xy/z '(#(-3.0 -2.0 -3.0)
+                                            #(3.0 -2.0 3.0))))))
 
 (defmethod rm::on-idle ((window jballs-sdl-window))
-  (rm::rotate *moving-group*
-	      :direction *rotation-direction*
+  (rm::rotate *moving-group* *rotation-direction*
 	      :reverse (list *stationary-group*)))
 
 (defun jballs-sdl ()
@@ -52,11 +51,11 @@
                                                           (make-instance 'floor-quad))))
          (moving-group (make-instance 'node :name "moving-group"
                                       :center (rm::vertex 0.0 0.0 0.0)
-                                      :lights (list (make-instance 'rm::point-light
-                                                                   :light-source :rm-light-3
-                                                                   :specular-color (rm::color 1.0 0.0 0.0 1.0)
-                                                                   :diffuse-color (rm::color 1.0 0.0 0.0 1.0)
-                                                                   :xy/z (rm::vertex 1.5 -1.0 0.0)))
+                                      :lights (make-instance 'rm::point-light
+                                                             :light-source :rm-light-3
+                                                             :specular-color (rm::color 1.0 0.0 0.0 1.0)
+                                                             :diffuse-color (rm::color 1.0 0.0 0.0 1.0)
+                                                             :xy/z (rm::vertex 1.5 -1.0 0.0))
                                       :children (list stationary-group
                                                       (rm::new-sphere :name "zippy"
                                                                       :specular-exponent 10.0
@@ -73,13 +72,10 @@
 
     (make-instance 'jballs-sdl-scene
                    :window (rm::default-window)
-                   :children (list moving-group)
-                   :lights (list (make-instance 'rm::directional-light
-                                                :light-source :rm-light-0
-                                                :specular-color (rm::color 0.7 0.7 0.7 1.0))))
-    
-    (setf (sdl:frame-rate) 60
-          (rm::frame-rate (rm::default-window)) nil)
-
+                   :children moving-group
+                   :lights (make-instance 'rm::directional-light
+                                          :light-source :rm-light-0
+                                          :specular-color (rm::color 0.7 0.7 0.7 1.0)))
+    (setf (sdl:frame-rate) 30)
     (rm::process-events)
     (rm::clean-up)))

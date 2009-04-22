@@ -28,14 +28,14 @@
                             (rm::new-sphere :opacity :transparent
                                             :name "transparent"
                                             :radius 3.0
-                                            :diffuse-color (rm::c4d 0.1 0.1 1.0 0.75)
-                                            :ambient-color (rm::c4d 1.0 1.0 1.0 0.5)
-                                            :specular-color (rm::c4d 0.1 0.1 1.0 1.0)
+                                            :diffuse-color (rm:color 0.1 0.1 1.0 0.75)
+                                            :ambient-color (rm::color 1.0 1.0 1.0 0.5)
+                                            :specular-color (rm::color 0.1 0.1 1.0 1.0)
                                             :specular-exponent 20.0)
                             (rm::new-sphere :opacity :opaque
                                             :name "opaque" 
-                                            :background-color (rm::c4d 0.0 0.0 0.0 0.0)
-                                            :rgb/a (rm::c4d 1.0 0.0 0.0 1.0))))
+                                            :background-color (rm::color 0.0 0.0 0.0 0.0)
+                                            :rgb/a (rm::color 1.0 0.0 0.0 1.0))))
   ;; Set the frame rate to 60fps.
   (setf (sdl:frame-rate) 60)
   ;; Start the event loop.
@@ -48,48 +48,49 @@
    :dims :rm-renderpass-3d
    :opacity :rm-renderpass-opaque
    :compute-bounding-box t
-   :background-color (rm::c4d 0.0 0.0 0.0 0.0)))
+   :background-color (rm::color 0.0 0.0 0.0 0.0)))
 
 (defclass transparent-node (rm::node) ()
   (:default-initargs
    :dims :rm-renderpass-3d
    :opacity :rm-renderpass-transparent
    :compute-bounding-box t
-   :diffuse-color (rm::c4d 0.1 0.1 1.0 0.75)
-   :ambient-color (rm::c4d 1.0 1.0 1.0 0.5)
-   :specular-color (rm::c4d 0.1 0.1 1.0 1.0)
+   :diffuse-color (rm::color 0.1 0.1 1.0 0.75)
+   :ambient-color (rm::color 1.0 1.0 1.0 0.5)
+   :specular-color (rm::color 0.1 0.1 1.0 1.0)
    :specular-exponent 20.0))
 
 (defclass opaque-sphere-prim (rm::sphere-primitive) ()
   (:default-initargs
    :radius 1.0
    :tesselate 512
-   :xy/z (rm::v3d 0.0 0.0 0.0)
-   :rgb/a (rm::c4d 1.0 0.0 0.0 1.0)))
+   :xy/z (rm::vertex 0.0 0.0 0.0)
+   :rgb/a (rm::color 1.0 0.0 0.0 1.0)))
 
 (defclass transparent-sphere-prim (rm::sphere-primitive) ()
   (:default-initargs
    :radius 3.0
    :tesselate 512
-   :xy/z (rm::v3d 0.0 0.0 0.0)))
-
+   :xy/z (rm::vertex 0.0 0.0 0.0)))
 
 (defun clrball-2-sdl ()
   ;; Create a window.
   ;; This also initializes SDL, OpenRM and creates the OpenGL context.  
-  (make-instance 'clrball-window
-                 :scene (make-instance 'clrball-scene))
+  (make-instance 'clrball-window :scene (make-instance 'clrball-scene))
 
   ;; Create a new scene.
   ;; A scene contains a camera.
   ;; The transparent and opaque spheres are attached to the scene below the scene node.
-  (dolist (obj (list (rm::make-instance 'opaque-node :name "opaque"
-                                        :primitives (list (make-instance 'opaque-sphere-prim)))
-                     (rm::make-instance 'transparent-node :name "transparent"
-                                        :primitives (list (make-instance 'transparent-sphere-prim)))))
-    (rm::add-node obj (rm::default-scene (rm::default-window))))
+  (rm::add-node (rm::make-instance 'opaque-node
+                                   :name "opaque"
+                                   :primitives (list (make-instance 'opaque-sphere-prim)))
+                (rm::default-scene))
+  (rm::add-node (rm::make-instance 'transparent-node
+                                   :name "transparent"
+                                   :primitives (list (make-instance 'transparent-sphere-prim)))
+                (rm::default-scene))
 
-  (rm::with-scene ((rm::default-scene (rm::default-window)) scene)
+  (rm::with-scene ((rm::default-scene) scene)
     (rm::union-all-boxes scene)
     (rm::compute-bounding-box scene)
     (rm::with-scene-camera (scene cam)

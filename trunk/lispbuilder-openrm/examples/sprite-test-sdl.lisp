@@ -1,38 +1,81 @@
 
 (in-package #:rm-examples)
 
-(defparameter *image-width* 1024)
-(defparameter *image-width* 960)
+(defun every-n-frames (max)
+  (let ((count 0))
+    #'(lambda ()
+	(if (eql 0 (mod (incf count 1) max))
+	    (setf count 0)
+	    nil))))
 
 (defun build-image (a)
   (let* ((image-width 8) (image-height 8)
-         (image (make-instance 'rm::image  
+         (image (make-instance 'rm::image
                                :type 2
                                :dims (vector image-width image-height)
                                :depth 1
                                :format :rm-image-rgba
-                               :data-type :rm-float))
-         (s (make-instance 'rm::c4d :r a :g 0.0 :b (- 1.0 a) :a 1.0)))
-    (rm::copy-color (rm::image-data image) s :end (* image-width image-height))
+                               :data-type :rm-float
+                               :image-data (rm::color* (rm::color a 0.0 (- 1.0 a) 1.0)
+                                                       (* image-width image-height)))))
     image))
 
-(defun build-tiles ()
-  (let* ((node (make-instance 'rm::node
-                              :dims :rm-renderpass-all
-                              :opacity :rm-renderpass-all))
-         (sprite (make-instance 'rm::sprite-primitive
-                                :images (list (build-image 1.0))
-                                :xy/z (rm::v2d 0.0 0.0))))
-    ;(setf (rm::unlit-color node) (rm::c4d 0.0 1.0 0.0 1.0))
-    (rm:add-primitive sprite node)))
+(defun build-tiles (num-width num-height)
+  (let* ((x (+ -1.0 0.05))
+         (dx (/ 1.9 num-width))
+         (y (+ -1.0 0.05))
+         (dy (/ 1.9 num-height))
+         (a 1.0)
+         (da (/ -1.0 (* num-width num-height)))
+         (sprites nil))
+    (dotimes (j num-height)
+      (dotimes (i num-width)
+        (incf a da)
+        (push (rm::new-sprite :dims :rm-renderpass-2d
+                              :opacity :opaque
+                              :images (build-image a)
+                              :xy/z (rm::vertex (+ x (* i dx))
+                                                (+ y (* j dy)))
+                              :display-list t)
+              sprites)))
+    sprites))
 
 (defun sprite-test-sdl ()
-  (rm::make-instance 'rm::window :width 320 :height 240
-                     :scene (make-instance 'rm::scene
-                                           :dims :rm-renderpass-2d
-                                           :opacity :rm-renderpass-opaque
-                                           ;:background-color (rm::c4d 0.3 0.3 0.3 1.0)
-                                           :camera (make-instance 'rm::camera-2d :defaults t)
-                                           :primitives (list (build-tiles))))
-  (rm::process-events)
+  (rm::make-instance 'rm::sdl-window
+                     :width 320 ;1024
+                     :height 204 ;960
+                     :title-caption "Sprite Test"
+                     :icon-caption "Sprite Test"
+                     :pipe (make-instance 'rm::sdl-pipe
+                                          :display-list t
+                                          :opaque-3d t
+                                          :transparent-3d t
+                                          :opaque-2d t))
+  (make-instance 'rm::scene
+                 :dims :rm-renderpass-2d
+                 :opacity :rm-renderpass-opaque
+                 :window (rm::default-window)
+                 :background-color (rm::color 0.3 0.3 0.3 1.0)
+                 :camera (make-instance 'rm::camera-2d)
+                 :compute-view-from-geometry nil
+                 :children (make-instance 'rm::node
+                                          :name "blocks"
+                                          :dims :rm-renderpass-all
+                                          :opacity :rm-renderpass-all
+                                          :unlit-color (rm::color 0.0 1.0 0.0 1.0)
+                                          :children (build-tiles 20 20)))
+  (setf (sdl:frame-rate) nil)
+
+  (format t "~A~%" (rm::pipe (rm::default-window)))
+  (format t "~A~%" (rm::default-window))
+
+  (let ((frame-test (every-n-frames 50)))
+    (sdl:with-events ()
+      (:key-down-event () (sdl:push-quit-event))
+      (:quit-event () t)
+      (:video-expose-event () (rm::render (rm::default-window)))
+      (:idle ()
+       (when (funcall frame-test)
+         (rm::format t "Frame Rate: ~A~%" (rm::cast float (sdl:average-fps))))
+       (rm::render (rm::default-window)))))
   (rm::clean-up))

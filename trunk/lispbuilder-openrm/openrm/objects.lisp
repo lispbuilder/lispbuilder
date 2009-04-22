@@ -4,37 +4,38 @@
 (defclass sphere (node)()
   (:default-initargs
    :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-opaque
+   :opacity :rm-renderpass-all
    :compute-bounding-box t
    :radius 1.0
    :tesselate 512
-   :p-xy/z (v3d 0.0 0.0 0.0)))
+   :p-xy/z #(0.0 0.0 0.0)))
 
 (defclass cone (node)()
   (:default-initargs
    :dims :rm-renderpass-3d
    :opacity :rm-renderpass-opaque
    :compute-bounding-box t
-   :p-xy/z (rm::v3d* '((1.0 0.0 0.0) (0.0 0.0 0.0)))
-   :radius '(1.0 1.0 1.0)
-   :rgb/a (rm::c4d* '((1.0 1.0 1.0 1.0)))))
+   :p-xy/z '(#(1.0 0.0 0.0)
+             #(0.0 0.0 0.0))
+   :radius #(1.0 1.0 1.0)
+   :rgb/a '(#(1.0 1.0 1.0 1.0))))
 
 (defclass cylinder (node)()
   (:default-initargs
    :dims :rm-renderpass-3d
    :opacity :rm-renderpass-opaque
    :compute-bounding-box t
-   :p-xy/z (rm::v3d* '((0.0 0.0 0.0) (1.0 0.0 0.0)))
-   :radius '(1.0 1.0 1.0)
-   :rgb/a (rm::c4d* '((1.0 1.0 1.0 1.0)))))
+   :p-xy/z '(#(0.0 0.0 0.0) #(1.0 0.0 0.0))
+   :radius #(1.0 1.0 1.0)
+   :rgb/a '(#(1.0 1.0 1.0 1.0))))
 
 (defclass box (node)()
   (:default-initargs
    :dims :rm-renderpass-3d
    :opacity :opaque
    :compute-bounding-box t
-   :p-xy/z (v3d* '((-1.0 -1.0 -1.0)
-                   (1.0 1.0 1.0)))
+   :p-xy/z '((#(-1.0 -1.0 -1.0)
+              #(1.0 1.0 1.0)))
    :type :solid))
 
 (defclass app-list (node)()
@@ -45,9 +46,10 @@
 
 (defclass sprite (node)()
   (:default-initargs
-   :dims :rm-renderpass-2d
+   :dims :rm-renderpass-all
    :opacity :opaque
-   :compute-bounding-box t))
+   :compute-bounding-box t
+   :p-xy/z #(0.0 0.0)))
 
 (defun replace-opacity-keyword (opacity keywords)
   (let* ((keywords (if keywords keywords (list :opacity opacity)))
@@ -68,7 +70,7 @@
                                           ;; Primitive KEYwords
                                           rgb/a p-xy/z normals
                                           p-bounding-box p-compute-bounding-box
-                                          display-list-p app-display-list
+                                          display-list app-display-list
                                           ;; Procedural Primitive KEYwords
                                           tesselate radius)
      (add-to-node self (make-instance ',(intern (format nil "~A-PRIMITIVE" obj))
@@ -76,7 +78,7 @@
                                       :bounding-box p-bounding-box
                                       :compute-bounding-box p-compute-bounding-box
                                       :tesselate tesselate :radius radius
-                                      :display-list-p display-list-p
+                                      :display-list display-list
                                       :app-display-list app-display-list))))
 
 (defmacro def-new-object (obj)
@@ -89,20 +91,20 @@
                                        ;; Primitive KEYwords
                                        rgb/a p-xy/z normals
                                        p-bounding-box p-compute-bounding-box
-                                       display-list-p app-display-list)
+                                       display-list app-display-list)
   (add-to-node self (cond ((eq type :solid)
                            (make-instance 'box-solid-primitive
                                           :rgb/a rgb/a :xy/z p-xy/z :normals normals
                                           :bounding-box p-bounding-box
                                           :compute-bounding-box p-compute-bounding-box
-                                          :display-list-p display-list-p
+                                          :display-list display-list
                                           :app-display-list app-display-list))
                           ((eq type :wire)
                            (make-instance 'box-wire-primitive
                                           :rgb/a rgb/a :xy/z p-xy/z :normals normals
                                           :bounding-box p-bounding-box
                                           :compute-bounding-box p-compute-bounding-box
-                                          :display-list-p display-list-p
+                                          :display-list display-list
                                           :app-display-list app-display-list))
                           (t (error "Cannot create BOX of type ~A" type)))))
 
@@ -110,12 +112,12 @@
                                        ;; Primitive KEYwords
                                        rgb/a p-xy/z normals
                                        p-bounding-box p-compute-bounding-box
-                                       display-list-p app-display-list)
+                                       display-list app-display-list)
   (add-to-node self (make-instance 'app-list-primitive
                                    :rgb/a rgb/a :xy/z p-xy/z :normals normals
                                    :bounding-box p-bounding-box
                                    :compute-bounding-box p-compute-bounding-box
-                                   :display-list-p display-list-p
+                                   :display-list display-list
                                    :app-display-list app-display-list)))
 
 (defmethod initialize-instance :after ((self sprite) &key
@@ -123,13 +125,13 @@
                                        ;; Primitive KEYwords
                                        rgb/a p-xy/z normals
                                        p-bounding-box p-compute-bounding-box
-                                       display-list-p app-display-list)
+                                       display-list app-display-list)
   (add-to-node self (make-instance 'sprite-primitive
                                    :images images
                                    :rgb/a rgb/a :xy/z p-xy/z :normals normals
                                    :bounding-box p-bounding-box
                                    :compute-bounding-box p-compute-bounding-box
-                                   :display-list-p display-list-p
+                                   :display-list display-list
                                    :app-display-list app-display-list)))
 
 (def-procedural-object sphere)

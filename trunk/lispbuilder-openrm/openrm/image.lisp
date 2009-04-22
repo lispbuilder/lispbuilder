@@ -4,7 +4,7 @@
 (defclass image (openrm-object) ()
   (:default-initargs
    :fp nil
-    :free (simple-free #'rm-cffi::rm-image-delete 'rm-image)))
+   :free (simple-free #'rm-cffi::rm-image-delete 'rm-image)))
 
 (defmethod initialize-instance :after ((self image) &key
 				       (type nil) (dims nil) (depth nil) (format nil) (data-type nil)
@@ -106,6 +106,22 @@
   (rm-cffi::rm-image-get-pixel-data (fp self)))
 (defmethod (setf image-data) (pixels (self image))
   (rm-cffi::rm-image-set-pixel-data (fp self) pixels (copy-data self) (cffi:null-pointer)))
+(defmethod (setf image-data) ((pixels c4d*) (self image))
+  (rm-cffi::rm-image-set-pixel-data (fp self) (fp pixels) (copy-data self) (cffi:null-pointer)))
+(defmethod (setf image-data) ((pixels vector) (self image))
+  (cffi:with-foreign-object (pixel-array 'rm-cffi::rm-color-4d (length pixels))
+    (let ((4d (cffi:foreign-type-size 'rm-cffi::rm-color-4d))
+          (color-fp pixel-array))
+      (loop
+       for vector across pixels
+       for i from 0 upto (1- (length pixels))
+       do (progn
+            (setf (cffi:foreign-slot-value color-fp 'rm-cffi::rm-color-4d 'rm-cffi::r) (r vector)
+                  (cffi:foreign-slot-value color-fp 'rm-cffi::rm-color-4d 'rm-cffi::g) (g vector)
+                  (cffi:foreign-slot-value color-fp 'rm-cffi::rm-color-4d 'rm-cffi::b) (b vector)
+                  (cffi:foreign-slot-value color-fp 'rm-cffi::rm-color-4d 'rm-cffi::a) (a vector))
+            (setf color-fp (cffi:inc-pointer color-fp 4d)))))
+    (rm-cffi::rm-image-set-pixel-data (fp self) pixel-array :RM-COPY-DATA (cffi:null-pointer))))
 
 ;;(defmethod (setf image-data) ((pixels list) (self image))
 ;;  (rm-cffi::rm-image-set-pixel-data (fp self) pixels (copy-data self) (cffi:null-pointer)))
@@ -114,6 +130,11 @@
   (svref dims 0))
 (defmethod height ((dims vector))
   (svref dims 1))
+
+(defmethod width ((self image))
+  (width (image-dims self)))
+(defmethod height ((self image))
+  (height (image-dims self)))
 
 (defmethod set-sprites ((self sprite-primitive) (image image))
   (set-sprites self (list image)))

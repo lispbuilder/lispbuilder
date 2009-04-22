@@ -32,14 +32,15 @@
 
 (defgeneric copy-color-to-foreign (color foreign &optional index))
 
-(defgeneric copy-data (self)
-  (:documentation "Returns either `:RM-COPY-DATA`, or `:RM-DONT-COPY-DATA`."))
+(defgeneric copy-data (object)
+  (:documentation "Returns the copy status of `OBJECT` as either `:RM-COPY-DATA`, or `:RM-DONT-COPY-DATA`."))
 
-(defgeneric copy-p (self)
-  (:documentation "Returns `T` if `:RM-COPY-DATA` is set, or `NIL` if `:RM-DONT-COPY-DATA` is set."))
+(defgeneric copy-p (object)
+  (:documentation "Returns the copy status of objects as `T` if `:RM-COPY-DATA` is set,
+or `NIL` if `:RM-DONT-COPY-DATA` is set."))
 
-(defgeneric (setf copy-p) (value self)
-  (:documentation "Sets the object's copy status to `:RM-COPY-DATA` when `T` and `:RM-DONT-COPY-DATA` when `NIL`.
+(defgeneric (setf copy-p) (value object)
+  (:documentation "Sets `OBJECT`s copy status to `:RM-COPY-DATA` when `T` and `:RM-DONT-COPY-DATA` when `NIL`.
 Turns on automatic garbage collection when `T`. Turns off automatic garbage collection when `NIL`"))
 
 (defgeneric enable (obj))
@@ -93,9 +94,8 @@ Turns on automatic garbage collection when `T`. Turns off automatic garbage coll
 
 (defgeneric compute-bounding-box (obj))
 
-(defgeneric traversep (obj))
-(defgeneric traverse (obj))
-(defgeneric (setf traverse) (color obj))
+(defgeneric traverse-p (obj))
+(defgeneric (setf traverse-p) (color obj))
 
 (defgeneric pick-p (obj))
 (defgeneric (setf pick-p) (color obj))
@@ -165,11 +165,12 @@ Turns on automatic garbage collection when `T`. Turns off automatic garbage coll
 
 (defgeneric wrap-node (parent this-node))
 
-(defgeneric v2d* (vertices &optional size))
-(defgeneric v3d* (vertices &optional size))
-(defgeneric v4d* (vertices &optional size))
+(defgeneric v2d* (size &key initial-element initial-contents))
+(defgeneric v3d* (size &key initial-element initial-contents))
+(defgeneric v4d* (size &key initial-element initial-contents))
 
-(defgeneric c4d* (colors &optional size))
+(defgeneric c3d* (size &key initial-element initial-contents))
+(defgeneric c4d* (size &key initial-element initial-contents))
 
 (defgeneric copy-vertex (dst src &key start end))
 
@@ -208,7 +209,10 @@ Turns on automatic garbage collection when `T`. Turns off automatic garbage coll
 (defgeneric dump-scene-graph (node))
 
 (defgeneric (setf text) (text obj))
+
+(defgeneric display-list-p (node))
 (defgeneric (setf display-list-p) (value node))
+
 (defgeneric (setf app-display-list) (value node))
 
 (defgeneric nth-vertex (vertex-array index))
@@ -216,8 +220,5 @@ Turns on automatic garbage collection when `T`. Turns off automatic garbage coll
 (defgeneric color-array (colors))
 (defgeneric nth-color (colors index))
 (defgeneric copy-color (dst src &key start end))
-
-(defgeneric copy-p (openrm-object))
-(defgeneric (setf copy-p) (value openrm-object))
 
 (defgeneric image-data (obj))
