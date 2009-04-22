@@ -23,14 +23,10 @@
 
 (defclass c3d (color-single)()
   (:default-initargs
-    :fp (cffi:foreign-alloc 'rm-cffi::rm-color-3d)))
-
-(defmethod initialize-instance :around ((self c3d)
-				       &key (r 0.0) (g 0.0) (b 0.0))
-  (call-next-method)
-  (setf (cffi:foreign-slot-value (fp self) 'rm-cffi::rm-color-3d 'rm-cffi::r) r
-	(cffi:foreign-slot-value (fp self) 'rm-cffi::rm-color-3d 'rm-cffi::g) g
-	(cffi:foreign-slot-value (fp self) 'rm-cffi::rm-color-3d 'rm-cffi::b) b))
+   :fp (cffi:foreign-alloc 'rm-cffi::rm-color-3d)
+   :r 0.0
+   :g 0.0
+   :b 0.0))
 
 (defclass c3d* (color-array)()
   (:default-initargs
@@ -39,15 +35,33 @@
 
 (defclass c4d (color-single)()
   (:default-initargs
-    :fp (cffi:foreign-alloc 'rm-cffi::rm-color-4d)))
+   :fp (cffi:foreign-alloc 'rm-cffi::rm-color-4d)
+   :r 0.0
+   :g 0.0
+   :b 0.0
+   :a 0.0))
 
-(defmethod initialize-instance :around ((self c4d)
-				       &key (r 0.0) (g 0.0) (b 0.0) (a 0.0))
-  (call-next-method)
-  (setf (cffi:foreign-slot-value (fp self) 'rm-cffi::rm-color-4d 'rm-cffi::r) r
-	(cffi:foreign-slot-value (fp self) 'rm-cffi::rm-color-4d 'rm-cffi::g) g
-	(cffi:foreign-slot-value (fp self) 'rm-cffi::rm-color-4d 'rm-cffi::b) b
-	(cffi:foreign-slot-value (fp self) 'rm-cffi::rm-color-4d 'rm-cffi::a) a))
+(defmethod initialize-instance :after ((self c3d)
+                                       &key r g b)
+  (let ((fp (fp self)))
+    (when r
+      (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-3d 'rm-cffi::r) r))
+    (when g
+      (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-3d 'rm-cffi::g) g))
+    (when b
+      (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-3d 'rm-cffi::b) b))))
+
+(defmethod initialize-instance :after ((self c4d)
+                                       &key r g b a)
+    (let ((fp (fp self)))
+      (when r
+        (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-4d 'rm-cffi::r) r))
+      (when g
+        (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-4d 'rm-cffi::g) g))
+      (when b
+        (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-4d 'rm-cffi::b) b))
+      (when a
+        (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-4d 'rm-cffi::a) a))))
 
 (defclass c4d* (color-array)()
   (:default-initargs
@@ -90,6 +104,24 @@
 ;;   (setf (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-2d 'rm-cffi::alpha)
 ;; 	alpha-val))
 
+(defmethod r ((color vector))
+  (svref color 0))
+(defmethod g ((color vector))
+  (svref color 1))
+(defmethod b ((color vector))
+  (svref color 2))
+(defmethod a ((color vector))
+  (when (> (length color) 3)
+    (svref color 3)))
+(defmethod (setf r) (value (color vector))
+  (setf (svref color 0) value))
+(defmethod (setf g) (value (color vector))
+  (setf (svref color 1) value))
+(defmethod (setf b) (value (color vector))
+  (setf (svref color 2) value))
+(defmethod (setf a) (value (color vector))
+  (when (> (length color) 3)
+    (setf (svref color 3) value)))
 
 (defmethod r ((color c3d))
   (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-3d 'rm-cffi::r))
@@ -130,6 +162,26 @@
   (setf (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-4d 'rm-cffi::a)
 	a-val))
 
+(defmethod rgb/a ((color c3d))
+  (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b) (fp color) rm-cffi::rm-color-3d)
+    (color rm-cffi::r rm-cffi::g rm-cffi::b)))
+(defmethod rgb/a ((color c4d))
+  (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a) (fp color) rm-cffi::rm-color-4d)
+    (color rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a)))
+
+(defmethod (setf rgb/a) ((value vector) (color c3d))
+  (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b) (fp color) rm-cffi::rm-color-3d)
+    (setf rm-cffi::r (r value)
+          rm-cffi::g (g value)
+          rm-cffi::b (b value))))
+
+(defmethod (setf rgb/a) ((value vector) (color c4d))
+  (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a) (fp color) rm-cffi::rm-color-4d)
+    (setf rm-cffi::r (r value)
+          rm-cffi::g (g value)
+          rm-cffi::b (b value)
+          rm-cffi::a (a value))))
+
 ;; (defun color-1d (lum &optional fp)
 ;;   (when fp
 ;;     (unless (is-valid-ptr fp)
@@ -153,36 +205,18 @@
 
 (defun color (r g b &optional a)
   (if a
-      (make-instance 'c4d :r r :g g :b b :a a)
-      (make-instance 'c3d :r r :g g :b b)))
+      (vector r g b a)
+      (vector r g b)))
 
 (defun c3d (r g b &optional fp)
-  (when fp
-    (unless (is-valid-ptr fp)
-      (error "FP must be a foreign pointer.")))
-  (let ((color (if fp
-		   (make-instance 'c3d :fp fp)
-		   (make-instance 'c3d))))
-    (unless fp (setf (r color) r
-		     (g color) g
-		     (b color) b))
-    color))
+  (if fp
+    (make-instance 'c3d :fp fp :r r :g g :b b)
+    (make-instance 'c3d :r r :g g :b b)))
 
 (defun c4d (r g b a &optional fp)
-  (when fp
-    (unless (is-valid-ptr fp)
-      (error "FP must be a foreign pointer.")))
-  (let ((color (if fp
-		   (make-instance 'c4d :fp fp)
-		   (make-instance 'c4d))))
-    (unless fp (setf (r color) r
-		     (g color) g
-		     (b color) b
-		     (a color) a))
-    color))
-
-;; (defun color (r g b a &optional (fp nil))
-;;   (c4d r g b a fp))
+  (if fp
+    (make-instance 'c4d :fp fp :r r :g g :b b :a a)
+    (make-instance 'c4d :r r :g g :b b :a a)))
 
 ;; (defmethod copy-color-to-foreign ((color color-3d) foreign-pointer)
 ;;   (rm-base:with-rm-color-3d (col foreign-pointer nil)
@@ -191,77 +225,144 @@
 ;; 	  rm-base:b (b color)))
 ;;   foreign-pointer)
 
-(defmethod c3d* ((color c3d) &optional size)
+(defmethod color* ((color vector) &optional size)
   (when size
-    (let ((color-array (make-instance 'c3d* :size size)))
-      (let ((color-array-fp (fp color-array))
-	    (3d (cffi:foreign-type-size 'rm-cffi::rm-color-3d)))
-	(loop
-	   for i from 0 upto (1- (size color-array))
-	   do (progn (setf (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::r) (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-3d 'rm-cffi::r)
-			   (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::g) (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-3d 'rm-cffi::g)
-			   (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::b) (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-3d 'rm-cffi::b))
-		     (setf color-array-fp (cffi:inc-pointer color-array-fp 3d)))))
-      color-array)))
-(defmethod c3d* ((colors list) &optional size)
-  (if (consp colors)
-      (let ((color-array (make-instance 'c3d* :size (length colors))))
-	(let ((color-array-fp (fp color-array))
-	      (3d (cffi:foreign-type-size 'rm-cffi::rm-color-3d)))
-	  (loop
-	     for i from 0 upto (1- (size color-array))
-	     for c in colors
-	     do (progn (if (consp c)
-			   (setf (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::r) (nth 0 c)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::g) (nth 1 c)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::b) (nth 2 c))
-			   (setf (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::r) (cffi:foreign-slot-value (fp c) 'rm-cffi::rm-color-3d 'rm-cffi::r)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::g) (cffi:foreign-slot-value (fp c) 'rm-cffi::rm-color-3d 'rm-cffi::g)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-3d 'rm-cffi::b) (cffi:foreign-slot-value (fp c) 'rm-cffi::rm-color-3d 'rm-cffi::b)))
-		       (setf color-array-fp (cffi:inc-pointer color-array-fp 3d)))))
-	color-array)
-      (when size
-	(make-instance 'c3d* :size size))))
+    (make-array size :initial-element color)))
 
-
-(defmethod c4d* ((color c4d) &optional size)
-  (when size
-    (let ((color-array (make-instance 'c4d* :size size)))
-      (let ((color-array-fp (fp color-array))
-	    (4d (cffi:foreign-type-size 'rm-cffi::rm-color-4d)))
-	(loop
-	   for i from 0 upto (1- (size color-array))
-	   do (progn (setf (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::r) (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-4d 'rm-cffi::r)
-			   (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::g) (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-4d 'rm-cffi::g)
-			   (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::b) (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-4d 'rm-cffi::b)
-			   (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::a) (cffi:foreign-slot-value (fp color) 'rm-cffi::rm-color-4d 'rm-cffi::a))
-		     (setf color-array-fp (cffi:inc-pointer color-array-fp 4d)))))
+(defmethod c3d* (size &key initial-element initial-contents)
+  (unless size
+    (when initial-element
+      (error "ERROR - C3D*; SIZE must be specified if :INITIAL-ELEMENT is specified."))
+    (unless initial-contents
+      (error "ERROR - C3D*; SIZE or :INITIAL-CONTENTS must be specified.")))
+  (if size
+    (let* ((color-array (make-instance 'c3d* :size size))
+           (fp (fp color-array)))
+      (when initial-element
+        (dotimes (i size)
+          (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b)
+                                    (cffi:mem-aref fp 'rm-cffi::rm-color-3d i) rm-cffi::rm-color-3d)
+            (setf rm-cffi::r (r initial-element)
+                  rm-cffi::g (g initial-element)
+                  rm-cffi::b (b initial-element)))))
+      color-array)
+    (let* ((color-array (make-instance 'c3d* :size (length initial-contents)))
+           (fp (fp color-array)))
+      (if (vectorp initial-contents)
+        ;; Loop over VECTOR
+        (loop
+         :for i :from 0 :below (size color-array)
+         :for v :across initial-contents
+         :do (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b)
+                                       (cffi:mem-aref fp 'rm-cffi::rm-color-3d i) rm-cffi::rm-color-3d)
+               (setf rm-cffi::r (r v)
+                     rm-cffi::g (g v)
+                     rm-cffi::b (b v))))
+        (loop
+         ;; Loop over LIST
+         :for i :from 0 :below (size color-array)
+         :for v :in initial-contents
+         :do (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b)
+                                       (cffi:mem-aref fp 'rm-cffi::rm-color-3d i) rm-cffi::rm-color-3d)
+               (setf rm-cffi::r (r v)
+                     rm-cffi::g (g v)
+                     rm-cffi::b (b v)))))
       color-array)))
-(defmethod c4d* ((colors list) &optional size)
-  (if (consp colors)
-      (let ((color-array (make-instance 'c4d* :size (length colors))))
-	(let ((color-array-fp (fp color-array))
-	      (4d (cffi:foreign-type-size 'rm-cffi::rm-color-4d)))
-	  (loop
-	     for i from 0 upto (1- (size color-array))
-	     for c in colors
-	     do (progn (if (consp c)
-			   (setf (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::r) (nth 0 c)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::g) (nth 1 c)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::b) (nth 2 c)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::a) (nth 3 c))
-			   (setf (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::r) (cffi:foreign-slot-value (fp c) 'rm-cffi::rm-color-4d 'rm-cffi::r)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::g) (cffi:foreign-slot-value (fp c) 'rm-cffi::rm-color-4d 'rm-cffi::g)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::b) (cffi:foreign-slot-value (fp c) 'rm-cffi::rm-color-4d 'rm-cffi::b)
-				 (cffi:foreign-slot-value color-array-fp 'rm-cffi::rm-color-4d 'rm-cffi::a) (cffi:foreign-slot-value (fp c) 'rm-cffi::rm-color-4d 'rm-cffi::a)))
-		       (setf color-array-fp (cffi:inc-pointer color-array-fp 4d)))))
-	color-array)
-      (when size
-	(make-instance 'c4d* :size size))))
+
+(defmethod c4d* (size &key initial-element initial-contents)
+  (unless size
+    (when initial-element
+      (error "ERROR - C4d*; SIZE must be specified if :INITIAL-ELEMENT is specified."))
+    (unless initial-contents
+      (error "ERROR - C4d*; SIZE or :INITIAL-CONTENTS must be specified.")))
+  (if size
+    (let* ((color-array (make-instance 'c4d* :size size))
+           (fp (fp color-array)))
+      (when initial-element
+        (dotimes (i size)
+          (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a)
+                                    (cffi:mem-aref fp 'rm-cffi::rm-color-4d i) rm-cffi::rm-color-4d)
+            (setf rm-cffi::r (r initial-element)
+                  rm-cffi::g (g initial-element)
+                  rm-cffi::b (b initial-element)
+                  rm-cffi::a (a initial-element)))))
+      color-array)
+    (let* ((color-array (make-instance 'c4d* :size (length initial-contents)))
+           (fp (fp color-array)))
+      (if (vectorp initial-contents)
+        ;; Loop over VECTOR
+        (loop
+         :for i :from 0 :below (size color-array)
+         :for v :across initial-contents
+         :do (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a)
+                                       (cffi:mem-aref fp 'rm-cffi::rm-color-4d i) rm-cffi::rm-color-4d)
+               (setf rm-cffi::r (r v)
+                     rm-cffi::g (g v)
+                     rm-cffi::b (b v)
+                     rm-cffi::a (a v))))
+        (loop
+         ;; Loop over LIST
+         :for i :from 0 :below (size color-array)
+         :for v :in initial-contents
+         :do (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a)
+                                       (cffi:mem-aref fp 'rm-cffi::rm-color-4d i) rm-cffi::rm-color-4d)
+               (setf rm-cffi::r (r v)
+                     rm-cffi::g (g v)
+                     rm-cffi::b (b v)
+                     rm-cffi::a (a v)))))
+      color-array)))
 
 (defmethod color-array ((colors list))
   (c4d* colors))
 
+(defmacro with-copy-color-3d-to-foreign ((color fp) &body body)
+  `(cffi:with-foreign-object (,fp 'rm-cffi::rm-color-3d)
+     (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b)
+                               ,fp rm-cffi::rm-color-3d)
+       (setf rm-cffi::r (r ,color)
+             rm-cffi::g (g ,color)
+             rm-cffi::b (b ,color))
+       ,@body)))
+
+(defmacro with-copy-color-4d-to-foreign ((color fp) &body body)
+  `(cffi:with-foreign-object (,fp 'rm-cffi::rm-color-4d)
+     (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a)
+                               ,fp rm-cffi::rm-color-4d)
+       (setf rm-cffi::r (r ,color)
+             rm-cffi::g (g ,color)
+             rm-cffi::b (b ,color)
+             rm-cffi::a (a ,color))
+       ,@body)))
+
+(defmacro with-copy-color-3d-array-to-foreign ((color fp) &body body)
+  (let ((i (gensym "i"))
+        (c (gensym "c")))
+    `(cffi:with-foreign-object (,fp 'rm-cffi::rm-color-3d (length ,color))
+       (loop
+        :for ,i :from 0 :below (length ,color)
+        :for ,c :across color
+        :do (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b)
+                                      (cffi:mem-aref ,fp 'rm-cffi::rm-color-3d ,i) rm-cffi::rm-color-3d)
+              (setf rm-cffi::r (r ,c)
+                    rm-cffi::g (g ,c)
+                    rm-cffi::b (b ,c))))
+       ,@body)))
+
+(defmacro with-copy-color-4d-array-to-foreign ((color fp) &body body)
+  (let ((i (gensym "i"))
+        (c (gensym "c")))
+    `(cffi:with-foreign-object (,fp 'rm-cffi::rm-color-4d (length ,color))
+       (loop
+        :for ,i :from 0 :below (length ,color)
+        :for ,c :across color
+        :do (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a)
+                                      (cffi:mem-aref ,fp 'rm-cffi::rm-color-4d ,i) rm-cffi::rm-color-4d)
+              (setf rm-cffi::r (r ,c)
+                    rm-cffi::g (g ,c)
+                    rm-cffi::b (b ,c)
+                    rm-cffi::a (a ,c))))
+       ,@body)))
+ 
 (defmethod copy-color-to-foreign ((color c4d) foreign-pointer &optional (index 0))
   (declare (ignore index))
   (rm-base:with-c4d (col foreign-pointer nil)
@@ -271,7 +372,7 @@
 	  rm-base:a (a color)))
   foreign-pointer)
 (defmethod copy-color-to-foreign ((color c4d*) foreign-pointer &optional (index 0))
-  (rm-base:with-c4d (vert foreign-pointer nil)
+  (rm-base:with-c4d (col foreign-pointer nil)
     (let ((v (nth-color color index)))
       (setf rm-base:r (r v)
 	    rm-base:g (g v)
@@ -294,7 +395,6 @@
 ;; 	(g dst) (g src)
 ;; 	(b dst) (b src)
 ;; 	(a dst) (a src)))
-
 
 (defmethod copy-color ((dst c4d*) (src c4d) &key (start 0) (end nil))
   (let ((fp (fp dst))

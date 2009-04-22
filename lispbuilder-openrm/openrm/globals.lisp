@@ -104,3 +104,5 @@
   (declare (ignore obj primitive))
   (error "SET-APP-DISPLAY-LIST must be called within the scope of WITH-DEFAULT-PRIMITIVE."))
 
+
+(defparameter *count* 0)

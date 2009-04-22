@@ -152,11 +152,22 @@
     (if (< (decf *particle-count* *increment*) 0)
 	(setf *particle-count* 0))))
 
+(defclass pipe (rm::sdl-pipe)()
+  (:default-initargs
+   :target :RM-PIPE-NOPLATFORM
+   :processing-mode :RM-PIPE-MULTISTAGE
+   :opaque :RM-TRUE
+   :transparent :RM-TRUE
+   :2D :RM-TRUE
+   :display-list nil
+   :swap-buffers nil))
+
 (defclass particles-window (rm::sdl-window) ()
   (:default-initargs
    :width *screen-width*
    :height *screen-height*
    :name "particles-window"
+   :pipe (make-instance 'pipe)
    :title-caption "Particles example"
    :icon-caption "Particles example"))
 
@@ -219,10 +230,10 @@
     ;; Application is quitting
     (:quit-event () t)
     ;; Idle work
-    (:idle
+    (:idle ()
      ;; Update particles
-     ;(dolist (p *particles*)
-     ;  (update-particle p *ftime*))
+     (dolist (p *particles*)
+       (update-particle p *ftime*))
      ;; Update timescale
      (setf *ftime* (sdl:time-scale))
      (when (funcall *frame-test*)
@@ -230,3 +241,4 @@
      ;; Flip back/front buffers
      (rm::render (rm::default-window))))
   (rm::clean-up))
+

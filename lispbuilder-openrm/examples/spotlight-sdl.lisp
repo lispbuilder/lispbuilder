@@ -73,7 +73,7 @@
           (make-instance 'spotlight
                          :direction (rm::point-direction *dummy* *spot-direction*)))
     ;; Rotate spotlight-icon
-    (rm::rotate *spotlight-icon* :match *dummy*)))
+    (rm::rotate *spotlight-icon* (rm::v3d 0.0 0.0 0.0) :match *dummy*)))
 
 ;;;;; -----------------
 ;;;;; -----------------
@@ -82,11 +82,11 @@
 (defun spotlight-sdl ()
   (make-instance 'spotlight-sdl-window)
   (setf *spot-direction* (rm::v3d 0.0 -1.0 0.0))
-  (let ((quads '((((0.0 0.0 0.0)  (10.0 0.0 10.0))  :xz  1)
-                 (((0.0 10.0 0.0) (10.0 10.0 10.0)) :xz -1)
-                 (((0.0 0.0 0.0)  (0.0 10.0 10.0))  :yz  1)
-                 (((10.0 0.0 0.0) (10.0 10.0 10.0)) :yz -1)
-                 (((0.0 0.0 0.0)  (10.0 10.0 0.0))  :xy  1))))
+  (let ((quads '(((#(0.0   0.0 0.0) #(10.0  0.0 10.0)) :xz  1)
+                 ((#(0.0  10.0 0.0) #(10.0 10.0 10.0)) :xz -1)
+                 ((#(0.0   0.0 0.0) #( 0.0 10.0 10.0)) :yz  1)
+                 ((#(10.0  0.0 0.0) #(10.0 10.0 10.0)) :yz -1)
+                 ((#(0.0   0.0 0.0) #(10.0 10.0  0.0)) :xy  1))))
 
     (setf *arc* (make-instance 'rm::arc)
           *dummy* (make-instance 'rm::node)
@@ -100,14 +100,14 @@
                                          :rgb/a *spot-color*
                                          :radius (coerce (rm::to-radian rm::*default-spot-cutoff*)
                                                          'single-float)
-                                         :p-xy/z (rm::v3d* (list *spot-direction*
-                                                                 (rm::v3d 0.0 0.0 0.0)))
+                                         :p-xy/z (rm::v3d* nil :initial-contents (list *spot-direction*
+                                                                                       (rm::v3d 0.0 0.0 0.0)))
                                          :tesselate 32))
 
     (setf *walls* (make-instance 'rm::node :name "quad"
                                  :primitives (loop for (xy/z orientation sign) in quads
                                                    collecting (make-instance 'rm::plane-primitive
-                                                                             :xy/z (rm::v3d* xy/z)
+                                                                             :xy/z (rm::v3d* nil :initial-contents xy/z)
                                                                              :orientation orientation
                                                                              :sign sign
                                                                              :subdivisions 100))))

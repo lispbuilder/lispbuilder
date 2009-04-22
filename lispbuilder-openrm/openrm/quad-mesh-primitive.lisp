@@ -22,8 +22,8 @@
 
 (defun build-XZ-Quad-Mesh (primitive vmin vmax subdivisions ysign)
   "Build a quad-mesh parallel to the X-Z plane."
-  (let ((ref-normal (v3d 0.0 (* 1.0 ysign) 0.0))
-	(w (v3d (x vmin) (y vmin) (z vmin)))
+  (let ((ref-normal (vertex 0.0 (* 1.0 ysign) 0.0))
+        (w (vertex (x vmin) (y vmin) (z vmin)))
 	(dx (/ (- (x vmax) (x vmin))
 	       (- subdivisions 1)))
 	(dz (/ (- (z vmax) (z vmin))
@@ -32,30 +32,31 @@
     (rm-cffi::rm-Primitive-Set-Qmesh-Dims (fp primitive) subdivisions subdivisions)
 
     ;; Set the Vertexes
-    (let ((v (rm-cffi::rm-vertex-3d-new (* subdivisions subdivisions))))
+    (cffi:with-foreign-object (v 'rm-cffi::rm-vertex-3d (* subdivisions subdivisions))
       (loop for i from 0 upto (1- subdivisions)
-	 for w-z = (z w) then (+ w-z dz)
-	 do (loop for j from 0 upto (1- subdivisions)
-	       for w-x = (x w) then (+ w-x dx)
-	       do (let ((vertex (cffi:mem-aref v 'rm-cffi::rm-vertex-3d (+ (* i subdivisions) j))))
-		    (setf (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::x) w-x
-			  (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::y) (y w)
-			  (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::z) w-z))))
+            for w-z = (z w) then (+ w-z dz)
+            do (loop for j from 0 upto (1- subdivisions)
+                     for w-x = (x w) then (+ w-x dx)
+                     do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
+                                                  (cffi:mem-aref v 'rm-cffi::rm-vertex-3d (+ (* i subdivisions) j))
+                                                  rm-cffi::rm-vertex-3d)
+                          (setf rm-cffi::x w-x
+                                rm-cffi::y (y w)
+                                rm-cffi::z w-z))))
       (rm-cffi::rm-Primitive-Set-Vertex-3D (fp primitive)
 					   (* subdivisions subdivisions)
 					   v
 					   :RM-COPY-DATA
-					   (cffi:null-pointer))
-      (rm-cffi::rm-vertex-3d-delete v))
-
-    ;; Set the Normals
-    (setf (normals primitive) (v3d* ref-normal (* subdivisions subdivisions)))
+					   (cffi:null-pointer)))
+    ;; Set the normals
+;(setf (normals primitive) (v3d* (* subdivisions subdivisions) :initial-element ref-normal))
+    (setf (normals primitive) (vertex* ref-normal (* subdivisions subdivisions)))
     primitive))
 
 
 (defun build-XY-Quad-mesh (primitive vmin vmax subdivisions ysign)
   "Build a quad-mesh parallel to the X-Y plane."
-  (let ((ref-normal (v3d 0.0 0.0 (* 1.0 ysign)))
+  (let ((ref-normal (vertex 0.0 0.0 (* 1.0 ysign)))
 	(w (v3d (x vmin) (y vmin) (z vmin)))
 	(dx (/ (- (x vmax) (x vmin))
 	       (- subdivisions 1)))
@@ -65,29 +66,31 @@
     (rm-cffi::rm-Primitive-Set-Qmesh-Dims (fp primitive) subdivisions subdivisions)
 
     ;; Set the Vertexes
-    (let ((v (rm-cffi::rm-vertex-3d-new (* subdivisions subdivisions))))
+    (cffi:with-foreign-object (v 'rm-cffi::rm-vertex-3d (* subdivisions subdivisions))
       (loop for i from 0 upto (1- subdivisions)
-	 for w-y = (y w) then (+ w-y dy)
-	 do (loop for j from 0 upto (1- subdivisions)
-	       for w-x = (x w) then (+ w-x dx)
-	       do (let ((vertex (cffi:mem-aref v 'rm-cffi::rm-vertex-3d (+ (* i subdivisions) j))))
-		    (setf (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::x) w-x
-			  (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::y) w-y
-			  (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::z) (z w)))))
+            for w-y = (y w) then (+ w-y dy)
+            do (loop for j from 0 upto (1- subdivisions)
+                     for w-x = (x w) then (+ w-x dx)
+                     do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
+                                                  (cffi:mem-aref v 'rm-cffi::rm-vertex-3d (+ (* i subdivisions) j))
+                                                  rm-cffi::rm-vertex-3d)
+                          (setf rm-cffi::x w-x
+                                rm-cffi::y w-y
+                                rm-cffi::z (z w)))))
       (rm-cffi::rm-Primitive-Set-Vertex-3D (fp primitive)
 					   (* subdivisions subdivisions)
 					   v
 					   :RM-COPY-DATA
-					   (cffi:null-pointer))
-      (rm-cffi::rm-vertex-3d-delete v))
+					   (cffi:null-pointer)))
 
     ;; Set the Normals
-    (setf (normals primitive) (v3d* ref-normal (* subdivisions subdivisions)))
+    ;;(setf (normals primitive) (v3d* (* subdivisions subdivisions) :initial-element ref-normal))
+    (setf (normals primitive) (vertex* ref-normal (* subdivisions subdivisions)))
     primitive))
 
 (defun build-YZ-Quad-mesh (primitive vmin vmax subdivisions ysign)
   "Build a quad-mesh parallel to the Y-Z plane."
-  (let ((ref-normal (v3d (* 1.0 ysign) 0.0 0.0))
+  (let ((ref-normal (vertex (* 1.0 ysign) 0.0 0.0))
 	(w (v3d (x vmin) (y vmin) (z vmin)))
 	(dz (/ (- (z vmax) (z vmin))
 	       (- subdivisions 1)))
@@ -97,26 +100,40 @@
     (rm-cffi::rm-Primitive-Set-Qmesh-Dims (fp primitive) subdivisions subdivisions)
     
     ;; Set the Vertexes
-    (let ((v (rm-cffi::rm-vertex-3d-new (* subdivisions subdivisions))))
+    (cffi:with-foreign-object (v 'rm-cffi::rm-vertex-3d (* subdivisions subdivisions))
       (loop for i from 0 upto (1- subdivisions)
-	 for w-y = (y w) then (+ w-y dy)
-	 do (loop for j from 0 upto (1- subdivisions)
-	       for w-z = (z w) then (+ w-z dz)
-	       do (let ((vertex (cffi:mem-aref v 'rm-cffi::rm-vertex-3d (+ (* i subdivisions) j))))
-		    (setf (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::x) (x w)
-			  (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::y) w-y
-			  (cffi:foreign-slot-value vertex 'rm-cffi::rm-vertex-3d 'rm-cffi::z) w-z))))
+            for w-y = (y w) then (+ w-y dy)
+            do (loop for j from 0 upto (1- subdivisions)
+                     for w-z = (z w) then (+ w-z dz)
+                     do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
+                                                  (cffi:mem-aref v 'rm-cffi::rm-vertex-3d (+ (* i subdivisions) j))
+                                                  rm-cffi::rm-vertex-3d)
+                          (setf rm-cffi::x (x w)
+                                rm-cffi::y w-y
+                                rm-cffi::z w-z))))
       (rm-cffi::rm-Primitive-Set-Vertex-3D (fp primitive)
 					   (* subdivisions subdivisions)
 					   v
 					   :RM-COPY-DATA
-					   (cffi:null-pointer))
-      (rm-cffi::rm-vertex-3d-delete v))
+					   (cffi:null-pointer)))
 
     ;; Set the Normals
-    (setf (normals primitive) (v3d* ref-normal (* subdivisions subdivisions)))
+    ;;(setf (normals primitive) (v3d* (* subdivisions subdivisions) :initial-element ref-normal))
+    (setf (normals primitive) (vertex* ref-normal (* subdivisions subdivisions)))
     primitive))
 
+(defmethod (setf xy/z) ((bounds list) (primitive quad-mesh-primitive))
+  (setf (xy/z primitive) (coerce bounds 'vector)))
+(defmethod (setf xy/z) ((bounds vector) (primitive quad-mesh-primitive))
+  (unless (vectorp (svref bounds 0))
+    (error "XY/Z with V3D is not allowed for the primitive type QUAD-MESH-PRIMITIVE. Use V3D* instead."))
+  (let ((vmin (nth-vertex bounds 0))
+        (vmax (nth-vertex bounds 1)))
+    (case (orientation primitive)
+      (:xz (build-xz-quad-mesh primitive vmin vmax (subdivisions primitive) (sign primitive)))
+      (:xy (build-xy-quad-mesh primitive vmin vmax (subdivisions primitive) (sign primitive)))
+      (:yz (build-yz-quad-mesh primitive vmin vmax (subdivisions primitive) (sign primitive)))
+      (otherwise (build-xz-quad-mesh primitive vmin vmax (subdivisions primitive) (sign primitive))))))
 (defmethod (setf xy/z) ((bounds v3d) (primitive quad-mesh-primitive))
   (error "XY/Z with V3D is not allowed for the primitive type QUAD-MESH-PRIMITIVE. Use V3D* instead."))
 (defmethod (setf xy/z) ((bounds v3d*) (primitive plane-primitive))

@@ -14,9 +14,9 @@
   (:default-initargs
    :target :RM-PIPE-NOPLATFORM
    :processing-mode :RM-PIPE-MULTISTAGE
-   :opaque :RM-TRUE
-   :transparent :RM-TRUE
-   :2D :RM-TRUE
+   :opaque-3d t
+   :transparent-3d t
+   :opaque-2d t
    :swap-buffers nil))
 
 (defclass sdl-window (window)
@@ -144,7 +144,7 @@
 				 :image-data (sdl-base::pixel-data px))
 		  :rm-image-mirror-height)))
 
-(defmethod load-image ((filename STRING))
+(defmethod load-image (filename)
   (sdl:with-surface (temp (sdl:load-image filename) t)
     (load-image temp)))
 
@@ -453,8 +453,8 @@
 ;;;;;
 ;;;;; Events
 
-(defmethod on-paint ((window sdl-window))
-  (render window))
+;;(defmethod on-paint ((window sdl-window))
+;;  (render window))
 
 (defmethod on-quit ((window sdl-window))
   (setf *quit* t))

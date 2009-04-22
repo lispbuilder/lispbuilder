@@ -40,6 +40,8 @@
 				     (cffi:null-pointer))
     (cffi:foreign-free radii))
   self)
+(defmethod (setf radius) ((radius vector) (self procedural-primitive))
+  (setf (radius self) (coerce radius 'list)))
 
 (defmethod (setf tesselate) (tesselate (self sphere-primitive))
   (rm-cffi::rm-Primitive-Set-Model-Flag (fp self) (case tesselate

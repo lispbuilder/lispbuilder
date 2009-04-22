@@ -49,7 +49,9 @@
 	     ;; (:file "pick")
              (:file "init")
              (:file "objects")
-	     (:file "cffi-finalizers"))
+             (:file "gl")
+	     ;(:file "cffi-finalizers")
+             )
 	    :serial t)
    (:module "documentation"
 	    :components
