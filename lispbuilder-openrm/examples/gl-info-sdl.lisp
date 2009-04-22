@@ -1,0 +1,17 @@
+
+(in-package #:rm-examples)
+
+(defun gl-info-sdl ()
+  (make-instance 'rm::sdl-window :width 320 :height 240)
+  (format t "GL-VERSION:    ~A~%" (rm::gl-version))
+  (format t "GL-VENDOR:     ~A~%" (rm::gl-vendor))
+  (format t "GL-RENDERER:   ~A~%" (rm::gl-renderer))
+  (format t "GL-EXTENSIONS: ~%")
+  (format t "==============~%")
+  (format t "~{~a~%~}" (rm::gl-extensions))
+  (format t "~%")
+  (format t "GLU-VERSION:    ~A~%" (rm::glu-version))
+  (format t "GLU-EXTENSIONS: ~%")
+  (format t "===============~%")
+  (format t "~{~a~%~}" (rm::glu-extensions))
+  (rm::clean-up))
