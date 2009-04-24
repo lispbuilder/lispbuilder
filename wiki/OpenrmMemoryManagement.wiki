@@ -42,7 +42,22 @@ Disadvantages:
 
 Objects that inherit from FOREIGN-OBJECT are responsible for managing the lifecycle of a foreign object. These objects include NODE, PRIMITIVE, CAMERA, LIGHT, Vertex data, Color data etc. 
 
-Prior to adding the object to the scene graph the default object behaviour is to free the allocated foreign object at time of finalization at such time as the object goes out of scope. Object finalization is immediately cancelled when the object is added to the scene graph or is added to another object and the system will not attempt to free memory allocated to the foreign object when the object goes out of scope. 
+An object that is shared will have finalization disabled.
+
+An object that is copied will have finalization enabled.
+
+The following 
+
+As described in 'Assigning Vertex, Pixel, Color & Normal Data' datasets may be copied or shared. When a dataset is shared the finalization for the wrapper object is immediately disabled. This is to stop an object from freeing the shared memory when when it is finalized (almost certainly causing a crash).
+
+PRIMITIVES may not be shared. Any time a primitive is added to a 
+
+S
+
+
+Certain objects Objects that are added to the scene graph, such as a PIPE and NODE, will immedaitely 
+
+Prior to adding the object to the scene graph the default object behaviour is to free the allocated foreign object when the object goes out of scope. Object finalization is immediately disabled when the object is added to the scene graph or the object is added to another object. When finalization is disabled, the system will not attempt to free memory allocated to the foreign object when the object goes out of scope. 
 
 Finalization is disabled for the following objects when added to the scene graph;
 
@@ -62,4 +77,4 @@ Finalization is disabled for the following ojbects when added to an IMAGE;
 
   * Pixel data
 
-Finalization can be explicitely enabled or disabled by calling GC-P. It is not recommended to do this unless you knoe what you are doing.
+Finalization can be explicitely enabled or disabled by calling GC-P. It is not recommended to do this unless you know what you are doing.
