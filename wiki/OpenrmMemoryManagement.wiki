@@ -2,15 +2,15 @@
 
 = Introduction =
 
-Many of the objects defined in LISPBUILDER-OPENRM wrap a Lispy shell around a foreign object; for example NODE, PRIMITIVE, CAMERA and LIGHT. LISPBUILDER-OPENRM attempts to hide much of the memory management cruft that would be necessary if one were to interface to OpenRM using a language like C. We use the TRIVIALE-GARBAGE package to automatically free foreign objects at object finalization, reducing the need for the programmer to manage references to objects and explicitly free memory when objects go out of scope.
+Many of the objects defined in LISPBUILDER-OPENRM wrap a Lispy shell around a foreign object; for example NODE, PRIMITIVE, CAMERA and LIGHT. LISPBUILDER-OPENRM attempts to hide much of the memory management cruft that would be necessary if one were to interface to OpenRM using a language like C. We use the TRIVIAL-GARBAGE package to automatically free foreign objects at object finalization, reducing the need for the programmer to manage references to objects and explicitly free memory when objects go out of scope.
 
-= OpenRM Scene Graph Objects =
+= Assigning Vertex, Pixel, Color & Normal Data  =
 
-This section describes the two mechansims for assigning datasets to the scene graph (for example vertex data, color data, normal data and pixel data); *copy* and *share*.
+There are two mechansims for assigning datasets to objects in the scene graph (for example vertex data, color data, normal data and pixel data); *copy* and *share*.
 
 == Copy ==
 
-An internal copy is made if any data assigned to an object. The deallocation of memory is then the responsibility of the OpenRM object. For example, a sprite primitive will copy image data into an internal frame buffer. The memory managed by the object is automatically freed when the object is removed from the scene graph.
+An internal copy is made of any data assigned to an object. The deallocation of memory is then the responsibility of the OpenRM object. For example, a sprite primitive will copy image data into an internal frame buffer. The memory managed by the object is automatically freed when the object is removed from the scene graph.
 
 Advantages:
 
@@ -29,40 +29,37 @@ When data is assiged to an object, only a reference to that data is stored. The 
 
 Advantages:
 
-  * Memory is shared. Efficient because large data sets are not copied.
-  * Because datasets are shared, any modification of the dataset by the application becomes immediately visible in the Scene Graph. For the application can make updated to the pixel data in a texture and these will be immediately rendered.
-  * PRIMITIVE objects store only a reference to the dataset so Data can be written and read at will.
+  * Memory is shared. Efficient as large data sets are not copied.
+  * Because datasets are shared, any modification of the dataset by the application becomes immediately visible in the Scene Graph. For example, the application can update the pixel data in a texture that then becomes immediately visible when next the scene graph is rendered.
+  * Data can be written and read at will inside objects. For example the Vertex in a PRIMITIVE can be easily read and updated.
 
 Disadvantages:
 
   * Garbage collection and memory management is not straightforward. The Scene Graph uses foreign callbacks into Lisp to free foreign memory. This is inefficient when many small foreign objects must be freed.
-  * A foreign object that contains vertex, color, pixel or normal data is not a lightweight object like a vector and access is via the CFFI. If the dataset requires many frequent updates then it may be more efficient to store the dataset in a lisp vector and copy the data into the object.
+  * A foreign object that contains vertex, color, pixel or normal data is not a lightweight object like a Lisp VECTOR and access is via the CFFI. If the dataset requires many frequent updates then it may be more efficient to store the dataset in a lisp vector and copy the data into the object.
 
 = Garbage Collection of foreign objects (Object Finalization) =
 
-Objects that inherit from FOREIGN-OBJECT contain a foreign object. It is the responsibility of these objects to manage the lifecycle of its foreign object as descibed in the sections below.
+Objects that inherit from FOREIGN-OBJECT are responsible for managing the lifecycle of a foreign object. These objects include NODE, PRIMITIVE, CAMERA, LIGHT, Vertex data, Color data etc. 
 
-The foreign object is created at the same time that the lisp object is created. The default behaviour is to free allocated foreign memory at time of object finalization. 
-However finalization can be explicitely enabled or disabled at any time by the programmer by calling GC-P, but this finalization has side effects which will be discussed below.
+Prior to adding the object to the scene graph the default object behaviour is to free the allocated foreign object at time of finalization at such time as the object goes out of scope. Object finalization is immediately cancelled when the object is added to the scene graph or is added to another object and the system will not attempt to free memory allocated to the foreign object when the object goes out of scope. 
 
-The OpenRM scene graph manages most of the lifecycle for a foreign object. 
+Finalization is disabled for the following objects when added to the scene graph;
 
-Finalization is automatically cancelled when;
+  * PIPE
+  * NODE
 
-  * An object is added to the scene graph, or
-  * And object is added to another object.
+Finalization is disabled for the following objects when added to a NODE;
 
+  * PRIMITIVE
 
-The systerm will not attempt to free memory allocated to the foreign object when the object goes out of scope. 
+Finalization is disabled for the following objects when added to a PRIMITIVE;
 
+  * IMAGE
+  * V2D, V2d*, V3D, V3D*, C3D, C3D*, C4D, C4D* (Vertex, color and normal data)
 
+Finalization is disabled for the following ojbects when added to an IMAGE;
 
+  * Pixel data
 
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Finalization can be explicitely enabled or disabled by calling GC-P. It is not recommended to do this unless you knoe what you are doing.
