@@ -10,7 +10,7 @@ This section describes the two mechansims for assigning datasets to the scene gr
 
 == Copy ==
 
-  * *Copy*: An internal copy is made if any data assigned to an object. The deallocation of memory is then the responsibility of the OpenRM object. For example, a sprite primitive will copy image data into an internal frame buffer. The memory managed by the object is automatically freed when the object is removed from the scene graph.
+An internal copy is made if any data assigned to an object. The deallocation of memory is then the responsibility of the OpenRM object. For example, a sprite primitive will copy image data into an internal frame buffer. The memory managed by the object is automatically freed when the object is removed from the scene graph.
 
 Advantages:
 
@@ -25,7 +25,7 @@ Disadvantages;
 
 == Share ==
 
-  * *Share*: When data is assiged to an object, only a reference to that data is stored. The deallocation of memory becomes the responsibility of the application. For example, a sprite primitive will not create an internal frame buffer but will instead store a reference to external pixel data. The object will not free memory when it is removed from the scene graph.
+When data is assiged to an object, only a reference to that data is stored. The deallocation of memory becomes the responsibility of the application. For example, a sprite primitive will not create an internal frame buffer but will instead store a reference to external pixel data. The object will not free memory when it is removed from the scene graph.
 
 Advantages:
 
