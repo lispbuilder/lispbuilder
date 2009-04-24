@@ -1,0 +1,68 @@
+#summary Garbage Collection, Memory Management and Sharing of Memory in OPENRM
+
+= Introduction =
+
+Many of the objects defined in LISPBUILDER-OPENRM wrap a Lispy shell around a foreign object; for example NODE, PRIMITIVE, CAMERA and LIGHT. LISPBUILDER-OPENRM attempts to hide much of the memory management cruft that would be necessary if one were to interface to OpenRM using a language like C. We use the TRIVIAGE-GARBAGE package to automatically free foreign objects at object finalization, reducing the need for the programmer to manage references to objects and explicitly free memory when objects go out of scope.
+
+This section describes the thinking behind the LISPBUILDER-OPERM memory model.
+
+Objects that inherit from FOREIGN-OBJECT contain a foreign object. It is the responsibility of these objects to manage the lifecycle of its foreign object as descibed in the sections below.
+
+= OpenRM Scene Graph Objects =
+
+OpenRM supports to mechanisms for adding data to an OpenRM object (for example vertex data, color data, normal data and pixel data); *copy* and *share*.
+
+  * *Copy*: An internal copy is made if any data assigned to an object. The deallocation of memory is then the responsibility of the OpenRM object. For example, a sprite primitive will copy image data into an internal frame buffer. The memory managed by the object is automatically freed when the object is removed from the scene graph.
+
+Advantages:
+
+  * Garbage collection is straighforward as memory is managed by the Scene Graph.
+  * A Lisp vector can be used to represent vertex, color, pixel and normal data. The vector is a lightweight lisp object that allows very efficient lookups. Thus a CFFI layer is not necessary (that would be necessary when reading/writing to a foreign array.)
+
+Disadvantages;
+
+  * Memory is copied. This is inefficient when very large datasets are involved. The contents of the Lisp vector are copied into a foreign array and the OpenRM object again creates an internal copy of this array.
+  * Datasets are not shared between application and scene graph. Modifying a single element in a data set requires that the entire dataset be again copied into the scene graph.
+  * PRIMITIVE objects allow data to be written but not read. For example Vertex data once copied into a PRIMITIVE cannot be read out (This is not true for vertex and color data assigned to NODES however).
+
+  * *Share*: When data is assiged to an object, only a reference to that data is stored. The deallocation of memory becomes the responsibility of the application. For example, a sprite primitive will not create an internal frame buffer but will instead store a reference to external pixel data. The object will not free memory when it is removed from the scene graph.
+
+Advantages:
+
+  * Memory is shared. Efficient because large data sets are not copied.
+  * Because datasets are shared, any modification of the dataset by the application becomes immediately visible in the Scene Graph. For the application can make updated to the pixel data in a texture and these will be immediately rendered.
+  * PRIMITIVE objects store only a reference to the dataset so Data can be written and read at will.
+
+Disadvantages:
+
+  * Garbage collection and memory management is not straightforward. The Scene Graph uses foreign callbacks into Lisp to free foreign memory. This is inefficient when many small foreign objects must be freed.
+  * A foreign object that contains vertex, color, pixel or normal data is not a lightweight object like a vector and access is via the CFFI. If the dataset requires many frequent updates then it may be more efficient to store the dataset in a lisp vector and copy the data into the object.
+
+= Garbage Collection of foreign objects (Object Finalization) =
+
+The foreign object is created at the same time that the lisp object is created. The default behaviour is to free allocated foreign memory at time of object finalization. 
+However finalization can be explicitely enabled or disabled at any time by the programmer by calling GC-P, but this finalization has side effects which will be discussed below.
+
+The OpenRM scene graph manages most of the lifecycle for a foreign object. 
+
+Finalization is automatically cancelled when;
+
+  * An object is added to the scene graph, or
+  * And object is added to another object.
+
+
+
+
+The systerm will not attempt to free memory allocated to the foreign object when the object goes out of scope. 
+
+
+
+
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
