@@ -2,15 +2,15 @@
 
 = Introduction =
 
-Many of the objects defined in LISPBUILDER-OPENRM wrap a Lispy shell around a foreign object; for example NODE, PRIMITIVE, CAMERA and LIGHT. LISPBUILDER-OPENRM attempts to hide much of the memory management cruft that would be necessary if one were to interface to OpenRM using a language like C. We use the TRIVIAL-GARBAGE package to automatically free foreign objects at object finalization, reducing the need for the programmer to manage references to objects and explicitly free memory when objects go out of scope.
+LISPBUILDER-OPENRM attempts to hide much of the manual memory management cruft that is necessary if one interfaces to OpenRM using a language like C. Many of the objects defined in LISPBUILDER-OPENRM place a Lispy shell around a foreign object; for example the NODE, PRIMITIVE, CAMERA and LIGHT objects. We use TRIVIAL-GARBAGE to free foreign objects automatically at object finalization, reducing the need to manage references to objects and explicitly free memory when objects go out of scope.
 
 = Assigning Vertex, Pixel, Color & Normal Data  =
 
-There are two mechansims for assigning datasets to objects in the scene graph (for example vertex data, color data, normal data and pixel data); *copy* and *share*.
+There are two mechansims for assigning datasets to objects in the scene graph (vertex data, color data, normal data and pixel data); *copy* and *share*.
 
 == Copy ==
 
-An internal copy is made of any data assigned to an object. The deallocation of memory is then the responsibility of the OpenRM object. For example, a sprite primitive will copy image data into an internal frame buffer. The memory managed by the object is automatically freed when the object is removed from the scene graph.
+The object makes an internal copy of the dataset. Deallocation of memory becomes the responsibility of the foreign OpenRM object. For example, an OpenRM sprite primitive will copy image data from an external pixel array into an internal frame buffer. The memory managed by the primitive object is automatically freed when the object is removed from the scene graph.
 
 Advantages:
 
@@ -25,7 +25,7 @@ Disadvantages;
 
 == Share ==
 
-When data is assiged to an object, only a reference to that data is stored. The deallocation of memory becomes the responsibility of the application. For example, a sprite primitive will not create an internal frame buffer but will instead store a reference to external pixel data. The object will not free memory when it is removed from the scene graph.
+The object stores a reference to the dataset is stored. Deallocation of memory becomes the responsibility of the application. For example, a sprite primitive will not create an internal frame buffer but will instead store a reference to external pixel data. The object will not free memory when it is removed from the scene graph.
 
 Advantages:
 
@@ -42,13 +42,20 @@ Disadvantages:
 
 Objects that inherit from FOREIGN-OBJECT are responsible for managing the lifecycle of a foreign object. These objects include NODE, PRIMITIVE, CAMERA, LIGHT, Vertex data, Color data etc. 
 
-An object that is shared will have finalization disabled.
+The NODE object, once added to the scene graph, will have finalization disabled. A NODE object may be added to the scene graph many times. The scene graph increments a reference for the NODE each time it is added. The NODE is deleted when all it is no longer attached to the scene graph and the reference count reached zero. When a NODE is deleted all PRIMITIVES attached to the NODE are also deleted.
 
-An object that is copied will have finalization enabled.
+The PRIMITIVE object, once added to a NODE, will have finalization disabled. A PRIMITIVE may be added to the scene graph only once as the scene graph does not maintain a reference count for the PRIMITIVE as it does the NODE. As described above, all PRIMITIVES attached to a NODE are deleted when the NODE is deleted. If a PRIMITIVE had been added to the scene graph a second time then a crash would more than likely result. To duplicate PRIMTIVES, add the primitive to a NODE and then add the NODE to the scene graph multiple times.
 
-The following 
+The IMAGE object, once added to a PRIMITIVE, will have finalization disabled. An IMAGE object may be added only once to a scene graph as the scene graph does not maintain a reference count for the IMAGE as it does the NODE. To add multiple images to the scene graph, duplicate an image using IMAGE-DUPLICATE. If the image pixel data is contained in a VECTOR then each IMAGE will maintain an internal frame buffer and a copy of the pixel data. If the pixel data is contained in a foreign array, then this data is shared across IMAGES.
 
-As described in 'Assigning Vertex, Pixel, Color & Normal Data' datasets may be copied or shared. When a dataset is shared the finalization for the wrapper object is immediately disabled. This is to stop an object from freeing the shared memory when when it is finalized (almost certainly causing a crash).
+The Vertex, Color and Normal objects, once added to an IMAGE or PRIMITIVE will have finalization disabled. A copy of the datasets is made when contained in a VECTOR, otherwise only the reference to the dataset is stored.
+
+
+There are two types of objects for the purposes of garbage collection. There are those objects that will automatically memory assigned to the foreign object freed when teh object goes out of scope, and there are objects 
+
+There are two types of objects in L
+
+As described in 'Assigning Vertex, Pixel, Color & Normal Data' datasets may be copied or shared. When a dataset is shared finalization is immediately disabled to stop an object from freeing the shared memory when when it is finalized (almost certainly causing a crash).
 
 PRIMITIVES may not be shared. Any time a primitive is added to a 
 
