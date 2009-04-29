@@ -1,7 +1,7 @@
 
 (in-package #:rm)
 
-(defclass rm-pipe (openrm-object) ()
+(defclass rm-pipe (foreign-object) ()
   (:default-initargs
    :free (simple-free #'rm-cffi::rm-pipe-delete 'rm-pipe)))
 
@@ -16,7 +16,8 @@
    :display-list t
    :init-matrix-stack t
    :channel-format :rm-mono-channel
-   :background-color (color 0.2 0.2 0.3 1.0)))
+   :background-color (color 0.2 0.2 0.3 1.0)
+   :notify-level t))
 
 (defmethod initialize-instance :after ((self pipe) &key
 				       target processing-mode
@@ -25,16 +26,20 @@
                                        dimensions
                                        display-list swap-buffers
                                        init-matrix-stack
-                                       background-color)
+                                       background-color
+                                       notify-level)
 
   (unless *initialised*
     (setf *initialised* t)
     (rm-cffi::rm-Init))
+
+  (cond
+   ((not notify-level)
+    (rm-cffi::rm-notify-level :rm-notify-silence))
+   (t
+    (rm-cffi::rm-notify-level :rm-notify-full)))
   
   (setf (slot-value self 'foreign-pointer-to-object) (rm-cffi::rm-Pipe-New target))
-
-  (log5:log-for (create) "initialize-instance.RM-PIPE: ~A, ~A, ~A"
-                self (id self) (this-fp self))
   
   (when (cffi:null-pointer-p (fp self))
     (error "Cannot create OpenRM Pipe: ~A" (fp self)))

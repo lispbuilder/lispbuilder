@@ -118,9 +118,8 @@
 (defmethod reset-arc ((arc arc) (node node) screen-width screen-height x y)
   (setf (x-of arc) (pixel-to-viewport x screen-width)
 	(y-of arc) (* -1.0 (pixel-to-viewport y screen-height)))
-  (if (equal (rm-cffi::rm-Node-Get-Rotate-Matrix (fp node) (initial-transform-of arc))
-	     :RM-false)
-      (rm-cffi::rm-Matrix-Identity (initial-transform-of arc))))
+  (when (eq (rm-cffi::rm-Node-Get-Rotate-Matrix (fp node) (initial-transform-of arc)) :rm-false)
+    (rm-cffi::rm-Matrix-Identity (initial-transform-of arc))))
 
 (defgeneric udpate-translate (translate node screen-width screen-height mousex mousey))
 (defmethod udpate-translate ((translate translate) (node node) screen-width screen-height mousex mousey)

@@ -1,19 +1,18 @@
 
 (in-package #:rm)
 
-(defclass image (openrm-object) ()
+(defclass image (foreign-object copyable-object) ()
   (:default-initargs
    :fp nil
    :free (simple-free #'rm-cffi::rm-image-delete 'rm-image)))
 
 (defmethod initialize-instance :after ((self image) &key
-				       (type nil) (dims nil) (depth nil) (format nil) (data-type nil)
-				       (image-data nil))
+                                       type dims depth format data-type image-data)
   (unless (this-fp self)
     (unless (or type dims depth format type)
       (error ":TYPE, :DIMS, :DEPTH, :FORMAT or :DATA-TYPE must not be NIL."))
     (setf (slot-value self 'foreign-pointer-to-object)
-	  (rm-cffi::rm-image-new type (elt dims 0) (elt dims 1) depth format data-type (copy-data self))))
+          (rm-cffi::rm-image-new type (elt dims 0) (elt dims 1) depth format data-type (copy-data self))))
   (when image-data
     (setf (image-data self) image-data)))
 
@@ -104,27 +103,58 @@
 
 (defmethod image-data ((self image))
   (rm-cffi::rm-image-get-pixel-data (fp self)))
-(defmethod (setf image-data) (pixels (self image))
-  (rm-cffi::rm-image-set-pixel-data (fp self) pixels (copy-data self) (cffi:null-pointer)))
-(defmethod (setf image-data) ((pixels c4d*) (self image))
-  (rm-cffi::rm-image-set-pixel-data (fp self) (fp pixels) (copy-data self) (cffi:null-pointer)))
-(defmethod (setf image-data) ((pixels vector) (self image))
-  (cffi:with-foreign-object (pixel-array 'rm-cffi::rm-color-4d (length pixels))
-    (let ((4d (cffi:foreign-type-size 'rm-cffi::rm-color-4d))
-          (color-fp pixel-array))
-      (loop
-       for vector across pixels
-       for i from 0 upto (1- (length pixels))
-       do (progn
-            (setf (cffi:foreign-slot-value color-fp 'rm-cffi::rm-color-4d 'rm-cffi::r) (r vector)
-                  (cffi:foreign-slot-value color-fp 'rm-cffi::rm-color-4d 'rm-cffi::g) (g vector)
-                  (cffi:foreign-slot-value color-fp 'rm-cffi::rm-color-4d 'rm-cffi::b) (b vector)
-                  (cffi:foreign-slot-value color-fp 'rm-cffi::rm-color-4d 'rm-cffi::a) (a vector))
-            (setf color-fp (cffi:inc-pointer color-fp 4d)))))
-    (rm-cffi::rm-image-set-pixel-data (fp self) pixel-array :RM-COPY-DATA (cffi:null-pointer))))
 
-;;(defmethod (setf image-data) ((pixels list) (self image))
-;;  (rm-cffi::rm-image-set-pixel-data (fp self) pixels (copy-data self) (cffi:null-pointer)))
+(defmethod (setf image-data) :after ((pixels foreign-object) (self image))
+  (if (gc-p pixels)
+    (setf (gc-p pixels) nil)))
+
+(defmethod (setf image-data) (pixels (self image))
+  (error "Don't know how to handle this type of PIXEL data."))
+
+(defmethod (setf image-data) ((pixels color-array) (self image))
+  (rm-cffi::rm-image-set-pixel-data (fp self)
+                                    (fp pixels)
+                                    (copy-data self)
+                                    (if (copy-p self)
+                                      (cffi:null-pointer)
+                                      (free-callback self))))
+
+(defmethod (setf image-data) ((pixels vector) (self image))
+  (if (> (length (aref pixels 0)) 3)
+    (cffi:with-foreign-object (pixel-array 'rm-cffi::rm-color-4d (length pixels))
+      (let ((size (cffi:foreign-type-size 'rm-cffi::rm-color-4d))
+            (color-fp pixel-array))
+        (loop
+         for vector across pixels
+         for i from 0 upto (1- (length pixels))
+         do (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b rm-cffi::a)
+                                      color-fp rm-cffi::rm-color-4d)
+              (setf rm-cffi::r (r vector)
+                    rm-cffi::g (g vector)
+                    rm-cffi::b (b vector)
+                    rm-cffi::a (a vector))
+              (setf color-fp (cffi:inc-pointer color-fp size)))))
+      
+      (rm-cffi::rm-image-set-pixel-data (fp self)
+                                        pixel-array
+                                        :rm-copy-data
+                                        (cffi:null-pointer)))
+    (cffi:with-foreign-object (pixel-array 'rm-cffi::rm-color-3d (length pixels))
+      (let ((size (cffi:foreign-type-size 'rm-cffi::rm-color-3d))
+            (color-fp pixel-array))
+        (loop
+         for vector across pixels
+         for i from 0 upto (1- (length pixels))
+         do (cffi:with-foreign-slots ((rm-cffi::r rm-cffi::g rm-cffi::b)
+                                      color-fp rm-cffi::rm-color-3d)
+              (setf rm-cffi::r (r vector)
+                    rm-cffi::g (g vector)
+                    rm-cffi::b (b vector))
+              (setf color-fp (cffi:inc-pointer color-fp size)))))
+      (rm-cffi::rm-image-set-pixel-data (fp self)
+                                        pixel-array
+                                        :rm-copy-data
+                                        (cffi:null-pointer)))))
 
 (defmethod width ((dims vector))
   (svref dims 0))
@@ -138,9 +168,16 @@
 
 (defmethod set-sprites ((self sprite-primitive) (image image))
   (set-sprites self (list image)))
+
+;; Cancel finalization for images added to a sprite. 
+(defmethod set-sprites :after ((self sprite-primitive) (images list))
+  (loop for image in images
+        do (when (gc-p image) (setf (gc-p image) nil))))
+
 (defmethod set-sprites ((self sprite-primitive) (images list))
   (cffi:with-foreign-object (handle :pointer)
-    (let ((image-array (cffi:foreign-alloc 'rm-cffi::rm-image
+    (let ((result nil)
+          (image-array (cffi:foreign-alloc 'rm-cffi::rm-image
                                            :initial-contents (loop for image in images
                                                                    collect (fp image)))))
       ;;(setf (cffi:mem-aref handle :pointer) image-array)
@@ -148,6 +185,7 @@
                                              image-array
                                              ;;handle
 					     )
-	  t
-	  nil)
-      (cffi:foreign-free image-array))))
+        (setf result t)
+        (setf result nil))
+      (cffi:foreign-free image-array)
+      result)))

@@ -12,7 +12,7 @@
 (defvar *spot-color* (rm::color 0.9 0.5 0.5 1.0))
 (defvar *spot-exponent* 4.0)
 (defparameter *spot-xy/z* (rm:vertex 5.0 5.0 5.0))
-(defparameter *spot-direction* (rm:vertex 0.0 -1.0 0.0))
+(defparameter *spot-direction* (rm::v3d 0.0 -1.0 0.0))
 
 (defparameter *arc* nil)
 (defparameter *dummy* nil)
@@ -70,9 +70,7 @@
     (rm::update-arc *arc* *dummy* *width* *height* x y)
     ;; Rotate spotlight
     (setf (rm::light *spotlight-root*)
-          (make-instance 'spotlight :direction (rm::point-direction *dummy* *spot-direction* #(0.0 0.0 0.0))))
-    (format t "spot-direction: *spot-direction*: ~A, rm::point-direction: ~A~%" *spot-direction*
-            (rm::point-direction *dummy* *spot-direction* #(0.0 0.0 0.0)))
+          (make-instance 'spotlight :direction (rm::point-direction *dummy* *spot-direction*)))
     ;; Rotate spotlight-icon
     (rm::rotate *spotlight-icon* *dummy*)))
 
@@ -80,9 +78,9 @@
 ;;;;; -----------------
 ;;;;; -----------------
 
-(defun spotlight-sdl ()
+(defun spotlight-2-sdl ()
   (make-instance 'spotlight-sdl-window)
-  (setf *spot-direction* (rm:vertex 0.0 -1.0 0.0))
+  (setf *spot-direction* (rm::v3d 0.0 -1.0 0.0))
   (let ((quads '(((#(0.0   0.0 0.0) #(10.0  0.0 10.0)) :xz  1)
                  ((#(0.0  10.0 0.0) #(10.0 10.0 10.0)) :xz -1)
                  ((#(0.0   0.0 0.0) #( 0.0 10.0 10.0)) :yz  1)
@@ -101,8 +99,8 @@
                                          :rgb/a *spot-color*
                                          :radius (coerce (rm::to-radian rm::*default-spot-cutoff*)
                                                          'single-float)
-                                         :p-xy/z (vector *spot-direction*
-                                                         (rm:vertex 0.0 0.0 0.0))
+                                         :p-xy/z (rm::v3d* nil :initial-contents (list *spot-direction*
+                                                                                       (rm::v3d 0.0 0.0 0.0)))
                                          :tesselate 32))
 
     (setf *walls* (make-instance 'rm::node :name "quad"

@@ -1,6 +1,6 @@
 (in-package #:rm)
 
-(defclass rm-node (openrm-object)
+(defclass rm-node (foreign-object trackable-object)
   ((name
     :reader name
     :initform ""
@@ -480,8 +480,6 @@ the exception of the root RMnode. Remove cameras and lights from the root node."
     (when (rm-cffi::rm-Node-Get-Translate-Vector (fp node) (fp position))
       position)))
 
-(defmethod (setf xy/z) ((translate list) (node rm-node))
-  (setf (xy/z node) (coerce translate 'vector)))
 (defmethod (setf xy/z) ((translate vector) (node rm-node))
   (if (> (length translate) 2)
     (rm-base:with-v3d (v3d)
@@ -644,14 +642,13 @@ Returns NIL otherwise."))
 (defmethod get-light ((self rm-node) light-source)
   (cffi:with-foreign-object (l :pointer)
     (when (rm-cffi::rm-Node-Get-Scene-Light (fp self) light-source l)
-      (let ((fp-light (cffi:mem-aref l :pointer)))
-        (cond
-         ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-SPOT)
-          (make-instance 'spotlight :light-source light-source :fp fp-light))
-         ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-POINT)
-          (make-instance 'point-light :light-source light-source :fp fp-light))
-         ((equal (rm-cffi::rm-Light-Get-Type fp-light) :RM-LIGHT-DIRECTIONAL)
-          (make-instance 'directional-light :light-source light-source :fp fp-light)))))))
+      (cond
+       ((equal (rm-cffi::rm-Light-Get-Type (cffi:mem-aref l :pointer)) :RM-LIGHT-SPOT)
+        (make-instance 'spot-light :light-source light-source :fp (cffi:mem-aref l :pointer)))
+       ((equal (rm-cffi::rm-Light-Get-Type (cffi:mem-aref l :pointer)) :RM-LIGHT-POINT)
+        (make-instance 'point-light :light-source light-source :fp (cffi:mem-aref l :pointer)))
+       ((equal (rm-cffi::rm-Light-Get-Type (cffi:mem-aref l :pointer)) :RM-LIGHT-DIRECTIONAL)
+        (make-instance 'directional-light :light-source light-source :fp (cffi:mem-aref l :pointer)))))))
 
 (defmethod light-p ((node rm-node) &optional light-source)
   (if light-source
@@ -695,17 +692,31 @@ Returns NIL otherwise."))
 
 ;;; Matrix Operations
 
-(defmethod point-direction ((self node) (src v3d) &optional (dst (v3d 0.0 0.0 0.0)))
+(defmethod point-direction ((self node) (src vector) &optional (dst #(0.0 0.0 0.0)))
+  (with-copy-vertex-3d-to-foreign (src src-fp)
+    (with-copy-vertex-3d-to-foreign (dst dst-fp)
+      (cffi:with-foreign-object (matrix 'rm-cffi::rm-matrix)
+        (when (rm-cffi::rm-Node-Get-Rotate-Matrix (fp self) matrix)
+          (rm-cffi::rm-Point-Matrix-Transform src-fp matrix dst-fp)
+          (setf (x dst) (cffi:foreign-slot-value dst-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::x)
+                (y dst) (cffi:foreign-slot-value dst-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::y)
+                (z dst) (cffi:foreign-slot-value dst-fp 'rm-cffi::rm-vertex-3d 'rm-cffi::z))))))
+  dst)
+
+(defmethod point-direction ((self node) (src v3d) &optional dst)
   (cffi:with-foreign-object (matrix 'rm-cffi::rm-matrix)
     (when (rm-cffi::rm-Node-Get-Rotate-Matrix (fp self) matrix)
+      (unless dst
+        (setf dst (v3d nil nil nil)))
       (rm-cffi::rm-Point-Matrix-Transform (fp src) matrix (fp dst)))
     dst))
 
-(defmethod rotate ((self node) (direction vector) &key (match nil) (reverse nil))
-  (with-copy-vertex-3d-to-foreign (direction fp)
+(defmethod rotate ((self node) (direction vector) &key (reverse nil))
+  "Rotate to face `DIRECTION`."
+  (with-copy-vertex-3d-to-foreign (direction d-fp)
     (rm-base::rotate-node (this-fp self)
-                          :direction fp 
-                          :match-node (if match (fp match) nil)
+                          :direction d-fp
+                          :match-node nil
                           :reverse-nodes (if (null reverse)
                                            nil
                                            (if (listp reverse)
@@ -713,17 +724,29 @@ Returns NIL otherwise."))
                                                    collect (this-fp node))
                                              t)))))
 
-(defmethod rotate ((self node) (direction v3d) &key (match nil) (reverse nil))
-  (with-copy-vertex-3d-to-foreign (direction fp)
-    (rm-base::rotate-node (this-fp self)
-                          :direction (fp direction)
-                          :match-node (if match (fp match) nil)
-                          :reverse-nodes (if (null reverse)
-                                           nil
-                                           (if (listp reverse)
-                                             (loop for node in reverse
-                                                   collect (this-fp node))
-                                             t)))))
+(defmethod rotate ((self node) (direction v3d) &key (reverse nil))
+  "Rotate to face `DIRECTION`."
+  (rm-base::rotate-node (this-fp self)
+                        :direction (fp direction)
+                        :match-node nil
+                        :reverse-nodes (if (null reverse)
+                                         nil
+                                         (if (listp reverse)
+                                           (loop for node in reverse
+                                                 collect (this-fp node))
+                                           t))))
+
+(defmethod rotate ((self node) (match node) &key (reverse nil))
+  "Match the rotation the node `MATCH`."
+  (rm-base::rotate-node (this-fp self)
+                        :direction nil
+                        :match-node (if match (fp match) nil)
+                        :reverse-nodes (if (null reverse)
+                                         nil
+                                         (if (listp reverse)
+                                           (loop for node in reverse
+                                                 collect (this-fp node))
+                                           t))))
 
 ;;;
 ;;;

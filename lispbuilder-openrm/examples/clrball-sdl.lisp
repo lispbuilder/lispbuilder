@@ -83,11 +83,11 @@
   ;; The transparent and opaque spheres are attached to the scene below the scene node.
   (rm::add-node (rm::make-instance 'opaque-node
                                    :name "opaque"
-                                   :primitives (list (make-instance 'opaque-sphere-prim)))
+                                   :primitives (make-instance 'opaque-sphere-prim))
                 (rm::default-scene))
   (rm::add-node (rm::make-instance 'transparent-node
                                    :name "transparent"
-                                   :primitives (list (make-instance 'transparent-sphere-prim)))
+                                   :primitives (make-instance 'transparent-sphere-prim))
                 (rm::default-scene))
 
   (rm::with-scene ((rm::default-scene) scene)

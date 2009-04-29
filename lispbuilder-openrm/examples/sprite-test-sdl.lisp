@@ -16,8 +16,8 @@
                                :depth 1
                                :format :rm-image-rgba
                                :data-type :rm-float
-                               :image-data (rm::color* (rm::color a 0.0 (- 1.0 a) 1.0)
-                                                       (* image-width image-height)))))
+                               :image-data (rm::color* (* image-width image-height)
+                                                       :initial-element (rm::color a 0.0 (- 1.0 a) 1.0)))))
     image))
 
 (defun build-tiles (num-width num-height)
@@ -42,8 +42,8 @@
 
 (defun sprite-test-sdl ()
   (rm::make-instance 'rm::sdl-window
-                     :width 320 ;1024
-                     :height 204 ;960
+                     :width 1024
+                     :height 960
                      :title-caption "Sprite Test"
                      :icon-caption "Sprite Test"
                      :pipe (make-instance 'rm::sdl-pipe
@@ -63,11 +63,8 @@
                                           :dims :rm-renderpass-all
                                           :opacity :rm-renderpass-all
                                           :unlit-color (rm::color 0.0 1.0 0.0 1.0)
-                                          :children (build-tiles 20 20)))
+                                          :children (build-tiles 60 60)))
   (setf (sdl:frame-rate) nil)
-
-  (format t "~A~%" (rm::pipe (rm::default-window)))
-  (format t "~A~%" (rm::default-window))
 
   (let ((frame-test (every-n-frames 50)))
     (sdl:with-events ()

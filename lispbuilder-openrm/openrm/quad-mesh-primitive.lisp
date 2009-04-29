@@ -50,7 +50,7 @@
 					   (cffi:null-pointer)))
     ;; Set the normals
 ;(setf (normals primitive) (v3d* (* subdivisions subdivisions) :initial-element ref-normal))
-    (setf (normals primitive) (vertex* ref-normal (* subdivisions subdivisions)))
+    (setf (normals primitive) (vertex* (* subdivisions subdivisions) :initial-element ref-normal))
     primitive))
 
 
@@ -85,7 +85,7 @@
 
     ;; Set the Normals
     ;;(setf (normals primitive) (v3d* (* subdivisions subdivisions) :initial-element ref-normal))
-    (setf (normals primitive) (vertex* ref-normal (* subdivisions subdivisions)))
+    (setf (normals primitive) (vertex* (* subdivisions subdivisions) :initial-element ref-normal))
     primitive))
 
 (defun build-YZ-Quad-mesh (primitive vmin vmax subdivisions ysign)
@@ -119,7 +119,7 @@
 
     ;; Set the Normals
     ;;(setf (normals primitive) (v3d* (* subdivisions subdivisions) :initial-element ref-normal))
-    (setf (normals primitive) (vertex* ref-normal (* subdivisions subdivisions)))
+    (setf (normals primitive) (vertex* (* subdivisions subdivisions) :initial-element ref-normal))
     primitive))
 
 (defmethod (setf xy/z) ((bounds list) (primitive quad-mesh-primitive))

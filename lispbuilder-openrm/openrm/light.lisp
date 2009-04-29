@@ -3,7 +3,7 @@
 
 (defvar *default-spot-cutoff* 45.0)
 
-(defclass light (openrm-object) 
+(defclass light (foreign-object) 
   ((source
     :accessor light-source
     :initform :rm-light-0
@@ -13,13 +13,13 @@
     :gc t
     :free (simple-free #'rm-cffi::rm-Light-Delete 'light)))
 
-(defclass light-model (openrm-object) ()
+(defclass light-model (foreign-object) ()
   (:default-initargs
    :fp (rm-cffi::rm-light-Model-New)
     :gc t
     :free (simple-free #'rm-cffi::rm-Light-Model-Delete 'light-model)))
 
-(defclass spotlight (light)())
+(defclass spot-light (light)())
 (defclass point-light (light)())
 (defclass directional-light (light)())
 
@@ -34,7 +34,7 @@
    :two-sided nil
    :local-viewer t))
 
-(defmethod initialize-instance :after ((self spotlight) &key)
+(defmethod initialize-instance :after ((self spot-light) &key)
   (rm-cffi::rm-Light-Set-Type (fp self) :RM-LIGHT-SPOT))
 
 (defmethod initialize-instance :after ((self point-light) &key)
@@ -149,7 +149,6 @@
 (defmethod ambient-color* ((light arena-light))
   (ambient-color* (light-model light)))
 
-
 ;;;
 ;;; Diffuse Color
 (defmethod (setf diffuse-color) ((color vector) (light light))
@@ -186,26 +185,26 @@
     (rm-cffi::rm-Light-Get-Color (fp light) (cffi:null-pointer) (cffi:null-pointer) (fp col))
     col))
 
-(defmethod (setf direction) ((vertex vector) (self spotlight))
+(defmethod (setf direction) ((vertex vector) (self spot-light))
   (with-copy-vertex-3d-to-foreign (vertex fp)
     (rm-cffi::rm-Light-Set-Spot-Direction (fp self) fp)))
-(defmethod (setf direction) ((vertex v3d) (self spotlight))
+(defmethod (setf direction) ((vertex v3d) (self spot-light))
   (rm-cffi::rm-Light-Set-Spot-Direction (fp self) (fp vertex))
   self)
 
-(defmethod direction ((self spotlight))
+(defmethod direction ((self spot-light))
   (rm-base:with-v3d (v)
     (rm-cffi::rm-Light-Get-Spot-Direction (fp self) v)
     (vertex rm-base::x rm-base::y rm-base::z)))
-(defmethod direction* ((self spotlight))
+(defmethod direction* ((self spot-light))
   (let ((v (v3d nil nil nil)))
     (when (rm-cffi::rm-Light-Get-Spot-Direction (fp self) (fp v))
       v)))
 
-(defmethod (setf cutoff) (value (self spotlight))
+(defmethod (setf cutoff) (value (self spot-light))
   (rm-cffi::rm-Light-Set-Spot-Cutoff (fp self) value)
   self)
-(defmethod cutoff ((self spotlight))
+(defmethod cutoff ((self spot-light))
   (cffi:with-foreign-object (v :float)
     (rm-cffi::rm-Light-Get-Spot-Cutoff (fp self) v)
     (cffi:mem-aref v :float)))
@@ -227,8 +226,6 @@
     (when (rm-cffi::rm-Light-Get-XYZ (fp self) (fp v))
       v)))
 
-(defmethod (setf xy/z) ((vertex list) (self light))
-  (setf (xy/z self) (coerce vertex 'vertex)))
 (defmethod (setf xy/z) ((vertex vector) (self light))
   ;; A single vertex
   (if (> (length vertex) 2)

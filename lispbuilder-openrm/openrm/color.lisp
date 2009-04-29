@@ -1,45 +1,57 @@
 
 (in-package #:rm)
 
-(defclass color (openrm-object)
+(defclass color (foreign-object copyable-object)
   ((create-function
     :initform nil 
-    :initarg :create))
+    :initarg :create)
+   (size
+    :reader size
+    :initform nil
+    :initarg :size))
   (:default-initargs
-   :gc t))
+   :gc t
+   :copy-p nil
+   :free-on-delete t))
+
+(defclass color-3d (color)())
+
+(defclass color-4d (color)())
 
 (defclass color-single (color)()
   (:default-initargs
-   :free (simple-free #'cffi:foreign-free 'color-single)))
+   :free (simple-free #'cffi:foreign-free 'color-single)
+   :size 1))
 
-(defclass color-array (color)
-  ((size
-    :reader size
-    :initform (error "Specify an array size.")
-    :initarg :size)))
-
-(defmethod initialize-instance :after ((self color-array) &key)
-  (setf (slot-value self 'foreign-pointer-to-object) (funcall (slot-value self 'create-function) (size self))))
-
-(defclass c3d (color-single)()
+(defclass c3d (color-single color-3d)()
   (:default-initargs
    :fp (cffi:foreign-alloc 'rm-cffi::rm-color-3d)
-   :r 0.0
-   :g 0.0
-   :b 0.0))
+   :r 0.0 :g 0.0 :b 0.0
+   :free-on-delete-fn 'color-3d-proc))
 
-(defclass c3d* (color-array)()
-  (:default-initargs
-   :create #'rm-cffi::rm-color-3d-new
-   :free (simple-free #'rm-cffi::rm-color-3d-delete 'c3d*)))
-
-(defclass c4d (color-single)()
+(defclass c4d (color-single color-4d)()
   (:default-initargs
    :fp (cffi:foreign-alloc 'rm-cffi::rm-color-4d)
-   :r 0.0
-   :g 0.0
-   :b 0.0
-   :a 0.0))
+   :r 0.0 :g 0.0 :b 0.0 :a 0.0
+   :free-on-delete-fn 'color-4d-proc))
+
+(defclass color-array (color)())
+
+(defclass c3d* (color-array color-3d)()
+  (:default-initargs
+   :create #'rm-cffi::rm-color-3d-new
+   :free (simple-free #'rm-cffi::rm-color-3d-delete 'c3d*)
+   :free-on-delete-fn 'color-3d-proc))
+
+(defclass c4d* (color-array color-4d)()
+  (:default-initargs
+   :create #'rm-cffi::rm-color-4d-new
+   :free (simple-free #'rm-cffi::rm-color-4d-delete 'c4d*)
+   :free-on-delete-fn 'color-4d-proc))
+
+(defmethod initialize-instance :after ((self color-array) &key)
+  (when (and (slot-value self 'create-function) (size self))
+    (setf (slot-value self 'foreign-pointer-to-object) (funcall (slot-value self 'create-function) (size self)))))
 
 (defmethod initialize-instance :after ((self c3d)
                                        &key r g b)
@@ -62,11 +74,6 @@
         (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-4d 'rm-cffi::b) b))
       (when a
         (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-color-4d 'rm-cffi::a) a))))
-
-(defclass c4d* (color-array)()
-  (:default-initargs
-   :create #'rm-cffi::rm-color-4d-new
-   :free (simple-free #'rm-cffi::rm-color-4d-delete 'c3d*)))
 
 ;; (defmethod initialize-instance :before ((self color-1D) &key)
 ;;   (setf (slot-value self 'foreign-pointer-to-object) (cffi:foreign-alloc 'rm-cffi::rm-color-1d))
@@ -225,9 +232,29 @@
 ;; 	  rm-base:b (b color)))
 ;;   foreign-pointer)
 
-(defmethod color* ((color vector) &optional size)
-  (when size
-    (make-array size :initial-element color)))
+(defmethod color* (size &key (initial-element #(0.0 0.0 0.0)) initial-contents)
+  "Create an array of vertices of length `SIZE` or `:INITAL-CONTENTS`.
+When `SIZE` is specified the array is initialized to `:INITIAL-ELEMENT`.
+`:INITIAL-ELEMENT` must be a 3D or 4D color, for example \(color 0.0 0.0 0.0\).
+When `SIZE` is not specified the array is initialized from `:INITIAL-CONTENTS`.
+`:INITIAL-CONTENTS` can be a list or a vector of 3D or 4D colors, for example
+'\(#\(0.0 0.0 0.0\) #\(1.0 1.0 1.0\)\)."
+  (unless size
+    (when initial-element
+      (error "ERROR - COLOR*; SIZE must be specified if :INITIAL-ELEMENT is specified."))
+    (unless initial-contents
+      (error "ERROR - COLOR*; SIZE or :INITIAL-CONTENTS must be specified.")))
+  (unless (vectorp initial-element)
+    (error "ERROR - COLOR*; :INITIAL-ELEMENT must be a COLOR."))
+  (when initial-contents
+    (unless (vectorp (elt initial-contents 0))
+      (error "ERROR - COLOR*; :INITIAL-CONTENTS must contain COLORs.")))
+  (if size
+    (cond
+     (initial-contents
+      (make-array (length initial-contents) :initial-contents initial-contents))
+     (initial-element
+      (make-array size :initial-element initial-element)))))
 
 (defmethod c3d* (size &key initial-element initial-contents)
   (unless size
@@ -436,3 +463,19 @@
 		 rm-base:g (g src)
 		 rm-base:b (b src)))))
   dst)
+
+(cffi:defcallback color-3d-proc :pointer
+    ((data-fp :pointer))
+  "Called when a color-3d is deleted"
+  (log5:log-for (info) "DEFCALLBACK:COLOR-3D")
+  (cffi:foreign-free data-fp)
+  ;;(rm-cffi::rm-color-3d-delete data-fp)
+  (cffi:null-pointer))
+
+(cffi:defcallback color-4d-proc :pointer
+    ((data-fp :pointer))
+  "Called when a color-4d is deleted"
+  (log5:log-for (info) "DEFCALLBACK:COLOR-4D")
+  (cffi:foreign-free data-fp)
+  ;;(rm-cffi::rm-color-4d-delete data-fp)
+  (cffi:null-pointer))
