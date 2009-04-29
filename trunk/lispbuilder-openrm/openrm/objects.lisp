@@ -149,7 +149,8 @@
 (defclass spotlight (node)
   ((light-node
     :reader light-node
-    :initarg :light-node)
+    :initarg :light-node
+    :initform (error "ERROR; SPOTLIGHT.INITIALIZE-INSTANCE; :LIGHT-NODE must be specified."))
    (light-source
     :initarg :light-source)
    (spot-light-direction))

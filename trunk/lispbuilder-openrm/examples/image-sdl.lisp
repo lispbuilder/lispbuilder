@@ -28,11 +28,23 @@
                                  :images image)))
     ;; Add the sprite to the Scene.
     (rm::add-node sprite (rm::default-scene)))
-  
+
   (setf (sdl:frame-rate) 5)
   (rm::process-events)
   (rm::clean-up))
 
+(defun every-n-frames (max)
+  (let ((count 0))
+    #'(lambda ()
+	(if (eql 0 (mod (incf count 1) max))
+	    (setf count 0)
+	    nil))))
+
+(defun draw-fps (string x y font surface render-p)
+  (when render-p
+    (sdl:render-string-shaded string sdl:*white* sdl:*black*
+                              :font font :cache t :free t))
+  (sdl:draw-font-at-* x y :font font :surface surface))
 
 (defun sdl-circles ()
   (make-instance 'rm::sdl-window
@@ -45,27 +57,33 @@
                  :viewport #(0.0 0.0 1.0 1.0)
                  :compute-view-from-geometry nil)
 
-  (let* ((surface (sdl:create-surface 320 240))
-         (image (rm::load-image surface))
+  (let* ((image (rm::load-image sdl:*default-display*))
          (sprite (rm::new-sprite :xy/z (calculate-image-center (rm::default-window) image)
                                  :images image)))
 
-    (setf sdl:*default-display* surface)
     (rm::add-node sprite (rm::default-scene))
-  
-    (setf (sdl:frame-rate) nil)
-    (sdl:with-events ()
-      (:key-down-event ()
-       (sdl:push-quit-event))
-      (:quit-event () t)
-      (:idle ()
-       (sdl:draw-circle-* (random 320) (random 240) (random 320)
-                          :color (sdl:color :r (random 255)
-                                            :g (random 255)
-                                            :b (random 255)))
-       (sdl:draw-filled-circle-* (random 320) (random 240) (random 50)
-                                 :color (sdl:color :r (random 255)
-                                                   :g (random 255)
-                                                   :b (random 255)))
-       (rm::render (rm::default-window)))))
+
+    (let ((100-frames-p (sdl-examples::every-n-frames 100)))
+      (sdl:initialise-default-font sdl:*font-5x7*)
+      (draw-fps "Calculating FPS....." 10 200
+                sdl:*default-font* sdl:*default-surface* t)
+      (setf (sdl:frame-rate) nil)
+      (sdl:with-events ()
+        (:key-down-event ()
+         (sdl:push-quit-event))
+        (:quit-event () t)
+        (:idle ()
+         (sdl:draw-circle-* (random 320) (random 240) (random 320)
+                            :color (sdl:color :r (random 255)
+                                              :g (random 255)
+                                              :b (random 255)))
+         (sdl:draw-filled-circle-* (random 320) (random 240) (random 50)
+                                   :color (sdl:color :r (random 255)
+                                                     :g (random 255)
+                                                     :b (random 255)))
+         (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
+                   10 200 sdl:*default-font* sdl:*default-surface*
+                   (funcall 100-frames-p))
+       
+         (rm::render (rm::default-window))))))
   (rm::clean-up))

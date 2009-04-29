@@ -70,9 +70,7 @@
     (rm::update-arc *arc* *dummy* *width* *height* x y)
     ;; Rotate spotlight
     (setf (rm::light *spotlight-root*)
-          (make-instance 'spotlight :direction (rm::point-direction *dummy* *spot-direction* #(0.0 0.0 0.0))))
-    (format t "spot-direction: *spot-direction*: ~A, rm::point-direction: ~A~%" *spot-direction*
-            (rm::point-direction *dummy* *spot-direction* #(0.0 0.0 0.0)))
+          (make-instance 'spot-light :direction (rm::point-direction *dummy* *spot-direction* #(0.0 0.0 0.0))))
     ;; Rotate spotlight-icon
     (rm::rotate *spotlight-icon* *dummy*)))
 
@@ -91,7 +89,7 @@
 
     (setf *arc* (make-instance 'rm::arc)
           *dummy* (make-instance 'rm::node)
-          *spotlight* (make-instance 'spotlight))
+          *spotlight* (make-instance 'spot-light))
     
     (setf *spotlight-icon* (rm::new-cone :name "spotlight-icon"
                                          :xy/z (rm::xy/z *spotlight*)

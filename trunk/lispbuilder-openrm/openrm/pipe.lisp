@@ -1,7 +1,7 @@
 
 (in-package #:rm)
 
-(defclass rm-pipe (foreign-object) ()
+(defclass rm-pipe (foreign-object)()
   (:default-initargs
    :free (simple-free #'rm-cffi::rm-pipe-delete 'rm-pipe)))
 
@@ -17,7 +17,7 @@
    :init-matrix-stack t
    :channel-format :rm-mono-channel
    :background-color (color 0.2 0.2 0.3 1.0)
-   :notify-level t))
+   :notify-level :FULL))
 
 (defmethod initialize-instance :after ((self pipe) &key
 				       target processing-mode
@@ -28,16 +28,11 @@
                                        init-matrix-stack
                                        background-color
                                        notify-level)
-
   (unless *initialised*
     (setf *initialised* t)
     (rm-cffi::rm-Init))
 
-  (cond
-   ((not notify-level)
-    (rm-cffi::rm-notify-level :rm-notify-silence))
-   (t
-    (rm-cffi::rm-notify-level :rm-notify-full)))
+  (set-notify-level notify-level)
   
   (setf (slot-value self 'foreign-pointer-to-object) (rm-cffi::rm-Pipe-New target))
   
@@ -58,6 +53,16 @@
     (setf (dimensions self) dimensions))
   (when background-color
     (setf (background-color self) background-color)))
+
+(defun set-notify-level (level)
+  (setf *notify-level* level)
+  (cond
+   ((not level)
+    (rm-cffi::rm-notify-level :rm-notify-silence))
+   ((eq level :FULL)
+    (rm-cffi::rm-notify-level :rm-notify-full))
+   (t
+    (rm-cffi::rm-notify-level :rm-notify-full))))
 
 (defmethod (setf swap-buffers)(value (self pipe))
   (if (not value)

@@ -112,8 +112,6 @@
                          :lights (list *spotlight*)
                          :children (list *spotlight-icon* *walls*)))
 
-    (format t "GET-LIGHT: ~A~%" (rm::get-light *spotlight-root* :rm-light-1))
-
     (make-instance 'spotlight-sdl-scene
                    :window (rm::default-window)
                    :children (list *spotlight-root*))
