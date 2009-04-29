@@ -219,7 +219,7 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
     (case type
       (:sw (push sdl-cffi::SDL-SW-SURFACE flags))
       (:hw (push sdl-cffi::SDL-HW-SURFACE flags)))
-    (let ((surf (sdl-cffi::SDL-convert-surface surface (pixel-format to-surface) flags)))
+    (let ((surf (sdl-cffi::SDL-convert-surface surface (pixel-format to-surface) (set-flags flags))))
       (unless (is-valid-ptr surf)
 	(error "ERROR, CONVERT-SURFACE Cannot convert surface to display format."))
       (when free
@@ -252,7 +252,7 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
 						       sdl-cffi::BitsPerPixel
 						       sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
 	(let ((Rmask 0) (Gmask 0) (Bmask 0) (Amask 0))
-	  ;; Set masks according to endianess of machine
+          ;; Set masks according to endianess of machine
 	  ;; Little-endian (X86)
 	  #+(or X86 PC386 little-endian)
 	  (progn
