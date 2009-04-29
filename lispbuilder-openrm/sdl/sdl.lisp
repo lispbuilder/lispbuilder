@@ -27,7 +27,9 @@
     :initarg :surface)
    (hwnd
     :initform nil
-    :initarg :hwnd))
+    :initarg :hwnd)
+   (default-display
+    :reader default-display))
   (:default-initargs
    :pipe (make-instance 'sdl-pipe)
    :double-buffer t
@@ -105,7 +107,9 @@
     (error "ERROR: SDL Surface or OpenGL context cannot be created."))
 
   (setf (slot-value window 'surface) surface
-        *quit* nil))
+        *quit* nil
+        (slot-value window 'default-display) (sdl:create-surface width height :rle-accel nil)
+        sdl:*default-display* (slot-value window 'default-display)))
 
 (defmethod close-window ((self sdl-window))
   (log5:log-for (free) "CLOSE-WINDOW: ~A" self)

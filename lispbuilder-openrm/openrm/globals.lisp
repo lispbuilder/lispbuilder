@@ -106,3 +106,5 @@
 
 
 (defparameter *count* 0)
+
+(defparameter *notify-level* :full)
