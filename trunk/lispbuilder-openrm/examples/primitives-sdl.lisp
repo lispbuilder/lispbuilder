@@ -5,6 +5,7 @@
 (in-package #:rm-examples)
 
 (defun sphere-example-1 ()
+  (rm-cffi::rm-notify-level :rm-notify-silence)
   (make-instance 'rm::sdl-window
                  :title-caption "Sphere Example 1" :icon-caption "Sphere Example 1"
                  :width 320 :height 240)
@@ -169,7 +170,7 @@
    :compute-bounding-box t
    :primitives (list (make-instance 'rm::plane-primitive
                                     :orientation :xz
-                                    :xy/z '(#(-3.0 -2.0 -3.0)
+                                    :xy/z #(#(-3.0 -2.0 -3.0)
                                             #(3.0 -2.0 3.0))))))
 
 (defun quad-example-1 ()

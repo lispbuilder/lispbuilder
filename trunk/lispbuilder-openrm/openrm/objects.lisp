@@ -15,27 +15,28 @@
    :dims :rm-renderpass-3d
    :opacity :rm-renderpass-opaque
    :compute-bounding-box t
-   :p-xy/z '(#(1.0 0.0 0.0)
+   :p-xy/z #(#(1.0 0.0 0.0)
              #(0.0 0.0 0.0))
    :radius #(1.0 1.0 1.0)
-   :rgb/a '(#(1.0 1.0 1.0 1.0))))
+   :rgb/a #(1.0 1.0 1.0 1.0)))
 
 (defclass cylinder (node)()
   (:default-initargs
    :dims :rm-renderpass-3d
    :opacity :rm-renderpass-opaque
    :compute-bounding-box t
-   :p-xy/z '(#(0.0 0.0 0.0) #(1.0 0.0 0.0))
+   :p-xy/z #(#(0.0 0.0 0.0)
+             #(1.0 0.0 0.0))
    :radius #(1.0 1.0 1.0)
-   :rgb/a '(#(1.0 1.0 1.0 1.0))))
+   :rgb/a  #(1.0 1.0 1.0 1.0)))
 
 (defclass box (node)()
   (:default-initargs
    :dims :rm-renderpass-3d
    :opacity :opaque
    :compute-bounding-box t
-   :p-xy/z '((#(-1.0 -1.0 -1.0)
-              #(1.0 1.0 1.0)))
+   :p-xy/z #(#(-1.0 -1.0 -1.0)
+             #( 1.0  1.0  1.0))
    :type :solid))
 
 (defclass app-list (node)()
@@ -80,7 +81,6 @@
                                       :tesselate tesselate :radius radius
                                       :display-list display-list
                                       :app-display-list app-display-list))))
-
 (defmacro def-new-object (obj)
   `(defun ,(intern (format nil "NEW-~A" obj))
           (&rest rest &key (opacity :opaque) &allow-other-keys)
@@ -144,3 +144,77 @@
 (def-new-object box)
 (def-new-object app-list)
 (def-new-object sprite)
+
+
+(defclass spotlight (node)
+  ((light-node
+    :reader light-node
+    :initarg :light-node)
+   (light-source
+    :initarg :light-source)
+   (spot-light-direction))
+  (:default-initargs
+   :dims :rm-renderpass-all
+   :opacity :rm-renderpass-all
+   :compute-bounding-box t
+   :radius (coerce (rm::to-radian *default-spot-cutoff*) 'single-float)
+
+   :light-node nil
+
+   :light-source :rm-light-1
+   :diffuse-color #(0.9 0.5 0.5 1.0)
+   :specular-color #(0.9 0.5 0.5 1.0)
+   :cutoff *default-spot-cutoff*
+   :exponent 4.0
+   :xy/z #(0.0 0.0 0.0)
+   :direction #(0.0 -1.0 0.0)))
+
+(def-new-object spotlight)
+
+(defmethod initialize-instance :after ((self spotlight) &key
+                                       ;; Node KEYwords
+                                       xy/z
+                                       ;; spotlight KEYwords
+                                       light-node
+                                       ;; Primitive KEYwords
+                                       rgb/a normals
+                                       p-bounding-box p-compute-bounding-box
+                                       tesselate radius
+                                       display-list app-display-list
+                                       ;; Light KEYwords
+                                       light-source
+                                       diffuse-color specular-color
+                                       cutoff exponent
+                                       direction)
+  (unless light-node
+    (setf (slot-value self 'light-node) (rm-root-node)))
+  
+  (setf (slot-value self 'spot-light-direction) direction)
+  
+  (setf (light light-node) (make-instance 'spot-light
+                                          :light-source light-source
+                                          :diffuse-color diffuse-color
+                                          :specular-color specular-color
+                                          :cutoff cutoff
+                                          :exponent exponent
+                                          :xy/z xy/z
+                                          :direction direction))
+  (add-node (make-instance 'cone-primitive
+                           :rgb/a rgb/a
+                           :xy/z (vector direction #(0.0 0.0 0.0))
+                           :normals normals
+                           :bounding-box p-bounding-box
+                           :compute-bounding-box p-compute-bounding-box
+                           :tesselate tesselate :radius radius
+                           :display-list display-list
+                           :app-display-list app-display-list)
+            self))
+
+;(defmethod reset-arc :after ((arc arc) (node spotlight) screen-width screen-height x y)
+;  )
+
+(defmethod update-arc :after ((arc arc) (node spotlight) screen-width screen-height mousex mousey)
+  (let ((temp-light (get-light (slot-value node 'light-node) (slot-value node 'light-source))))
+    (setf (direction temp-light)
+          (rm::point-direction node (slot-value node 'spot-light-direction)))
+    (setf (light (slot-value node 'light-node)) temp-light)))

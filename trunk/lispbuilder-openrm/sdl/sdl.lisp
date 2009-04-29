@@ -17,7 +17,8 @@
    :opaque-3d t
    :transparent-3d t
    :opaque-2d t
-   :swap-buffers nil))
+   :swap-buffers nil
+   :notify-level t))
 
 (defclass sdl-window (window)
   ((surface
@@ -32,6 +33,15 @@
    :double-buffer t
    :init-video t
    :frame t))
+
+(defclass sdl-pixels* (color-array)()
+  (:default-initargs
+   :create nil
+   :size nil
+   :gc nil
+   :free-on-delete nil
+   :copy-p nil
+   :free (simple-free #'cffi:foreign-free 'color-single)))
 
 (defmethod initialize-instance :after ((window sdl-window)
                                        &key surface double-buffer
@@ -116,46 +126,65 @@
 (defmethod render :after ((self sdl-window))
   (sdl-cffi::sdl-gl-swap-buffers))
 
-(defun load-3bpp-image (surface)
+(defun load-3bpp-image (surface copy free-on-delete)
+  (declare (ignore copy free-on-delete))
   (sdl:with-surface (surf (sdl:create-surface (sdl:width surface)
                                               (sdl:height surface))
                           t)
-    ;; Convert the 3bpp surface to a 4bpp surface
-    (sdl:draw-surface surface :surface surf)
     (sdl-base::with-pixel (px (sdl:fp surf))
-      (image-mirror
-       (make-instance 'image
-                      :type 2
-                      :dims (vector (sdl:width surf) (sdl:height surf))
-                      :depth 0
-                      :format :rm-image-rgba
-                      :data-type :rm-unsigned-byte
-                      :image-data (sdl-base::pixel-data px))
-       :rm-image-mirror-height))))
+      ;; Convert the 3bpp surface to a 4bpp surface
+      (sdl:draw-surface surface :surface surf)
+      (image-mirror (make-instance 'image
+                                   :type 2
+                                   :dims (vector (sdl:width surf) (sdl:height surf))
+                                   :depth 0
+                                   :format :rm-image-rgba
+                                   :data-type :rm-unsigned-byte
+                                   :copy-p t
+                                   :free-on-delete nil
+                                   :image-data (make-instance 'sdl-pixels*
+                                                              :fp (sdl-base::pixel-data px)
+                                                              :copy-p t
+                                                              :free-on-delete nil))
+                    :rm-image-mirror-height))))
 
-(defun load-4bpp-image (surface)
+(defun load-4bpp-image (surface copy free-on-delete)
   (sdl-base::with-pixel (px (sdl:fp surface))
     (image-mirror (make-instance 'image
-				 :type 2
-				 :dims (vector (sdl:width surface) (sdl:height surface))
-				 :depth 0
-				 :format :rm-image-rgba
-				 :data-type :rm-unsigned-byte
-				 :image-data (sdl-base::pixel-data px))
-		  :rm-image-mirror-height)))
+                                 :type 2
+                                 :dims (vector (sdl:width surface) (sdl:height surface))
+                                 :depth 0
+                                 :format :rm-image-rgba
+                                 :data-type :rm-unsigned-byte
+                                 :copy-p copy
+                                 :free-on-delete free-on-delete
+                                 :image-data (make-instance 'sdl-pixels*
+                                                            :fp (sdl-base::pixel-data px)
+                                                            :copy-p copy
+                                                            :free-on-delete free-on-delete))
+                  :rm-image-mirror-height)))
 
-(defmethod load-image (filename)
+(defmethod load-image (filename &key (copy t) (free-on-delete nil))
+  (declare (ignore copy free-on-delete))
   (sdl:with-surface (temp (sdl:load-image filename) t)
-    (load-image temp)))
+    (load-image temp :copy t :free-on-delete nil)))
 
-(defmethod load-image ((surface SDL:SDL-SURFACE))
+(defmethod load-image ((surface SDL:SDL-SURFACE) &key (copy nil) (free-on-delete nil))
   (sdl-base::with-pixel (px (sdl:fp surface))
     (cond
-      ((eq 3 (sdl-base::pixel-bpp px))
-       (load-3bpp-image surface))
-      ((eq 4 (sdl-base::pixel-bpp px))
-       (load-4bpp-image surface))
-      (t (error "LOAD-IMAGE: The image must be 3bpp or 4bpp.")))))
+     ((eq 3 (sdl-base::pixel-bpp px))
+      (load-3bpp-image surface t nil))
+     ((eq 4 (sdl-base::pixel-bpp px))
+      (load-4bpp-image surface copy free-on-delete))
+     (t (error "LOAD-IMAGE: The image must be 3bpp or 4bpp.")))))
+
+(cffi:defcallback sdl-surface-proc :pointer
+    ((data-fp :pointer))
+  "Called when a surface is no longer used by the scene graph."
+  (declare (ignore data-fp))
+  (log5:log-for (info) "DEFCALLBACK:SDL-SURFACE")
+  ;(cffi:foreign-free data-fp)
+  (cffi:null-pointer))
 
 ;;;;;
 ;;;;; Event Handling

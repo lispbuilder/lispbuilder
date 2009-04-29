@@ -15,7 +15,6 @@
 (defparameter *spot-direction* (rm:vertex 0.0 -1.0 0.0))
 
 (defparameter *arc* nil)
-(defparameter *dummy* nil)
 (defparameter *spotlight-root* nil)
 (defparameter *spotlight-icon* nil)
 (defparameter *spotlight* nil)
@@ -51,7 +50,7 @@
    :compute-view-from-geometry nil
    :default-lighting nil))
 
-(defclass spotlight (rm::spotlight) ()
+(defclass spot-light (rm::spot-light) ()
   (:default-initargs
    :light-source :rm-light-1
    :diffuse-color *spot-color*
@@ -63,24 +62,20 @@
 
 (defmethod rm::on-mouse-down ((window spotlight-sdl-window) button x y)
   (when (rm::button= button :button-left)
-    (rm::reset-arc *arc* *dummy* *width* *height* x y)))
+    (rm::reset-arc *arc* *spotlight-icon* *width* *height* x y)))
 
-(defmethod rm::on-mouse-move ((window spotlight-sdl-window) button x y x-rel y-rel)                       
+(defmethod rm::on-mouse-move ((window spotlight-sdl-window) button x y x-rel y-rel)
   (when (rm::button= button :button-left)
-    (rm::update-arc *arc* *dummy* *width* *height* x y)
+    (rm::update-arc *arc* *spotlight-icon* *width* *height* x y)
     ;; Rotate spotlight
     (setf (rm::light *spotlight-root*)
-          (make-instance 'spotlight :direction (rm::point-direction *dummy* *spot-direction* #(0.0 0.0 0.0))))
-    (format t "spot-direction: *spot-direction*: ~A, rm::point-direction: ~A~%" *spot-direction*
-            (rm::point-direction *dummy* *spot-direction* #(0.0 0.0 0.0)))
-    ;; Rotate spotlight-icon
-    (rm::rotate *spotlight-icon* *dummy*)))
+          (make-instance 'spot-light :direction (rm::point-direction *spotlight-icon* *spot-direction*)))))
 
 ;;;;; -----------------
 ;;;;; -----------------
 ;;;;; -----------------
 
-(defun spotlight-sdl ()
+(defun spotlight-1-sdl ()
   (make-instance 'spotlight-sdl-window)
   (setf *spot-direction* (rm:vertex 0.0 -1.0 0.0))
   (let ((quads '(((#(0.0   0.0 0.0) #(10.0  0.0 10.0)) :xz  1)
@@ -90,8 +85,7 @@
                  ((#(0.0   0.0 0.0) #(10.0 10.0  0.0)) :xy  1))))
 
     (setf *arc* (make-instance 'rm::arc)
-          *dummy* (make-instance 'rm::node)
-          *spotlight* (make-instance 'spotlight))
+          *spotlight* (make-instance 'spot-light))
     
     (setf *spotlight-icon* (rm::new-cone :name "spotlight-icon"
                                          :xy/z (rm::xy/z *spotlight*)
@@ -101,21 +95,71 @@
                                          :rgb/a *spot-color*
                                          :radius (coerce (rm::to-radian rm::*default-spot-cutoff*)
                                                          'single-float)
-                                         :p-xy/z (vector *spot-direction*
-                                                         (rm:vertex 0.0 0.0 0.0))
+                                         :p-xy/z (rm::vertex* nil :initial-contents (list *spot-direction*
+                                                                                          (rm:vertex 0.0 0.0 0.0)))
                                          :tesselate 32))
 
     (setf *walls* (make-instance 'rm::node :name "quad"
                                  :primitives (loop for (xy/z orientation sign) in quads
                                                    collecting (make-instance 'rm::plane-primitive
-                                                                             :xy/z (rm::v3d* nil :initial-contents xy/z)
+                                                                             :xy/z (rm::vertex* nil
+                                                                                                :initial-contents xy/z)
                                                                              :orientation orientation
                                                                              :sign sign
                                                                              :subdivisions 100))))
     (setf *spotlight-root*
-          (make-instance 'rm::node :name "spotlight"
+          (make-instance 'rm::node :name "spot-light"
                          :lights (list *spotlight*)
                          :children (list *spotlight-icon* *walls*)))
+
+    (format t "GET-LIGHT: ~A~%" (rm::get-light *spotlight-root* :rm-light-1))
+
+    (make-instance 'spotlight-sdl-scene
+                   :window (rm::default-window)
+                   :children (list *spotlight-root*))
+    
+    (setf (sdl:frame-rate) 60)
+    (rm::process-events)
+    (rm::clean-up)))
+
+(defmethod rm::on-mouse-down ((window spotlight-sdl-window) button x y)
+  (when (rm::button= button :button-left)
+    (rm::reset-arc *arc* *spotlight* *width* *height* x y)))
+
+(defmethod rm::on-mouse-move ((window spotlight-sdl-window) button x y x-rel y-rel)
+  (when (rm::button= button :button-left)
+    (rm::update-arc *arc* *spotlight* *width* *height* x y)))
+
+(defun spotlight-3-sdl ()
+  (make-instance 'spotlight-sdl-window)
+  (setf *spot-direction* (rm:vertex 0.0 -1.0 0.0))
+  (let ((quads '(((#(0.0   0.0 0.0) #(10.0  0.0 10.0)) :xz  1)
+                 ((#(0.0  10.0 0.0) #(10.0 10.0 10.0)) :xz -1)
+                 ((#(0.0   0.0 0.0) #( 0.0 10.0 10.0)) :yz  1)
+                 ((#(10.0  0.0 0.0) #(10.0 10.0 10.0)) :yz -1)
+                 ((#(0.0   0.0 0.0) #(10.0 10.0  0.0)) :xy  1))))
+
+    (setf *spotlight-root* (make-instance 'rm::node :name "spot-light"))
+    (setf *arc* (make-instance 'rm::arc)
+          *spotlight* (rm::new-spotlight :light-node *spotlight-root*
+                                         :light-source :rm-light-1
+                                         :diffuse-color *spot-color*
+                                         :specular-color *spot-color*
+                                         :cutoff rm::*default-spot-cutoff*
+                                         :exponent *spot-exponent*
+                                         :xy/z *spot-xy/z*
+                                         :direction *spot-direction*))
+
+    (setf *walls* (make-instance 'rm::node :name "quad"
+                                 :primitives (loop for (xy/z orientation sign) in quads
+                                                   collecting (make-instance 'rm::plane-primitive
+                                                                             :xy/z (rm::vertex* nil
+                                                                                                :initial-contents xy/z)
+                                                                             :orientation orientation
+                                                                             :sign sign
+                                                                             :subdivisions 100))))
+    (rm::add-node *spotlight* *spotlight-root*)
+    (rm::add-node *walls* *spotlight-root*)
 
     (make-instance 'spotlight-sdl-scene
                    :window (rm::default-window)

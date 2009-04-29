@@ -1,54 +1,66 @@
  
 (in-package #:rm)
 
-(defclass vertex (openrm-object)
+(defclass vertex (foreign-object copyable-object)
   ((create-function
     :initform nil 
-    :initarg :create))
+    :initarg :create)
+   (size
+    :reader size
+    :initform nil
+    :initarg :size))
   (:default-initargs
-   :gc t))
+   :gc t
+   :copy-p nil
+   :free-on-delete t))
+
+(defclass vertex-2d (vertex)())
+
+(defclass vertex-3d (vertex)())
 
 (defclass vertex-single (vertex)()
   (:default-initargs
-   :free (simple-free #'cffi:foreign-free 'vertex)))
+   :free (simple-free #'cffi:foreign-free 'vertex)
+   :size 1))
 
-(defclass vertex-array (vertex)
-  ((size
-    :reader size
-    :initform (error "Specify an array size.")
-    :initarg :size)))
-
-(defmethod initialize-instance :after ((self vertex-array) &key) 
-  (setf (slot-value self 'foreign-pointer-to-object) (funcall (slot-value self 'create-function) (size self))))
-
-(defclass v2d (vertex-single)()
+(defclass v2d (vertex-single vertex-2d)()
   (:default-initargs
-   :fp (cffi:foreign-alloc 'rm-cffi::rm-vertex-2d)))
+   :fp (cffi:foreign-alloc 'rm-cffi::rm-vertex-2d)
+   :free-on-delete-fn 'vertex-2d-proc))
+
+(defclass v3d (vertex-single vertex-3d)()
+  (:default-initargs
+   :fp (cffi:foreign-alloc 'rm-cffi::rm-vertex-3d)
+   :free-on-delete-fn 'color-4d-proc))
+
+(defclass vertex-array (vertex)())
+
+(defclass v2d* (vertex-array vertex-2d)()
+  (:default-initargs
+   :create #'rm-cffi::rm-vertex-2d-new
+   :free (simple-free #'rm-cffi::rm-vertex-2d-delete 'vertex)
+   :free-on-delete-fn 'vertex-2d-proc))
+
+(defclass v3d* (vertex-array vertex-3d)()
+  (:default-initargs
+   :create #'rm-cffi::rm-vertex-3d-new
+   :free (simple-free #'rm-cffi::rm-vertex-3d-delete 'vertex)
+   :free-on-delete-fn 'vertex-3d-proc))
+
+(defmethod initialize-instance :after ((self vertex-array) &key)
+  (when (and (slot-value self 'create-function) (size self))
+    (setf (slot-value self 'foreign-pointer-to-object) (funcall (slot-value self 'create-function) (size self)))))
 
 (defmethod initialize-instance :after ((self v2d) &key x y)
   (let ((fp (fp self)))
     (when x (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-2d 'rm-cffi::x) x))
     (when y (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-2d 'rm-cffi::y) y))))
 
-(defclass v2d* (vertex-array)()
-  (:default-initargs
-   :create #'rm-cffi::rm-vertex-2d-new
-   :free (simple-free #'rm-cffi::rm-vertex-2d-delete 'vertex)))
-
-(defclass v3d (vertex-single)()
-  (:default-initargs
-   :fp (cffi:foreign-alloc 'rm-cffi::rm-vertex-3d)))
-
 (defmethod initialize-instance :after ((self v3d) &key x y z)
   (let ((fp (fp self)))
     (when x (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-3d 'rm-cffi::x) x))
     (when y (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-3d 'rm-cffi::y) y))
     (when z (setf (cffi:foreign-slot-value fp 'rm-cffi::rm-vertex-3d 'rm-cffi::z) z))))
-
-(defclass v3d* (vertex-array)()
-  (:default-initargs
-   :create #'rm-cffi::rm-vertex-3d-new
-   :free (simple-free #'rm-cffi::rm-vertex-3d-delete 'vertex)))
 
 ;; (defclass v4d (vertex-single)
 ;;   ()
@@ -117,7 +129,6 @@
   (setf (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::x) (svref dims 0)
 	(cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-2d 'rm-cffi::y) (svref dims 1)))
 (defmethod (setf xy/z) ((dims vector float 3) (vertex v3d))
-  (format t "In (dims vector float 3)~%")
   (setf (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::x) (svref dims 0)
 	(cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::y) (svref dims 1)
         (cffi:foreign-slot-value (fp vertex) 'rm-cffi::rm-vertex-3d 'rm-cffi::z) (svref dims 2)))
@@ -173,9 +184,29 @@
 ;; 	    (w vertex) w))
 ;;     vertex))
 
-(defmethod vertex* ((vertex vector) &optional size)
-  (when size
-    (make-array size :initial-element vertex)))
+(defmethod vertex* (size &key initial-element initial-contents)
+  "Create an array of vertices of length `SIZE` or `:INITAL-CONTENTS`.
+When `SIZE` is specified the array is initialized to `:INITIAL-ELEMENT`.
+`:INITIAL-ELEMENT` must be a 2D or 3D vertex, for example \(vertex 0.0 0.0 0.0\).
+When `SIZE` is not specified the array is initialized from `:INITIAL-CONTENTS`.
+`:INITIAL-CONTENTS` can be a list or a vector of 2D or 3D vertexes, for example
+'\(#\(0.0 0.0 0.0\) #\(1.0 1.0 1.0\)\)."
+  (unless size
+    (when initial-element
+      (error "ERROR - VERTEX*; SIZE must be specified if :INITIAL-ELEMENT is specified."))
+    (unless initial-contents
+      (error "ERROR - VERTEX*; SIZE or :INITIAL-CONTENTS must be specified.")))
+  (when initial-element
+    (unless (vectorp initial-element)
+      (error "ERROR - VERTEX*; :INITIAL-ELEMENT must be a VERTEX.")))
+  (when initial-contents
+    (unless (vectorp (elt initial-contents 0))
+      (error "ERROR - VERTEX*; :INITIAL-CONTENTS must contain VERTEXs.")))
+  (cond
+   (initial-contents
+    (make-array (length initial-contents) :initial-contents initial-contents))
+   (initial-element
+    (make-array size :initial-element initial-element))))
 
 (defmethod v2d* (size &key initial-element initial-contents)
   (unless size
@@ -244,13 +275,11 @@
          ;; Loop over LIST
          :for i :from 0 :below (size vertex-array)
          :for v :in initial-contents
-         :do (progn
-               (format t "~a: x = ~A~%" v (x v))
-               (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
+         :do (cffi:with-foreign-slots ((rm-cffi::x rm-cffi::y rm-cffi::z)
                                        (cffi:mem-aref fp 'rm-cffi::rm-vertex-3d i) rm-cffi::rm-vertex-3d)
                (setf rm-cffi::x (x v)
                      rm-cffi::y (y v)
-                     rm-cffi::z (z v))))))
+                     rm-cffi::z (z v)))))
       vertex-array)))
 
 (defmacro with-copy-vertex-2d-to-foreign ((vertex fp) &body body)
@@ -426,3 +455,20 @@
 		 rm-base::y (y src)
 		 rm-base::z (z src)))))
   dst)
+
+
+(cffi:defcallback vertex-2d-proc :pointer
+    ((data-fp :pointer))
+  "Called when a vertex-2d is deleted"
+  (log5:log-for (info) "DEFCALLBACK:VERTEX-2D")
+  (cffi:foreign-free data-fp)
+  ;;(rm-cffi::rm-vertex-2d-delete data-fp)
+  (cffi:null-pointer))
+
+(cffi:defcallback vertex-3d-proc :pointer
+    ((data-fp :pointer))
+  "Called when a vertex-2d is deleted"
+  (log5:log-for (info) "DEFCALLBACK:VERTEX-2D")
+  (cffi:foreign-free data-fp)
+  ;;(rm-cffi::rm-vertex-3d-delete data-fp)
+  (cffi:null-pointer))

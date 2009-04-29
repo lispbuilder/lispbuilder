@@ -241,34 +241,35 @@
   matrix)
 
 (defun rotate-node (node &key (direction nil) (match-node nil) (reverse-nodes nil))
-  (let ((dir (if direction direction (rm-base::rmvertex-3d 0.0 0.0 0.0))))
-    (cffi:with-foreign-objects ((m 'rm-cffi::rm-matrix)
-				(old 'rm-cffi::rm-matrix))
-      (if match-node
-	  (progn
-	    (unless (rm-cffi::rm-Node-Get-Rotate-Matrix match-node old)
-	      (rm-cffi::rm-Matrix-Identity old))
-	    (unless (rm-cffi::rm-Node-Get-Rotate-Matrix match-node m)
-	      (rm-cffi::rm-Matrix-Identity m)))
-	  (progn
-	    (rm-cffi::rm-matrix-identity m)
-	    (rotate-matrix m dir)	;set matrix values
-	    (unless (rm-cffi::rm-Node-Get-Rotate-Matrix node old)
-	      (rm-cffi::rm-Matrix-Identity old))
-	    (rm-cffi::rm-Matrix-Multiply old m old)))
+  (cffi:with-foreign-objects ((m 'rm-cffi::rm-matrix)
+                              (old 'rm-cffi::rm-matrix))
+    (if match-node
+      (progn
+        (unless (rm-cffi::rm-Node-Get-Rotate-Matrix match-node old)
+          (rm-cffi::rm-Matrix-Identity old))
+        (unless (rm-cffi::rm-Node-Get-Rotate-Matrix match-node m)
+          (rm-cffi::rm-Matrix-Identity m)))
+      ;; Delete dir if not assigned to direction.
+      (with-v3d (dir direction (not direction))
+        (unless direction
+          (setf x 0.0
+                y 0.0
+                z 0.0))
+        (rm-cffi::rm-matrix-identity m)
+        (rotate-matrix m dir)	;set matrix values
+        (unless (rm-cffi::rm-Node-Get-Rotate-Matrix node old)
+          (rm-cffi::rm-Matrix-Identity old))
+        (rm-cffi::rm-matrix-multiply old m old)))
       
-      (unless direction (cffi:foreign-free dir))
-      
-      (rm-cffi::rm-Node-Set-Rotate-Matrix node old)
+    (rm-cffi::rm-Node-Set-Rotate-Matrix node old)
 
-      (when reverse-nodes
-	(if (listp reverse-nodes)
-	    ;;Reverse the rotation for all :REVERSE-NODES if a LIST
-	    (loop for node in reverse-nodes do
-		 (inverse-rotation node m))
-	    ;;Reverse the rotation for all child nodes if :REVERSE-NODES is T
-	    (dotimes (i (rm-cffi::rm-Node-Get-Num-Children node))
-	      (let ((child (rm-cffi::rm-Node-Get-Ith-Child node i)))
-		(inverse-rotation child m)))))
-      ))
+    (when reverse-nodes
+      (if (listp reverse-nodes)
+        ;;Reverse the rotation for all :REVERSE-NODES if a LIST
+        (loop for node in reverse-nodes do
+              (inverse-rotation node m))
+        ;;Reverse the rotation for all child nodes if :REVERSE-NODES is T
+        (dotimes (i (rm-cffi::rm-Node-Get-Num-Children node))
+          (let ((child (rm-cffi::rm-Node-Get-Ith-Child node i)))
+            (inverse-rotation child m))))))
   node)

@@ -34,8 +34,8 @@
    :compute-bounding-box t
    :primitives (list (make-instance 'rm::plane-primitive
                                     :orientation :xz
-                                    :xy/z '(#(-3.0 -2.0 -3.0)
-                                            #(3.0 -2.0 3.0))))))
+                                    :xy/z #(#(-3.0 -2.0 -3.0)
+                                            #( 3.0 -2.0  3.0))))))
 
 (defmethod rm::on-idle ((window jballs-sdl-window))
   (rm::rotate *moving-group* *rotation-direction*
@@ -64,7 +64,7 @@
                                                                       :p-xy/z (rm::vertex 1.5 -1.0 0.0)
                                                                       :radius 0.25
                                                                       :tesselate 128))))
-         (rotation-direction (rm::vertex 0.0 -2.0 0.0)))
+         (rotation-direction (rm::v3d 0.0 -2.0 0.0)))
       
     (setf *moving-group* moving-group
           *stationary-group* stationary-group

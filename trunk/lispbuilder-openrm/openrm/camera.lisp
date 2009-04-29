@@ -1,7 +1,7 @@
 
 (in-package #:rm)
 
-(defclass camera (openrm-object) ())
+(defclass camera (foreign-object) ())
 
 (defclass camera-2D (camera)
   ()
@@ -31,8 +31,7 @@
 	 ,body-value))))
 
 (defmethod initialize-instance :around ((self camera-2d) &key
-					(extents nil) (aspect-ratio nil)
-					(defaults nil))
+                                        extents aspect-ratio defaults)
   (call-next-method)
 
   (when defaults
@@ -43,12 +42,12 @@
     (setf (aspect-ratio self) aspect-ratio)))
 
 (defmethod initialize-instance :around ((self camera-3d) &key
-					(eye nil) (at nil) (up-vector nil)
-                                        (hither nil) (yon nil) (fov nil)
-                                        (aspect-ratio nil) (projection nil)
-					(stereo nil) (eye-separation nil)
-                                        (focal-distance nil)
-					(defaults nil))
+                                        eye at up-vector
+                                        hither yon fov
+                                        aspect-ratio projection
+                                        stereo eye-separation
+                                        focal-distance
+                                        defaults)
   (call-next-method)
 
   (when defaults
@@ -136,34 +135,18 @@
   (rm-base:with-v3d (v)
     (rm-cffi::rm-camera-3d-get-eye (fp camera) v)
     (vertex rm-base::x rm-base::y rm-base::z)))
-(defmethod eye* ((camera camera-3d))
-  (let ((v (v3d nil nil nil)))
-    (rm-cffi::rm-camera-3d-get-eye (fp camera) (fp v))
-    v))
-
 (defmethod (setf eye) ((value vector) (camera camera-3d))
   (with-copy-vertex-3d-to-foreign (value fp)
-    (rm-cffi::rm-camera-3d-set-eye (fp camera) (fp value)))
-  value)
-(defmethod (setf eye) ((value v3d) (camera camera-3d))
-  (rm-cffi::rm-camera-3d-set-eye (fp camera) (fp value))
+    (rm-cffi::rm-camera-3d-set-eye (fp camera) fp))
   value)
 
 (defmethod at ((camera camera-3d))
   (rm-base:with-v3d (v)
     (rm-cffi::rm-camera-3d-get-at (fp camera) v)
     (vertex rm-base::x rm-base::y rm-base::z)))
-(defmethod at* ((camera camera-3d))
-  (let ((v (v3d nil nil nil)))
-    (rm-cffi::rm-camera-3d-get-at (fp camera) (fp v))
-    v))
-
 (defmethod (setf at) ((value vector) (camera camera-3d))
   (with-copy-vertex-3d-to-foreign (value fp)
     (rm-cffi::rm-camera-3d-set-at (fp camera) fp))
-  value)
-(defmethod (setf at) ((value v3d) (camera camera-3d))
-  (rm-cffi::rm-camera-3d-set-at (fp camera) (fp value))
   value)
 
 (defmethod hither ((camera camera-3d))
@@ -188,17 +171,10 @@
   (rm-base:with-v3d (v)
     (rm-cffi::rm-camera-3d-get-up-vector (fp camera) v)
     (vector rm-base::x rm-base::y rm-base::z)))
-(defmethod up-vector* ((camera camera-3d))
-  (let ((v (v3d nil nil nil)))
-    (rm-cffi::rm-camera-3d-get-up-vector (fp camera) (fp v))
-    v))
 
 (defmethod (setf up-vector) ((value vector) (camera camera-3d))
   (with-copy-vertex-3d-to-foreign (value fp)
     (rm-cffi::rm-camera-3d-set-up-vector (fp camera) fp))
-  value)
-(defmethod (setf up-vector) ((value v3d) (camera camera-3d))
-  (rm-cffi::rm-camera-3d-set-up-vector (fp camera) (fp value))
   value)
 
 (defmethod projection ((camera camera-3d))

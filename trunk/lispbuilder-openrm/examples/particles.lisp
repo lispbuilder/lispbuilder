@@ -142,7 +142,7 @@
     (incf *particle-count* number)
     (loop repeat number
           collect (init-particle (make-particle
-                                  :obj (rm::new-sprite :p-xy/z (rm::v3d 10.0 10.0 48.0)
+                                  :obj (rm::new-sprite :p-xy/z #(10.0 10.0 48.0)
                                                        :images (rm::load-image particle.bmp)
                                                        :dims :rm-renderpass-3d))))))
 (defun remove-particles ()
@@ -156,9 +156,9 @@
   (:default-initargs
    :target :RM-PIPE-NOPLATFORM
    :processing-mode :RM-PIPE-MULTISTAGE
-   :opaque :RM-TRUE
-   :transparent :RM-TRUE
-   :2D :RM-TRUE
+   :opaque-3d t
+   :transparent-3d t
+   :opaque-2d t
    :display-list nil
    :swap-buffers nil))
 
@@ -177,8 +177,8 @@
    :dims :rm-renderpass-3D
    :opacity :rm-renderpass-opaque
    :viewport t
-   :background-color (rm::c4d 0.0 0.0 0.0 1.0)
-   :camera (make-instance 'rm::camera-3d :defaults t)
+   :background-color #(0.0 0.0 0.0 1.0)
+   :camera (make-instance 'rm::camera-3d)
    :compute-view-from-geometry nil))
 
 (defclass particles-node (rm::node) ()
