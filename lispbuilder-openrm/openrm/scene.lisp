@@ -57,6 +57,12 @@
 (defmethod height ((self scene))
   (height (window self)))
 
+(defmethod x-to-viewport ((self scene) x)
+  (pixel-to-viewport x (width self)))
+
+(defmethod y-to-viewport ((self scene) y)
+  (* -1.0 (pixel-to-viewport y (height self))))
+
 (defmethod add-to-scene ((self scene) (child node))
   (add-to-node self child))
 

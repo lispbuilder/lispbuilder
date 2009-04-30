@@ -1,18 +1,18 @@
 
 (in-package #:rm-examples)
 
-(defclass clrball-scene (rm::scene rm::aux-trackball rm::aux-scene)()
-  (:default-initargs
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-all
-   :name "scene"))
-
-(defclass clrball-window (rm::sdl-window rm::aux-window) ()
+(defclass clrball-window (rm::sdl-window) ()
   (:default-initargs
    :width 400 :height 300
    :name "window"
    :title-caption "Clrball" :icon-caption "Clrball"
    :events '(rm::on-quit rm::on-idle rm::on-paint)))
+
+(defclass clrball-scene (rm::scene rm::aux-trackball)()
+  (:default-initargs
+   :dims :rm-renderpass-3d
+   :opacity :rm-renderpass-all
+   :name "scene"))
 
 (defun clrball-1-sdl ()
   ;; Create a window.

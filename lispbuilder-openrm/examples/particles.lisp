@@ -28,13 +28,6 @@
 (defparameter *particle-speed-max* 0.9)
 (defparameter *particle-count* 50)
 
-(defun every-n-frames (max)
-  (let ((count 0))
-    #'(lambda ()
-	(if (eql 0 (mod (incf count 1) max))
-	    (setf count 0)
-	    nil))))
-
 (defparameter *frame-test* (every-n-frames 100))
 
 ;;; ----------------------------------------------------------------------
@@ -239,6 +232,6 @@
      (when (funcall *frame-test*)
        (rm::fformat "Frame Rate: ~A~%" (rm::cast float (sdl:average-fps))))
      ;; Flip back/front buffers
-     (rm::render (rm::default-window))))
+     (rm::render)))
   (rm::clean-up))
 

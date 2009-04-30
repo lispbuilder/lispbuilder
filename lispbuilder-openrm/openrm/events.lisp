@@ -115,6 +115,3 @@
   (on-joy-button-up     (obj which button state))
   (on-joy-hat-motion    (obj which axis value))
   (on-joy-ball-motion   (obj which ball x-rel y-rel)))
-  
-
-

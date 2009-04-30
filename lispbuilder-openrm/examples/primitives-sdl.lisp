@@ -5,7 +5,6 @@
 (in-package #:rm-examples)
 
 (defun sphere-example-1 ()
-  (rm-cffi::rm-notify-level :rm-notify-silence)
   (make-instance 'rm::sdl-window
                  :title-caption "Sphere Example 1" :icon-caption "Sphere Example 1"
                  :width 320 :height 240)
@@ -185,5 +184,20 @@
                  :union-all t
                  :window (rm::default-window)
                  :children (make-instance 'floor-quad))
+  (rm::process-events)
+  (rm::clean-up))
+
+(defun box-example-1 ()
+  (make-instance 'rm::sdl-window
+                 :title-caption "Box Example 1" :icon-caption "Box Example 1"
+                 :width 320 :height 240)
+  (make-instance 'rm::scene
+                 :dims :rm-renderpass-3d
+                 :opacity :rm-renderpass-all
+                 :compute-bounding-box t
+                 :compute-view-from-geometry t
+                 :union-all t
+                 :window (rm::default-window)
+                 :children (rm::new-box :type :wire))
   (rm::process-events)
   (rm::clean-up))
