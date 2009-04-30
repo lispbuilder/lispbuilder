@@ -33,12 +33,6 @@
   (rm::process-events)
   (rm::clean-up))
 
-(defun every-n-frames (max)
-  (let ((count 0))
-    #'(lambda ()
-	(if (eql 0 (mod (incf count 1) max))
-	    (setf count 0)
-	    nil))))
 
 (defun draw-fps (string x y font surface render-p)
   (when render-p
@@ -63,11 +57,14 @@
 
     (rm::add-node sprite (rm::default-scene))
 
-    (let ((100-frames-p (sdl-examples::every-n-frames 100)))
+    (let ((100-frames-p (every-n-frames 100)))
+      
       (sdl:initialise-default-font sdl:*font-5x7*)
       (draw-fps "Calculating FPS....." 10 200
                 sdl:*default-font* sdl:*default-surface* t)
+      
       (setf (sdl:frame-rate) nil)
+      
       (sdl:with-events ()
         (:key-down-event ()
          (sdl:push-quit-event))
@@ -85,5 +82,5 @@
                    10 200 sdl:*default-font* sdl:*default-surface*
                    (funcall 100-frames-p))
        
-         (rm::render (rm::default-window))))))
+         (rm::render)))))
   (rm::clean-up))

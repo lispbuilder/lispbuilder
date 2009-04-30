@@ -76,6 +76,6 @@
                    :lights (make-instance 'rm::directional-light
                                           :light-source :rm-light-0
                                           :specular-color (rm::color 0.7 0.7 0.7 1.0)))
-    (setf (sdl:frame-rate) 30)
+    (setf (sdl:frame-rate) 60)
     (rm::process-events)
     (rm::clean-up)))

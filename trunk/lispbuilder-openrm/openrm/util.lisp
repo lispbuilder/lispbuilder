@@ -48,4 +48,3 @@
   (cast single-float (/ (- pixel (ash dimension -1))
 			(ash dimension -1))))
 
-

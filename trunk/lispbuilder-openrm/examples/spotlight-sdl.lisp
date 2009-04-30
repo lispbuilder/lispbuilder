@@ -51,7 +51,7 @@
    :compute-view-from-geometry nil
    :default-lighting nil))
 
-(defclass spotlight (rm::spotlight) ()
+(defclass spot-light (rm::spot-light) ()
   (:default-initargs
    :light-source :rm-light-1
    :diffuse-color *spot-color*

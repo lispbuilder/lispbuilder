@@ -147,8 +147,10 @@
 
 (defmethod close-window ((self window)) nil)
 
+(defun render ()
+  (%render (default-window)))
 
-(defmethod render ((self window))
+(defmethod %render ((self window))
   ;;(format t "RENDER: ~A~%" (incf *count*))
   ;;(force-output t)
   (rm-cffi::rm-frame (fp (pipe self)) (fp self)))
@@ -157,10 +159,10 @@
 ;;; Events
 
 (defmethod on-paint :after ((self window))
-  (render self))
+  (%render self))
 
 (defmethod on-idle :after ((self window))
-  (render self))
+  (%render self))
 
 (defmethod on-resize ((self window) width height)
   "Automatically sets the width and height of the PIPE to the width and height

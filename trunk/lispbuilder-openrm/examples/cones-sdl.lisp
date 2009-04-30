@@ -1,7 +1,7 @@
 
 (in-package #:rm-examples)
 
-(defclass cones-window (rm::sdl-window rm::aux-window) ()
+(defclass cones-window (rm::sdl-window) ()
   (:default-initargs
    :width 400 :height 300
    :title-caption "Cones" :icon-caption "Cones"
@@ -9,7 +9,7 @@
    :pipe (make-instance 'rm::sdl-pipe
                         :channel-format :RM-REDBLUE-STEREO-CHANNEL)))
 
-(defclass cones-scene (rm::scene rm::aux-trackball rm::aux-scene)()
+(defclass cones-scene (rm::scene rm::aux-trackball)()
   (:default-initargs
    :name "scene"
    :dims :rm-renderpass-3d

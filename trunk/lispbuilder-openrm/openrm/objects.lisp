@@ -147,21 +147,21 @@
 
 
 (defclass spotlight (node)
-  ((light-node
-    :reader light-node
-    :initarg :light-node
-    :initform (error "ERROR; SPOTLIGHT.INITIALIZE-INSTANCE; :LIGHT-NODE must be specified."))
+  ((target-node
+    :reader target-node
+    :initarg :target
+    :initform (error "ERROR; SPOTLIGHT.INITIALIZE-INSTANCE; :TARGET must be specified."))
    (light-source
+    :reader light-source
     :initarg :light-source)
-   (spot-light-direction))
+   (light-direction
+    :reader light-direction))
   (:default-initargs
    :dims :rm-renderpass-all
    :opacity :rm-renderpass-all
    :compute-bounding-box t
    :radius (coerce (rm::to-radian *default-spot-cutoff*) 'single-float)
-
-   :light-node nil
-
+   :target nil
    :light-source :rm-light-1
    :diffuse-color #(0.9 0.5 0.5 1.0)
    :specular-color #(0.9 0.5 0.5 1.0)
@@ -176,7 +176,7 @@
                                        ;; Node KEYwords
                                        xy/z
                                        ;; spotlight KEYwords
-                                       light-node
+                                       target
                                        ;; Primitive KEYwords
                                        rgb/a normals
                                        p-bounding-box p-compute-bounding-box
@@ -187,19 +187,19 @@
                                        diffuse-color specular-color
                                        cutoff exponent
                                        direction)
-  (unless light-node
-    (setf (slot-value self 'light-node) (rm-root-node)))
+  (unless target
+    (setf (slot-value self 'target-node) (rm-root-node)))
   
-  (setf (slot-value self 'spot-light-direction) direction)
+  (setf (slot-value self 'light-direction) direction)
   
-  (setf (light light-node) (make-instance 'spot-light
-                                          :light-source light-source
-                                          :diffuse-color diffuse-color
-                                          :specular-color specular-color
-                                          :cutoff cutoff
-                                          :exponent exponent
-                                          :xy/z xy/z
-                                          :direction direction))
+  (setf (light target) (make-instance 'spot-light
+                                      :light-source light-source
+                                      :diffuse-color diffuse-color
+                                      :specular-color specular-color
+                                      :cutoff cutoff
+                                      :exponent exponent
+                                      :xy/z xy/z
+                                      :direction direction))
   (add-node (make-instance 'cone-primitive
                            :rgb/a rgb/a
                            :xy/z (vector direction #(0.0 0.0 0.0))
@@ -211,11 +211,13 @@
                            :app-display-list app-display-list)
             self))
 
-;(defmethod reset-arc :after ((arc arc) (node spotlight) screen-width screen-height x y)
-;  )
-
-(defmethod update-arc :after ((arc arc) (node spotlight) screen-width screen-height mousex mousey)
-  (let ((temp-light (get-light (slot-value node 'light-node) (slot-value node 'light-source))))
+(defmethod rotate :after ((self spotlight) (node node) &key (reverse nil))
+  (declare (ignore node reverse))
+  ;; Retrieve the light at the Spotlight's 'target-node'.
+  (let ((temp-light (get-light (target-node self) (light-source self))))
+    ;; Point the 'target-node' in the direction that the cone is facing.
     (setf (direction temp-light)
-          (rm::point-direction node (slot-value node 'spot-light-direction)))
-    (setf (light (slot-value node 'light-node)) temp-light)))
+          (rm::point-direction self (light-direction self)))
+    ;; Add the light back to the 'target-node'
+    (setf (light (target-node self)) temp-light)
+    (free temp-light)))

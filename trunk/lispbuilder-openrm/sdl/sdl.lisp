@@ -127,7 +127,7 @@
 (defmethod clean-up :after (&optional (quit-rm nil))
   (sdl-cffi::SDL-Quit))
 
-(defmethod render :after ((self sdl-window))
+(defmethod %render :after ((self sdl-window))
   (sdl-cffi::sdl-gl-swap-buffers))
 
 (defun load-3bpp-image (surface copy free-on-delete)

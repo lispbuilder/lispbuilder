@@ -113,7 +113,7 @@ Turns on automatic garbage collection when `T`. Turns off automatic garbage coll
 (defgeneric (setf radius) (radius obj))
 (defgeneric (setf tesselate) (radius obj))
 
-(defgeneric render (obj))
+(defgeneric %render (obj))
 
 (defgeneric add-scene (scene window &optional add-node))
 (defgeneric find-scene (window id))
