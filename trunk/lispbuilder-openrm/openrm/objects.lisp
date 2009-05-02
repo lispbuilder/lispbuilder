@@ -175,6 +175,7 @@
 (defmethod initialize-instance :after ((self spotlight) &key
                                        ;; Node KEYwords
                                        xy/z
+                                       name
                                        ;; spotlight KEYwords
                                        target
                                        ;; Primitive KEYwords
@@ -221,3 +222,4 @@
     ;; Add the light back to the 'target-node'
     (setf (light (target-node self)) temp-light)
     (free temp-light)))
+

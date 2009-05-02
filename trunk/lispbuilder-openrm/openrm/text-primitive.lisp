@@ -1,8 +1,7 @@
 
 (in-package #:lispbuilder-openrm)
 
-(defclass text-primitive (primitive)
-  ()
+(defclass text-primitive (primitive)()
   (:default-initargs
    :fp (rm-cffi::rm-Primitive-New :rm-text)))
 
@@ -30,4 +29,3 @@
 	 for i from 0 below num-strs
 	 do (cffi:foreign-string-free (cffi:mem-aref ptr :pointer i))))
     self))
-
