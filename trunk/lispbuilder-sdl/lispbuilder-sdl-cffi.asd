@@ -12,7 +12,7 @@
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi #+(or mswindows win32)lispbuilder-sdl-binaries)
+    :depends-on (cffi #+(or mswindows win32)lispbuilder-sdl-binaries #+(or darwin)cocoahelper)
     :components
     ((:module "cffi"
 	      :components
