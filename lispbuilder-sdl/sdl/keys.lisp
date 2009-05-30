@@ -125,8 +125,8 @@ returns `NIL` otherwise. `MOD` may be a list of modifiers, or a single modifier.
 
 ##### Example
 
-      \(:KEY-DOWN-EVENT \(:MOD-KEYS MOD-KEYS\)
-          \(SDL:MODIFIER= '(:SDL-KEY-MOD-LCTRL :SDL-KEY-MOD-LALT) MOD-KEYS\)\)"))
+      \(:KEY-DOWN-EVENT \(:MOD MOD\)
+          \(SDL:MODIFIER= '(:SDL-KEY-MOD-LCTRL :SDL-KEY-MOD-LALT) MOD\)\)"))
 (defmethod modifier= (mod (key list))
   ;; Make mod a list, if not already.
   (let ((mod (if (listp mod) mod (list mod))))
@@ -146,13 +146,13 @@ or `NIL` if no modifiers match. By default, `MODS` is the list of valid modifier
 
 ##### Example 1
 
-      \(:KEY-DOWN-EVENT \(:MOD-KEYS MOD-KEYS\)
-          \(SDL:MODIFIER-P MOD-KEYS '(:SDL-KEY-MOD-LCTRL :SDL-KEY-MOD-LALT)\)\)
+      \(:KEY-DOWN-EVENT \(:MOD MOD\)
+          \(SDL:MODIFIER-P MOD '(:SDL-KEY-MOD-LCTRL :SDL-KEY-MOD-LALT)\)\)
 
 ##### Example 2
 
-      \(:KEY-DOWN-EVENT \(:MOD-KEYS MOD-KEYS\)
-          \(SDL:MODIFIER-P MOD-KEYS\)\)"))
+      \(:KEY-DOWN-EVENT \(:MOD MOD\)
+          \(SDL:MODIFIER-P MOD\)\)"))
 (defmethod modifier-p ((key list) &optional
                        (mods (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)))
   ;; Make mod a list, if not already.
