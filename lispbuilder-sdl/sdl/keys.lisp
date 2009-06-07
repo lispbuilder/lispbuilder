@@ -79,7 +79,7 @@ initialized to have an effect."
                                   key))))))
 
 (defun key-state-p (&optional key)
-  "Returns all keys that are currently depressed as a LIST. Or, returns
+  "Returns all keys that are currently depressed as a LIST. 
 Returns KEY if KEY is currently depressed, returns NIL otherwise.
 Note: Use SDL_PumpEvents to update the state array.
 Note: This function gives you the current state after all events have been processed, 
@@ -105,7 +105,7 @@ For example: \(KEY-STATE-P :SDL-KEY-F1\)"
                                 key)))))
 
 (defun mod-state-p (&optional key)
-  "Returns all modifier keys that are currently depressed as a LIST. Or, returns
+  "Returns all modifier keys that are currently depressed as a LIST. 
 Returns KEY if KEY is currently depressed, returns NIL otherwise.
 Note: Use SDL_PumpEvents to update the state array.
 Note: This function gives you the current state after all events have been processed, 
@@ -127,22 +127,22 @@ returns `NIL` otherwise. `MOD` may be a list of modifiers, or a single modifier.
 
       \(:KEY-DOWN-EVENT \(:MOD MOD\)
           \(SDL:MODIFIER= '(:SDL-KEY-MOD-LCTRL :SDL-KEY-MOD-LALT) MOD\)\)"))
-(defmethod modifier= (mod (key list))
-  ;; Make mod a list, if not already.
-  (let ((mod (if (listp mod) mod (list mod))))
-    (if (= (length (intersection mod key))
-           (length mod))
-      mod
+(defmethod modifier= (modifiers (key list))
+  ;; Make modifiers a list, if not already.
+  (let ((modifiers (if (listp modifiers) modifiers (list modifiers))))
+    (if (= (length (intersection modifiers key))
+           (length modifiers))
+      modifiers
       nil)))
 
-(defmethod modifier= (mod key)
-  ;; Make mod a list, if not already.
-  (let* ((key (modifier-p key mod)))
-    (modifier= mod key)))
+(defmethod modifier= (modifiers key)
+  ;; Make modifiers a list, if not already.
+  (let* ((key (modifier-p key modifiers)))
+    (modifier= modifiers key)))
 
-(defgeneric modifier-p (key &optional mods)
-  (:documentation "Returns a list of the modifiers in `KEY` that match `MODS`,
-or `NIL` if no modifiers match. By default, `MODS` is the list of valid modifiers.
+(defgeneric modifier-p (key &optional modifiers)
+  (:documentation "Returns a list of the modifiers in `KEY` that match `MODIFIERS`,
+or `NIL` if no modifiers match. By default, `MODIFIERS` is the list of valid modifiers.
 
 ##### Example 1
 
@@ -154,22 +154,23 @@ or `NIL` if no modifiers match. By default, `MODS` is the list of valid modifier
       \(:KEY-DOWN-EVENT \(:MOD MOD\)
           \(SDL:MODIFIER-P MOD\)\)"))
 (defmethod modifier-p ((key list) &optional
-                       (mods (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)))
+                       (modifiers (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)))
   ;; Make mod a list, if not already.
-  (unless (listp mods)
-    (setf mods (list mods)))
-  (intersection key mods))
+  (unless (listp modifiers)
+    (setf modifiers (list modifiers)))
+  (intersection key modifiers))
 
 (defmethod modifier-p (key &optional
-                           (mods (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)))
+                           (modifiers (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)))
   ;; Make mod a list, if not already.
-  (unless (listp mods)
-    (setf mods (list mods)))
+  (unless (listp modifiers)
+    (setf modifiers (list modifiers)))
   (remove nil
-          (loop for modifier in mods
-                collect (when (/= (logand
-                                   (cffi:foreign-enum-value 'sdl-cffi::SDL-Mod modifier)
-                                   key)
-                                  0)
+          (loop for modifier in modifiers
+                collect (when (or (/= (logand (cffi:foreign-enum-value 'sdl-cffi::SDL-Mod modifier)
+                                              key)
+                                      0)
+                                  ;; Check for :SDL-KEY-MOD-NONE
+                                  (= (cffi:foreign-enum-value 'sdl-cffi::SDL-Mod modifier) key))
                           modifier))))
 
