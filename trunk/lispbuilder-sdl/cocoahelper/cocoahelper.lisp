@@ -4,10 +4,16 @@
  (:use :common-lisp :cffi))
 
 (in-package :lispbuilder-sdl-cocoahelper)
-(push (asdf:component-pathname (asdf:find-system :cocoahelper)) *foreign-library-directories*)
+(push (merge-pathnames (pathname "cocoahelper/")
+                       (asdf:component-pathname (asdf:find-system :cocoahelper)))
+      *foreign-library-directories*)
+(push (merge-pathnames (pathname "cocoahelper/")
+                       (asdf:component-pathname (asdf:find-system :cocoahelper)))
+      *darwin-framework-directories*)
 
 (define-foreign-library cocoahelper
-  (t (:default "cocoahelper")))
+  (:darwin (:or (:framework "cocoahelper")
+                "cocoahelper.dylib")))
 (use-foreign-library cocoahelper)
 
 (defcfun "cocoahelper_init" :void)
