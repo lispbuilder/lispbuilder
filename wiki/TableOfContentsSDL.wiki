@@ -2,6 +2,7 @@
 
  * [LispbuilderSDL Home]
  * [DownloadInstallationIntro Download & Installation]
+  * [WindowsInstallation Windows]
  * [Screenshots Screenshots]
  * Documentation
   * [UsingLispbuilderSDL User Guide]
