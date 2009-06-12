@@ -24,7 +24,7 @@ NIL
 
 The guide assumes a Unix-like command-line environment. It is not strictly necessary to use such an environment for development, although it may make your life easier (in more ways that one). Feel free to use batch commands or Power Shell, but be aware that you may have to translate some simple shell commands.
 
-If you are interested in installing a Unix-like shell on Windows, [http://www.cygwin.com/ Cygwin], [MSYS http://www.mingw.org/], and [http://gnuwin32.sourceforge.net/ GnuWin32] are all good options.
+If you are interested in installing a Unix-like shell on Windows, [http://www.cygwin.com/ Cygwin], [http://www.mingw.org/ MSYS], and [http://gnuwin32.sourceforge.net/ GnuWin32] are all good options.
 
 = Defining a Startup Function =
 
