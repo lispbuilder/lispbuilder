@@ -12,8 +12,7 @@
   (setf (slot-value self 'foreign-pointer-to-object)
         (cffi:foreign-alloc :unsigned-char
                             :initial-contents (loop for i across (data font-definition)
-                                                    collect i))
-))
+                                                    collect i))))
 
 (defmethod set-default-font ((font gfx-bitmap-font))
   (sdl-gfx-cffi::gfx-Primitives-Set-Font (fp font)
