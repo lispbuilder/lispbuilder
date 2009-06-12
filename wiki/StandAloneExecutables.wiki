@@ -34,7 +34,7 @@ When creating an executable, a user-defined function can be provided to run when
 
   ;; Load SDL
   (cffi:define-foreign-library sdl
-      (t (:default "SDL")))
+      (t (:default "SDL")))           ; Windows only, see below for portable version
   (cffi:use-foreign-library sdl)
 
   ;; Run the game
@@ -105,3 +105,5 @@ Finally, copy and graphics or other resources to the build folder. Now try runni
 <pre>
 $ ./main
 </pre>
+
+If it works, copy the folder over to another machine (preferably one without Lisp or SDL installed), and try running it. If it works there too, then you can tar it, zip it, make a Mac app for it, or make a Windows installer for it, etc.
