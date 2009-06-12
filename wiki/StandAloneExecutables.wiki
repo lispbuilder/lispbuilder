@@ -56,11 +56,16 @@ Executables, or Lisp images, are executable copies of the runtime state of the c
 To dump an executable, first start the compiler and load LISPBUILDER-SDL and any user code. After defining a startup function (more details below), run the following commands to create the binary.
 
 {{{
-(asdf:operate 'asdf:load-op :lispbuilder-sdl)
-(load (compile-file "main"))
-(let ((filename #+windows "main.exe" #-windows "main"))
-  #+clisp (saveinitmem filename :init-function #'main :executable t :norc t)
-  #+sbcl (save-lisp-and-die filename :toplevel #'main :executable t))
+* (asdf:operate 'asdf:load-op :lispbuilder-sdl)
+...
+NIL
+* (load (compile-file "main"))
+...
+NIL
+* (let ((filename #+windows "main.exe" #-windows "main"))
+    #+clisp (saveinitmem filename :init-function #'main :executable t :norc t)
+    #+sbcl (save-lisp-and-die filename :toplevel #'main :executable t))
+
 ;; TODO: Add Lispworks and Allegro.
 }}}
 
