@@ -1,0 +1,28 @@
+#summary LISPBUILDER-SDL Windows Lispworks installation
+#sidebar TableOfContentsSDL
+
+<wiki:toc max_depth="3" />
+
+= Overview =
+
+This page describes the installation and configuration of Lispworks and LISPBUILDER-SDL for Windows.
+
+= Install Lispworks with the Lisp Starter Pack =
+
+The LISPBUILDER-SDL package relies on the external [http://www.libsdl.org/ libSDL] dynamic linked library. [http://www.libsdl.org/ libSDL] is downloaded and installed automatically using the procedure describe below.
+
+ # Download & install [http://www.lispworks.com/downloads/index.html Lispworks Personal Edition].
+ # Download & install [http://www.weitz.de/starter-pack/ Edi Weitz's Lisp Starter Pack].
+ # Download & save [http://www.balooga.com/lispbuilder/config.lisp config.lisp] to the same location as the Lisp Starter Pack. _Note:_ `LispStarterPack.exe` and `config.lisp` must be in the same directory.
+ # Run `LispStarterPack.exe` and select the `LISPBUILDER-*` packages. The packages will be downloaded and installed (in `Win XP`) to  `"My Documents\Lisp Libraries"`.
+
+= Using LISPBUILDER-SDL =
+
+ # Start `Lispworks`.
+ # Use the `File menu` to `Load...` (and _not_ `Open...`) the file `start.lisp` that was installed in a directory called `"Lisp Libraries"` within the `"My Documents"` folder. Lispworks will now compile the packages.
+ # Execute the following in the Lispworks `"Listener"` (the REPL) window when compilation is `DONE`.
+  ** `(ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL-EXAMPLES)`
+ # Run one of the examples to verify that the installation was successful;
+  ** `(SDL-EXAMPLES:PARTICLES)`
+
+ASDF will take care of loading the `CFFI` and `:LISPBUILDER-SDL` dependencies. The `SDL.dll` library will also be loaded into the Lisp image at this time.
