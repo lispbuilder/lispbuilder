@@ -107,3 +107,21 @@ $ ./main
 </pre>
 
 If it works, copy the folder over to another machine (preferably one without Lisp or SDL installed), and try running it. If it works there too, then you can tar it, zip it, make a Mac app for it, or make a Windows installer for it, etc.
+
+= Writing a Better Startup Function =
+
+One problem with the provided startup function is that expects to find a shared library called "SDL". This doesn't work on Linux where the file is traditionally "libSDL.so", or on OS X, where most users would prefer to use "SDL.framework". The following snippets, taken from the source code of LISPBUILDER-SDL, can be used as portable substitutes for the above.
+
+http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/cffi/library.lisp
+
+<pre>
+(cffi:define-foreign-library sdl
+  (:darwin (:or (:framework "SDL")
+                (:default "libSDL")))
+  (:windows "SDL.dll")
+  (:unix (:or "libSDL-1.2.so.0.7.2"
+	      "libSDL-1.2.so.0"
+	      "libSDL-1.2.so"
+	      "libSDL.so"
+	      "libSDL")))
+</pre>
