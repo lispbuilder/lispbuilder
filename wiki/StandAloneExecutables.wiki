@@ -1,0 +1,98 @@
+#summary Creating standalone executables to be distributed on various platforms.
+#sidebar TableOfContentsSDL
+
+<wiki:toc max_depth="3" />
+
+= Introduction =
+
+All modern Lisp compilers can create executables to be distributed to users. This page covers how to build executables under various implementations, and how to package and distribute them for various OSes.
+
+= Prerequisite: Ensure LISPBUILDER-SDL is Working =
+
+Make sure everything works. Try an example; see the game run. If the game does not run properly, troubleshoot, otherwise continue.
+
+{{{
+[1]> (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+... lots of loading text ...
+0 errors, 0 warnings
+NIL
+[2]> (sdl-examples:mandelbrot)
+NIL
+}}}
+
+= Windows Prerequisite: Cygwin, MSYS, or !GnuWin32 =
+
+The guide assumes a Unix-like command-line environment. It is not strictly necessary to use such an environment for development, although it may make your life easier (in more ways that one). Feel free to use batch commands or Power Shell, but be aware that you may have to translate some simple shell commands.
+
+If you are interested in installing a Unix-like shell on Windows, [http://www.cygwin.com/ Cygwin], [MSYS http://www.mingw.org/], and [http://gnuwin32.sourceforge.net/ GnuWin32] are all good options.
+
+= Defining a Startup Function =
+
+When creating an executable, a user-defined function can be provided to run when the Lisp image starts up. Users of LISPBUILDER-SDL typically use this function to load and initialize SDL and start their game. An example of such a function follows;
+
+{{{
+(defun main ()
+
+  ;; Load SDL
+  (cffi:define-foreign-library sdl
+      (t (:default "SDL")))
+  (cffi:use-foreign-library sdl)
+
+  ;; Run the game
+  (sdl:with-init ()
+    (sdl-examples:mandelbrot))
+
+  ;; Quit
+  #-allegro (quit) #+allegro (exit))
+}}}
+
+The function looks for a foreign library called SDL (e.g. "SDL.dll"), and loads the library. Then it starts one the examples in LISPBUILDER-SDL. When the example demo ends, it quits the program (to avoid entering the toplevel, as some Lisps do).
+
+= Dumping an Executable =
+
+Executables, or Lisp images, are executable copies of the runtime state of the compiler after loading user-defined code. Some Lisp compilers, especially commercial ones, try to slim down the resulting executable, but in open source compilers, an image will include the entire compiler.
+
+To dump an executable, first start the compiler and load LISPBUILDER-SDL and any user code. After defining a startup function (more details below), run one of the following commands to create the binary.
+
+{{{
+#+clisp (saveinitmem "main" :init-function #'main :executable t :norc t)
+#+sbcl (save-lisp-and-die "main" :toplevel #'main :executable t)
+;; TODO: Add Lispworks and Allegro.
+}}}
+
+Theoretically, this executable can just be run by itself,
+
+{{{
+$ ./main
+}}}
+
+but, more often than not, the necessary runtime components (shared libraries, graphics, etc) are not in correct locations relative to the executable. Therefore, for most applications, it will be necessary to build a distribution to run on each target platform.
+
+= Bundling Shared Libraries =
+
+The easiest way to find runtime libraries is simply to put them in the same directory as the binary. For example;
+
+{{{
+$ mkdir build
+$ cp main build
+}}}
+
+Find SDL.dll (on Windows), libSDL.so (on Linux), or SDL.framework (on OS X), and copy it to the build folder.
+
+{{{
+$ cp C:\\path\\to\\SDL.dll build             # Windows
+$ cp /usr/lib/libSDL.so build                # Linux
+$ cp /Library/Frameworks/SDL.framework build # OS X
+}}}
+
+And copy and runtime libraries required by the compiler itself. For example, on CLISP;
+
+{{{
+$ cp C:\\path\\to\\*.dll   # for CLISP
+}}}
+
+Finally, copy and graphics or other resources to the build folder. Now try running the game;
+
+{{{
+$ ./main
+}}}
