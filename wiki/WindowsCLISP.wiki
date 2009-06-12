@@ -1,5 +1,5 @@
 #summary LISPBUILDER-SDL Windows CLISP installation
-#sidebar TableOfContents
+#sidebar TableOfContentsSDL
 
 <wiki:toc max_depth="3" />
 
