@@ -97,7 +97,7 @@ $ cp /Library/Frameworks/SDL.framework build # OS X
 And copy and runtime libraries required by the compiler itself. For example, on CLISP;
 
 <pre>
-$ cp C:\\path\\to\\`*`.dll   # for CLISP
+$ cp C:\\path\\to\\clisp\\`*`.dll   # CLISP
 </pre>
 
 Finally, copy and graphics or other resources to the build folder. Now try running the game;
