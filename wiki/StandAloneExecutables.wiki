@@ -12,11 +12,10 @@ All modern Lisp compilers can create executables to be distributed to users. Thi
 Make sure everything works. Try an example; see the game run. If the game does not run properly, troubleshoot, otherwise continue.
 
 {{{
-[1]> (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+* (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
 ... lots of loading text ...
-0 errors, 0 warnings
 NIL
-[2]> (sdl-examples:mandelbrot)
+* (sdl-examples:mandelbrot)
 NIL
 }}}
 
@@ -48,22 +47,27 @@ When creating an executable, a user-defined function can be provided to run when
 
 The function looks for a foreign library called SDL (e.g. "SDL.dll"), and loads the library. Then it starts one the examples in LISPBUILDER-SDL. When the example demo ends, it quits the program (to avoid entering the toplevel, as some Lisps do).
 
+Type the above function into a file called "main.lisp" for use below.
+
 = Dumping an Executable =
 
 Executables, or Lisp images, are executable copies of the runtime state of the compiler after loading user-defined code. Some Lisp compilers, especially commercial ones, try to slim down the resulting executable, but in open source compilers, an image will include the entire compiler.
 
-To dump an executable, first start the compiler and load LISPBUILDER-SDL and any user code. After defining a startup function (more details below), run one of the following commands to create the binary.
+To dump an executable, first start the compiler and load LISPBUILDER-SDL and any user code. After defining a startup function (more details below), run the following commands to create the binary.
 
 {{{
-#+clisp (saveinitmem "main" :init-function #'main :executable t :norc t)
-#+sbcl (save-lisp-and-die "main" :toplevel #'main :executable t)
+(asdf:operate 'asdf:load-op :lispbuilder-sdl)
+(load (compile-file "main"))
+(let ((filename #+windows "main.exe" #-windows "main"))
+  #+clisp (saveinitmem filename :init-function #'main :executable t :norc t)
+  #+sbcl (save-lisp-and-die filename :toplevel #'main :executable t))
 ;; TODO: Add Lispworks and Allegro.
 }}}
 
 Theoretically, this executable can just be run by itself,
 
 {{{
-$ ./main
+$ ./main   # or main.exe on Windows
 }}}
 
 but, more often than not, the necessary runtime components (shared libraries, graphics, etc) are not in correct locations relative to the executable. Therefore, for most applications, it will be necessary to build a distribution to run on each target platform.
