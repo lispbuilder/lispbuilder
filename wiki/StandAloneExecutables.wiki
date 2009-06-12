@@ -11,13 +11,13 @@ All modern Lisp compilers can create executables to be distributed to users. Thi
 
 Make sure everything works. Try an example; see the game run. If the game does not run properly, troubleshoot, otherwise continue.
 
-{{{
-* (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
+<pre>
+> (asdf:operate 'asdf:load-op :lispbuilder-sdl-examples)
 ... lots of loading text ...
 NIL
-* (sdl-examples:mandelbrot)
+> (sdl-examples:mandelbrot)
 NIL
-}}}
+</pre>
 
 = Windows Prerequisite: Cygwin, MSYS, or !GnuWin32 =
 
@@ -29,7 +29,7 @@ If you are interested in installing a Unix-like shell on Windows, [http://www.cy
 
 When creating an executable, a user-defined function can be provided to run when the Lisp image starts up. Users of LISPBUILDER-SDL typically use this function to load and initialize SDL and start their game. An example of such a function follows;
 
-{{{
+<pre>
 (defun main ()
 
   ;; Load SDL
@@ -43,7 +43,7 @@ When creating an executable, a user-defined function can be provided to run when
 
   ;; Quit
   #-allegro (quit) #+allegro (exit))
-}}}
+</pre>
 
 The function looks for a foreign library called SDL (e.g. "SDL.dll"), and loads the library. Then it starts one the examples in LISPBUILDER-SDL. When the example demo ends, it quits the program (to avoid entering the toplevel, as some Lisps do).
 
@@ -55,25 +55,25 @@ Executables, or Lisp images, are executable copies of the runtime state of the c
 
 To dump an executable, first start the compiler and load LISPBUILDER-SDL and any user code. After defining a startup function (more details below), run the following commands to create the binary.
 
-{{{
-* (asdf:operate 'asdf:load-op :lispbuilder-sdl)
+<pre>
+> (asdf:operate 'asdf:load-op :lispbuilder-sdl)
 ...
 NIL
-* (load (compile-file "main"))
+> (load (compile-file "main"))
 ...
 NIL
-* (let ((filename #+windows "main.exe" #-windows "main"))
+> (let ((filename #+windows "main.exe" #-windows "main"))
     #+clisp (saveinitmem filename :init-function #'main :executable t :norc t)
     #+sbcl (save-lisp-and-die filename :toplevel #'main :executable t))
 
 ;; TODO: Add Lispworks and Allegro.
-}}}
+</pre>
 
 Theoretically, this executable can just be run by itself,
 
-{{{
+<pre>
 $ ./main   # or main.exe on Windows
-}}}
+</pre>
 
 but, more often than not, the necessary runtime components (shared libraries, graphics, etc) are not in correct locations relative to the executable. Therefore, for most applications, it will be necessary to build a distribution to run on each target platform.
 
@@ -81,27 +81,27 @@ but, more often than not, the necessary runtime components (shared libraries, gr
 
 The easiest way to find runtime libraries is simply to put them in the same directory as the binary. For example;
 
-{{{
+<pre>
 $ mkdir build
 $ cp main build
-}}}
+</pre>
 
 Find SDL.dll (on Windows), libSDL.so (on Linux), or SDL.framework (on OS X), and copy it to the build folder.
 
-{{{
+<pre>
 $ cp C:\\path\\to\\SDL.dll build             # Windows
 $ cp /usr/lib/libSDL.so build                # Linux
 $ cp /Library/Frameworks/SDL.framework build # OS X
-}}}
+</pre>
 
 And copy and runtime libraries required by the compiler itself. For example, on CLISP;
 
-{{{
-$ cp C:\\path\\to\\*.dll   # for CLISP
-}}}
+<pre>
+$ cp C:\\path\\to\\`*`.dll   # for CLISP
+</pre>
 
 Finally, copy and graphics or other resources to the build folder. Now try running the game;
 
-{{{
+<pre>
 $ ./main
-}}}
+</pre>
