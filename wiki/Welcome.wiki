@@ -1,5 +1,5 @@
 #summary Welcome to the lispbuilder wiki
-#sidebar TableOfContents
+#sidebar TableOfContentsSDL
 
 <wiki:toc max_depth="3" />
 
