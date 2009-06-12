@@ -1,4 +1,4 @@
-#summary LISPBUILDER-SDL Windows alternate installation
+#summary LISPBUILDER-SDL Windows installation
 #sidebar TableOfContentsSDL
 
  * See [WindowsLispworks Windows/Lispworks] for installing Lispworks on Windows using the Lisp Starter Pack.
