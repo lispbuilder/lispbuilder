@@ -661,6 +661,5 @@ Use the following to gain access to OpenGL shaders, etc. Use *after* an OpenGL c
 
 Tutorials for creating standalone executables using the various Common Lisp development environments;
 
+ * [StandAloneExecutables Creating standalone executables]
  * [StandAloneCLISP CLISP executable]
- * [StandAloneSBCL SBCL executable]
- * [StandAloneLispworks Lispworks executable]
