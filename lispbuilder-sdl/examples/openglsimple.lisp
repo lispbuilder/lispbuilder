@@ -1,8 +1,9 @@
 ;;;; Simple OpenGL example
 ;;;; Shows usage of opengl from lispbuilder
 
-; You need to install cl-opengl and load up these systems
+; You need to asdf install cl-opengl and load up these systems
 ; for this example
+
 ;(asdf:oos 'asdf:load-op 'cl-opengl)
 ;(asdf:oos 'asdf:load-op 'cl-glu)
 ;(asdf:oos 'asdf:load-op 'cl-glut)
@@ -11,7 +12,7 @@
 (defparameter *screen-width* 400)
 (defparameter *screen-height* 400)
 
-; Many thanks, Chris Double
+; Many thanks, Chris Double for macros
 (defmacro with-glBegin (type &body body)
   `(progn
     (gl::begin ,type)
@@ -31,7 +32,7 @@
   (gl::viewport 0 0 width height))
 
 (defun setup(width height)
-  "Setup the users app"
+  "Setup your app"
   (gl:matrix-mode :projection)
   (gl:load-identity)
   (if (<= width height)
@@ -42,7 +43,7 @@
   (gl:shade-model :smooth))
 
 (defun draw()
-  "Users draw function called each frame update"
+  "Draw function called each frame update"
   (gl:clear :color-buffer)
 
   (gl:with-primitives :triangles
