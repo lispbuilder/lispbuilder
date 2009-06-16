@@ -30,6 +30,9 @@
       (setf *default-display* (make-instance 'display-surface :fp surf))
       (setf *opengl-context* (surface-info *default-display* sdl-opengl)))
     (setf sdl-base::*default-fpsmanager* fps)
+    (quit-input-util)
+    (initialise-input-util)
+    (enable-event-filters)
     *default-display*))
 
 (defmethod resize-window (width height &key flags title-caption icon-caption bpp)
@@ -77,19 +80,19 @@ The display is updated when `UPDATE` is `T`."
 (defun get-native-window ()
   "Returns a foreign pointer to the native SDL display window."
   (let ((wm-info (cffi:foreign-alloc 'sdl-cffi::SDL-Sys-WM-info)))
-      ;; Set the wm-info structure to the current SDL version.
-      (sdl-cffi::sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
-      (sdl-cffi::SDL-Get-WM-Info wm-info)
-      ;; For Windows
-      #+win32(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
-      ;; For X
-      #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
-											      'sdl-cffi::SDL-Sys-WM-info
-											      'sdl-cffi::info)
-								   'sdl-cffi::SDL-Sys-WM-info-info
-								   'sdl-cffi::x11)
-					'sdl-cffi::SDL-Sys-WM-info-info-x11
-					'sdl-cffi::window)))
+    ;; Set the wm-info structure to the current SDL version.
+    (sdl-cffi::sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
+    (sdl-cffi::SDL-Get-WM-Info wm-info)
+    ;; For Windows
+    #+win32(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
+    ;; For X
+    #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
+                                                                                            'sdl-cffi::SDL-Sys-WM-info
+                                                                                            'sdl-cffi::info)
+                                                                 'sdl-cffi::SDL-Sys-WM-info-info
+                                                                 'sdl-cffi::x11)
+                                      'sdl-cffi::SDL-Sys-WM-info-info-x11
+                                      'sdl-cffi::window)))
 
 (defun surface-info (surface &optional (info nil))
   "Returns information about the SDL surface `SURFACE`.

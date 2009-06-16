@@ -164,3 +164,7 @@ Audio formats are defined in `SDL_audio.h`;
 
 
 (defparameter *event-filter-hook* #'(lambda (sdl-event) (declare (ignore sdl-event)) t))
+
+(defvar *allow-convert-to-display-format* t
+  "`CONVERT-TO-DISPLAY-FORMAT` will convert the input surface to the display format when `T`,
+and copy to a new surface when `NIL`.")

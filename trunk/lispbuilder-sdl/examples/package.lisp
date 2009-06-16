@@ -113,6 +113,9 @@
    ;; key-test
    #:key-test
 
+   ;; alpha-example.lisp
+   #:alpha-example
+
    ;; The following are only defined in the
    ;; LISPBUILDER-SDL-CL-VECTORS-EXAMPLES package.
    ;; cl-vectors.lisp

@@ -17,37 +17,37 @@
    init-flags can be any combination of SDL-INIT-TIMER, SDL-INIT-AUDIO, SDL-INIT-VIDEO, SDL-INIT-CDROM,
    SDL-INIT-JOYSTICK, SDL-INIT-NOPARACHUTE, SDL-INIT-EVENTTHREAD or SDL-INIT-EVERYTHING."
   `(block nil
-    (unwind-protect
+     (unwind-protect
 	 (when (init-sdl ,@(when init-flags
-				 `(:flags (list ,@init-flags))))
+                             `(:flags (list ,@init-flags))))
 	   ,@body)
-      (sdl-cffi::SDL-Quit))))
+       (sdl-cffi::SDL-Quit))))
 
 (defun init-sdl (&key (flags nil))
   (if (equal 0 (sdl-cffi::SDL-Init (set-flags flags)))
-      t
-      nil))
+    t
+    nil))
 
 (defun init-p (&key (flags))
   (if (equal (set-flags flags)
 	     (sdl-cffi::sdl-was-init (set-flags flags)))
-      t
-      nil))
+    t
+    nil))
 
 (defun set-flags (&rest keyword-args)
   (if (listp (first keyword-args))
-      (let ((keywords 
-	     (mapcar #'(lambda (x)
-			 (eval x))
-		     (first keyword-args))))
-	(apply #'logior keywords))
-      (apply #'logior keyword-args)))
+    (let ((keywords 
+           (mapcar #'(lambda (x)
+                       (eval x))
+                   (first keyword-args))))
+      (apply #'logior keywords))
+    (apply #'logior keyword-args)))
 
 (defun load-image (filename)
   "load in the supplied filename, must be a bmp file"
 ;  (format t "loading ~a~%" filename)
   (let ((file (namestring filename)))
     (if (and (stringp file) (probe-file file)) ; LJC: Make sure filename is a string and the filename exists.
-	(sdl-cffi::SDL-Load-BMP-RW (sdl-cffi::sdl-RW-From-File file "rb") 1)
-	(error "File ~A does not exist." file))))
+      (sdl-cffi::SDL-Load-BMP-RW (sdl-cffi::sdl-RW-From-File file "rb") 1)
+      (error "File ~A does not exist." file))))
 
