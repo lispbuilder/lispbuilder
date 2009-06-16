@@ -483,24 +483,34 @@ Differences between [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format), [CO
 ** A pixel alpha component can be specified. 
 ** New surface can be filled with the old surface, or the color key or both."
   (check-type surface sdl-surface)
-  (let ((surf (make-instance 'surface
-                             :fp (sdl-base::convert-surface-to-display-format
-                                  (fp surface)
-                                  :enable-color-key (if inherit
-                                                      (color-key-enabled-p surface)
-                                                      enable-color-key)
-                                  :enable-alpha (if inherit
-                                                  (alpha-enabled-p surface)
-                                                  (or enable-alpha pixel-alpha)) 
-                                  :pixel-alpha (if inherit
-                                                 (pixel-alpha-enabled-p surface)
-                                                 pixel-alpha)
-                                  :free nil))))
-    (when free
-      (free surface))
-    surf))
+  (if *allow-convert-to-display-format*
+    (let ((surf (make-instance 'surface
+                               :fp (sdl-base::convert-surface-to-display-format
+                                    (fp surface)
+                                    :enable-color-key (if inherit
+                                                        (color-key-enabled-p surface)
+                                                        enable-color-key)
+                                    :enable-alpha (if inherit
+                                                    (alpha-enabled-p surface)
+                                                    (or enable-alpha pixel-alpha)) 
+                                    :pixel-alpha (if inherit
+                                                   (pixel-alpha-enabled-p surface)
+                                                   pixel-alpha)
+                                    :free nil))))
+      (when free
+        (free surface))
+      surf)
+    (let ((surf (copy-surface :surface surface
+                              :inherit inherit
+                              :pixel-alpha pixel-alpha
+                              :free nil)))
+      (when free
+        (free surface))
+      surf)))
 
-(defun convert-surface (&key (surface *default-surface*) (to-surface *default-display*) enable-alpha enable-color-key (free nil) (inherit t) (type :sw))
+(defun convert-surface (&key
+                        (surface *default-surface*) (to-surface *default-display*)
+                        enable-alpha enable-color-key (free nil) (inherit t) (type :sw))
   "Converts `:SURFACE` and returns a new surface matching the pixel format and color of `:TO-SURFACE`.
 Calls [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format) if converting to the display format.
 
@@ -525,14 +535,14 @@ Use `:FREE` to delete the source `SURFACE`."
 					     :pixel-alpha (pixel-alpha-enabled-p surface)
 					     :free nil
 					     :inherit inherit)
-		  (make-instance 'surface
+                    (make-instance 'surface
 				 :fp (sdl-base::convert-surface (fp surface) (fp to-surface)
 								:enable-color-key (if inherit
-										      (color-key-enabled-p surface)
-										      enable-color-key)
+                                                                                    (color-key-enabled-p surface)
+                                                                                    enable-color-key)
 								:enable-alpha (if inherit
-											  (alpha-enabled-p surface)
-											  enable-alpha)
+                                                                                (alpha-enabled-p surface)
+                                                                                enable-alpha)
 								:free nil
 								:type type)))))
     (when free

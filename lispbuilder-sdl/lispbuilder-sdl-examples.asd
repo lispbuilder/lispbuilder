@@ -43,5 +43,6 @@
                (:file "functional-geometry" :depends-on ("package"))
                (:file "audio-mixer" :depends-on ("package"))
                (:file "squashed" :depends-on ("package"))
-               (:file "keys" :depends-on ("package")))
+               (:file "keys" :depends-on ("package"))
+               (:file "alpha-example" :depends-on ("package")))
                :serial t)))

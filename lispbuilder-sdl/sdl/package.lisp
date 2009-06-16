@@ -50,7 +50,18 @@
 
    lispbuilder-sdl-cffi::Num-Joysticks
    lispbuilder-sdl-cffi::SDL-Joystick-Name
-   lispbuilder-sdl-cffi::SDL-WM-GRAB-INPUT)
+   lispbuilder-sdl-cffi::SDL-WM-GRAB-INPUT
+
+   lispbuilder-sdl-cffi::SDL-BUTTON-LEFT
+   lispbuilder-sdl-cffi::SDL-BUTTON-MIDDLE
+   lispbuilder-sdl-cffi::SDL-BUTTON-RIGHT
+   lispbuilder-sdl-cffi::SDL-BUTTON-WHEEL-UP
+   lispbuilder-sdl-cffi::SDL-BUTTON-WHEEL-DOWN
+   lispbuilder-sdl-cffi::SDL-BUTTON-X1
+   lispbuilder-sdl-cffi::SDL-BUTTON-X2
+   ;; (cl:defconstant SDL-BUTTON-WHEEL-LEFT 6)
+   ;; (cl:defconstant SDL-BUTTON-WHEEL-RIGHT 7)
+   )
 
   (:import-from #:lispbuilder-sdl-assets
    lispbuilder-sdl-assets::*default-asset-path*)
@@ -98,6 +109,8 @@
    #:+MIN-AUDIO-16+
    #:+MAX-AUDIO-8+
    #:+MIN-AUDIO-8+
+
+   #:*allow-convert-to-display-format*
    
    ;; init.lisp
    #:with-init
@@ -124,6 +137,13 @@
    #:key-time-in-previous-state
    #:handle-key-up
    #:handle-key-down
+   #:mouse-pressed-p 
+   #:mouse-released-p 
+   #:mouse-held-p
+   #:mouse-time-in-current-state
+   #:mouse-time-in-previous-state
+   #:handle-mouse-up
+   #:handle-mouse-down
 
    ;;generics.lisp
    #:fp
@@ -481,47 +501,6 @@
    ;; assets/globals.lisp
    ;;#:*default-font-path*
 
-   ;; Imports from lispbuilder-sdl-cffi
-   #:sdl-get-ticks
-   #:sdl-opengl
-   #:sdl-init-everything
-   #:sdl-init-video
-   #:sdl-init-cdrom
-   #:sdl-init-audio 
-   #:sdl-init-timer
-   #:sdl-init-joystick
-   #:sdl-init-eventthread
-   #:sdl-init-noparachute
-   
-   #:sdl-sw-surface
-   #:sdl-hw-surface
-   #:sdl-async-blit
-   #:sdl-any-format
-   #:sdl-hw-palette
-   #:sdl-doublebuf
-   #:sdl-fullscreen
-   #:sdl-opengl
-   #:sdl-opengl-blit
-   #:sdl-resizable
-   #:sdl-no-frame
-
-   #:sdl-hw-accel
-   #:sdl-src-color-key
-   #:sdl-rle-accel-ok
-   #:sdl-rle-accel
-   #:sdl-src-alpha
-   #:sdl-pre-alloc
-   #:sdl-yv12-overlay
-   #:sdl-iyuv-overlay
-   #:sdl-yuy2-overlay
-   #:sdl-uyvy-overlay
-   #:sdl-yvyu-overlay
-
-   #:Num-Joysticks
-   #:SDL-Joystick-Name
-
-   #:SDL-WM-GRAB-INPUT
-   
    ;; fps.lisp
    #:frame-rate
    #:average-fps
@@ -562,6 +541,55 @@
    #:is-font-face-fixed-width
    #:get-font-face-family-name
    #:get-font-face-style-name
+
+      ;; Imports from lispbuilder-sdl-cffi
+   #:sdl-get-ticks
+   #:sdl-opengl
+   #:sdl-init-everything
+   #:sdl-init-video
+   #:sdl-init-cdrom
+   #:sdl-init-audio 
+   #:sdl-init-timer
+   #:sdl-init-joystick
+   #:sdl-init-eventthread
+   #:sdl-init-noparachute
+   
+   #:sdl-sw-surface
+   #:sdl-hw-surface
+   #:sdl-async-blit
+   #:sdl-any-format
+   #:sdl-hw-palette
+   #:sdl-doublebuf
+   #:sdl-fullscreen
+   #:sdl-opengl
+   #:sdl-opengl-blit
+   #:sdl-resizable
+   #:sdl-no-frame
+
+   #:sdl-hw-accel
+   #:sdl-src-color-key
+   #:sdl-rle-accel-ok
+   #:sdl-rle-accel
+   #:sdl-src-alpha
+   #:sdl-pre-alloc
+   #:sdl-yv12-overlay
+   #:sdl-iyuv-overlay
+   #:sdl-yuy2-overlay
+   #:sdl-uyvy-overlay
+   #:sdl-yvyu-overlay
+
+   #:Num-Joysticks
+   #:SDL-Joystick-Name
+
+   #:SDL-WM-GRAB-INPUT
+
+   #:SDL-BUTTON-LEFT
+   #:SDL-BUTTON-MIDDLE
+   #:SDL-BUTTON-RIGHT
+   #:SDL-BUTTON-WHEEL-UP
+   #:SDL-BUTTON-WHEEL-DOWN
+   #:SDL-BUTTON-X1
+   #:SDL-BUTTON-X2
 
    ;; Imports from lispbuilder-sdl-base  
    #:*default-fpsmanager*

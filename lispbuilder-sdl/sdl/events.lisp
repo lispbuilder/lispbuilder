@@ -28,6 +28,21 @@
 
 (cffi:defcallback event-filter
     :int ((sdl-event sdl-cffi::sdl-event))
+  (cond
+   ((event= sdl-event :sdl-key-down-event)
+    (handle-key-down (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
+                                                                         'sdl-cffi::sdl-keyboard-event
+                                                                         'sdl-cffi::keysym)
+                                              'sdl-cffi::sdl-key-sym 'sdl-cffi::sym)))
+   ((event= sdl-event :sdl-key-up-event)
+    (handle-key-up (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
+                                                                       'sdl-cffi::sdl-keyboard-event
+                                                                       'sdl-cffi::keysym)
+                                            'sdl-cffi::sdl-key-sym 'sdl-cffi::sym)))
+   ((event= sdl-event :sdl-mouse-button-down-event)
+    (handle-mouse-down (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button)))
+   ((event= sdl-event :sdl-mouse-button-up-event)
+    (handle-mouse-up (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button))))
   (when *event-filter-hook*
     (if (funcall *event-filter-hook* sdl-event)
       1
@@ -300,7 +315,7 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
       (push (list (first keyword) (second keyword)) keyword-list))
     (setf keywords (mapcar #'(lambda (key)
 			       (case (first key) 
-				 (:button
+                                 (:button
 				  `(,(intern (format nil "~A" (second key)) :keyword)
                                     (cffi:foreign-slot-value ,sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button)))
 				 (:state
@@ -1011,6 +1026,7 @@ The contents of the event are completely up to the programmer.
                                       events))))
              (unless ,quit
                #+lispbuilder-sdl-audio(process-audio)
+               (sdl:update-input-util (sdl:frame-time))
                (sdl-base::process-timestep sdl-base::*default-fpsmanager*
                                            ,idle-func)))
        (cffi:foreign-free ,sdl-event))))
