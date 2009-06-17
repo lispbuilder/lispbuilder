@@ -1,18 +1,20 @@
 ;;;; Simple OpenGL example
-;;;; Shows usage of opengl from lispbuilder
+;;;; Shows usage of cl-opengl from lispbuilder
 
 ; You need to asdf install cl-opengl and load up these systems
 ; for this example
 
 ;(asdf:oos 'asdf:load-op 'cl-opengl)
 ;(asdf:oos 'asdf:load-op 'cl-glu)
-;(asdf:oos 'asdf:load-op 'cl-glut)
+;(asdf:oos 'asdf:load-op 'cl-glut) ; not needed 
 
 ;; Application specific parameters
 (defparameter *screen-width* 400)
 (defparameter *screen-height* 400)
 
 ; Many thanks, Chris Double for macros
+; Justinhj NOTE these are not used here but they're handy
+; and a useful pattern 
 (defmacro with-glBegin (type &body body)
   `(progn
     (gl::begin ,type)
@@ -79,6 +81,6 @@
 			   (sdl:push-quit-event)))
       (:idle ()         
 	     (draw)
-	     (sdl-cffi::sdl-gl-swap-buffers)))))
+	     (sdl:update-display)))))
 
 
