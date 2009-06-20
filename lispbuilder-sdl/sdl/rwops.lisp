@@ -1,10 +1,28 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defclass rwops (foreign-object) ()
+(defclass rwops () ())
+
+(defclass rwops-file (rwops foreign-object) ()
   (:default-initargs
    :gc t
-    :free #'sdl-cffi::SDL-Free-RW)
+   :free #'(lambda (fp)
+             (when (is-valid-ptr fp)
+               (cffi:foreign-funcall-pointer (cffi:foreign-slot-value fp 'sdl-cffi::sdl-rwops 'sdl-cffi::close)
+                                             ()
+                                             :pointer fp :int))))
+  (:documentation "A wrapper around a foreign SDL_RWops object.
+Free using [FREE](#free)."))
+
+(defclass rwops-mem (rwops foreign-object) ()
+  (:default-initargs
+   :gc t
+   :free ;;#'sdl-cffi::SDL-Free-RW)
+   #'(lambda (fp)
+             (when (is-valid-ptr fp)
+               (cffi:foreign-funcall-pointer (cffi:foreign-slot-value fp 'sdl-cffi::sdl-rwops 'sdl-cffi::close)
+                                             ()
+                                             :pointer fp :int))))
   (:documentation "A wrapper around a foreign SDL_RWops object.
 Free using [FREE](#free)."))
 
@@ -12,13 +30,13 @@ Free using [FREE](#free)."))
   "Creates and returns a new `RWOPS` object from the file at location `FILENAME`."
   (let ((rwops (sdl-base::create-RWops-from-file (namestring filename))))
     (if (sdl-base::is-valid-ptr rwops)
-	(make-instance 'rwops :fp rwops)
-	nil)))
+      (make-instance 'rwops-file :fp rwops)
+      nil)))
 
 (defun create-RWops-from-byte-array (array)
   "Creates and returns a new `RWOPS` object from the Lisp array `ARRAY`."
   (let* ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array))
-	 (rwops (make-instance 'rwops :fp (sdl-cffi::sdl-rw-from-mem mem-array (length array)))))
+	 (rwops (make-instance 'rwops-mem :fp (sdl-cffi::sdl-rw-from-mem mem-array (length array)))))
     rwops))
 
 (defun file-to-byte-sequence (filepath)
