@@ -20,22 +20,24 @@
   (make-instance 'clrball-window)
   ;; Create a new scene.
   ;; A scene contains a camera.
-  (make-instance 'clrball-scene
-                 :window (rm::default-window)
-                 ;; The transparent and opaque spheres are attached to the
-                 ;; scene below the scene node.
-                 :children (list
-                            (rm::new-sphere :opacity :transparent
-                                            :name "transparent"
-                                            :radius 3.0
-                                            :diffuse-color (rm:color 0.1 0.1 1.0 0.75)
-                                            :ambient-color (rm::color 1.0 1.0 1.0 0.5)
-                                            :specular-color (rm::color 0.1 0.1 1.0 1.0)
-                                            :specular-exponent 20.0)
-                            (rm::new-sphere :opacity :opaque
-                                            :name "opaque" 
-                                            :background-color (rm::color 0.0 0.0 0.0 0.0)
-                                            :rgb/a (rm::color 1.0 0.0 0.0 1.0))))
+  (make-instance 
+   'clrball-scene
+   :window (rm::default-window)
+   ;; The transparent and opaque spheres are attached to the
+   ;; scene below the scene node.
+   :children (list (rm::new-sphere
+                    :opacity :transparent
+                    :name "transparent"
+                    :radius 3.0
+                    :diffuse-color (rm:color 0.1 0.1 1.0 0.75)
+                    :ambient-color (rm::color 1.0 1.0 1.0 0.5)
+                    :specular-color (rm::color 0.1 0.1 1.0 1.0)
+                    :specular-exponent 20.0)
+                   (rm::new-sphere
+                    :opacity :opaque
+                    :name "opaque" 
+                    :background-color (rm::color 0.0 0.0 0.0 0.0)
+                    :rgb/a (rm::color 1.0 0.0 0.0 1.0))))
   ;; Set the frame rate to 60fps.
   (setf (sdl:frame-rate) 60)
   ;; Start the event loop.

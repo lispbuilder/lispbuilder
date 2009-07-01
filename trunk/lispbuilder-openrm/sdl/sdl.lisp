@@ -210,40 +210,38 @@
       nil)))
 
 (defun expand-activeevent (sdl-event window)
-  (handle-on-active
-   ;; window
-   window
-   ;; gain
-   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::gain)
-   ;; state
-   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::state)))
+  (handle-on-active ;; window
+                    window
+                    ;; gain
+                    (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::gain)
+                    ;; state
+                    (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::state)))
 
 (defun expand-keydown (sdl-event window)
-  (handle-on-key-down
-   ;; window
-   window
-   ;; state
-   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Keyboard-Event 'sdl-cffi::state)
-   ;; scancode
-   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-						       'sdl-cffi::sdl-keyboard-event
-						       'sdl-cffi::keysym)
-			    'sdl-cffi::sdl-key-sym 'sdl-cffi::scancode)
-   ;; key
-   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-						       'sdl-cffi::sdl-keyboard-event
-						       'sdl-cffi::keysym)
-			    'sdl-cffi::sdl-key-sym 'sdl-cffi::sym)
-   ;; mod
-   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-						       'sdl-cffi::sdl-keyboard-event
-						       'sdl-cffi::keysym)
-			    'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)
-   ;; unicode
-   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-						       'sdl-cffi::sdl-keyboard-event
-						       'sdl-cffi::keysym)
-			    'sdl-cffi::sdl-key-sym 'sdl-cffi::unicode)))
+  (handle-on-key-down ;; window
+                      window
+                      ;; state
+                      (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Keyboard-Event 'sdl-cffi::state)
+                      ;; scancode
+                      (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
+                                                                          'sdl-cffi::sdl-keyboard-event
+                                                                          'sdl-cffi::keysym)
+                                               'sdl-cffi::sdl-key-sym 'sdl-cffi::scancode)
+                      ;; key
+                      (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
+                                                                          'sdl-cffi::sdl-keyboard-event
+                                                                          'sdl-cffi::keysym)
+                                               'sdl-cffi::sdl-key-sym 'sdl-cffi::sym)
+                      ;; mod
+                      (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
+                                                                          'sdl-cffi::sdl-keyboard-event
+                                                                          'sdl-cffi::keysym)
+                                               'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)
+                      ;; unicode
+                      (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
+                                                                          'sdl-cffi::sdl-keyboard-event
+                                                                          'sdl-cffi::keysym)
+                                               'sdl-cffi::sdl-key-sym 'sdl-cffi::unicode)))
 
 (defun expand-keyup (sdl-event window)
   (handle-on-key-up

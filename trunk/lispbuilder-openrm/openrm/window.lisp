@@ -40,13 +40,14 @@
   (add-window self)
 
   (setf (pipe self) pipe)
-  (if (pipe self)
-    (setf (dimensions (pipe self))
-          (vector (slot-value self 'width) (slot-value self 'height)))
-    (setf (pipe self)
-          (make-instance 'sdl-pipe
-                         :dimensions (vector (slot-value self 'width)
-                                             (slot-value self 'height)))))
+  (unless (pipe self)
+    (error "ERROR: initialize-instance :around GENERIC-WINDOW: :PIPE must be specified."))
+  (setf (dimensions (pipe self))
+        (vector (slot-value self 'width) (slot-value self 'height)))
+    ;;(setf (pipe self)
+    ;;      (make-instance 'sdl-pipe
+    ;;                     :dimensions (vector (slot-value self 'width)
+    ;;                                         (slot-value self 'height))))
   (when create-context
     (rm-cffi::rmw-pipe-create-context (fp (pipe self))))
 

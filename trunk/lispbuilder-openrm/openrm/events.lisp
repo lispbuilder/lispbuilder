@@ -24,6 +24,8 @@
   (loop for event in events do
        (enable-event self event)))
 
+(defclass event-loop (event-handler)())
+
 (defun has-event-handler? (obj ev)
   (cdr (assoc ev (slot-value obj 'event-handlers))))
 
