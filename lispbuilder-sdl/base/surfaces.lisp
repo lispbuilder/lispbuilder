@@ -49,11 +49,10 @@
        (with-surface (,var ,surface ,nil)
 	 (unwind-protect 
 	      (progn (when (must-lock? ,var)
-		       (when (/= (the fixnum (sdl-cffi::sdl-Lock-Surface ,var)) 0)
+		       (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
 			 (error "Cannot lock surface")))
 		     (setf ,body-value (progn ,@body))
-		     (when (must-lock? ,var)
-		       (Sdl-Cffi::Sdl-Unlock-Surface ,var))))
+                     (Sdl-Cffi::Sdl-Unlock-Surface ,var)))
 	 ,body-value))))
 
 (defmacro with-locked-surfaces (bindings &rest body)

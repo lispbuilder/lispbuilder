@@ -297,10 +297,12 @@ lot of consing because it uses PUSH/POP as the stack.  This function is fast.
 (defun ff-push(x y)
   (declare (type fixnum x y)
            (optimize (speed 3)(safety 0)))
-  (when (< (1- *ff-stack-pointer*))
-    (incf *ff-stack-pointer*)
-    (setf (svref *ff-stack* *ff-stack-pointer*)
-          (the fixnum (+ (the fixnum (* x *ff-max-height*)) y)))))
+  (if (< (1- *ff-stack-pointer*))
+      (progn
+	(incf *ff-stack-pointer*)
+	(setf (svref *ff-stack* *ff-stack-pointer*)
+	      (the fixnum (+ (the fixnum (* x *ff-max-height*)) y))))
+      nil))
 
 (defun ff-pop()
   (declare (optimize (speed 3)(safety 0)))
