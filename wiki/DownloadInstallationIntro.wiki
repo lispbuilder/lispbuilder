@@ -9,7 +9,7 @@
 || Allegro || Yes || ?? || ?? || ?? || ||
 || CMUCL || NA || Yes || ?? || ?? || ||
 || CLISP || Yes || Yes || Yes || Yes || ||
-|| Clozure CL || Yes || ?? || ?? || ?? || ||
+|| Clozure CL || Yes || Yes || ?? || ?? || ||
 || ECL || No || Yes || ?? || ?? || Latest ECL for Win32 breaks when loading ALEXANDRIA.||
 
 = Download & Installation for Windows =
