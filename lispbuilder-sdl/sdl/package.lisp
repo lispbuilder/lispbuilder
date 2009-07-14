@@ -447,6 +447,10 @@
    
    ;; pixel.lisp
    #:bit-depth
+   #:r-mask
+   #:g-mask
+   #:b-mask
+   #:a-mask
 
    ;; audio.lisp
    #:audio-spec

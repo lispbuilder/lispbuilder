@@ -16,3 +16,35 @@
 		       (sdl-base:pixel-format (fp surface))
 		       sdl-cffi::SDL-Pixel-Format)
     sdl-cffi::BitsPerPixel))
+
+(defun r-mask (&optional (surface *default-surface*))
+  "Returns the red mask of `SURFACE`."
+  (check-type surface sdl-surface)
+  (with-foreign-slots ((sdl-cffi::rmask)
+                       (sdl-base:pixel-format (fp surface))
+		       sdl-cffi::SDL-Pixel-Format)
+    sdl-cffi::rmask))
+
+(defun g-mask (&optional (surface *default-surface*))
+  "Returns the green mask of `SURFACE`."
+  (check-type surface sdl-surface)
+  (with-foreign-slots ((sdl-cffi::gmask)
+                       (sdl-base:pixel-format (fp surface))
+		       sdl-cffi::SDL-Pixel-Format)
+    sdl-cffi::gmask))
+
+(defun b-mask (&optional (surface *default-surface*))
+  "Returns the blue mask of `SURFACE`."
+  (check-type surface sdl-surface)
+  (with-foreign-slots ((sdl-cffi::bmask)
+                       (sdl-base:pixel-format (fp surface))
+		       sdl-cffi::SDL-Pixel-Format)
+    sdl-cffi::bmask))
+
+(defun a-mask (&optional (surface *default-surface*))
+  "Returns the alpha mask of `SURFAaCE`."
+  (check-type surface sdl-surface)
+  (with-foreign-slots ((sdl-cffi::amask)
+                       (sdl-base:pixel-format (fp surface))
+		       sdl-cffi::SDL-Pixel-Format)
+    sdl-cffi::amask))
