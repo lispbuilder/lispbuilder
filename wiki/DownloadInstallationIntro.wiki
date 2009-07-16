@@ -6,7 +6,7 @@
 || *Lisp Implementation* || *Win32* || *Linux* || *OS X* || *BSD* || *Comments* ||
 || SBCL || Yes || Yes || Yes || Yes || Win32 version is single threaded.||
 || Lispworks || Yes || Yes || Yes || ?? || ||
-|| Allegro || Yes || ?? || ?? || ?? || ||
+|| Allegro || Yes || Yes || ?? || ?? || ||
 || CMUCL || NA || Yes || ?? || ?? || ||
 || CLISP || Yes || Yes || Yes || Yes || ||
 || Clozure CL || Yes || Yes || ?? || ?? || ||
