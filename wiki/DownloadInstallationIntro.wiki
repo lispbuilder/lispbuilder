@@ -10,7 +10,7 @@
 || CMUCL || NA || Yes || ?? || ?? || ||
 || CLISP || Yes || Yes || Yes || Yes || ||
 || Clozure CL || Yes || Yes || No || ?? || CCL on OS X has some sort of a [http://thread.gmane.org/gmane.lisp.cl-lispbuilder.general/1471 surface locking error]. ||
-|| ECL || No || Yes || No || ?? || ECL doesn't compile on MinGW after 9.4; status on Visual Studio is unknown. ECL on OS X breaks in cocoahelper. ||
+|| ECL || No || Yes || No || ?? || ECL doesn't compile on [http://article.gmane.org/gmane.lisp.ecl.general/5384/ MinGW after version 9.4]; [http://article.gmane.org/gmane.lisp.ecl.general/5410/ Visual Studio compiles] but is otherwise unknown. ECL on OS X breaks in cocoahelper. ||
 
 = Download & Installation for Windows =
 
