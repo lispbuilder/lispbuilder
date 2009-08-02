@@ -120,7 +120,7 @@
 
   ;; Configure Lispworks to allow
   ;; callbacks from unknown foreign threads
-  #+(and lispworks (not lispworks5.1))(system:setup-for-alien-threads)
+  #+(and lispworks (not lispworks5.1) (not lispworks4.3))(system:setup-for-alien-threads)
  
   (setf *mixer* (make-instance 'mixer
                                :audio-volume volume
