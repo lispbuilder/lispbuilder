@@ -944,89 +944,89 @@ The contents of the event are completely up to the programmer.
 					    events))))
        
        (loop until ,quit do
-             (loop until ,(case type
-                            (:poll `(= 0 (sdl-cffi::SDL-Poll-Event ,sdl-event)))
-                            (:wait `(or ,quit (= 0 (sdl-cffi::SDL-Wait-Event ,sdl-event))))
-                            (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type))) do
-                   (cond
-                    ,@(remove nil 
-                              (mapcar #'(lambda (event)
-                                          (case (first event)
-                                            (:active-event
-                                             (expand-activeevent sdl-event 
-                                                                 (first (rest event)) 
-                                                                 (rest (rest event))))
-                                            (:key-down-event
-                                             (expand-keydown sdl-event 
-                                                             (first (rest event)) 
-                                                             (rest (rest event))))
-                                            (:key-up-event
-                                             (expand-keyup sdl-event 
-                                                           (first (rest event)) 
-                                                           (rest (rest event))))
-                                            (:mouse-motion-event
-                                             (expand-mousemotion sdl-event 
-                                                                 (first (rest event)) 
-                                                                 (rest (rest event))))
-                                            (:mouse-button-down-event
-                                             (expand-mousebuttondown sdl-event
-                                                                     (first (rest event)) 
-                                                                     (rest (rest event))))
-                                            (:mouse-button-up-event
-                                             (expand-mousebuttonup sdl-event 
-                                                                   (first (rest event)) 
-                                                                   (rest (rest event))))
-                                            (:joy-axis-motion-event
-                                             (expand-joyaxismotion sdl-event 
-                                                                   (first (rest event)) 
-                                                                   (rest (rest event))))
-                                            (:joy-button-down-event
-                                             (expand-joybuttondown sdl-event 
-                                                                   (first (rest event)) 
-                                                                   (rest (rest event))))
-                                            (:joy-button-up-event
-                                             (expand-joybuttonup sdl-event 
-                                                                 (first (rest event)) 
-                                                                 (rest (rest event))))
-                                            (:joy-hat-motion-event
-                                             (expand-joyhatmotion sdl-event 
-                                                                  (first (rest event)) 
-                                                                  (rest (rest event))))
-                                            (:joy-ball-motion-event
-                                             (expand-joyballmotion sdl-event 
-                                                                   (first (rest event)) 
-                                                                   (rest (rest event))))
-                                            (:video-resize-event
-                                             (expand-videoresize sdl-event 
-                                                                 (first (rest event)) 
-                                                                 (rest (rest event))))
-                                            (:video-expose-event
-                                             (expand-videoexpose sdl-event 
-                                                                 (rest (rest event))))
-                                            (:sys-wm-event
-                                             (expand-syswmevent sdl-event 
-                                                                (rest (rest event))))
-                                            (:quit-event
-                                             (expand-quit sdl-event 
-                                                          (rest (rest event))
-                                                          quit))
-                                            (:user-event
-                                             (expand-userevent sdl-event 
-                                                               (first (rest event)) 
-                                                               (rest (rest event))))
-                                            (:idle
-                                             (if (eql type :wait)
-                                               (error "WITH-EVENTS; :IDLE is ignored when TYPE is :WAIT.")))
-                                            (otherwise
-                                             (error
-                                              "WITH-EVENTS: EVENTS ~A, must be one or more of; 
+	    (loop until ,(case type
+			       (:poll `(= 0 (sdl-cffi::SDL-Poll-Event ,sdl-event)))
+			       (:wait `(or ,quit (= 0 (sdl-cffi::SDL-Wait-Event ,sdl-event))))
+			       (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type))) do
+		 (cond
+		   ,@(remove nil 
+			     (mapcar #'(lambda (event)
+					 (case (first event)
+					   (:active-event
+					    (expand-activeevent sdl-event 
+								(first (rest event)) 
+								(rest (rest event))))
+					   (:key-down-event
+					    (expand-keydown sdl-event 
+							    (first (rest event)) 
+							    (rest (rest event))))
+					   (:key-up-event
+					    (expand-keyup sdl-event 
+							  (first (rest event)) 
+							  (rest (rest event))))
+					   (:mouse-motion-event
+					    (expand-mousemotion sdl-event 
+								(first (rest event)) 
+								(rest (rest event))))
+					   (:mouse-button-down-event
+					    (expand-mousebuttondown sdl-event
+								    (first (rest event)) 
+								    (rest (rest event))))
+					   (:mouse-button-up-event
+					    (expand-mousebuttonup sdl-event 
+								  (first (rest event)) 
+								  (rest (rest event))))
+					   (:joy-axis-motion-event
+					    (expand-joyaxismotion sdl-event 
+								  (first (rest event)) 
+								  (rest (rest event))))
+					   (:joy-button-down-event
+					    (expand-joybuttondown sdl-event 
+								  (first (rest event)) 
+								  (rest (rest event))))
+					   (:joy-button-up-event
+					    (expand-joybuttonup sdl-event 
+								(first (rest event)) 
+								(rest (rest event))))
+					   (:joy-hat-motion-event
+					    (expand-joyhatmotion sdl-event 
+								 (first (rest event)) 
+								 (rest (rest event))))
+					   (:joy-ball-motion-event
+					    (expand-joyballmotion sdl-event 
+								  (first (rest event)) 
+								  (rest (rest event))))
+					   (:video-resize-event
+					    (expand-videoresize sdl-event 
+								(first (rest event)) 
+								(rest (rest event))))
+					   (:video-expose-event
+					    (expand-videoexpose sdl-event 
+								(rest (rest event))))
+					   (:sys-wm-event
+					    (expand-syswmevent sdl-event 
+							       (rest (rest event))))
+					   (:quit-event
+					    (expand-quit sdl-event 
+							 (rest (rest event))
+							 quit))
+					   (:user-event
+					    (expand-userevent sdl-event 
+							      (first (rest event)) 
+							      (rest (rest event))))
+					   (:idle
+					    (if (eql type :wait)
+						(error "WITH-EVENTS; :IDLE is ignored when TYPE is :WAIT.")))
+					   (otherwise
+					    (error
+					     "WITH-EVENTS: EVENTS ~A, must be one or more of; 
 :ACTIVE-EVENT, :KEY-DOWN-EVENT, :KEY-UP-EVENT, :MOUSE-MOTION-EVENT, :MOUSE-BUTTON-DOWN-EVENT, :MOUSE-BUTTON-UP-EVENT,
 :JOY-AXIS-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :JOY-HAT-MOTION-EVENT, :JOY-BALL-MOTION-EVENT, 
 :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :SYS-WM-EVENT, :QUIT-EVENT, :USER-EVENT or :IDLE." (first event)))))
-                                      events))))
-             (unless ,quit
-               #+lispbuilder-sdl-audio(process-audio)
-               (sdl:update-input-util (sdl:frame-time))
-               (sdl-base::process-timestep sdl-base::*default-fpsmanager*
-                                           ,idle-func)))
-       (cffi:foreign-free ,sdl-event))))
+				     events))))
+		   (unless ,quit
+		     #+lispbuilder-sdl-audio(process-audio)
+		     (sdl:update-input-util (sdl:frame-time))
+		     (sdl-base::process-timestep sdl-base::*default-fpsmanager*
+						 ,idle-func)))
+	    (cffi:foreign-free ,sdl-event))))

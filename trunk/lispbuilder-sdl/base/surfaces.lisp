@@ -44,16 +44,14 @@
 
 (defmacro with-locked-surface ((var &optional surface)
 				&body body)
-  (let ((body-value (gensym "body-value-")))
-    `(let ((,body-value nil))
-       (with-surface (,var ,surface ,nil)
-	 (unwind-protect 
-	      (progn (when (must-lock? ,var)
-		       (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
-			 (error "Cannot lock surface")))
-		     (setf ,body-value (progn ,@body))
-                     (Sdl-Cffi::Sdl-Unlock-Surface ,var)))
-	 ,body-value))))
+  `(with-surface (,var ,surface ,nil)
+     (unwind-protect 
+         (progn (when (must-lock? ,var)
+                  (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
+                    (error "Cannot lock surface")))
+           ,@body)
+       (when (must-lock? ,var)
+         (Sdl-Cffi::Sdl-Unlock-Surface ,var)))))
 
 (defmacro with-locked-surfaces (bindings &rest body)
   (if bindings
@@ -239,17 +237,17 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
       (:sw (push sdl-cffi::SDL-SW-SURFACE flags))
       (:hw (push sdl-cffi::SDL-HW-SURFACE flags)))
     (if (is-valid-ptr surface)
-	(with-foreign-slots ((sdl-cffi::BitsPerPixel
-			      sdl-cffi::Rmask
-			      sdl-cffi::Gmask
-			      sdl-cffi::Bmask
-			      sdl-cffi::Amask)
-			     (pixel-format surface)
-			     sdl-cffi::SDL-Pixel-Format)
-	  (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
-						       width height
-						       sdl-cffi::BitsPerPixel
-						       sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
+      (with-foreign-slots ((sdl-cffi::BitsPerPixel
+                            sdl-cffi::Rmask
+                            sdl-cffi::Gmask
+                            sdl-cffi::Bmask
+                            sdl-cffi::Amask)
+                           (pixel-format surface)
+                           sdl-cffi::SDL-Pixel-Format)
+        (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
+                                                     width height
+                                                     sdl-cffi::BitsPerPixel
+                                                     sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
 	(let ((Rmask 0) (Gmask 0) (Bmask 0) (Amask 0))
           ;; Set masks according to endianess of machine
 	  ;; Little-endian (X86)
@@ -277,6 +275,7 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
     surf))
 
 ;; cl-sdl "sdl-ext.lisp"
+;; #define SDL_MUSTLOCK(surface) (surface->offset ||    ((surface->flags & (SDL_HWSURFACE|SDL_ASYNCBLIT|SDL_RLEACCEL)) != 0))
 (defun must-lock? (surface)
   "Checks if a surface can be locked.
    Re-implementation of the SDL_MUSTLOCK macro.

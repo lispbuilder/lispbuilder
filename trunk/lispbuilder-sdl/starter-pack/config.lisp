@@ -2,13 +2,13 @@
        "http://common-lisp.net/project/babel/releases/babel_0.3.0.tar.gz")
 
 (:alexandria "ALEXANDRIA."
-       "http://www.balooga.com/lispbuilder/alexandria.tar.gz")
+       "http://common-lisp.net/~loliveira/tarballs/inofficial/alexandria-2008-07-29.tar.gz")
 
 (:trivial-features "TRIVIAL-FEATURES."
        "http://common-lisp.net/~loliveira/tarballs/trivial-features/trivial-features_latest.tar.gz")
 
 (:cffi "CFFI."
-       "http://common-lisp.net/project/cffi/releases/cffi_0.10.4.tar.gz"
+       "http://common-lisp.net/project/cffi/releases/cffi_0.10.5.tar.gz"
        :babel
        :trivial-features
        :alexandria)
