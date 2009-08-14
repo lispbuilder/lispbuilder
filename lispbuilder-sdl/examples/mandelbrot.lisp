@@ -32,8 +32,8 @@
 		  (loop with a = (complex (float (+ (* (/ (- x1 x0) width) x) x0))
 					  (float (+ (* (/ (- y1 y0) height) y) y0)))
 		     for z = a then (+ (* z z) a)
-		     while (< (abs z) 2)
 		     for c from 60 above 0
+		     while (< (abs z) 2)
 		     finally (sdl-base::write-pixel pix x y
 						    (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format surface-fp)
 									   (mod (* 13 (the fixnum c)) 256)
