@@ -84,9 +84,9 @@ The display is updated when `UPDATE` is `T`."
     (sdl-cffi::sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
     (sdl-cffi::SDL-Get-WM-Info wm-info)
     ;; For Windows
-    #+win32(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
+    #+windows(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
     ;; For X
-    #-win32(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
+    #-windows(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
                                                                                             'sdl-cffi::SDL-Sys-WM-info
                                                                                             'sdl-cffi::info)
                                                                  'sdl-cffi::SDL-Sys-WM-info-info
@@ -155,21 +155,25 @@ return `INFO` as `T` or `NIL` if supported by the surface.
 (defun video-memory ()
   "Returns the amount of video memory of the graphics hardware. Must be called after SDL is initialized 
 using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)."
-  (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::video-mem))
+  (let ((video-info (sdl-cffi::SDL-Get-Video-Info)))
+    (unless (cffi:null-pointer-p video-info)
+      (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::video-mem))))
 
 (defun video-dimensions ()
   "Returns the best video dimensions if called before a window is created, using [WINDOW](#window). 
 Returns the current video dimensions if called after a window is created.
 Must be called after SDL is initialized using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)"
-  (vector (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::current-w)
-	  (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::current-h)))
+  (let ((video-info (sdl-cffi::SDL-Get-Video-Info)))
+    (unless (cffi:null-pointer-p video-info)
+      (vector (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::current-w)
+	  (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::current-h)))))
 
 (defun video-info (&optional (info nil))
   "Returns information about the video hardware. 
-`GET-VIDEO-INFO` must be called after SDL is initialised using [INIT-SDL](#init-sdl) or 
+`VIDEO-INFO` must be called after SDL is initialised using [INIT-SDL](#init-sdl) or 
 [WITH-INIT](#with-init).
-If `GET-VIDEO-INFO` is called before [WINDOW](#window), the information returned is of 
-the *best* video mode. If `GET-VIDEO-INFO` is called after [WINDOW](#window), the information 
+If `VIDEO-INFO` is called before [WINDOW](#window), the information returned is of 
+the *best* video mode. If `VIDEO-INFO` is called after [WINDOW](#window), the information 
 returned is of the *current* video mode. 
 
 ##### Parameters
@@ -181,9 +185,11 @@ video flags.
 ##### Example
 
     \(video-info :HW-AVAILABLE\)"
-  (if info
-      (find info (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags))
-      (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))
+  (let ((video-info (sdl-cffi::SDL-Get-Video-Info)))
+    (unless (cffi:null-pointer-p video-info)
+      (if info
+        (find info (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags))
+        (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))))
 
 (defun list-modes (flags &optional (surface nil))
   "Returns a LIST of vectors sorted largest to smallest that contains the width and height 
@@ -212,7 +218,8 @@ Returns `T` if any dimension will support the pixel format and video flags.
 
     \(LIST-MODES '\(SDL-HW-SURFACE SDL-FULLSCREEN\)\)"
   (declare (ignore surface))
-  (let ((modes nil)
+  (when (video-info)
+    (let ((modes nil)
         (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (sdl-base::set-flags flags))))
     (cond
       ((cffi:null-pointer-p listmodes)
@@ -225,7 +232,7 @@ Returns `T` if any dimension will support the pixel format and video flags.
 	 (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes 'sdl-cffi::sdl-rect i) :pointer)))
 	   (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w)
 				     (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
-			     modes))))))))
+			     modes)))))))))
 
 (defun query-cursor ()
   "Queries the current state of the cursor. 
