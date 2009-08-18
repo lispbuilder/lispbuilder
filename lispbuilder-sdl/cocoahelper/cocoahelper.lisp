@@ -13,8 +13,9 @@
 
 (define-foreign-library cocoahelper
   (:darwin (:or (:framework "cocoahelper")
-                "cocoahelper.dylib")))
+                (:default "cocoahelper.dylib"))))
 (use-foreign-library cocoahelper)
 
-(defcfun "cocoahelper_init" :void)
-(cocoahelper-init)
+
+#+darwin(defcfun "cocoahelper_init" :void)
+#+darwin(cocoahelper-init)
