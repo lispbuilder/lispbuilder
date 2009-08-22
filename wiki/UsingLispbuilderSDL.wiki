@@ -15,13 +15,13 @@ Or if you are using SLIME, enter `,` then `l` then `LISPBUILDER-SDL`
 
 = Initializing LISPBUILDER-SDL =
 
-lispbuilder-sdl must be initialized prior to use by calling [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl INIT-SDL], 
+lispbuilder-sdl must be initialized prior to use by calling [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl init-sdl], 
 
 {{{
 (SDL:INIT-SDL)
 }}}
 
-or, the using the macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT].
+or, the using the macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init with-init].
 
 {{{
 (SDL:WITH-INIT()
@@ -36,7 +36,7 @@ Audio, video, joystick, cdrom, and timers are separate subsystems and each must 
 (SDL:INIT-SDL '(SDL-INIT-VIDEO SDL-INIT-AUDIO)
 }}}
 
-or, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#WITH-INIT with-init].
+or, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init with-init].
 
 {{{
 (SDL:WITH-INIT (SDL-INIT-VIDEO SDL-INIT-AUDIO)
