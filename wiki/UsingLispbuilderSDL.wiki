@@ -15,7 +15,7 @@ Or if you are using SLIME, enter `,` then `l` then `LISPBUILDER-SDL`
 
 = Initializing LISPBUILDER-SDL =
 
-lispbuilder-sdl must be initialized prior to use by calling [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl INTI-SDL], 
+lispbuilder-sdl must be initialized prior to use by calling [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl INIT-SDL], 
 
 {{{
 (SDL:INIT-SDL)
