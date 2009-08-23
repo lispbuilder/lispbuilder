@@ -126,9 +126,9 @@ Note: A BPP of 24 uses the packed representation of 3 bytes/pixel. For the more 
 
 == Using System or Video Memory ==
 
-A display surface in system memory (software surface) improves the performance of pixel level access but is incompatible with some types of hardware blitting.
+A surface in system memory (software surface) improves the performance of pixel level access but is incompatible with some types of hardware blitting.
 
-A display surface in video memory (hardware surface) takes advantage of Video->Video blits which are often hardware accelerated.
+A surface in video memory (hardware surface) takes advantage of Video->Video blits which are often hardware accelerated.
 
 A hardware surface (`SDL-HW-SURFACE`) must be locked prior to performing per-pixel manipulations. When locked the surface is copied from video memory to system memory and copied back when unlocked. This can cause a *major* performance hit.
 
