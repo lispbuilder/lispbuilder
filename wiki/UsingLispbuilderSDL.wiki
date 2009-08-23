@@ -75,7 +75,7 @@ Graphics are rendered to a video surface. lispbuilder-sdl allows the video surfa
   * Exclusive palette access, 
   * Single or Double buffering,
   * Allow OpenGL rendering,
-  * Resizable,
+  * Window border,
   * Having a title bar or having no window frame.
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
@@ -89,14 +89,15 @@ resize-window width height &key bpp flags title-caption icon-caption => result
 }}}
 
 *Parameters*
-`WIDTH` and `HEIGHT` are the pixel width and height of the video surface. If WIDTH and HEIGHT are both 0, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). 
-`BPP` is the the number of bits per pixel. Defaults to 0 which is the current display bits per pixel. Note: A BPP of 24 uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, specify a BPP of 32.
-`FLAGS` is one or more of the following; 
-
+  * `WIDTH` and `HEIGHT` are the pixel width and height of the video surface. If WIDTH and HEIGHT are both 0, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). 
+  * `BPP` is the the number of bits per pixel. See the section Color Depth for more information.
+  * `TITLE-CAPTION` appears in the Window title bar. 
+  * `ICON-CAPTION` appears when the Window is minimized.
+  * `FLAGS` is one or more of the following; 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-sw-surface SDL-SW-SURFACE] to create the video surface in system memory,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-hw-surface SDL-HW-SURFACE] to create the video surface in video memory, 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-async-blit SDL-ASYNC-BLIT] update the video surface asynchronously to the main thread, 
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-any-format SDL-ANY-FORMAT] use the video surface, regardless of the current dispaly depth. Normally, if a video surface of the requested bits-per-pixel (`BPP`) is not available, one is emulated using shadow surface. Passing `SDL-ANY-FORMAT` prevents this and the video surface is used, regardless of its pixel depth.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-any-format SDL-ANY-FORMAT], see the Section Color Depth.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-hw-palette SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-doublebuf SDL-DOUBLEBUF] will enable hardware double buffering.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-fullscreen SDL-FULLSCREEN] will attempt to use fullscreen mode.
@@ -104,25 +105,83 @@ resize-window width height &key bpp flags title-caption icon-caption => result
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-resizable SDL-RESIZABLE] will create a resizable window, and 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-no-frame SDL-NO-FRAME] creates a window with no title bar or frame decoration. Fullscreen modes automatically have this flag set.
 
-`TITLE-CAPTION` is the title that appears in the Window title bar.
-`ICON-CAPTION` is the title that appears when the Window is minimized.
-
 == Fullscreen or Windowed ==
 
-lispbuilder-sdl will create a Windowed display by default, however this can be changed on startup or any time during program execution by using the `SDL-FULLSCREEN` flag.
+lispbuilder-sdl will create a Windowed display by default, however this can be changed on startup or any time during program execution by passing the `SDL-FULLSCREEN` flag to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW]. If a hardware resolution change is not possible the next higher resolution will be used and the display window centered on a black background.
 
+== Color depth ==
 
-Note: 
+`:BPP` defaults to 0 which is the bits per pixel of the current display.
 
+When `SDL-ANY-FORMAT` is used and the requested pixel depth is unavailable, a display surface having a bits-per-pixel that matches the current display is returned. Normally, if a video surface of the requested bits-per-pixel (`BPP`) is not available, one is emulated using shadow surface. Passing `SDL-ANY-FORMAT` prevents this and the video surface is used, regardless of its pixel depth
 
-A display may be full-screen or a window, use . lispbuilder-sdl must first create you must  first set up the mode video mode create a A window must be created to display any kind of output. A window of a specific pixel width and height is created using the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW]. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] takes additional keyword parameters to set the requested video mode, color bit depth, the window title and the icon title.
-	  
-More detailed information can be found in in the documentation for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW].
+Note: A BPP of 24 uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, use a BPP of 32. 
+
+== Using System or Video Memory ==
+
+A display surface in system memory (software surface) improves the performance of pixel level access but is incompatible with some types of hardware blitting.
+
+A display surface in video memory (hardware surface) takes advantage of Video->Video blits which are often hardware accelerated.
+
+A surface in video memory (`SDL-HW-SURFACE`) must be locked prior to performing per-pixel manipulations. When locked the surface is copied from video memory to system memory and copied back when unlocked. This can cause a *major* performance hit.
+
+Use hardware surfaces when per-pixel manipulations are not required, or when the graphics hardware supports blitting of surfaces having alpha channels.
+
+Use software surfaces (`SDL-SW-SURFACE`) to perform per-pixel manipulations, or blit surfaces having alpha channels at a high frame rate when not supported in hardware.
+
+Be aware that the system may return a software surface even when a hardware surface is be requested. Many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN`. `SDL-HW-SURFACE` is best used when the surfaces you'll be blitting can also be stored in video memory.
+
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO] to query the capabilities of the graphics hardware.
 
 {{{
-(WITH-INIT (SDL-INIT-VIDEO)
-  (WINDOW 320 240))
+video-info &optional info => result
 }}}
+
+`:INFO` can be one of:
+
+  * hw-available, Is it possible to create hardware surfaces?
+  * wm-available, Is there a window manager available?
+  * blit-hw, Are hardware to hardware blits accelerated?
+  * blit-hw-cc, Are hardware to hardware colorkey blits accelerated?
+  * blit-hw-a, Are hardware to hardware alpha blits accelerated?
+  * blit-sw, Are software to hardware blits accelerated?
+  * blit-sw-cc, Are software to hardware colorkey blits accelerated?
+  * blit-sw-a, Are software to hardware alpha blits accelerated?
+  * blit-fill, Are color fills accelerated?
+  * `NIL`, returns a list of all supported video flags
+
+{{{
+video-memory => result
+}}}
+
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] to query the amount of video memory availalble. Only makes sense if `hw-available`, otherwise returns `0`.
+
+{{{
+video-dimensions => result
+}}}
+
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height if called before a window is created. Or returns the current video dimensions if called after a window is created. 
+
+{{{
+list-modes flags &optional surface => result
+}}}
+
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a `LIST` of vectors sorted largest to smallest containing the width and height of the screen that will support the video `:FLAGS`.
+
+Use [tbd] and [tbd] to set the x and y positions of the window.
+
+== Synchronous or Asynchronous updates ==
+
+== Exclusive palette access ==
+
+== Single or Double buffering ==
+
+== OpenGL rendering ==
+
+== Window border ==
+  * Having a title bar or having no window frame.
+
+
 
 = Handling Events and the Game Loop =
 
