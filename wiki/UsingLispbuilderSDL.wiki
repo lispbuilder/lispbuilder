@@ -69,15 +69,14 @@ Initialization is somewhat complicated by the fact that a Common Lisp developmen
 An [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk. Graphics are rendered to a video surface. lispbuilder-sdl allows the video surface to be configured to support the capabilities of the underlying graphical hardware as well as the types of blitting to be performed as follows;
 
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed Full-screen or Windowed],
-  * Color depth (16, 24 or 32 bits per pixel), 
-  * Using System or Video Memory,
-  * Synchronous or Asynchronous updates,
-  * Exclusive palette access, 
-  * Single or Double buffering,
-  * Allow OpenGL rendering,
-  * Window border,
-  * Having a title bar or having no window frame,
-  * Window x and y position.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth Color depth] (16, 24 or 32 bits per pixel), 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory Using System or Video Memory],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Synchronous_or_Asynchronous_updates Synchronous or Asynchronous updates],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access Exclusive palette access], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering Single or Double buffering],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering Allow OpenGL rendering],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_title_and_border Window border],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position Window x and y position].
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
 
