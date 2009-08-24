@@ -68,50 +68,11 @@ Initialization is somewhat complicated by the fact that a Common Lisp developmen
 
 An [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk. Graphics are rendered to a video surface. 
 
-The video surface can be configured to support the capabilities of the underlying graphics hardware as follows;
-
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Creating_the_Display Creating the Display],
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed Full-screen or Windowed],
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth Color depth] (16, 24 or 32 bits per pixel), 
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory Using System or Video Memory],
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Synchronous_or_Asynchronous_updates Synchronous or Asynchronous updates],
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access Exclusive palette access], 
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering Single or Double buffering],
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering Allow OpenGL rendering],
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border Window Title and Border],
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position Window x and y position].
-
-== Creating the Display ==
-
-Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup.
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
 
 {{{
 window width height &key bpp flags title-caption icon-caption => result
 }}}
-
-Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
-
-{{{
-resize-window width height &key bpp flags title-caption icon-caption => result
-}}}
-
-*Parameters*
-
-  * `WIDTH` and `HEIGHT` are the pixel width and height of the video surface. If WIDTH and HEIGHT are both 0, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). 
-  * `BPP` is the the number of bits per pixel. See the section Color Depth for more information.
-  * `TITLE-CAPTION` appears in the Window title bar. 
-  * `ICON-CAPTION` appears when the Window is minimized.
-  * `FLAGS` is one or more of the following; 
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-sw-surface SDL-SW-SURFACE] to create the video surface in system memory,
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-hw-surface SDL-HW-SURFACE] to create the video surface in video memory, 
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-async-blit SDL-ASYNC-BLIT] update the video surface asynchronously to the main thread, 
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-any-format SDL-ANY-FORMAT], see the Section Color Depth.
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-hw-palette SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`.
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-doublebuf SDL-DOUBLEBUF] will enable hardware double buffering.
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-fullscreen SDL-FULLSCREEN] will attempt to use fullscreen mode.
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-opengl SDL-OPENGL] will create an OpenGL rendering context.
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-resizable SDL-RESIZABLE] will create a resizable window, and 
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-no-frame SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
 
 For example;
 
@@ -119,6 +80,32 @@ For example;
 (SDL:WINDOW 320 240 :TITLE-CAPTION "Random Rectangles" :ICON-CAPTION "Random Rectangles"  
                     :FLAGS '(SDL:SDL-DOUBLEBUF SDL:SDL-FULLSCREEN)) 
 }}}
+
+
+*Parameters*
+
+  * `WIDTH` and `HEIGHT` are the pixel width and height of the video surface. If WIDTH and HEIGHT are both 0, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). 
+  * `:BPP` is the the number of bits per pixel. See the section [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth Color depth] for more information.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border TITLE-CAPTION] appears in the Window title bar. 
+* [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border ICON-CAPTION] appears when the Window is minimized.
+  * `:FLAGS` is described in greater detail below; 
+
+The video surface can be configured to support the capabilities of the underlying graphics hardware by passing one or more of the following parameters to `:FLAGS`;
+
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed SDL-FULLSCREEN], use full-screen mode,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory SDL-SW-SURFACE], and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory SDL-HW-SURFACE], create the surface in System or Video Memory,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Synchronous_or_Asynchronous_updates SDL-ASYNC-BLIT] update the video surface asynchronously to the main thread, 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access SDL-ANY-FORMAT] see the Section Color Depth,
+  * http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering SDL-DOUBLEBUF] will enable hardware double buffering,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering SDL-OPENGL] will create an OpenGL rendering context,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-RESIZABLE] will create a resizable window, and 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
+
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position Window x and y position].
+
+== Creating the Display ==
+
 
 == Full-screen or Windowed ==
 
@@ -817,3 +804,15 @@ Tutorials for creating standalone executables using the various Common Lisp deve
 
  * [StandAloneExecutables Creating standalone executables]
  * [StandAloneCLISP CLISP executable]
+
+
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-fullscreen SDL-FULLSCREEN] use full-screen mode,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-sw-surface SDL-SW-SURFACE] create the video surface in system memory,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-hw-surface SDL-HW-SURFACE] attempts to create the video surface in video memory, 
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-async-blit SDL-ASYNC-BLIT] update the video surface asynchronously to the main thread, 
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-any-format SDL-ANY-FORMAT], see the Section Color Depth,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-hw-palette SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-doublebuf SDL-DOUBLEBUF] will enable hardware double buffering,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-opengl SDL-OPENGL] will create an OpenGL rendering context,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-resizable SDL-RESIZABLE] will create a resizable window, and 
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-no-frame SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
