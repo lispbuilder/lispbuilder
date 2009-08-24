@@ -66,9 +66,9 @@ Initialization is somewhat complicated by the fact that a Common Lisp developmen
 
 = The Display =
 
-Graphics are rendered to a video surface. lispbuilder-sdl allows the video surface to be configured to support the capabilities of the underlying graphical hardware as well as the types of blitting to be performed. The video surface may be configured as follows;
+An [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk. Graphics are rendered to a video surface. lispbuilder-sdl allows the video surface to be configured to support the capabilities of the underlying graphical hardware as well as the types of blitting to be performed as follows;
 
-  * Fullscreen or Windowed,
+  * Full-screen or Windowed,
   * Color depth (16, 24 or 32 bits per pixel), 
   * Using System or Video Memory,
   * Synchronous or Asynchronous updates,
@@ -76,7 +76,8 @@ Graphics are rendered to a video surface. lispbuilder-sdl allows the video surfa
   * Single or Double buffering,
   * Allow OpenGL rendering,
   * Window border,
-  * Having a title bar or having no window frame.
+  * Having a title bar or having no window frame,
+  * Window x and y position.
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
 
@@ -89,6 +90,7 @@ resize-window width height &key bpp flags title-caption icon-caption => result
 }}}
 
 *Parameters*
+
   * `WIDTH` and `HEIGHT` are the pixel width and height of the video surface. If WIDTH and HEIGHT are both 0, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). 
   * `BPP` is the the number of bits per pixel. See the section Color Depth for more information.
   * `TITLE-CAPTION` appears in the Window title bar. 
@@ -103,18 +105,18 @@ resize-window width height &key bpp flags title-caption icon-caption => result
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-fullscreen SDL-FULLSCREEN] will attempt to use fullscreen mode.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-opengl SDL-OPENGL] will create an OpenGL rendering context.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-resizable SDL-RESIZABLE] will create a resizable window, and 
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-no-frame SDL-NO-FRAME] creates a window with no title bar or frame decoration. Fullscreen modes automatically have this flag set.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-no-frame SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
 
 For example;
 
 {{{
-(SDL:WINDOW 320 240 :TITLE-CAPTION "Random-Rects" :ICON-CAPTION "Random-Rects"  
+(SDL:WINDOW 320 240 :TITLE-CAPTION "Random Rectangles" :ICON-CAPTION "Random Rectangles"  
                     :FLAGS '(SDL:SDL-DOUBLEBUF SDL:SDL-FULLSCREEN)) 
 }}}
 
-== Fullscreen or Windowed ==
+== Full-screen or Windowed ==
 
-lispbuilder-sdl will create a Windowed display by default. However this can be changed on startup or any time during program execution by passing the `SDL-FULLSCREEN` flag to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW]. If a hardware resolution change is not possible the next higher resolution will be used and the display window centered on a black background.
+lispbuilder-sdl will create a Windowed display by default. However this can be changed on startup or any time during program execution by passing `SDL:SDL-FULLSCREEN` to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW]. If a hardware resolution change is not possible then the next higher resolution will be used and the display window centered on a black background.
 
 == Color depth ==
 
@@ -124,23 +126,33 @@ If `SDL-ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailabl
 
 Note: A BPP of 24 uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, use a BPP of 32. 
 
-== Using System or Video Memory ==
+== Using Surfaces in System and Video Memory ==
+
+=== Overview ===
 
 A surface in system memory (software surface) improves the performance of pixel level access but is incompatible with some types of hardware blitting.
 
-A surface in video memory (hardware surface) takes advantage of Video->Video blits which are often hardware accelerated.
+A surface in video memory (hardware surface) takes advantage of Video-to-Video blits which are often hardware accelerated.
 
-A hardware surface (`SDL-HW-SURFACE`) must be locked prior to performing per-pixel manipulations. When locked the surface is copied from video memory to system memory and copied back when unlocked. This can cause a *major* performance hit.
+A hardware surface (`SDL-HW-SURFACE`) must be locked prior to performing per-pixel manipulations. When locked the hardware surface is copied from video memory to system memory and copied back when unlocked. This can cause a *major* performance hit.
 
-Use hardware surfaces when per-pixel manipulations are not required, or when the graphics hardware supports blitting of surfaces having alpha channels.
+Use software surfaces (`SDL-SW-SURFACE`) to perform per-pixel manipulations, or to blit surfaces having alpha channels at a high frame rate when alpha blitting is not supported in hardware.
 
-Use software surfaces (`SDL-SW-SURFACE`) to perform per-pixel manipulations, or blit surfaces having alpha channels at a high frame rate when not supported in hardware.
+Use hardware surfaces when per-pixel manipulations are not required, or when the graphics hardware supports blitting of surfaces having alpha channels, or when the surfaces can be stored in video memory.
 
-Many of the drawing functions in lispbuilder-sdl require per-pixel manipulation of the destination surface; these functions include [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-bezier DRAW-BEZIER], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-curve DRAW-CURVE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-shape DRAW-SHAPE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-line DRAW-LINE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pixel DRAW-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#read-pixel READ-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-circle, DRAW-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-trigon, DRAW-TRIGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-polygon, DRAW-POLYGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-ellipse, DRAW-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-ellipse, DRAW-FILLED-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pie, DRAW-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-pie, DRAW-FILLED-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-trigon, DRAW-FILLED-TRIGON], and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-polygon, DRAW-FILLED-POLYGON].
+Many of the drawing functions require per-pixel manipulation of the destination surface. If drawing directly to the display surface then the display surface must be a software surface (in system memory) or performance will be effected.
+Drawing functions that require per-pixel manipulation of a destination surface include; [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-bezier DRAW-BEZIER], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-curve DRAW-CURVE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-shape DRAW-SHAPE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-line DRAW-LINE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pixel DRAW-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#read-pixel READ-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-circle, DRAW-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-trigon, DRAW-TRIGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-polygon, DRAW-POLYGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-ellipse, DRAW-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-ellipse, DRAW-FILLED-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pie, DRAW-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-pie, DRAW-FILLED-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-trigon, DRAW-FILLED-TRIGON], and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-polygon, DRAW-FILLED-POLYGON].
 
-If drawn directly to the display surface then the display surface must be a software surface (in system memory) or performance will be effected.
+The system may return a software surface even when a hardware surface is requested as many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN`. 
 
-Be aware that the system may return a software surface even when a hardware surface is be requested. Many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN`. `SDL-HW-SURFACE` is best used when the surfaces you'll be blitting can also be stored in video memory.
+=== Determining the Capabilities of the Graphics Hardware ===
+
+The following functions allow the capabilities of the hardware to be determined;
+
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO],
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY],
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS], and
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES]
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO] to query the capabilities of the graphics hardware.
 
@@ -150,36 +162,33 @@ video-info &optional info => result
 
 `:INFO` can be one of:
 
-  * hw-available, Is it possible to create hardware surfaces?
-  * wm-available, Is there a window manager available?
-  * blit-hw, Are hardware to hardware blits accelerated?
-  * blit-hw-cc, Are hardware to hardware colorkey blits accelerated?
-  * blit-hw-a, Are hardware to hardware alpha blits accelerated?
-  * blit-sw, Are software to hardware blits accelerated?
-  * blit-sw-cc, Are software to hardware colorkey blits accelerated?
-  * blit-sw-a, Are software to hardware alpha blits accelerated?
-  * blit-fill, Are color fills accelerated?
-  * `NIL`, returns a list of all supported video flags
+  * `:hw-available`, Is it possible to create hardware surfaces?
+  * `:wm-available`, Is there a window manager available?
+  * `:blit-hw`, Are hardware to hardware blits accelerated?
+  * `:blit-hw-cc`, Are hardware to hardware colorkey blits accelerated?
+  * `:blit-hw-a`, Are hardware to hardware alpha blits accelerated?
+  * `:blit-sw`, Are software to hardware blits accelerated?
+  * `:blit-sw-cc`, Are software to hardware colorkey blits accelerated?
+  * `:blit-sw-a`, Are software to hardware alpha blits accelerated?
+  * `:blit-fill`, Are color fills accelerated?
+  * `:NIL`, returns a list of all supported video flags
+
+For example, enter the following code to determine the capabilities of the video hardware;
 
 {{{
-video-memory => result
+(SDL:WITH-INIT ()
+  (SDL:VIDEO-INFO))
 }}}
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] to query the amount of video memory availalble. Only makes sense if `hw-available`, otherwise returns `0`.
 
-{{{
-video-dimensions => result
-}}}
-
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height if called before a window is created. Or returns the current video dimensions if called after a window is created. 
+
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a `LIST` of vectors sorted largest to smallest containing the width and height of the screen that will support the video `:FLAGS`.
 
 {{{
 list-modes flags &optional surface => result
 }}}
-
-[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a `LIST` of vectors sorted largest to smallest containing the width and height of the screen that will support the video `:FLAGS`.
-
-Use [tbd] and [tbd] to set the x and y positions of the window.
 
 == Synchronous or Asynchronous updates ==
 
@@ -192,7 +201,9 @@ Use [tbd] and [tbd] to set the x and y positions of the window.
 == Window border ==
   * Having a title bar or having no window frame.
 
+== Window x and y position ==
 
+Use [tbd] and [tbd] to set the x and y positions of the window.
 
 = Handling Events and the Game Loop =
 
