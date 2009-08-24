@@ -210,7 +210,7 @@ list-modes flags &optional surface => result
 
 == OpenGL rendering ==
 
-== Window border ==
+== Window Title and Border ==
   * Having a title bar or having no window frame.
 
 == Window x and y position ==
