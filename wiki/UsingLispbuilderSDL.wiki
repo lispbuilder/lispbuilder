@@ -254,41 +254,47 @@ The SDL display surface needs to be updated once per game loop, as described in 
 
 = Default Keyword Arguments =
 
-Many of the functions and macros defined in lispbuilder accept one or more keyword arguments. For example the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE] accepts `:COLOR` and `:SURFACE` keyword arguments that are bound to the symbols [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*] respectively. The objects that are bound to these symbols will be used unless the keyword arguments are overriden by the developer. 
+Many of the functions and macros defined in lispbuilder accept one or more keyword arguments. For example the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pixel DRAW-PIXEL] accepts `:COLOR` and `:SURFACE` keyword arguments that are bound to the symbols [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*] respectively. The objects that are bound to these symbols will be used unless the keyword arguments are overridden by the developer. 
 
-The definition for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-rectangle DRAW-RECTANGLE] is as follows:
-
-{{{
-draw-rectangle rect &key (surface *default-surface*) 
-                    (color *default-color*)
-                    update-p clipping-p 
-}}}
-
-So for example,
+The macros [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-surface WITH-SURFACE], and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-surfaces WITH-SURFACES] will bind a surface to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-SURFACE* *DEFAULT-SURFACE*] within the scope of these macros. For example, instead of specifying a target surface for each `draw-*` function a user may bind [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-SURFACE* *DEFAULT-SURFACE*] to a surface once and subsequent draw-* functions will use this surface while it remains in scope.
 
 {{{
-(draw-rectangle #(0 0 100 100) :COLOR (COLOR 0 0 0) :SURFACE *default-surface*)
+(DRAW-PIXEL (point :x x1 :y y1) :surface a-surface :color *white*)
+(DRAW-PIXEL (point :x x2 :y y2) :surface a-surface :color *white*)	    
+(DRAW-PIXEL (point :x x3 :y y3) :surface a-surface :color *white*)
+(DRAW-PIXEL (point :x x4 :y y4) :surface a-surface :color *white*)
 }}}
 
-Will render a black rectangle onto the display. However;
+Now, we use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-surface WITH-SURFACE] to bind a surface to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-SURFACE* *DEFAULT-SURFACE*].
 
 {{{
-(draw-rectangle #(0 0 100 100))
+(WITH-SURFACE (a-surface)
+  (DRAW-PIXEL (point :x x1 :y y1) :color *white*)
+  (DRAW-PIXEL (point :x x2 :y y2) :color *white*)
+  (DRAW-PIXEL (point :x x3 :y y3) :color *white*)
+  (DRAW-PIXEL (point :x x4 :y y4) :color *white*))
 }}}
 
-Will render a rectangle of the color that is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] onto surface that is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*].
-
-Several _convenience_ macros are defined that will bind color and surface values to variables with the same name as these global symbols. We shall explain;
-
-The following example shows how the macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] binds the color black to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*].
+We can use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] to bind [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-COLOR* *DEFAULT-COLOR*] to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*white* *WHITE*]:
 
 {{{
-(with-color ((COLOR 0 0 0))
-  (draw-rectangle (rectangle 0 0 50 50)
-  (draw-rectangle (rectangle 50 50 100 100))
+(WITH-SURFACE (a-surface)
+  (WITH-COLOR (*white*)
+    (DRAW-PIXEL (point :x x1 :y y1))
+    (DRAW-PIXEL (point :x x2 :y y2))
+    (DRAW-PIXEL (point :x x3 :y y3))
+    (DRAW-PIXEL (point :x x4 :y y4)))
 }}}
 
-Here two black rectangles are rendered onto a surface, taking advantage of the default keyword [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*]. 
+Finally, if the target surface is the display then [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#WITH-SURFACE *WITH-SURFACE*] is not required as `:SURFACE` when `NIL` will be bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-DISPLAY* *DEFAULT-DISPLAY*] as a convenience. So the above code can be shortened as follows:
+
+{{{
+(WITH-COLOR (*white*)
+  (DRAW-PIXEL (point :x x1 :y y1))
+  (DRAW-PIXEL (point :x x2 :y y2))
+  (DRAW-PIXEL (point :x x3 :y y3))
+  (DRAW-PIXEL (point :x x4 :y y4)))
+}}}
 
 But default keyword arguments have an added advantage other than keystroke savings. The macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] does not bind a color to the global symbol [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] but rather creates a new local variable called [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*]. The local variable in effect _shadows_ the global symbol. Thus [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*] is bound to the color black ONLY within the scope of [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR]. This means we are able to nest several [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] macros creating in effect a stack. We push a new color onto the stack with each subsequent [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] and the system pops a color from the stack when a [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] goes out of scope. This is illustrated by the following example:
 
@@ -521,46 +527,6 @@ LISPBUILDER-SDL provides low-level drawing support for several primitives. Most 
  * Polygons and Triangles: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-polygon DRAW-POLYGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-trigon DRAW-TRIGON] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-shape WITH-SHAPE].
  * Filling Surfaces with Color: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#fill-surface FILL-SURFACE]
  * Filling Arbitrary Shapes with Color: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#flood-fill FLOOD-FILL]
-
-Drawing functions require a target surface and color. LISPBUILDER-SDL uses defaults for both target surface ([http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*]) and color ([http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-color* *DEFAULT-COLOR*]) unless these are otherwise specified by the user. The macros [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-surface WITH-SURFACE], and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-surfaces WITH-SURFACES] will bind a surface to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-SURFACE* *DEFAULT-SURFACE*] within the scope of these macros. For example, instead of specifying a target surface for each `draw-*` function a user may bind [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-SURFACE* *DEFAULT-SURFACE*] to a surface once and subsequent draw-* functions will use this surface while it remains in scope.
-
-{{{
-(DRAW-PIXEL (point :x x1 :y y1) :surface a-surface :color *white*)
-(DRAW-PIXEL (point :x x2 :y y2) :surface a-surface :color *white*)	    
-(DRAW-PIXEL (point :x x3 :y y3) :surface a-surface :color *white*)
-(DRAW-PIXEL (point :x x4 :y y4) :surface a-surface :color *white*)
-}}}
-
-Now, we use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-surface WITH-SURFACE] to bind a surface to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-SURFACE* *DEFAULT-SURFACE*].
-
-{{{
-(WITH-SURFACE (a-surface)
-  (DRAW-PIXEL (point :x x1 :y y1) :color *white*)
-  (DRAW-PIXEL (point :x x2 :y y2) :color *white*)
-  (DRAW-PIXEL (point :x x3 :y y3) :color *white*)
-  (DRAW-PIXEL (point :x x4 :y y4) :color *white*))
-}}}
-
-We can use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-color WITH-COLOR] to bind [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-COLOR* *DEFAULT-COLOR*] to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*white* *WHITE*]:
-
-{{{
-(WITH-SURFACE (a-surface)
-  (WITH-COLOR (*white*)
-    (DRAW-PIXEL (point :x x1 :y y1))
-    (DRAW-PIXEL (point :x x2 :y y2))
-    (DRAW-PIXEL (point :x x3 :y y3))
-    (DRAW-PIXEL (point :x x4 :y y4)))
-}}}
-
-Finally, if the target surface is the display then [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#WITH-SURFACE *WITH-SURFACE*] is not required as `:SURFACE` when `NIL` will be bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*DEFAULT-DISPLAY* *DEFAULT-DISPLAY*] as a convenience. So the above code can be shortened as follows:
-
-{{{
-(WITH-COLOR (*white*)
-  (DRAW-PIXEL (point :x x1 :y y1))
-  (DRAW-PIXEL (point :x x2 :y y2))
-  (DRAW-PIXEL (point :x x3 :y y3))
-  (DRAW-PIXEL (point :x x4 :y y4)))
-}}}
 
 = Fonts =
 
