@@ -75,7 +75,7 @@ An [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.ht
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access Exclusive palette access], 
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering Single or Double buffering],
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering Allow OpenGL rendering],
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_title_and_border Window border],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border Window Title and Border],
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position Window x and y position].
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
