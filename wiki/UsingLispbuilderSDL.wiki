@@ -66,8 +66,11 @@ Initialization is somewhat complicated by the fact that a Common Lisp developmen
 
 = The Display =
 
-An [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk. Graphics are rendered to a video surface. The video surface to be configured to support the capabilities of the underlying graphics hardware as follows;
+An [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk. Graphics are rendered to a video surface. 
 
+The video surface can be configured to support the capabilities of the underlying graphics hardware as follows;
+
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Creating_the_Display Creating the Display],
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed Full-screen or Windowed],
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth Color depth] (16, 24 or 32 bits per pixel), 
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory Using System or Video Memory],
@@ -77,6 +80,8 @@ An [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.ht
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering Allow OpenGL rendering],
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border Window Title and Border],
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position Window x and y position].
+
+== Creating the Display ==
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup.
 
