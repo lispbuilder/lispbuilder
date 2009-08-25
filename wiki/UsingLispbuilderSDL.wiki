@@ -113,7 +113,7 @@ If a hardware resolution change is not possible then the next higher resolution 
 
 When `:BPP` is unspecified or `0`, the surface will be created with the bits-per-pixel of the current display.
 
-If `SDL-ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailable, a display surface having a bits-per-pixel that matches the current display is returned. Normally, if a video surface of the requested bits-per-pixel is not available, one is emulated using shadow surface. Passing `SDL-ANY-FORMAT` prevents this and the video surface is used, regardless of the requested its pixel depth. For example;
+Normally if a video surface of the requested bits-per-pixel is not available one is emulated using a shadow surface. Passing `SDL-ANY-FORMAT` prevents this. If `SDL-ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailable, a display surface having a bits-per-pixel that matches the current display is returned. For example;
 
 {{{
 (SDL:WINDOW 320 240 :BPP 32
@@ -139,7 +139,7 @@ Use `:TITLE-CAPTION` to set the caption in the window title bar. Use `:ICON-CAPT
                     :ICON-CAPTION "A Test Minimized"))
 }}}
 
-To allow the window to be resized, pass `SDL-RESIZABLE` to `:FLAGS`.
+To allow the window to be resized, pass `SDL-RESIZABLE` to `:FLAGS`.  The library will allow the window manager, if any, to resize the window at runtime.  When this occurs, a `VIDEO-RESIZE-EVENT` event is sent to the application, and the application must respond by calling `RESIZE-WINDOW` with the requested size (or another size that suits the application).
 
 {{{
 (SDL:WINDOW 320 240 :TITLE-CAPTION "A Test"
@@ -182,13 +182,21 @@ Generally, create your display surface in system memory unless you know what you
 The system may return a software surface even when a hardware surface is requested as many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN`. 
 
 == Synchronous or Asynchronous updates ==
-TBD
+
+Enables the use of asynchronous updates of the display surface. This will usually slow down blitting on single CPU machines, but may provide a speed increase on SMP systems.
+
+An overview is provided on the SDL developers mailing list [http://lists.libsdl.org/pipermail/sdl-libsdl.org/2005-February/048955.html here], and [http://lists.libsdl.org/pipermail/sdl-libsdl.org/2006-January/053805.html here]
+
+This has not been well tested on the supported Lisp platforms so use at your own risk. It may be problematic on Lisps that do not support multi-threading.
 
 == Exclusive palette access ==
-TBD
+
+If `SDL-HWPALETTE` is set in `:FLAGS`, the library will guarantee that the colors set by SDL_SetColors() will be the colors you get. Otherwise, in 8-bit mode, SDL_SetColors() may not be able to set all of the colors exactly the way they are requested, and you should look at the video surface structure to determine the actual palette.
+If SDL cannot guarantee that the colors you request can be set, i.e. if the colormap is shared, then the video surface may be createdunder emulation in system memory, overriding the `SDL-HWSURFACE` flag.
 
 == Single or Double buffering ==
-TBD
+
+If `SDL-DOUBLEBUF` is set in `:FLAGS`, the library will try to set up two surfaces in video memory and swap between them when you call `UPDATE-DISPLAY`.  This is usually slower than the normal single-buffering scheme, but prevents "tearing" artifacts caused by modifying video memory while the monitor is refreshing.  Double buffering should only be used by applications that redraw the entire screen on every update.
 
 == OpenGL rendering ==
 TBD
