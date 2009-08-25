@@ -45,13 +45,13 @@ or, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.h
 
 The list of subsystems is;
 
-  * `SDL:SDL-INIT-VIDEO`, The video subsystem
-  * `SDL:SDL-INIT-AUDIO`, The audio subsystem
-  * `SDL:SDL-INIT-CDROM`, The cdrom subsystem
-  * `SDL:SDL-INIT-JOYSTICK`, The joystick subsystem
-  * `SDL:SDL-INIT-TIMER`, The timer subsystem
-  * `SDL:SDL-INIT-EVERYTHING`, All of the above
-  * _SDL:SDL-INIT-EVENTTHREAD_ (Don't use. Not supported on Windows)
+  * `SDL-INIT-VIDEO`, The video subsystem
+  * `SDL-INIT-AUDIO`, The audio subsystem
+  * `SDL-INIT-CDROM`, The cdrom subsystem
+  * `SDL-INIT-JOYSTICK`, The joystick subsystem
+  * `SDL-INIT-TIMER`, The timer subsystem
+  * `SDL-INIT-EVERYTHING`, All of the above
+  * _SDL-INIT-EVENTTHREAD_ (Don't use. Not supported on Windows)
 
 Initialization is somewhat complicated by the fact that a Common Lisp development environment will load a foreign library once, but multiple debug sessions will initialize and close the foreign library many times. A C/C++ development environment on the other hand will open and close a library each time the program is run, thereby freeing memory and resources left hanging by incomplete or buggy initialize/close functions. Some poorly written C libraries may therefore frequently core dump in a Lisp environment when resources are not properly freed. LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control of the initialization of foreign libraries. These functions are as follows: 
 
@@ -128,9 +128,18 @@ To set the caption when the window is minimized to `"A Test Minimized"`
 :ICON-CAPTION "A Test Minimized"
 }}}
 
-To allow the window to be resized, pass `SDL:SDL-RESIZABLE` to `:FLAGS`.
+To allow the window to be resized, pass `SDL-RESIZABLE` to `:FLAGS`.
 
-To remove the title bar and border decoration from the window, pass `SDL:SDL-NO-FRAME` to `:FLAGS`. Full-screen modes automatically have this flag set.
+{{{
+:FLAGS '(SDL:SDL-RESIZABLE)
+}}}
+
+To remove the title bar and border decoration from the window, pass `SDL-NO-FRAME` to `:FLAGS`. Full-screen modes automatically have this flag set.
+
+{{{
+:FLAGS '(SDL:SDL-NO-FRAME)
+}}}
+
 
 == Window x and y position ==
 
@@ -139,6 +148,12 @@ Use `:POSITION` to set the display window x and y position as follows;
   * When `NIL` will use the previous x and y positions,
   * When `T` will center the window on the screen,
   * When `(VECTOR x y)` will set the window to the specified x and y positions.
+
+For example;
+
+{{{
+:POSITION #(100 200)
+}}}
 
 == Using Surfaces in System and Video Memory ==
 
