@@ -81,13 +81,13 @@ For example;
                     :FLAGS '(SDL:SDL-DOUBLEBUF SDL:SDL-FULLSCREEN)) 
 }}}
 
-
 *Parameters*
 
   * `WIDTH` and `HEIGHT` are the pixel width and height of the video surface. If WIDTH and HEIGHT are both 0, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). 
   * `:BPP` is the the number of bits per pixel. See the section [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth Color depth] for more information.
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border TITLE-CAPTION] appears in the Window title bar. 
-* [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border ICON-CAPTION] appears when the Window is minimized.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border ICON-CAPTION] appears when the Window is minimized.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position POSITION] sets the Window X and Y position.
   * `:FLAGS` is described in greater detail below; 
 
 The video surface can be configured to support the capabilities of the underlying graphics hardware by passing one or more of the following parameters to `:FLAGS`;
@@ -99,13 +99,7 @@ The video surface can be configured to support the capabilities of the underlyin
   * http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering SDL-DOUBLEBUF] will enable hardware double buffering,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering SDL-OPENGL] will create an OpenGL rendering context,
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-RESIZABLE] will create a resizable window, and 
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
-
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position Window x and y position].
-
-== Creating the Display ==
-
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-RESIZABLE] will create a resizable window, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
 
 == Full-screen or Windowed ==
 
@@ -118,6 +112,14 @@ lispbuilder-sdl will create a Windowed display by default. However this can be c
 If `SDL-ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailable, a display surface having a bits-per-pixel that matches the current display is returned. Normally, if a video surface of the requested bits-per-pixel is not available, one is emulated using shadow surface. Passing `SDL-ANY-FORMAT` prevents this and the video surface is used, regardless of the requested its pixel depth.
 
 Note: A BPP of 24 uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, use a BPP of 32. 
+
+== Window x and y position ==
+
+Use `:POSITION` to set the display window x and y position as follows;
+
+  * When `NIL` will use the previous x and y positions,
+  * When `T` will center the window on the screen,
+  * When `(VECTOR x y)` will set the window to the specified x and y positions.
 
 == Using Surfaces in System and Video Memory ==
 
@@ -206,10 +208,6 @@ list-modes flags &optional surface => result
 
 == Window Title and Border ==
   * Having a title bar or having no window frame.
-
-== Window x and y position ==
-
-Use [tbd] and [tbd] to set the x and y positions of the window.
 
 = Handling Events and the Game Loop =
 
