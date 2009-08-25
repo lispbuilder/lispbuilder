@@ -199,6 +199,8 @@ The following functions allow the capabilities of the hardware to be determined;
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS], and
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES]
 
+== Video Info ==
+
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO] to query the capabilities of the graphics hardware.
 
 {{{
@@ -225,9 +227,14 @@ For example, enter the following code to determine the capabilities of the video
   (SDL:VIDEO-INFO))
 }}}
 
+== Video Memory ==
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] to query the amount of video memory availalble. Only makes sense if `hw-available`, otherwise `0` video memory is reported.
 
+== Video Dimensions ==
+
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height if called before a window is created. Or returns the current video dimensions if called after a window is created. 
+
+== Video Modes ==
 
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list sorted largest to smallest of the width and height of the screens that will support the type of video surface requested in `:FLAGS`. 
 
