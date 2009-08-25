@@ -71,14 +71,15 @@ A [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.htm
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
 
 {{{
-window width height &key bpp flags title-caption icon-caption => result
+window width height &key bpp flags title-caption icon-caption :position => result
 }}}
 
 For example;
 
 {{{
 (SDL:WINDOW 320 240 :TITLE-CAPTION "Random Rectangles" :ICON-CAPTION "Random Rectangles"  
-                    :FLAGS '(SDL:SDL-DOUBLEBUF SDL:SDL-FULLSCREEN)) 
+                    :FLAGS '(SDL:SDL-DOUBLEBUF SDL:SDL-FULLSCREEN
+                    :POSITION t))
 }}}
 
 *Parameters*
@@ -99,7 +100,7 @@ The video surface can be configured to support the capabilities of the underlyin
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering SDL-DOUBLEBUF] will enable hardware double buffering,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering SDL-OPENGL] will create an OpenGL rendering context,
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-RESIZABLE] will create a resizable window, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-RESIZABLE] will create a resizable window, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-NO-FRAME] creates a window with no title bar or frame decoration.
 
 == Full-screen or Windowed ==
 
@@ -114,7 +115,22 @@ If `SDL-ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailabl
 Note: A BPP of 24 uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, use a BPP of 32. 
 
 == Window Title and Border ==
-  * Having a title bar or having no window frame.
+
+To set the caption in the window title bar to `"A Test"`, 
+
+{{{
+:TITLE-CAPTION "A Test"
+}}}
+
+To set the caption when the window is minimized to `"A Test Minimized"`
+
+{{{
+:ICON-CAPTION "A Test Minimized"
+}}}
+
+To allow the window to be resized, pass `SDL:SDL-RESIZABLE` to `:FLAGS`.
+
+To remove the title bar and border decoration from the window, pass `SDL:SDL-NO-FRAME` to `:FLAGS`. Full-screen modes automatically have this flag set.
 
 == Window x and y position ==
 
