@@ -94,7 +94,7 @@ For example;
 The video surface can be configured to support the capabilities of the underlying graphics hardware by passing one or more of the following parameters to `:FLAGS`;
 
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed SDL-FULLSCREEN], use full-screen mode,
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory SDL-SW-SURFACE], and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory SDL-HW-SURFACE], create the surface in System or Video Memory,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Display_Surface_in_System_Memory_or_Video_Memory SDL-SW-SURFACE], and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Display_Surface_in_System_Memory_or_Video_Memory SDL-HW-SURFACE], create the surface in System or Video Memory,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Synchronous_or_Asynchronous_updates SDL-ASYNC-BLIT] update the video surface asynchronously to the main thread, 
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth SDL-ANY-FORMAT] see the Section Color Depth,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
@@ -166,28 +166,31 @@ For example;
 :POSITION #(100 200)
 }}}
 
-== Using Surfaces in System and Video Memory ==
+== Display Surface in System Memory or Video Memory ==
 
-=== Overview ===
+The display surface can be created in system memory or video memory. When created in system memory, a software surface is returned. When created in video memory, a hardware surface is returned.
 
 A surface in system memory (software surface) improves the performance of pixel level access but is incompatible with some types of hardware blitting.
 
 A surface in video memory (hardware surface) takes advantage of Video-to-Video blits which are often hardware accelerated.
 
-A hardware surface (`SDL-HW-SURFACE`) must be locked prior to performing per-pixel manipulations. When locked the hardware surface is copied from video memory to system memory and copied back when unlocked. This can cause a *major* performance hit.
-
-Use software surfaces (`SDL-SW-SURFACE`) to perform per-pixel manipulations, or to blit surfaces having alpha channels at a high frame rate when alpha blitting is not supported in hardware.
-
-Use hardware surfaces when per-pixel manipulations are not required, or when the graphics hardware supports blitting of surfaces having alpha channels, or when the surfaces can be stored in video memory.
-
-Many of the drawing functions require per-pixel manipulation of the destination surface. If drawing directly to the display surface then the display surface must be a software surface (in system memory) or performance will be effected.
-Drawing functions that require per-pixel manipulation of a destination surface include; [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-bezier DRAW-BEZIER], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-curve DRAW-CURVE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-shape DRAW-SHAPE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-line DRAW-LINE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pixel DRAW-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#read-pixel READ-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-circle, DRAW-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-trigon, DRAW-TRIGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-polygon, DRAW-POLYGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-ellipse, DRAW-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-ellipse, DRAW-FILLED-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pie, DRAW-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-pie, DRAW-FILLED-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-trigon, DRAW-FILLED-TRIGON], and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-polygon, DRAW-FILLED-POLYGON].
-
-To efficiently use the drawing functions with hardware surfaces, render to a software surface and then blit the software surface to a hardware surface using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#blit-surface BLIT-SURFACE].
+Generally, create your display surface in system memory unless you know what you are doing. This topic is discussed in greater detail in [TBD]
 
 The system may return a software surface even when a hardware surface is requested as many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN`. 
 
-=== Determining the Capabilities of the Graphics Hardware ===
+== Synchronous or Asynchronous updates ==
+TBD
+
+== Exclusive palette access ==
+TBD
+
+== Single or Double buffering ==
+TBD
+
+== OpenGL rendering ==
+TBD
+
+== Determining the Capabilities of the Graphics Hardware ==
 
 The following functions allow the capabilities of the hardware to be determined;
 
@@ -244,18 +247,6 @@ list-modes flags &optional surface => result
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-opengl SDL-OPENGL] will create an OpenGL rendering context.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-resizable SDL-RESIZABLE] will create a resizable window, and 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-no-frame SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
-
-== Synchronous or Asynchronous updates ==
-TBD
-
-== Exclusive palette access ==
-TBD
-
-== Single or Double buffering ==
-TBD
-
-== OpenGL rendering ==
-TBD
 
 = The Game Loop and Handling Events =
 == Overview ==
@@ -931,6 +922,23 @@ A surface is created:
 Functions that accept a surface parameter will most likely bind surface to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*] when unspecified. The macros [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-surface WITH-SURFACE] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-surfaces WITH-SURFACES] will bind a [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*] within the scope of these macro. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-surface* *DEFAULT-SURFACE*] is bound to a surface, all subsequent drawing functions will use this implied surface while it remains in scope.
 
 A surface can be explicitely freed by calling [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#free-surface FREE-SURFACE].
+
+== Video Memory Or System Memory ==
+
+A surface in system memory (software surface) improves the performance of pixel level access but is incompatible with some types of hardware blitting.
+
+A surface in video memory (hardware surface) takes advantage of Video-to-Video blits which are often hardware accelerated.
+
+A hardware surface (`SDL-HW-SURFACE`) must be locked prior to performing per-pixel manipulations. When locked the hardware surface is copied from video memory to system memory and copied back when unlocked. This can cause a *major* performance hit.
+
+Use software surfaces (`SDL-SW-SURFACE`) to perform per-pixel manipulations, or to blit surfaces having alpha channels at a high frame rate when alpha blitting is not supported in hardware.
+
+Use hardware surfaces when per-pixel manipulations are not required, or when the graphics hardware supports blitting of surfaces having alpha channels, or when the surfaces can be stored in video memory.
+
+Many of the drawing functions require per-pixel manipulation of the destination surface. If drawing directly to the display surface then the display surface must be a software surface (in system memory) or performance will be effected.
+Drawing functions that require per-pixel manipulation of a destination surface include; [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-bezier DRAW-BEZIER], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-curve DRAW-CURVE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-shape DRAW-SHAPE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-line DRAW-LINE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pixel DRAW-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#read-pixel READ-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-circle, DRAW-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-trigon, DRAW-TRIGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-polygon, DRAW-POLYGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-ellipse, DRAW-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-ellipse, DRAW-FILLED-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pie, DRAW-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-pie, DRAW-FILLED-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-trigon, DRAW-FILLED-TRIGON], and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-polygon, DRAW-FILLED-POLYGON].
+
+To efficiently use the drawing functions with hardware surfaces, render to a software surface and then blit the software surface to a hardware surface using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#blit-surface BLIT-SURFACE].
 
 == Images ==
 
