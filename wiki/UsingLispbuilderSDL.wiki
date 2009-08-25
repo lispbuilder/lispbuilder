@@ -190,7 +190,7 @@ TBD
 == OpenGL rendering ==
 TBD
 
-== Determining the Capabilities of the Graphics Hardware ==
+= Determining the Capabilities of the Graphics Hardware =
 
 The following functions allow the capabilities of the hardware to be determined;
 
