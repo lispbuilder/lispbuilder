@@ -33,25 +33,25 @@ To close lispbuilder-sdl use [http://lispbuilder.googlecode.com/svn/trunk/docume
 Audio, video, joystick, cdrom, and timers are separate subsystems and each must be initialized prior to use. By default the video subsystem is always initialized. If initializing video and additional subsystems, for example audio, then these subsystems must be passed as parameters to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl INIT-SDL], 
 
 {{{
-(SDL:INIT-SDL '(SDL-INIT-VIDEO SDL-INIT-AUDIO)
+(SDL:INIT-SDL '(SDL-INIT-VIDEO SDL-INIT-AUDIO))
 }}}
 
 or, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT].
 
 {{{
-(SDL:WITH-INIT (SDL-INIT-VIDEO SDL-INIT-AUDIO)
+(SDL:WITH-INIT (SDL:SDL-INIT-VIDEO SDL:SDL-INIT-AUDIO)
   ...)
 }}}
 
 The list of subsystems is;
 
-  * SDL-INIT-VIDEO
-  * SDL-INIT-AUDIO
-  * SDL-INIT-CDROM
-  * SDL-INIT-JOYSTICK
-  * SDL-INIT-TIMER
-  * SDL-INIT-EVERYTHING
-  * SDL-INIT-EVENTTHREAD (Don't use. Not supported on Windows)
+  * `SDL:SDL-INIT-VIDEO`, The video subsystem
+  * `SDL:SDL-INIT-AUDIO`, The audio subsystem
+  * `SDL:SDL-INIT-CDROM`, The cdrom subsystem
+  * `SDL:SDL-INIT-JOYSTICK`, The joystick subsystem
+  * `SDL:SDL-INIT-TIMER`, The timer subsystem
+  * `SDL:SDL-INIT-EVERYTHING`, All of the above
+  * _SDL:SDL-INIT-EVENTTHREAD_ (Don't use. Not supported on Windows)
 
 Initialization is somewhat complicated by the fact that a Common Lisp development environment will load a foreign library once, but multiple debug sessions will initialize and close the foreign library many times. A C/C++ development environment on the other hand will open and close a library each time the program is run, thereby freeing memory and resources left hanging by incomplete or buggy initialize/close functions. Some poorly written C libraries may therefore frequently core dump in a Lisp environment when resources are not properly freed. LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control of the initialization of foreign libraries. These functions are as follows: 
 
@@ -66,7 +66,7 @@ Initialization is somewhat complicated by the fact that a Common Lisp developmen
 
 = The Display =
 
-An [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk. Graphics are rendered to a video surface. 
+A [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk. Graphics are rendered to a video surface. 
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
 
@@ -85,9 +85,9 @@ For example;
 
   * `WIDTH` and `HEIGHT` are the pixel width and height of the video surface. If WIDTH and HEIGHT are both 0, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). 
   * `:BPP` is the the number of bits per pixel. See the section [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth Color depth] for more information.
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border TITLE-CAPTION] appears in the Window title bar. 
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border ICON-CAPTION] appears when the Window is minimized.
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position POSITION] sets the Window X and Y position.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :TITLE-CAPTION] appears in the Window title bar. 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :ICON-CAPTION] appears when the Window is minimized.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position :POSITION] sets the Window X and Y position.
   * `:FLAGS` is described in greater detail below; 
 
 The video surface can be configured to support the capabilities of the underlying graphics hardware by passing one or more of the following parameters to `:FLAGS`;
