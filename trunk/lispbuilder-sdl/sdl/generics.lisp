@@ -332,7 +332,7 @@ Returns a new `FONT`, or `NIL` if unsuccessful."))
 
 (defgeneric free-cached-surface (font))
 
-(defgeneric window (width height &key bpp flags title-caption icon-caption fps)
+(defgeneric window (width height &key bpp flags title-caption icon-caption fps position)
   (:documentation
   "Creates a new SDL window of pixel width `WIDTH` and height `HEIGHT` using SDL_SetVideoMode.
 
@@ -362,6 +362,9 @@ For the more common 4 bytes/pixel mode, use a `BPP` of 32.
 [SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable) and [SDL-NO-FRAME](#SDL-NO-FRAME).
 * `TITLE-CAPTION` is the title that appears in the Window title bar, of type `STRING`.
 * `ICON-CAPTION` is the title that appears when the Window is minimized, of type `STRING`.
+* `POSITION` is the x and y display positions of the window. When `NIL` will use the previous x and y positions,
+when `T` will center the window on the screen, when `(VECTOR x y)` will set the window to the
+specified x and y positions.
 
 
 ##### Returns

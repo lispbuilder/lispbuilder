@@ -26,6 +26,7 @@
      (:file "base")
      (:file "util")
      (:file "init")
+     (:file "mouse")
      (:file "input-util")
      (:file "fps")
      (:file "events")

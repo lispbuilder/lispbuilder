@@ -17,7 +17,15 @@
 
 (defmethod window (width height &key
                          (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption
-                         (fps (make-instance 'sdl-base::fps-fixed)))
+                         (fps (make-instance 'sdl-base::fps-fixed))
+                         (position nil))
+  ;; Set the x/y window position
+  (let ((window-position (if (symbolp position)
+                           "center"
+                           (format nil "~A,~A" (elt position 0) (elt position 1)))))
+    (if position
+      (sdl-cffi::sdl-put-env (format nil "SDL_VIDEO_WINDOW_POS=~A" window-position))
+      (sdl-cffi::sdl-put-env (format nil "SDL_VIDEO_WINDOW_POS="))))
   (let ((surf (sdl-base::set-screen (cast-to-int width)
                                     (cast-to-int height)
 				    :bpp bpp
@@ -36,6 +44,7 @@
     *default-display*))
 
 (defmethod resize-window (width height &key flags title-caption icon-caption bpp)
+  "Modifies the dispaly, resets the input loop and clears all key events."
   (multiple-value-bind (title icon)
       (sdl:get-caption)
     (when title-caption
