@@ -381,8 +381,11 @@ Note: This event does *not* occur when an application window is first created.
 {{{
 (:KEY-DOWN-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE)
    &BODY BODY)
+}}}
+{{{
 (:KEY-UP-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE)
    &BODY BODY)
+}}}
 
 A keyboard event generally occurs when a key is released or when a key is pressed. 
 The information on the key that generated the event is stored in `KEY` and `MOD`. 
