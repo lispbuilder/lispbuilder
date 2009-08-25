@@ -192,14 +192,15 @@ This has not been well tested on the supported Lisp platforms so use at your own
 == Exclusive palette access ==
 
 If `SDL-HWPALETTE` is set in `:FLAGS`, the library will guarantee that the colors set by SDL_SetColors() will be the colors you get. Otherwise, in 8-bit mode, SDL_SetColors() may not be able to set all of the colors exactly the way they are requested, and you should look at the video surface structure to determine the actual palette.
-If SDL cannot guarantee that the colors you request can be set, i.e. if the colormap is shared, then the video surface may be createdunder emulation in system memory, overriding the `SDL-HWSURFACE` flag.
+If SDL cannot guarantee that the colors you request can be set, i.e. if the colormap is shared, then the video surface may be created under emulation in system memory, overriding the `SDL-HWSURFACE` flag.
 
 == Single or Double buffering ==
 
 If `SDL-DOUBLEBUF` is set in `:FLAGS`, the library will try to set up two surfaces in video memory and swap between them when you call `UPDATE-DISPLAY`.  This is usually slower than the normal single-buffering scheme, but prevents "tearing" artifacts caused by modifying video memory while the monitor is refreshing.  Double buffering should only be used by applications that redraw the entire screen on every update.
 
 == OpenGL rendering ==
-TBD
+
+If `SDL-OPENGL` is set in `:FLAGS`, the library will try to create an OpenGL rendering context.
 
 = Determining the Capabilities of the Graphics Hardware =
 
