@@ -329,25 +329,22 @@ If `:WAIT`, `WITH-EVENTS` will sleep indefinitely for the next available event. 
 
 The following events are supported;
 
-  * :ACTIVE-EVENT, 
-  * :KEY-DOWN-EVENT, 
-  * :KEY-UP-EVENT, 
-  * :MOUSE-MOTION-EVENT, 
-  * :MOUSE-BUTTON-DOWN-EVENT, 
-  * :MOUSE-BUTTON-UP-EVENT, 
-  * :JOY-AXIS-MOTION-EVENT, 
-  * :JOY-BUTTON-DOWN-EVENT, 
-  * :JOY-BUTTON-UP-EVENT, 
-  * :JOY-HAT-MOTION-EVENT, 
-  * :JOY-BALL-MOTION-EVENT, 
-  * :VIDEO-RESIZE-EVENT, 
-  * :VIDEO-EXPOSE-EVENT, 
-  * :SYS-WM-EVENT, 
-  * :QUIT-EVENT, 
-  * :USER-EVENT,
-  * :IDLE
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Active_Event Active/Focus Mouse and Keyboard], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Keyboard_Events Key Down/up],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Mouse_Motion_Event Mouse Motion],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Mouse_Button_Events Mouse Button Down/Up], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Joystick_Motion_Event Joystick Axis Motion], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Joystick_Button_Events Joystick Button Down/Up], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Joystick_Hat_Motion_Event Joystick Hat], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Joystick_Ball_Motion_Event Joystick Ball], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Resize_Event Display Resized], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Expose_Event Display Exposed],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Manager_Events Window Manager Events], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Quit_Event Quit Events], 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#User_Events User Defined Events],
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#IDLE_Event Idle Events]
 
-=== IDLE Event ===
+=== Idle Event ===
 
 {{{
  (:IDLE ()  
@@ -538,7 +535,7 @@ When `SDL-RESIZABLE` is passed as a flag to WINDOW, the user is allowed to resiz
   * W is the window width as an INTEGER.
   * H is the window height as an INTERGER`.
 
-=== SDL Window Expose Event ===
+=== Window Expose Event ===
 
 {{{
 (:VIDEO-EXPOSE-EVENT ()  
@@ -547,7 +544,7 @@ When `SDL-RESIZABLE` is passed as a flag to WINDOW, the user is allowed to resiz
 
 VIDEO-EXPOSE-EVENT is triggered when the screen has been modified outside of the application, usually by the window manager, and needs to be redrawn. 
 
-=== System Window Events ===
+=== Window Manager Events ===
 
 {{{
 (:SYS-WM-EVENT ()  
