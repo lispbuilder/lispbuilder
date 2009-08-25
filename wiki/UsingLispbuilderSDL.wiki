@@ -269,13 +269,13 @@ list-modes flags &optional surface => result
 
 = The Game Loop =
 
-The 'game loop' is responsible for receiving and dispatching incoming events, executing game logic, and redrawing the display. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop.
+Unlike most other software, a game is typically built around a game loop. The game loop is responsible for receiving and dispatching incoming events, executing game logic, and redrawing the display. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop.
 
-== Handling Events Overview ==
+== Introduction to Handling Events ==
 
-The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro processes events and limits the game loop to the specified number of frames per second. 
+For each input stimuli the system will generate a corresponding event. Inputs are received from the mouse, keyboard, joystick, window manager, and user (user generated). The system creates events to match the specific inputs; for example a key when depressed can will generate a key down event. Releasing the key will generate a key up event. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro provides the mechanism to process these events.
 
-For example, each time the mouse is moved a `:MOUSE-MOTION-EVENT` is generated. To process the x and y mouse position when the mouse is moved:
+For example, each time the mouse is moved a `:MOUSE-MOTION-EVENT` is generated. To process the x and y mouse position the user provide a `:MOUSE-MOTION-EVENT` handler. `WITH-EVENTS` calls the handler when this event is received. Event handlers are straight forward to write as shown in the code segment below;
 
 {{{
 (WITH-EVENTS ()
@@ -283,7 +283,7 @@ For example, each time the mouse is moved a `:MOUSE-MOTION-EVENT` is generated. 
     ...))
 }}}
 
-The only event that *must* be handled with [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] is `:QUIT-EVENT`. If `:QUIT-EVENT` is ignored or not handled then it becomes impossible to close the Window or exit the game loop.
+The only event that *must* be handled is `:QUIT-EVENT`. If `:QUIT-EVENT` is ignored or not handled then it becomes impossible to close the Window or exit the game loop.
 
 {{{
 (WITH-EVENTS ()
@@ -291,6 +291,8 @@ The only event that *must* be handled with [http://lispbuilder.googlecode.com/sv
   (:MOUSE-MOTION-EVENT (:X mouse-x :Y mouse-y)
     ...))
 }}}
+
+The list of supported events are described in greater detail in section [Events].
 
 == Executing Game Logic ==
 
@@ -326,7 +328,7 @@ The display surface must be updated once per game loop, as described in the sect
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-display UPDATE-DISPLAY] to refresh the video surface or swap buffers if double buffering is enabled.
 
 = Event Processing =
-== Polling or Waiting ==
+== Poll or Wait ==
 
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] can either POLL or WAIT for events on the queue by specifying `:POLL` or `:WAIT` respectively, for example;
 
