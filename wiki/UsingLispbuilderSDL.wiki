@@ -78,8 +78,8 @@ For example;
 
 {{{
 (SDL:WINDOW 320 240 :TITLE-CAPTION "Random Rectangles" :ICON-CAPTION "Random Rectangles"  
-                    :FLAGS '(SDL:SDL-DOUBLEBUF SDL:SDL-FULLSCREEN
-                    :POSITION t))
+                    :FLAGS '(SDL:SDL-DOUBLEBUF SDL:SDL-FULLSCREEN)
+                    :POSITION t)
 }}}
 
 *Parameters*
@@ -347,7 +347,7 @@ The following events are supported;
   * :USER-EVENT,
   * :IDLE
 
-=== :IDLE Event ===
+=== IDLE Event ===
 
 {{{
  (:IDLE ()  
