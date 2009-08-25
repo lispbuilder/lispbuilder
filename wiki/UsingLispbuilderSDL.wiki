@@ -401,10 +401,7 @@ The KEYUP and KEYDOWN events are therefore analogous to the state of
   * `SCANCODE` is the hardware-dependent scancode returned by the keyboard.
   * `KEY` is the value of the key that generated the event. The value for `KEY` generally takes the following format: `:SDL-KEY-0` to `:SDL-KEY-1` for numeric keys. `SDL-KEY-a` to `SDL-KEY-z` for alpha keys in the range a-z.Other keys are generally spelled out, for example `SDL-KEY-PAGEDOWN`, `SDL-KEY-F1` or `SDL-KEY-NUMLOCK` .
   * `MOD` is the keyboard modifier state returned as an `INTEGER`.
-  * `MOD-KEY` is the current state of the keyboard modifiers as explained in SDL_GetModState. Returned as a `LIST` of one or more of `:SDL-KEY-MOD-LSHIFT, :SDL-KEY-MOD-RSHIFT,
-:SDL-KEY-MOD-LCTRL, :SDL-KEY-MOD-RCTRL, :SDL-KEY-MOD-LALT, :SDL-KEY-MOD-RALT,
-:SDL-KEY-MOD-LMETA, :SDL-KEY-MOD-RMETA, :SDL-KEY-MOD-NUM, :SDL-KEY-MOD-CAPS,
-:SDL-KEY-MOD-MODE or :SDL-KEY-MOD-RESERVED`.
+  * `MOD-KEY` is the current state of the keyboard modifiers as explained in SDL_GetModState. Returned as a `LIST` of one or more of `:SDL-KEY-MOD-LSHIFT, :SDL-KEY-MOD-RSHIFT, :SDL-KEY-MOD-LCTRL, :SDL-KEY-MOD-RCTRL, :SDL-KEY-MOD-LALT, :SDL-KEY-MOD-RALT, :SDL-KEY-MOD-LMETA, :SDL-KEY-MOD-RMETA, :SDL-KEY-MOD-NUM, :SDL-KEY-MOD-CAPS, :SDL-KEY-MOD-MODE or :SDL-KEY-MOD-RESERVED`.
   * `UNICODE` is the translated character. The unicode field is only used when UNICODE translation is enabled with SDL_EnableUNICODE. If unicode is non-zero then this is the UNICODE character corresponding to the keypress. If the high 9 bits of the character are 0, then this maps to the equivalent ASCII character.
 
 === Mouse Motion Event ===
