@@ -183,7 +183,7 @@ Use hardware surfaces when per-pixel manipulations are not required, or when the
 Many of the drawing functions require per-pixel manipulation of the destination surface. If drawing directly to the display surface then the display surface must be a software surface (in system memory) or performance will be effected.
 Drawing functions that require per-pixel manipulation of a destination surface include; [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-bezier DRAW-BEZIER], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-curve DRAW-CURVE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-shape DRAW-SHAPE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-line DRAW-LINE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pixel DRAW-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#read-pixel READ-PIXEL], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-circle, DRAW-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-circle, DRAW-FILLED-CIRCLE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-trigon, DRAW-TRIGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-polygon, DRAW-POLYGON], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-ellipse, DRAW-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-ellipse, DRAW-FILLED-ELLIPSE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-pie, DRAW-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-pie, DRAW-FILLED-PIE], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-trigon, DRAW-FILLED-TRIGON], and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-filled-polygon, DRAW-FILLED-POLYGON].
 
-To efficiently use the drawing functions with hardware surfaces, render to a software surface and then blit the software surface to a hardware surface using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#blit-surface, BLIT-SURFACE].
+To efficiently use the drawing functions with hardware surfaces, render to a software surface and then blit the software surface to a hardware surface using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#blit-surface BLIT-SURFACE].
 
 The system may return a software surface even when a hardware surface is requested as many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN`. 
 
@@ -246,12 +246,16 @@ list-modes flags &optional surface => result
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-no-frame SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
 
 == Synchronous or Asynchronous updates ==
+TBD
 
 == Exclusive palette access ==
+TBD
 
 == Single or Double buffering ==
+TBD
 
 == OpenGL rendering ==
+TBD
 
 = Handling Events and the Game Loop =
 
