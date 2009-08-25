@@ -257,25 +257,20 @@ TBD
 == OpenGL rendering ==
 TBD
 
-= Handling Events and the Game Loop =
+= The Game Loop and Handling Events =
+== Overview ==
 
-LISPBUILDER-SDL provides the [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro that simplifies the game loop and handling of SDL events. Event handlers are defined by specifying the event type a well as an optional list of fields specific to that event.
+The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro handles events and limits the game loop to the specified number of frames per second. 
 
-More detailed information on all SDL events (Keyboard events, Joystick events, User events etc.) can be found in in the documentation for [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS]. For example, to process the current x and y mouse position when the mouse is moved:
-
-{{{
-(:MOUSE-MOTION-EVENT (:X X-POS :Y Y-POS)
-  ...)
-}}}
-
-Or to process the x and y relative mouse positions when the mouse is moved:
+For example, each time the mouse is moved a `:MOUSE-MOTION-EVENT` is generated. To process the x and y mouse position when the mouse is moved:
 
 {{{
-(:MOUSE-MOTION-EVENT (:X-REL relative-x :Y-REL relative-y)
-  ...)
+(WITH-EVENTS ()
+  (:MOUSE-MOTION-EVENT (:X mouse-x :Y mouse-y)
+    ...))
 }}}
 
-The only event that must be handled with [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] is the `:QUIT-EVENT`. If `:QUIT-EVENT` is ignored then it is impossible for the user to close the SDL Window or exit the game loop.
+The only event that *must* be handled with [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] is `:QUIT-EVENT`. If `:QUIT-EVENT` is ignored or not handled then it becomes impossible to close the Window or exit the game loop.
 
 {{{
 (WITH-EVENTS ()
@@ -284,35 +279,333 @@ The only event that must be handled with [http://lispbuilder.googlecode.com/svn/
     ...))
 }}}
 
-In addition to handling events, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] also manages the game loop. Introducing the `:IDLE` event. `:IDLE`, although not technically an actual event, is executed once per game loop after all events have been processed in the SDL event queue. `:IDLE` is where the user can place code that needs to be executed once per game loop and that is not 'event' driven. This code may involve updating world physics, updating the state of game objects and rendering sprites to the display.
+In addition to handling events, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] also manages the game loop. 
+
+Introducing the `:IDLE` event. `:IDLE`, although not technically an actual event, is executed once per game loop after all events have been removed from the the event queue have and processed . Place code that must to be executed once per game loop and is not event drive in `:IDLE`. This code may update world physics, update the state of game objects and render sprites to the display.
 
 {{{
-(WITH-EVENTS ()
+(SDL:WITH-EVENTS ()
   (:QUIT-EVENT () T)
   (:MOUSE-MOTION-EVENT (:X mouse-x :Y mouse-y)
     ...)
   (:IDLE ()
-    (UPDATE-DISPLAY)))
+    (SDL:UPDATE-DISPLAY)))
 }}}
 
-[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] can also limit execution of the the game loop to a specific number of iterations a second using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE]. This effectively limits the number of frames displayed per second. To set the frame rate to 60 frames per second, 
+== Frame Rate Limits ==
+
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] can limit execution of the the game loop to a specific number of iterations a second using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE]. This effectively limits the number of frames displayed per second. To set the frame rate to 60 frames per second, 
 
 {{{
 (SETF (FRAME-RATE) 60)
 }}}
 
-To unlock the frame rate effectively running the game loop as fast as the CPU will allow set the FRAME-RATE to `0`; 
+To unlock the frame rate effectively running the game loop as fast as the CPU will allow set the FRAME-RATE to `NIL`; 
 
 {{{
-(SETF (FRAME-RATE) 0)
+(SETF (FRAME-RATE) NIL)
 }}}
 
-The SDL display surface needs to be updated once per game loop, as described in the section [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html SDL Display].
+The display surface must be updated once per game loop, as described in the section [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html SDL Display].
+
+== Polling or Waiting ==
+
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] can either POLL or WAIT for events on the queue by specifying `:POLL` or `:WAIT` respectively, for example;
 
 {{{
-(SETF (FRAME-RATE) 30)
-(WITH-EVENTS ()
-  ...)
+(SDL:WITH-EVENTS (:POLL)  
+  (:QUIT-EVENT () T)  
+  (:KEY-DOWN-EVENT (:KEY KEY)  
+      (WHEN (SDL:KEY= KEY :SDL-KEY-ESCAPE)  
+        (SDL:PUSH-QUIT-EVENT)))  
+  (:VIDEO-EXPOSE-EVENT () (SDL:UPDATE-DISPLAY)))))) 
+}}}
+
+If `:POLL`, `WITH-EVENTS` will continuously poll for pending events. If no events are available then the game loop is run and the forms in :IDLE are executed. 
+
+If `:WAIT`, `WITH-EVENTS` will sleep indefinitely for the next available event. If no events are available then the game loop is paused. `:IDLE` is ignored when the event mechanism is `:WAIT`. 
+
+== Events ==
+
+The following events are supported;
+
+  * :ACTIVE-EVENT, 
+  * :KEY-DOWN-EVENT, 
+  * :KEY-UP-EVENT, 
+  * :MOUSE-MOTION-EVENT, 
+  * :MOUSE-BUTTON-DOWN-EVENT, 
+  * :MOUSE-BUTTON-UP-EVENT, 
+  * :JOY-AXIS-MOTION-EVENT, 
+  * :JOY-BUTTON-DOWN-EVENT, 
+  * :JOY-BUTTON-UP-EVENT, 
+  * :JOY-HAT-MOTION-EVENT, 
+  * :JOY-BALL-MOTION-EVENT, 
+  * :VIDEO-RESIZE-EVENT, 
+  * :VIDEO-EXPOSE-EVENT, 
+  * :SYS-WM-EVENT, 
+  * :QUIT-EVENT, 
+  * :USER-EVENT,
+  * :IDLE
+
+=== :IDLE Event ===
+
+{{{
+ (:IDLE ()  
+    &BODY BODY) 
+}}}
+
+The `:IDLE` event is special in that it is not a system generated event. Rather the forms in `:IDLE` are executed once each game loop after all events in the event queue are processed. `:IDLE` is ignored when the event mechanism specified by TYPE is :WAIT. 
+
+=== Active Event ===
+
+{{{
+(:ACTIVE-EVENT (:GAIN GAIN :STATE STATE)  
+   &BODY BODY)
+}}}
+
+If the mouse has entered the window then GAIN will be 1, otherwise GAIN will be 0. 
+
+When the mouse leaves or enters the window area an SDL-APP-MOUSE-FOCUS type activation event is generated.
+
+An SDL-APP-INPUT-FOCUS type activation event occurs when the application loses or gains keyboard focus, usually when a different application is made active. 
+
+Finally, an SDL-APP-ACTIVE type event occurs when the application is either minimised/iconified, GAIN is 0, or restored. 
+
+Note: This event does *not* occur when an application window is first created. 
+
+  * `GAIN` is 0 if the event is a loss or 1 if it is a gain.
+  * `STATE` a bitmask of the following values: SDL-APP-MOUSE-FOCUS if mouse focus was gained or lost, SDL-APP-INPUT-FOCUS if input focus was gained or lost, and SDL-APP-ACTIVE if the application was iconified, GAIN is 0, or restored GAIN is 1. A single event can have multiple values set in STATE. 
+
+=== Keyboard Events ===
+
+{{{
+(:KEY-DOWN-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE)
+   &BODY BODY)
+(:KEY-UP-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :MOD-KEY MOD-KEY :UNICODE UNICODE)
+   &BODY BODY)
+
+A keyboard event generally occurs when a key is released or when a key is pressed. 
+The information on the key that generated the event is stored in `KEY` and `MOD`. 
+
+The `SDL-CAPS-LOCK` and `SDL-NUM-LOCK` keys are special cases and report an 
+`SDL-KEY-DOWN` when first pressed, then an `SDL-RELEASED` when released and pressed again.
+
+The KEYUP and KEYDOWN events are therefore analogous to the state of
+ the caps lock and num lock LEDs rather than the keys themselves. These special
+ cases are required for compatibility with Sun workstations.
+
+*Note:* Repeating `KEY-DOWN-EVENT` events will occur if key repeat is enabled using
+[SDL-ENABLE-KEY-REPEAT](#sdl-enable-key-repeat).
+
+* `STATE` is `SDL-PRESSED` or `SDL-RELEASED` if the key is pressed or released respectively.
+* `SCANCODE` is the hardware-dependent scancode returned by the keyboard.
+* `KEY` is the value of the key that generated the event. The 
+value for `KEY` generally takes the following format: `:SDL-KEY-0` to `:SDL-KEY-1` for numeric keys. 
+`SDL-KEY-a` to `SDL-KEY-z` for alpha keys in the range a-z.
+Other keys are generally spelled out, for example `SDL-KEY-PAGEDOWN`, `SDL-KEY-F1` or 
+`SDL-KEY-NUMLOCK` .
+* `MOD` is the keyboard modifier state returned as an `INTEGER`.
+* `MOD-KEY` is the current state of the keyboard modifiers as explained in SDL_GetModState. 
+Returned as a `LIST` of one or more of `:SDL-KEY-MOD-LSHIFT, :SDL-KEY-MOD-RSHIFT,
+:SDL-KEY-MOD-LCTRL, :SDL-KEY-MOD-RCTRL, :SDL-KEY-MOD-LALT, :SDL-KEY-MOD-RALT,
+:SDL-KEY-MOD-LMETA, :SDL-KEY-MOD-RMETA, :SDL-KEY-MOD-NUM, :SDL-KEY-MOD-CAPS,
+:SDL-KEY-MOD-MODE or :SDL-KEY-MOD-RESERVED`.
+* `UNICODE` is the translated character. The unicode field is only used when 
+UNICODE translation is enabled with SDL_EnableUNICODE. If unicode is non-zero 
+then this is the UNICODE character corresponding to the keypress. 
+If the high 9 bits of the character are 0, then this maps to the equivalent 
+ASCII character.
+
+=== Mouse Motion Event ===
+
+{{{
+(:MOUSE-MOTION-EVENT (:STATE STATE :X X :Y Y :X-REL X-REL :Y-REL Y-REL)  
+   &BODY BODY) 
+}}}
+
+A `MOUSE-MOTION-EVENT` event occurs when the mouse moves within the application window or when `SDL-WARP-MOUSE` is called. Both the absolute `X` and `Y` and relative `X-REL` and `Y-REL` coordinates are reported along with the current button state `STATE`. The button state can be interpreted using `SDL-BUTTON`, see `SDL-GET-MOUSE-STATE`. 
+
+If the cursor is hidden using `SDL-SHOW-CURSOR` and the input is grabbed using `SDL-WM-GRAB-INPUT`, then the mouse will give relative motion events even when the cursor reaches the edge of the screen. This is currently only implemented on Windows and Linux/Unix-alikes.
+ 
+  * STATE is the current button state.
+  * X is the X coordinates of the mouse
+  * Y is the Y coordinates of the mouse
+  * X-REL is the relative motion in the X direction
+  * Y-REL is the relative motion in the Y direction
+
+=== Mouse Button Events ===
+
+{{{
+ (:MOUSE-BUTTON-DOWN-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)  
+   &BODY BODY)  
+}}}
+{{{
+ (:MOUSE-BUTTON-UP-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)  
+   &BODY BODY) 
+}}}
+
+When a mouse button press or release is detected the number of the button pressed (from 1 to 255, with 1 usually being the left button and 2 the right) is placed into BUTTON, the position of the mouse when this event occurred is stored in the X and the Y fields. 
+
+Mouse wheel events are reported as buttons 4 (up) and 5 (down). Two events are generated i.e. a MOUSE-BUTTON-DOWN followed by a MOUSE-BUTTON-UP event. 
+
+  * BUTTON is the mouse button index which is one of SDL-BUTTON-LEFT, SDL-BUTTON-MIDDLE, SDL-BUTTON-RIGHT, SDL-BUTTON-WHEELUP or SDL-BUTTON-WHEELDOWN. 
+  * STATE is the state of the button which is SDL-PRESSED or SDL-RELEASED.
+  * X is the X coordinates of the mouse at press/release time.
+  * Y is the Y coordinates of the mouse at press/release time.
+
+=== Joystick Motion Event ===
+
+{{{
+(:JOY-AXIS-MOTION-EVENT (:WHICH WHICH :AXIS AXIS :VALUE VALUE)  
+   &BODY BODY) 
+}}}
+
+A JOY-AXIS-MOTION-EVENT event occurs whenever a user moves an axis on the joystick. 
+
+  * WHICH is the joystick device index. The index of the joystick that reported the event.
+  * AXIS is the joystick axis index
+  * VALUE is the current position of the axis (range: -32768 to 32767)
+
+=== Joystick Button Events ===
+
+{{{
+(:JOY-BUTTON-DOWN-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)  
+   &BODY BODY)  
+}}}
+{{{
+(:JOY-BUTTON-UP-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)  
+   &BODY BODY) 
+}}}
+
+A JOY-BUTTON-DOWN-EVENT or JOY-BUTTON-DOWN-EVENT event occurs whenever a user presses or releases a button on a joystick. 
+
+  * WHICH is the index of the joystick that reported the event.
+  * BUTTON is the button pressed that caused the event.
+  * STATE is the current state of the button and is either SDL-PRESSED or SDL-RELEASED. 
+
+=== Joystick Hat Motion Event ===
+
+{{{
+   (:JOY-HAT-MOTION-EVENT (:WHICH WHICH :HAT HAT :VALUE VALUE)  
+     &BODY BODY) 
+}}}
+
+A JOY-HAT-MOTION-EVENT event occurs when ever a user moves a hat on the joystick. 
+
+  * WHICH is the index of the joystick that reported the event.
+  * HAT is the index of the hat that generated the event.
+  * VALUE is the current position of the hat, a bitwise OR'd combination of the following values SDL-HAT-CENTERED, SDL-HAT-UP, SDL-HAT-RIGHT, SDL-HAT-DOWN, SDL-HAT-LEFT, SDL-HAT-RIGHT-UP, SDL-HAT-RIGHT-DOWN, SDL-HAT-LEFT-UP and SDL-HAT-LEFT-DOWN. 
+
+=== Joystick Ball Motion Event ===
+
+{{{
+(:JOY-BALL-MOTION-EVENT (:WHICH WHICH :BALL BALL :X-REL X-REL :Y-REL Y-REL)  
+  &BODY BODY) 
+}}}
+
+A JOY-BALL-MOTION-EVENT event occurs when a user moves a trackball on the joystick. Trackballs only return relative motion. 
+
+  * WHICH is the index of the joystick that reported the event.
+  * BALL is the index of the trackball that generated the event.
+  * X-REL is the change in X position of the ball since it was last polled (last cycle of the event loop). 
+  * Y-REL is the change in Y position of the ball since it was last polled (last cycle of the event loop). 
+
+=== Quit Event ===
+
+{{{
+(:QUIT-EVENT ()  
+   &BODY BODY) 
+}}}
+
+If QUIT-EVENT is filtered or ignored then it is impossible for the user to close the window. If QUIT-EVENT is accepted and returns T then the application window will be closed. If QUIT-EVENT is accepted and returns NIL then the application window will not be closed. SDL-QUIT-REQUESTED will return non-zero if a QUIT-EVENT event is pending. 
+
+Note: Screen updates will continue to report success even though the application is no longer visible. 
+
+NOTE: :QUIT-EVENT must return T to exit the WITH-EVENT macro. 
+
+== Window Resize Event ===
+
+{{{
+(:VIDEO-RESIZE-EVENT (:W W :H H)  
+   ...) 
+}}}
+
+When `SDL-RESIZABLE` is passed as a flag to WINDOW, the user is allowed to resize the application window. When the window is resized a VIDEO-RESIZE-EVENT event is reported, with the new window width and height values stored in W and H respectively. When an VIDEO-RESIZE-EVENT event is received the window should be resized to the new dimensions using WINDOW. 
+
+  * W is the window width as an INTEGER.
+  * H is the window height as an INTERGER`.
+
+=== SDL Window Expose Event ===
+
+{{{
+(:VIDEO-EXPOSE-EVENT ()  
+   ...) 
+}}}
+
+VIDEO-EXPOSE-EVENT is triggered when the screen has been modified outside of the application, usually by the window manager, and needs to be redrawn. 
+
+=== System Window Events ===
+
+{{{
+(:SYS-WM-EVENT ()  
+   ...) 
+}}}
+
+The system window manager event contains a pointer to system-specific information about unknown window manager events. If this event is enabled using SDL-EVENT-STATE, it will be generated whenever unhandled events are received from the window manager. This can be used, for example, to implement cut-and-paste in your application. If you want to obtain system-specific information about the window manager, you can fill in the version member of a SDL-SYS-WM-INFO structure using SDL-VERSION, and pass it to the function: SDL-GET-WM-INFO 
+
+=== User Events ===
+
+{{{
+(:USER-EVENT (:TYPE TYPE :CODE CODE :DATA1 DATA1 :DATA2 DATA2)  
+   ...) 
+}}}
+
+USER-EVENT is unique in that it is created by the user. USER-EVENT can be pushed onto the event queue using PUSH-USER-EVENT. The contents of the event are completely up to the programmer. 
+
+  * TYPE is a value from SDL-USER-EVENT to (- SDL-NUM-EVENTS 1)` inclusive.
+  * CODE is a user defined event code
+  * DATA1 is a user defined data pointer
+  * DATA2 is a user defined data pointer
+
+=== Syntax of WITH-EVENTS ===
+
+{{{
+(WITH-EVENTS (TYPE)  
+ (:ACTIVE-EVENT (:GAIN GAIN :STATE STATE)  
+    ... )  
+ (:KEY-DOWN-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)  
+    ... )  
+ (:KEY-UP-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)  
+    ...)  
+ (:MOUSE-MOTION-EVENT (:STATE STATE :X X :Y Y :X-REL X-REL :Y-REL Y-REL)  
+    ...)  
+ (:MOUSE-BUTTON-DOWN-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)  
+    ...)  
+ (:MOUSE-BUTTON-UP-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)  
+    ...)  
+ (:JOY-AXIS-MOTION-EVENT (:WHICH WHICH :AXIS AXIS :VALUE VALUE)  
+    ...)  
+ (:JOY-BUTTON-DOWN-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)  
+    ...)  
+ (:JOY-BUTTON-UP-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)  
+    ...)  
+ (:JOY-HAT-MOTION-EVENT (:WHICH WHICH :HAT HAT :VALUE VALUE)  
+    ...)  
+ (:JOY-BALL-MOTION-EVENT (:WHICH WHICH :BALL BALL :X-REL X-REL :Y-REL Y-REL)  
+    ...)  
+ (:VIDEO-RESIZE-EVENT (:W W :H H)  
+    ...)  
+ (:VIDEO-EXPOSE-EVENT ()  
+    ...)  
+ (:SYS-WM-EVENT ()  
+    ...)  
+ (:USER-EVENT (:TYPE TYPE :CODE CODE :DATA1 DATA1 :DATA2 DATA2)  
+    ...)  
+ (:QUIT-EVENT ()  
+    ...  
+    T)  
+ (:IDLE ()  
+    ... )) 
 }}}
 
 = Default Keyword Arguments =
