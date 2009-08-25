@@ -95,8 +95,8 @@ The video surface can be configured to support the capabilities of the underlyin
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed SDL-FULLSCREEN], use full-screen mode,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory SDL-SW-SURFACE], and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Using_Surfaces_in_System_and_Video_Memory SDL-HW-SURFACE], create the surface in System or Video Memory,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Synchronous_or_Asynchronous_updates SDL-ASYNC-BLIT] update the video surface asynchronously to the main thread, 
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access SDL-ANY-FORMAT] see the Section Color Depth,
-  * http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth SDL-ANY-FORMAT] see the Section Color Depth,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access SDL-HW-PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering SDL-DOUBLEBUF] will enable hardware double buffering,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering SDL-OPENGL] will create an OpenGL rendering context,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-RESIZABLE] will create a resizable window, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border SDL-NO-FRAME] creates a window with no title bar or frame decoration. Full-screen modes automatically have this flag set.
@@ -112,6 +112,9 @@ lispbuilder-sdl will create a Windowed display by default. However this can be c
 If `SDL-ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailable, a display surface having a bits-per-pixel that matches the current display is returned. Normally, if a video surface of the requested bits-per-pixel is not available, one is emulated using shadow surface. Passing `SDL-ANY-FORMAT` prevents this and the video surface is used, regardless of the requested its pixel depth.
 
 Note: A BPP of 24 uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, use a BPP of 32. 
+
+== Window Title and Border ==
+  * Having a title bar or having no window frame.
 
 == Window x and y position ==
 
@@ -205,9 +208,6 @@ list-modes flags &optional surface => result
 == Single or Double buffering ==
 
 == OpenGL rendering ==
-
-== Window Title and Border ==
-  * Having a title bar or having no window frame.
 
 = Handling Events and the Game Loop =
 
