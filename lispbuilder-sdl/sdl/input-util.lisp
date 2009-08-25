@@ -25,10 +25,10 @@
   status)
 
 (defun input-eq (input input-status)
-  "Returns true if the input is eq to input-status.
+  "Returns `T` if the input is eq to input-status.
 
 ##### Returns
-True if the input is held
+`T` if the input is held
 "
   (let ((status (gethash input *input-event-status*)))
     (if (input-status-p status)
@@ -36,10 +36,10 @@ True if the input is held
       nil)))
 
 (defun input-set-p (input input-status)
-  "Returns true if the status for input has just been set
+  "Returns `T` if the status for input has just been set
 
 ##### Returns
-True if the input was just pressed
+`T` if the input was just pressed
 "
   (when (and (input-eq input input-status)
              (= 0.0 (time-in-current-state input)))
@@ -155,33 +155,33 @@ to update key, mouse button & joystick information.
   (handle-input key 'pressed))
 
 (defun key-held-p(key)
-  "Returns true if a key is currently held, which means it has either
+  "Returns `T` if a key is currently held, which means it has either
 just been pressed, or it has been pressed and held for a while.
 
 ##### Parameters
 * `KEY` is the SDL key definition (for example :SDL-KEY-ESCAPE)
 ##### Returns
-True if the key is held
+`T` if the key is held
 "
   (input-eq key 'pressed))
 
 (defun key-pressed-p(key)
-  "Returns true if a key has just been pressed
+  "Returns `T` if a key has just been pressed
 
 ##### Parameters
 * `KEY` is the SDL key definition (for example :SDL-KEY-ESCAPE)
 ##### Returns
-True if the key was just pressed
+`T` if the key was just pressed
 "
   (input-set-p key 'pressed))
 
 (defun key-released-p(key)
-  "Returns true if a key has just been released
+  "Returns `T` if a key has just been released
 
 ##### Parameters
 * `KEY` is the SDL key definition (for example :SDL-KEY-ESCAPE)
 ##### Returns
-True if the key was just pressed
+`T` if the key was just pressed
 "
   (input-set-p key 'released))
 
@@ -215,8 +215,8 @@ Time key was in previous state
 
 ##### Parameters
 * `BUTTON` is the SDL mouse button definition for the button that is now up. This can be one of
-SDL-BUTTON-LEFT, SDL-BUTTON-MIDDLE, SDL-BUTTON-RIGHT, SDL-BUTTON-WHEEL-UP, SDL-BUTTON-WHEEL-DOWN,
-SDL-BUTTON-X1, SDL-BUTTON-X2.
+MOUSE-LEFT, MOUSE-MIDDLE, MOUSE-RIGHT, MOUSE-WHEEL-UP, MOUSE-WHEEL-DOWN,
+MOUSE-X1, or MOUSE-X2.
 ##### Returns
 "
   (handle-input button 'released))
@@ -226,48 +226,56 @@ SDL-BUTTON-X1, SDL-BUTTON-X2.
 
 ##### Parameters
 * `BUTTON` is the SDL mouse button definition for the button that is now down. This can be one of
-SDL-BUTTON-LEFT, SDL-BUTTON-MIDDLE, SDL-BUTTON-RIGHT, SDL-BUTTON-WHEEL-UP, SDL-BUTTON-WHEEL-DOWN,
-SDL-BUTTON-X1, SDL-BUTTON-X2.
+MOUSE-LEFT, MOUSE-MIDDLE, MOUSE-RIGHT, MOUSE-WHEEL-UP, MOUSE-WHEEL-DOWN,
+MOUSE-X1, or MOUSE-X2.
 ##### Returns
 "
   (handle-input button 'pressed))
 
-(defun mouse-held-p(mouse)
-  "Returns true if a mouse is currently held, which means it has either
+(defun mouse-held-p(button)
+  "Returns `T` if the mouse `BUTTON` is currently held, which means the mouse button it has either
 just been pressed, or it has been pressed and held for a while.
 
 ##### Parameters
-* `MOUSE` is the SDL mouse definition (for example :SDL-MOUSE-ESCAPE)
+* `BUTTON` can be one of
+MOUSE-LEFT, MOUSE-MIDDLE, MOUSE-RIGHT, MOUSE-WHEEL-UP, MOUSE-WHEEL-DOWN,
+MOUSE-X1, or MOUSE-X2.
 ##### Returns
-True if the mouse is held
+`T` if the mouse button is held
 "
-  (input-eq mouse 'pressed))
+  (input-eq button 'pressed))
 
 (defun mouse-pressed-p(button)
-  "Returns true if a mouse button has just been released
+  "Returns `T` if the mouse `BUTTON` has just been pressed
 
 ##### Parameters
-* `MOUSE` is the SDL mouse definition (for example :SDL-MOUSE-ESCAPE)
+* `BUTTON` can be one of
+MOUSE-LEFT, MOUSE-MIDDLE, MOUSE-RIGHT, MOUSE-WHEEL-UP, MOUSE-WHEEL-DOWN,
+MOUSE-X1, or MOUSE-X2.
 ##### Returns
-True if the mouse was just pressed
+`T` if the mouse was just pressed
 "
   (input-set-p button 'pressed))
 
 (defun mouse-released-p(button)
-  "Returns true if a mouse has just been released
+  "Returns `T` if the mouse `BUTTON` has just been released
 
 ##### Parameters
-* `MOUSE` is the SDL mouse definition (for example :SDL-MOUSE-ESCAPE)
+* `BUTTON` can be one of
+MOUSE-LEFT, MOUSE-MIDDLE, MOUSE-RIGHT, MOUSE-WHEEL-UP, MOUSE-WHEEL-DOWN,
+MOUSE-X1, or MOUSE-X2.
 ##### Returns
-True if the mouse was just pressed
+`T` if the mouse was just pressed
 "
   (input-set-p button 'released))
 
 (defun mouse-time-in-current-state(button)
-  "Returns time a mouse button has been in current state
+  "Returns time a mouse `BUTTON` has been in current state
 
 ##### Parameters
-* `MOUSE` is the SDL mouse definition (for example :SDL-BUTTON-LEFT)
+* `BUTTON` can be one of
+MOUSE-LEFT, MOUSE-MIDDLE, MOUSE-RIGHT, MOUSE-WHEEL-UP, MOUSE-WHEEL-DOWN,
+MOUSE-X1, or MOUSE-X2.
 ##### Returns
 Time mouse is in current state
 "
@@ -277,7 +285,9 @@ Time mouse is in current state
   "Returns time mouse button was in a previous state
 
 ##### Parameters
-* `MOUSE` is the SDL mouse definition (for example :SDL-BUTTON-LEFT)
+* `BUTTON` can be one of
+MOUSE-LEFT, MOUSE-MIDDLE, MOUSE-RIGHT, MOUSE-WHEEL-UP, MOUSE-WHEEL-DOWN,
+MOUSE-X1, or MOUSE-X2.
 ##### Returns
 Time mouse was in previous state
 "

@@ -22,6 +22,6 @@
          (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
          (sdl:update-display))))
       (:mouse-motion-event (:x x :y y :x-rel xrel :y-rel yrel)
-       (when (sdl:mouse-held-p sdl-cffi::SDL-BUTTON-LEFT)
+       (when (sdl:mouse-left-p)
          (sdl:draw-line-* x y (- x xrel) (- y yrel) :color (sdl:color))
          (sdl:update-display))))))

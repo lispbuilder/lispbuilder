@@ -546,7 +546,30 @@
    #:get-font-face-family-name
    #:get-font-face-style-name
 
-      ;; Imports from lispbuilder-sdl-cffi
+   ;; mouse.lisp
+   #:MOUSE-LEFT
+   #:MOUSE-MIDDLE
+   #:MOUSE-RIGHT
+   #:MOUSE-WHEEL-UP
+   #:MOUSE-WHEEL-DOWN
+   #:MOUSE-X1
+   #:MOUSE-X2
+   #:mouse-x
+   #:mouse-relative-x
+   #:mouse-y
+   #:mouse-relative-y
+   #:mouse-position
+   #:mouse-relative-position
+   #:mouse-buttons
+   #:mouse-left-p
+   #:mouse-right-p
+   #:mouse-middle-p
+   #:mouse-wheel-up-p
+   #:mouse-wheel-down-p
+   #:mouse-x1-p
+   #:mouse-x2-p
+  
+   ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
    #:sdl-opengl
    #:sdl-init-everything
