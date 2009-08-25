@@ -526,7 +526,7 @@ Note: Screen updates will continue to report success even though the application
 
 NOTE: :QUIT-EVENT must return T to exit the WITH-EVENT macro. 
 
-== Window Resize Event ===
+=== Window Resize Event ===
 
 {{{
 (:VIDEO-RESIZE-EVENT (:W W :H H)  
