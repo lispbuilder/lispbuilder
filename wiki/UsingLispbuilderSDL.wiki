@@ -273,9 +273,11 @@ Unlike application software, a game is typically built around a game loop. The g
 
 == Introduction to Handling Input ==
 
+=== Input Events ===
+
 Games require interaction with with users. The game receives input from the user, executes the game logic based on this input, and generates output - usually in the form of graphics rendered to a display. For each input stimuli the system will generate a corresponding event. Inputs are received from the mouse, keyboard, joystick, window manager, and user (user generated). The system creates events to match these inputs; for example a key when depressed will generate a key down event. Releasing the key will generate a key up event. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro provides an efficient mechanism for processing these events.
 
-For example, while the mouse is moved a constant stream of `:MOUSE-MOTION-EVENT` events are generated. To process the x and y mouse position the user provide a `:MOUSE-MOTION-EVENT` handler. `WITH-EVENTS` calls the handler each time this event is received. Event handlers are straight forward to write as shown in the code below;
+For example, while the mouse is moved a constant stream of `:MOUSE-MOTION-EVENT` events are generated. To process the x and y mouse position the user must provide a `:MOUSE-MOTION-EVENT` handler. `WITH-EVENTS` calls the handler each time this event is received. Event handlers are straight forward to define as shown in the code below;
 
 {{{
 (WITH-EVENTS ()
@@ -293,6 +295,8 @@ The only event that *must* be handled is `:QUIT-EVENT`. If `:QUIT-EVENT` is igno
 }}}
 
 The list of supported events are described in greater detail in section [Events].
+
+=== Input State ===
 
 In addition to processing events, the system also provides functions to query the current state of the keyboard, mouse, display and joystick. 
 
