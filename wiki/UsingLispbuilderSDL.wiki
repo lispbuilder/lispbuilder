@@ -269,13 +269,13 @@ list-modes flags &optional surface => result
 
 = The Game Loop =
 
-Unlike most other software, a game is typically built around a game loop. The game loop is responsible for receiving and dispatching incoming events, executing game logic, and redrawing the display. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop.
+Unlike application software, a game is typically built around a game loop. The game loop is responsible for receiving user input, executing game logic, and redrawing the display. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop.
 
-== Introduction to Handling Events ==
+== Introduction to Handling Input ==
 
-For each input stimuli the system will generate a corresponding event. Inputs are received from the mouse, keyboard, joystick, window manager, and user (user generated). The system creates events to match the specific inputs; for example a key when depressed can will generate a key down event. Releasing the key will generate a key up event. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro provides the mechanism to process these events.
+Games require interaction with with users. The game receives input from the user, executes the game logic based on this input, and generates output - usually in the form of graphics rendered to a display. For each input stimuli the system will generate a corresponding event. Inputs are received from the mouse, keyboard, joystick, window manager, and user (user generated). The system creates events to match these inputs; for example a key when depressed will generate a key down event. Releasing the key will generate a key up event. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro provides an efficient mechanism for processing these events.
 
-For example, each time the mouse is moved a `:MOUSE-MOTION-EVENT` is generated. To process the x and y mouse position the user provide a `:MOUSE-MOTION-EVENT` handler. `WITH-EVENTS` calls the handler when this event is received. Event handlers are straight forward to write as shown in the code segment below;
+For example, while the mouse is moved a constant stream of `:MOUSE-MOTION-EVENT` events are generated. To process the x and y mouse position the user provide a `:MOUSE-MOTION-EVENT` handler. `WITH-EVENTS` calls the handler each time this event is received. Event handlers are straight forward to write as shown in the code below;
 
 {{{
 (WITH-EVENTS ()
@@ -283,7 +283,7 @@ For example, each time the mouse is moved a `:MOUSE-MOTION-EVENT` is generated. 
     ...))
 }}}
 
-The only event that *must* be handled is `:QUIT-EVENT`. If `:QUIT-EVENT` is ignored or not handled then it becomes impossible to close the Window or exit the game loop.
+The only event that *must* be handled is `:QUIT-EVENT`. If `:QUIT-EVENT` is ignored then it becomes impossible to close the Window or exit the game loop.
 
 {{{
 (WITH-EVENTS ()
@@ -294,9 +294,47 @@ The only event that *must* be handled is `:QUIT-EVENT`. If `:QUIT-EVENT` is igno
 
 The list of supported events are described in greater detail in section [Events].
 
+In addition to processing events, the system also provides functions to query the current state of the keyboard, mouse, display and joystick. 
+
+Unlike events that are generated in response to input; state is the way something is with respect to its main attributes. For example a `:KEY-DOWN-EVENT` event may signal that a the `:SDL-KEY-ESCAPE` key is depressed. However the current state of the keyboard may indicate that keys `:SDL-KEY-ESCAPE` and `:SDL-KEY-SPACE` are currently depressed.
+
+= Querying the Keyboard State =
+
+  * KEY-HELD-P
+  * KEY-PRESSED-P
+  * KEY-RELEASED-P
+  * KEY-TIME-IN-CURRENT-STATE
+  * KEY-TIME-IN-PREVIOUS-STATE
+
+  * KEY-DOWN-P
+  * KEYS-DOWN-P
+  * MOD-DOWN-P
+  * MODS-DOWN-P
+  
+= Querying the Mouse State =
+
+  * MOUSE-X
+  * MOUSE-Y
+  * MOUSE-POSITION
+  * MOUSE-RELATIVE-POSITION
+  * MOUSE-BUTTONS
+  * MOUSE-LEFT-P
+  * MOUSE-MIDDLE-P
+  * MOUSE-RIGHT-P
+  * MOUSE-WHEEL-UP-P
+  * MOUSE-WHEEL-DOWN-P
+  * MOUSE-X1-P
+  * MOUSE-X2-P
+
+
+
+
+= Querying the Joystick State =
+[TBD]
+
 == Executing Game Logic ==
 
-`:IDLE`, although not technically an actual event, is executed once per game loop after all events have been processed. Place logic code to be executed in the game loop that is not event driven in `:IDLE`. This logic may update world physics, update the state of game objects and render sprites to the display.
+`:IDLE`, although not technically an actual event, is executed once per game loop after all events have been processed. Place logic to be executed in the game loop that is not event driven in `:IDLE`. This logic may update world physics, update the state of game objects and render sprites to the display.
 
 {{{
 (SDL:WITH-EVENTS ()
@@ -309,23 +347,21 @@ The list of supported events are described in greater detail in section [Events]
 
 == Limiting the Frame Rate ==
 
-[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] can limit the game loop to a specific number of iterations a second as set by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE]. This effectively limits the number of frames displayed per second. To set the frame rate to 60 frames per second for example, 
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] can limit the game loop to a specific number of iterations a second as set by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE]. This effectively limits the number of frames displayed per second. For example, to set the frame rate to 60 frames per second;
 
 {{{
 (SETF (FRAME-RATE) 60)
 }}}
 
-To unlock the frame rate, effectively running the game loop as fast as the CPU will allow, set the FRAME-RATE to `NIL`; 
+To unlock the frame rate, effectively running the game loop as fast as the CPU will allow, set the `FRAME-RATE` to `NIL`; 
 
 {{{
 (SETF (FRAME-RATE) NIL)
 }}}
 
-The display surface must be updated once per game loop, as described in the section [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html SDL Display].
-
 == Updating the Display ==
 
-Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-display UPDATE-DISPLAY] to refresh the video surface or swap buffers if double buffering is enabled.
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-display UPDATE-DISPLAY] to refresh the video surface or swap buffers if double buffering is enabled. The display surface must be updated once per game loop, as described in the section [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html SDL Display].
 
 = Event Processing =
 == Poll or Wait ==
@@ -371,7 +407,7 @@ The following events are supported;
     &BODY BODY) 
 }}}
 
-The `:IDLE` event is special in that it is not a system generated event. Rather the forms in `:IDLE` are executed once each game loop after all events in the event queue are processed. `:IDLE` is ignored when the event mechanism specified by TYPE is :WAIT. 
+The `:IDLE` event is special in that it is not a system generated event. The forms in `:IDLE` are executed once per game loop after all events in the event queue are processed. `:IDLE` is ignored when the event mechanism is `:WAIT`. 
 
 === Active Event ===
 
