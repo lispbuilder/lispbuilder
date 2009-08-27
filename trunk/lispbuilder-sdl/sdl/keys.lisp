@@ -91,6 +91,26 @@ For example: \(KEY-STATE-P :SDL-KEY-F1\)"
     (get-key-state key)
     (get-keys-state)))
 
+(defun key-down-p (key)
+  "Returns `KEY` if currently depressed, returns NIL otherwise.
+Note: Use SDL_PumpEvents to update the state array.
+Note: This function returns the current state after all events have been processed, 
+so if a key or button has been pressed and released before you process events, 
+then the pressed state will never show up in the getstate calls.
+Note: This function doesn't take into account whether shift is currently depressed.
+For example: \(KEY-DOWN-P :SDL-KEY-F1\)"
+  (get-key-state key))
+
+(defun keys-down-p ()
+  "Returns all keys that are currently depressed as a LIST. 
+Note: Use SDL_PumpEvents to update the state array.
+Note: This function returns the current state after all events have been processed, 
+so if a key or button has been pressed and released before you process events, 
+then the pressed state will never show up in the getstate calls.
+Note: This function doesn't take into account whether shift is currently depressed.
+For example: \(KEYS-DOWN-P\)"
+  (get-keys-state))
+
 (defun get-mod-state (key)
   (if (> (logand (sdl-cffi:sdl-get-mod-state)
                  (cffi:foreign-enum-value 'sdl-cffi::sdl-mod key))
@@ -115,6 +135,24 @@ For example: \(GET-MOD-STATE :SDL-KEY-MOD-LCTRL)"
   (if key
     (get-mod-state key)
     (get-mods-state)))
+
+(defun mod-down-p (mod)
+  "Returns `MOD` if currently depressed, returns NIL otherwise.
+Note: Use SDL_PumpEvents to update the state array.
+Note: This function gives you the current state after all events have been processed, 
+so if a key or button has been pressed and released before you process events, 
+then the pressed state will never show up in the getstate calls.
+For example: \(MOD-DOWN-P :SDL-KEY-MOD-LCTRL\)"
+  (get-mod-state mod))
+
+(defun mods-down-p ()
+  "Returns all modifier keys that are currently depressed as a LIST. 
+Note: Use SDL_PumpEvents to update the state array.
+Note: This function gives you the current state after all events have been processed, 
+so if a key or button has been pressed and released before you process events, 
+then the pressed state will never show up in the getstate calls.
+For example: \(MODS-DOWN-P\)"
+  (get-mods-state))
 
 (defun key= (key1 key2)
   (eq key1 key2))

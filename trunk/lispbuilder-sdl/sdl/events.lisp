@@ -75,6 +75,18 @@ This function is set to the following as default;
   "Disables event filters."
   (sdl-cffi::sdl-set-event-filter (cffi:null-pointer)))
 
+(defun pump-events ()
+  "Pumps the event loop, gathering events from the input devices. 
+`PUMP-EVENTS` gathers all the pending input information from devices and places it on the event queue.
+Without calls to SDL_PumpEvents no events would ever be placed on the queue.
+Often the need for calls to SDL_PumpEvents is hidden from the user since
+[SDL-POLL-EVENT](#sdl-poll-event) and [SDL-WAIT-EVENT](#sdl-wait-event) implicitly call `PUMP-EVENTS`.
+However, if you are not polling or waiting for events (e.g. you are filtering them), then you must call
+`PUMP-EVENTS` to force an event queue update.
+
+Note: Only call this function in the thread that set the video mode."
+  (lispbuilder-sdl-cffi::sdl-pump-events))
+
 (defun new-event (&optional (event-type :SDL-NO-EVENT))
   "Creates a new `SDL_Event` and of `EVENT-TYPE`.
  An event of type `SDL-NO-EVENT` `\(SDL_NOEVENT\)` is created if 
@@ -1026,7 +1038,7 @@ The contents of the event are completely up to the programmer.
 				     events))))
 		   (unless ,quit
 		     #+lispbuilder-sdl-audio(process-audio)
-		     (sdl:update-input-util (sdl:frame-time))
+                     (sdl:update-input-util (sdl:frame-time))
 		     (sdl-base::process-timestep sdl-base::*default-fpsmanager*
 						 ,idle-func)))
 	    (cffi:foreign-free ,sdl-event))))

@@ -20,7 +20,7 @@
                          (fps (make-instance 'sdl-base::fps-fixed))
                          (position nil))
   ;; Set the x/y window position
-  (let ((window-position (if (symbolp position)
+  #+windows(let ((window-position (if (symbolp position)
                            "center"
                            (format nil "~A,~A" (elt position 0) (elt position 1)))))
     (if position
