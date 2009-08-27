@@ -273,6 +273,7 @@
    #:new-event
    #:push-quit-event
    #:push-user-event
+   #:pump-events
 
    ;; image.lisp
    #:load-image
@@ -529,6 +530,10 @@
    #:key=
    #:modifier=
    #:modifier-p
+   #:key-down-p
+   #:keys-down-p
+   #:mod-down-p
+   #:mods-down-p
 
    ;; font.lisp
    #:with-default-font
@@ -555,9 +560,7 @@
    #:MOUSE-X1
    #:MOUSE-X2
    #:mouse-x
-   #:mouse-relative-x
    #:mouse-y
-   #:mouse-relative-y
    #:mouse-position
    #:mouse-relative-position
    #:mouse-buttons

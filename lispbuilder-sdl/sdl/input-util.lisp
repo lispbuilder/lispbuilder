@@ -155,7 +155,7 @@ to update key, mouse button & joystick information.
   (handle-input key 'pressed))
 
 (defun key-held-p(key)
-  "Returns `T` if a key is currently held, which means it has either
+  "Returns the time that the key has been held for, which means it has either
 just been pressed, or it has been pressed and held for a while.
 
 ##### Parameters
@@ -163,7 +163,8 @@ just been pressed, or it has been pressed and held for a while.
 ##### Returns
 `T` if the key is held
 "
-  (input-eq key 'pressed))
+  (when (input-eq key 'pressed)
+    (time-in-current-state key)))
 
 (defun key-pressed-p(key)
   "Returns `T` if a key has just been pressed
@@ -233,7 +234,7 @@ MOUSE-X1, or MOUSE-X2.
   (handle-input button 'pressed))
 
 (defun mouse-held-p(button)
-  "Returns `T` if the mouse `BUTTON` is currently held, which means the mouse button it has either
+  "Returns the time that the mouse `BUTTON` has been held, which means the mouse button has either
 just been pressed, or it has been pressed and held for a while.
 
 ##### Parameters
@@ -243,7 +244,8 @@ MOUSE-X1, or MOUSE-X2.
 ##### Returns
 `T` if the mouse button is held
 "
-  (input-eq button 'pressed))
+  (when (input-eq button 'pressed)
+    (time-in-current-state button)))
 
 (defun mouse-pressed-p(button)
   "Returns `T` if the mouse `BUTTON` has just been pressed
