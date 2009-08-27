@@ -304,34 +304,37 @@ Unlike events that are generated in response to input; state is the way somethin
 
 = Querying the Keyboard State =
 
-  * KEY-HELD-P
-  * KEY-PRESSED-P
-  * KEY-RELEASED-P
-  * KEY-TIME-IN-CURRENT-STATE
-  * KEY-TIME-IN-PREVIOUS-STATE
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-held-p KEY-HELD-P], returns the duration in seconds that the key has been depressed over a number of game loops.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-pressed-p KEY-PRESSED-P], returns `T` if the key has just been depressed in the current game loop.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-released-p KEY-RELEASED-P], returns `T` if the key has just been released in the current game loop.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-time-in-current-state KEY-TIME-IN-CURRENT-STATE], returns the duration in seconds that key has been either pressed or depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-time-in-previous-state KEY-TIME-IN-PREVIOUS-STATE], returns the duration in seconds that key was in its previous state, either pressed or depressed.
 
-  * KEY-DOWN-P
-  * KEYS-DOWN-P
-  * MOD-DOWN-P
-  * MODS-DOWN-P
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-down-p KEY-DOWN-P], returns `T` if the key is depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#keys-down-p KEYS-DOWN-P], returns a list of the keys that are depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mod-down-p MOD-DOWN-P], returns `T` if the modifier key is depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mods-down-p MODS-DOWN-P], returns a list of the modifier keys that are depressed.
   
 = Querying the Mouse State =
 
-  * MOUSE-X
-  * MOUSE-Y
-  * MOUSE-POSITION
-  * MOUSE-RELATIVE-POSITION
-  * MOUSE-BUTTONS
-  * MOUSE-LEFT-P
-  * MOUSE-MIDDLE-P
-  * MOUSE-RIGHT-P
-  * MOUSE-WHEEL-UP-P
-  * MOUSE-WHEEL-DOWN-P
-  * MOUSE-X1-P
-  * MOUSE-X2-P
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-held-p MOUSE-HELD-P], returns the duration in seconds that the mouse button has been depressed over a number of game loops.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-pressed-p MOUSE-PRESSED-P], returns `T` if the mouse button has just been depressed in the current game loop.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-released-p MOUSE-RELEASED-P], returns `T` if the mouse button has just been released in the current game loop.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-time-in-current-state MOUSE-TIME-IN-CURRENT-STATE], returns the duration in seconds that mouse button has been either pressed or depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-time-in-previous-state MOUSE-TIME-IN-PREVIOUS-STATE], returns the duration in seconds that mouse button was in its previous state, either pressed or depressed.
 
-
-
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-x MOUSE-X], returns the absolute mouse `X` cursor position.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-y MOUSE-Y], returns the absolute mouse `Y` cursor position.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-position MOUSE-POSITION], returns the absolute mouse `X` and `Y` cursor positions as a `VECTOR`.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-relative-position MOUSE-RELATIVE-POSITION], returns the relative mouse `X` and `Y` cursor positions as a `VECTOR`. This is the delta between the current mouse position and the position when `MOUSE-RELATIVE-POSITION` was last called.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-buttons MOUSE-BUTTONS], returns a list of the depressed mouse buttons.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-left-p MOUSE-LEFT-P], returns `T` if the left mouse button is depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-middle-p MOUSE-MIDDLE-P], returns `T` if the middle mouse button is depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-right-p MOUSE-RIGHT-P], returns `T` if the right mouse button is depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-wheel-up-p MOUSE-WHEEL-UP-P], returns `T` if the mouse wheel is rotated up.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-wheel-down-p MOUSE-WHEEL-DOWN-P], returns `T` if the mouse wheel is rotated down.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-x1-p MOUSE-X1-P], returns `T` if the extended mouse button `X1` is depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-x2-p MOUSE-X2-P], returns `T` if the extended mouse button `X2` is depressed.
 
 = Querying the Joystick State =
 [TBD]
