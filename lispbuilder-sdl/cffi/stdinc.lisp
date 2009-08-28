@@ -18,10 +18,16 @@
 
 ;;; Is this even cross platform between Windows, *nix, OSX?
 ;; extern DECLSPEC char * SDLCALL SDL_getenv(const char *name);
-(defcfun ("SDL_getenv" SDL-get-env) :pointer
-  (name :string))
+(if (cffi:foreign-symbol-pointer "getenv")
+    (defcfun ("getenv" SDL-get-env) :pointer
+      (variable :string))
+    (defcfun ("SDL_getenv" SDL-get-env) :pointer
+	    (name :string)))
 
 ;;; Is this even cross platform between Windows, *nix, OSX?
 ;; extern DECLSPEC int SDLCALL SDL_putenv(const char *variable);
-(defcfun ("SDL_putenv" SDL-put-env) :int
-  (variable :string))
+(if (cffi:foreign-symbol-pointer "putenv")
+    (defcfun ("putenv" SDL-put-env) :int
+      (variable :string))
+    (defcfun ("SDL_putenv" SDL-put-env) :int
+      (variable :string)))

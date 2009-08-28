@@ -1,11 +1,16 @@
 
 (in-package #:lispbuilder-sdl)
-                         
+
+                    
 (defmethod load-image ((source rwops) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the `RWOPS` in `SOURCE`."
   (declare (ignore image-type force))
-  (let ((surf (make-instance 'surface
-			     :using-surface (sdl-cffi::SDL-Load-BMP-RW (fp source) 0)
+  
+  (let* ((surf-ptr (sdl-cffi::SDL-Load-BMP-RW (fp source) 0))
+	 (surf (make-instance 'surface
+			      :using-surface (if (cffi-sys:null-pointer-p surf-ptr)
+						(error "ERROR: LOAD-IMAGE; cannot load file '~a'" (sdl-cffi::sdl-get-error))
+						surf-ptr)						
 			     :enable-color-key (or color-key color-key-at)
 			     :color-key color-key
 			     :color-key-at color-key-at
