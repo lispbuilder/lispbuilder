@@ -20,6 +20,7 @@ Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system]
 
 = Projects using LISPBUILDER-SDL =
 
+ * [http://lispgamesdev.blogspot.com/ Lisp Games Blog]
  * [http://uxul.wordpress.com/2009/04/07/a-detailed-preview-of-my-jnr-game-written-in-common-lisp/ JNR (Jump & Run)]
  * [http://github.com/sykopomp Common-Worm, and yashmup]
  * [http://sourceforge.net/projects/latrunculi/ Latrunculi]
