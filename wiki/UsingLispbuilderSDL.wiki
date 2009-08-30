@@ -126,7 +126,7 @@ The valid values for `:BPP` are as follows;
   * `8`, use a 256 index color palette (not supported in lispbuilder-sdl right now),
   * `16`, allows 65,536 colors,
   * `24`, allows 16,777,216 colors,
-  * `32`, use the common 8 bits per pixel. Allows 4.2 billion colors.
+  * `32`, use the common 8 bits per pixel allowing 4.2 billion colors.
 
 A bits-per-pixel of 24 uses the packed representation of 3 bytes per pixel. For the more common 4 bytes per pixel mode, please use a bits-per-pixel of 32.
 
@@ -271,11 +271,11 @@ list-modes flags &optional surface => result
 
 Unlike application software, a game is typically built around a game loop. The game loop is responsible for receiving user input, executing game logic, and redrawing the display. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop.
 
-== Introduction to Handling Input ==
+== Introduction to Input Handling ==
 
 === Input Events ===
 
-Games require interaction with with users. The game receives input from the user, executes the game logic based on this input, and generates output - usually in the form of graphics rendered to a display. For each input stimuli the system will generate a corresponding event. Inputs are received from the mouse, keyboard, joystick, window manager, and user (user generated). The system creates events to match these inputs; for example a key when depressed will generate a key down event. Releasing the key will generate a key up event. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro provides an efficient mechanism for processing these events.
+Interaction with the user is generally a significant part of the game. The event loop receives input from the user, executes the game logic based on this input, and generates output - usually in the form of graphics rendered to a display. For each input stimuli the system will generate a corresponding event. Inputs are received from the mouse, keyboard, joystick, window manager, and user (user generated). The system creates events to match these inputs; for example a key when depressed will generate a key down event. Releasing the key will generate a key up event. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro provides an efficient mechanism for processing these events.
 
 For example, while the mouse is moved a constant stream of `:MOUSE-MOTION-EVENT` events are generated. To process the x and y mouse position the user must provide a `:MOUSE-MOTION-EVENT` handler. `WITH-EVENTS` calls the handler each time this event is received. Event handlers are straight forward to define as shown in the code below;
 
@@ -298,16 +298,16 @@ The list of supported events are described in greater detail in section [Events]
 
 === Input State ===
 
-In addition to processing events, the system also provides functions to query the current state of the keyboard, mouse, display and joystick. 
+In addition to event processing, the system also provides functions to query the current state of the keyboard, mouse, display and joystick. 
 
 Unlike events that are generated in response to input; state is the way something is with respect to its main attributes. For example a `:KEY-DOWN-EVENT` event may signal that a the `:SDL-KEY-ESCAPE` key is depressed. However the current state of the keyboard may indicate that keys `:SDL-KEY-ESCAPE` and `:SDL-KEY-SPACE` are currently depressed.
 
-= Querying the Keyboard State =
+== Querying the Keyboard State ==
 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-held-p KEY-HELD-P], returns the duration in seconds that the key has been depressed over a number of game loops.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-pressed-p KEY-PRESSED-P], returns `T` if the key has just been depressed in the current game loop.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-released-p KEY-RELEASED-P], returns `T` if the key has just been released in the current game loop.
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-time-in-current-state KEY-TIME-IN-CURRENT-STATE], returns the duration in seconds that key has been either pressed or depressed.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-time-in-current-state KEY-TIME-IN-CURRENT-STATE], returns the duration in seconds that key is either pressed or depressed.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-time-in-previous-state KEY-TIME-IN-PREVIOUS-STATE], returns the duration in seconds that key was in its previous state, either pressed or depressed.
 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#key-down-p KEY-DOWN-P], returns `T` if the key is depressed.
@@ -315,7 +315,7 @@ Unlike events that are generated in response to input; state is the way somethin
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mod-down-p MOD-DOWN-P], returns `T` if the modifier key is depressed.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mods-down-p MODS-DOWN-P], returns a list of the modifier keys that are depressed.
   
-= Querying the Mouse State =
+== Querying the Mouse State ==
 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-held-p MOUSE-HELD-P], returns the duration in seconds that the mouse button has been depressed over a number of game loops.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-pressed-p MOUSE-PRESSED-P], returns `T` if the mouse button has just been depressed in the current game loop.
@@ -336,7 +336,7 @@ Unlike events that are generated in response to input; state is the way somethin
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-x1-p MOUSE-X1-P], returns `T` if the extended mouse button `X1` is depressed.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-x2-p MOUSE-X2-P], returns `T` if the extended mouse button `X2` is depressed.
 
-= Querying the Joystick State =
+== Querying the Joystick State ==
 [TBD]
 
 == Executing Game Logic ==
