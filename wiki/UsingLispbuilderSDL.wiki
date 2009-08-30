@@ -7,7 +7,7 @@
 
 LISPBUILDER-SDL provides abstractions to graphics, sound, physics (TBD), character animation (TBD) and 3D libraries (in development) allowing the development of interactive applications and games in Common Lisp.
 
-Core functionality includes window and event loop management, support for 2D bitmap and vector graphics, 2D graphical effects such as rotation, color keying and alpha blending, many graphics drawing primitives such as circles, polygons, squares, Bezier and Cuttmull-Rom curves, image support (bmp, jpeg, png, tiff, tga), sound mixing and playback of samples (WAV) and streaming music (mp3 and ogg formats), bitmap and true-type font support. 
+Core functionality includes window and event loop management, support for 2D bitmap and vector graphics, 2D graphical effects such as rotation, color keying and alpha blending, many graphics drawing primitives such as circles, polygons, squares, Bezier and Cuttmull-Rom curves, vector drawing, image loading (bmp, jpeg, png, tiff, tga), sound mixing and playback of samples (WAV) and streaming music (mp3 and ogg formats), bitmap and true-type font support. 
 
 Optional packages allow the core functionality described above to be enhanced to provide additional capabilities such 3D scene management, physics and character animation.
 
