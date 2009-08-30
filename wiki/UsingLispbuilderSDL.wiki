@@ -3,7 +3,15 @@
 
 <wiki:toc max_depth="3" />
 
-= Loading LISPBUILDER-SDL =
+= Introduction to LISPBUILDER-SDL =
+
+LISPBUILDER-SDL provides abstractions to graphics, sound, physics (TBD), character animation (TBD) and 3D libraries (in development) allowing development of interactive application and games using Common Lisp.
+
+The core functionality includes window and event loop management, support for 2D bitmap and vector graphics, 2D graphical effects such as rotation, color keying and alpha blending, many graphics drawing primitives such as circles, polygons, squares, Bezier and Cuttmull-Rom curves, image support (bmp, jpeg, png, tiff, tga), sound mixing and playback of samples (WAV) and streaming music (mp3 and ogg formats), bitmap and true-type font support. 
+
+Optional packages allow the core functionality described above to be enhanced to provide additional capabilities such 3D scene management, physics and character animation.
+
+== Loading LISPBUILDER-SDL ==
 
 After [http://code.google.com/p/lispbuilder/wiki/DownloadInstallation#Download_&_Installation_of_LISPBUILDER-SDL installation] is complete, `LISPBUILDER-SDL` can be loaded as follows;
 
@@ -269,13 +277,13 @@ list-modes flags &optional surface => result
 
 = The Game Loop =
 
-Unlike application software, a game is typically built around a game loop. The game loop is responsible for receiving user input, executing game logic, and redrawing the display. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop.
+Unlike application software, a game is typically built around a game loop. The game loop is responsible for [Introduction_to_Input_Handling processing user input], [Executing_Game_Logic executing game logic], [Limiting_the_Frame_Rate Limiting the farme rate, and [Updating_the_Display redrawing the display]. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop and is discussed in the following sections.
 
 == Introduction to Input Handling ==
 
 === Input Events ===
 
-Interaction with the user is generally a significant part of the game. The event loop receives input from the user, executes the game logic based on this input, and generates output - usually in the form of graphics rendered to a display. For each input stimuli the system will generate a corresponding event. Inputs are received from the mouse, keyboard, joystick, window manager, and user (user generated). The system creates events to match these inputs; for example a key when depressed will generate a key down event. Releasing the key will generate a key up event. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro provides an efficient mechanism for processing these events.
+Interaction with the user is a significant part of a game. The game loop receives input from the user, executes the game logic based on this input, and generates output - usually in the form of graphics rendered to a display. For each input stimuli the system will generate a corresponding event. Inputs are received from the mouse, keyboard, joystick, window manager, and user (user generated). The system creates events to match these inputs; for example a key when depressed will generate a key down event. Releasing the key will generate a key up event. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro provides an efficient mechanism for processing these events.
 
 For example, while the mouse is moved a constant stream of `:MOUSE-MOTION-EVENT` events are generated. To process the x and y mouse position the user must provide a `:MOUSE-MOTION-EVENT` handler. `WITH-EVENTS` calls the handler each time this event is received. Event handlers are straight forward to define as shown in the code below;
 
