@@ -20,7 +20,7 @@ Download and install LISPBUILDER-SDL and required packages [http://code.google.c
 Once installed, LISPBUILDER-SDL must be loaded into your Common Lisp environment by following the instructions [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Loading_LISPBUILDER-SDL here].
 
 
-LISPBUILDER-SDL must always be [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL LISPBUILDER-SDL initialized prior to use].
+LISPBUILDER-SDL must always be [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL initialized prior to use].
 
 = Loading LISPBUILDER-SDL =
 
