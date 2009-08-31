@@ -19,7 +19,7 @@ Download and install LISPBUILDER-SDL and required packages [http://code.google.c
 
 Once installed, LISPBUILDER-SDL must be loaded into your Common Lisp environment by following the instructions [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Loading_LISPBUILDER-SDL here].
 
-The structure of a simple game using LISPBUILDER-SDL uses the following pattern;
+The structure of a simple game follows the pattern;
 
   # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL Initialize the library]
   # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Display Create a display]
