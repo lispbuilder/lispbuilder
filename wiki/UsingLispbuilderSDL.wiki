@@ -28,7 +28,7 @@ The structure of a simple game follows the pattern;
   # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Updating_the_Display Update the display]
   # Return to 3
 
-In the following example make a box (a filled rectangle) follow the position of the mouse cursor, redrawing the box in a new color when the mouse button is depressed. Pressing any key will exit the example.
+The following example makes a box (a filled rectangle) follow the position of the mouse cursor, redrawing the box in a new color when the mouse button is depressed. Pressing any key will exit the example.
 
 First create a variable to hold the color.
 
