@@ -13,14 +13,21 @@ Optional packages allow the core functionality described above to be enhanced to
 
 = Introduction =
 
-LISPBUILDER-SDL is not distributed with any Common Lisp development environment and must be downloaded and installed separately. Installation is always tricky for the Lisp newbie as Lisp packages are unlike similar packages for other languages, but we have attempted to provide [http://code.google.com/p/lispbuilder/wiki/DownloadInstallationIntro comprehensive instructions] for all supported platforms. Support is also provided on the [http://code.google.com/p/lispbuilder/wiki/Community Lispbuilder Mailing List].
+LISPBUILDER-SDL is not distributed with any Common Lisp development environment and must be downloaded and installed separately. Installation is always tricky for the Lisp newbie because Lisp packages are unlike similar packages for other languages, but we have attempted to provide [http://code.google.com/p/lispbuilder/wiki/DownloadInstallationIntro comprehensive instructions] for all supported platforms. Support is also provided on the [http://code.google.com/p/lispbuilder/wiki/Community Lispbuilder Mailing List]. Before downloading, verify that your Lisp implementation and operating system [http://code.google.com/p/lispbuilder/wiki/DownloadInstallationIntro are supported].
 
 Download and install LISPBUILDER-SDL and required packages [http://code.google.com/p/lispbuilder/wiki/DownloadInstallation#Download_&_Installation_of_LISPBUILDER-SDL here]. 
 
 Once installed, LISPBUILDER-SDL must be loaded into your Common Lisp environment by following the instructions [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Loading_LISPBUILDER-SDL here].
 
-
 LISPBUILDER-SDL must always be [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL initialized prior to use].
+
+The next step is usually to create the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Display graphics window]. Some kind of display (window or full-screen) must be cerated to receive events from the Window Manager.
+
+The create the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Game_Loop game loop] to process the incoming user events.
+
+= Compatibility & Platforms Supported =
+
+LISPBUILDER-SDL runs on all of the popular Common Lisp implementations. The [http://code.google.com/p/lispbuilder/wiki/DownloadInstallationIntro compatibility table] lists the combinations of implementation and operating system that are supported.
 
 = Loading LISPBUILDER-SDL =
 
