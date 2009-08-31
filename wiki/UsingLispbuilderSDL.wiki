@@ -19,11 +19,91 @@ Download and install LISPBUILDER-SDL and required packages [http://code.google.c
 
 Once installed, LISPBUILDER-SDL must be loaded into your Common Lisp environment by following the instructions [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Loading_LISPBUILDER-SDL here].
 
+In the following example we move a rectangle with the mouse cursor, redrawing the rectangle in a new color when the mouse button is depressed. Pressing any key will exit the example.
+
+First create a new variable to hold the color.
+
+{{{
+(defparameter *random-color* sdl:*white*)
+}}}
+
+First create a new variable to hold the color.
+
 LISPBUILDER-SDL must always be [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL initialized prior to use].
 
-The next step is usually to create the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Display graphics window]. Some kind of display (window or full-screen) must be cerated to receive events from the Window Manager.
+{{{
+(sdl:with-init ()
+}}}
+
+The next step is to create the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Display graphics window]. Some kind of display (window or full-screen) must be created to receive events from the Window Manager.
+
+{{{
+    (sdl:window 200 200 :title-caption "Move a rectangle using the mouse")
+}}}
+
+Lock the frame-rate to 60 fps.
+
+{{{
+    (setf (sdl:frame-rate) 60)
+}}}
 
 The create the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Game_Loop game loop] to process the incoming user events.
+
+{{{
+    (sdl:with-events ()
+}}}
+
+The event loop will only exit when :QUIT-EVENT returns `T`. Always remember to handle this event or the event loop will never exit.
+
+{{{
+      (:quit-event () t)
+}}}
+
+Push a new quit-event on the event queue. This will cause :QUIT-EVENT to fire on the next event loop.
+
+{{{
+      (:key-down-event ()
+       (sdl:push-quit-event))
+}}}
+
+Most game logic will be called from the :IDLE event. The :IDLE event is called when all other events in the event queue have been processed for the current event loop. In other words, when the game loop is 'idle'. As such :IDLE is not a real event.
+
+{{{
+      (:idle ()
+}}}
+
+Generate a random color while the right mouse button is depressed. Keeping the mouse down will cause the colors to cycle. 
+
+{{{
+       ;; Change the color of the box if the left mouse button is depressed
+       (when (sdl:mouse-left-p)
+         (setf *random-color* (sdl:color :r (random 255) :g (random 255) :b (random 255))))
+}}}
+
+Clear the screen prior to drawing the rectangle. 
+
+{{{
+       ;; Clear the display each game loop
+       (sdl:clear-display sdl:*black*)
+}}}
+
+Draw the box. The x/y position is set to the current cursor position. 
+
+{{{
+       ;; Draw the box having a center at the mouse x/y coordinates.
+       (sdl:draw-box (sdl:rectangle-from-midpoint-* (sdl:mouse-x) (sdl:mouse-y) 20 20)
+                     :color *random-color*)
+}}}
+
+The display must now be redrawn at the end of the game loop.
+
+{{{
+       ;; Redraw the display
+       (sdl:update-display)))))
+}}}
+
+
+
 
 = Compatibility & Platforms Supported =
 
