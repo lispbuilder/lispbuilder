@@ -36,7 +36,7 @@ First create a variable to hold the color.
 (defparameter *random-color* sdl:*white*)
 }}}
 
-LISPBUILDER-SDL must be [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL initialized prior to use]. The example will only draw to the screen and therefore we do not need to initialize the audio, joystick, or CDROM subsystems.
+LISPBUILDER-SDL must be [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL initialized prior to use]. The example only draws to the screen and so there is no need to initialize the audio, joystick, or CDROM subsystems.
 
 {{{
 (sdl:with-init ()
