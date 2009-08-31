@@ -19,60 +19,67 @@ Download and install LISPBUILDER-SDL and required packages [http://code.google.c
 
 Once installed, LISPBUILDER-SDL must be loaded into your Common Lisp environment by following the instructions [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Loading_LISPBUILDER-SDL here].
 
-In the following example we move a rectangle with the mouse cursor, redrawing the rectangle in a new color when the mouse button is depressed. Pressing any key will exit the example.
+The structure of a simple game using LISPBUILDER-SDL uses the following pattern;
 
-First create a new variable to hold the color.
+  # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL Initialize the library]
+  # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Display Create a display]
+  # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Game_Loop Start the game loop] to process events
+  # Perform the game logic
+  # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Updating_the_Display Update the display]
+  # Return to 3
+
+In the following example make a box (a filled rectangle) follow the position of the mouse cursor, redrawing the box in a new color when the mouse button is depressed. Pressing any key will exit the example.
+
+First create a variable to hold the color.
 
 {{{
 (defparameter *random-color* sdl:*white*)
 }}}
 
-First create a new variable to hold the color.
-
-LISPBUILDER-SDL must always be [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL initialized prior to use].
+LISPBUILDER-SDL must be [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL initialized prior to use]. The example will only draw to the screen and therefore we do not need to initialize the audio, joystick, or CDROM subsystems.
 
 {{{
 (sdl:with-init ()
 }}}
 
-The next step is to create the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Display graphics window]. Some kind of display (window or full-screen) must be created to receive events from the Window Manager.
+Next, create a 200 pixel by 200 pixel [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Display graphics window]. Some kind of display (window or full-screen) must be created to receive events from the Window Manager.
 
 {{{
     (sdl:window 200 200 :title-caption "Move a rectangle using the mouse")
 }}}
 
-Lock the frame-rate to 60 fps.
+Lock the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Setting_Frame_Rate frame-rate] to 60 fps.
 
 {{{
     (setf (sdl:frame-rate) 60)
 }}}
 
-The create the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Game_Loop game loop] to process the incoming user events.
+Create the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Game_Loop game loop] to process the incoming user events.
 
 {{{
     (sdl:with-events ()
 }}}
 
-The event loop will only exit when :QUIT-EVENT returns `T`. Always remember to handle this event or the event loop will never exit.
+The event loop will exit only when the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Quit_Event :QUIT-EVENT] handler returns `T`. Always remember to handle this event or the event loop will never exit. This handler is called when a quit event is received in the event queue. A quit event is generated when the user attempts to close the window, or any time [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#push-quit-event SDL:PUSH-QUIT-EVENT] is called.
 
 {{{
       (:quit-event () t)
 }}}
 
-Push a new quit-event on the event queue. This will cause :QUIT-EVENT to fire on the next event loop.
+The [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Keyboard_Events :KEY-DOWN-EVENT] handler is called for each key depressed. We want to exit the example to exit when a key is pressed, therefore push the quit event onto the event queue [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#push-quit-event SDL:PUSH-QUIT-EVENT] causing `:QUIT-EVENT` to fire on the next event loop.
 
 {{{
       (:key-down-event ()
        (sdl:push-quit-event))
 }}}
 
-Most game logic will be called from the :IDLE event. The :IDLE event is called when all other events in the event queue have been processed for the current event loop. In other words, when the game loop is 'idle'. As such :IDLE is not a real event.
+Most game logic will be called from the [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#IDLE_Event :IDLE event]. This handler is called when all other events in the event queue have been processed for the current event loop. In other words, `:IDLE` is called when the game loop is 'idle' and as such :IDLE is not a real system event.
 
 {{{
       (:idle ()
 }}}
 
-Generate a random color while the right mouse button is depressed. Keeping the mouse down will cause the colors to cycle. 
+Generate a random color while the right mouse button is depressed. Keeping the mouse down will cause the colors to cycle. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-left-p MOUSE-LEFT-P] returns `T` when the right mouse button is depressed.
 
 {{{
        ;; Change the color of the box if the left mouse button is depressed
@@ -87,7 +94,7 @@ Clear the screen prior to drawing the rectangle.
        (sdl:clear-display sdl:*black*)
 }}}
 
-Draw the box. The x/y position is set to the current cursor position. 
+Draw the box. A new rectangle is created having a midpoint at the current cursor position using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#rectangle-from-midpoint-* RECTANGLE-FROM-MIDPOINT-*]. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-x MOUSE-X] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#mouse-y MOUSE-Y] return the current mouse cursor position.
 
 {{{
        ;; Draw the box having a center at the mouse x/y coordinates.
@@ -95,15 +102,12 @@ Draw the box. The x/y position is set to the current cursor position.
                      :color *random-color*)
 }}}
 
-The display must now be redrawn at the end of the game loop.
+The display is then redrawn at the end of the game loop.
 
 {{{
        ;; Redraw the display
        (sdl:update-display)))))
 }}}
-
-
-
 
 = Compatibility & Platforms Supported =
 
