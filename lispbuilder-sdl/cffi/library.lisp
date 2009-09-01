@@ -28,7 +28,11 @@
 	      "libSDL")))
 
 (cffi:define-foreign-library sdl-glue
-  (:windows "lispbuilder-sdl-glue.dll"))
+  (:windows "lispbuilder-sdl-glue.dll")
+  (:darwin (:or (:framework "lispbuilder-sdl-glue")
+                (:default "lispbuilder-sdl-glue")))
+  (:unix (:or "lispbuilder-sdl-glue"
+	      "lispbuilder-sdl-glue.so")))
 
 (cffi:use-foreign-library sdl)
 
