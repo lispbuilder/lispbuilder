@@ -202,10 +202,10 @@ Initialization is somewhat complicated by the fact that a Common Lisp developmen
 
 The following functions allow the capabilities of the hardware to be determined;
 
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO],
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY],
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS], and
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES]
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO] queries the capabilities of the graphics hardware,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] returns the amount of video memory available,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height supported by the graphics hardware, and
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list of of window dimensions supported by the grapgics hardware.
 
 == Video Info ==
 
@@ -217,30 +217,45 @@ video-info &optional info => result
 
 `:INFO` can be one of:
 
-  * `:hw-available`, Is it possible to create hardware surfaces?
-  * `:wm-available`, Is there a window manager available?
-  * `:blit-hw`, Are hardware to hardware blits accelerated?
-  * `:blit-hw-cc`, Are hardware to hardware colorkey blits accelerated?
-  * `:blit-hw-a`, Are hardware to hardware alpha blits accelerated?
-  * `:blit-sw`, Are software to hardware blits accelerated?
-  * `:blit-sw-cc`, Are software to hardware colorkey blits accelerated?
-  * `:blit-sw-a`, Are software to hardware alpha blits accelerated?
-  * `:blit-fill`, Are color fills accelerated?
+  * `:HW-AVAILABLE`, Is it possible to create hardware surfaces?
+  * `:WM-AVAILABLE`, Is there a window manager available?
+  * `:BLIT-HW`, Are hardware to hardware blits accelerated?
+  * `:BLIT-HW-CC`, Are hardware to hardware colorkey blits accelerated?
+  * `:BLIT-HW-A`, Are hardware to hardware alpha blits accelerated?
+  * `:BLIT-SW`, Are software to hardware blits accelerated?
+  * `:BLIT-SW-CC`, Are software to hardware colorkey blits accelerated?
+  * `:BLIT-SW-A`, Are software to hardware alpha blits accelerated?
+  * `:BLIT-FILL`, Are color fills accelerated?
   * `:NIL`, returns a list of all supported video flags
 
 For example, enter the following to determine the capabilities of the video hardware;
 
 {{{
-(SDL:WITH-INIT ()
-  (SDL:VIDEO-INFO))
+>> (SDL:VIDEO-INFO))
+>> (:WM-AVAILABLE)
 }}}
 
 == Video Memory ==
-Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] to query the amount of video memory availalble. Only makes sense if `hw-available`, otherwise `0` video memory is reported.
+
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] to query the amount of video memory availalble. Only makes sense if `VIDEO-INFO` returns `:HW-AVAILABLE`, otherwise `0` video memory is reported.
+
+For example;
+
+{{{
+>>(SDL:VIDEO-MEMORY)
+>> 0
+}}}
 
 == Video Dimensions ==
 
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height if called before a window is created. Or returns the current video dimensions if called after a window is created. 
+
+For example;
+
+{{{
+>> (SDL:VIDEO-DIMENSIONS)
+>> #(1280 800)
+}}}
 
 == Video Modes ==
 
