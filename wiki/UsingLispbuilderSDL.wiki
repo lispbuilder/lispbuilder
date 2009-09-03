@@ -232,7 +232,8 @@ For example, enter the following to determine the capabilities of the video hard
 
 {{{
 >> (SDL:VIDEO-INFO))
->> (:WM-AVAILABLE)
+
+(:WM-AVAILABLE)
 }}}
 
 == Video Memory ==
@@ -242,8 +243,9 @@ Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.h
 For example;
 
 {{{
->>(SDL:VIDEO-MEMORY)
->> 0
+>> (SDL:VIDEO-MEMORY)
+
+0
 }}}
 
 == Video Dimensions ==
@@ -254,10 +256,11 @@ For example;
 
 {{{
 >> (SDL:VIDEO-DIMENSIONS)
->> #(1280 800)
+
+#(1280 800)
 }}}
 
-== Video Modes ==
+== List Modes ==
 
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list sorted largest to smallest of the width and height of the screens that will support the type of video surface requested in `:FLAGS`. 
 
@@ -277,6 +280,14 @@ list-modes flags &optional surface => result
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-opengl SDL-OPENGL] an OpenGL rendering context.
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-resizable SDL-RESIZABLE] a resizable window, and 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-no-frame SDL-NO-FRAME] no title bar or frame decoration.
+
+For example;
+
+{{{
+>> (SDL:LIST-MODES '(SDL:SDL-HW-SURFACE SDL:SDL-FULLSCREEN SDL:SDL-DOUBLEBUF))
+
+(#(1280 800) #(1024 768) #(800 1280) #(800 600) #(768 1024) #(640 480) #(640 400) #(600 800) #(512 384) #(480 640) #(400 640) #(384 512) #(320 200))
+}}}
 
 = The Display =
 == Description of the Display ==
