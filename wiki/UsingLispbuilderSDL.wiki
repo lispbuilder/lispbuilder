@@ -205,7 +205,7 @@ The following functions allow the capabilities of the hardware to be determined;
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO] queries the capabilities of the graphics hardware,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] returns the amount of video memory available,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height supported by the graphics hardware, and
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list of of window dimensions supported by the grapgics hardware.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list of of window dimensions supported by the graphics hardware.
 
 == Video Info ==
 
@@ -286,7 +286,9 @@ For example;
 {{{
 >> (SDL:LIST-MODES '(SDL:SDL-HW-SURFACE SDL:SDL-FULLSCREEN SDL:SDL-DOUBLEBUF))
 
-(#(1280 800) #(1024 768) #(800 1280) #(800 600) #(768 1024) #(640 480) #(640 400) #(600 800) #(512 384) #(480 640) #(400 640) #(384 512) #(320 200))
+(#(1280 800) #(1024 768) #(800 1280) #(800 600) #(768 1024) 
+ #(640 480) #(640 400) #(600 800) #(512 384) #(480 640) #(400 640) 
+ #(384 512) #(320 200))
 }}}
 
 = The Display =
@@ -294,10 +296,16 @@ For example;
 
 Graphics are rendered to a video surface. A [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk.
 
-Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. 
 
 {{{
-window width height &key bpp flags title-caption icon-caption :position => result
+window width height &key bpp flags title-caption icon-caption position => result
+}}}
+
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
+
+{{{
+resize-window width height &key bpp flags title-caption icon-caption => result
 }}}
 
 For example;
@@ -445,7 +453,7 @@ Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.h
 = The Game Loop =
 == Description of the Game Loop ==
 
-Unlike desktop application software that is usually event driven, a game is typically built around a game loop. The game loop is responsible for [Introduction_to_Input_Handling processing user input], [Executing_Game_Logic executing game logic], [Setting_the_Frame_Rate Limiting the frame rate, and [Updating_the_Display redrawing the display]. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop and is discussed in the following sections.
+Unlike desktop application software that is usually event driven, a game is typically built around a game loop. The game loop is responsible for [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Introduction_to_Input_Handling processing user input], [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Executing_Game_Logic executing game logic], [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Setting_the_Frame_Rate Limiting the frame rate, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Updating_the_Display redrawing the display]. The [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] macro forms the core of the game loop and is discussed in the following sections.
 
 == Introduction to Input Handling ==
 === Description of Input Events ===
