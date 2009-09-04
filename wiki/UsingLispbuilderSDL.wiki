@@ -26,7 +26,7 @@ The structure of a simple game follows the pattern;
 
 The following example makes a box (a filled rectangle) follow the position of the mouse cursor, redrawing the box in a new color when the mouse button is depressed. Pressing any key will exit the example.
 
-http://code.google.com/images/mouse-rect-2d.jpg
+http://lispbuilder.googlecode.com/svn/trunk/documentation/mouse-rect-2d.jpg
 
 {{{
 (defparameter *random-color* sdl:*white*)
