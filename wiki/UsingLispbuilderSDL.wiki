@@ -21,7 +21,7 @@ The structure of a simple game follows the pattern;
 
   # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Initializing_LISPBUILDER-SDL Initialize the library]
   # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Display Create a display]
-  # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Game_Loop Start the game loop] to [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Introduction_to_Input_Handling Start handle input events], [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Executing_Game_Logic perform the game logic, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Updating_the_Display update the display]
+  # [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#The_Game_Loop Start the game loop] to [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Introduction_to_Input_Handling Start handle input events], [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Executing_Game_Logic perform the game logic], and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Updating_the_Display update the display]
   # Goto to 3
 
 The following example makes a box (a filled rectangle) follow the position of the mouse cursor, redrawing the box in a new color when the mouse button is depressed. Pressing any key will exit the example.
