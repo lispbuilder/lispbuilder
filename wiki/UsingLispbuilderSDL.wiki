@@ -297,7 +297,7 @@ Graphics are rendered to a video surface. A [http://lispbuilder.googlecode.com/s
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. 
 
 {{{
-window width height &key bpp flags title-caption icon-caption position => result
+window width height &key bpp flags title-caption icon-caption position fps => result
 }}}
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
@@ -321,6 +321,7 @@ For example;
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :TITLE-CAPTION] appears in the Window title bar. 
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :ICON-CAPTION] appears when the Window is minimized.
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position :POSITION] sets the Window X and Y position.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Frame_Rate Frame Rate] specify game loop to be constant frame rate, or constant time-step.
   * `:FLAGS` allows the video surface to be configured to support the capabilities of the underlying graphics hardware by using one or more of the following parameters;
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed SDL-FULLSCREEN], use full-screen mode,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Display_Surface_in_System_Memory_or_Video_Memory SDL-SW-SURFACE], and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Display_Surface_in_System_Memory_or_Video_Memory SDL-HW-SURFACE], create the surface in System or Video Memory,
@@ -503,17 +504,7 @@ Input State is described in greater detail in section [http://code.google.com/p/
 
 == Setting the Frame Rate ==
 
-[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] can limit the game loop to a specific number of iterations a second as set by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE]. This effectively limits the number of frames displayed per second. For example, to set the frame rate to 60 frames per second;
-
-{{{
-(SETF (FRAME-RATE) 60)
-}}}
-
-To unlock the frame rate, effectively running the game loop as fast as the CPU will allow, set the `FRAME-RATE` to `NIL`; 
-
-{{{
-(SETF (FRAME-RATE) NIL)
-}}}
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-events WITH-EVENTS] can limit the game loop to a number of iterations a second, or maintain a constant time-step described in [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Frame_Rate Frame Rate].
 
 == Updating the Display ==
 
@@ -840,6 +831,41 @@ USER-EVENT is unique in that it is created by the user. USER-EVENT can be pushed
 
 == Querying the Joystick State ==
 [TBD]
+
+= Frame Rate =
+== Introduction the Frame Rate ==
+
+The game loop can be locked to a constant frame rate or a constant time-step as described below.
+
+, as set by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE].
+
+== Constant Frame Rate ==
+
+Simple games can get away with a game loop that is executed a fixed number of frames per second. In this mode, `IDLE` is executed once per game loop. The constant frame rate algorithm is the same one used in [http://www.ferzkopp.net/joomla/content/view/19/14/ SDL_gfx].
+
+{{{
+(SDL:WINDOW 320 240 :FPS (make-instance 'sdl-base::fps-fixed))
+}}}
+
+For example, to set the frame rate to 60 frames per second;
+
+{{{
+(SETF (FRAME-RATE) 60)
+}}}
+
+To unlock the frame rate, effectively running the game loop as fast as the CPU will allow, set the `FRAME-RATE` to `NIL`; 
+
+{{{
+(SETF (FRAME-RATE) NIL)
+}}}
+
+== Constant Time-step ==
+
+A game that implements a physics simulation should use a constant time-step. In this mode `:IDLE` is executed using a constant time-step, meaning the number of times `IDLE` is executed per game loop varies. The constant time-step algorithm is the same one used in [http://www.gaffer.org/game-physics/fix-your-timestep/ Fix Your Timestep!].
+
+{{{
+(SDL:WINDOW 320 240 :FPS (make-instance 'sdl-base::fps-unlocked))
+}}}
 
 = Default Keyword Arguments =
 
