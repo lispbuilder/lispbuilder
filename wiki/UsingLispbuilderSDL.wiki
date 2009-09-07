@@ -837,8 +837,6 @@ USER-EVENT is unique in that it is created by the user. USER-EVENT can be pushed
 
 The game loop can be locked to a constant frame rate or a constant time-step as described below.
 
-, as set by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE].
-
 == Constant Frame Rate ==
 
 Simple games can get away with a game loop that is executed a fixed number of frames per second. In this mode, `IDLE` is executed once per game loop. The constant frame rate algorithm is the same one used in [http://www.ferzkopp.net/joomla/content/view/19/14/ SDL_gfx].
@@ -847,7 +845,7 @@ Simple games can get away with a game loop that is executed a fixed number of fr
 (SDL:WINDOW 320 240 :FPS (make-instance 'sdl-base::fps-fixed))
 }}}
 
-For example, to set the frame rate to 60 frames per second;
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE] to set the frame rate. For example to set the frame rate to 60 frames per second;
 
 {{{
 (SETF (FRAME-RATE) 60)
