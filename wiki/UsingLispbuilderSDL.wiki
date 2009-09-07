@@ -859,7 +859,7 @@ To unlock the frame rate, effectively running the game loop as fast as the CPU w
 
 == Constant Time-step ==
 
-A game that implements a physics simulation should use a constant time-step. In this mode `:IDLE` is executed using a constant time-step, meaning the number of times `IDLE` is executed per game loop varies. The constant time-step algorithm is the same one used in [http://www.gaffer.org/game-physics/fix-your-timestep/ Fix Your Timestep!].
+A game that implements a physics simulation should use a constant time-step. In this mode `:IDLE` is executed using a constant time-step, meaning the number of times `:IDLE` is executed per game loop varies. The constant time-step algorithm is the same one used in [http://www.gaffer.org/game-physics/fix-your-timestep/ Fix Your Timestep!].
 
 {{{
 (SDL:WINDOW 320 240 :FPS (make-instance 'sdl-base::fps-unlocked))
