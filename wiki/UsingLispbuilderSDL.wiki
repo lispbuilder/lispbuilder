@@ -321,7 +321,7 @@ For example;
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :TITLE-CAPTION] appears in the Window title bar. 
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :ICON-CAPTION] appears when the Window is minimized.
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_x_and_y_position :POSITION] sets the Window X and Y position.
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Frame_Rate Frame Rate] specify game loop to be constant frame rate, or constant time-step.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Frame_Rate :FPS] specify game loop to be constant frame rate, or constant time-step.
   * `:FLAGS` allows the video surface to be configured to support the capabilities of the underlying graphics hardware by using one or more of the following parameters;
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed SDL-FULLSCREEN], use full-screen mode,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Display_Surface_in_System_Memory_or_Video_Memory SDL-SW-SURFACE], and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Display_Surface_in_System_Memory_or_Video_Memory SDL-HW-SURFACE], create the surface in System or Video Memory,
