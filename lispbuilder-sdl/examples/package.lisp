@@ -97,6 +97,7 @@
 
    ;; particles.lisp
    #:particles
+   #:particles-timestep
 
    ;; fireworks.lisp
    #:fireworks

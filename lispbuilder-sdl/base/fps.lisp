@@ -162,14 +162,15 @@ not calculated"))
 ;;;; Lock timestep to Specified Rate
 ;;;; From http://www.gaffer.org/game-physics/fix-your-timestep/
 
-(defmethod process-timestep :before ((self fps-unlocked) fn)
-  (declare (ignorable fn))
-  (with-slots (fps-ticks delta-ticks dt max-dt accumulator physics-hook-function)
-      self
-    (incf accumulator (if (> delta-ticks max-dt) max-dt delta-ticks))
-    (loop until (< accumulator dt) do
-          (progn
-            (when physics-hook-function
-              (funcall physics-hook-function fps-ticks dt))
-            (incf fps-ticks dt)
-            (decf accumulator dt)))))
+;(defmethod process-timestep :before ((self fps-unlocked) fn)
+;  (declare (ignorable fn))
+;  (with-slots (fps-ticks delta-ticks dt max-dt accumulator physics-hook-function)
+;      self
+;    (incf accumulator (if (> delta-ticks max-dt) max-dt delta-ticks))
+;    (loop until (< accumulator dt) do
+;          (progn
+;            (when physics-hook-function
+;              (funcall physics-hook-function fps-ticks dt))
+;            (incf fps-ticks dt)
+;            (decf accumulator dt)))))
+

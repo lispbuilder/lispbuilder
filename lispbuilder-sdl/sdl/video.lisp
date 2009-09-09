@@ -9,9 +9,31 @@
 
 ;;;; Functions
 
-(defun opengl-context-p (flags)
-  "Returns `T` if [SDL-OPENGL](#sdl-opengl) is within the bitmask `FLAGS`, or returns `NIL` otherwise."
-  (if (eq 1 (logand flags sdl-opengl))
+(defun opengl-context-p ()
+  "Returns `T` if the video surface has an OpenGL context, or returns `NIL` otherwise."
+  (if (/= 0 (logand (cffi:foreign-slot-value (sdl-cffi::sdl-get-video-surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+                    sdl-cffi::sdl-opengl))
+      t
+      nil))
+
+(defun double-buffered-p ()
+  "Returns `T` if the video surface is double buffered, or returns `NIL` otherwise."
+  (if (/= 0 (logand (cffi:foreign-slot-value (sdl-cffi::sdl-get-video-surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+                    sdl-cffi::sdl-doublebuf))
+      t
+      nil))
+
+(defun fullscreen-p ()
+    "Returns `T` if the video surface is fullscreen. Returns `NIL` if the video surface is windowed."
+  (if (/= 0 (logand (cffi:foreign-slot-value (sdl-cffi::sdl-get-video-surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+                    sdl-cffi::sdl-fullscreen))
+      t
+      nil))
+
+(defun resizable-p ()
+    "Returns `T` if the video surface is resizable, returns `NIL` otherwise."
+  (if (/= 0 (logand (cffi:foreign-slot-value (sdl-cffi::sdl-get-video-surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+                    sdl-cffi::sdl-resizable))
       t
       nil))
 
@@ -32,44 +54,40 @@
 				    :flags flags
 				    :title-caption title-caption
 				    :icon-caption icon-caption)))
-    (setf *default-display* nil
-	  *opengl-context* nil)
+    (setf *default-display* nil)
     (when surf
-      (setf *default-display* (make-instance 'display-surface :fp surf))
-      (setf *opengl-context* (surface-info *default-display* sdl-opengl)))
+      (setf *default-display* (make-instance 'display-surface :fp surf)))
     (setf sdl-base::*default-fpsmanager* fps)
     (quit-input-util)
     (initialise-input-util)
-    (enable-event-filters)
+    (sdl-cffi::sdl-set-event-filter (cffi:callback event-filter))
     *default-display*))
 
 (defmethod resize-window (width height &key flags title-caption icon-caption bpp)
   "Modifies the dispaly, resets the input loop and clears all key events."
   (multiple-value-bind (title icon)
       (sdl:get-caption)
-    (when title-caption
-      (setf title title-caption))
-    (when icon-caption
-      (setf icon icon-caption ))
-    (let ((flags (if flags flags (sdl:surface-info sdl:*default-display*)))
-          (bpp (if bpp bpp (sdl:bit-depth sdl:*default-display*)))
-          (fps sdl-base::*default-fpsmanager*))
-      (sdl:window width height
-                  :title-caption title :icon-caption icon
-                  :bpp bpp :flags flags :fps fps))))
+    (sdl:window width height
+                :title-caption (if title-caption title-caption title)
+                :icon-caption (if icon-caption icon-caption icon)
+                :bpp (if bpp bpp (sdl:bit-depth sdl:*default-display*))
+                :flags (if flags flags (sdl:surface-info sdl:*default-display*))
+                :fps sdl-base::*default-fpsmanager*)))
 
 (defun update-display (&optional (surface *default-display*))
-  "When [OPENGL-CONTEXT](#opengl-context) is `NIL`; `UPDATE-DISPLAY` will flip the SDL video buffers and update 
+  "`UPDATE-DISPLAY` will flip the SDL video buffers and update 
 the screen `SURFACE` if `SDL-HW-SURFACE` is set in [WINDOW](#window). If double buffering is not enabled then
  SDL will perform an [SDL-UPDATE-RECT](#sdl-update-rect) on the entire screen.
 
-When [OPENGL-CONTEXT](#opengl-context) is `T`; `UPDATE-DISPLAY` will call 
-[SDL-GL-SWAP-BUFFERS](#sdl-gl-swap-buffers) to update the OpenGL display context.
+If there is an active OpenGL contenxt, then `UPDATE-DISPLAY` will call 
+[SDL-GL-SWAP-BUFFERS](#sdl-gl-swap-buffers) to update the OpenGL display display.
 
 `SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified."
-  (if *opengl-context*
+  (if (opengl-context-p)
       (sdl-cffi::sdl-gl-swap-buffers)
-      (sdl-cffi::sdl-flip (fp surface))))
+      (if (double-buffered-p)
+        (sdl-cffi::sdl-flip (fp surface))
+        (sdl-cffi::sdl-update-rect (fp surface) 0 0 0 0))))
 
 (defun clear-display (color &key (surface *default-display*) (update nil))
   "Fills the display `SURFACE` using color `COLOR`.
@@ -200,10 +218,9 @@ video flags.
         (find info (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags))
         (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))))
 
-(defun list-modes (flags &optional (surface nil))
-  "Returns a LIST of vectors sorted largest to smallest that contains the width and height 
-dimensions of the screen that will support the pixel format of the specified 
-surface `SURFACE` and video flags `FLAGS`. `LIST-MODES` must be called after SDL is 
+(defun list-modes (flags)
+  "Returns a LIST of vectors sorted largest to smallest containing window or screen dimensions
+that will support the specified video `FLAGS`. `LIST-MODES` must be called after SDL is 
 initialised using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init).
 
 ##### Parameters
@@ -226,10 +243,9 @@ Returns `T` if any dimension will support the pixel format and video flags.
 ##### Example
 
     \(LIST-MODES '\(SDL-HW-SURFACE SDL-FULLSCREEN\)\)"
-  (declare (ignore surface))
   (when (video-info)
     (let ((modes nil)
-        (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (sdl-base::set-flags flags))))
+          (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (sdl-base::set-flags flags))))
     (cond
       ((cffi:null-pointer-p listmodes)
        nil)
@@ -237,8 +253,8 @@ Returns `T` if any dimension will support the pixel format and video flags.
        t)
       (t
        (do ((i 0 (1+ i)))
-	   ((cffi:null-pointer-p (cffi:mem-ref (cffi:mem-aref listmodes 'sdl-cffi::sdl-rect i) :pointer)) (reverse modes))
-	 (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes 'sdl-cffi::sdl-rect i) :pointer)))
+           ((cffi:null-pointer-p (cffi:mem-aref listmodes :pointer i)) (reverse modes))
+	 (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes :pointer i) 'sdl-cffi::sdl-rect)))
 	   (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w)
 				     (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
 			     modes)))))))))

@@ -22,7 +22,6 @@
     (sdl:window 640 480)
     (setf (sdl:frame-rate) 30)
     ;; Open the audio mixer. Use a smaller buffer for lower latency.
-    #+lispbuilder-sdl-audio
     (sdl:open-audio :audio-buffer-size 1024)
     (let ((bug (load-image "bug.bmp"))
 	  (racket (load-image "racket.bmp"))
@@ -33,9 +32,7 @@
 	  (lasttick 0)
 	  (score 0)
 	  (bug? t) (racket? t) (blood? nil) (squash? nil) (squashed? nil)
-          #+lispbuilder-sdl-audio
           (swat-effect (load-audio "bookclose2.wav"))
-          #+lispbuilder-sdl-audio
           (squash-effects (list (load-audio "splat1a.wav")
                                 (load-audio "splat2a.wav")
                                 (load-audio "splat3a.wav"))))
@@ -46,7 +43,6 @@
       
       (show-score score)
       (sdl:show-cursor nil)
-      #+lispbuilder-sdl-audio
       (sdl:play-audio)
       (sdl:with-events ()
         (:quit-event () t)
@@ -70,10 +66,8 @@
            (when (> levelticks 200)
              (decf levelticks 100))
            ;; Play one of the squashed sound effects.
-           #+lispbuilder-sdl-audio
            (sdl:play-audio (sdl:copy-audio (nth (random 3) squash-effects))))
          ;; Play the swatting sound effect.
-         #+lispbuilder-sdl-audio
          (sdl:play-audio (sdl:copy-audio swat-effect)))
         (:idle ()
          (sdl:with-surface (disp sdl:*default-display*)
