@@ -267,7 +267,7 @@
    #:event=
    #:set-event-filter
    #:remove-event-filter
-   #:remove-event-filters
+   #:remove-all-event-filters
    #:enable-event-filters
    #:disable-event-filters
    #:with-events
