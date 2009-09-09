@@ -171,7 +171,7 @@
 
     ;; Enable event filters using the specified callback.
     (sdl:enable-event-filters)
-    (sdl:remove-event-filters)
+    (sdl:remove-all-event-filters)
     (sdl::set-event-filter :video-resize-event #'resize-screen)
 
     ;; Fix the framerate
@@ -276,7 +276,7 @@
     ;; Enable event filters.
     (sdl:enable-event-filters)
     ;; Remove any existing filters.
-    (sdl:remove-event-filters)
+    (sdl:remove-all-event-filters)
     ;; Handle the :video-resize-event
     (sdl::set-event-filter :video-resize-event #'resize-screen)
 

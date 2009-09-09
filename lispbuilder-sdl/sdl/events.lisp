@@ -258,7 +258,7 @@ For example;
   "Removes any existing event filters. that were set with `SET-EVENT-FILTERS`"
   (setf (gethash sdl-event *filter-event-hooks*) nil))
 
-(defun remove-event-filters ()
+(defun remove-all-event-filters ()
   "Removes any existing event filters. that were set with `SET-EVENT-FILTERS`"
   (setf *filter-event-hooks* (make-hash-table)))
 
