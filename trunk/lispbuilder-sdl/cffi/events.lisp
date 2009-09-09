@@ -1,5 +1,33 @@
 (in-package #:lispbuilder-sdl-cffi) 
 
+(cffi:defcenum Event-Type
+	(:NO-EVENT 0)
+	:ACTIVE-EVENT
+	:KEY-DOWN-EVENT
+	:KEY-UP-EVENT
+	:MOUSE-MOTION-EVENT
+	:MOUSE-BUTTON-DOWN-EVENT
+	:MOUSE-BUTTON-UP-EVENT
+	:JOY-AXIS-MOTION-EVENT
+	:JOY-BALL-MOTION-EVENT
+	:JOY-HAT-MOTION-EVENT
+	:JOY-BUTTON-DOWN-EVENT
+	:JOY-BUTTON-UP-EVENT
+	:QUIT-EVENT
+	:SYS-WM-EVENT
+	:EVENT-RESERVEDA
+	:EVENT-RESERVEDB
+	:VIDEO-RESIZE-EVENT
+	:VIDEO-EXPOSE-EVENT
+	:EVENT-RESERVED2
+	:EVENT-RESERVED3
+	:EVENT-RESERVED4
+	:EVENT-RESERVED5
+	:EVENT-RESERVED6
+	:EVENT-RESERVED7
+	(:USER-EVENT 24)
+	(:NUM-EVENTS 32))
+
 (cffi:defcenum Sdl-Event-Type
 	(:SDL-NO-EVENT 0)
 	:SDL-ACTIVE-EVENT
@@ -123,9 +151,9 @@
 (cffi:defcfun ("SDL_PumpEvents" SDL-Pump-Events) :void)
 
 (cffi:defcenum SDL-event-action
-	:SDL-ADD-EVENT
-	:SDL-PEEK-EVENT
-	:SDL-GET-EVENT)
+	:ADD-EVENT
+	:PEEK-EVENT
+	:GET-EVENT)
 
 (cffi:defcfun ("SDL_PeepEvents" SDL-Peep-Events) :int
   (events :pointer)
@@ -163,62 +191,62 @@
   (1<< X))
 
 (defun SDL-ACTIVE-EVENT-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-ACTIVE-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :ACTIVE-EVENT)))
 
 (defun SDL-KEY-DOWN-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-KEY-DOWN-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :KEY-DOWN-EVENT)))
 
 (defun SDL-KEY-UP-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-KEY-UP-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :KEY-UP-EVENT)))
 
 (defun SDL-KEY-EVENT-MASK ()
-  (or (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-KEY-UP-EVENT))
-      (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-KEY-DOWN-EVENT))))
+  (or (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :KEY-UP-EVENT))
+      (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :KEY-DOWN-EVENT))))
 
 (defun SDL-MOUSE-MOTION-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-MOUSE-MOTION-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :MOUSE-MOTION-EVENT)))
 
 (defun SDL-MOUSE-BUTTON-DOWN-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :sdl-mouse-button-down-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :mouse-button-down-EVENT)))
 
 (defun SDL-MOUSE-BUTTON-UP-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :sdl-mouse-button-up-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :mouse-button-up-EVENT)))
 
 (defun SDL-MOUSE-EVENT-MASK ()
-  (logior (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-MOUSE-MOTION-EVENT))
-          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :sdl-mouse-button-down-EVENT))
-          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :sdl-mouse-button-up-EVENT))))
+  (logior (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :MOUSE-MOTION-EVENT))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :mouse-button-down-EVENT))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :mouse-button-up-EVENT))))
 
 (defun SDL-JOY-AXIS-MOTION-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-AXIS-MOTION-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-AXIS-MOTION-EVENT)))
 
 (defun SDL-JOY-BALL-MOTION-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-BALL-MOTION-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-BALL-MOTION-EVENT)))
 
 (defun SDL-JOY-HAT-MOTION-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-HAT-MOTION-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-HAT-MOTION-EVENT)))
 
 (defun SDL-JOY-BUTTON-DOWN-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-BUTTON-DOWN-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-BUTTON-DOWN-EVENT)))
 
 (defun SDL-JOY-BUTTON-UP-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-BUTTON-UP-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-BUTTON-UP-EVENT)))
 
 (defun SDL-JOY-EVENT-MASK ()
-  (logior (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-AXIS-MOTION-EVENT))
-          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-BALL-MOTION-EVENT))
-          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-HAT-MOTION-EVENT))
-          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-BUTTON-DOWN-EVENT))
-          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-JOY-BUTTON-UP-EVENT))))
+  (logior (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-AXIS-MOTION-EVENT))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-BALL-MOTION-EVENT))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-HAT-MOTION-EVENT))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-BUTTON-DOWN-EVENT))
+          (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-BUTTON-UP-EVENT))))
 
 (defun SDL-VIDEO-RESIZE-MASK () 
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-VIDEO-RESIZE-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :VIDEO-RESIZE-EVENT)))
 
 (defun SDL-VIDEO-EXPOSE-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-VIDEO-EXPOSE-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :VIDEO-EXPOSE-EVENT)))
 
 (defun SDL-QUIT-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-QUIT-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :QUIT-EVENT)))
 
 (defun SDL-SYS-WM-EVENT-MASK ()
-  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Sdl-Event-Type :SDL-SYS-WM-EVENT)))
+  (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :SYS-WM-EVENT)))

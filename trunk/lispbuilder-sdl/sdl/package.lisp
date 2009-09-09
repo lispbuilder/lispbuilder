@@ -265,15 +265,54 @@
   
    ;; events.lisp
    #:event=
-   #:set-event-filters
+   #:set-event-filter
+   #:remove-event-filter
    #:remove-event-filters
    #:enable-event-filters
    #:disable-event-filters
    #:with-events
    #:new-event
+   #:quit-requested-p
    #:push-quit-event
    #:push-user-event
    #:pump-events
+   #:get-event-type
+   #:active-event-gain
+   #:active-event-state
+   #:key-event-state
+   #:key-event-scancode
+   #:key-event-key
+   #:key-event-mod
+   #:key-event-mod-key
+   #:key-event-unicode
+   #:mouse-motion-event-state
+   #:mouse-motion-event-x
+   #:mouse-motion-event-y
+   #:mouse-motion-event-x-rel
+   #:mouse-motion-event-y-rel
+   #:mouse-button-event-button
+   #:mouse-button-event-state
+   #:mouse-button-event-x
+   #:mouse-button-event-y
+   #:joy-axis-motion-event-which
+   #:joy-axis-motion-event-axis
+   #:joy-axis-motion-event-value
+   #:joy-hat-motion-event-which
+   #:joy-hat-motion-event-axis
+   #:joy-hat-motion-event-value
+   #:joy-ball-motion-event-which
+   #:joy-ball-motion-event-ball
+   #:joy-ball-motion-event-x-rel
+   #:joy-ball-motion-event-y-rel
+   #:joy-button-event-which
+   #:joy-button-event-button
+   #:joy-button-event-state
+   #:user-event-type
+   #:user-event-code
+   #:user-event-data1
+   #:user-event-data2
+   #:video-resize-event-w
+   #:video-resize-event-h
 
    ;; image.lisp
    #:load-image
@@ -379,8 +418,11 @@
    #:set-gl-attribute
    #:set-caption
    #:get-caption
-   #:render-state
-   
+   #:opengl-context-p
+   #:double-buffered-p
+   #:fullscreen-p
+   #:resizable-p
+
    ;; rwops.lisp
    #:rwops
    #:create-RWops-from-file
@@ -511,7 +553,11 @@
    #:average-fps
    #:frame-time
    #:time-scale
-   #:register-physics
+   ;;#:register-physics
+   #:dt
+   #:max-dt
+   #:ticks
+   #:with-timestep
 
    ;; keys.lisp
    #:enable-unicode-p
@@ -631,6 +677,7 @@
    #:is-valid-ptr
    #:push-user-event
    #:fps-fixed
+   #:fps-unlocked
    #:fps-timestep
 
    ;; Imports from lispbuilder-sdl-assets

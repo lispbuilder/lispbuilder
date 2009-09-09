@@ -68,7 +68,8 @@
   ;; Set the user data pointer.
   (setf (cffi:foreign-slot-value (sdl:fp (audio-spec self))
                                  'sdl-cffi::SDL-Audio-Spec
-                                 'sdl-cffi::userdata) user-data))
+                                 'sdl-cffi::userdata)
+        user-data))
 
 ;; (defmethod print-kobject ((obj mixer) stream)
 ;;   (print-unreadable-object (obj stream :type t)
@@ -147,13 +148,14 @@
                                    'sdl-cffi::channels)
           (requested-output-channels *mixer*))
     ;; Set the output buffer size.
-    ;; In Windows this is not used as audio is handled
-    ;; by the glue library.
+    ;; This is not used by the glue library.
     (setf (cffi:foreign-slot-value requested-audio-spec
                                    'sdl-cffi::sdl-Audio-Spec
                                    'sdl-cffi::samples)
           (requested-audio-buffer-size *mixer*))
     ;; Set the callback function
+    ;; This callback function is overwritten by callback function in the
+    ;; glue library if the glue library is used.
     (setf (cffi:foreign-slot-value requested-audio-spec
                                    'sdl-cffi::SDL-Audio-Spec
                                    'sdl-cffi::callback)
@@ -473,8 +475,8 @@
 (defun load-audio (filename)
   (when (audio-opened-p)
     (let ((audio-buffer (load-sample filename)))
-    (when (and audio-buffer (audio-opened-p))
-      (build-audio-cvt audio-buffer *mixer*)))))
+      (when (and audio-buffer (audio-opened-p))
+        (build-audio-cvt audio-buffer *mixer*)))))
 
 (defun fill-audio-buffer (stream len)
   (unless (slot-value *mixer* 'pause)
@@ -560,10 +562,12 @@
                        (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer-length))
     (sdl-cffi::SDL-glue-SDL-Buffer-Filled)))
 
+;; This callback is not used if the glue library is used.
 (cffi:defcallback default-fill-audio-buffer
     :pointer ((user-data :pointer)
               (stream :pointer)
               (len :int))
-  (declare (ignore user-data))
-  (fill-audio-buffer stream len)
+  (declare (ignorable stream len user-data))
+  (when *mixer*
+    (fill-audio-buffer stream len))
   (cffi:null-pointer))

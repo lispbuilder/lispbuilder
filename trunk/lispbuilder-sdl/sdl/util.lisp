@@ -60,5 +60,5 @@
 (defun create-path (filename &optional path)
   "Creates a new path from `FILENAME` and `PATH`."
   (if path
-      (namestring (merge-pathnames filename path))
-      filename))
+    (namestring (merge-pathnames filename path))
+    filename))

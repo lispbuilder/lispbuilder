@@ -155,6 +155,7 @@
                           (sdl:cast-to-int (* scale y1))
                           :color sdl:*white*
                           :surface sdl:*default-display*)))
+    (sdl:update-display)
     (sdl:with-events ()
       (:video-expose-event () (sdl:update-display))
       (:quit-event () t))))

@@ -162,8 +162,26 @@ Audio formats are defined in `SDL_audio.h`;
 ;; (defun set-renderer (renderer)
 ;;   (setf *renderer* renderer))
 
+(defparameter *event-filters* t)
 
-(defparameter *event-filter-hook* #'(lambda (sdl-event) (declare (ignore sdl-event)) t))
+(defparameter *filter-active-event* nil)
+(defparameter *filter-key-down-event* nil)
+(defparameter *filter-key-up-event* nil)
+(defparameter *filter-mouse-button-down-event* nil)
+(defparameter *filter-mouse-button-up-event* nil)
+(defparameter *filter-mouse-motion-event* nil)
+(defparameter *filter-joy-axis-motion-event* nil)
+(defparameter *filter-joy-button-down-event* nil)
+(defparameter *filter-joy-button-up-event* nil)
+(defparameter *filter-joy-hat-motion-event* nil)
+(defparameter *filter-joy-ball-motion-event* nil)
+(defparameter *filter-video-resize-event* nil)
+(defparameter *filter-video-expose-event* nil)
+(defparameter *filter-sys-wm-event* nil)
+(defparameter *filter-user-event* nil)
+(defparameter *filter-quit-event* nil)
+
+(defparameter *filter-event-hooks* (make-hash-table))
 
 (defvar *allow-convert-to-display-format* t
   "`CONVERT-TO-DISPLAY-FORMAT` will convert the input surface to the display format when `T`,

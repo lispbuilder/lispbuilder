@@ -1,7 +1,6 @@
 
 (in-package #:sdl-examples)
 
-#+lispbuilder-sdl-audio
 (defun mixer-test ()
   (let ((sample nil)
         (status ""))
@@ -17,8 +16,7 @@
      
       (when (sdl:audio-opened-p)
         ;; Open the WAV file
-        (setf sample (sdl:load-audio (sdl:create-path *wav-file*
-                                                      sdl:*default-asset-path*)))
+        (setf sample (sdl:load-audio (sdl:create-path "example.wav" sdl:*default-asset-path*)))
       
         ;; Start playing the audio stream
         (when sample
