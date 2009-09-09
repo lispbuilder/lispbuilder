@@ -902,10 +902,11 @@ The constant timestep manager must be initialized prior to entering the game loo
 (SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-unlocked))
 }}}
 
-The duration between frames is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#dt DT]
+The duration between frames is retrieved and set using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#dt DT]. 
 
 {{{
 (SDL:DT)
+(setf (SDL:DT) 10)
 }}}
 
 The maximum dt is set using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#max-dt MAX-DT].
@@ -914,7 +915,6 @@ The maximum dt is set using [http://lispbuilder.googlecode.com/svn/trunk/documen
 (SDL:MAX-DT)
 (setf (SDL:MAX-DT) 100)
 }}}
-
 
 = Default Keyword Arguments =
 
