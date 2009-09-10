@@ -22,25 +22,20 @@ See [WITH-EVENTS](#with-events), and [AVERAGE-FPS](#average-fps)."
 
 (defun time-scale (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   (sdl-base::calculate-time-scale fpsmanager (sdl-base::delta-ticks fpsmanager)))
+(defun frame-time (&optional (fpsmanager sdl-base::*default-fpsmanager*))
+  "Returns how long current frame time is"
+  (sdl-base::calculate-time-scale fpsmanager (sdl-base::delta-ticks fpsmanager)))
 
 (defun average-fps (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   "Returns the average frame rate of the event loop calculated over a sliding window
 of 'n' frames."
   (sdl-base::average-fps fpsmanager))
 
-(defun frame-time (&optional (fpsmanager sdl-base::*default-fpsmanager*))
-  "Returns how long current frame time is"
-  (sdl-base::calculate-time-scale fpsmanager (sdl-base::delta-ticks fpsmanager)))
-
 (defun dt (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   (sdl-base::dt fpsmanager))
-(defun (setf dt) (value &optional (fpsmanager sdl-base::*default-fpsmanager*))
-  (setf (sdl-base::dt fpsmanager) value))
 
 (defun max-dt (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   (sdl-base::max-dt fpsmanager))
-(defun (setf max-dt) (value &optional (fpsmanager sdl-base::*default-fpsmanager*))
-  (setf (sdl-base::max-dt fpsmanager) value))
 
 (defun ticks (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   (sdl-base::fps-ticks fpsmanager))

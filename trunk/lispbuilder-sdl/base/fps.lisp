@@ -13,8 +13,7 @@ not calculated"))
   (:documentation "Manages the timestep. Called once per game loop."))
 
 (defclass fps-manager ()
-  ((tscale :accessor tscale :initform 0)
-   (world :accessor world :initform 1000)
+  ((world :accessor world :initform 1000)
    (index :accessor index :initform 0)
    (window :accessor average-window :initform nil)
    (not-through-p :accessor not-through-p :initform nil)
@@ -23,8 +22,7 @@ not calculated"))
    (last-ticks :accessor last-ticks :initform (sdl-cffi::sdl-get-ticks))
    (delta-ticks :accessor delta-ticks :initform 0))
   (:default-initargs
-   :window 60
-   :target-frame-rate 30))
+   :window 60))
 
 (defclass fps-fixed (fps-manager)
   ((target-frame-rate :reader target-frame-rate)
@@ -33,11 +31,12 @@ not calculated"))
    (delay-ticks :accessor delay-ticks :initform (sdl-cffi::sdl-get-ticks))
    (upper-limit :accessor upper-limit :initform 1000 :initarg :upper-limit)
    (lower-limit :accessor lower-limit :initform 1 :initarg :lower-limit)
-   (max-delta :accessor max-delta :initform 500 :initarg :max-delta)))
+   (max-dt :accessor max-dt :initform 500 :initarg :max-dt))
+  (:default-initargs
+   :target-frame-rate 30))
 
-(defclass fps-unlocked (fps-manager)
-  ((target-frame-rate :reader target-frame-rate)
-   (fps-ticks
+(defclass fps-timestep (fps-manager)
+  ((fps-ticks
     :accessor fps-ticks
     :type integer
     :initform 0
@@ -54,8 +53,10 @@ not calculated"))
     :accessor accumulator
     :type integer
     :initform 0
-    :initarg :accumulator)
-   (physics-hook-function
+    :initarg :accumulator)))
+
+(defclass fps-unlocked (fps-timestep)
+  ((physics-hook-function
     :accessor ps-fn
     :initform #'(lambda (fps-time dt)
                   (declare (ignorable fps-time dt))
@@ -65,10 +66,14 @@ not calculated"))
 (defmethod initialize-instance :after ((self fps-manager)
                                        &key
                                        window
-                                       target-frame-rate
                                        &allow-other-keys)
   (when window
-    (setf (average-window self) (make-array window :initial-element 0)))
+    (setf (average-window self) (make-array window :initial-element 0))))
+
+(defmethod initialize-instance :after ((self fps-fixed)
+                                       &key
+                                       target-frame-rate
+                                       &allow-other-keys)
   (when target-frame-rate
     (setf (target-frame-rate self) target-frame-rate)))
 
@@ -90,10 +95,12 @@ not calculated"))
               :finally (return (/ 1000 (/ total window-length))))))))
 
 (defun calculate-time-scale (fps-manager delta-ticks)
-  (with-slots (tscale world) fps-manager
-    (setf tscale (/ delta-ticks world))))
+  (/ delta-ticks (world fps-manager)))
 
-(defmethod (setf target-frame-rate) :around (rate (self fps-manager))
+(defmethod dt ((self fps-fixed))
+  (calculate-time-scale self (delta-ticks self)))
+
+(defmethod (setf target-frame-rate) :around (rate (self fps-fixed))
   (with-slots (target-frame-rate) self
     (if (and (numberp rate) (zerop rate))
       ;; Zero is the same as NIL
@@ -112,7 +119,7 @@ not calculated"))
         (setf (frame-count self) 0
               (rate-ticks self) (truncate (/ 1000 target-frame-rate)))))))
 
-(defmethod (setf target-frame-rate) (rate (self fps-unlocked))
+(defmethod (setf target-frame-rate) (rate (self fps-timestep))
   (declare (ignorable rate self))
   nil)
 
@@ -147,14 +154,14 @@ not calculated"))
 (defmethod process-timestep :after ((self fps-fixed) fn)
   (declare (ignorable fn))
   (with-slots (target-frame-rate frame-count rate-ticks current-ticks delay-ticks
-                                 max-delta) self
+                                 max-dt) self
     ;; Delay game loop, if necessary
     (when target-frame-rate
       (incf frame-count)
       (let ((delta (truncate (- (+ delay-ticks (* frame-count rate-ticks))
                                 current-ticks))))
         (if (> delta 0)
-          (sdl-cffi::sdl-delay (if (> delta max-delta) max-delta delta))
+          (sdl-cffi::sdl-delay (if (> delta max-dt) max-dt delta))
           (setf frame-count 0
                 delay-ticks current-ticks))))))
 
@@ -162,15 +169,15 @@ not calculated"))
 ;;;; Lock timestep to Specified Rate
 ;;;; From http://www.gaffer.org/game-physics/fix-your-timestep/
 
-;(defmethod process-timestep :before ((self fps-unlocked) fn)
-;  (declare (ignorable fn))
-;  (with-slots (fps-ticks delta-ticks dt max-dt accumulator physics-hook-function)
-;      self
-;    (incf accumulator (if (> delta-ticks max-dt) max-dt delta-ticks))
-;    (loop until (< accumulator dt) do
-;          (progn
-;            (when physics-hook-function
-;              (funcall physics-hook-function fps-ticks dt))
-;            (incf fps-ticks dt)
-;            (decf accumulator dt)))))
+(defmethod process-timestep :before ((self fps-unlocked) fn)
+  (declare (ignorable fn))
+  (with-slots (fps-ticks delta-ticks dt max-dt accumulator physics-hook-function)
+      self
+    (incf accumulator (if (> delta-ticks max-dt) max-dt delta-ticks))
+    (loop until (< accumulator dt) do
+          (progn
+            (when physics-hook-function
+              (funcall physics-hook-function fps-ticks dt))
+            (incf fps-ticks dt)
+            (decf accumulator dt)))))
 
