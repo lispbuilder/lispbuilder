@@ -36,8 +36,6 @@
 (defvar *particle-img* nil)
 (defvar *particles* nil)
 
-(defvar *ftime* 0.1)
-
 (defvar *font-large* nil)
 (defvar *font-small* nil)
 
@@ -245,7 +243,7 @@
          
        ;; Update/Draw the particles
        (dolist (p *particles*)
-         (update-particle p *ftime*)
+         (update-particle p (sdl:time-scale))
          (let ((pos (particle-pos p)))
            (sdl:draw-surface-at-* *particle-img*
                                   (round (vec2-x pos)) (round (vec2-y pos)))))
@@ -253,15 +251,15 @@
        (draw-cached-string "" 5 5 *font-large* sdl:*default-display* nil)
          
        (if (funcall *frames-p*)
-         (draw-cached-string (format nil "Particles: ~d, Framerate: ~f ftime: ~2f"
-                                     *particle-count* (truncate (sdl:average-fps)) *ftime*)
+         (draw-cached-string (format nil "Particles: ~d, Framerate: ~f, timescale: ~f"
+                                     *particle-count* (truncate (sdl:average-fps)) (sdl:time-scale)
+                                     )
                              5 35 *font-small* sdl:*default-display* t)
          (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
          
-       ;; Update the timescale
-       (setf *ftime* (sdl:time-scale))
        ;; Flip back/front buffers
        (sdl:update-display)))))
+
 
 (defun particles-timestep ()
   (sdl:with-init ()
@@ -270,7 +268,7 @@
                         :title-caption "Particles Demo"
                         :icon-caption "Particles Demo"
                         :flags '(sdl:sdl-sw-surface sdl:sdl-resizable)
-                        :fps (make-instance 'sdl:fps-unlocked))
+                        :fps (make-instance 'sdl:fps-timestep))
       (error "~&Unable to create a SDL window~%"))
 
     ;; Enable event filters.
@@ -362,8 +360,8 @@
        (draw-cached-string nil 5 5 *font-large* sdl:*default-display* nil)
          
        (if (funcall *frames-p*)
-         (draw-cached-string (format nil "Particles: ~d, Framerate: ~f dt: ~A"
-                                     *particle-count* (truncate (sdl:average-fps)) (sdl:dt sdl:*default-fpsmanager*))
+         (draw-cached-string (format nil "Particles: ~d, Framerate: ~f, timescale: ~f, dt: ~f"
+                                     *particle-count* (truncate (sdl:average-fps)) (sdl:time-scale) (sdl:dt))
                              5 35 *font-small* sdl:*default-display* t)
          (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
                   

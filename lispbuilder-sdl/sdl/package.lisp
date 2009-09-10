@@ -12,7 +12,8 @@
    lispbuilder-sdl-base::*default-fpsmanager*              
    lispbuilder-sdl-base::1/0->t/nil
    lispbuilder-sdl-base::fps-fixed
-   lispbuilder-sdl-base::fps-unlocked)
+   lispbuilder-sdl-base::fps-unlocked
+   lispbuilder-sdl-base::fps-timestep)
 
   (:import-from #:lispbuilder-sdl-cffi
    lispbuilder-sdl-cffi::sdl-get-ticks
@@ -553,7 +554,6 @@
    #:average-fps
    #:frame-time
    #:time-scale
-   ;;#:register-physics
    #:dt
    #:max-dt
    #:ticks
