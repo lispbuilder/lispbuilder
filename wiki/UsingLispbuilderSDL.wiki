@@ -835,7 +835,22 @@ USER-EVENT is unique in that it is created by the user. USER-EVENT can be pushed
 = Frame Rate and Timestep =
 == Introduction to Frame Rate and Timestep ==
 
-Simple games can get away with locking the physics timestep to the frame rate. For games that require an accurate physics simulation, the physics timestep must be decoupled from the display frame rate. The lispbuilder-sdl game loop supports both of these modes, as described below.
+Simple games can get away with locking the physics simulation to the frame rate. For games that require an accurate physics simulation, the physics simulation must be decoupled from the display frame rate. These two modes are supported by the game loop.
+
+The logic for each mode is encapsulated within a frame rate manager;
+
+  * fps-fixed, supports a constant or unlocked frame rate where the physics simulation is locked to the frame rate,
+  * fps-unlocked, supports an unlocked frame rate where the physics simulation is decoupled from the frame rate, but uses a callback to update the physics simulation.
+  * fps-timestep, same as `fps-unlocked`, but uses `WITH-TIMESTEP` to update the physics simulation. 
+
+The functions used to query and manage frame rate are as follows;
+
+  * frame-rate, query or set the target frame rate,
+  * dt, returns current timestep
+  * average-fps, returns the average frames per second,
+  * ticks, tbd
+
+  * with-timestep 
 
 == Constant Frame Rate ==
 
@@ -846,11 +861,18 @@ The constant frame rate algorithm used is the same as described in [http://www.f
 
 Use `:IDLE` to update the physics simulation and redraw the screen each frame.
 
-The constant frame rate manager must be initialized prior to entering the game loop, at display creation time.
+The constant frame rate manager, `FPS-FIXED`, must be initialized prior to entering the game loop, at display creation time.
 
 {{{
 (SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-fixed))
 }}}
+
+`FPS-FIXED` accepts the following optional keyword arguments;
+
+  * `:TARGET-FRAME-RATE` attempts to maintain the specified frame rate,
+  * `:WORLD` is used in the calculation of `DT`, where `dt = (/ (- current-frame-ticks previous-frame-ticks) world)`,
+  * `:WINDOW` is the number of previous frames over which the average frame rate is calculated,
+  * `:MAX-DELTA` is the maximum number of milliseconds between frames.
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE] to set the frame rate. For example to set the frame rate to 60 frames per second;
 
@@ -864,10 +886,16 @@ To unlock the frame rate, effectively running the game loop as fast as the CPU w
 (SETF (SDL:FRAME-RATE) NIL)
 }}}
 
-The duration between frames is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#dt DT]
+The delta between frames is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#dt DT]
 
 {{{
 (SDL:DT)
+}}}
+
+The maximum dt is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#max-dt MAX-DT].
+
+{{{
+(SDL:MAX-DT)
 }}}
 
 == Constant Time-step ==
@@ -899,21 +927,46 @@ Use `:IDLE` to redraw the screen each frame. To update the physics simulation us
 The constant timestep manager must be initialized prior to entering the game loop, at display creation time.
 
 {{{
-(SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-unlocked))
+(SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-timestep))
 }}}
 
-The duration between frames is retrieved and set using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#dt DT]. 
+`FPS-TIMESTEP` accepts the following optional keyword parameters;
+
+  * `:WORLD` is used in the calculation of `DT`, where `dt = (/ (- current-frame-ticks previous-frame-ticks) world)`,
+  * `:WINDOW` is the number of previous frames over which the average frame rate is calculated,
+  * `:MAX-DT` is the maximum number of milliseconds that the physics simulation can run during a single frame.
+  * `:DT` is the timestep (in milliseconds) that is used to update the physics simulation.
+
+`FPS-UNLOCKED` uses a callback mechanism to update the physics simulation. The callback is passed to `FPS-UNLOCKED` as an optional keyword parameter;
+
+  * `:PS-FN` is the callback function used to update the physics simulation. This callback must be specified as follows.
+
+{{{
+#'(lambda (ticks dt)
+    ...)
+}}}
+
+For example;
+
+{{{
+(defun physics (ticks dt)
+  (declare (ignore ticks))
+  (dolist (p *particles*)
+    (update-particle p (/ dt 1000))))
+
+(SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-unlocked :ps-fn #'physics))
+}}}
+
+The delta between frames is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#dt DT]. 
 
 {{{
 (SDL:DT)
-(setf (SDL:DT) 10)
 }}}
 
-The maximum dt is set using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#max-dt MAX-DT].
+The maximum dt is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#max-dt MAX-DT].
 
 {{{
 (SDL:MAX-DT)
-(setf (SDL:MAX-DT) 100)
 }}}
 
 = Default Keyword Arguments =
