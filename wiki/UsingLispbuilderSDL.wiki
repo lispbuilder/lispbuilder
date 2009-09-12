@@ -878,7 +878,7 @@ The maximum `dt` is retrieved using [http://lispbuilder.googlecode.com/svn/trunk
 == Constant Frame Rate ==
 
 The game loop may be executed a fixed number of frames per second or as fast as possible. Games that implement a simple physics simulation can get away with locking the physics simulation to to the frame rate and updating the physics simulation once per game loop. 
-In this mode the value of `DT` will change due to small variations in the duration of each frame. The algorithm used to maintain teh frame rate is the same as described in [http://www.ferzkopp.net/joomla/content/view/19/14/ SDL_gfx].
+In this mode the value of `DT` will change due to small variations in the duration of each frame. The algorithm used to maintain the frame rate is the same as described in [http://www.ferzkopp.net/joomla/content/view/19/14/ SDL_gfx].
 
 `:IDLE` is executes each frame and contains game logic, physics and sprite and screen redraws.
 
