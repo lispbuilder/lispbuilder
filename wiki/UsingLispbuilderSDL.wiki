@@ -841,7 +841,7 @@ The logic for each mode is encapsulated within a frame rate manager;
 
   * `FPS-FIXED`, supports a constant or unlocked frame rate where the physics simulation is locked to the frame rate,
   * `FPS-UNLOCKED`, supports an unlocked frame rate where the physics simulation is decoupled from the frame rate, but uses a callback to update the physics simulation.
-  * `FPS-TIMESTEP, same as `FPS-UNLOCKED`, but uses `WITH-TIMESTEP` to update the physics simulation. 
+  * `FPS-TIMESTEP`, same as `FPS-UNLOCKED`, but uses `WITH-TIMESTEP` to update the physics simulation. 
 
 The functions used to query and manage frame rate are as follows;
 
