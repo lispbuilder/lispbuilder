@@ -40,11 +40,15 @@ of 'n' frames."
 (defun ticks (&optional (fpsmanager sdl-base::*default-fpsmanager*))
   (sdl-base::fps-ticks fpsmanager))
 
-;(defun physics-hook-p (&optional (fpsmanager sdl-base::*default-fpsmanager*))
-;  (sdl-base::ps-fn fpsmanager))
-;(defun set-physics-hook (fn &optional (fpsmanager sdl-base::*default-fpsmanager*))
-;  (setf (sdl-base::ps-fn fpsmanager) fn))
-;(defsetf physics-hook-p set-physics-hook)
+(defun physics-hook-p (&optional (fpsmanager sdl-base::*default-fpsmanager*))
+  (sdl-base::ps-fn fpsmanager))
+(defun set-physics-hook (fn &optional (fpsmanager sdl-base::*default-fpsmanager*))
+  (setf (sdl-base::ps-fn fpsmanager) fn))
+(defsetf physics-hook-p set-physics-hook)
+
+(defun system-ticks ()
+  (sdl-cffi::sdl-get-ticks))
+
 
 ;;;; --------------------------
 ;;;; Lock timestep to Specified Rate

@@ -75,13 +75,13 @@
            (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
            ;; draw images
            (if squashed?
-             (if (> (- (sdl-cffi::SDL-Get-Ticks) last-squash-tick) 700)
+             (if (> (- (sdl:system-ticks) last-squash-tick) 700)
                (setf squashed? nil
                      squash? nil
                      blood? nil
                      bug? t))
-             (when (> (sdl-cffi::SDL-Get-Ticks) (+ lasttick levelticks))
-               (setf lasttick (sdl-cffi::SDL-Get-Ticks))
+             (when (> (sdl:system-ticks) (+ lasttick levelticks))
+               (setf lasttick (sdl:system-ticks))
                (sdl:set-position-* bug :x (random 640) :y (random 480))))
            (when squash?
              (sdl:draw-surface squash))

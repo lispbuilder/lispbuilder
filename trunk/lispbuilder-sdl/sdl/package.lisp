@@ -558,6 +558,7 @@
    #:max-dt
    #:ticks
    #:with-timestep
+   #:system-ticks
 
    ;; keys.lisp
    #:enable-unicode-p
