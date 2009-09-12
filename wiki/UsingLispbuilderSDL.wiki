@@ -899,6 +899,23 @@ The constant frame rate manager, `FPS-FIXED`, must be initialized at display cre
 
 Games that implement a complex physics simulation must use a constant timestep. To maintain a constant timestep the physics simulation is be decoupled from the frame rate. The algorithm used is the same as is described in [http://www.gaffer.org/game-physics/fix-your-timestep/ Fix Your Timestep!]. 
 
+The physics simulation can be updated via a callback using `FPS-UNLOCKED`, and within `WITH-TIMESTEP` using `FPS-TIMESTEP`.
+
+=== Physics Inline ===
+
+`FPS-TIMESTEP` must be initialized prior to entering the game loop, at display creation time.
+
+{{{
+(SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-timestep))
+}}}
+
+`FPS-TIMESTEP` accepts the following optional keyword parameters;
+
+  * `:WORLD` is used in the calculation of `DT`, where `dt = (/ (- current-frame-ticks previous-frame-ticks) world)`,
+  * `:WINDOW` is the number of previous frames over which the average frame rate is calculated,
+  * `:MAX-DT` is the maximum number of milliseconds that the physics simulation can run during a single frame.
+  * `:DT` is the timestep (in milliseconds) that is used to update the physics simulation.
+
 Use `:IDLE` to redraw the screen each frame. To update the physics simulation use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-timestep WITH-TIMESTEP]. `WITH-TIMESTEP` will update the physics simulation as is necessary per frame. This means that the forms within `WITH-TIMESTEP` are executed more often per frame on machines having a lower frame rate.
 
 {{{
@@ -921,18 +938,7 @@ Use `:IDLE` to redraw the screen each frame. To update the physics simulation us
  (sdl:update-display))
 }}}
 
-The constant timestep manager must be initialized prior to entering the game loop, at display creation time.
-
-{{{
-(SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-timestep))
-}}}
-
-`FPS-TIMESTEP` accepts the following optional keyword parameters;
-
-  * `:WORLD` is used in the calculation of `DT`, where `dt = (/ (- current-frame-ticks previous-frame-ticks) world)`,
-  * `:WINDOW` is the number of previous frames over which the average frame rate is calculated,
-  * `:MAX-DT` is the maximum number of milliseconds that the physics simulation can run during a single frame.
-  * `:DT` is the timestep (in milliseconds) that is used to update the physics simulation.
+=== Physics Callback ===
 
 `FPS-UNLOCKED` uses a callback mechanism to update the physics simulation. The callback is passed to `FPS-UNLOCKED` as an optional keyword parameter;
 
