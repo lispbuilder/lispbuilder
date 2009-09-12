@@ -839,40 +839,16 @@ Simple games can get away with locking the physics simulation to the frame rate.
 
 The logic for each mode is encapsulated within a frame rate manager;
 
-  * fps-fixed, supports a constant or unlocked frame rate where the physics simulation is locked to the frame rate,
-  * fps-unlocked, supports an unlocked frame rate where the physics simulation is decoupled from the frame rate, but uses a callback to update the physics simulation.
-  * fps-timestep, same as `fps-unlocked`, but uses `WITH-TIMESTEP` to update the physics simulation. 
+  * `FPS-FIXED`, supports a constant or unlocked frame rate where the physics simulation is locked to the frame rate,
+  * `FPS-UNLOCKED`, supports an unlocked frame rate where the physics simulation is decoupled from the frame rate, but uses a callback to update the physics simulation.
+  * `FPS-TIMESTEP, same as `FPS-UNLOCKED`, but uses `WITH-TIMESTEP` to update the physics simulation. 
 
 The functions used to query and manage frame rate are as follows;
 
-  * frame-rate, query or set the target frame rate,
-  * dt, returns current timestep
-  * average-fps, returns the average frames per second,
-  * ticks, tbd
-
-  * with-timestep 
-
-== Constant Frame Rate ==
-
-The game loop can be executed a fixed number of frames per second or as fast as possible. Games that implement a simple physics simulation can get away with locking the physics simulation to to the frame rate and updating the physics simulation once per game loop. 
-In this mode the value of `DT` will change due to small variations in the duration of each frame. 
-
-The constant frame rate algorithm used is the same as described in [http://www.ferzkopp.net/joomla/content/view/19/14/ SDL_gfx].
-
-Use `:IDLE` to update the physics simulation and redraw the screen each frame.
-
-The constant frame rate manager, `FPS-FIXED`, must be initialized prior to entering the game loop, at display creation time.
-
-{{{
-(SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-fixed))
-}}}
-
-`FPS-FIXED` accepts the following optional keyword arguments;
-
-  * `:TARGET-FRAME-RATE` attempts to maintain the specified frame rate,
-  * `:WORLD` is used in the calculation of `DT`, where `dt = (/ (- current-frame-ticks previous-frame-ticks) world)`,
-  * `:WINDOW` is the number of previous frames over which the average frame rate is calculated,
-  * `:MAX-DELTA` is the maximum number of milliseconds between frames.
+  * `SYSTEM-TICKS`, returns the number of ticks (milliseconds) since system boot,
+  * `FRAME-RATE`, query or set the target frame rate. Useful only for `FPS-FIXED` and ignored otherwise,
+  * `DT`, returns current time step for the frame and should be used to update the physics simulation,
+  * `AVERAGE-FPS`, returns the average frames per second,
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#frame-rate FRAME-RATE] to set the frame rate. For example to set the frame rate to 60 frames per second;
 
@@ -892,11 +868,32 @@ The delta between frames is retrieved using [http://lispbuilder.googlecode.com/s
 (SDL:DT)
 }}}
 
-The maximum dt is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#max-dt MAX-DT].
+The maximum `dt` is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#max-dt MAX-DT].
 
 {{{
 (SDL:MAX-DT)
 }}}
+
+
+== Constant Frame Rate ==
+
+The game loop may be executed a fixed number of frames per second or as fast as possible. Games that implement a simple physics simulation can get away with locking the physics simulation to to the frame rate and updating the physics simulation once per game loop. 
+In this mode the value of `DT` will change due to small variations in the duration of each frame. The algorithm used to maintain teh frame rate is the same as described in [http://www.ferzkopp.net/joomla/content/view/19/14/ SDL_gfx].
+
+`:IDLE` is executes each frame and contains game logic, physics and sprite and screen redraws.
+
+The constant frame rate manager, `FPS-FIXED`, must be initialized at display creation time, prior to entering the game loop
+
+{{{
+(SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-fixed))
+}}}
+
+`FPS-FIXED` accepts the following optional keyword arguments;
+
+  * `:TARGET-FRAME-RATE` attempts to maintain the specified frame rate,
+  * `:WORLD` is used in the calculation of `DT`, where `dt = (/ (- current-frame-ticks previous-frame-ticks) world)`,
+  * `:WINDOW` is the number of previous frames over which the average frame rate is calculated,
+  * `:MAX-DELTA` is the maximum number of milliseconds between frames.
 
 == Constant Time-step ==
 
@@ -955,18 +952,6 @@ For example;
     (update-particle p (/ dt 1000))))
 
 (SDL:WINDOW 320 240 :FPS (make-instance 'sdl:fps-unlocked :ps-fn #'physics))
-}}}
-
-The delta between frames is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#dt DT]. 
-
-{{{
-(SDL:DT)
-}}}
-
-The maximum dt is retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#max-dt MAX-DT].
-
-{{{
-(SDL:MAX-DT)
 }}}
 
 = Default Keyword Arguments =
