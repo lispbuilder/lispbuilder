@@ -146,29 +146,40 @@ Or if you are using SLIME, enter `,` then `l` then `LISPBUILDER-SDL`
 
 = Initializing LISPBUILDER-SDL =
 
-lispbuilder-sdl must be initialized prior to use by calling [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl INIT-SDL], 
+`LSPBUILDER-SDL` *must* be initialized prior to use. The following functions initialize and close the library;
+
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT], initialize/close the library and specified subsystems.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl INIT-SDL], initialize the library and specified subsystems.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-sdl QUIT-SDL], close the library and specified subsystems.
 
 {{{
 (SDL:INIT-SDL)
 }}}
 
-or, using the macro [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT].
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT] is a convenience macro that will initialize the library and subsystems and upon exit will close the library and subsystems.
 
 {{{
 (SDL:WITH-INIT ()
   ...)
 }}}
 
-To close lispbuilder-sdl use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-sdl QUIT-SDL]. Using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT] will automatically close lispbuilder-sdl upon exit.
+Audio, video, joystick and CDROM are separate subsystems and must be initialized prior to use. The list of subsystems is;
 
-Audio, video, joystick and CDROM are separate subsystems and must be initialized prior to use. These subsystems are initialized as follows;
+  * `SDL-INIT-VIDEO`, The video subsystem
+  * `SDL-INIT-AUDIO`, The audio subsystem
+  * `SDL-INIT-CDROM`, The cdrom subsystem
+  * `SDL-INIT-JOYSTICK`, The joystick subsystem
+  * `SDL-INIT-EVERYTHING`, All of the above
+  * _SDL-INIT-EVENTTHREAD_ (Don't use. Not supported on Windows)
+
+Subsystems are automatically initialized prior to use as follows;
 
   * The video subsystem is initialized when creating the display using `WINDOW`.
   * The audio subsystem is initialized when opening audio using `OPEN-AUDIO`
   * The joystick subsystem is initialized when opening the joystick using `OPEN-JOYSTICK` _(not yet supported)_
-  * The CDROM subsystem is initialized when opening the CRDOM drive for reading using `OPEN-CDROM` _(not yet supported)_
+  * The CDROM subsystem is initialized when opening the CDROM drive for reading using `OPEN-CDROM` _(not yet supported)_
 
-To initialize these subsystems using `INIT-SDL` and `WITH-INIT`, the subsystems must be passed as parameters, for example 
+To initialize subsystems using `INIT-SDL` and `WITH-INIT`, the subsystems must be passed as parameters, for example 
 
 {{{
 (SDL:INIT-SDL :FLAGS '(SDL:SDL-INIT-VIDEO SDL:SDL-INIT-AUDIO))
@@ -181,26 +192,40 @@ or, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.h
   ...)
 }}}
 
-The list of subsystems is;
+To close lispbuilder-sdl use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-sdl QUIT-SDL]. Using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT] will automatically close lispbuilder-sdl upon exit.
 
-  * `SDL-INIT-VIDEO`, The video subsystem
-  * `SDL-INIT-AUDIO`, The audio subsystem
-  * `SDL-INIT-CDROM`, The cdrom subsystem
-  * `SDL-INIT-JOYSTICK`, The joystick subsystem
-  * `SDL-INIT-EVERYTHING`, All of the above
-  * _SDL-INIT-EVENTTHREAD_ (Don't use. Not supported on Windows)
+Individual subsystems can be managed at any time using the following functions;
 
-Initialization is somewhat complicated by the fact that a Common Lisp development environment will load a foreign library once, but multiple debug sessions will initialize and close the foreign library many times. A C/C++ development environment on the other hand will open and close a library each time the program is run, thereby freeing memory and resources left hanging by incomplete or buggy initialize/close functions. Some poorly written C libraries may therefore frequently core dump in a Lisp environment when resources are not properly freed. LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control of the initialization of foreign libraries. These functions are as follows: 
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sub-systems INIT-SUB-SYSTEMS], initialize the specified subsystems
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-sub-systems QUIT-SUB-SYSTEMS], close the specified subsystems
 
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialize-on-startup INITIALIZE-ON-STARTUP]
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-on-exit QUIT-ON-EXIT]
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sub-systems INIT-SUB-SYSTEMS]
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-sub-systems QUIT-SUB-SYSTEMS]
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#init-sdl INIT-SDL]
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#quit-sdl QUIT-SDL]
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-sub-systems LIST-SUB-SYSTEMS]
-  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#return-sub-systems-of-status RETURN-SUB-SYSTEMS-OF-STATUS]
+The status of the library or any subsystem can be queried at runtime using;
 
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialized-subsystems-p INITIALIZED-SUBSYSTEMS-P], returns a list of the initialized subsystems. Note that if all subsystems are initialized then `SDL-INIT-EVERYTHING` is returned,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#return-sub-systems-of-status RETURN-SUB-SYSTEMS-OF-STATUS], returns a bitmask of the subsystems that are initialized or closed,
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-sub-systems LIST-SUB-SYSTEMS], returns a list of subsystems from a specified bitmask, usually returned from `RETURN-SUB-SYSTEMS-OF-STATUS`.
+
+{{{
+(SDL:INITIALIZED-SUBSYSTEMS-P SDL:SDL-INIT-VIDEO)
+
+>> ((LISPBUILDER-SDL-CFFI::SDL-INIT-VIDEO 32))
+}}}
+
+{{{
+return-sub-systems-of-status flags status => result 
+}}}
+
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#return-sub-systems-of-status RETURN-SUB-SYSTEMS-OF-STATUS] returns the status of the specified subsystems as a bitmask. 
+`FLAGS` may contain a logior of zero or more of: SDL-INIT-EVERYTHING, SDL-INIT-VIDEO, SDL-INIT-CDROM, SDL-INIT-AUDIO, SDL-INIT-TIMER, SDL-INIT-JOYSTICK, SDL-INIT-EVENTTHREAD, SDL-INIT-NOPARACHUTE.
+`STATUS` when `T` returns the status of initialized subsystems. `STATUS` when `NIL`, returns the status of closed subsystems.
+
+For example;
+
+{{{
+(sdl:list-subsystems (sdl:return-subsystems-of-status sdl:sdl-init-video t))
+
+>> ((LISPBUILDER-SDL-CFFI::SDL-INIT-VIDEO 32))
+}}}
 
 = Determining the Capabilities of the Graphics Hardware =
 == Description of the Graphics Hardware Capabilities ==
@@ -1390,8 +1415,8 @@ Putting this all together, we can write short example showing a white rectangle 
   (WITH-EVENTS ()
     (:QUIT-EVENT () T)      ; Absolutely have to handle the :QUIT-EVENT,
                             ; or the application will not exit.
-    (:KEY-DOWN-EVENT (:KEY key) 
-      (WHEN (KEY= key :SDL-KEY-ESCAPE) (PUSH-QUIT-EVENT)))
+    (:KEY-DOWN-EVENT () 
+      (WHEN (KEY-DOWN-P :SDL-KEY-ESCAPE) (PUSH-QUIT-EVENT)))
 
     (:MOUSE-MOTION-EVENT (:X mouse-x :Y mouse-y)
       (CLEAR-DISPLAY *black*)
