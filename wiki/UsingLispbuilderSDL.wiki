@@ -211,13 +211,13 @@ The status of the library or any subsystem can be queried at runtime using;
 >> ((LISPBUILDER-SDL-CFFI::SDL-INIT-VIDEO 32))
 }}}
 
-{{{
-return-sub-systems-of-status flags status => result 
-}}}
-
 [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#return-sub-systems-of-status RETURN-SUB-SYSTEMS-OF-STATUS] returns the status of the specified subsystems as a bitmask. 
 `FLAGS` may contain a logior of zero or more of: SDL-INIT-EVERYTHING, SDL-INIT-VIDEO, SDL-INIT-CDROM, SDL-INIT-AUDIO, SDL-INIT-TIMER, SDL-INIT-JOYSTICK, SDL-INIT-EVENTTHREAD, SDL-INIT-NOPARACHUTE.
 `STATUS` when `T` returns the status of initialized subsystems. `STATUS` when `NIL`, returns the status of closed subsystems.
+
+{{{
+return-sub-systems-of-status flags status => result 
+}}}
 
 For example;
 
