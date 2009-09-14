@@ -29,10 +29,6 @@
 
   ;; Initialize SDL
   (sdl:with-init (sdl:sdl-init-video sdl:sdl-init-audio)
-    ;; Make sure SDL is closed on exit,
-    ;; or the SDL library might become a little unstable
-    (setf (sdl:quit-on-exit) t)
-        
     (sdl:window 400 20 :title-caption "WAV playback" :icon-caption "WAV playback")
     (setf (sdl:frame-rate) 5)
     (sdl:initialise-default-font)

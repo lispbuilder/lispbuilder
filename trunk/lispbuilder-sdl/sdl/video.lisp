@@ -48,6 +48,11 @@
     (if position
       (sdl-cffi::sdl-put-env (format nil "SDL_VIDEO_WINDOW_POS=~A" window-position))
       (sdl-cffi::sdl-put-env (format nil "SDL_VIDEO_WINDOW_POS="))))
+
+  ;; Initialize the video subsytem, if not already initialized.
+  (unless (init-subsystems sdl:sdl-init-video)
+    (error "ERROR Cannot initialize the video subsystem. Cannot create the display surface~%"))
+
   (let ((surf (sdl-base::set-screen (cast-to-int width)
                                     (cast-to-int height)
 				    :bpp bpp

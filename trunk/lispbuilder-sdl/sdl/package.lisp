@@ -91,6 +91,8 @@
    #:*external-init-subsystems-on-startup*
    #:*external-quit-subsystems-on-exit*
 
+   #:*quit-on-exit*
+
    #:*opengl-context*
 
    ;;#:*default-font-path*
@@ -559,6 +561,8 @@
    #:ticks
    #:with-timestep
    #:system-ticks
+   #:physics-hook-p
+   #:set-physics-hook
 
    ;; keys.lisp
    #:enable-unicode-p
