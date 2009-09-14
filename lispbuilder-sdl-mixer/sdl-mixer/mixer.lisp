@@ -131,7 +131,8 @@ NOTE: The sample may already have been freed and therefore the pointer to the fo
                    (frequency +DEFAULT-FREQUENCY+)
 		   (format +DEFAULT-FORMAT+)
 		   (channels +DEFAULT-CHANNELS+)
-		   (chunksize +DEFAULT-SAMPLE-BUFFER+))
+		   (chunksize +DEFAULT-SAMPLE-BUFFER+)
+		   (enable-callbacks nil))
   "Initializes the mixer. SDL must be initialized with [SDL-INIT-AUDIO](#sdl-init-audio) prior to this call. 
 [OPEN-AUDIO](#open-audio) can be called multiple times, however `FORMAT` is set on the first call and will not changed on subsequent calls. 
 The audio device must be closed and re-opened for any change to `FORMAT` to take effect.
@@ -153,31 +154,37 @@ Increase `CHUNKSIZE` to decrease CPU resources, if sound skips or if playing mus
 ##### Returns
 
 * `T` on success and `NIL` on failure."
-  ;; Make sure that SDL is initialized with SDL:SDL-INIT-AUDIO
-  (when (= 0 (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t))
-    (error "OPEN-AUDIO: SDL must be initialized with SDL:SDL-INIT-AUDIO prior to calling OPEN-AUDIO."))
-  (if (= 0 (sdl-mixer-cffi::open-audio frequency format channels chunksize))
-    (progn
-      ;; Register the music finished callback
-      ;(register-music-finished nil)
-      ;; Register the sample finished callback
-      ;(register-sample-finished nil)
-      t)
-    nil))
+  (setf *enable-callbacks* enable-callbacks)
+  ;; Make sure that SDL Audio is initialized
+  (when (sdl:init-subsystems SDL:SDL-INIT-AUDIO)
+    (when (= 0 (sdl-mixer-cffi::open-audio frequency format channels chunksize))
+      (when *enable-callbacks*
+	;; Register the music finished callback
+	(register-music-finished-callback)
+	(register-music-finished nil)
+	;; Register the sample finished callback
+	(register-sample-finished-callback)
+	(register-sample-finished nil))
+      t)))
 
 (defun close-audio (&optional (all nil))
   "Attempts to close the audio device. The audio device can be opened multiple times by [OPEN-AUDIO](#open-audio) 
 and to properly close the audio device, [CLOSE-AUDIO](#close-audio) should be called the same number of times. 
 Optionally `ALL` when `T` will forcibly close the audio device, no matter how many times the device was opened."
-  ;; Unregister the music finished callback
-  ;(register-music-finished nil)
-  ;; Unregister the sample finished callback
-  ;(register-sample-finished nil)
-  (format t "audio-opened-p: ~A,  query-spec: ~A~%" (audio-opened-p) (query-spec))
+
+  (when *enable-callbacks*
+    ;; Unregister the music finished callback
+    (unregister-music-finished)
+    (unregister-music-finished-callback)
+    ;; Unregister the sample finished callback
+    (unregister-sample-finished)
+    (unregister-sample-finished-callback))
+  
   (if (and all (audio-opened-p))
     (dotimes (i (query-spec))
       (sdl-mixer-cffi::close-audio))
-    (sdl-mixer-cffi::close-audio)))
+    (sdl-mixer-cffi::close-audio))
+  (sdl:quit-subsystems sdl:sdl-init-audio))
 
 (defun play-music (music &key
 		   (loop nil)
@@ -564,8 +571,7 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   "Called when any channel finishes playback or is halted. `CHANNEL` contains the channel number that has finished."
   (when *channel-finished*
     (funcall *channel-finished* channel))
-  ;(cffi:null-pointer)
-  )
+  (cffi:null-pointer))
 
 (defun register-sample-finished-callback (&optional cb)
   (unless cb
@@ -592,8 +598,7 @@ Same as calling [ALLOCATE-CHANNELS](#allocate-channels) with `NIL`, or `0`."
   "Called when music finishes playback or is halted."
   (when *music-finished*
     (funcall *music-finished*))
-  ;;(cffi:null-pointer)
-  )
+  (cffi:null-pointer))
 
 (defun register-music-finished-callback (&optional cb)
   (unless cb
