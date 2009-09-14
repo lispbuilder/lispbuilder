@@ -68,8 +68,10 @@
    ;; PLAY-SAMPLE
    ;; 4.3.7 Mix_Pause
    #:PAUSE-CHANNEL
+   #:PAUSE-SAMPLE
    ;; 4.3.8 Mix_Resume
    #:RESUME-CHANNEL
+   #:RESUME-MUSIC
    ;; 4.3.9 Mix_HaltChannel
    #:HALT-SAMPLE
    ;; 4.3.10 Mix_ExpireChannel

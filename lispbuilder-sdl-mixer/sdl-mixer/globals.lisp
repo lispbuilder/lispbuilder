@@ -9,3 +9,5 @@
 (defvar *audio-buffer* nil)
 
 (defvar *callback-p* nil)
+
+(defparameter *enable-callbacks* nil)
