@@ -107,7 +107,7 @@
     (funcall (joystick-ball-motion joystick) x (incf y (incf-line)))))
 
 (defun joystick ()
-  (sdl:with-init (sdl:SDL-INIT-EVERYTHING)
+  (sdl:with-init (sdl:sdl-init-joystick)
     (sdl:window 600 240 :title-caption "Joystick" :icon-caption "Joystick")
     (setf (sdl:frame-rate) 30)
     (sdl:initialise-default-font)

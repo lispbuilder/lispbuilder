@@ -105,19 +105,10 @@
                    (audio-buffer-size +DEFAULT-SAMPLE-BUFFER+)
                    callback
                    (volume +MAX-VOLUME+))
-  ;; Make sure that SDL is initialized with SDL:SDL-INIT-AUDIO,
-  ;; If not, then initialize it and add it to the list of subsystems to quit on
-  ;; sdl exit.
-  (when (= (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t) 0)
-    (sdl:initialize-subsystems-on-startup (logior
-                                           sdl::*initialize-subsystems-on-startup*
-                                           SDL:SDL-INIT-AUDIO))
-    (sdl:quit-subsystems-on-exit (logior
-                                  sdl::*quit-subsystems-on-exit*
-                                  SDL:SDL-INIT-AUDIO))
-    ;; Initialize the subsystems in sdl::*initialize-subsystems-on-startup*
-    ;; that are not yet initialized.
-    (sdl:init-subsystems))
+  ;; Close the audio subsystem in case it is already open.
+  (sdl:close-audio)
+  ;; Make sure that the audio subsystem is initialized.
+  (init-subsystems SDL:SDL-INIT-AUDIO)
 
   ;; Configure Lispworks to allow
   ;; callbacks from unknown foreign threads
@@ -217,7 +208,7 @@
   (_audio-paused-p_ obj))
 
 (defun audio-opened-p ()
-  (when (and (> (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t) 0)
+  (when (and (list-subsystems (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t))
              *mixer*)
     (mixer-opened-p *mixer*)))
 
@@ -242,6 +233,7 @@
   #-lispbuilder-sdl-audio(progn
                            (sdl-cffi::sdl-lock-audio)
                            (sdl-cffi::sdl-close-audio))
+  (quit-subsystems sdl:sdl-init-audio)
   (setf *managed-audio* nil))
 
 (defgeneric load-sample (filename))

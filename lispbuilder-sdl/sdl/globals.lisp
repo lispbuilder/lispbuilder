@@ -91,8 +91,6 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 (defvar *initialized* nil)
 (defvar *reinit-on-startup* nil)
 (defvar *quit-on-exit* t)
-(defvar *initialize-subsystems-on-startup* (logior SDL-INIT-VIDEO))
-(defvar *quit-subsystems-on-exit* (logior SDL-INIT-VIDEO))
 
 (defvar *external-init-subsystems-on-startup* nil
   "The list of functions that are called from [INIT-SDL](#init-sdl).")
