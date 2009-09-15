@@ -18,11 +18,14 @@
 
 (defun squashed ()
   "Squashed: main entry function"
-  (sdl:with-init (sdl:sdl-init-video sdl:sdl-init-audio)
+  (sdl:with-init ()
+
     (sdl:window 640 480)
     (setf (sdl:frame-rate) 30)
+
     ;; Open the audio mixer. Use a smaller buffer for lower latency.
     (sdl:open-audio :audio-buffer-size 1024)
+    
     (let ((bug (load-image "bug.bmp"))
 	  (racket (load-image "racket.bmp"))
 	  (blood (load-image "blood.bmp"))
@@ -43,11 +46,13 @@
       
       (show-score score)
       (sdl:show-cursor nil)
+
       (sdl:play-audio)
+
       (sdl:with-events ()
         (:quit-event () t)
-        (:key-down-event (:key key)
-         (when (sdl:key= key :sdl-key-escape) (sdl:push-quit-event)))
+        (:key-down-event ()
+         (when (sdl:key-down-p :sdl-key-escape) (sdl:push-quit-event)))
         (:mouse-motion-event (:x x :y y)
          (sdl:set-position-* racket :x x :y y))
         (:mouse-button-down-event (:x x :y y)
