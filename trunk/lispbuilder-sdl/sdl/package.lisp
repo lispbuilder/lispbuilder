@@ -22,7 +22,8 @@
    lispbuilder-sdl-base::pixel-bpp
    lispbuilder-sdl-base::pixel-pitch
    lispbuilder-sdl-base::with-pixel
-   lispbuilder-sdl-base::with-pixels)
+   lispbuilder-sdl-base::with-pixels
+   lispbuilder-sdl-base::pixels)
 
   (:import-from #:lispbuilder-sdl-cffi
    lispbuilder-sdl-cffi::sdl-get-ticks
@@ -706,6 +707,7 @@
    #:pixel-pitch
    #:with-pixel
    #:with-pixels
+   #:pixels
 
    ;; Imports from lispbuilder-sdl-assets
    #:*default-asset-path*))
