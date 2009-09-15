@@ -93,6 +93,7 @@ specified in `FLAGS`.
      (unwind-protect
          (when (init-sdl :flags ',flags)
            ,@body)
+       (close-audio)
        (quit-sdl :flags ',flags))))
 
 (defun list-subsystems (flag)
@@ -101,58 +102,54 @@ specified in `FLAGS`.
 `FLAGS` is an `INTEGER` bitmask containing the logior of zero or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
 `SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`, `SDL-INIT-EVENTTHREAD` and `SDL-INIT-NOPARACHUTE`."
   (let ((subsystems nil))
-    (if (= flag sdl-cffi::sdl-init-everything)
-	(push (list 'sdl-cffi::sdl-init-everything
-		    sdl-cffi::sdl-init-everything)
-	      subsystems)
-	(progn
-	  (when (/= 0 (logand flag sdl-cffi::sdl-init-video))
-	    (push (list 'sdl-cffi::sdl-init-video
-			sdl-cffi::sdl-init-video)
-		  subsystems))
-	  (when (/= 0 (logand flag sdl-cffi::sdl-init-cdrom))
-	    (push (list 'sdl-cffi::sdl-init-cdrom
-			sdl-cffi::sdl-init-cdrom)
-		  subsystems))
-	  (when (/= 0 (logand flag sdl-cffi::sdl-init-audio))
-	    (push (list 'sdl-cffi::sdl-init-audio
-			sdl-cffi::sdl-init-audio)
-		  subsystems))
-	  (when (/= 0 (logand flag sdl-cffi::sdl-init-timer))
-	    (push (list 'sdl-cffi::sdl-init-timer
-			sdl-cffi::sdl-init-timer)
-		  subsystems))
-	  (when (/= 0 (logand flag sdl-cffi::sdl-init-joystick))
-	    (push (list 'sdl-cffi::sdl-init-joystick
-			sdl-cffi::sdl-init-joystick)
-		  subsystems))
-	  (when (/= 0 (logand flag sdl-cffi::sdl-init-eventthread))
-	    (push (list 'sdl-cffi::sdl-init-eventthread
-			sdl-cffi::sdl-init-eventthread)
-		  subsystems))
-	  (when (/= 0 (logand flag sdl-cffi::sdl-init-noparachute))
-	    (push (list 'sdl-cffi::sdl-init-noparachute
-			sdl-cffi::sdl-init-noparachute)
-		  subsystems))))
+    (when (/= 0 (logand flag sdl-cffi::sdl-init-video))
+      (push (list 'sdl-cffi::sdl-init-video
+                  sdl-cffi::sdl-init-video)
+            subsystems))
+    (when (/= 0 (logand flag sdl-cffi::sdl-init-cdrom))
+      (push (list 'sdl-cffi::sdl-init-cdrom
+                  sdl-cffi::sdl-init-cdrom)
+            subsystems))
+    (when (/= 0 (logand flag sdl-cffi::sdl-init-audio))
+      (push (list 'sdl-cffi::sdl-init-audio
+                  sdl-cffi::sdl-init-audio)
+            subsystems))
+    (when (/= 0 (logand flag sdl-cffi::sdl-init-timer))
+      (push (list 'sdl-cffi::sdl-init-timer
+                  sdl-cffi::sdl-init-timer)
+            subsystems))
+    (when (/= 0 (logand flag sdl-cffi::sdl-init-joystick))
+      (push (list 'sdl-cffi::sdl-init-joystick
+                  sdl-cffi::sdl-init-joystick)
+            subsystems))
+    (when (/= 0 (logand flag sdl-cffi::sdl-init-eventthread))
+      (push (list 'sdl-cffi::sdl-init-eventthread
+                  sdl-cffi::sdl-init-eventthread)
+            subsystems))
+    (when (/= 0 (logand flag sdl-cffi::sdl-init-noparachute))
+      (push (list 'sdl-cffi::sdl-init-noparachute
+                  sdl-cffi::sdl-init-noparachute)
+            subsystems))
     subsystems))
 
 (defun return-subsystems-of-status (flags status)
   "Returns the `STATUS` of the the specified SDL subsystems in `FLAGS`. 
 
 ##### Parameters
-* `FLAGS` must containone or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+* `FLAGS` must contain one or more of: `SDL-INIT-EVERYTHING`, `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
 `SDL-INIT-TIMER`, `SDL-INIT-JOYSTICK`.
 * `STATUS` when `T` returns the specified initialized subsystems.
 `STATUS` when `NIL`, returns the specified uninitialised subsystems."
-  (let ((subsystems (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything))
-	(to-initialize 0)
-	(status-fn (if status #'/= #'=)))
+  (let ((initialized (list-subsystems (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
+        (queried (list-subsystems (sdl-base::set-flags flags)))
+        (to-initialize 0))
     (mapc #'(lambda (subsystem)
               (let ((value (second subsystem)))
-		(when (funcall status-fn 0 (logand subsystems value))
-		  (setf to-initialize (logior to-initialize
-					      value)))))
-	  (list-subsystems (sdl-base::set-flags flags)))
+                (setf to-initialize (logior to-initialize
+                                            value))))
+          (if status
+            (intersection queried initialized :key #'car)
+            (set-difference queried initialized :key #'car)))
     to-initialize))
 
 (defun init-subsystems (subsystems)
@@ -180,11 +177,14 @@ already initialized.
 `QUIT-SUBSYSTEMS` can be called only after SDL is successfully intialized using [INIT-SDL](#init-sdl)."
   (sdl-cffi::sdl-quit-subsystem (return-subsystems-of-status (sdl-base::set-flags subsystems) t)))
 
-(defun initialized-subsystems-p (&optional (subsystem sdl-cffi::sdl-init-everything))
+(defun initialized-subsystems-p (&optional subsystem)
   "Returns a list of the initialized SDL subsystems."
-  (list-subsystems
-   ;; (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)
-   (sdl:return-subsystems-of-status (sdl-base::set-flags subsystem) t)))
+  (if subsystem
+    (if (and (/= 0 (logand (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)
+                           (sdl-base::set-flags subsystem)))
+             (>= (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything) (sdl-base::set-flags subsystem)))
+      (list-subsystems (sdl:return-subsystems-of-status (sdl-base::set-flags subsystem) t)))
+    (list-subsystems (sdl:return-subsystems-of-status (sdl-base::set-flags sdl:sdl-init-everything) t))))
 
 (defun init-sdl (&key flags)
   "Initalizes the SDL library using `FLAGS`."

@@ -178,7 +178,8 @@
 (defun play-audio (&optional obj &key loop pos)
   (unless obj
     (setf obj *mixer*))
-  (_play-audio_ obj :loop loop :pos pos))
+  (when obj
+    (_play-audio_ obj :loop loop :pos pos)))
 
 (defmethod _pause-audio_ ((self mixer))
   (when (audio-opened-p)
@@ -188,12 +189,14 @@
 (defun pause-audio (&optional obj)
   (unless obj
     (setf obj *mixer*))
-  (_pause-audio_ obj))
+  (when obj
+    (_pause-audio_ obj)))
 
 (defun resume-audio (&optional obj)
   (unless obj
     (setf obj *mixer*))
-  (_resume-audio_ obj))
+  (when obj
+    (_resume-audio_ obj)))
 
 (defmethod _resume-audio_ ((self mixer))
   (play-audio self))
@@ -205,10 +208,11 @@
 (defun audio-paused-p (&optional obj)
   (unless obj
     (setf obj *mixer*))
-  (_audio-paused-p_ obj))
+  (when obj
+    (_audio-paused-p_ obj)))
 
 (defun audio-opened-p ()
-  (when (and (list-subsystems (sdl:return-subsystems-of-status SDL:SDL-INIT-AUDIO t))
+  (when (and (initialized-subsystems-p SDL:SDL-INIT-AUDIO)
              *mixer*)
     (mixer-opened-p *mixer*)))
 
@@ -221,18 +225,16 @@
 (defmethod audio-playing-p (&optional obj)
   (unless obj
     (setf obj *mixer*))
-  (_audio-playing-p_ obj))
+  (when obj
+    (_audio-playing-p_ obj)))
 
 (defun close-audio ()
-  ;; Pause the audio stream
   (when (audio-opened-p)
-    (pause-audio)
-    (setf (slot-value *mixer* 'mixer-opened-p) nil))
-  ;; Lock the audio device to halt all callbacks
+      ;; Pause the audio stream
+      (pause-audio)
+      (setf (slot-value *mixer* 'mixer-opened-p) nil))
   #+lispbuilder-sdl-audio(sdl-cffi::sdl-glue-sdl-close-audio)
-  #-lispbuilder-sdl-audio(progn
-                           (sdl-cffi::sdl-lock-audio)
-                           (sdl-cffi::sdl-close-audio))
+  #-lispbuilder-sdl-audio(sdl-cffi::sdl-close-audio)
   (quit-subsystems sdl:sdl-init-audio)
   (setf *managed-audio* nil))
 
