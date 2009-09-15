@@ -62,6 +62,8 @@
    lispbuilder-sdl-cffi::SDL-BUTTON-X2
    ;; (cl:defconstant SDL-BUTTON-WHEEL-LEFT 6)
    ;; (cl:defconstant SDL-BUTTON-WHEEL-RIGHT 7)
+
+   lispbuilder-sdl-cffi::sdl-gl-get-proc-address
    )
 
   (:import-from #:lispbuilder-sdl-assets
@@ -671,6 +673,8 @@
    #:SDL-BUTTON-WHEEL-DOWN
    #:SDL-BUTTON-X1
    #:SDL-BUTTON-X2
+
+   #:SDL-GL-GET-PROC-ADDRESS
 
    ;; Imports from lispbuilder-sdl-base  
    #:*default-fpsmanager*
