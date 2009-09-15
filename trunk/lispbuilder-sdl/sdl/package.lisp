@@ -13,7 +13,16 @@
    lispbuilder-sdl-base::1/0->t/nil
    lispbuilder-sdl-base::fps-fixed
    lispbuilder-sdl-base::fps-unlocked
-   lispbuilder-sdl-base::fps-timestep)
+   lispbuilder-sdl-base::fps-timestep
+
+   lispbuilder-sdl-base::read-pixel
+   lispbuilder-sdl-base::write-pixel
+   lispbuilder-sdl-base::pixel-data
+   lispbuilder-sdl-base::write-pixel
+   lispbuilder-sdl-base::pixel-bpp
+   lispbuilder-sdl-base::pixel-pitch
+   lispbuilder-sdl-base::with-pixel
+   lispbuilder-sdl-base::with-pixels)
 
   (:import-from #:lispbuilder-sdl-cffi
    lispbuilder-sdl-cffi::sdl-get-ticks
@@ -688,6 +697,15 @@
    #:fps-fixed
    #:fps-unlocked
    #:fps-timestep
+
+   #:read-pixel
+   #:write-pixel
+   #:pixel-data
+   #:write-pixel
+   #:pixel-bpp
+   #:pixel-pitch
+   #:with-pixel
+   #:with-pixels
 
    ;; Imports from lispbuilder-sdl-assets
    #:*default-asset-path*))
