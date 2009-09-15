@@ -1532,7 +1532,7 @@ Use the following function to set the OpenGL attributes;
 (SDL:SET-GL-ATTRIBUTE <attribute> <value>)
 }}}
 
-The following _<attributes>_ are supported;
+The following _attributes_ are supported;
 
   * :SDL-GL-RED-SIZE
   * :SDL-GL-GREEN-SIZE
@@ -1550,7 +1550,7 @@ The following _<attributes>_ are supported;
   * :SDL-GL-MULTISAMPLEBUFFERS
   * :SDL-GL-MULTISAMPLESAMPLES
   * :SDL-GL-ACCELERATED-VISUAL
-  * :SDL-GL-SWAP-CONTROL)
+  * :SDL-GL-SWAP-CONTROL
 
 The following function provides access to OpenGL. Use *after* an OpenGL context is created.
 
