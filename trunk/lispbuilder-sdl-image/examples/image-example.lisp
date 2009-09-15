@@ -35,17 +35,19 @@
 										:image-type :TGA ; TGA must be specified
 										:color-key-at #(0 0))))))
       (loop
-	 for image in images
-	 for i from 0
-	 for (y x) = (multiple-value-list (floor i 4))
-	 for position = (sdl:point :x (+ 10 (* x 128))
-				   :y (+ 10 (* y 111)))
-	 do (sdl:draw-surface-at image position)))
+       for image in images
+       for i from 0
+       for (y x) = (multiple-value-list (floor i 4))
+       for position = (sdl:point :x (+ 10 (* x 128))
+                                 :y (+ 10 (* y 111)))
+       do (sdl:draw-surface-at image position)))
+
+    (sdl:update-display)
       
-      (sdl:with-events ()
-	(:quit-event () t)
-	(:key-down-event (:key key)
-			 (if (sdl:key= key :SDL-KEY-ESCAPE)
-			     (sdl:push-quit-event)))
-	(:video-expose-event () (sdl:update-display)))))
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:key-down-event (:key key)
+       (if (sdl:key= key :SDL-KEY-ESCAPE)
+         (sdl:push-quit-event)))
+      (:video-expose-event () (sdl:update-display)))))
 
