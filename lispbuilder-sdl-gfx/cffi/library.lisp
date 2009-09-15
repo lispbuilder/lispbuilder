@@ -7,10 +7,10 @@
 ;;	   cffi:*foreign-library-directories*
 ;;	   :test #'equal))
 
-#+win32(eval-when (:compile-toplevel :load-toplevel :execute)
-         (pushnew sdl-gfx-bin:*dll-path*
-                  cffi:*foreign-library-directories*
-                  :test #'equal))
+#+windows(eval-when (:compile-toplevel :load-toplevel :execute)
+           (pushnew sdl-gfx-bin:*dll-path*
+                    cffi:*foreign-library-directories*
+                    :test #'equal))
 
 (cffi:define-foreign-library sdl-gfx
   (:darwin (:framework "SDL_gfx"))
