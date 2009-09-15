@@ -23,7 +23,7 @@ Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system]
  * [http://lispgamesdev.blogspot.com Lisp Games Blog]
  * [http://dto.github.com/notebook/blast.html Blast Tactics]
  * [http://lispgamesdev.blogspot.com/2009/07/preview-of-bratwurst.html Remake of the Amiga game Bratwurst]
- * [http://uxul.wordpress.com/2009/04/07/a-detailed-preview-of-my-jnr-game-written-in-common-lisp/ JNR (Jump & Run)]
+ * Uxul-world, [http://wiki.github.com/dasuxullebt/uxul-world], and [http://uxul.wordpress.com/2009/04/07/a-detailed-preview-of-my-jnr-game-written-in-common-lisp/ JNR].
  * [http://github.com/sykopomp Common-Worm, and yashmup]
  * [http://sourceforge.net/projects/latrunculi/ Latrunculi]
  * [http://code.google.com/p/lisp-game-engine/ Lisp-Game-Engine]
