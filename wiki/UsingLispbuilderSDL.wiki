@@ -1532,7 +1532,27 @@ Use the following function to set the OpenGL attributes;
 (SDL:SET-GL-ATTRIBUTE <attribute> <value>)
 }}}
 
-Use the following to gain access to OpenGL shaders, etc. Use *after* an OpenGL context is created.
+The following _<attributes>_ are supported;
+
+  * :SDL-GL-RED-SIZE
+  * :SDL-GL-GREEN-SIZE
+  * :SDL-GL-BLUE-SIZE
+  * :SDL-GL-ALPHA-SIZE
+  * :SDL-GL-BUFFER-SIZE
+  * :SDL-GL-DOUBLEBUFFER
+  * :SDL-GL-DEPTH-SIZE
+  * :SDL-GL-STENCIL-SIZE
+  * :SDL-GL-ACCUM-RED-SIZE
+  * :SDL-GL-ACCUM-GREEN-SIZE
+  * :SDL-GL-ACCUM-BLUE-SIZE
+  * :SDL-GL-ACCUM-ALPHA-SIZE
+  * :SDL-GL-STEREO
+  * :SDL-GL-MULTISAMPLEBUFFERS
+  * :SDL-GL-MULTISAMPLESAMPLES
+  * :SDL-GL-ACCELERATED-VISUAL
+  * :SDL-GL-SWAP-CONTROL)
+
+The following function provides access to OpenGL. Use *after* an OpenGL context is created.
 
 {{{
 (setf cl-opengl-bindings:*gl-get-proc-address* #'sdl:sdl-gl-get-proc-address)
