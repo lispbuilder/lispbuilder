@@ -245,9 +245,9 @@ Using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl
   * Hardware acceleration for color fills,
   * OpenGL for 2D or 3D acceleration.
 
-Hardware capabilities must be accessible through the display driver and so selection of display driver is important.
+Hardware capabilities must be accessible through the display driver.
 
-The `windib` display driver is used in Windows by default. This driver provides almost no support for taking advantage of the underlying hardware and will perform all graphical operations in software. However `windib` is the most compatible across hardware and operating system versions, and is usually the best choice in terms of speed especially when using color keys or alpha blending.
+The `windib` display driver is used in Windows by default. This driver provides almost no support for the underlying hardware and will perform all graphical operations in software. However `windib` is the most compatible across hardware and operating system versions, and is usually the best choice in terms of speed especially when using color keys or alpha blending.
 
 The display driver is specified by passing the driver name to `WINDOW` using `:VIDEO-DRIVER`, as described in [TBD]. The display driver is set prior to creating the display.
 
@@ -291,20 +291,24 @@ video-info &optional info => result
 For example, enter the following to determine the capabilities of the video hardware;
 
 {{{
->> (SDL:VIDEO-INFO))
+>> (SDL:INIT-VIDEO)
+T
 
+>> (SDL:VIDEO-INFO))
 (:WM-AVAILABLE)
 }}}
 
 == Video Memory ==
 
-Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] to query the amount of video memory availalble. Only makes sense if `VIDEO-INFO` returns `:HW-AVAILABLE`, otherwise `0` video memory is reported.
+Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] to query the amount of video memory available. Only makes sense when surfaces can be created in video memory, `(HW-AVAILABLE-P)` returns `T`, otherwise `0` video memory is reported.
 
 For example;
 
 {{{
->> (SDL:VIDEO-MEMORY)
+>> (SDL:INIT-VIDEO)
+T
 
+>> (SDL:VIDEO-MEMORY)
 0
 }}}
 
@@ -315,8 +319,10 @@ For example;
 For example;
 
 {{{
->> (SDL:VIDEO-DIMENSIONS)
+>> (SDL:INIT-VIDEO)
+T
 
+>> (SDL:VIDEO-DIMENSIONS)
 #(1280 800)
 }}}
 
@@ -344,8 +350,10 @@ list-modes flags &optional surface => result
 For example;
 
 {{{
->> (SDL:LIST-MODES '(SDL:SDL-HW-SURFACE SDL:SDL-FULLSCREEN SDL:SDL-DOUBLEBUF))
+>> (SDL:INIT-VIDEO)
+T
 
+>> (SDL:LIST-MODES '(SDL:SDL-HW-SURFACE SDL:SDL-FULLSCREEN SDL:SDL-DOUBLEBUF))
 (#(1280 800) #(1024 768) #(800 1280) #(800 600) #(768 1024) 
  #(640 480) #(640 400) #(600 800) #(512 384) #(480 640) #(400 640) 
  #(384 512) #(320 200))
