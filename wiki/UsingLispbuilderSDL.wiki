@@ -187,21 +187,21 @@ The list of subsystems is;
 
 Video, audio, joystick and CDROM subsystems can be initialized at any time using the following functions;
 
-  * INIT-SDL, initializes a list of subsystems not already initialized,
-  * INIT-VIDEO, initializes the video subsystem if not already initialized,
-  * INIT-AUDIO, initializes the video subsystem if not already initialized,
-  * INIT-CDROM, initializes the CDROM subsystem if not already initialized,
-  * INIT-JOYSTICK, initializes the joystick subsystem if not already initialized,
+  * `INIT-SDL`, initializes a list of subsystems not already initialized,
+  * `INIT-VIDEO`, initializes the video subsystem if not already initialized,
+  * `INIT-AUDIO`, initializes the video subsystem if not already initialized,
+  * `INIT-CDROM`, initializes the CDROM subsystem if not already initialized,
+  * `INIT-JOYSTICK`, initializes the joystick subsystem if not already initialized,
 
 These functions will force the initialization of the specified subsystem regardless of current status when `FORCE` is `T`.
 
 The status of the library or of any subsystem can be queried at runtime using;
   
-  * SDL-INIT-P, returns a list of initialized subsystems,
-  * VIDEO-INIT-P, returns `T` if the video subsystem is initialized,
-  * AUDIO-INIT-P, returns `T` if the audio subsystem is initialized,
-  * CDROM-INIT-P, returns `T` if the CDROM subsystem is initialized,
-  * JOYSTICK-INIT-P, returns `T` if the joystick subsystem is initialized,
+  * `SDL-INIT-P`, returns a list of initialized subsystems,
+  * `VIDEO-INIT-P`, returns `T` if the video subsystem is initialized,
+  * `AUDIO-INIT-P`, returns `T` if the audio subsystem is initialized,
+  * `CDROM-INIT-P`, returns `T` if the CDROM subsystem is initialized,
+  * `JOYSTICK-INIT-P`, returns `T` if the joystick subsystem is initialized,
 
 {{{
 (SDL:SDL-INIT-P SDL:SDL-INIT-VIDEO)
@@ -217,11 +217,11 @@ The status of the library or of any subsystem can be queried at runtime using;
 
 Subsystems can be closed at any time using the following functions;
   
-  * QUIT-SDL, closes the list of initialized subsystems or all initialized subsystems if unspecified,
-  * QUIT-VIDEO, closes the video subsystem if initialized,
-  * QUIT-AUDIO, closes the audio subsystem if initialized,
-  * QUIT-CDROM, closes the CDROM subsystem if initialized,
-  * QUIT-JOYSTICK, closes the joystick subsystem if initialized
+  * `QUIT-SDL`, closes the list of initialized subsystems or all initialized subsystems if unspecified,
+  * `QUIT-VIDEO`, closes the video subsystem if initialized,
+  * `QUIT-AUDIO`, closes the audio subsystem if initialized,
+  * `QUIT-CDROM`, closes the CDROM subsystem if initialized,
+  * `QUIT-JOYSTICK`, closes the joystick subsystem if initialized
 
 These functions will force close of the specified subsystems regardless of current status when `FORCE` it `T`.
 
