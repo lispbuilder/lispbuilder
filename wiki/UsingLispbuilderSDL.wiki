@@ -159,31 +159,32 @@ The video, audio, joystick and CDROM subsystems are automatically initialized as
   * `OPEN-JOYSTICK` will initialize the joystick subsystem when opening the joystick for use _(not yet supported)_,
   * `OPEN-CDROM` will initialize the CDROM subsystem when opening the CDROM drive for use _(not yet supported)_
 
-Individual subsystems can also be initialized using `INIT-SDL` and `WITH-INIT`, by passing the subsystems as parameters, for example
+Individual subsystems can also be initialized using `INIT-SDL` and `WITH-INIT`.
 
 {{{
-(SDL:INIT-SDL :FLAGS '(SDL:SDL-INIT-VIDEO SDL:SDL-INIT-AUDIO))
+(SDL:INIT-SDL :VIDEO T :AUDIO T)
 }}}
 
-or, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT].
+or, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT], by passing the subsystems as parameters, for example
 
 {{{
 (SDL:WITH-INIT (SDL:SDL-INIT-VIDEO SDL:SDL-INIT-AUDIO)
   ...)
 }}}
 
-`INIT-SDL` will only initialize subsystems that are not already initialized. To force the initialization of subsystems regardless of current status use `:FORCE T`, for example
-
-{{{
-(SDL:INIT-SDL :FLAGS '(SDL:SDL-INIT-VIDEO SDL:SDL-INIT-AUDIO) :FORCE T)
-}}}
-
-The list of subsystems is;
+The list of subsystems is as follows;
 
   * `SDL-INIT-VIDEO`, The video subsystem
   * `SDL-INIT-AUDIO`, The audio subsystem
   * `SDL-INIT-CDROM`, The cdrom subsystem
   * `SDL-INIT-JOYSTICK`, The joystick subsystem
+  * `SDL-NOPARACHUTE`, Prevents `SDL` from catching fatal signals.
+
+`INIT-SDL` will only initialize subsystems that are not already initialized. To force the initialization of subsystems regardless of current status use `:FORCE T`, for example
+
+{{{
+(SDL:INIT-SDL :VIDEO T :AUDIO T :FORCE T)
+}}}
 
 Video, audio, joystick and CDROM subsystems can be initialized at any time using the following functions;
 
@@ -204,15 +205,11 @@ The status of the library or of any subsystem can be queried at runtime using;
   * `JOYSTICK-INIT-P`, returns `T` if the joystick subsystem is initialized,
 
 {{{
-(SDL:SDL-INIT-P SDL:SDL-INIT-VIDEO)
+>> (SDL:SDL-INIT-P SDL:SDL-INIT-VIDEO)
+((LISPBUILDER-SDL-CFFI::SDL-INIT-VIDEO 32))
 
->> ((LISPBUILDER-SDL-CFFI::SDL-INIT-VIDEO 32))
-}}}
-
-{{{
-(SDL:VIDEO-INIT-P)
-
->> T
+>> (SDL:VIDEO-INIT-P)
+T
 }}}
 
 Subsystems can be closed at any time using the following functions;
