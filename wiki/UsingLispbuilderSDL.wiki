@@ -251,7 +251,7 @@ The `windib` display driver is used in Windows by default. This driver provides 
 
 The display driver is specified by passing the driver name to `WINDOW` using `:VIDEO-DRIVER`, as described in [TBD]. The display driver is set prior to creating the display.
 
-The capabilities of the hardware can be queried following initialization (`INIT-SDL`) and before the display is created (`WINDOW`).
+The capabilities of the hardware can be queried following initialization (`INIT-SDL`) and before the display is created (`WINDOW`). Prior to the display being created these functions will return the best video mode available. After the display is created these functions will return the current video mode. These 
 
   * `HW-AVAILABLE-P`, is it possible to create hardware surfaces?
   * `WM-AVAILABLE-P`, is there a window manager available?
@@ -262,25 +262,10 @@ The capabilities of the hardware can be queried following initialization (`INIT-
   * `BLIT-SW-CC-P`, are system memory to video memory color key blits accelerated?
   * `BLIT-SW-A-P`, are system memory to video memory alpha blits accelerated?
   * `BLIT-FILL-P`, are color fills accelerated? 
-  * `VIDEO-MEMORY`, returns the amount of video memory available,
-  * `VIDEO-INFO`, returns 
-
-The following functions allow the capabilities of the hardware to be determined;
-
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO] queries the capabilities of the graphics hardware,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] returns the amount of video memory available,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height supported by the graphics hardware, and
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list of of window dimensions supported by the graphics hardware.
-
-  * `HW-AVAILABLE-P`
-  * `WM-AVAILABLE-P`
-  * `BLIT-HW-P`
-  * `BLIT-HW-CC-P`
-  * `BLIT-HW-A-P`
-  * `BLIT-SW-P`
-  * `BLIT-SW-CC-P`
-  * `BLIT-SW-A-P`
-  * `BLIT-FILL-P`
 
 == Video Info ==
 
