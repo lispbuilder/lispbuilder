@@ -228,7 +228,42 @@ These functions will force close of the specified subsystems regardless of curre
 Using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-init WITH-INIT] will automatically close lispbuilder-sdl upon exit.
 
 = Determining the Capabilities of the Graphics Hardware =
-== Description of the Graphics Hardware Capabilities ==
+== Graphics Hardware Capabilities ==
+
+`LISPBUILDER-SDL` can utilize the following capabilities of the graphics hardware if available;
+
+  * Create surfaces in video memory,
+  * Use a window manager if available,
+  * Hardware acceleration for video memory to video memory blits,
+    * For normal surfaces, 
+    * Or when color keying, or 
+    * When using alpha transparency,
+  * Hardware acceleration for system memory to video memory blits,
+    * For normal surfaces, 
+    * Or when color keying, or 
+    * When using alpha transparency,
+  * Hardware acceleration for color fills,
+  * OpenGL for 2D or 3D acceleration.
+
+Hardware capabilities must be accessible through the display driver and so selection of display driver is important.
+
+The `windib` display driver is used in Windows by default. This driver provides almost no support for taking advantage of the underlying hardware and will perform all graphical operations in software. However `windib` is the most compatible across hardware and operating system versions, and is usually the best choice in terms of speed especially when using color keys or alpha blending.
+
+The display driver is specified by passing the driver name to `WINDOW` using `:VIDEO-DRIVER`, as described in [TBD]. The display driver is set prior to creating the display.
+
+The capabilities of the hardware can be queried following initialization (`INIT-SDL`) and before the display is created (`WINDOW`).
+
+  * `HW-AVAILABLE-P`, is it possible to create hardware surfaces?
+  * `WM-AVAILABLE-P`, is there a window manager available?
+  * `BLIT-HW-P`, are video memory to video memory blits accelerated?
+  * `BLIT-HW-CC-P`, are video memory to video memory color key blits accelerated?
+  * `BLIT-HW-A-P`, are video memory to video memory alpha blits accelerated?
+  * `BLIT-SW-P`, are system memory to video memory blits accelerated?
+  * `BLIT-SW-CC-P`, are system memory to video memory color key blits accelerated?
+  * `BLIT-SW-A-P`, are system memory to video memory alpha blits accelerated?
+  * `BLIT-FILL-P`, are color fills accelerated? 
+  * `VIDEO-MEMORY`, returns the amount of video memory available,
+  * `VIDEO-INFO`, returns 
 
 The following functions allow the capabilities of the hardware to be determined;
 
@@ -236,6 +271,16 @@ The following functions allow the capabilities of the hardware to be determined;
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] returns the amount of video memory available,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height supported by the graphics hardware, and
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list of of window dimensions supported by the graphics hardware.
+
+  * `HW-AVAILABLE-P`
+  * `WM-AVAILABLE-P`
+  * `BLIT-HW-P`
+  * `BLIT-HW-CC-P`
+  * `BLIT-HW-A-P`
+  * `BLIT-SW-P`
+  * `BLIT-SW-CC-P`
+  * `BLIT-SW-A-P`
+  * `BLIT-FILL-P`
 
 == Video Info ==
 
@@ -420,7 +465,7 @@ To remove the title bar and border decoration from the window, pass `SDL-NO-FRAM
                     :FLAGS '(SDL:SDL-NO-FRAME))
 }}}
 
-== Window x and y position ==
+== Window X and Y Position ==
 
 Use `:POSITION` to set the display window x and y position as follows;
 
@@ -480,6 +525,25 @@ The display should be redrawn once per game loop.
 == Clearing the Display ==
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#clear-display CLEAR-DISPLAY] to clear video display using a specific color.
+
+== Determining the Properties of the Current Video Display Surface ==
+
+The following functions return the properties of the current display surface;
+
+  * `OPENGL-CONTEXT-P` returns `T` if there is a valid OpenGL context,
+  * `DOUBLE-BUFFERED-P` returns `T` if the display is double-buffered
+  * `FULLSCEEN-P` returns `T` if the display is fullscreen, or `NIL` if windowed,
+  * `RESIZABLE-P` returns `T` if the display is resizable, or `NIL` if fullscreen or not resizable.
+  * `ANY-FORMAT-P`
+  * `HW-AVAILABLE-P`
+  * `WM-AVAILABLE-P`
+  * `BLIT-HW-P`
+  * `BLIT-HW-CC-P`
+  * `BLIT-HW-A-P`
+  * `BLIT-SW-P`
+  * `BLIT-SW-CC-P`
+  * `BLIT-SW-A-P`
+  * `BLIT-FILL-P`
 
 = The Game Loop =
 == Description of the Game Loop ==
