@@ -251,9 +251,9 @@ The `windib` display driver is used in Windows by default. This driver provides 
 
 The display driver is specified by passing the driver name to `WINDOW` using `:VIDEO-DRIVER`, as described in [TBD]. The display driver is set prior to creating the display.
 
-The capabilities of the hardware can be queried following initialization (`INIT-SDL`) and before the display is created (`WINDOW`). Prior to the display being created these functions will return the best video mode available. After the display is created these functions will return the current video mode. These 
+The capabilities of the hardware can be queried following initialization (`INIT-SDL`) and before the display is created (`WINDOW`). Prior to the display being created these functions will return the best video mode available. After the display is created these functions will return the current video mode.
 
-  * `HW-AVAILABLE-P`, is it possible to create hardware surfaces?
+  * `HW-AVAILABLE-P`, is it possible to create hardware surfaces, or is the current video display in video memory?
   * `WM-AVAILABLE-P`, is there a window manager available?
   * `BLIT-HW-P`, are video memory to video memory blits accelerated?
   * `BLIT-HW-CC-P`, are video memory to video memory color key blits accelerated?
