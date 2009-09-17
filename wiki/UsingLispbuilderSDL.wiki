@@ -178,7 +178,7 @@ The list of subsystems is as follows;
   * `SDL-INIT-AUDIO`, The audio subsystem
   * `SDL-INIT-CDROM`, The cdrom subsystem
   * `SDL-INIT-JOYSTICK`, The joystick subsystem
-  * `SDL-NOPARACHUTE`, Prevents `SDL` from catching fatal signals.
+  * `SDL-INIT-NOPARACHUTE`, Prevents `SDL` from catching fatal signals.
 
 `INIT-SDL` will only initialize subsystems that are not already initialized. To force the initialization of subsystems regardless of current status use `:FORCE T`, for example
 
