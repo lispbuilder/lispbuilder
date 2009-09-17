@@ -308,6 +308,9 @@ For example;
 >> (SDL:INIT-VIDEO)
 T
 
+>> (SDL:HW-AVAILABLE-P)
+NIL
+
 >> (SDL:VIDEO-MEMORY)
 0
 }}}
