@@ -108,7 +108,8 @@
   ;; Close the audio subsystem in case it is already open.
   (sdl:close-audio)
   ;; Make sure that the audio subsystem is initialized.
-  (init-subsystems SDL:SDL-INIT-AUDIO)
+  (unless (init-audio)
+    (error "ERROR: Cannot initialize the audio subsystem."))
 
   ;; Configure Lispworks to allow
   ;; callbacks from unknown foreign threads
@@ -285,7 +286,7 @@
                            for byte-2 = 1 then (1+ byte-1)
                            collect (to-s16 (logior (ash (cffi:mem-aref wave :unsigned-char byte-1) 8)
                                            (cffi:mem-aref wave :unsigned-char byte-2))))))))
-        (sdl-cffi::sdl-free-wav wave)
+        (sdl-cffi::sdl-free-wav #|wave|# (cffi:mem-aref wave :pointer))
         (cffi:foreign-free sample-handle)
         (cffi:foreign-free sample-length)
         (make-instance 'audio
