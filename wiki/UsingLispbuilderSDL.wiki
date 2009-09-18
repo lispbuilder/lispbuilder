@@ -257,6 +257,7 @@ The capabilities of the video hardware can be queried following initialization o
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] returns the amount of video memory available,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height supported by the graphics hardware, and
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list of of window dimensions supported by the graphics hardware.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-river-name VIDEO-DRIVER-NAME] returns the name of the video driver.
 
 The video driver exposes hardware capabilities to the library. The `windib` display driver is used in Windows by default. This driver provides almost no support for the underlying hardware and will perform all graphical operations in software. However `windib` is the most compatible across hardware and operating system versions, and is usually the best choice in terms of speed especially when using color keys or alpha blending.
 
@@ -387,7 +388,7 @@ Valid drivers for Windows are "windib" and "directx". The default video driver i
 For example;
 
 {{{
-(SDL:SET-VIDEO-DRIVER "windib")
+>> (SDL:SET-VIDEO-DRIVER "windib")
 }}}
 
 `:VIDEO-DRIVER` when passed to `WINDOW` will also set the video driver.
@@ -401,10 +402,25 @@ Valid drivers for Windows are "pulse", "dsound" and "waveout".
 For example;
 
 {{{
-(SDL:SET-AUDIO-DRIVER "waveout")
+>> (SDL:SET-AUDIO-DRIVER "waveout")
 }}}
 
 `:AUDIO-DRIVER` when passed to `WINDOW` will also set the audio driver.
+
+== Video Driver Name ==
+
+`VIDEO-DRIVER-NAME` will return the name if the video driver. The video drivers supported are listed in the [http://www.libsdl.org/cgi/docwiki.cgi/SDL_envvars SDL documentation]. This function is useful only after the video subsystem has been initialized. 
+
+For example;
+
+{{{
+>> (SDL:INIT-VIDEO)
+T
+
+>> (SDL:VIDEO-DRIVER-NAME)
+"windib"
+}}}
+
 
 = The Display =
 == Description of the Display ==
