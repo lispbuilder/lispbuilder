@@ -381,7 +381,7 @@ T
 
 == Video Driver ==
 
-`SET-VIDEO-DRIVER`will attempt to use the specified video driver to create the display. The video drivers supported are listed in the [http://www.libsdl.org/cgi/docwiki.cgi/SDL_envvars SDL documentation]. Set the video driver after the video subsystem has been initialized, but before the display is created. 
+`SET-VIDEO-DRIVER` will attempt to use the specified video driver to create the display. The video drivers supported are listed in the [http://www.libsdl.org/cgi/docwiki.cgi/SDL_envvars SDL documentation]. Set the video driver after the video subsystem has been initialized, but before the display is created. 
 
 Valid drivers for Windows are "windib" and "directx". The default video driver is "windib".
 
