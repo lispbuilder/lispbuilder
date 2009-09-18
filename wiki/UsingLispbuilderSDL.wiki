@@ -605,7 +605,7 @@ Valid drivers for Windows are "pulse", "dsound" and "waveout".
 For example;
 
 {{{
-(SDL:WINDOW 320 240 :AudIO-DRIVER "waveout")
+(SDL:WINDOW 320 240 :AUDIO-DRIVER "waveout")
 }}}
 
 = The Game Loop =
