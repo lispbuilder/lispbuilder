@@ -558,7 +558,7 @@ The following functions return the properties of the current display surface;
 
 == Setting the Video Driver ==
 
-`:VIDEO-DRIVER` will attempt to use the specified video driver to create the display. These video drivers supported are listed in the [http://www.libsdl.org/cgi/docwiki.cgi/SDL_envvars SDL documentation]. 
+`:VIDEO-DRIVER` will attempt to use the specified video driver to create the display. The video drivers supported are listed in the [http://www.libsdl.org/cgi/docwiki.cgi/SDL_envvars SDL documentation]. 
 
 For example;
 
