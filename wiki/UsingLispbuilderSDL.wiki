@@ -349,7 +349,7 @@ T
 list-modes flags &optional surface => result
 }}}
 
-`FLAGS` is one or more of the following;
+`FLAGS` can be one or more of the following;
 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-sw-surface SDL-SW-SURFACE] a video surface in system memory,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-hw-surface SDL-HW-SURFACE] a video surface in video memory, 
