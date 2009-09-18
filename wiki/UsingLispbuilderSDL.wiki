@@ -388,7 +388,7 @@ For example;
 
 `:VIDEO-DRIVER` when passed to `WINDOW` will also set the video driver.
 
-== Setting the Audio Driver ==
+== Audio Driver ==
 
 `SET-AUDIO-DRIVER` will attempt to use the specified audio driver. The audio drivers supported are listed in the [http://www.libsdl.org/cgi/docwiki.cgi/SDL_envvars SDL documentation]. Set the audio driver after the audio subsystem has been initialized, but before the display is created.
 
