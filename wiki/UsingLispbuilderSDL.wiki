@@ -288,11 +288,26 @@ video-info &optional info => result
 For example, enter the following to determine the capabilities of the video hardware;
 
 {{{
+>> (SDL:SET-VIDEO-DRIVER "windib")
+0
+
 >> (SDL:INIT-VIDEO)
 T
 
 >> (SDL:VIDEO-INFO))
 (:WM-AVAILABLE)
+
+>> (SDL:QUIT-SDL)
+
+>> (SDL:SET-VIDEO-DRIVER "directx")
+0
+
+>> (SDL:INIT-VIDEO)
+T
+
+>> (SDL:VIDEO-INFO))
+(:HW-AVAILABLE :WM-AVAILABLE :BLIT-SW-CC :BLIT-FILL :BLIT-HW-CC :BLIT-SW :BLIT-HW)
+
 }}}
 
 == Video Memory ==
