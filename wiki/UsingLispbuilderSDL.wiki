@@ -411,8 +411,7 @@ For example;
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Frame_Rate :FPS] specify game loop to be constant frame rate, or constant time-step.
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Setting_the_Video_Driver :VIDEO-DRIVER] select the video driver to use,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Setting_the_Audio_Driver :AUDIO-DRIVER] select the audio driver to use,
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-
-screen_or_Windowed :FULLSCREEN], use full-screen mode,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Full-screen_or_Windowed :FULLSCREEN], use full-screen mode,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Display_Surface_in_System_Memory_or_Video_Memory :SW], and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Display_Surface_in_System_Memory_or_Video_Memory :HW], create the surface in System or Video Memory,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Synchronous_or_Asynchronous_updates :ASYNC-BLIT] update the video surface asynchronously to the main thread, 
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth :ANY-FORMAT] see the Section Color Depth,
