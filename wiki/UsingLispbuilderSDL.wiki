@@ -263,11 +263,11 @@ The video driver exposes hardware capabilities to the library. The `windib` disp
 
 The video driver can be specified by passing the driver name to `WINDOW` using `:VIDEO-DRIVER`, or using `SET-VIDEO-DRIVER`. The display driver is set prior to creating the display.
 
-  * [http://code.google.com/p/lispbuilder/w/edit/UsingLispbuilderSDL#Video_Driver SET-VIDEO-DRIVER] sets the video driver.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Video_Driver SET-VIDEO-DRIVER] sets the video driver.
 
 The audio driver can be specified by passing the driver name to `WINDOW` using `:AUDIO-DRIVER`, or using `SET-AUDIO-DRIVER`. The display driver is set prior to creating the display.
 
-  * [http://code.google.com/p/lispbuilder/w/edit/UsingLispbuilderSDL#Audio_Driver SET-AUDIO-DRIVER] sets the audio driver.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Audio_Driver SET-AUDIO-DRIVER] sets the audio driver.
 
 == Video Info ==
 
