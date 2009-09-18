@@ -242,12 +242,6 @@ Using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl
   * Hardware acceleration for color fills,
   * OpenGL for 2D or 3D acceleration.
 
-Hardware capabilities must be accessible through the display driver.
-
-The `windib` display driver is used in Windows by default. This driver provides almost no support for the underlying hardware and will perform all graphical operations in software. However `windib` is the most compatible across hardware and operating system versions, and is usually the best choice in terms of speed especially when using color keys or alpha blending.
-
-The display driver is specified by passing the driver name to `WINDOW` using `:VIDEO-DRIVER`, as described in [TBD]. The display driver is set prior to creating the display.
-
 The capabilities of the video hardware can be queried following initialization of the video subsystem `(INIT-SDL :VIDEO T`), or `(INIT-VIDEO)`. Prior to the display being created (using `WINDOW`) these functions will return the best video mode available. After the display is created these functions will return the current video mode.
 
   * `HW-AVAILABLE-P`, is it possible to create hardware surfaces, or is the current video display in video memory?
@@ -263,6 +257,16 @@ The capabilities of the video hardware can be queried following initialization o
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-memory VIDEO-MEMORY] returns the amount of video memory available,
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS] returns the best video width and height supported by the graphics hardware, and
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list of of window dimensions supported by the graphics hardware.
+
+The video driver exposes hardware capabilities to the library. The `windib` display driver is used in Windows by default. This driver provides almost no support for the underlying hardware and will perform all graphical operations in software. However `windib` is the most compatible across hardware and operating system versions, and is usually the best choice in terms of speed especially when using color keys or alpha blending.
+
+The video driver can be specified by passing the driver name to `WINDOW` using `:VIDEO-DRIVER`, or using `SET-VIDEO-DRIVER`. The display driver is set prior to creating the display.
+
+  * [http://code.google.com/p/lispbuilder/w/edit/UsingLispbuilderSDL#Video_Driver SET-VIDEO-DRIVER] sets the video driver.
+
+The audio driver can be specified by passing the driver name to `WINDOW` using `:AUDIO-DRIVER`, or using `SET-AUDIO-DRIVER`. The display driver is set prior to creating the display.
+
+  * [http://code.google.com/p/lispbuilder/w/edit/UsingLispbuilderSDL#Audio_Driver SET-AUDIO-DRIVER] sets the audio driver.
 
 == Video Info ==
 
