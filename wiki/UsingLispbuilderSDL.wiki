@@ -639,6 +639,15 @@ The following functions return the properties of the current display surface;
   * `DOUBLE-BUFFERED-P` returns `T` if the display is double-buffered
   * `FULLSCEEN-P` returns `T` if the display is fullscreen, or `NIL` if windowed,
   * `RESIZABLE-P` returns `T` if the display is resizable, or `NIL` if fullscreen or not resizable.
+  * `HW-AVAILABLE-P`, is it possible to create hardware surfaces, or is the current video display in video memory?
+  * `WM-AVAILABLE-P`, is there a window manager available?
+  * `BLIT-HW-P`, are video memory to video memory blits accelerated?
+  * `BLIT-HW-CC-P`, are video memory to video memory color key blits accelerated?
+  * `BLIT-HW-A-P`, are video memory to video memory alpha blits accelerated?
+  * `BLIT-SW-P`, are system memory to video memory blits accelerated?
+  * `BLIT-SW-CC-P`, are system memory to video memory color key blits accelerated?
+  * `BLIT-SW-A-P`, are system memory to video memory alpha blits accelerated?
+  * `BLIT-FILL-P`, are color fills accelerated? 
   * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO] retrieves the properties of the current display surface.
 
 == Native Window ==
