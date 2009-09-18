@@ -425,7 +425,11 @@ T
 = The Display =
 == Description of the Display ==
 
-Graphics are rendered to a video surface. A [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk.
+Graphics are rendered to a video surface. A [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] represents an area of _graphical_ memory that can be drawn or rendered to, for example the video frame buffer or an image that is loaded from disk. 
+
+The video surface must be updated at least once each game loop using the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-display UPDATE-DISPLAY]. The display can be filled with a background color using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#clear-display CLEAR-DISPLAY].
+
+The properties of an SDL surface can be queried using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface-info SURFACE-INFO]. The screen resolutions supported by a particular set of video flags can be retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES]. The name of the video driver can be retrieved as a STRING using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-driver-name VIDEO-DRIVER-NAME].
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] to create and configure the video surface on startup. 
 
@@ -468,12 +472,24 @@ For example;
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering :OPENGL] will create an OpenGL rendering context,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :RESIZABLE] will create a resizable window, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :NO-FRAME] creates a window with no title bar or frame decoration.
 
+== Dimensions ==
+
+The window width and height are retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-dimensions VIDEO-DIMENSIONS].
+
+{{{
+>> (SDL:WINDOW 320 240)
+
+>> (SDL:VIDEO-DIMENSIONS)
+#(320 240)
+}}}
+
+
 == Full-screen or Windowed ==
 
 `LISPBUILDER-SDL` will create a windowed display by default. However this can be changed on startup or any time during program execution by setting `:FULLSCREEN`. 
 
 {{{
-(SDL:WINDOW 320 240 :FULLSCREEN T)
+>> (SDL:WINDOW 320 240 :FULLSCREEN T)
 }}}
 
 If the specified resolution is not supported in full-screen mode then the next higher resolution will be used and the display window will be centered on a black background.
@@ -623,6 +639,11 @@ The following functions return the properties of the current display surface;
   * `DOUBLE-BUFFERED-P` returns `T` if the display is double-buffered
   * `FULLSCEEN-P` returns `T` if the display is fullscreen, or `NIL` if windowed,
   * `RESIZABLE-P` returns `T` if the display is resizable, or `NIL` if fullscreen or not resizable.
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO] retrieves the properties of the current display surface.
+
+== Native Window ==
+
+A foreign pointer pointer to the display surface can be retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-native-window GET-NATIVE-WINDOW]. 
 
 = The Game Loop =
 == Description of the Game Loop ==
@@ -1534,12 +1555,6 @@ http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/waddle
 == Updating Surfaces and the Display ==
 
 The functions [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-display UPDATE-DISPLAY] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-surface UPDATE-SURFACE] update the SDL display surface (or OpenGL context) and general SDL surfaces respectively.
-
-= The Display =
-
-The SDL display surface must be updated at least once each game loop using the function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-display UPDATE-DISPLAY]. This function will call [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-gl-swap-buffers SDL-GL-SWAP-BUFFERS] to update the OpenGL display, [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#sdl-flip SDL-FLIP] to update the SDL surface depending on the current [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*opengl-context* *OPENGL-CONTEXT*]. The display can be filled with a background color using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#clear-display CLEAR-DISPLAY].
-
-The properties of an SDL surface can be queried using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface-info SURFACE-INFO]. The properties of the SDL display and video hardware can be queried using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-info VIDEO-INFO]. The screen resolutions supported by a particular set of video flags can be retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES]. A pointer to the native SDL window can be retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-native-window GET-NATIVE-WINDOW]. The name of the video driver can be retrieved as a STRING using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#video-driver-name VIDEO-DRIVER-NAME].
 
 = The Cursor =
 
