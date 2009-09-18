@@ -397,28 +397,27 @@ For example;
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Color_depth :ANY-FORMAT] see the Section Color Depth,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access :PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering :DOUBLE-BUFFER] will enable hardware double buffering,
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering SDL-:OPENGL] will create an OpenGL rendering context,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering :OPENGL] will create an OpenGL rendering context,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :RESIZABLE] will create a resizable window, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :NO-FRAME] creates a window with no title bar or frame decoration.
 
 == Full-screen or Windowed ==
 
-lispbuilder-sdl will create a Windowed display by default. However this can be changed on startup or any time during program execution by passing `SDL:SDL-FULLSCREEN` to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#window WINDOW] or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW]. 
+`LISPBUILDER-SDL` will create a windowed display by default. However this can be changed on startup or any time during program execution by setting `:FULLSCREEN`. 
 
 {{{
-(SDL:WINDOW 320 240 :FLAGS '(SDL:SDL-FULLSCREEN))
+(SDL:WINDOW 320 240 :FULLSCREEN T)
 }}}
 
-If a hardware resolution change is not possible then the next higher resolution will be used and the display window centered on a black background.
+If the specified resolution is not supported in full-screen mode then the next higher resolution will be used and the display window will be centered on a black background.
 
 == Color depth ==
 
 When `:BPP` is unspecified or `0`, the surface will be created with the bits-per-pixel of the current display.
 
-Normally if a video surface of the requested bits-per-pixel is not available one is emulated using a shadow surface. Passing `SDL-ANY-FORMAT` prevents this. If `SDL-ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailable, a display surface having a bits-per-pixel that matches the current display is returned. For example;
+Normally if a video surface of the requested bits-per-pixel is not available one is emulated using a shadow surface. Setting `:ANY-FORMAT` prevents this. If `:ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailable, a display surface having a bits-per-pixel that matches the current display is returned. For example;
 
 {{{
-(SDL:WINDOW 320 240 :BPP 32
-                    :FLAGS '(SDL:SDL-ANY-FORMAT))
+(SDL:WINDOW 320 240 :BPP 32 :ANY-FORMAT)
 }}}
 
 The valid values for `:BPP` are as follows;
@@ -440,20 +439,20 @@ Use `:TITLE-CAPTION` to set the caption in the window title bar. Use `:ICON-CAPT
                     :ICON-CAPTION "A Test Minimized"))
 }}}
 
-To allow the window to be resized, pass `SDL-RESIZABLE` to `:FLAGS`.  The library will allow the window manager, if any, to resize the window at runtime.  When this occurs, a `VIDEO-RESIZE-EVENT` event is sent to the application, and the application must respond by calling `RESIZE-WINDOW` with the requested size (or another size that suits the application).
+To allow the window to be resized, set `:RESIZABLE`.  The library will allow the window manager, if any, to resize the window at runtime.  When this occurs, a `VIDEO-RESIZE-EVENT` event is sent to the application, and the application must respond by calling `RESIZE-WINDOW` with the requested size (or another size that suits the application).
 
 {{{
 (SDL:WINDOW 320 240 :TITLE-CAPTION "A Test"
                     :ICON-CAPTION "A Test Minimized")
-                    :FLAGS '(SDL:SDL-RESIZABLE))
+                    :RESIZABLE T)
 }}}
 
-To remove the title bar and border decoration from the window, pass `SDL-NO-FRAME` to `:FLAGS`. Full-screen modes automatically have this flag set.
+To remove the title bar and border decoration from the window, set `:NO-FRAME`. Full-screen modes automatically have this flag set.
 
 {{{
 (SDL:WINDOW 320 240 :TITLE-CAPTION "A Test"
                     :ICON-CAPTION "A Test Minimized")
-                    :FLAGS '(SDL:SDL-NO-FRAME))
+                    :NO-FRAME T)
 }}}
 
 == Window X and Y Position ==
@@ -472,7 +471,7 @@ For example;
 
 == Display Surface in System Memory or Video Memory ==
 
-The display surface can be created in system memory or video memory. When the display is created in system memory a software surface is returned. When the display is created in video memory a hardware surface is returned.
+The display surface can be created in system memory (`:SW`) or video memory (`:HW`). When the display is created in system memory a software surface is returned. When the display is created in video memory a hardware surface is returned.
 
 A surface in system memory (software surface) improves the performance of pixel level access but is incompatible with some types of hardware blitting.
 
@@ -482,26 +481,57 @@ Generally, create your display surface in system memory unless you know what you
 
 The system may return a software surface even when a hardware surface is requested as many platforms can only provide a hardware surface when using `SDL-FULL-SCREEN`. 
 
+For example;
+
+{{{
+(SDL:WINDOW 320 240 :SW T)
+}}}
+
 == Synchronous or Asynchronous updates ==
 
-Enables the use of asynchronous updates of the display surface. This will usually slow down blitting on single CPU machines, but may provide a speed increase on SMP systems.
+`:ASYNC-BLIT` enables the use of asynchronous updates of the display surface. This will usually slow down blitting on single CPU machines, but may provide a speed increase on SMP systems.
 
 An overview is provided on the SDL developers mailing list [http://lists.libsdl.org/pipermail/sdl-libsdl.org/2005-February/048955.html here], and [http://lists.libsdl.org/pipermail/sdl-libsdl.org/2006-January/053805.html here]
 
 This has not been well tested on the supported Lisp platforms so use at your own risk. It may be problematic on Lisps that do not support multi-threading.
 
+For example;
+
+{{{
+(SDL:WINDOW 320 240 :ASYNC-BLIT T)
+}}}
+
+
 == Exclusive palette access ==
 
-If `SDL-HWPALETTE` is set in `:FLAGS`, the library will guarantee that the colors set by SDL_SetColors() will be the colors you get. Otherwise, in 8-bit mode, SDL_SetColors() may not be able to set all of the colors exactly the way they are requested, and you should look at the video surface structure to determine the actual palette.
-If SDL cannot guarantee that the colors you request can be set, i.e. if the colormap is shared, then the video surface may be created under emulation in system memory, overriding the `SDL-HWSURFACE` flag.
+`:PALETTE` will guarantee that the colors set by SDL_SetColors() will be the colors you get. Otherwise, in 8-bit mode, SDL_SetColors() may not be able to set all of the colors exactly the way they are requested, and you should look at the video surface structure to determine the actual palette.
+If SDL cannot guarantee that the colors you request can be set, i.e. if the colormap is shared, then the video surface may be created under emulation in system memory, overriding `:HW`.
+
+For example;
+
+{{{
+(SDL:WINDOW 320 240 :PALETTE T)
+}}}
 
 == Single or Double buffering ==
 
-If `SDL-DOUBLEBUF` is set in `:FLAGS`, the library will try to set up two surfaces in video memory and swap between them when you call `UPDATE-DISPLAY`.  This is usually slower than the normal single-buffering scheme, but prevents "tearing" artifacts caused by modifying video memory while the monitor is refreshing.  Double buffering should only be used by applications that redraw the entire screen on every update.
+`:DOUBLE-BUFFER` will try to set up two surfaces in video memory and swap between them when you call `UPDATE-DISPLAY`.  This is usually slower than the normal single-buffering scheme, but prevents "tearing" artifacts caused by modifying video memory while the monitor is refreshing.  Double buffering should only be used by applications that redraw the entire screen on every update.
+
+For example;
+
+{{{
+(SDL:WINDOW 320 240 :DOUBLE-BUFFER T)
+}}}
 
 == OpenGL rendering ==
 
-If `SDL-OPENGL` is set in `:FLAGS`, the library will create an OpenGL rendering context.
+`:OPENGL` will create an OpenGL rendering context.
+
+For example;
+
+{{{
+(SDL:WINDOW 320 240 :OPENGL T)
+}}}
 
 == Redraw the Display ==
 
@@ -525,16 +555,18 @@ The following functions return the properties of the current display surface;
   * `DOUBLE-BUFFERED-P` returns `T` if the display is double-buffered
   * `FULLSCEEN-P` returns `T` if the display is fullscreen, or `NIL` if windowed,
   * `RESIZABLE-P` returns `T` if the display is resizable, or `NIL` if fullscreen or not resizable.
-  * `ANY-FORMAT-P`
-  * `HW-AVAILABLE-P`
-  * `WM-AVAILABLE-P`
-  * `BLIT-HW-P`
-  * `BLIT-HW-CC-P`
-  * `BLIT-HW-A-P`
-  * `BLIT-SW-P`
-  * `BLIT-SW-CC-P`
-  * `BLIT-SW-A-P`
-  * `BLIT-FILL-P`
+
+== Setting the Video Driver ==
+
+`:VIDEO-DRIVER` will attempt to use the specified video driver to create the display. These video drivers supported are listed in the [http://www.libsdl.org/cgi/docwiki.cgi/SDL_envvars SDL documentation]. 
+
+For example;
+
+{{{
+(SDL:WINDOW 320 240 :VIDEO-DRIVER "directx")
+}}}
+
+Valid drivers for Windows are "windib" and "directx". The default video driver is "windib".
 
 = The Game Loop =
 == Description of the Game Loop ==
