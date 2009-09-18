@@ -539,7 +539,7 @@ Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.h
 
   * Update the video surface, or
   * Swap video buffers if double buffering is enabled, or 
-  * Swap OpenGL buffers when [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*opengl-context* *OPENGL-CONTEXT*] is `T`.
+  * Swap OpenGL buffers if there is a valid OpenGL context, `:OPENGL` is set.
 
 The display should be redrawn once per game loop.
 
