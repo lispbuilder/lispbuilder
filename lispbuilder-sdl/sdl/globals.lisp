@@ -184,3 +184,5 @@ Audio formats are defined in `SDL_audio.h`;
 (defvar *allow-convert-to-display-format* t
   "`CONVERT-TO-DISPLAY-FORMAT` will convert the input surface to the display format when `T`,
 and copy to a new surface when `NIL`.")
+
+(defparameter *default-fpsmanager* nil)

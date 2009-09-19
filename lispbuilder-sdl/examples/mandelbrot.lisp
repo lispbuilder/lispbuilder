@@ -25,7 +25,7 @@
 	   (type fixnum width height sx sy sw sh)
 	   (optimize (safety 3) (speed 1)))
   (let ((surface-fp (sdl:fp sdl:*default-display*)))
-    (sdl-base::with-pixel (pix surface-fp)
+    (sdl:with-pixel (pix surface-fp)
       (sdl:with-color (col (sdl:color))
 	(loop for y from sy below (+ sy sh) do
 	     (loop for x from sx below (+ sx sw) do
@@ -34,8 +34,8 @@
 		     for z = a then (+ (* z z) a)
 		     for c from 60 above 0
 		     while (< (abs z) 2)
-		     finally (sdl-base::write-pixel pix x y
-						    (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format surface-fp)
+		     finally (sdl:write-pixel pix x y
+						    (sdl-cffi::sdl-map-rgb (sdl-base:pixel-format surface-fp)
 									   (mod (* 13 (the fixnum c)) 256)
 									   (mod (* 7 (the fixnum c)) 256)
 									   (mod (* 2 (the fixnum c)) 256))))))))))

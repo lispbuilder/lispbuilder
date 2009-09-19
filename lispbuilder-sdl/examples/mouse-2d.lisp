@@ -17,11 +17,13 @@
            (sdl:draw-box (sdl:rectangle-from-midpoint-* x (/ height 2)
                                                         (+ (/ y 2) 10)
                                                         (+ (/ y 2) 10))
-                         :alpha 255)
+                         :alpha 255
+                         )
            (sdl:draw-box (sdl:rectangle-from-midpoint-* (- width x) (/ height 2)
                                                         (+ (/ (- height y) 2) 10)
                                                         (+ (/ (- height y) 2) 10))
-                         :alpha 255)))
+                         :alpha 255
+                         )))
 	(:idle () (sdl:update-display))))))
 
 (defun mouse-surface-2d ()

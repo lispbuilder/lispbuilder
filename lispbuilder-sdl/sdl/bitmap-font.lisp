@@ -95,7 +95,7 @@ are different than specified for the existing surface."
 	    (bg-col (if bg-color
                       (map-color (glyph-bg-color glyph) (glyph-surface glyph))
                       0)))
-        (sdl-base::with-pixel (pix (fp (glyph-surface glyph)))
+        (with-pixel (pix (fp (glyph-surface glyph)))
 	  (let ((char-pos (* (char-code char)
                              (char-size font)))
                 (patt 0)
@@ -109,8 +109,8 @@ are different than specified for the existing surface."
                         mask #x80)
                   (incf char-pos))
                 (if (> (logand patt mask) 0)
-                  (sdl-base::write-pixel pix ix iy fg-col)
-                  (sdl-base::write-pixel pix ix iy bg-col))))))))
+                  (write-pixel pix ix iy fg-col)
+                  (write-pixel pix ix iy bg-col))))))))
     (glyph-surface glyph)))
 
 (defun draw-character (c p1 fg-color bg-color &key

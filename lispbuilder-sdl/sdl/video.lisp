@@ -9,69 +9,110 @@
 
 ;;;; Functions
 
+(defun any-format-p ()
+  "Returns `T` if any pixel format is allowed."
+  (get-surface-attribute (sdl-cffi::sdl-get-video-surface) sdl-any-format))
+
 (defun opengl-context-p ()
   "Returns `T` if the video surface has an OpenGL context, or returns `NIL` otherwise."
-  (if (/= 0 (logand (cffi:foreign-slot-value (sdl-cffi::sdl-get-video-surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
-                    sdl-cffi::sdl-opengl))
-      t
-      nil))
+  (get-surface-attribute (sdl-cffi::sdl-get-video-surface) sdl-opengl))
 
 (defun double-buffered-p ()
   "Returns `T` if the video surface is double buffered, or returns `NIL` otherwise."
-  (if (/= 0 (logand (cffi:foreign-slot-value (sdl-cffi::sdl-get-video-surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
-                    sdl-cffi::sdl-doublebuf))
-      t
-      nil))
+  (get-surface-attribute (sdl-cffi::sdl-get-video-surface) sdl-doublebuf))
 
 (defun fullscreen-p ()
-    "Returns `T` if the video surface is fullscreen. Returns `NIL` if the video surface is windowed."
-  (if (/= 0 (logand (cffi:foreign-slot-value (sdl-cffi::sdl-get-video-surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
-                    sdl-cffi::sdl-fullscreen))
-      t
-      nil))
+  "Returns `T` if the video surface is fullscreen. Returns `NIL` if the video surface is windowed."
+  (get-surface-attribute (sdl-cffi::sdl-get-video-surface) sdl-fullscreen))
 
 (defun resizable-p ()
-    "Returns `T` if the video surface is resizable, returns `NIL` otherwise."
-  (if (/= 0 (logand (cffi:foreign-slot-value (sdl-cffi::sdl-get-video-surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
-                    sdl-cffi::sdl-resizable))
-      t
-      nil))
+  "Returns `T` if the video surface is resizable, returns `NIL` otherwise."
+  (get-surface-attribute (sdl-cffi::sdl-get-video-surface) sdl-resizable))
 
-(defmethod window (width height &key
-                         (bpp 0) (flags SDL-SW-SURFACE) title-caption icon-caption
-                         (fps (make-instance 'sdl-base::fps-fixed))
-                         (position nil))
-  ;; Set the x/y window position
+(defun set-window-position (position)
   (let ((window-position (if (symbolp position)
                            "center"
                            (format nil "~A,~A" (elt position 0) (elt position 1)))))
     (if position
       (sdl-cffi::sdl-put-env (format nil "SDL_VIDEO_WINDOW_POS=~A" window-position))
-      (sdl-cffi::sdl-put-env (format nil "SDL_VIDEO_WINDOW_POS="))))
+      (sdl-cffi::sdl-put-env (format nil "SDL_VIDEO_WINDOW_POS=")))))
+
+(defun set-video-driver (driver)
+  (when driver
+    (sdl-cffi::sdl-put-env (format nil "SDL_VIDEODRIVER=~A" driver))))
+
+(defun set-audio-driver (driver)
+  (when driver
+    (sdl-cffi::sdl-put-env (format nil "SDL_AUDIODRIVER=~A" driver))))
+
+(defmethod window (width height &key (bpp 0) (title-caption "") (icon-caption "")
+                         flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
+                         (fps (make-instance 'sdl-base::fps-fixed))
+                         position
+                         video-driver audio-driver)
+
+  ;; Set the x/y window position
+  (set-window-position position)
+
+  ;; Set the video driver
+  (set-video-driver video-driver)
+
+  ;; Set the audio driver
+  (set-audio-driver audio-driver)
 
   ;; Initialize the video subsytem, if not already initialized.
-  (unless (init-subsystems sdl:sdl-init-video)
+  (unless (init-video)
     (error "ERROR Cannot initialize the video subsystem. Cannot create the display surface~%"))
 
-  (let ((surf (sdl-base::set-screen (cast-to-int width)
-                                    (cast-to-int height)
-				    :bpp bpp
-				    :flags flags
-				    :title-caption title-caption
-				    :icon-caption icon-caption)))
-    (setf *default-display* nil)
-    (when surf
-      (setf *default-display* (make-instance 'display-surface :fp surf)))
-    (setf sdl-base::*default-fpsmanager* fps)
-    (quit-input-util)
-    (initialise-input-util)
-    (sdl-cffi::sdl-set-event-filter (cffi:callback event-filter))
-    *default-display*))
+  (unless flags
+    (setf flags (remove nil (list (when sw sdl-sw-surface)
+                                  (when hw sdl-hw-surface)
+                                  (when fullscreen sdl-fullscreen)
+                                  (when async-blit sdl-async-blit)
+                                  (when any-format sdl-any-format)
+                                  (when palette sdl-hw-palette)
+                                  (when double-buffer sdl-doublebuf)
+                                  (when opengl sdl-opengl)
+                                  (when resizable sdl-resizable)
+                                  (when no-frame sdl-no-frame)))))
 
-(defmethod resize-window (width height &key flags title-caption icon-caption bpp)
+  ;; Make sure the display surface is created
+  (let ((surface (sdl-cffi::SDL-Set-Video-Mode (cast-to-int width) (cast-to-int height)
+                                               bpp (sdl-base::set-flags flags))))
+    (if (is-valid-ptr surface)
+      (setf *default-display* (make-instance 'display-surface :fp surface))
+      (setf *default-display* nil)))
+
+  ;; And set the captions
+  (set-caption title-caption icon-caption)
+
+  ;; Set the frame rate manager
+  (setf sdl-base::*default-fpsmanager* fps)
+  
+  ;; Prime the input handling code
+  (quit-input-util)
+  (initialise-input-util)
+  (sdl-cffi::sdl-set-event-filter (cffi:callback event-filter))
+  
+  *default-display*)
+
+(defmethod resize-window (width height &key
+                                flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
+                                title-caption icon-caption bpp)
   "Modifies the dispaly, resets the input loop and clears all key events."
   (multiple-value-bind (title icon)
       (sdl:get-caption)
+    (unless flags
+      (setf flags (remove nil (list (when sw sdl-sw-surface)
+                                    (when hw sdl-hw-surface)
+                                    (when fullscreen sdl-fullscreen)
+                                    (when async-blit sdl-async-blit)
+                                    (when any-format sdl-any-format)
+                                    (when palette sdl-hw-palette)
+                                    (when double-buffer sdl-doublebuf)
+                                    (when opengl sdl-opengl)
+                                    (when resizable sdl-resizable)
+                                    (when no-frame sdl-no-frame)))))
     (sdl:window width height
                 :title-caption (if title-caption title-caption title)
                 :icon-caption (if icon-caption icon-caption icon)
@@ -94,14 +135,14 @@ If there is an active OpenGL contenxt, then `UPDATE-DISPLAY` will call
         (sdl-cffi::sdl-flip (fp surface))
         (sdl-cffi::sdl-update-rect (fp surface) 0 0 0 0))))
 
-(defun clear-display (color &key (surface *default-display*) (update nil))
+(defun clear-display (color &key (surface *default-display*) update)
   "Fills the display `SURFACE` using color `COLOR`.
 `SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified. 
 The display is updated when `UPDATE` is `T`."
-  (sdl-base::fill-surface (fp surface)
-			  (map-color color surface)
-			  :update update
-			  :clipping nil))
+  (let ((fp (fp surface)))
+    (sdl-cffi::sdl-Fill-Rect fp (cffi:null-pointer) (map-color color surface))
+    (if update
+      (sdl-cffi::SDL-Update-Rect fp 0 0 0 0))))
 
 (defun show-cursor (state)
   "Disables the cursor when state is `NIL`, otherwise enables the cursor."
@@ -126,63 +167,7 @@ The display is updated when `UPDATE` is `T`."
                                       'sdl-cffi::SDL-Sys-WM-info-info-x11
                                       'sdl-cffi::window)))
 
-(defun surface-info (surface &optional (info nil))
-  "Returns information about the SDL surface `SURFACE`.
 
-##### Parameters
-
-* `SURFACE` is an SDL surface of type [SDL-SURFACE](#sdl-surface).
-* `INFO` must be one of `NIL`, [SDL-SW-SURFACE](#sdl-sw-surface), 
-[SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
-[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
-[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
-[SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable)
-[SDL-HW-ACCEL](#sdl-hw-accel), [SDL-SRC-COLOR-KEY](#sdl-src-color-key),
-[SDL-RLE-ACCEL](#sdl-rle-accel), [SDL-SRC-ALPHA](#sdl-src-alpha)
- or [SDL-PRE-ALLOC](#sdl-pre-alloc).
-
-##### Returns
-
-`INFO` when `NIL` will return a list of all enabled surface flags. Otherwise will
-return `INFO` as `T` or `NIL` if supported by the surface.
-
-##### Example
-
-    \(SURFACE-INFO A-SURFACE '\(SDL-HW-SURFACE SDL-HW-PALETTE SDL-HW-ACCELL\)\)"
-  (check-type surface sdl-surface)
-  (if info
-      (let ((property (find info (list SDL-HW-SURFACE SDL-SW-SURFACE SDL-ASYNC-BLIT SDL-ANY-FORMAT
-				       SDL-HW-PALETTE SDL-DOUBLEBUF SDL-FULLSCREEN
-				       SDL-OPENGL SDL-RESIZABLE SDL-HW-ACCEL
-				       SDL-SRC-COLOR-KEY SDL-RLE-ACCEL SDL-SRC-ALPHA
-				       SDL-PRE-ALLOC))))
-	(if property
-	    (if (eq (logand property
-			    (cffi:foreign-slot-value (fp surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags))
-		    property)
-		t
-		nil)))
-      (remove nil (mapcar #'(lambda (query)
-			      (let ((info (first query))
-				    (description (second query)))
-				(let ((result (logand (cffi:foreign-slot-value (fp surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
-						      info)))
-				  (unless (eq result 0)
-				    description))))
-			  (list (list SDL-HW-SURFACE 'SDL-HW-SURFACE)
-				(list SDL-SW-SURFACE 'SDL-SW-SURFACE)
-				(list SDL-ASYNC-BLIT 'SDL-ASYNC-BLIT)
-				(list SDL-ANY-FORMAT 'SDL-ANY-FORMAT)
-				(list SDL-HW-PALETTE 'SDL-HW-PALETTE)
-				(list SDL-DOUBLEBUF 'SDL-DOUBLEBUF)
-				(list SDL-FULLSCREEN 'SDL-FULLSCREEN)
-				(list SDL-OPENGL 'SDL-OPENGL)
-				(list SDL-RESIZABLE 'SDL-RESIZABLE)
-				(list SDL-HW-ACCEL 'SDL-HW-ACCEL)
-				(list SDL-SRC-COLOR-KEY 'SDL-SRC-COLOR-KEY)
-				(list SDL-RLE-ACCEL 'SDL-RLE-ACCEL)
-				(list SDL-SRC-ALPHA 'SDL-SRC-ALPHA)
-				(list SDL-PRE-ALLOC 'SDL-PRE-ALLOC))))))
 
 (defun video-memory ()
   "Returns the amount of video memory of the graphics hardware. Must be called after SDL is initialized 
@@ -200,7 +185,7 @@ Must be called after SDL is initialized using [INIT-SDL](#init-sdl) or [WITH-INI
       (vector (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::current-w)
 	  (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::current-h)))))
 
-(defun video-info (&optional (info nil))
+(defun video-info (&rest info)
   "Returns information about the video hardware. 
 `VIDEO-INFO` must be called after SDL is initialised using [INIT-SDL](#init-sdl) or 
 [WITH-INIT](#with-init).
@@ -220,8 +205,28 @@ video flags.
   (let ((video-info (sdl-cffi::SDL-Get-Video-Info)))
     (unless (cffi:null-pointer-p video-info)
       (if info
-        (find info (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags))
-        (cffi:foreign-slot-value (sdl-cffi::SDL-Get-Video-Info) 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))))
+        (remove nil (loop for attribute in info
+                          collecting (find attribute (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::flags))))
+        (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))))
+
+(defun hw-available-p ()
+  (video-info :hw-available))
+(defun wm-available-p ()
+  (video-info :wm-available))
+(defun blit-hw-p ()
+  (video-info :blit-hw))
+(defun blit-hw-cc-p ()
+  (video-info :blit-hw-cc))
+(defun blit-hw-a-p ()
+  (video-info :blit-hw-a))
+(defun blit-sw-p ()
+  (video-info :blit-sw))
+(defun blit-sw-cc-p ()
+  (video-info :blit-sw-cc))
+(defun blit-sw-a-p ()
+  (video-info :blit-sw-a))
+(defun blit-fill-p ()
+  (video-info :blit-fill))
 
 (defun list-modes (flags)
   "Returns a LIST of vectors sorted largest to smallest containing window or screen dimensions
@@ -252,17 +257,15 @@ Returns `T` if any dimension will support the pixel format and video flags.
     (let ((modes nil)
           (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (sdl-base::set-flags flags))))
     (cond
-      ((cffi:null-pointer-p listmodes)
-       nil)
-      ((equal (cffi:pointer-address listmodes) 4294967295)
-       t)
+      ((cffi:null-pointer-p listmodes) nil)
+      ((equal (cffi:pointer-address listmodes) 4294967295) t)
       (t
        (do ((i 0 (1+ i)))
-           ((cffi:null-pointer-p (cffi:mem-aref listmodes :pointer i)) (reverse modes))
-	 (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes :pointer i) 'sdl-cffi::sdl-rect)))
-	   (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w)
-				     (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
-			     modes)))))))))
+             ((cffi:null-pointer-p (cffi:mem-aref listmodes :pointer i)) (reverse modes))
+           (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes :pointer i) 'sdl-cffi::sdl-rect)))
+             (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w)
+                                       (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
+                               modes)))))))))
 
 (defun query-cursor ()
   "Queries the current state of the cursor. 
@@ -291,16 +294,23 @@ is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)
 (defun set-gl-attribute (attribute value)
   (sdl-cffi::sdl-gl-set-attribute attribute value))
 
+(defun get-gl-attribute (attribute value)
+  (declare (ignore attribute value))
+  ;; TBD
+  )
+
 (defun set-caption (window-caption icon-caption)
   "Sets the caption text for window bar, and icon."
-  (sdl-cffi::sdl-wm-set-caption window-caption icon-caption))
+  (unless (cffi:null-pointer-p (sdl-cffi::SDL-Get-Video-Info))
+    (sdl-cffi::sdl-wm-set-caption window-caption icon-caption)))
 
 (defun get-caption ()
   "Returns the caption and icon text for the display surface as a spread; \(VALUES title-captio icon caption\)"
-  (cffi:with-foreign-objects ((title-handle :pointer)
-                              (icon-handle :pointer))
+  (unless (cffi:null-pointer-p (sdl-cffi::SDL-Get-Video-Info))
+    (cffi:with-foreign-objects ((title-handle :pointer)
+                                (icon-handle :pointer))
     (sdl-cffi::SDL-WM-Get-Caption title-handle icon-handle)
     (let ((foreign-title-caption (cffi:mem-aref title-handle :pointer))
           (foreign-icon-caption (cffi:mem-aref icon-handle :pointer)))
       (values (cffi:foreign-string-to-lisp foreign-title-caption)
-              (cffi:foreign-string-to-lisp foreign-icon-caption)))))
+              (cffi:foreign-string-to-lisp foreign-icon-caption))))))

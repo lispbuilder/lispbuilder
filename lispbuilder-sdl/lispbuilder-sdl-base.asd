@@ -17,14 +17,10 @@
     ((:module "base"
 	      :components
 	      ((:file "package")
-	       (:file "globals")
+               (:file "pixel")
 	       (:file "util")
-	       (:file "fps")
-               ;;(:file "events")
-	       (:file "pixel")
 	       (:file "rectangle")
 	       (:file "surfaces")
-	       (:file "video")
 	       (:file "rwops")
 	       (:file "sdl-util"))
 	      :serial t)))

@@ -138,9 +138,25 @@
    #:init-subsystems
    #:quit-subsystems
    #:initialized-subsystems-p
-   #:init-sdl
-   #:quit-sdl
 
+   #:sdl-init-p
+   #:video-init-p
+   #:audio-init-p
+   #:joystick-init-p
+   #:cdrom-init-p
+
+   #:init-sdl
+   #:init-video
+   #:init-audio
+   #:init-joysick
+   #:init-cdrom
+
+   #:quit-sdl
+   #:quit-video
+   #:quit-audio
+   #:quit-joysick
+   #:quit-cdrom
+   
    ;; input-util.lisp
    #:initialise-input-util
    #:update-input-util
@@ -400,6 +416,7 @@
    #:set-cell
    #:set-cell-*
    #:copy-channel-to-alpha
+   #:surface-info
 
    ;; util.lisp
    #:random+1
@@ -425,7 +442,6 @@
    #:query-cursor
    #:show-cursor
    #:video-info
-   #:surface-info
    #:get-native-window
    #:list-modes
    #:video-memory
@@ -433,10 +449,24 @@
    #:set-gl-attribute
    #:set-caption
    #:get-caption
+   #:any-format-p
    #:opengl-context-p
    #:double-buffered-p
    #:fullscreen-p
    #:resizable-p
+
+   #:hw-available-p
+   #:wm-available-p
+   #:blit-hw-p
+   #:blit-hw-cc-p
+   #:blit-hw-alpha-p
+   #:blit-sw-p
+   #:blit-sw-cc-p
+   #:blit-sw-a-p
+   #:blit-fill-p
+
+   #:set-video-driver
+   #:set-audio-driver
 
    ;; rwops.lisp
    #:rwops
@@ -509,7 +539,16 @@
    #:g-mask
    #:b-mask
    #:a-mask
-
+   #:read-pixel
+   #:write-pixel
+   #:pixel-data
+   #:write-pixel
+   #:pixel-bpp
+   #:pixel-pitch
+   #:with-pixel
+   #:with-pixels
+   #:pixels
+   
    ;; audio.lisp
    #:audio-spec
    #:print-object

@@ -4,7 +4,7 @@
 
 (defun convert-line (start-x start-y pad-x pad-y width height size characters
                              data surface color-key)
-  (sdl-base::with-pixel (pix (sdl:fp surface))
+  (with-pixel (pix (sdl:fp surface))
     (loop for c across characters
           for i = 0 then (incf i)
           do (let* ((char-pos (* (char-code c) size))
@@ -13,7 +13,7 @@
                  (setf mask #x80)                       
                  (dotimes (ix width)
                    (multiple-value-bind (rgba r g b)
-                       (sdl-base::read-pixel pix
+                       (read-pixel pix
                                              (+ start-x pad-x
                                                 (* i width) ix)
                                              (+ start-y pad-y iy))

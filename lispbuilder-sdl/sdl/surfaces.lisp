@@ -269,8 +269,95 @@ Free using [FREE](#free)."))
 	     :h (height surface))
   surface)
 
+(defun get-surface-attribute (surface attribute)
+  "Returns `T` if the attribute is set for the surface surface, or returns `NIL` otherwise."
+  (unless (cffi:null-pointer-p surface)
+    (/= 0 (logand (cffi:foreign-slot-value surface 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+                  attribute))))
+
+(defun surface-info (surface &optional (info nil))
+  "Returns information about the SDL surface `SURFACE`.
+
+##### Parameters
+
+* `SURFACE` is an SDL surface of type [SDL-SURFACE](#sdl-surface).
+* `INFO` must be one of `NIL`, [SDL-SW-SURFACE](#sdl-sw-surface), 
+[SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
+[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
+[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
+[SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable)
+[SDL-HW-ACCEL](#sdl-hw-accel), [SDL-SRC-COLOR-KEY](#sdl-src-color-key),
+[SDL-RLE-ACCEL](#sdl-rle-accel), [SDL-SRC-ALPHA](#sdl-src-alpha)
+ or [SDL-PRE-ALLOC](#sdl-pre-alloc).
+
+##### Returns
+
+`INFO` when `NIL` will return a list of all enabled surface flags. Otherwise will
+return `INFO` as `T` or `NIL` if supported by the surface.
+
+##### Example
+
+    \(SURFACE-INFO A-SURFACE '\(SDL-HW-SURFACE SDL-HW-PALETTE SDL-HW-ACCELL\)\)"
+  (check-type surface sdl-surface)
+  (if info
+    (let ((attribute (find info (list SDL-HW-SURFACE SDL-SW-SURFACE SDL-ASYNC-BLIT SDL-ANY-FORMAT
+                                      SDL-HW-PALETTE SDL-DOUBLEBUF SDL-FULLSCREEN
+                                      SDL-OPENGL SDL-RESIZABLE SDL-HW-ACCEL
+                                      SDL-SRC-COLOR-KEY SDL-RLE-ACCEL SDL-SRC-ALPHA
+                                      SDL-PRE-ALLOC))))
+      (if attribute
+        (if (eq (logand attribute
+                        (cffi:foreign-slot-value (fp surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags))
+                attribute)
+          t
+          nil)))
+    (remove nil (mapcar #'(lambda (query)
+                            (let ((info (first query))
+                                  (description (second query)))
+                              (let ((result (logand (cffi:foreign-slot-value (fp surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+                                                    info)))
+                                (unless (eq result 0)
+                                  description))))
+                        (list (list SDL-HW-SURFACE 'SDL-HW-SURFACE)
+                              (list SDL-SW-SURFACE 'SDL-SW-SURFACE)
+                              (list SDL-ASYNC-BLIT 'SDL-ASYNC-BLIT)
+                              (list SDL-ANY-FORMAT 'SDL-ANY-FORMAT)
+                              (list SDL-HW-PALETTE 'SDL-HW-PALETTE)
+                              (list SDL-DOUBLEBUF 'SDL-DOUBLEBUF)
+                              (list SDL-FULLSCREEN 'SDL-FULLSCREEN)
+                              (list SDL-OPENGL 'SDL-OPENGL)
+                              (list SDL-RESIZABLE 'SDL-RESIZABLE)
+                              (list SDL-HW-ACCEL 'SDL-HW-ACCEL)
+                              (list SDL-SRC-COLOR-KEY 'SDL-SRC-COLOR-KEY)
+                              (list SDL-RLE-ACCEL 'SDL-RLE-ACCEL)
+                              (list SDL-SRC-ALPHA 'SDL-SRC-ALPHA)
+                              (list SDL-PRE-ALLOC 'SDL-PRE-ALLOC))))))
+
+(defmethod hardware-surface-p ((surface sdl-surface))
+  "Returns `T` if the surface is stored in video memory."
+  (get-surface-attribute (fp surface) sdl-hw-surface))
+(defmethod software-surface-p ((surface sdl-surface))
+  "Returns `T` if the surface is stored in system memory."
+  (get-surface-attribute (fp surface) sdl-sw-surface))
+(defmethod async-blit-p ((surface sdl-surface))
+  "Returns `T` if asynchronous blits are possible."
+  (get-surface-attribute (fp surface) sdl-async-blit))
+(defmethod hardware-accel-p ((surface sdl-surface))
+  "Returns `T` if the surface uses hardware acceration."
+  (get-surface-attribute (fp surface) sdl-hw-accel))
+(defmethod pre-alloc-p ((surface sdl-surface))
+  "Returns `T` if the surface uses pre-allocated memory."
+  (get-surface-attribute (fp surface) sdl-pre-alloc))
+(defmethod hardware-palette-p ((surface sdl-surface))
+  "Returns `T` if the surface has an exclusive palette." 
+  (get-surface-attribute (fp surface) sdl-hw-palette))
 (defmethod alpha-enabled-p ((surface sdl-surface))
-  (1/0->T/NIL (sdl-base::alpha-enabled-p (fp surface))))
+  (get-surface-attribute (fp surface) sdl-src-alpha))
+(defmethod color-key-enabled-p ((surface sdl-surface))
+  (get-surface-attribute (fp surface) sdl-src-color-key))
+(defmethod rle-accel-enabled-p ((surface sdl-surface))
+  (get-surface-attribute (fp surface) sdl-rle-accel))
+
 (defmethod (setf alpha-enabled-p) (value (surface sdl-surface))
   (setf (sdl-base::alpha-enabled-p (fp surface)) value))
 (defun enable-alpha (value &key (surface *default-surface*))
@@ -283,8 +370,6 @@ A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha 
 (defmethod (setf alpha) (value (surface sdl-surface))
   (setf (sdl-base::alpha (fp surface)) value))
 
-(defmethod color-key-enabled-p ((surface sdl-surface))
-  (1/0->T/NIL (sdl-base::color-key-enabled-p (fp surface))))
 (defmethod (setf color-key-enabled-p) (value (surface sdl-surface))
   (setf (sdl-base::color-key-enabled-p (fp surface)) value))
 (defun enable-color-key (value &key (surface *default-surface*))
@@ -307,8 +392,7 @@ A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha 
 (defmethod pixel-alpha-enabled-p ((surface sdl-surface))
   (1/0->T/NIL (sdl-base::pixel-alpha-enabled-p (fp surface))))
 
-(defmethod rle-accel-enabled-p ((surface sdl-surface))
-  (1/0->T/NIL (sdl-base::rle-accel-enabled-p (fp surface))))
+
 (defmethod (setf rle-accel-enabled-p) (value (surface sdl-surface))
   (setf (sdl-base::rle-accel-enabled-p (fp surface)) value))
 (defun enable-rle-accel (value &key (surface *default-surface*))
@@ -550,7 +634,7 @@ Use `:FREE` to delete the source `SURFACE`."
     surf))
 
 (defun copy-surface (&key cell cell-index (surface *default-surface*) color-key alpha pixel-alpha
-                          (rle-accel nil) (type :sw) (free nil) (inherit t)
+                          rle-accel (type :sw) free (inherit t)
                           (fill t) (color-key-fill t)
                           (pixel-format nil))
   "Returns a copy of `:SURFACE`. 
@@ -573,19 +657,18 @@ Use `:FREE` to delete the source `SURFACE`."
   (let ((new-surface nil))
     (let ((x 0) (y 0) (width (width surface)) (height (height surface))
 	  (rect nil))
-      (when (or cell cell-index)
-	(when cell
-	  (setf x (x cell)
-		y (y cell)
-		width (width cell)
-		height (height cell))
-	  (setf rect cell))
-	(when cell-index
-	  (setf rect (get-cell :surface surface :index cell-index))
-	  (setf x (x rect)
-		y (y rect)
-		width (width rect)
-		height (height rect))))
+      (when cell
+        (setf x (x cell)
+              y (y cell)
+              width (width cell)
+              height (height cell))
+        (setf rect cell))
+      (when cell-index
+        (setf rect (get-cell :surface surface :index cell-index))
+        (setf x (x rect)
+              y (y rect)
+              width (width rect)
+              height (height rect)))
       (setf new-surface (make-instance 'surface
 				       :using-surface (when pixel-format surface)
 				       :x x :y y :width width :height height
@@ -608,11 +691,11 @@ Use `:FREE` to delete the source `SURFACE`."
 				       :rle-accel rle-accel
 				       :bpp (bit-depth surface)))
       (when color-key-fill
-	(if inherit
-	  (if (color-key-enabled-p surface)
+        (if inherit
+          (if (color-key-enabled-p surface)
             (fill-surface (color-key surface) :surface new-surface))
-	  (if color-key
-            (fill-surface (color-key surface) :surface new-surface))))      
+          (if color-key
+            (fill-surface (color-key surface) :surface new-surface))))
       (when fill
 	(if (or cell cell-index)
 	  (sdl-base::blit-surface (fp surface) (fp new-surface)
@@ -741,22 +824,22 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
 
 (defun copy-channel-to-alpha (destination source &key (channel :r))
   (check-types sdl-surface destination source)
-  (sdl-base::with-pixels ((src (fp source))
-			  (dst (fp destination)))
-    (loop for y from 0 below (height destination)
-	 do (loop for x from 0 below (width destination)
-	       do (multiple-value-bind (src-px src-r src-g src-b src-a)
-		      (sdl-base::read-pixel src x y)
-		    (declare (ignorable src-px src-r src-g src-b src-a))
-		    (multiple-value-bind (dst-px dst-r dst-g dst-b dst-a)
-			(sdl-base::read-pixel dst x y)
-		      (declare (ignore dst-px dst-a))
-		      (case channel
-			(:r (sdl-base::write-pixel dst x y (sdl-base::map-color (fp destination) dst-r dst-g dst-b src-r)))
-			(:g (sdl-base::write-pixel dst x y (sdl-base::map-color (fp destination) dst-r dst-g dst-b src-g)))
-			(:b (sdl-base::write-pixel dst x y (sdl-base::map-color (fp destination) dst-r dst-g dst-b src-b)))
-			(:a (sdl-base::write-pixel dst x y (sdl-base::map-color (fp destination) dst-r dst-g dst-b src-a)))
-			(otherwise (error "copy-channel-to-alpha: CHANNEL must be one of :R, :G, :B or :A"))))))))
+  (with-pixels ((src (fp source))
+                (dst (fp destination)))
+               (loop for y from 0 below (height destination)
+                     do (loop for x from 0 below (width destination)
+                              do (multiple-value-bind (src-px src-r src-g src-b src-a)
+                                     (read-pixel src x y)
+                                   (declare (ignorable src-px src-r src-g src-b src-a))
+                                   (multiple-value-bind (dst-px dst-r dst-g dst-b dst-a)
+                                       (read-pixel dst x y)
+                                     (declare (ignore dst-px dst-a))
+                                     (case channel
+                                       (:r (write-pixel dst x y (sdl-base::map-color (fp destination) dst-r dst-g dst-b src-r)))
+                                       (:g (write-pixel dst x y (sdl-base::map-color (fp destination) dst-r dst-g dst-b src-g)))
+                                       (:b (write-pixel dst x y (sdl-base::map-color (fp destination) dst-r dst-g dst-b src-b)))
+                                       (:a (write-pixel dst x y (sdl-base::map-color (fp destination) dst-r dst-g dst-b src-a)))
+                                       (otherwise (error "copy-channel-to-alpha: CHANNEL must be one of :R, :G, :B or :A"))))))))
   destination)
 
 ;; (defun set-mask-alpha (surface threshold)
@@ -764,7 +847,7 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
 ;;   (let ((mask (make-array (* (width surface) (height surface))
 ;; 			  :element-type 'bit
 ;; 			  :initial-contents nil)))
-;;     (sdl-base::with-pixels (px (fp surface)))
+;;     (with-pixels (px (fp surface)))
 ;;     ))
 
 ;; (defun get-mask-alpha (surface))
@@ -775,10 +858,10 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
 ;; 			  :element-type 'bit
 ;; 			  :initial-contents nil))
 ;; 	(mask-color (map-color color-key surface)))
-;;     (sdl-base::with-pixels (px (fp surface))
+;;     (with-pixels (px (fp surface))
 ;;       (dotimes (y (height surface))
 ;; 	(dotimes (x (width surface))
-;; 	  (let ((col (sdl-base::read-pixel px x y)))
+;; 	  (let ((col (read-pixel px x y)))
 ;; 	    (if (eql col mask-color)
 ;; 		(setf (sbit mask (* x y)) t))))))
 ;;     (setf (slot-value surface 'color-key-mask) mask)))
@@ -791,6 +874,6 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
 ;; 	(mask (make-array (* (width surface) (height surface))
 ;; 			  :element-type 'bit
 ;; 			  :initial-contents nil)))
-;;     (sdl-base::with-pixels (px (fp surface))
+;;     (with-pixels (px (fp surface))
 ;;       ())
 ;;     ))

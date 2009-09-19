@@ -354,22 +354,22 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
   dst-rect)
 
 (defun fill-surface (surface color &key (template nil) (update nil) (clipping nil))
-  "fill the entire surface with the specified RGB/A color.
+  "Fill the entire surface with the specified RGB/A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
    Use :update to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update.
 *Note*: `TEMPLATE` is clipped to the surface `SURFACE`, when `CLIPPING` is `T`."
   (if template
-      (progn (if clipping
-		 (setf template (clip-to-surface template surface)))
-	     (sdl-cffi::sdl-Fill-Rect surface template color))
-      (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))
+    (progn (when clipping
+             (setf template (clip-to-surface template surface)))
+      (sdl-cffi::sdl-Fill-Rect surface template color))
+    (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))
   (when update
     (if template
-	(update-surface surface
-			:template template
-			:clipping nil)
-	(sdl-cffi::SDL-Update-Rect surface 0 0 0 0)))
+      (update-surface surface
+                      :template template
+                      :clipping nil)
+      (sdl-cffi::SDL-Update-Rect surface 0 0 0 0)))
   template)
 
 (defun map-color (surface r g b &optional a)
