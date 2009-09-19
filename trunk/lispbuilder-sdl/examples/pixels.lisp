@@ -31,8 +31,8 @@
 	(sdl:with-events ()
 	  (:quit-event () t)
 	  (:idle ()
-           (sdl-base::with-pixel (disp (sdl:fp sdl:*default-display*))
-             (sdl-base::write-pixel disp (random width) (random height)
+           (sdl:with-pixel (disp (sdl:fp sdl:*default-display*))
+             (sdl:write-pixel disp (random width) (random height)
                                     (sdl:map-color (sdl:set-color-* color
                                                                     :r (random 255)
                                                                     :g (random 255)

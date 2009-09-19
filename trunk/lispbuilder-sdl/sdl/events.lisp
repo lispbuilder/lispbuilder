@@ -705,6 +705,6 @@ The contents of the event are completely up to the programmer.
              (unless ,quit
                #+lispbuilder-sdl-audio(process-audio)
                (sdl:update-input-util (sdl:frame-time))
-               (sdl-base::process-timestep sdl-base::*default-fpsmanager*
-                                           ,idle-func)))
+               (process-timestep *default-fpsmanager*
+                                 ,idle-func)))
        (cffi:foreign-free ,sdl-event))))

@@ -423,18 +423,18 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
        (setf dx (- x1 x0))
        (setf dy (- y1 y0))
 
-       (sdl-base::with-pixel (pix (fp surface))
+       (with-pixel (pix (fp surface))
 	 (if (>= dy 0)
 	     (if (>= dx dy)
 		 (loop for x from x0 to x1 do
-		      (sdl-base::write-pixel pix x y color)
+		      (write-pixel pix x y color)
 		      (if (< (* 2 (+ e dy)) dx)
 			  (incf e dy)
 			  (progn
 			    (incf y)
 			    (incf e (- dy dx)))))
 		 (loop for y from y0 to y1 do
-		      (sdl-base::write-pixel pix x y color)
+		      (write-pixel pix x y color)
 		      (if (< (* 2 (+ e dx)) dy)
 			  (incf e dx)
 			  (progn
@@ -442,7 +442,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 			    (incf e (- dx dy))))))
 	     (if (>= dx (- dy))
 		 (loop for x from x0 to x1 do
-		      (sdl-base::write-pixel pix x y color)
+		      (write-pixel pix x y color)
 		      (if (> (* 2 (+ e dy)) (- dx))
 			  (incf e dy)
 			  (progn
@@ -455,7 +455,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 		   (setf dx (- x1 x0))
 		   (setf dy (- y1 y0))
 		   (loop for y from y0 to y1 do
-			(sdl-base::write-pixel pix x y color)
+			(write-pixel pix x y color)
 			(if (> (* 2 (+ e dx)) (- dy))
 			    (incf e dx)
 			    (progn
@@ -741,8 +741,8 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
   (when clipping
     (sdl-base::check-bounds 0 (- (width surface) 1) x)
     (sdl-base::check-bounds 0 (- (height surface) 1) y))
-  (sdl-base::with-pixel (pix (fp surface))
-    (sdl-base::write-pixel pix x y (map-color color surface)))
+  (with-pixel (pix (fp surface))
+    (write-pixel pix x y (map-color color surface)))
   surface)
 
 (defun read-pixel (point &key (clipping t) (surface *default-surface*))
@@ -775,9 +775,9 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
   (when clipping
     (sdl-base::check-bounds 0 (- (width surface) 1) x)
     (sdl-base::check-bounds 0 (- (height surface) 1) y))
-  (sdl-base::with-pixel (surf (fp surface))
+  (with-pixel (surf (fp surface))
     (multiple-value-bind (rgba r g b a)
-        (sdl-base::read-pixel surf x y)
+        (read-pixel surf x y)
       (declare (ignore rgba))
       (color :r r :g g :b b :a a))))
 
@@ -930,23 +930,23 @@ is blitted to `SURFACE`.
 	      (y0 (if alpha r y0)))
 	  
 	  (let ((x-pos 0) (y-pos 0))
-	    (sdl-base::with-pixel (pix (fp surf))
+	    (with-pixel (pix (fp surf))
 	      (setf x-pos x0
 		    y-pos (+ y0 r))
 	      (when (in-bounds x-pos y-pos width height)
-		(sdl-base::write-pixel pix x-pos y-pos col))
+		(write-pixel pix x-pos y-pos col))
 	      (setf x-pos x0
 		    y-pos (- y0 r))
 	      (when (in-bounds x-pos y-pos width height)
-		(sdl-base::write-pixel pix x-pos y-pos col))
+		(write-pixel pix x-pos y-pos col))
 	      (setf x-pos (+ x0 r)
 		    y-pos y0)
 	      (when (in-bounds x-pos y-pos width height)
-		(sdl-base::write-pixel pix x-pos y-pos col))
+		(write-pixel pix x-pos y-pos col))
 	      (setf x-pos (- x0 r)
 		    y-pos y0)
 	      (when (in-bounds x-pos y-pos width height)
-		(sdl-base::write-pixel pix x-pos y-pos col))
+		(write-pixel pix x-pos y-pos col))
 	      (do ((x 0)
 		   (y r))
 		  ((<= y x))
@@ -962,35 +962,35 @@ is blitted to `SURFACE`.
 		(setf x-pos (+ x0 x)
 		      y-pos (+ y0 y))
 		(when (in-bounds x-pos y-pos width height)
-		  (sdl-base::write-pixel pix x-pos y-pos col)) ;     setPixel(x0 + x, y0 + y);
+		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 + x, y0 + y);
 		(setf x-pos (- x0 x)
 		      y-pos (+ y0 y))
 		(when (in-bounds x-pos y-pos width height)
-		  (sdl-base::write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - x, y0 + y);
+		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - x, y0 + y);
 		(setf x-pos (+ x0 x)
 		      y-pos (- y0 y))
 		(when (in-bounds x-pos y-pos width height)
-		  (sdl-base::write-pixel pix x-pos y-pos col)) ;     setPixel(x0 + x, y0 - y);
+		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 + x, y0 - y);
 		(setf x-pos (- x0 x)
 		      y-pos (- y0 y))
 		(when (in-bounds x-pos y-pos width height)
-		  (sdl-base::write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - x, y0 - y);
+		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - x, y0 - y);
 		(setf x-pos (+ x0 y)
 		      y-pos (+ y0 x))
 		(when (in-bounds x-pos y-pos width height)
-		  (sdl-base::write-pixel pix x-pos y-pos col)) ;     setPixel(x0 + y, y0 + x);
+		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 + y, y0 + x);
 		(setf x-pos (- x0 y)
 		      y-pos (+ y0 x))
 		(when (in-bounds x-pos y-pos width height)
-		  (sdl-base::write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - y, y0 + x);
+		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - y, y0 + x);
 		(setf x-pos (+ x0 y)
 		      y-pos (- y0 x))
 		(when (in-bounds x-pos y-pos width height)
-		  (sdl-base::write-pixel pix x-pos y-pos col)) ;     setPixel(x0 + y, y0 - x);
+		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 + y, y0 - x);
 		(setf x-pos (- x0 y)
 		      y-pos (- y0 x))
 		(when (in-bounds x-pos y-pos width height)
-		  (sdl-base::write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - y, y0 - x);
+		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - y, y0 - x);
 		))))
       
 	(when alpha

@@ -9,14 +9,14 @@
   (let* ((surf-ptr (sdl-cffi::SDL-Load-BMP-RW (fp source) 0))
 	 (surf (make-instance 'surface
 			      :using-surface (if (cffi-sys:null-pointer-p surf-ptr)
-						(error "ERROR: LOAD-IMAGE; cannot load file '~a'" (sdl-cffi::sdl-get-error))
-						surf-ptr)						
-			     :enable-color-key (or color-key color-key-at)
-			     :color-key color-key
-			     :color-key-at color-key-at
-			     :enable-alpha alpha
-			     :alpha alpha
-			     :x 0 :y 0)))
+                                               (error "ERROR: LOAD-IMAGE; cannot load file '~a'" (sdl-cffi::sdl-get-error))
+                                               surf-ptr)
+                              :enable-color-key (or color-key color-key-at)
+                              :color-key color-key
+                              :color-key-at color-key-at
+                              :enable-alpha alpha
+                              :alpha alpha
+                              :x 0 :y 0)))
     (when free-rwops
       (free source))
     surf))

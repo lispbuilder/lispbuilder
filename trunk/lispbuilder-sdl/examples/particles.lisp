@@ -150,8 +150,8 @@
 (let ((currently-fullscreen? nil))
   (defun toggle-fullscreen ()
     (if currently-fullscreen?
-      (sdl:resize-window *screen-width* *screen-height* :flags '(sdl:sdl-sw-surface sdl:sdl-resizable))
-      (sdl:resize-window *screen-width* *screen-height* :flags '(sdl:sdl-hw-surface sdl:sdl-doublebuf sdl:sdl-fullscreen )))
+      (sdl:resize-window *screen-width* *screen-height* :sw t :resizable t)
+      (sdl:resize-window *screen-width* *screen-height* :sw t :fullscreen t))
     (setf currently-fullscreen? (if currently-fullscreen? nil t))))
     
 ;;; ----------------------------------------------------------------------
@@ -163,7 +163,7 @@
     (unless (sdl:window *screen-width* *screen-height*
                         :title-caption "Particles Demo"
                         :icon-caption "Particles Demo"
-                        :flags '(sdl:sdl-sw-surface sdl:sdl-resizable)
+                        :sw t :resizable t
                         :fps (make-instance 'sdl:fps-fixed))
       (error "~&Unable to create a SDL window~%"))
 
@@ -184,12 +184,22 @@
                                                          :inherit nil
                                                          :pixel-alpha t
                                                          :free t))
+    ;;(setf *particle-img* (sdl:load-image (sdl:create-path
+    ;;                                      "particle.bmp"
+    ;;                                      sdl:*default-asset-path*)))
+
+    ;;(format t "surface-info: ~A~%" (sdl:surface-info *particle-img*))
       
     ;; Replace the alpha channel of *particle-img* with
     ;; the alpha map in particle-alpha.bmp
     (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp"
                                                               sdl:*default-asset-path*)))
       (sdl:copy-channel-to-alpha *particle-img* alpha :channel :r))
+
+
+    ;;(setf *particle-img* (sdl:copy-surface :surface *particle-img* :inherit nil :rle-accel t :free t :fill nil))
+    
+    ;; (format t "surface-info: ~A~%" (sdl:surface-info *particle-img*))
 
     ;; Load the bitmap fonts
     (setf *font-large* (sdl:initialise-font sdl:*font-8x13*))
@@ -252,8 +262,7 @@
          
        (if (funcall *frames-p*)
          (draw-cached-string (format nil "Particles: ~d, Framerate: ~f, timescale: ~f"
-                                     *particle-count* (truncate (sdl:average-fps)) (sdl:time-scale)
-                                     )
+                                     *particle-count* (truncate (sdl:average-fps)) (sdl:time-scale))
                              5 35 *font-small* sdl:*default-display* t)
          (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
          
@@ -289,7 +298,7 @@
                                                          :inherit nil
                                                          :pixel-alpha t
                                                          :free t))
-      
+
     ;; Replace the alpha channel of *particle-img* with
     ;; the alpha map in particle-alpha.bmp
     (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp"
