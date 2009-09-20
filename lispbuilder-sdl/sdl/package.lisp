@@ -9,11 +9,7 @@
 
   (:import-from #:lispbuilder-sdl-base
    lispbuilder-sdl-base::is-valid-ptr
-   lispbuilder-sdl-base::*default-fpsmanager*              
    lispbuilder-sdl-base::1/0->t/nil
-   lispbuilder-sdl-base::fps-fixed
-   lispbuilder-sdl-base::fps-unlocked
-   lispbuilder-sdl-base::fps-timestep
 
    lispbuilder-sdl-base::read-pixel
    lispbuilder-sdl-base::write-pixel
@@ -98,14 +94,11 @@
    #:*default-position*
    #:*default-rectangle*
 
-   #:*sdl-initialized*
-
    #:*external-init-subsystems-on-startup*
    #:*external-quit-subsystems-on-exit*
-
    #:*quit-on-exit*
 
-   #:*opengl-context*
+   #:*default-fpsmanager*
 
    ;;#:*default-font-path*
    #:*default-simple-font*
@@ -603,6 +596,9 @@
    ;;#:*default-font-path*
 
    ;; fps.lisp
+   #:fps-fixed
+   #:fps-unlocked
+   #:fps-timestep
    #:frame-rate
    #:average-fps
    #:frame-time
@@ -726,17 +722,13 @@
    #:SDL-GL-GET-PROC-ADDRESS
 
    ;; Imports from lispbuilder-sdl-base  
-   #:*default-fpsmanager*
+
    #:with-events
    #:push-quit-event
    #:key=
-   #:average-fps
 
    #:is-valid-ptr
    #:push-user-event
-   #:fps-fixed
-   #:fps-unlocked
-   #:fps-timestep
 
    #:read-pixel
    #:write-pixel

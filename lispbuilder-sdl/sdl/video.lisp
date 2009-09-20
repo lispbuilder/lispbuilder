@@ -47,7 +47,7 @@
 
 (defmethod window (width height &key (bpp 0) (title-caption "") (icon-caption "")
                          flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
-                         (fps (make-instance 'sdl-base::fps-fixed))
+                         (fps (make-instance 'fps-fixed))
                          position
                          video-driver audio-driver)
 
@@ -87,7 +87,7 @@
   (set-caption title-caption icon-caption)
 
   ;; Set the frame rate manager
-  (setf sdl-base::*default-fpsmanager* fps)
+  (setf *default-fpsmanager* fps)
   
   ;; Prime the input handling code
   (quit-input-util)
@@ -118,7 +118,7 @@
                 :icon-caption (if icon-caption icon-caption icon)
                 :bpp (if bpp bpp (sdl:bit-depth sdl:*default-display*))
                 :flags (if flags flags (sdl:surface-info sdl:*default-display*))
-                :fps sdl-base::*default-fpsmanager*)))
+                :fps *default-fpsmanager*)))
 
 (defun update-display (&optional (surface *default-display*))
   "`UPDATE-DISPLAY` will flip the SDL video buffers and update 
