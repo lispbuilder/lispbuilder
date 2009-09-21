@@ -645,6 +645,21 @@ The following functions return the properties of the current display surface;
 
 A foreign pointer pointer to the display surface can be retrieved using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-native-window GET-NATIVE-WINDOW]. 
 
+= Application State =
+
+Application state includes mouse focus, keyboard focus and window show state. The following functions will return the current application state;
+
+  * `MOUSE-FOCUS-P`, the application has mouse focus. The mouse is currently within the window area.
+  * `INPUT-FOCUS-P`, the application has keyboard focus. All key events will be received by the application.
+  * `ACTIVE-P`, the application window show state which can be minimized/iconified, or restored.
+
+For example;
+
+{{{
+>> (SDL:ACTIVE-P)
+T
+}}}
+
 = The Game Loop =
 == Description of the Game Loop ==
 
