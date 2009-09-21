@@ -759,7 +759,7 @@ The `:IDLE` event is special in that it is not a system generated event. The for
    &BODY BODY)
 }}}
 
-If the mouse has entered the window then GAIN will be `T`, otherwise GAIN will be `NIL`. 
+If the event is a gain then `:GAIN` will be `T`, otherwise `:GAIN` will be `NIL`. 
 
 `:STATE` a bitmask of the following values: 
 
