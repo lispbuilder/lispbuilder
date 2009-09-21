@@ -784,22 +784,26 @@ If the event is a gain then `:GAIN` will be `T`, otherwise `:GAIN` will be `NIL`
 
 The following functions return the current state of the application, or interpret the value of `:STATE`.
 
+  * `MOUSE-GAIN-FOCUS-P`
+  * `INPUT-GAIN-FOCUS-P`
+  * `ACTIVE-GAIN-P`
   * `MOUSE-FOCUS-P`
   * `INPUT-FOCUS-P`
   * `ACTIVE-P`
-
-For example;
 
 {{{
 >> (SDL:MOUSE-FOCUS-P)
 T
 }}}
 
+Use :GAIN and :STATE in combination to determine the active event, for example;
+
 {{{
 (:ACTIVE-EVENT (:GAIN gain :STATE state)
-   (WHEN (AND gain (SDL:MOUSE-FOCUS-P state))
-      ;; MOUSE FOCUS GAINED
-    ))
+   (WHEN (SDL:MOUSE-FOCUS-P state) ;; Mouse focus event
+       (IF (SDL:MOUSE-GAIN-FOCUS-P gain state)
+            ;; Mouse over window
+            )))
 }}}
 
 Note: This event is *not* generated when an application window is first created. 
