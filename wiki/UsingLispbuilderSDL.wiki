@@ -759,18 +759,35 @@ The `:IDLE` event is special in that it is not a system generated event. The for
    &BODY BODY)
 }}}
 
-If the mouse has entered the window then GAIN will be 1, otherwise GAIN will be 0. 
+If the mouse has entered the window then GAIN will be `T`, otherwise GAIN will be `NIL`. 
 
-When the mouse leaves or enters the window area an SDL-APP-MOUSE-FOCUS type activation event is generated.
+`:STATE` a bitmask of the following values: 
 
-An SDL-APP-INPUT-FOCUS type activation event occurs when the application loses or gains keyboard focus, usually when a different application is made active. 
+  * `APP-MOUSE-FOCUS` if mouse focus was gained or lost, when the mouse leaves or enters the window area
+  * `APP-INPUT-FOCUS` if input focus was gained or lost, the application loses or gains keyboard focus, usually when a different application is made active
+  * `APP-ACTIVE` if the application was minimized/iconified, or restored. `:GAIN` is `T`, when restored and `NIL` minimized/iconified. A single event can have multiple values set in STATE.
 
-Finally, an SDL-APP-ACTIVE type event occurs when the application is either minimised/iconified, GAIN is 0, or restored. 
+The following functions return the current state of the application, or interpret the value of `:STATE`.
 
-Note: This event does *not* occur when an application window is first created. 
+  * `MOUSE-FOCUS-P`
+  * `INPUT-FOCUS-P`
+  * `ACTIVE-P`
 
-  * `GAIN` is 0 if the event is a loss or 1 if it is a gain.
-  * `STATE` a bitmask of the following values: SDL-APP-MOUSE-FOCUS if mouse focus was gained or lost, SDL-APP-INPUT-FOCUS if input focus was gained or lost, and SDL-APP-ACTIVE if the application was iconified, GAIN is 0, or restored GAIN is 1. A single event can have multiple values set in STATE. 
+For example;
+
+{{{
+>> (SDL:MOUSE-FOCUS-P)
+T
+}}}
+
+{{{
+(:ACTIVE-EVENT (:GAIN gain :STATE state)
+   (WHEN (AND gain (SDL:MOUSE-FOCUS-P state))
+      ;; MOUSE FOCUS GAINED
+    ))
+}}}
+
+Note: This event is *not* generated when an application window is first created. 
 
 === Keyboard Events ===
 
