@@ -21,6 +21,7 @@ In addition, it is possible to [UsingLispbuilderSDL#Creating_Standalone_Executab
 (sdl:with-init ()
   (sdl:window 320 240)
   (sdl:draw-surface (sdl:load-image "lisp.bmp"))
+  (sdl:update-display)
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event (sdl:update-display))))
