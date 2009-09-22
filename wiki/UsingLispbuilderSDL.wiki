@@ -960,7 +960,9 @@ When `SDL-RESIZABLE` is passed as a flag to WINDOW, the user is allowed to resiz
    ...) 
 }}}
 
-VIDEO-EXPOSE-EVENT is triggered when the screen has been modified outside of the application, usually by the window manager, and needs to be redrawn. For example the window may be 'Maximized' or 'Restored'.
+A `VIDEO-EXPOSE-EVENT` is generated when the screen has been modified outside of the application, usually by the window manager, and needs to be redrawn. For example the window may be 'Maximized' or 'Restored'.
+
+_Note:_ A `VIDEO-EXPOSE_EVENT` is not generated when the window or screen is initially displayed.
 
 === Window Manager Events ===
 
