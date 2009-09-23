@@ -774,28 +774,6 @@ The `:IDLE` event is special in that it is not a system generated event. The for
    &BODY BODY)
 }}}
 
-If the event is a gain then `:GAIN` will be `T`, otherwise `:GAIN` will be `NIL`. 
-
-`:STATE` a bitmask of the following values: 
-
-  * `APP-MOUSE-FOCUS` if mouse focus was gained or lost, when the mouse leaves or enters the window area
-  * `APP-INPUT-FOCUS` if input focus was gained or lost, the application loses or gains keyboard focus, usually when a different application is made active
-  * `APP-ACTIVE` if the application was minimized/iconified, or restored. `:GAIN` is `T`, when restored and `NIL` minimized/iconified. A single event can have multiple values set in STATE.
-
-The following functions return the current state of the application, or interpret the value of `:STATE`.
-
-  * `MOUSE-GAIN-FOCUS-P`
-  * `INPUT-GAIN-FOCUS-P`
-  * `ACTIVE-GAIN-P`
-  * `MOUSE-FOCUS-P`
-  * `INPUT-FOCUS-P`
-  * `ACTIVE-P`
-
-{{{
->> (SDL:MOUSE-FOCUS-P)
-T
-}}}
-
 Use :GAIN and :STATE in combination to determine the active event, for example;
 
 {{{
@@ -805,6 +783,36 @@ Use :GAIN and :STATE in combination to determine the active event, for example;
             ;; Mouse over window
             )))
 }}}
+
+The following functions return the current state of the application, or interpret the value of `:STATE`.
+
+  * `MOUSE-FOCUS-P` returns `T` if the application has mouse focus - the mouse is within the window area.
+  * `INPUT-FOCUS-P` returns `T` if the application has the keyboard focus - keys are captured by the application.
+  * `ACTIVE-P` returns `T` if the application is not minimized.
+
+For example;
+
+{{{
+>> (SDL:MOUSE-FOCUS-P)
+T
+}}}
+
+The following functions return the event type, interpreting the value of `:GAIN` and `:STATE` to determine if the application has gained or lost mouse, key or active state.
+
+  * `MOUSE-GAIN-FOCUS-P` if mouse focus was gained or lost, when the mouse leaves or enters the window area
+  * `INPUT-GAIN-FOCUS-P` if input focus was gained or lost, the application loses or gains keyboard focus, usually when a different application is made active
+  * `ACTIVE-GAIN-P` if the application was minimized/iconified, or restored. `:GAIN` is `T`, when restored and `NIL` minimized/iconified. A single event can have multiple values set in STATE.
+
+For example;
+
+{{{
+>> (SDL:MOUSE-GAIN-FOCUS-P gain state)
+T
+}}}
+
+If the application window has gained state, then `:GAIN` will be `1`, otherwise `:GAIN` will be `0` (zero).
+
+`:STATE` contains a bitmask of any or all of `APP-MOUSE-FOCUS`, `APP-INPUT-FOCUS` or `APP-ACTIVE` identifying the events that caused the change in state.
 
 Note: This event is *not* generated when an application window is first created. 
 
