@@ -41,3 +41,5 @@ Prior to the first call to a `RENDER-STRING*` function, the cached surface is `N
     (sdl-ttf:init-ttf))
   (sdl-ttf:open-font self))
 
+  
+
