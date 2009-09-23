@@ -662,19 +662,33 @@ T
 
 = Key processing =
 
-The following functions control the processing of Unicode and key repeat intervals.
+`LISPBUILDER-SDL` provides control over Unicode processing and key repeat intervals.
 
-  * unicode-enabled-p, queries the current state of Unicode keyboard translation. Returns `T` if enabled, and `NIL` if disabled.
-  * enable-unicode, enables Unicode translation. To obtain the character codes corresponding to received keyboard events, Unicode translation must first be turned on using this function. The translation incurs a slight overhead for each keyboard event and is therefore disabled by default. For each subsequently received `:KEY-DOWN-EVENT`, the `:UNICODE` keyword will contain the corresponding character code, or zero for keys that do not correspond to any character code. _Note_ that only key press events will be translated, not release events."
-  * disable-unicode, disables Unicode translation.
+== Unicode ==
 
-  * enable-key-repeat, enables the keyboard repeat. DELAY specifies how long the key must be pressed before it begins repeating, it then repeats at the speed specified by INTERVAL. Both DELAY and INTERVAL are expressed in milliseconds. Setting DELAY or INTERVAL to NIL will set the default values of the constants `SDL-DEFAULT-REPEAT-DELAY` and `SDL-DEFAULT-REPEAT-INTERVAL` respectively. _NOTE_: `ENABLE-KEY-REPEAT` must be called after the SDL library has been
-initialized to have an effect.
-  * disable-key-repeat, disables the keyboard repeat.
-  * key-repeat-enabled-p, returns the current keyboard delay and keyboard repeat rate interval in milliseconds as `(VALUES DELAY INTERVAL)`."
-  * key-repeat-delay, returns the current key repeat delay, in milliseconds.
-  * key-repeat-interval, returns the current key repeat interval, in milliseconds.
+To obtain the character codes corresponding to received keyboard events, Unicode translation must first be turned on using `ENABLE-UNICODE`. The translation incurs a slight overhead for each keyboard event and is therefore disabled by default. For each subsequently received `:KEY-DOWN-EVENT`, the `:UNICODE` keyword will contain the corresponding character code, or zero for keys that do not correspond to any character code. _Note_ that only key press events will be translated, not release events.
 
+  * `UNICODE-ENABLED-P`, queries the current state of Unicode keyboard translation. Returns `T` if enabled, and `NIL` if disabled.
+  * `ENABLE-UNICODE`, enables Unicode translation."
+  * `DISABLE-UNICODE`, disables Unicode translation.
+
+== Key Repeat ==
+
+A single `:KEY-DOWN-EVENT` is generated per key press regardless of how long the key is depressed. When key repeat is enabled, multiple `:KEY-DOWN-EVENT`s are generated per the specified delay and interval.
+
+{{{
+ENABLE-KEY_REPEAT delay interval
+}}}
+
+`DELAY` is the amount of time that elapses before characters repeat when a key is depressed. `INTERVAL` determines how fast characters repeat when a key is depressed. Both `DELAY` and `INTERVAL` are expressed in milliseconds. Setting `DELAY` or `INTERVAL` to `NIL` will set the default values of the constants `SDL-DEFAULT-REPEAT-DELAY` and `SDL-DEFAULT-REPEAT-INTERVAL` respectively. _Note_: `ENABLE-KEY-REPEAT` must be called after the SDL library has been initialized to have any effect.
+
+The functions for controlling key repeat are;
+
+  * `ENABLE-KEY-REPEAT`, enables the keyboard repeat. 
+  * `DISABLE-KEY-REPEAT`, disables the keyboard repeat.
+  * `KEY-REPEAT-ENABLED-P`, returns the current keyboard delay and keyboard repeat rate interval in milliseconds as `(VALUES DELAY INTERVAL)`."
+  * `KEY-REPEAT-ENABLED`, returns the current key repeat delay, in milliseconds.
+  * `KEY-REPEAT-INTERVAL`, returns the current key repeat interval, in milliseconds.
 
 = The Game Loop =
 == Description of the Game Loop ==
