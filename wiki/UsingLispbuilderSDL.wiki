@@ -501,7 +501,7 @@ When `:BPP` is unspecified or `0`, the surface will be created with the bits-per
 Normally if a video surface of the requested bits-per-pixel is not available one is emulated using a shadow surface. Setting `:ANY-FORMAT` prevents this. If `:ANY-FORMAT` is used and the requested pixel depth (`:BPP`) is unavailable, a display surface having a bits-per-pixel that matches the current display is returned. For example;
 
 {{{
-(SDL:WINDOW 320 240 :BPP 32 :ANY-FORMAT)
+(SDL:WINDOW 320 240 :BPP 32 :ANY-FORMAT T)
 }}}
 
 The valid values for `:BPP` are as follows;
@@ -659,7 +659,7 @@ For example;
 >> (SDL:ACTIVE-P)
 T
 }}}
-
+embarrassing embarrasing 
 = Key processing =
 
 `LISPBUILDER-SDL` provides control over Unicode processing and key repeat intervals.
@@ -669,7 +669,7 @@ T
 To obtain the character codes corresponding to received keyboard events, Unicode translation must first be turned on using `ENABLE-UNICODE`. The translation incurs a slight overhead for each keyboard event and is therefore disabled by default. For each subsequently received `:KEY-DOWN-EVENT`, the `:UNICODE` keyword will contain the corresponding character code, or zero for keys that do not correspond to any character code. _Note_ that only key press events will be translated, not release events.
 
   * `UNICODE-ENABLED-P`, queries the current state of Unicode keyboard translation. Returns `T` if enabled, and `NIL` if disabled.
-  * `ENABLE-UNICODE`, enables Unicode translation."
+  * `ENABLE-UNICODE`, enables Unicode translation.
   * `DISABLE-UNICODE`, disables Unicode translation.
 
 == Key Repeat ==
