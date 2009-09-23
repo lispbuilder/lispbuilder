@@ -776,16 +776,6 @@ The `:IDLE` event is special in that it is not a system generated event. The for
 
 `:ACTIVE-EVENT` is generated when the application gains or loses mouse, key or active state. For example an `:ACTIVE-EVENT` event is received when the mouse is moved outside the boundary of the application window.
 
-Use :GAIN and :STATE in combination to determine the active event, for example;
-
-{{{
-(:ACTIVE-EVENT (:GAIN gain :STATE state)
-   (WHEN (SDL:MOUSE-FOCUS-P state) ;; Mouse focus event
-       (IF (SDL:MOUSE-GAIN-FOCUS-P gain state)
-            ;; Mouse over window
-            )))
-}}}
-
 The following functions return the current state of the application, or interpret the value of `:STATE`.
 
   * `MOUSE-FOCUS-P` returns `T` if the application has mouse focus - the mouse is within the window area.
@@ -810,6 +800,16 @@ For example;
 {{{
 >> (SDL:MOUSE-GAIN-FOCUS-P gain state)
 T
+}}}
+
+Use :GAIN and :STATE in combination to determine the active event, for example;
+
+{{{
+(:ACTIVE-EVENT (:GAIN gain :STATE state)
+   (WHEN (SDL:MOUSE-FOCUS-P state) ;; Mouse focus event
+       (IF (SDL:MOUSE-GAIN-FOCUS-P gain state)
+            ;; Mouse over window
+            )))
 }}}
 
 If the application window has gained state, then `:GAIN` will be `1`, otherwise `:GAIN` will be `0` (zero).
