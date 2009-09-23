@@ -24,7 +24,7 @@ In addition, it is possible to [UsingLispbuilderSDL#Creating_Standalone_Executab
   (sdl:update-display)
     (sdl:with-events ()
       (:quit-event () t)
-      (:video-expose-event (sdl:update-display))))
+      (:video-expose-event () (sdl:update-display))))
 }}}
 
 http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/sdl-alien.png
