@@ -774,6 +774,8 @@ The `:IDLE` event is special in that it is not a system generated event. The for
    &BODY BODY)
 }}}
 
+`:ACTIVE-EVENT` is generated when the application gains or loses mouse, key or active state. For example an `:ACTIVE-EVENT` event is received when the mouse is moved outside the boundary of the application window.
+
 Use :GAIN and :STATE in combination to determine the active event, for example;
 
 {{{
