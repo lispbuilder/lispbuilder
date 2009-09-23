@@ -32,10 +32,12 @@ truetype library if the library is uninitialised.
 ##### Returns
 
 * Returns new `FONT` object if successful, returns `NIL` if unsuccessful."
-  (make-instance 'sdl:ttf-font
-                 :fp (sdl-ttf-cffi::ttf-Open-Font(sdl::filename definition)
-                                                 (sdl::char-size definition))
-                 :font-definition definition))
+  (let ((font (sdl-ttf-cffi::ttf-Open-Font (namestring (sdl::filename definition))
+                                           (sdl::char-size definition))))
+    (unless (cffi:null-pointer-p font)
+      (make-instance 'sdl:ttf-font
+                     :fp font
+                     :font-definition definition))))
 
 ;;; Functions
 
