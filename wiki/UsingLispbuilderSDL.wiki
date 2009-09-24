@@ -1514,6 +1514,15 @@ LISPBUILDER-SDL provides low-level drawing support for several primitives. Most 
 
 `LISPBUILDER-SDL` can render text over a transparent background (Solid rendering), render text over a colored background (Shaded rendering), and anti-alias text into a transparent background (blended text). Text may be left, right or center justified. Text can be rendered using bitmaps fonts or Truetype fonts.
 
+The following table described the text capabilities of `LISPBUILDER-SDL`;
+
+|| *Package* || *"Simple" Fonts* || *Bitmap Fonts* || *Truetype Fonts* || 
+|| `LISPBUILDER-SDL` || Yes || Yes || Using `VECTO` ||
+|| `VECTO` || NO || No || Yes ||
+|| `LISPBUILDER-SDL-GFX` || No || Yes || No ||
+|| `LISPBUILDER-SDL-TTF || No || No || Yes ||
+
+
 == Fonts ==
 
 Initializing fonts;
