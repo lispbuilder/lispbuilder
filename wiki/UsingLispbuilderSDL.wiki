@@ -1550,7 +1550,7 @@ The following functions manage fonts;
   * `get-font-descent`
   * `get-font-line-skip`
   * `get-font-faces`
-  * `is-font-face-fixed-width`
+  * `font-fixed-width-p`
   * `get-font-face-family-name`
   * `get-font-face-style-name`
   * `free-cached-surface`
@@ -1683,7 +1683,7 @@ This is a count of the number of specific fonts (based on size and style and oth
 {{{
 }}}
 
-'IS-FONT-FACE-FIXED-WIDTH` returns `T` if the font face is of a fixed width, or `NIL` otherwise. Fixed width fonts are mono-space, meaning every character that exists in the font is the same width. 
+'FONT-FIXED-WIDTH-P` returns `T` if the font face is of a fixed width, or `NIL` otherwise. Fixed width fonts are mono-space, meaning every character that exists in the font is the same width. 
 
   * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
   * Returns `T` if `FONT` is of fixed width, and `NIL` otherwise.
