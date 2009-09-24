@@ -1562,7 +1562,7 @@ The following functions manage fonts;
 
 The "simple" font is available using the `*simple-font-4x5*` font definition. The font looks as follows;
 
-http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/assets/font.bmp
+http://lispbuilder.googlecode.com/svn/trunk/documentation/font.jpg
 
 Bitmaps fonts support the SDL_gfx font format. The following bitmap font definitions are created at compile time and are always accessible in the `LISPBUILDER-SDL` library; `*FONT-10X20*`, `*FONT-5X7*`, `*FONT-5X8*`, `*FONT-6X10*`, `*FONT-6X12*`, `*FONT-6X13*`, `*FONT-6X13B*`, `*FONT-6X13O*`, `*FONT-6X9*`, `*FONT-7X13*`, `*FONT-7X13B*`, `*FONT-7X13O*`, `*FONT-7X14*`, `*FONT-7X14B*`, `*FONT-8X13*`, `*FONT-8X13B*`, `*FONT-8X13O*`, `*FONT-8X8*`, `*FONT-9X15*`, `*FONT-9X15B*`, `*FONT-9X18*` and `*FONT-9X18B*`.
 
