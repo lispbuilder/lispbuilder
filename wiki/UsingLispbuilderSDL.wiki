@@ -1516,31 +1516,39 @@ LISPBUILDER-SDL provides low-level drawing support for several primitives. Most 
 
 == Fonts ==
 
-The following functions manage fonts;
+Initializing fonts;
 
-  * `INITIALISE-FONT` returns a new `SDL-BITMAP-FONT` initialized from `FONT-DEFINITION`, or `NIL` if the font cannot be created. 
-  * `INITIALIZE-DEFAULT-FONT` Uses the `*font-8x8*` font definition if unspecified. Binds the symbol `*DEFAULT-FONT*` to the new font to be used as the default for subsequent font rendering or drawing operations.
-  * `DRAW-FONT` blits the cached `SURFACE` in the font to the destination `SURFACE`. The cached surface should have been created during a previous call to any of the `DRAW-STRING*` functions.
-  * `DRAW-FONT-AT`
-  * `DRAW-FONT-AT-*`
-  * `draw-string-solid`
-  * `draw-string-solid-*`
-  * `draw-string-shaded`
-  * `draw-string-shaded-*`
-  * `draw-string-blended`
-  * `draw-string-blended-*`
-  * `render-string-solid`
-  * `render-string-shaded`
-  * `render-string-blended`
-  * `X`, `Y`
-  * `WIDTH`, `HEIGHT`
-  * `WITH-DEFAULT-FONT`
-  * `WITH-FONT`
-  * `CHAR-WIDTH`
-  * `CHAR-HEIGHT`
-  * `CHAR-PITCH`
-  * `CHAR-SIZE`
-  * `SET-FONT-STYLE`
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Font_Initialization INITIALISE-FONT] initializes a font for use from the specified font definition. 
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Font_Initialization INITIALISE-DEFAULT-FONT] initializes a font for use from the specified font definition. Uses the `*font-8x8*` font definition if unspecified. 
+
+Setting the font typeface;
+
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Font_Style SET-FONT-STYLE] sets the font Typeface of normal, bold, italic or underline. 
+
+Drawing text to a surface;
+
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-STRING-SOLID] draw text with a transparent background
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-STRING-SOLID-*]
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-STRING-SHADED] draw text with a colored background
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-STRING-SHADED]
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-STRING-BLENDED] draw anti-aliased text with a transparent background
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-STRING-BLENDED-*]
+
+Draw text to a new surface;
+
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-SOLID] draw text with a transparent background to a new surface
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-SHADED] draw text with a colored background to a new surface
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-BLENDED] draw anti-aliased text with a transparent background to a new surface
+
+Blit a cached surface to the target surface;
+
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-FONT] blits the cached `SURFACE` in the font to the destination `SURFACE`. The cached surface is created during a previous call to any of the `RENDER-STRING*` functions.
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-FONT-AT]
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text DRAW-FONT-AT-*]
+
+Querying font attributes;
+
+  * `X`, `Y`, `WIDTH`, `HEIGHT` return the position and dimensions of the cached font surface
   * `get-Glyph-Metric`
   * `get-Font-Size`
   * `set-Font-style`
@@ -1550,11 +1558,23 @@ The following functions manage fonts;
   * `get-font-descent`
   * `get-font-line-skip`
   * `get-font-faces`
-  * `font-fixed-width-p`
   * `get-font-face-family-name`
   * `get-font-face-style-name`
+  * `font-fixed-width-p`
+  * `CHAR-WIDTH`
+  * `CHAR-HEIGHT`
+  * `CHAR-PITCH`
+  * `CHAR-SIZE`
+
+Freeing a font;
+
   * `free-cached-surface`
   * `FREE`
+
+Font macros;
+
+  * `WITH-DEFAULT-FONT`
+  * `WITH-FONT`
 
 === Bitmapped Fonts ===
 
@@ -1724,7 +1744,7 @@ This is a count of the number of specific fonts (based on size and style and oth
 
 == Font Initialization ==
 
-A font must be initialized prior to use using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT]. These functions accept a font definition and return a font object or `NIL` if the font cannot be initialized. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] will use `*font-8x8*` if a definition is unspecified. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] binds the new font to `*DEFAULT-FONT*` to be used for subsequent font rendering or drawing operations.
+A font must be initialized prior to use using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT]. These functions accept a [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Font_Definition font definition] and return a font object or `NIL` if the font cannot be initialized. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] will use `*font-8x8*` if a definition is unspecified. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] binds the new font to `*DEFAULT-FONT*` to be used for subsequent font rendering or drawing operations.
 
 {{{
 initialise-font font-definition => result
