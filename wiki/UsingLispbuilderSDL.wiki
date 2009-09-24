@@ -1690,6 +1690,9 @@ This is a count of the number of specific fonts (based on size and style and oth
 
 === Font Face Family Name ===
 
+{{{
+}}}
+
 `GET-FONT-FACE-FAMILY-NAME` returns the current font face family name of `FONT` or `NIL` if the information is unavailable. 
 
   * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
