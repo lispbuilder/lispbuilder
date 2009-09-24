@@ -1512,14 +1512,14 @@ LISPBUILDER-SDL provides low-level drawing support for several primitives. Most 
 
 = Displaying Text =
 
-`LISPBUILDER-SDL` can renderer text over a transparent background (Solid rendering), renderer text over a colored background (Shaded rendering), and anti-alias text into a colored background (blended text). Text may be left, right or center justified. Text can be rendered using bitmaps fonts or Truetype fonts.
+`LISPBUILDER-SDL` can render text over a transparent background (Solid rendering), render text over a colored background (Shaded rendering), and anti-alias text into a transparent background (blended text). Text may be left, right or center justified. Text can be rendered using bitmaps fonts or Truetype fonts.
 
 == Fonts ==
 
 The following functions manage fonts;
 
   * `INITIALISE-FONT` returns a new `SDL-BITMAP-FONT` initialized from `FONT-DEFINITION`, or `NIL` if the font cannot be created. 
-  * `INITIALIZE-DEFAULT-FONT` Uses `\*font-8x8\*` if unspecified. Binds the symbol `\*DEFAULT-FONT\*` to the new font to be used as the default for subsequent font rendering or drawing operations.
+  * `INITIALIZE-DEFAULT-FONT` Uses the `\font-8x8\` font definition if unspecified. Binds the symbol `\*DEFAULT-FONT\*` to the new font to be used as the default for subsequent font rendering or drawing operations.
   * `DRAW-FONT` blits the cached `SURFACE` in the font to the destination `SURFACE`. The cached surface should have been created during a previous call to any of the `DRAW-STRING*` functions.
   * `DRAW-FONT-AT`
   * `DRAW-FONT-AT-*`
@@ -1536,7 +1536,6 @@ The following functions manage fonts;
   * `WIDTH`, `HEIGHT`
   * `WITH-DEFAULT-FONT`
   * `WITH-FONT`
-  * `WITH-DEFAULT-FONT`
   * `CHAR-WIDTH`
   * `CHAR-HEIGHT`
   * `CHAR-PITCH`
@@ -1575,7 +1574,7 @@ The [http://www.xach.com/lisp/vecto/#sect-text VECTO] documentation describes ho
 
 == Font Initialization ==
 
-A font must be initialized prior to use using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT]. These functions accept a font definition and return a font object or `NIL` if the font cannot be initialized. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] will use `\*font-8x8\*` if a definition is unspecified. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] binds the new font to `\*DEFAULT-FONT\*` to be used for subsequent font rendering or drawing operations.
+A font must be initialized prior to use using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT]. These functions accept a font definition and return a font object or `NIL` if the font cannot be initialized. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] will use `*font-8x8*` if a definition is unspecified. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] binds the new font to `*DEFAULT-FONT*` to be used for subsequent font rendering or drawing operations.
 
 {{{
 initialise-font font-definition => result
@@ -1664,9 +1663,14 @@ The font rendering functions accept a font object which is bound to [http://lisp
       (DRAW-STRING-SOLID-* "Font is 10x20." 10 20))
 
     (DRAW-STRING-SOLID-* "Font is 8x8 again." 10 40)))
-}}}	
+}}}
 
-== Rendering Solid Text ==
+Note the difference between [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-font WITH-FONT] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-default-font WITH-DEFAULT-FONT].
+
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-font WITH-FONT] takes a font definition and will initialize and assign the font to `*DEFAULT-FONT` within the scope of the macro. The font will be closed when out of scope of the macro. 
+  * [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-default-font WITH-DEFAULT-FONT] takes an already initialized font object and assigns the font to `*DEFAULT-FONT` within the scope of the macro. 
+
+=== Rendering Solid Text ===
 
 {{{
 draw-string-solid string p1 &key justify surface font color => result
@@ -1693,7 +1697,7 @@ Renders the `STRING` using `FONT` with text `COLOR` to a new `SURFACE`. The surf
 render-string-solid string &key font color free cache => result
 }}}
 
-== Shaded ==
+=== Shaded ===
 
 {{{
 draw-string-shaded string p1 fg-color bg-color &key justify surface font => result
@@ -1718,7 +1722,7 @@ render-string-shaded string fg-color bg-color &key font free cache => result
 
 Draw `STRING` using `FONT` with foreground color `FG-COLOR` and background color `BG-COLOR` to a new `SURFACE`.  `FONT` is bound to `*DEFAULT-FONT*` if unspecified. The dimensions of the new surface are `FONT` height and width * `STRING` length. The surface background is transparent and can be keyed over other surfaces.
 
-== Blended ==
+=== Blended ===
 
 {{{
 draw-string-blended string p1 &key justify surface font color => result
