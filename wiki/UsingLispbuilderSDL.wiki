@@ -1691,7 +1691,7 @@ For example;
 (SDL:DRAW-STRING-SOLID "Hello World!" :COLOR SDL:*WHITE*)
 }}}
 
-Renders the `STRING` using `FONT` with text `COLOR` to a new `SURFACE`. The surface background is transparent and therefore can be keyed over other surfaces. The dimensions of the new surface are `FONT` height and width * `STRING` length. The surface background is transparent and can be keyed over other surfaces.
+Renders the `STRING` using `FONT` with text `COLOR` to a new `SURFACE`. The surface background is transparent and therefore can be keyed over other surfaces. The dimensions of the new surface are `FONT` height and width*`STRING` length. The surface background is transparent and can be keyed over other surfaces.
 
 {{{
 render-string-solid string &key font color free cache => result
@@ -1720,7 +1720,7 @@ For example;
 render-string-shaded string fg-color bg-color &key font free cache => result
 }}}
 
-Draw `STRING` using `FONT` with foreground color `FG-COLOR` and background color `BG-COLOR` to a new `SURFACE`.  `FONT` is bound to `*DEFAULT-FONT*` if unspecified. The dimensions of the new surface are `FONT` height and width * `STRING` length. The surface background is transparent and can be keyed over other surfaces.
+Draw `STRING` using `FONT` with foreground color `FG-COLOR` and background color `BG-COLOR` to a new `SURFACE`.  `FONT` is bound to `*DEFAULT-FONT*` if unspecified. The dimensions of the new surface are `FONT` height and width*`STRING` length. The surface background is transparent and can be keyed over other surfaces.
 
 === Blended ===
 
@@ -1743,7 +1743,7 @@ For example;
 (SDL:DRAW-STRING-BLENDED "Hello World!" :COLOR SDL:*WHITE*)
 }}}
 
-Draw the anti-aliased `STRING` using `FONT` with text `COLOR` to the target `SURFACE`. The dimensions of the new surface are `FONT` height and width * `STRING` length. The surface background is transparent and can be keyed over other surfaces.
+Draw the anti-aliased `STRING` using `FONT` with text `COLOR` to the target `SURFACE`. The dimensions of the new surface are `FONT` height and width*`STRING` length. The surface background is transparent and can be keyed over other surfaces.
 
 
 = Surfaces =
