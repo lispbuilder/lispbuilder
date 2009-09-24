@@ -1536,9 +1536,9 @@ Drawing text to a surface;
 
 Draw text to a new surface;
 
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-SOLID] draw text with a transparent background to a new surface
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-SHADED] draw text with a colored background to a new surface
-  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-BLENDED] draw anti-aliased text with a transparent background to a new surface
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-SOLID] returns a new surface containing the text and having a transparent background sized to the text width and height
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-SHADED] returns a new surface containing the text having a colored background sized to the text width and height
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Rendering_Text RENDER-STRING-BLENDED] returns a new surface containing the anti-aliased text having a transparent background sized to the text width and height
 
 Blit a cached surface to the target surface;
 
