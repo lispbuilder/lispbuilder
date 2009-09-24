@@ -1581,9 +1581,9 @@ The [http://www.xach.com/lisp/vecto/#sect-text VECTO] documentation describes ho
 
 `GET-GLYPH-METRIC` returns the glyph metrics for the character `CH`, or `NIL` upon error. 
 
-* `CH` is a Unicode character specified as an `INTEGER`.
-* `FONT` is the `FONT` object from which to retrieve the glyph metrics of the character `CH`. Binds to `*DEFAULT-FONT*` by default.
-* `METRIC` is a `KEY`word argument and may be one of; `:MINX` for the minimum `X` offset, `:MAXX` for the maximum `X` offset, `:MINY` for the minimum `Y` offset, `:MAXY` for the maximum `Y` offset, `:ADVANCE` for the advance offset. 
+  * `CH` is a Unicode character specified as an `INTEGER`.
+  * `FONT` is the `FONT` object from which to retrieve the glyph metrics of the character `CH`. Binds to `*DEFAULT-FONT*` by default.
+  * `METRIC` is a `KEY`word argument and may be one of; `:MINX` for the minimum `X` offset, `:MAXX` for the maximum `X` offset, `:MINY` for the minimum `Y` offset, `:MAXY` for the maximum `Y` offset, `:ADVANCE` for the advance offset. 
 
 For example;
 
@@ -1598,9 +1598,9 @@ For example;
 
 `GET-FONT-SIZE` calculates and returns the resulting `SIZE` of the `SURFACE` that is required to render the `TEXT`, or `NIL` on error. No actual rendering is performed, however correct kerning is calculated for the actual width. The height returned is the same as returned using `GET-FONT-HEIGHT`. 
 
-* `TEXT` is the string to size, of type `STRING`. 
-* `SIZE` must be one of; `:W` for the text width or `:H` for the text height.
-* `FONT` is the font used to calculate the size of the `TEXT`. Binds to `*DEFAULT-FONT*` by default.
+  * `TEXT` is the string to size, of type `STRING`. 
+  * `SIZE` must be one of; `:W` for the text width or `:H` for the text height.
+  * `FONT` is the font used to calculate the size of the `TEXT`. Binds to `*DEFAULT-FONT*` by default.
 
 === Font Style ===
 
@@ -1609,12 +1609,12 @@ For example;
 
 `GET-FONT-STYLE` returns the rendering style of the `FONT`. If no style is set then `:STYLE-NORMAL` is returned, or `NIL` upon error.
   
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default. 
-* Returns the font style as one or more of: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default. 
+  * Returns the font style as one or more of: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`
 
 `SET-FONT-STYLE` sets the rendering `STYLE` of `FONT`. This will flush the internal cache of previously rendered glyphs, even if there is no change in style, so it may be best to check the current style using `GET-FONT-STYLE` before setting the style. 
 
-* `STYLE` is a list of one or more: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`. 
+  * `STYLE` is a list of one or more: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`. 
 
 _Node_: Combining `:STYLE-UNDERLINE` with anything can cause a *segfault*, other combinations may also do this.
 
@@ -1629,8 +1629,8 @@ though adding at least one pixel height to it will space it so they can't touch.
 Remember that `LISPBUILDER-SDL` doesn't handle multi-line printing so you are responsible 
 for line spacing, see `GET-FONT-LINE-SKIP` as well. 
 
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default. 
-* Returns the height of the `FONT` as an `INTEGER`.
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default. 
+  * Returns the height of the `FONT` as an `INTEGER`.
 
 === Font Ascent ===
 
@@ -1641,8 +1641,8 @@ for line spacing, see `GET-FONT-LINE-SKIP` as well.
 This can also be interpreted as the distance from the top of the font to the baseline. 
 It could be used when drawing an individual glyph relative to a top point, by combining it with the glyph's `:MAXY` metric to resolve the top of the rectangle used when blitting the glyph on the screen. 
 
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
-* Returns the ascent of the `FONT` as an `INTEGER`.
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+  * Returns the ascent of the `FONT` as an `INTEGER`.
 
 === Font Descent ===
 
@@ -1653,8 +1653,8 @@ It could be used when drawing an individual glyph relative to a top point, by co
 This can also be interpreted as the distance from the baseline to the bottom of the font. 
 It could be used when drawing an individual glyph relative to a bottom point, by combining it with the glyph's `:MAXY` metric to resolve the top of the rectangle used when blitting the glyph on the screen. 
 
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
-* Returns the descent of the `FONT` as an `INTEGER`.
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+  * Returns the descent of the `FONT` as an `INTEGER`.
 
 === Font Line Skip ===
 
@@ -1663,8 +1663,8 @@ It could be used when drawing an individual glyph relative to a bottom point, by
 
 `GET-FONT-LINE-SKIP` returns the recommended pixel height of a rendered line of text of the `FONT`. This is usually larger than the `GET-FONT-HEIGHT` of the font. 
 
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
-* Returns the pixel height of the `FONT` as an `INTEGER`.
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+  * Returns the pixel height of the `FONT` as an `INTEGER`.
 
 === Font Faces ===
 
@@ -1675,8 +1675,8 @@ It could be used when drawing an individual glyph relative to a bottom point, by
 This is a count of the number of specific fonts (based on size and style and other typographical features perhaps) contained in the font itself. It seems to be a useless
  fact to know, since it cannot be applied in any other font functions.
 
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
-* Returns the number of faces in the `FONT` as an `INTEGER`.
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+  * Returns the number of faces in the `FONT` as an `INTEGER`.
 
 === Font Fixed Width ===
 
@@ -1685,15 +1685,15 @@ This is a count of the number of specific fonts (based on size and style and oth
 
 'IS-FONT-FACE-FIXED-WIDTH` returns `T` if the font face is of a fixed width, or `NIL` otherwise. Fixed width fonts are mono-space, meaning every character that exists in the font is the same width. 
 
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
-* Returns `T` if `FONT` is of fixed width, and `NIL` otherwise.
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+  * Returns `T` if `FONT` is of fixed width, and `NIL` otherwise.
 
 === Font Face Family Name ===
 
 `GET-FONT-FACE-FAMILY-NAME` returns the current font face family name of `FONT` or `NIL` if the information is unavailable. 
 
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
-* Returns the name of the `FONT` face family name as a `STRING`, or `NIL` if unavailable.
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+  * Returns the name of the `FONT` face family name as a `STRING`, or `NIL` if unavailable.
 
 === Font Face Style Name ===
 
@@ -1702,8 +1702,8 @@ This is a count of the number of specific fonts (based on size and style and oth
 
 `GET-FONT-FACE-STYLE-NAME` returns the current font face style name of `FONT`, or `NIL` if the information is unavailable. 
 
-* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
-* Returns the name of the `FONT` face style as a `STRING`, or `NIL` if unavailable.
+  * `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+  * Returns the name of the `FONT` face style as a `STRING`, or `NIL` if unavailable.
 
 === Free Cached Surface ===
 
