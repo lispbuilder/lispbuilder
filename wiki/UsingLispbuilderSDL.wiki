@@ -1519,7 +1519,7 @@ LISPBUILDER-SDL provides low-level drawing support for several primitives. Most 
 The following functions manage fonts;
 
   * `INITIALISE-FONT` returns a new `SDL-BITMAP-FONT` initialized from `FONT-DEFINITION`, or `NIL` if the font cannot be created. 
-  * `INITIALIZE-DEFAULT-FONT` Uses the `\font-8x8\` font definition if unspecified. Binds the symbol `\*DEFAULT-FONT\*` to the new font to be used as the default for subsequent font rendering or drawing operations.
+  * `INITIALIZE-DEFAULT-FONT` Uses the `*font-8x8*` font definition if unspecified. Binds the symbol `*DEFAULT-FONT*` to the new font to be used as the default for subsequent font rendering or drawing operations.
   * `DRAW-FONT` blits the cached `SURFACE` in the font to the destination `SURFACE`. The cached surface should have been created during a previous call to any of the `DRAW-STRING*` functions.
   * `DRAW-FONT-AT`
   * `DRAW-FONT-AT-*`
@@ -1543,7 +1543,7 @@ The following functions manage fonts;
   * `SET-FONT-STYLE`
   * `get-Glyph-Metric`
   * `get-Font-Size`
-  * `get-Font-style`
+  * `set-Font-style`
   * `get-Font-style`
   * `get-font-height`
   * `get-font-ascent`
@@ -1566,11 +1566,158 @@ http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/assets/font.bmp
 
 Bitmaps fonts support the SDL_gfx font format. The following bitmap font definitions are created at compile time and are always accessible in the `LISPBUILDER-SDL` library; `*FONT-10X20*`, `*FONT-5X7*`, `*FONT-5X8*`, `*FONT-6X10*`, `*FONT-6X12*`, `*FONT-6X13*`, `*FONT-6X13B*`, `*FONT-6X13O*`, `*FONT-6X9*`, `*FONT-7X13*`, `*FONT-7X13B*`, `*FONT-7X13O*`, `*FONT-7X14*`, `*FONT-7X14B*`, `*FONT-8X13*`, `*FONT-8X13B*`, `*FONT-8X13O*`, `*FONT-8X8*`, `*FONT-9X15*`, `*FONT-9X15B*`, `*FONT-9X18*` and `*FONT-9X18B*`.
 
-=== Truetype ===
+=== Truetype Fonts ===
 
 Support for Truetype fonts is provided by [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#LISPBUILDER-SDL-TTF LISPBUILDER-SDL-TTF] or [http://www.xach.com/lisp/vecto/ VECTO].
 
 The [http://www.xach.com/lisp/vecto/#sect-text VECTO] documentation describes how to render text using this package. Once rendered, text is copied from a VECTO buffer into a `LISPBUILDER-SDL` `SURFACE` using `VECTO->SURFACE`.
+
+== Font Attributes ===
+
+=== Glyph Metrics ===
+
+{{{
+}}}
+
+`GET-GLYPH-METRIC` returns the glyph metrics for the character `CH`, or `NIL` upon error. 
+
+* `CH` is a Unicode character specified as an `INTEGER`.
+* `FONT` is the `FONT` object from which to retrieve the glyph metrics of the character `CH`. Binds to `*DEFAULT-FONT*` by default.
+* `METRIC` is a `KEY`word argument and may be one of; `:MINX` for the minimum `X` offset, `:MAXX` for the maximum `X` offset, `:MINY` for the minimum `Y` offset, `:MAXY` for the maximum `Y` offset, `:ADVANCE` for the advance offset. 
+
+For example;
+
+{{{
+(SDL:GET-GLYPH-METRIC char :METRIC :MINX
+}}})
+
+=== Font Size ===
+
+{{{
+}}}
+
+`GET-FONT-SIZE` calculates and returns the resulting `SIZE` of the `SURFACE` that is required to render the `TEXT`, or `NIL` on error. No actual rendering is performed, however correct kerning is calculated for the actual width. The height returned is the same as returned using `GET-FONT-HEIGHT`. 
+
+* `TEXT` is the string to size, of type `STRING`. 
+* `SIZE` must be one of; `:W` for the text width or `:H` for the text height.
+* `FONT` is the font used to calculate the size of the `TEXT`. Binds to `*DEFAULT-FONT*` by default.
+
+=== Font Style ===
+
+{{{
+}}}
+
+`GET-FONT-STYLE` returns the rendering style of the `FONT`. If no style is set then `:STYLE-NORMAL` is returned, or `NIL` upon error.
+  
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default. 
+* Returns the font style as one or more of: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`
+
+`SET-FONT-STYLE` sets the rendering `STYLE` of `FONT`. This will flush the internal cache of previously rendered glyphs, even if there is no change in style, so it may be best to check the current style using `GET-FONT-STYLE` before setting the style. 
+
+* `STYLE` is a list of one or more: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`. 
+
+_Node_: Combining `:STYLE-UNDERLINE` with anything can cause a *segfault*, other combinations may also do this.
+
+=== Font Height ===
+
+{{{
+}}}
+
+`GET-FONT-HEIGHT` returns the maximum pixel height of all glyphs of `FONT`. 
+Use this height for rendering text as close together vertically as possible, 
+though adding at least one pixel height to it will space it so they can't touch. 
+Remember that `LISPBUILDER-SDL` doesn't handle multi-line printing so you are responsible 
+for line spacing, see `GET-FONT-LINE-SKIP` as well. 
+
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default. 
+* Returns the height of the `FONT` as an `INTEGER`.
+
+=== Font Ascent ===
+
+{{{
+}}}
+
+`GET-FONT-ASCENT` returns the maximum pixel ascent of all glyphs of `FONT`. 
+This can also be interpreted as the distance from the top of the font to the baseline. 
+It could be used when drawing an individual glyph relative to a top point, by combining it with the glyph's `:MAXY` metric to resolve the top of the rectangle used when blitting the glyph on the screen. 
+
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+* Returns the ascent of the `FONT` as an `INTEGER`.
+
+=== Font Descent ===
+
+{{{
+}}}
+
+`GET-FONT-DESCENT` returns the maximum pixel descent of all glyphs of `FONT`. 
+This can also be interpreted as the distance from the baseline to the bottom of the font. 
+It could be used when drawing an individual glyph relative to a bottom point, by combining it with the glyph's `:MAXY` metric to resolve the top of the rectangle used when blitting the glyph on the screen. 
+
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+* Returns the descent of the `FONT` as an `INTEGER`.
+
+=== Font Line Skip ===
+
+{{{
+}}}
+
+`GET-FONT-LINE-SKIP` returns the recommended pixel height of a rendered line of text of the `FONT`. This is usually larger than the `GET-FONT-HEIGHT` of the font. 
+
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+* Returns the pixel height of the `FONT` as an `INTEGER`.
+
+=== Font Faces ===
+
+{{{
+}}}
+
+`GET-FONT-FACES` returns the number of faces 'sub-fonts' available in the `FONT`. 
+This is a count of the number of specific fonts (based on size and style and other typographical features perhaps) contained in the font itself. It seems to be a useless
+ fact to know, since it cannot be applied in any other font functions.
+
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+* Returns the number of faces in the `FONT` as an `INTEGER`.
+
+=== Font Fixed Width ===
+
+{{{
+}}}
+
+'IS-FONT-FACE-FIXED-WIDTH` returns `T` if the font face is of a fixed width, or `NIL` otherwise. Fixed width fonts are mono-space, meaning every character that exists in the font is the same width. 
+
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+* Returns `T` if `FONT` is of fixed width, and `NIL` otherwise.
+
+=== Font Face Family Name ===
+
+`GET-FONT-FACE-FAMILY-NAME` returns the current font face family name of `FONT` or `NIL` if the information is unavailable. 
+
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+* Returns the name of the `FONT` face family name as a `STRING`, or `NIL` if unavailable.
+
+=== Font Face Style Name ===
+
+{{{
+}}}
+
+`GET-FONT-FACE-STYLE-NAME` returns the current font face style name of `FONT`, or `NIL` if the information is unavailable. 
+
+* `FONT` is a `FONT` object. Binds to `*DEFAULT-FONT*` by default.
+* Returns the name of the `FONT` face style as a `STRING`, or `NIL` if unavailable.
+
+=== Free Cached Surface ===
+
+{{{
+}}}
+
+`FREE-CACHED-SURFACE` will free the `FONT` cached surface created in a `RENDER-STRING` call.
+
+=== Free Font ===
+
+{{{
+}}}
+
+`FREE` will all resources allocated for the `FONT` including any cached surface.
 
 == Font Initialization ==
 
