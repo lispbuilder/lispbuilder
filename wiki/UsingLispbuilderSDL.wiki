@@ -1510,35 +1510,150 @@ LISPBUILDER-SDL provides low-level drawing support for several primitives. Most 
  * Filling Surfaces with Color: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#fill-surface FILL-SURFACE]
  * Filling Arbitrary Shapes with Color: [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#flood-fill FLOOD-FILL]
 
-= Fonts =
+= Displaying Text =
 
-LISPBUILDER-SDL contains several bitmap fonts of different sizes and faces (italics/bolded). See [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT] for the complete list of built-in fonts. 
+`LISPBUILDER-SDL` can renderer text over a transparent background (Solid rendering), renderer text over a colored background (Shaded rendering), and anti-alias text into a colored background (blended text). Text may be left, right or center justified. Text can be rendered using bitmaps fonts or Truetype fonts.
 
-Use [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#LISPBUILDER-SDL-TTF LISPBUILDER-SDL-TTF] to load and render True-Type fonts.
+== Fonts ==
 
-== Font Initialisation ==
+The following functions manage fonts;
 
-LISPBUILDER-SDL has the concept of a [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*]. Fonts are initialised and assigned to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-open-font WITH-OPEN-FONT]. The resouces allocated to a font are freed by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#free FREE]. A font must be initialised prior to use.
+  * `INITIALISE-FONT` returns a new `SDL-BITMAP-FONT` initialized from `FONT-DEFINITION`, or `NIL` if the font cannot be created. 
+  * `INITIALIZE-DEFAULT-FONT` Uses `\*font-8x8\*` if unspecified. Binds the symbol `\*DEFAULT-FONT\*` to the new font to be used as the default for subsequent font rendering or drawing operations.
+  * `DRAW-FONT` blits the cached `SURFACE` in the font to the destination `SURFACE`. The cached surface should have been created during a previous call to any of the `DRAW-STRING*` functions.
+  * `DRAW-FONT-AT`
+  * `DRAW-FONT-AT-*`
+  * `draw-string-solid`
+  * `draw-string-solid-*`
+  * `draw-string-shaded`
+  * `draw-string-shaded-*`
+  * `draw-string-blended`
+  * `draw-string-blended-*`
+  * `render-string-solid`
+  * `render-string-shaded`
+  * `render-string-blended`
+  * `X`, `Y`
+  * `WIDTH`, `HEIGHT`
+  * `WITH-DEFAULT-FONT`
+  * `WITH-FONT`
+  * `WITH-DEFAULT-FONT`
+  * `CHAR-WIDTH`
+  * `CHAR-HEIGHT`
+  * `CHAR-PITCH`
+  * `CHAR-SIZE`
+  * `SET-FONT-STYLE`
+  * `get-Glyph-Metric`
+  * `get-Font-Size`
+  * `get-Font-style`
+  * `get-Font-style`
+  * `get-font-height`
+  * `get-font-ascent`
+  * `get-font-descent`
+  * `get-font-line-skip`
+  * `get-font-faces`
+  * `is-font-face-fixed-width`
+  * `get-font-face-family-name`
+  * `get-font-face-style-name`
+  * `free-cached-surface`
+  * `FREE`
+
+=== Bitmapped Fonts ===
+
+`LISPBUILDER-SDL` supports two kinds of bitmap fonts; a "simple" font where the font data is created from a bitmapped image loaded from the drive, and a bitmap font having the font data used in `SDL_gfx`. 
+
+The "simple" font is available using the `*simple-font-4x5*` font definition. The font looks as follows;
+
+http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/assets/font.bmp
+
+Bitmaps fonts support the SDL_gfx font format. The following bitmap font definitions are created at compile time and are always accessible in the `LISPBUILDER-SDL` library; `*FONT-10X20*`, `*FONT-5X7*`, `*FONT-5X8*`, `*FONT-6X10*`, `*FONT-6X12*`, `*FONT-6X13*`, `*FONT-6X13B*`, `*FONT-6X13O*`, `*FONT-6X9*`, `*FONT-7X13*`, `*FONT-7X13B*`, `*FONT-7X13O*`, `*FONT-7X14*`, `*FONT-7X14B*`, `*FONT-8X13*`, `*FONT-8X13B*`, `*FONT-8X13O*`, `*FONT-8X8*`, `*FONT-9X15*`, `*FONT-9X15B*`, `*FONT-9X18*` and `*FONT-9X18B*`.
+
+=== Truetype ===
+
+Support for Truetype fonts is provided by [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#LISPBUILDER-SDL-TTF LISPBUILDER-SDL-TTF] or [http://www.xach.com/lisp/vecto/ VECTO].
+
+The [http://www.xach.com/lisp/vecto/#sect-text VECTO] documentation describes how to render text using this package. Once rendered, text is copied from a VECTO buffer into a `LISPBUILDER-SDL` `SURFACE` using `VECTO->SURFACE`.
+
+== Font Initialization ==
+
+A font must be initialized prior to use using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT]. These functions accept a font definition and return a font object or `NIL` if the font cannot be initialized. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] will use `\*font-8x8\*` if a definition is unspecified. [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] binds the new font to `\*DEFAULT-FONT\*` to be used for subsequent font rendering or drawing operations.
+
+{{{
+initialise-font font-definition => result
+}}}
+
+Resources allocated to a font are freed by [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#free FREE]. 
+
+== Font Definition ==
+
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT] accept a font definition and return a font object. A font definition is specific to the type of font.
+
+To load a Truetype font from disk, first create a Truetype font definition as follows;
+
+{{{
+(make-instance 'SDL:ttf-font-definition
+               :size 32
+               :filename (merge-pathnames "Vera.ttf" *default-font-path*))
+}}}
+
+Then pass this font definition to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT], or [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-font INITIALISE-FONT] to create the font object.
+
+{{{
+(defparameter *vera-ttf* (make-instance 'SDL:ttf-font-definition
+                                        :size 32
+                                        :filename (merge-pathnames "Vera.ttf" *default-font-path*))
+
+(unless (SDL:INITIALIZE-DEFAULT-FONT *vera-ttf*)
+   (error "Cannot create font."))
+}}}
+
+To create a bitmap font definition, where `:DATA` is the same format of the fonts used in `SDL_gfx`;
+
+{{{
+(make-instance 'SDL:bitmap-font-definition
+               :width 6
+               :height 9
+               :data #(...)))
+}}}
+
+To create a simple font definition;
+
+{{{
+(make-instance 'SDL:simple-font-definition
+               :width 4 :height 5
+               :character-map "abcdefghijklmnopqrstuvwxyz:'!?_-,.()#~0123456789"
+               :color-key (sdl:color :r 99 :g 0 :b 0)
+               :filename (create-path "font.bmp" *default-asset-path*)
+               :pad-x 0 :pad-y 0)
+}}}
 
 == Rendering Text ==
 
-LISPBUILDER-SDL supports the rendering of colored text over a transparent background (Solid rendering), and the rendering of colored text over a solid colored background (Shaded rendering). Text may be left, right or center justified. Text can be drawn directly to a target surface using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-string-solid DRAW-STRING-SOLID] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-string-shaded DRAW-STRING-SHADED]. Text can be rendered to a new surface of character height and string width using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#render-string-solid RENDER-STRING-SOLID] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#render-string-shaded RENDER-STRING-SHADED]. This new surface may be optionally cached in the font object. A cached surface font can be accessed using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#cached-surface CACHED-SURFACE]) and can be blitted to a target surface using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-font DRAW-FONT].
+LISPBUILDER-SDL supports the rendering of colored text over a transparent background (Solid rendering), and the rendering of colored text over a solid colored background (Shaded rendering). Text may be left, right or center justified. Text is drawn to a target surface using the `DRAW-STRING` functions, or rendered to a new surface of character height and string width using the `RENDER-STRING` functions. the `RENDER-STRING` functions can optionally cache the new surface in the font object. A cached surface can be accessed using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#cached-surface CACHED-SURFACE]) and can be blitted to a target surface using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#draw-font DRAW-FONT].
 
-The font rendering functions accept a font object. This font parameter is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] when unspecified. The function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] and the macros [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-font WITH-FONT] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-default-font WITH-DEFAULT-FONT] will bind a font to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] within the scope of these macros. When [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] is bound to a font, all subsequent font drawing or font rendering functions that take a &KEYword or &OPTIONAL `:FONT` argument will use the font assigned to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] while it remains in scope, unless a [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#font FONT] is specified. This makes calling functions a bit easier as the `:FONT` parameter need not be explicitely passed. For example: 
+The following functions draw text directly to a surface;
 
-Compare;
+  * `draw-string-solid`
+  * `draw-string-solid-*`
+  * `draw-string-shaded`
+  * `draw-string-shaded-*`
+  * `draw-string-blended`
+  * `draw-string-blended-*`
 
-{{{
-(GET-FONT-SIZE "TEXT" :SIZE :W :FONT ANY-FONT)
-}}}
+The following functions will draw text to a new surface, and optionally cache that surface in the `FONT` object;
 
-to,
+  * `render-string-solid`
+  * `render-string-shaded`
+  * `render-string-blended`
+  * `CACHED-SURFACE`
 
-{{{
-(GET-FONT-SIZE "TEXT" :SIZE :W)
-}}}
+The following functions will blit the cached surface to the target surface;
 
-The following methods also apply to fonts; [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#x X], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#y Y], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#width WIDTH], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#height HEIGHT], returns the width of the cached [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE] when `OBJ` is a [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#font FONT].
+  * `DRAW-FONT-AT`
+  * `DRAW-FONT-AT-*`
+
+The following methods also apply to fonts; [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#x X], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#y Y], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#width WIDTH], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#height HEIGHT], returns the width of the cached [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#surface SURFACE].
+
+The font rendering functions accept a font object which is bound to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] when unspecified. The function [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#initialise-default-font INITIALISE-DEFAULT-FONT] and the macros [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-font WITH-FONT] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#with-default-font WITH-DEFAULT-FONT] will bind a font to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*]. All font drawing or font rendering functions that take a &KEYword or &OPTIONAL `:FONT` argument will use the font assigned to [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#*default-font* *DEFAULT-FONT*] unless another font is specified. This makes calling these functions a bit easier as the `:FONT` parameter need not be explicitly passed. For example: 
 
 {{{
 (WITH-COLOR (*WHITE*)
@@ -1550,6 +1665,82 @@ The following methods also apply to fonts; [http://lispbuilder.googlecode.com/sv
 
     (DRAW-STRING-SOLID-* "Font is 8x8 again." 10 40)))
 }}}	
+
+== Rendering Solid Text ==
+
+{{{
+draw-string-solid string p1 &key justify surface font color => result
+draw-string-solid-* string x y &key justify surface font color => result
+}}}
+
+Renders the `STRING` using `FONT` with text `COLOR` to the target `SURFACE`. The surface background is transparent and therefore can be keyed over other surfaces.
+
+Use `:CACHE T` to cache the new surface in the `FONT` object.
+When `:FREE T` any existing cached surface in `FONT` is automatically freed.
+When `:FREE NIL` the caller is responsible for freeing any existing cached surface in `FONT`.
+
+Any cached surface can be accessed using `CACHED-SURFACE` and can be blitted to a target surface using `DRAW-FONT`.
+
+For example;
+
+{{{
+(SDL:DRAW-STRING-SOLID "Hello World!" :COLOR SDL:*WHITE*)
+}}}
+
+Renders the `STRING` using `FONT` with text `COLOR` to a new `SURFACE`. The surface background is transparent and therefore can be keyed over other surfaces. The dimensions of the new surface are `FONT` height and width * `STRING` length. The surface background is transparent and can be keyed over other surfaces.
+
+{{{
+render-string-solid string &key font color free cache => result
+}}}
+
+== Shaded ==
+
+{{{
+draw-string-shaded string p1 fg-color bg-color &key justify surface font => result
+draw-string-shaded-* string x y fg-color bg-color &key justify surface font => result
+}}}
+
+Draw `STRING` using `FONT` with foreground color `FG-COLOR` and background color `BG-COLOR` to the target `SURFACE`.  `FONT` is bound to `*DEFAULT-FONT*` if unspecified. 
+
+Use `:CACHE T` to cache the new surface in the `FONT` object.
+When `:FREE T` any existing cached surface in `FONT` is automatically freed.
+
+For example;
+
+{{{
+(SDL:DRAW-STRING-SHADED "Hello World!" SDL:*WHITE* SDL:*BLUE*)
+}}}
+
+
+{{{
+render-string-shaded string fg-color bg-color &key font free cache => result
+}}}
+
+Draw `STRING` using `FONT` with foreground color `FG-COLOR` and background color `BG-COLOR` to a new `SURFACE`.  `FONT` is bound to `*DEFAULT-FONT*` if unspecified. The dimensions of the new surface are `FONT` height and width * `STRING` length. The surface background is transparent and can be keyed over other surfaces.
+
+== Blended ==
+
+{{{
+draw-string-blended string p1 &key justify surface font color => result
+draw-string-blended-* string x y &key justify surface font color => result
+}}}
+
+Draw the anti-aliased `STRING` using `FONT` with text `COLOR` to the target `SURFACE`.  `FONT` is bound to `*DEFAULT-FONT*` if unspecified. The surface background is transparent and can be keyed over other surfaces.
+
+Use `:CACHE T` to cache the new surface in the `FONT` object.
+When `:FREE T` any existing cached surface in `FONT` is automatically freed.
+When `:FREE NIL` the caller is responsible for freeing any existing cached surface in `FONT`.
+
+Any cached surface can be accessed using `CACHED-SURFACE` and can be blitted to a target surface using `DRAW-FONT`.
+
+For example;
+
+{{{
+(SDL:DRAW-STRING-BLENDED "Hello World!" :COLOR SDL:*WHITE*)
+}}}
+
+Draw the anti-aliased `STRING` using `FONT` with text `COLOR` to the target `SURFACE`. The dimensions of the new surface are `FONT` height and width * `STRING` length. The surface background is transparent and can be keyed over other surfaces.
+
 
 = Surfaces =
 
