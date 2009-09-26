@@ -41,4 +41,8 @@
 
 ;; Load the general sdl libraries.
 (cffi:use-foreign-library sdl-ttf)
-(cffi:use-foreign-library sdl-ttf-glue)
+;;(cffi:use-foreign-library sdl-ttf-glue)
+
+(when (handler-case (cffi:use-foreign-library sdl-ttf-glue)
+        (load-foreign-library-error () nil))
+  (pushnew :lispbuilder-sdl-ttf-glue *features*))
