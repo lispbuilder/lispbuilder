@@ -612,11 +612,13 @@
    #:set-physics-hook
 
    ;; keys.lisp
-   #:enable-unicode-p
+   #:unicode-enabled-p
    #:enable-unicode
+   #:disable-unicode
+   
    #:enable-key-repeat
    #:disable-key-repeat
-   #:enable-key-repeat-p
+   #:key-repeat-enabled-p
    #:key-repeat-delay
    #:key-repeat-interval
    #:get-key-state
@@ -645,7 +647,7 @@
    #:get-font-descent
    #:get-font-line-skip
    #:get-font-faces
-   #:is-font-face-fixed-width
+   #:font-fixed-width-p
    #:get-font-face-family-name
    #:get-font-face-style-name
 
@@ -669,6 +671,17 @@
    #:mouse-wheel-down-p
    #:mouse-x1-p
    #:mouse-x2-p
+
+   ;; active.lisp
+   #:mouse-gain-focus-p
+   #:input-gain-focus-p
+   #:active-gain-p
+   #:mouse-focus-p
+   #:input-focus-p
+   #:active-p
+   #:app-mouse-focus
+   #:app-input-focus
+   #:app-active
   
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks

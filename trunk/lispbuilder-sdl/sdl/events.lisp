@@ -303,7 +303,9 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 
 (defun push-quit-event ()
   "Pushes a new `SDL_Event` of type `:QUIT-EVENT` onto the event queue."
-  (sdl-cffi::SDL-Push-Event (new-event :quit-event)))
+  (let ((quit (new-event :quit-event)))
+    (sdl-cffi::SDL-Push-Event quit)
+    (cffi:foreign-free quit)))
 
 ;;/* There are no functions directly affecting the quit event */
 ;;#define SDL_QuitRequested() \
@@ -322,7 +324,8 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
     (setf (cffi:foreign-slot-value event 'sdl-cffi::SDL-user-event 'sdl-cffi::code) code
 	  (cffi:foreign-slot-value event 'sdl-cffi::SDL-user-event 'sdl-cffi::data1) (cffi:convert-to-foreign data1 :pointer)
           (cffi:foreign-slot-value event 'sdl-cffi::SDL-user-event 'sdl-cffi::data2) (cffi:convert-to-foreign data2 :pointer))
-    (sdl-cffi::SDL-Push-Event event)))
+    (sdl-cffi::SDL-Push-Event event)
+    (cffi:foreign-free event)))
 
 ;;; Event Handling from here   -----------------------
 
@@ -708,3 +711,10 @@ The contents of the event are completely up to the programmer.
                (process-timestep *default-fpsmanager*
                                  ,idle-func)))
        (cffi:foreign-free ,sdl-event))))
+
+(defun pressed-p (state)
+  (= state sdl-cffi::sdl-pressed))
+
+(defun released-p (state)
+  (= state sdl-cffi::sdl-released))
+

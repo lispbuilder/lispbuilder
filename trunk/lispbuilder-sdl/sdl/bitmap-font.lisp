@@ -252,7 +252,7 @@ onto surface `SURFACE`.
 (defmethod _get-Font-Height_ ((font bitmap-font))
   (char-height font))
 
-(defmethod _is-font-face-fixed-width_ ((font bitmap-font))
+(defmethod _font-fixed-width-p_ ((font bitmap-font))
   t)
 
 ;; (defun load-font (file-name font-width font-height &optional (path-name ""))

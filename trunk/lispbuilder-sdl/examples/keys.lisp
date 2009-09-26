@@ -10,7 +10,7 @@
           (key-press-status nil)
           (y-pos 0))
     
-      (sdl:enable-unicode t)
+      (sdl:enable-unicode)
 
       (sdl:with-events ()
         (:quit-event () t)        
@@ -35,7 +35,7 @@
          
          (setf y-pos 0)
 
-         (sdl:draw-string-solid-* (format nil "(ENABLE-UNICODE-P) => ~A" (sdl:enable-unicode-p))
+         (sdl:draw-string-solid-* (format nil "(UNICODE-ENABLED-P) => ~A" (sdl:unicode-enabled-p))
                                   10 (incf y-pos 15)
                                   :color sdl:*white*
                                   :surface sdl:*default-display*)

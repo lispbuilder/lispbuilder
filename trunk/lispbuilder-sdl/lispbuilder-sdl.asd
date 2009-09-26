@@ -77,6 +77,7 @@
      (:file "default-colors")
      (:file "audio")
      (:file "mixer")
+     (:file "active")
      (:static-file "bitstream-vera-copyright")
      (:static-file "Vera.ttf"))
     :serial t)
