@@ -5,17 +5,32 @@
 (in-package #:lispbuilder-sdl)
 
 
-(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color sdl:color) (bg-color sdl:color) justify (surface sdl:sdl-surface) (font ttf-font))
-  (sdl:with-surface (font-surface (_render-string-shaded_ string fg-color bg-color font nil nil) t)
-    (sdl:set-surface-* font-surface :x x :y y)
-    (sdl:blit-surface font-surface surface))
+(defmethod _draw-string-shaded-*_ ((string string) (x integer) (y integer) (fg-color color) (bg-color color) justify (surface sdl-surface) (font ttf-font))
+  (with-surface (font-surface (_render-string-shaded_ string fg-color bg-color font nil nil) t)
+    (set-surface-* font-surface :x x :y y)
+    (blit-surface font-surface surface))
   surface)
 
-(defmethod _render-string-shaded_ ((string string) (fg-color sdl:color) (bg-color sdl:color) (font ttf-font) free cache)
+#+lispbuilder-sdl-ttf-glue
+(defmethod _render-string-shaded_ ((string string) (fg-color color) (bg-color color) (font ttf-font) free cache)
   (let ((surf
-	 (sdl:with-foreign-color-copy (fg-struct fg-color)
-	   (sdl:with-foreign-color-copy (bg-struct bg-color)
-	     (make-instance 'sdl:surface :fp (sdl-ttf-cffi::ttf-Render-UTF8-shaded (sdl:fp font) string fg-struct bg-struct))))))
+	 (with-foreign-color-copy (fg-struct fg-color)
+	   (with-foreign-color-copy (bg-struct bg-color)
+	     (make-instance 'surface :fp (sdl-ttf-cffi::ttf-Render-UTF8-shaded (fp font) string fg-struct bg-struct))))))
     (when cache
-      (setf (sdl:cached-surface font) surf))
+      (setf (cached-surface font) surf))
+    surf))
+
+#-lispbuilder-sdl-ttf-glue
+(defmethod _render-string-shaded_ ((string string) (fg-color color) (bg-color color) (font ttf-font) free cache)
+  (let ((surf (make-instance 'surface
+                             :fp (sdl-ttf-cffi::ttf-Render-UTF8-shaded (fp font) string
+                                                                       (+ (ash (b fg-color) 16)
+                                                                          (ash (g fg-color) 8)
+                                                                          (r fg-color))
+                                                                       (+ (ash (b bg-color) 16)
+                                                                          (ash (g bg-color) 8)
+                                                                          (r bg-color))))))
+    (when cache
+      (setf (cached-surface font) surf))
     surf))
