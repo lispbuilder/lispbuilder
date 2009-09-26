@@ -286,8 +286,9 @@
                            for byte-2 = 1 then (1+ byte-1)
                            collect (to-s16 (logior (ash (cffi:mem-aref wave :unsigned-char byte-1) 8)
                                            (cffi:mem-aref wave :unsigned-char byte-2))))))))
-        ;;(format t "sample-handle: ~A~%" sample-handle)
-        ;;(format t "wave: ~A~%" wave)
+        ;(format t "1. sample-handle: ~A~%" sample-handle)
+        ;(format t "1. wave: ~A~%" wave)
+        ;(format t "1. sample-handle->wave: ~A~%" (cffi:mem-aref sample-handle :pointer))
         ;;(format t "(cffi:mem-aref wave :pointer): ~A~%" (cffi:mem-aref wave :pointer))
         ;; (sdl-cffi::sdl-free-wav #|wave|# (cffi:mem-aref wave :pointer))
         (sdl-cffi::sdl-free-wav sample-handle)
@@ -443,12 +444,22 @@
                           for byte = 0 then (1+ byte)
                           collect (to-s8 (cffi:mem-aref cvt-buffer
                                                  :unsigned-char byte)))))))
-            (sdl-cffi::sdl-free-wav
-             (make-pointer
-              (pointer-address
-               (foreign-slot-pointer audio-cvt
-                                     'sdl-cffi::sdl-audio-cvt
-                                     'sdl-cffi::buf))))
+            (cffi:with-foreign-object (handle :pointer)
+              ;(format t "~%2. sample-handle: ~A~%" handle)
+              ;(format t "2. wave: ~A~%" (foreign-slot-pointer audio-cvt
+              ;                                                'sdl-cffi::sdl-audio-cvt
+              ;                                                'sdl-cffi::buf))
+              (setf (cffi:mem-aref handle :pointer) (foreign-slot-pointer audio-cvt
+                                                                          'sdl-cffi::sdl-audio-cvt
+                                                                          'sdl-cffi::buf))
+              ;(format t "2. sample-handle->wave: ~A~%" (cffi:mem-aref handle :pointer))
+              ;(sdl-cffi::sdl-free-wav
+              ; (make-pointer
+              ;  (pointer-address
+              ;   (foreign-slot-pointer audio-cvt
+              ;                         'sdl-cffi::sdl-audio-cvt
+              ;                         'sdl-cffi::buf))))
+              (sdl-cffi::sdl-free-wav handle))
             (make-instance 'audio
                            :audio-buffer-handle
                            (make-instance 'audio-buffer
