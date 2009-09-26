@@ -286,7 +286,11 @@
                            for byte-2 = 1 then (1+ byte-1)
                            collect (to-s16 (logior (ash (cffi:mem-aref wave :unsigned-char byte-1) 8)
                                            (cffi:mem-aref wave :unsigned-char byte-2))))))))
-        (sdl-cffi::sdl-free-wav #|wave|# (cffi:mem-aref wave :pointer))
+        ;;(format t "sample-handle: ~A~%" sample-handle)
+        ;;(format t "wave: ~A~%" wave)
+        ;;(format t "(cffi:mem-aref wave :pointer): ~A~%" (cffi:mem-aref wave :pointer))
+        ;; (sdl-cffi::sdl-free-wav #|wave|# (cffi:mem-aref wave :pointer))
+        (sdl-cffi::sdl-free-wav sample-handle)
         (cffi:foreign-free sample-handle)
         (cffi:foreign-free sample-length)
         (make-instance 'audio
