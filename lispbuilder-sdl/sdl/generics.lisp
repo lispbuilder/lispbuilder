@@ -301,6 +301,9 @@ Functions that take a `FONT` argument use `\*DEFAULT-FONT\*` unless
 otherwise specified.
 Returns a new `FONT`, or `NIL` if unsuccessful."))
 
+(defgeneric open-font (definition))
+(defgeneric close-font (font))
+
 (defgeneric _set-font-style_ (font style))
 (defgeneric _get-glyph-metric_ (font ch metric))
 (defgeneric _get-font-size_ (font text size))
@@ -310,7 +313,7 @@ Returns a new `FONT`, or `NIL` if unsuccessful."))
 (defgeneric _get-font-descent_ (font))
 (defgeneric _get-font-line-skip_ (font))
 (defgeneric _get-font-faces_ (font))
-(defgeneric _is-font-face-fixed-width_ (font))
+(defgeneric _font-fixed-width-p_ (font))
 (defgeneric _get-font-face-family-name_ (font))
 (defgeneric _get-font-face-style-name_ (font))
 

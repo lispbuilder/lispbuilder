@@ -257,7 +257,7 @@ This is a count of the number of specific fonts (based on size and style and oth
 * Supported in _LISPBUILDER-SDL-TTF_"
   (_get-font-faces_ font))
 
-(defun is-font-face-fixed-width (&key (font sdl:*default-font*))
+(defun font-fixed-width-p (&key (font sdl:*default-font*))
   "Returns `T` if the font face is of a fixed width, or `NIL` otherwise. 
 Fixed width fonts are monospace, meaning every character that exists in the font is the same width. 
 
@@ -272,7 +272,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-TTF_"
-  (_is-font-face-fixed-width_ font))
+  (_font-fixed-width-p_ font))
 
 (defun get-font-face-family-name (&key (font sdl:*default-font*))
   "Returns the current font face family name of font `FONT` or `NIL` if the information is unavailable. 
@@ -306,3 +306,9 @@ Fixed width fonts are monospace, meaning every character that exists in the font
 
 * Supported in _LISPBUILDER-SDL-TTF_"
   (_get-font-face-style-name_ font))
+
+(defmethod set-default-font (font)
+  nil)
+
+(defmethod open-font (definition))
+(defmethod close-font (font))

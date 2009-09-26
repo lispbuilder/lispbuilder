@@ -7,6 +7,10 @@
   (:nicknames #:sdl-examples)
   (:documentation "Examples for `lispbuilder-sdl'.")
   (:export
+
+   ;; active.lisp
+   #:active-event
+   
    ;; bezier.lisp
    #:bezier
 
