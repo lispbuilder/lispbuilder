@@ -156,7 +156,7 @@ Increase `CHUNKSIZE` to decrease CPU resources, if sound skips or if playing mus
 * `T` on success and `NIL` on failure."
   (setf *enable-callbacks* enable-callbacks)
   ;; Make sure that SDL Audio is initialized
-  (when (sdl:init-subsystems SDL:SDL-INIT-AUDIO)
+  (when (sdl:init-audio)
     (when (= 0 (sdl-mixer-cffi::open-audio frequency format channels chunksize))
       (when *enable-callbacks*
 	;; Register the music finished callback
