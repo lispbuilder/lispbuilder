@@ -6,5 +6,5 @@
 (defparameter *ttf-font-vera*
   (make-instance 'ttf-font-definition
                  :size 32
-                 :filename (create-path "Vera.ttf" *default-font-path*)))
+                 :filename (merge-pathnames "Vera.ttf" *default-font-path*)))
 

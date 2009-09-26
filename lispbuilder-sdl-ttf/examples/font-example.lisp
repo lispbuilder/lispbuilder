@@ -9,7 +9,7 @@
   (sdl:with-init ()
     (sdl:window 320 300 :title-caption "SDL-TTF Font Example"
                 :icon-caption "SDL-TTF Font Example")
-    (setf (sdl:frame-rate) 5)
+    (setf (sdl:frame-rate) 30)
     (sdl:fill-surface sdl:*white* :surface sdl:*default-display*)
     (unless (sdl:initialise-default-font sdl:*ttf-font-vera*)
       (error "FONT-EXAMPLE: Cannot initialize the default font."))
@@ -20,7 +20,10 @@
                               sdl:*yellow*)
     (sdl:draw-string-blended-* "Text UTF8 - Blended" 0 250
                                :color sdl:*black*)
+    (sdl:update-display)
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event () (sdl:update-display))
-      (:idle () (sdl:update-display)))))
+      (:key-down-event ()
+       (when (sdl:key-down-p :sdl-key-escape)
+         (sdl:push-quit-event))))))

@@ -14,6 +14,4 @@
    ;; sdl-util-ttf.lisp
    #:is-init
    #:init-ttf
-   #:quit-ttf
-   #:close-font
-   #:open-font))
+   #:quit-ttf))
