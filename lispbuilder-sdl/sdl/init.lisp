@@ -83,6 +83,55 @@ specified in `FLAGS`.
        (close-audio)
        (quit-sdl :flags ',flags))))
 
+(defun quit-on-exit-p ()
+  "Returns `T` if the SDL library will be uninitialised in a call to [QUIT-SDL](#quit-sdl), or [WITH-INIT](#with-init). 
+Returns `NIL` otherwise."
+  *quit-on-exit*)
+(defun set-quit-on-exit (val)
+  (setf *quit-on-exit* val))
+(defsetf quit-on-exit set-quit-on-exit)
+
+(defun initialize-subsystems-on-startup (&rest flags)
+  "Sets the SDL subsystems that must be initialized in calls to [INIT-SUBSYSTEMS](#init-subsystems).
+
+##### Parameters
+
+* `FLAGS` may be one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-JOYSTICK` and `SDL-INIT-NOPARACHUTE`, or `NIL` to not initialize any
+subsystems.
+
+##### Returns
+
+* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS`.
+
+##### Example
+
+    \(INITIALIZE-SUBSYSTEMS-ON-STARTUP SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM\)"
+  (setf *initialize-subsystems-on-startup* (if flags
+                                             (apply #'logior flags)
+                                             0)))
+
+(defun quit-subsystems-on-exit (&rest flags)
+  "Sets one or more SDL subsystems that must *not* be uninitialized in calls to
+[QUIT-SUBSYSTEMS](#quit-subsystems).
+
+##### Parameters
+
+* `FLAGS` may be one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-JOYSTICK` and `SDL-INIT-NOPARACHUTE` , or `NIL` to not uninitialize any
+subsystems.
+
+##### Returns
+
+* Returns an INTEGER bitmask of the SDL subsystems in `FLAGS`.
+
+##### Example
+
+    \(QUIT-SUBSYSTEMS-ON-EXIT SDL:SDL-INIT-VIDEO SDL:SDL-INIT-CDROM\)"
+  (setf *quit-subsystems-on-exit* (if flags
+                                    (apply #'logior flags)
+                                    0)))
+
 (defun list-subsystems (flag)
   "Returns a list of SDL subsystems that are specified in `FLAGS`.
 
@@ -148,10 +197,11 @@ already initialized.
 `SDL-INIT-NOPARACHUTE`.
 
 `INIT-SUBSYSTEMS` can be called only after SDL is succesfully initialized by [INIT-SDL](#init-sdl)."
-  (if (= -1
-         (if force
-           (sdl-cffi::sdl-init-subsystem (sdl-base::set-flags subsystems))
-           (sdl-cffi::sdl-init-subsystem (return-subsystems-of-status (sdl-base::set-flags subsystems) nil))))
+  (if (/= 0 (sdl-base::set-flags *initialize-subsystems-on-startup*))
+    (setf subsystems (sdl-base::set-flags *initialize-subsystems-on-startup*)))
+  (if (= -1 (if force
+              (sdl-cffi::sdl-init-subsystem (sdl-base::set-flags subsystems))
+              (sdl-cffi::sdl-init-subsystem (return-subsystems-of-status (sdl-base::set-flags subsystems) nil))))
     nil
     t))
 
@@ -163,9 +213,12 @@ already initialized.
 `SDL-INIT-JOYSTICK` and `SDL-INIT-NOPARACHUTE`.
 
 `QUIT-SUBSYSTEMS` can be called only after SDL is successfully intialized using [INIT-SDL](#init-sdl)."
-  (if force
-    (sdl-cffi::sdl-init-subsystem (sdl-base::set-flags subsystems))
-    (sdl-cffi::sdl-quit-subsystem (return-subsystems-of-status (sdl-base::set-flags subsystems) t))))
+  (if (/= 0 (sdl-base::set-flags *quit-subsystems-on-exit*))
+    ;; Close only specified subsystems, if specified
+    (quit-subsystems (sdl-base::set-flags *quit-subsystems-on-exit*) force)
+    (if force
+      (sdl-cffi::sdl-init-subsystem (sdl-base::set-flags subsystems))
+      (sdl-cffi::sdl-quit-subsystem (return-subsystems-of-status (sdl-base::set-flags subsystems) t)))))
 
 (defun initialized-subsystems-p (&optional subsystem)
   "Returns a list of the initialized SDL subsystems."
@@ -176,7 +229,8 @@ already initialized.
       (list-subsystems (sdl:return-subsystems-of-status (sdl-base::set-flags subsystem) t)))
     (list-subsystems (sdl:return-subsystems-of-status (sdl-base::set-flags sdl:sdl-init-everything) t))))
 
-(defun init-sdl (&key flags force video cdrom audio joystick no-parachute)
+(defun init-sdl (&key flags
+                      force video cdrom audio joystick no-parachute)
   "Initalizes the SDL library."
   (unless flags
     (setf flags (remove nil (list (when video sdl-init-video)
@@ -194,19 +248,22 @@ already initialized.
                       video cdrom audio joystick no-parachute)
   (dolist (fn *external-quit-subsystems-on-exit*)
     (funcall fn))
-  (unless flags
-    (setf flags (sdl-base::set-flags (remove nil
-                                             (list (when video sdl-init-video)
-                                                   (when cdrom sdl-init-cdrom)
-                                                   (when audio sdl-init-audio)
-                                                   (when joystick sdl-init-joystick)
-                                                   (when no-parachute sdl-init-noparachute))))))
-  (if flags
-    (setf flags (sdl-base::set-flags flags))
-    (setf flags (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
-  (if (/= flags 0)
-    (quit-subsystems flags force)
-    (sdl-cffi::sdl-quit)))
+  (if *quit-on-exit*
+    ;; Quit SDL if *quit-on-exit*, otherwise quit each subsystem
+    (sdl-cffi::sdl-quit)
+    (let ((flags (sdl-base::set-flags flags)))
+      ;; Close only specified subsystems
+      (when (= 0 flags)
+        (setf flags (sdl-base::set-flags (remove nil
+                                                 (list (when video sdl-init-video)
+                                                       (when cdrom sdl-init-cdrom)
+                                                       (when audio sdl-init-audio)
+                                                       (when joystick sdl-init-joystick)
+                                                       (when no-parachute sdl-init-noparachute))))))
+      ;; Or close all subsystems
+      (when (= 0 flags)
+        (setf flags (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
+      (quit-subsystems flags force))))
 
 (defun register-physics (fn)
   (setf (ps-fn *default-fpsmanager*) fn))

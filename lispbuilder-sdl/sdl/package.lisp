@@ -124,7 +124,7 @@
    #:with-init
    #:initialize-subsystems-on-startup
    #:quit-subsystems-on-exit
-   #:init-on-startup
+   #:quit-on-exit-p
    #:quit-on-exit
    #:list-subsystems
    #:return-subsystems-of-status
