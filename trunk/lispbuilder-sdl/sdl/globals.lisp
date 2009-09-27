@@ -89,13 +89,15 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 ;; (defvar *quit* nil)
 
 (defvar *initialized* nil)
-(defvar *reinit-on-startup* nil)
-(defvar *quit-on-exit* t)
 
 (defvar *external-init-subsystems-on-startup* nil
   "The list of functions that are called from [INIT-SDL](#init-sdl).")
 (defvar *external-quit-subsystems-on-exit* nil
   "The list of functions that are called from [QUIT-SDL](#quit-sdl).")
+
+(defparameter *initialize-subsystems-on-startup* nil)
+(defparameter *quit-subsystems-on-exit* nil)
+(defparameter *quit-on-exit* t)
 
 (defparameter *default-ttf-font*
   (merge-pathnames "vera.ttf" *default-asset-path*))
@@ -186,3 +188,5 @@ Audio formats are defined in `SDL_audio.h`;
 and copy to a new surface when `NIL`.")
 
 (defparameter *default-fpsmanager* nil)
+
+
