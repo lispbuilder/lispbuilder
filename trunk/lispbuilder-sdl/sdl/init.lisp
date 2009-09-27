@@ -201,7 +201,8 @@ already initialized.
                                                    (when audio sdl-init-audio)
                                                    (when joystick sdl-init-joystick)
                                                    (when no-parachute sdl-init-noparachute))))))
-  (unless flags
+  (if flags
+    (setf flags (sdl-base::set-flags flags))
     (setf flags (sdl-cffi::sdl-was-init sdl-cffi::sdl-init-everything)))
   (if (/= flags 0)
     (quit-subsystems flags force)
