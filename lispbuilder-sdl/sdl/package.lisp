@@ -408,6 +408,7 @@
    #:clear-cell
    #:set-cell
    #:set-cell-*
+   #:cell-index
    #:copy-channel-to-alpha
    #:surface-info
 
