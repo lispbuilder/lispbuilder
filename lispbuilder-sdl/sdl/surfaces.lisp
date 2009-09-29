@@ -17,7 +17,7 @@
     :initform 0
     :initarg :cell-index)
    (cells
-    :accessor cells
+    :reader cells
     :initform nil
     :initarg :cells)
    (display-surface-p
@@ -68,6 +68,7 @@ Free using [FREE](#free)."))
 				       pixel-alpha
 				       (type :sw)
 				       rle-accel
+                                       (cells 1)
 				       &allow-other-keys)
   ;; A surface can be created any of four ways:
   ;; 1) Using SDL_Surface in :SURFACE only. No surface parameters may be set.
@@ -93,8 +94,9 @@ Free using [FREE](#free)."))
 		using-surface)))
 
   (unless (cells surface)
-    (setf (cells surface) (vector (rectangle)))
-    (set-cell-* (x surface) (y surface) (width surface) (height surface) :surface surface))
+    (when cells
+      (setf (cells surface) cells)
+      (set-cell-* (x surface) (y surface) (width surface) (height surface) :surface surface :index 0)))
 
   (when x (setf (x surface) x))
   (when y (setf (y surface) y))
@@ -140,6 +142,18 @@ Free using [FREE](#free)."))
 	     ,body-value)
 	  `(progn
 	     ,body-value)))))
+
+(defmethod (setf cells) ((num integer) (self surface))
+  (setf (slot-value self 'cells) (make-array num :initial-contents (loop repeat num collect (rectangle))))
+  (setf (cell-index self) 0))
+
+(defmethod (setf cells) ((rects list) (self surface))
+  (setf (slot-value self 'cells) (make-array (length rects) :initial-contents (loop for rect in rects
+                                                                                    collect (rectangle :x (elt rect 0)
+                                                                                                       :y (elt rect 1)
+                                                                                                       :w (elt rect 2)
+                                                                                                       :h (elt rect 3)))))
+  (setf (cell-index self) 0))
 
 (defmacro with-surface-slots ((var &optional surface)
 			      &body body)
@@ -482,8 +496,9 @@ of transparent pixels (i.e., pixels that match the key color)."
   (check-type rectangle rectangle)
   (unless index
     (setf index (cell-index surface)))
-  (sdl-base::copy-rectangle (fp rectangle) (fp (get-cell :surface surface :index index)))
-  (get-cell :surface surface :index index))
+  (let ((rect (get-cell :surface surface :index index)))
+    (sdl-base::copy-rectangle (fp rectangle) (fp rect))
+    (get-cell :surface surface :index index)))
 
 (defun set-cell-* (x y w h &key (surface *default-surface*) (index nil))
   "Sets the `CELL` at `INDEX` to a rectangle bounded by `X`, `Y`, `W` and `H`.
@@ -700,7 +715,7 @@ Use `:FREE` to delete the source `SURFACE`."
 	(if (or cell cell-index)
 	  (sdl-base::blit-surface (fp surface) (fp new-surface)
 				  (fp rect) (fp rect))
-	  (blit-surface surface new-surface))))
+          (blit-surface surface new-surface (current-cell :surface surface)))))
     (when free
       (free surface))
     new-surface))
@@ -721,7 +736,7 @@ Use `:FREE` to delete the source `SURFACE`."
   (sdl-base::update-surface (fp surface) :x x :y y :w w :h h)
   surface)
 
-(defun blit-surface (source &optional (surface *default-surface*))
+(defun blit-surface (source &optional (surface *default-surface*) cell)
   "Performs a fast blit of the `SOURCE` surface to the destination `SURFACE`. The area defined 
 by the `SOURCE` cell is blitted to the area defined by the destination clipping rectangle. 
 The blit function should not be called on a locked surface.
@@ -769,29 +784,29 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
     (setf surface *default-display*))
   (check-types sdl-surface source surface)
   (sdl-base::blit-surface (fp source) (fp surface)
-                          (fp (current-cell :surface source))
+                          (if cell
+                            (fp (get-cell :surface source :index cell))
+                            (fp (current-cell :surface source)))
                           (fp (position-rect source)))
   source)
 
-(defun draw-surface (src &key (surface *default-surface*))
+(defun draw-surface (src &key (surface *default-surface*) cell)
   "See [BLIT-SURFACE](#blit-surface)"
-  (blit-surface src surface)
+  (blit-surface src surface cell)
   src)
 
-(defun draw-surface-at-* (src x y &key (surface *default-surface*))
+(defun draw-surface-at-* (src x y &key (surface *default-surface*) cell)
   "Draws the source surface to the destination surface at position X and Y.
  See [BLIT-SURFACE](#blit-surface).
 *Note*: Modifies the position of `SRC` as a side-effect."
-  (setf (x src) x
-	(y src) y)
-  (draw-surface src :surface surface))
+  (draw-surface-at src (vector x y ):surface surface :cell cell))
 
-(defun draw-surface-at (src point &key (surface *default-surface*))
+(defun draw-surface-at (src point &key (surface *default-surface*) cell)
     "Draws the source surface to the destination surface at position POINT.
  See [BLIT-SURFACE](#blit-surface).
 *Note*: Modifies the position of `SRC` as a side-effect."
   (set-surface src point)
-  (blit-surface src surface))
+  (blit-surface src surface cell))
 
 (defun fill-surface (color &key
 		     (template nil)
