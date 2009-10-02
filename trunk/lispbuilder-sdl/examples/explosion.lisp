@@ -7,12 +7,15 @@
     (setf (sdl:frame-rate) 25)
     
     (let* ((sprite-sheet (sdl:load-image (merge-pathnames "ani2.bmp" lispbuilder-sdl-assets::*default-asset-path*)))
+           ;; Create a cell list.
+           ;; Each 'cell' is the x/y width/height of one an image in the sprite sheet
            (sprite-cells (loop for y from 0 to 192 by 64
                                append (loop for x from 0 to 192 by 64
                                         collect (list x y 64 64))))
            (total (length sprite-cells))
            (current 0))
 
+      ;; Create the cells for the sprite-sheel
       (setf (sdl:cells sprite-sheet) sprite-cells)
       
       (sdl:with-events ()
