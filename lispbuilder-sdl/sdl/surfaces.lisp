@@ -69,6 +69,7 @@ Free using [FREE](#free)."))
 				       (type :sw)
 				       rle-accel
                                        (cells 1)
+                                       (cell-index 0)
 				       &allow-other-keys)
   ;; A surface can be created any of four ways:
   ;; 1) Using SDL_Surface in :SURFACE only. No surface parameters may be set.
@@ -94,9 +95,10 @@ Free using [FREE](#free)."))
 		using-surface)))
 
   (unless (cells surface)
-    (when cells
-      (setf (cells surface) cells)
-      (set-cell-* (x surface) (y surface) (width surface) (height surface) :surface surface :index 0)))
+    (setf (cells surface) cells))
+  (if (> (length (cells surface)) cell-index)
+    (setf (cell-index surface) cell-index)
+    (setf (cell-index surface) 0))
 
   (when x (setf (x surface) x))
   (when y (setf (y surface) y))
@@ -144,7 +146,7 @@ Free using [FREE](#free)."))
 	     ,body-value)))))
 
 (defmethod (setf cells) ((num integer) (self surface))
-  (setf (slot-value self 'cells) (make-array num :initial-contents (loop repeat num collect (rectangle))))
+  (setf (slot-value self 'cells) (make-array num :initial-contents (loop repeat num collect (get-rectangle-* self))))
   (setf (cell-index self) 0))
 
 (defmethod (setf cells) ((rects list) (self surface))
@@ -153,6 +155,31 @@ Free using [FREE](#free)."))
                                                                                                        :y (elt rect 1)
                                                                                                        :w (elt rect 2)
                                                                                                        :h (elt rect 3)))))
+  (setf (cell-index self) 0))
+
+(defmethod (setf cells) ((rects vector) (self surface))
+  (setf (slot-value self 'cells) (make-array (length rects) :initial-contents (loop for rect in rects
+                                                                                    collect (copy-rectangle rect))))
+  (setf (cell-index self) 0))
+
+(defmethod (setf cells) ((rect rectangle) (self surface))
+  (setf (slot-value self 'cells) (make-array 1 :initial-element (copy-rectangle rect)))
+  (setf (cell-index self) 0))
+
+(defmethod copy-cells ((self surface) &optional index)
+  (copy-cells (cells self) index))
+
+(defmethod copy-cells ((self vector) &optional index)
+  (if index
+    (make-array 1 :initial-element (copy-rectangle (aref self index)))
+    (make-array (length self) :initial-contents (loop for cell across self
+                                                      collect (copy-rectangle cell)))))
+
+(defmethod copy-cells ((self rectangle) &optional index)
+  (make-array 1 :initial-element (copy-rectangle self)))
+
+(defmethod reset-cells ((self surface))
+  (setf (slot-value self 'cells) (make-array 1 :initial-element (get-rectangle-* self)))
   (setf (cell-index self) 0))
 
 (defmacro with-surface-slots ((var &optional surface)
@@ -280,8 +307,7 @@ Free using [FREE](#free)."))
   (rectangle :x (x surface)
 	     :y (y surface)
 	     :w (width surface)
-	     :h (height surface))
-  surface)
+	     :h (height surface)))
 
 (defun get-surface-attribute (surface attribute)
   "Returns `T` if the attribute is set for the surface surface, or returns `NIL` otherwise."
@@ -648,10 +674,11 @@ Use `:FREE` to delete the source `SURFACE`."
       (free surface))
     surf))
 
-(defun copy-surface (&key cell cell-index (surface *default-surface*) color-key alpha pixel-alpha
+(defun copy-surface (&key (surface *default-surface*) color-key alpha pixel-alpha
                           rle-accel (type :sw) free (inherit t)
                           (fill t) (color-key-fill t)
-                          (pixel-format nil))
+                          (pixel-format nil)
+                          cells cell-index)
   "Returns a copy of `:SURFACE`. 
 
 Use `:COLOR-KEY` or `:ALPHA` to set the key color and surface alpha transparency.
@@ -670,23 +697,25 @@ The new surface will inherit the pixel, alpha and color key components of the so
 Use `:FREE` to delete the source `SURFACE`."
   (check-type surface sdl-surface)
   (let ((new-surface nil))
-    (let ((x 0) (y 0) (width (width surface)) (height (height surface))
-	  (rect nil))
-      (when cell
-        (setf x (x cell)
-              y (y cell)
-              width (width cell)
-              height (height cell))
-        (setf rect cell))
-      (when cell-index
-        (setf rect (get-cell :surface surface :index cell-index))
-        (setf x (x rect)
-              y (y rect)
-              width (width rect)
-              height (height rect)))
+    ;; If cells is not specified, and cell-index is not specified, then copy all cells from the old surface to the new surface.
+    ;; If cells is not specified, and cell-index is specified, then copy only the specified cell from the old surface to the new surface.
+    ;; If cells is specified, and cell-index is not specified, then copy the specified cells to the new surface.
+    ;; If cells is specified, and cell-index is specified, then copy the specified cells to the new surface and set the specified cell-index.
+    (let ((cs nil) (c nil) (i 0))
+      (cond
+       ((and cells cell-index)
+        (setf cs (copy-cells cells)
+              i cell-index))
+       (cells
+        (setf cs (copy-cells cells)))
+       (cell-index
+        (setf cs (copy-cells surface cell-index)))
+       (t
+        (setf cs (copy-cells surface))))
+      (setf c (aref cs i))
       (setf new-surface (make-instance 'surface
 				       :using-surface (when pixel-format surface)
-				       :x x :y y :width width :height height
+				       :x (x c) :y (y c) :width (width c) :height (height c)
 				       :enable-color-key (if inherit
                                                            (color-key-enabled-p surface)
                                                            color-key)
@@ -704,7 +733,9 @@ Use `:FREE` to delete the source `SURFACE`."
                                                       pixel-alpha)
 				       :type type
 				       :rle-accel rle-accel
-				       :bpp (bit-depth surface)))
+				       :bpp (bit-depth surface)
+                                       :cells cs
+                                       :cell-index i))
       (when color-key-fill
         (if inherit
           (if (color-key-enabled-p surface)
@@ -712,10 +743,7 @@ Use `:FREE` to delete the source `SURFACE`."
           (if color-key
             (fill-surface (color-key surface) :surface new-surface))))
       (when fill
-	(if (or cell cell-index)
-	  (sdl-base::blit-surface (fp surface) (fp new-surface)
-				  (fp rect) (fp rect))
-          (blit-surface surface new-surface (current-cell :surface surface)))))
+        (blit-surface surface new-surface)))
     (when free
       (free surface))
     new-surface))
@@ -784,9 +812,14 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
     (setf surface *default-display*))
   (check-types sdl-surface source surface)
   (sdl-base::blit-surface (fp source) (fp surface)
-                          (if cell
+                          (if (integerp cell)
                             (fp (get-cell :surface source :index cell))
                             (fp (current-cell :surface source)))
+                          ;(if cell
+                          ;  (if (integerp cell)
+                          ;    (fp (get-cell :surface source :index cell))
+                          ;    (fp (current-cell :surface source)))
+                          ;  (cffi:null-pointer))
                           (fp (position-rect source)))
   source)
 

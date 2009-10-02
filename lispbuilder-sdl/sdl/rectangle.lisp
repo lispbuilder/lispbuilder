@@ -5,12 +5,12 @@
 
 (defclass rectangle (foreign-object) ()
   ;; ((rectangle-color
-;;     :accessor rectangle-color
-;;     :initform (color :r 255 :g 255 :b 255)
-;;     :initarg :color))
+  ;;     :accessor rectangle-color
+  ;;     :initform (color :r 255 :g 255 :b 255)
+  ;;     :initarg :color))
   (:default-initargs
    :gc t
-    :free #'cffi:foreign-free)
+   :free #'cffi:foreign-free)
   (:documentation "A `RECTANGLE` object manages the foreign SDL_Rect object.
 Free using [FREE](#free)."))
 
@@ -233,6 +233,12 @@ Returns the rectangle `RECTANGLE` as RESULT."
     (when w (setf rect.w (sdl-base:to-int w)))
     (when h (setf rect.h (sdl-base:to-int h))))
   rectangle)
+
+(defmethod copy-rectangle ((self rectangle ))
+  (rectangle :x (x self)
+             :y (y self)
+             :w (width self)
+             :h (height self)))
 
 ;; (defmethod color-* ((rectangle rectangle))
 ;;   "Returns the color of the rectangle `RECTANGLE`."

@@ -354,6 +354,7 @@
    #:rectangle-from-midpoint-*
    #:with-rectangle
    #:with-rectangles
+   #:copy-rectangle
 
    ;; sdl-util.lisp
    #:within-range

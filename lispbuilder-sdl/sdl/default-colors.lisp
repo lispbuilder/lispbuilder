@@ -19,3 +19,5 @@
   "`RGB` [COLOR](#color) cyan.")
 (defvar *magenta* (color :r 255 :g 0 :b 255)
   "`RGB` [COLOR](#color) magenta.")
+
+(setf *default-color* *white*)
