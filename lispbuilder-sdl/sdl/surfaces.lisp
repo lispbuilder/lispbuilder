@@ -158,7 +158,7 @@ Free using [FREE](#free)."))
   (setf (cell-index self) 0))
 
 (defmethod (setf cells) ((rects vector) (self surface))
-  (setf (slot-value self 'cells) (make-array (length rects) :initial-contents (loop for rect in rects
+  (setf (slot-value self 'cells) (make-array (length rects) :initial-contents (loop for rect across rects
                                                                                     collect (copy-rectangle rect))))
   (setf (cell-index self) 0))
 
