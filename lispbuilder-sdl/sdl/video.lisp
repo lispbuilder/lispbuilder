@@ -45,25 +45,26 @@
   (when driver
     (sdl-cffi::sdl-put-env (format nil "SDL_AUDIODRIVER=~A" driver))))
 
-(defmethod window (width height &key (bpp 0) (title-caption "") (icon-caption "")
-                         flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
-                         (fps (make-instance 'fps-fixed))
-                         position
-                         video-driver audio-driver)
+(defclass display (display-surface) ()
+  (:default-initargs
+   :fps (make-instance 'sdl:fps-fixed)))
 
+(defmethod initialize-instance :before ((self display) &key position video-driver audio-driver)
   ;; Set the x/y window position
   (set-window-position position)
-
   ;; Set the video driver
   (set-video-driver video-driver)
-
   ;; Set the audio driver
   (set-audio-driver audio-driver)
-
   ;; Initialize the video subsytem, if not already initialized.
   (unless (init-video)
-    (error "ERROR Cannot initialize the video subsystem. Cannot create the display surface~%"))
+    (error "ERROR Cannot initialize the video subsystem. Cannot create the display surface~%")))
 
+(defmethod initialize-instance :after ((self display) &key
+                                       (width 0) (height 0) (bpp 0) (title-caption "") (icon-caption "")
+                                       flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
+                                       fps)
+  
   (unless flags
     (setf flags (remove nil (list (when sw sdl-sw-surface)
                                   (when hw sdl-hw-surface)
@@ -80,7 +81,8 @@
   (let ((surface (sdl-cffi::SDL-Set-Video-Mode (cast-to-int width) (cast-to-int height)
                                                bpp (sdl-base::set-flags flags))))
     (if (is-valid-ptr surface)
-      (setf *default-display* (make-instance 'display-surface :fp surface))
+      (setf (slot-value self 'foreign-pointer-to-object) surface
+            *default-display* self)
       (setf *default-display* nil)))
 
   ;; And set the captions
@@ -92,9 +94,18 @@
   ;; Prime the input handling code
   (quit-input-util)
   (initialise-input-util)
-  (sdl-cffi::sdl-set-event-filter (cffi:callback event-filter))
-  
-  *default-display*)
+  (sdl-cffi::sdl-set-event-filter (cffi:callback event-filter)))
+
+(defmethod window (width height
+                         ;&key (bpp 0) (title-caption "") (icon-caption "")
+                         ;flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
+                         ;(fps (make-instance 'fps-fixed))
+                         ;position
+                         ;video-driver audio-driver
+                         &rest rest)
+  (let ((window (apply #'make-instance 'display (append rest (list :width width :height height)))))
+    (when (fp window)
+      window)))
 
 (defmethod resize-window (width height &key
                                 flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame

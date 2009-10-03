@@ -162,8 +162,8 @@ Indicates that the surface is full-screen.")
   "Applies to [DISPLAY-SURFACE](#display-surface).
 * When passed as a `FLAG` to [WINDOW](#window); 
 Create an OpenGL rendering context. You should have previously set OpenGL video attributes with 
-[SDL-GL-SET-ATTRIBUTE](#sdl-gl-set-attribute).
-* When read from the `FLAGS` field in [DISPLAY-SURFACE](#display-surface); 
+[SET-GL-ATTRIBUTE](#set-gl-attribute).
+* When read from the `FLAGS` field in [DISPLAY-SURFACE](#display-surface)
 Indicates that the surface has an OpenGL rendering context.")
 
 (cl:defconstant SDL-RESIZABLE #x00000010

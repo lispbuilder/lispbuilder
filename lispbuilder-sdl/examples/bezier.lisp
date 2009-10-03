@@ -24,6 +24,4 @@
         (:key-down-event ()
          (when (sdl:key-down-p :sdl-key-escape)
            (sdl:push-quit-event)))
-	(:video-expose-event () (sdl:update-display))
-        (:active-event (:gain gain :state state)
-         (format t "gain: ~A, state: ~A~%" gain state))))))
+	(:video-expose-event () (sdl:update-display))))))

@@ -39,10 +39,9 @@
   "Freeing the display surface is not a valid operation."
   nil)
 
-(defmethod initialize-instance :around ((surface sdl-surface) &key)
+(defmethod initialize-instance :before ((surface sdl-surface) &key)
   (unless (initialized-subsystems-p)
-    (error "ERROR: The SDL library must be initialized prior to use."))
-  (call-next-method))
+    (error "ERROR: The SDL library must be initialized prior to use.")))
 
 (defclass surface (sdl-surface) ()
   (:default-initargs
