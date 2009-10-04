@@ -291,9 +291,11 @@
         ;(format t "1. sample-handle->wave: ~A~%" (cffi:mem-aref sample-handle :pointer))
         ;;(format t "(cffi:mem-aref wave :pointer): ~A~%" (cffi:mem-aref wave :pointer))
         ;; (sdl-cffi::sdl-free-wav #|wave|# (cffi:mem-aref wave :pointer))
-        (sdl-cffi::sdl-free-wav sample-handle)
-        (cffi:foreign-free sample-handle)
-        (cffi:foreign-free sample-length)
+        ;;(sdl-cffi::sdl-free-wav (cffi:make-pointer (cffi:pointer-address (cffi:mem-aref wav-buffer-handle :pointer))))
+        ;;(sdl-cffi::sdl-free-wav sample-handle)
+        (sdl-cffi::sdl-free-wav (cffi:make-pointer (cffi:pointer-address (cffi:mem-aref sample-handle :pointer))))
+        ;(cffi:foreign-free sample-handle)
+        ;(cffi:foreign-free sample-length)
         (make-instance 'audio
                        :audio-buffer-handle
                        (make-instance 'audio-buffer
@@ -453,13 +455,14 @@
                                                                           'sdl-cffi::sdl-audio-cvt
                                                                           'sdl-cffi::buf))
               ;(format t "2. sample-handle->wave: ~A~%" (cffi:mem-aref handle :pointer))
-              ;(sdl-cffi::sdl-free-wav
-              ; (make-pointer
-              ;  (pointer-address
-              ;   (foreign-slot-pointer audio-cvt
-              ;                         'sdl-cffi::sdl-audio-cvt
-              ;                         'sdl-cffi::buf))))
-              (sdl-cffi::sdl-free-wav handle))
+              (sdl-cffi::sdl-free-wav
+               (make-pointer
+                (pointer-address
+                 (cffi:mem-aref (foreign-slot-pointer audio-cvt
+                         'sdl-cffi::sdl-audio-cvt
+                         'sdl-cffi::buf) :pointer))))
+              ;(sdl-cffi::sdl-free-wav handle)
+              )
             (make-instance 'audio
                            :audio-buffer-handle
                            (make-instance 'audio-buffer
