@@ -595,6 +595,7 @@
    #:build-audio-cvt
    #:load-audio
    #:default-fill-audio-buffer
+   #:audio-driver-name
    
    ;; assets/globals.lisp
    ;;#:*default-font-path*

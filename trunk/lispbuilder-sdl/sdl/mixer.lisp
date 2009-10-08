@@ -294,8 +294,8 @@
         ;;(sdl-cffi::sdl-free-wav (cffi:make-pointer (cffi:pointer-address (cffi:mem-aref wav-buffer-handle :pointer))))
         ;;(sdl-cffi::sdl-free-wav sample-handle)
         (sdl-cffi::sdl-free-wav (cffi:make-pointer (cffi:pointer-address (cffi:mem-aref sample-handle :pointer))))
-        ;(cffi:foreign-free sample-handle)
-        ;(cffi:foreign-free sample-length)
+        (cffi:foreign-free sample-handle)
+        (cffi:foreign-free sample-length)
         (make-instance 'audio
                        :audio-buffer-handle
                        (make-instance 'audio-buffer
@@ -461,8 +461,7 @@
                  (cffi:mem-aref (foreign-slot-pointer audio-cvt
                          'sdl-cffi::sdl-audio-cvt
                          'sdl-cffi::buf) :pointer))))
-              ;(sdl-cffi::sdl-free-wav handle)
-              )
+              (sdl-cffi::sdl-free-wav handle))
             (make-instance 'audio
                            :audio-buffer-handle
                            (make-instance 'audio-buffer
@@ -580,7 +579,7 @@
     :pointer ((user-data :pointer)
               (stream :pointer)
               (len :int))
-  (declare (ignorable stream len user-data))
+  (declare (ignorable user-data stream len))
   (when *mixer*
     (fill-audio-buffer stream len))
   (cffi:null-pointer))

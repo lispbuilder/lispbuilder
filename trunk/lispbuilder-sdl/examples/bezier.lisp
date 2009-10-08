@@ -5,6 +5,7 @@
 (in-package #:sdl-examples) 
 
 
+
 (defun bezier ()
   (let ((width 200) (height 200))
     (sdl:with-init ()
@@ -22,6 +23,6 @@
       (sdl:with-events ()
 	(:quit-event () t)
         (:key-down-event ()
-         (when (sdl:key-down-p :sdl-key-escape)
-           (sdl:push-quit-event)))
+			 (when (sdl:key-down-p :sdl-key-escape)
+			   (sdl:push-quit-event)))
 	(:video-expose-event () (sdl:update-display))))))

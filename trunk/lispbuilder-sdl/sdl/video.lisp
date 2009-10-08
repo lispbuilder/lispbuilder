@@ -63,7 +63,7 @@
 (defmethod initialize-instance :after ((self display) &key
                                        (width 0) (height 0) (bpp 0) (title-caption "") (icon-caption "")
                                        flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
-                                       fps)
+                                       fps opengl-attributes)
   
   (unless flags
     (setf flags (remove nil (list (when sw sdl-sw-surface)
@@ -77,6 +77,15 @@
                                   (when resizable sdl-resizable)
                                   (when no-frame sdl-no-frame)))))
 
+  (when opengl-attributes
+    (unless (consp (first opengl-attributes))
+      (setf opengl-attributes (list opengl-attributes)))
+    (loop for (attribute val) in opengl-attributes
+       do (progn
+	    (unless (integerp val)
+	      (error "ERROR: WINDOW :OPENGL-ATTRIBUTES not valid for ~A and ~A" attribute val))
+	    (sdl:set-gl-attribute attribute val))))
+   
   ;; Make sure the display surface is created
   (let ((surface (sdl-cffi::SDL-Set-Video-Mode (cast-to-int width) (cast-to-int height)
                                                bpp (sdl-base::set-flags flags))))
@@ -109,7 +118,7 @@
 
 (defmethod resize-window (width height &key
                                 flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
-                                title-caption icon-caption bpp)
+                                title-caption icon-caption bpp opengl-attributes)
   "Modifies the dispaly, resets the input loop and clears all key events."
   (multiple-value-bind (title icon)
       (sdl:get-caption)
@@ -129,6 +138,7 @@
                 :icon-caption (if icon-caption icon-caption icon)
                 :bpp (if bpp bpp (sdl:bit-depth sdl:*default-display*))
                 :flags (if flags flags (sdl:surface-info sdl:*default-display*))
+		:opengl-attributes opengl-attributes
                 :fps *default-fpsmanager*)))
 
 (defun update-display (&optional (surface *default-display*))

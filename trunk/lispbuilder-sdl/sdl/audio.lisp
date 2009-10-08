@@ -380,6 +380,22 @@ or `NIL` if `AUDIO` is halted."
               (setf quit (post-process audio)))))))
 
 
+(defun audio-driver-name ()
+  "Returns the driver name of the initialised audio driver. The driver name is a `STRING` containing a 
+one-word identifier like \"x11\" or \"windib\". Returns 'NIL' if the audio driver 
+is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init).
+
+##### Example
+
+    \(sdl:with-init \(\)
+      \(sdl:audio-driver-name\)\)
+    >> \"windib\""
+  (let ((string-return-val (cffi:with-foreign-pointer-as-string (str 100)
+			     (sdl-cffi::SDL-Audio-Driver-Name str 100))))
+    (if (equal string-return-val "")
+	nil
+	string-return-val)))
+
 ;; (defmethod print-object ((obj audio) stream)
 ;;   (print-unreadable-object (obj stream :type t)
 ;;     (format stream "buffer: ~A,  length: ~A, remaining: ~A, position: ~A,  frequency: ~A, format: ~A, channels: ~A"
