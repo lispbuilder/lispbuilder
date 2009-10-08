@@ -2153,7 +2153,7 @@ Example of using `LISPBUILDER-SDL` and [http://common-lisp.net/project/cl-opengl
 (asdf:operate 'asdf:load-op :cl-opengl)
 
 (defun opengl-test-1 ()
-  (sdl:with-init ()
+  (sdl:with-init (sdl:sdl-init-video)
     (sdl:window 250 250
                 :flags sdl:sdl-opengl
                 :title-caption "OpenGL Example"
