@@ -448,15 +448,19 @@ Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.h
 
 {{{
 window width height 
-       &key flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame 
-       bpp title-caption icon-caption position fps 
-       video-driver audio-driver => result
+       &key flags sw hw fullscreen async-blit any-format palette double-buffer 
+            opengl opengl-attributes resizable no-frame 
+            bpp title-caption icon-caption position fps 
+            video-driver audio-driver => result
 }}}
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#resize-window RESIZE-WINDOW] to modify the video surface during program execution.
 
 {{{
-resize-window width height &key bpp flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame title-caption icon-caption => result
+resize-window width height 
+              &key bpp flags sw hw fullscreen async-blit any-format 
+                   palette double-buffer opengl resizable no-frame 
+                   title-caption icon-caption => result
 }}}
 
 For example;
