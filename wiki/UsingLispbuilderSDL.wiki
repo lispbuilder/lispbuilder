@@ -421,6 +421,19 @@ T
 "windib"
 }}}
 
+== Audio Driver Name ==
+
+`Audio-DRIVER-NAME` will return the name if the audio driver. The audio drivers supported are listed in the [http://www.libsdl.org/cgi/docwiki.cgi/SDL_envvars SDL documentation]. This function is useful only after the audio subsystem has been initialized. 
+
+For example;
+
+{{{
+>> (SDL:INIT-AUDIO)
+T
+
+>> (SDL:AUDIO-DRIVER-NAME)
+"dsound"
+}}}
 
 = The Display =
 == Description of the Display ==
