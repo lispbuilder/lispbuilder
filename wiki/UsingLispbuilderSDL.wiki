@@ -630,6 +630,35 @@ For example;
 (SDL:WINDOW 320 240 :OPENGL T)
 }}}
 
+`:OPENGL-ATTRIBUTES` sets the following attributes for OpenGL;
+
+  * :SDL-GL-RED-SIZE
+  * :SDL-GL-GREEN-SIZE
+  * :SDL-GL-BLUE-SIZE
+  * :SDL-GL-ALPHA-SIZE
+  * :SDL-GL-BUFFER-SIZE
+  * :SDL-GL-DOUBLEBUFFER
+  * :SDL-GL-DEPTH-SIZE
+  * :SDL-GL-STENCIL-SIZE
+  * :SDL-GL-ACCUM-RED-SIZE
+  * :SDL-GL-ACCUM-GREEN-SIZE
+  * :SDL-GL-ACCUM-BLUE-SIZE
+  * :SDL-GL-ACCUM-ALPHA-SIZE
+  * :SDL-GL-STEREO
+  * :SDL-GL-MULTISAMPLEBUFFERS
+  * :SDL-GL-MULTISAMPLESAMPLES
+  * :SDL-GL-ACCELERATED-VISUAL
+  * :SDL-GL-SWAP-CONTROL
+
+`:OPENGL-ATTRIBUTES` must be a list of attributes as follows;
+
+{{{
+(SDL:WINDOW 320 240 :OPENGL T
+                    :OPENGL-ATTRIBUTES '((:SDL-GL-DOUBLEBUFFER 1)
+                                         (:SDL-GL-STEREO 1)))
+}}}
+
+
 == Redraw the Display ==
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-display UPDATE-DISPLAY] to;
