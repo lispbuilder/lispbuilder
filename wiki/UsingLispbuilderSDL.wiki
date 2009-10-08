@@ -459,8 +459,8 @@ Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.h
 {{{
 resize-window width height 
               &key bpp flags sw hw fullscreen async-blit any-format 
-                   palette double-buffer opengl resizable no-frame 
-                   title-caption icon-caption => result
+                   palette double-buffer opengl opengl-attributes 
+                   resizable no-frame title-caption icon-caption => result
 }}}
 
 For example;
