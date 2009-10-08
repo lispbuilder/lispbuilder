@@ -7,7 +7,7 @@
 
 (cl:defconstant SDL-MINOR-VERSION 2)
 
-(cl:defconstant SDL-PATCH-LEVEL 13)
+(cl:defconstant SDL-PATCH-LEVEL 14)
 
 (cffi:defcstruct SDL-version
 	(major :unsigned-char)

@@ -337,7 +337,7 @@ Returns a new `FONT`, or `NIL` if unsuccessful."))
 
 (defgeneric window (width height &key bpp flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
                           title-caption icon-caption fps position
-                          video-driver audio-driver)
+                          video-driver audio-driver opengl-attributes)
   (:documentation
   "Creates a new SDL window of pixel width `WIDTH` and height `HEIGHT` using SDL_SetVideoMode.
 
@@ -385,6 +385,7 @@ will be released automatically by SDL.
     \(WINDOW 320 240 :TITLE-CAPTION \"Random-Rects\" :ICON-CAPTION \"Random-Rects\"
                      :FLAGS \'(SDL-DOUBLEBUF SDL-FULLSCREEN\)\)"))
 
-(defgeneric resize-window (width height &key flags title-caption icon-caption bpp)
+(defgeneric resize-window (width height &key flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
+				 title-caption icon-caption bpp opengl-attributes)
   (:documentation
    "Resizes the current display to the specified `WIDTH` and `HEIGHT`. The pixel depth, title and icon captions, and surface flags will remain the same"))
