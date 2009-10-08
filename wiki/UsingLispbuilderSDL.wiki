@@ -483,6 +483,7 @@ For example;
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Exclusive_palette_access :PALETTE] sets exclusive palette access. Without this flag you may not always get the the colors you request using `SDL_SetColors` or `SDL_SetPalette`,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Single_or_Double_buffering :DOUBLE-BUFFER] will enable hardware double buffering,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering :OPENGL] will create an OpenGL rendering context,
+  * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#OpenGL_rendering :OPENGL-ATTRIBUTES] will set the OpenGL rendering attributes,
   * [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :RESIZABLE] will create a resizable window, and [http://code.google.com/p/lispbuilder/wiki/UsingLispbuilderSDL#Window_Title_and_Border :NO-FRAME] creates a window with no title bar or frame decoration.
 
 == Dimensions ==
