@@ -313,6 +313,8 @@ is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)
 	string-return-val)))
 
 (defun set-gl-attribute (attribute value)
+  (unless (video-init-p)
+    (init-video))
   (sdl-cffi::sdl-gl-set-attribute attribute value))
 
 (defun get-gl-attribute (attribute value)
