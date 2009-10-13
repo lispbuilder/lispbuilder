@@ -52,9 +52,11 @@
               :free-rwops free-rwops
               :color-key-at color-key-at))
 
-(defun save-image (surface filename)
+(defmethod save-image ((surface sdl-surface) (filename string))
   "Saves the `SURFACE` as a `BMP` image to a file at location `FILENAME`."
-  (check-type surface sdl-surface)
-  (let ((file (namestring filename)))
-    (sdl-cffi::SDL-Save-BMP-RW (fp surface) (sdl-cffi::SDL-RW-FROM-FILE file "wb") 1)))
+  (sdl-cffi::SDL-Save-BMP-RW (fp surface) (sdl-cffi::SDL-RW-FROM-FILE filename "wb") 1))
+
+(defmethod save-image ((surface sdl-surface) (filename pathname))
+  "Saves the `SURFACE` as a `BMP` image to a file at location `FILENAME`."
+  (save-image surface (namestring filename)))
 
