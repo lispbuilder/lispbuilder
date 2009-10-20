@@ -55,54 +55,32 @@ if successful, or `NIL` if the font cannot be closed or the `SDL_TTF` font libra
     (sdl-ttf:init-ttf))
   (open-font self))
 
-(defmethod _get-Glyph-Metric_ ((font ttf-font) ch metric)
-  (let ((p-minx (cffi:null-pointer))
-	(p-miny (cffi:null-pointer))
-	(p-maxx (cffi:null-pointer))
-	(p-maxy (cffi:null-pointer))
-	(p-advance (cffi:null-pointer))
-	(val nil)
+(defmethod _get-Glyph-Metric_ ((font ttf-font) (ch character) metric)
+  (let ((val nil)
 	(r-val nil))
     (cffi:with-foreign-objects ((minx :int) (miny :int) (maxx :int) (maxy :int) (advance :int))
-      (case metric
-	(:minx (setf p-minx minx))
-	(:miny (setf p-miny miny))
-	(:maxx (setf p-maxx maxx))
-	(:maxy (setf p-maxy maxy))
-	(:advance (setf p-advance advance)))
-      (setf r-val (sdl-ttf-cffi::ttf-Glyph-Metrics font ch p-minx p-maxx p-miny p-maxy p-advance))
-      (if r-val
-        (cond
-         ((sdl:is-valid-ptr p-minx)
-          (setf val (cffi:mem-aref p-minx :int)))
-         ((sdl:is-valid-ptr miny)
-          (setf val (cffi:mem-aref p-miny :int)))
-         ((sdl:is-valid-ptr maxx)
-          (setf val (cffi:mem-aref p-maxx :int)))
-         ((sdl:is-valid-ptr maxy)
-          (setf val (cffi:mem-aref p-maxy :int)))
-         ((sdl:is-valid-ptr advance)
-          (setf val (cffi:mem-aref p-advance :int))))
-        (setf val r-val)))
+      (setf r-val (sdl-ttf-cffi::ttf-Glyph-Metrics (sdl:fp font) (char-code ch) minx maxx miny maxy advance))
+      (when r-val
+	(setf val
+	      (case metric
+		(:minx (setf val (cffi:mem-aref minx :int)))
+		(:miny (setf val (cffi:mem-aref miny :int)))
+		(:maxx (setf val (cffi:mem-aref maxx :int)))
+		(:maxy (setf val (cffi:mem-aref maxy :int)))
+		(:advance (setf val (cffi:mem-aref advance :int)))
+		(t (error "ERROR: GET-GLYPH-METRIC; :METRIC must be one of :MINX, :MINY, :MAXX, :MAXY or :ADVANCE"))))))
     val))
 
 (defmethod _get-Font-Size_ ((font ttf-font) text size)
-  (let ((p-w (cffi:null-pointer))
-	(p-h (cffi:null-pointer))
-	(val nil)
+  (let ((val nil)
         (r-val nil))
     (cffi:with-foreign-objects ((w :int) (h :int))
-      (case size
-	(:w (setf p-w w))
-	(:h (setf p-h h)))
-      (setf r-val (sdl-ttf-cffi::ttf-Size-UTF8 (sdl:fp font) text p-w p-h))
-      (if r-val
-	  (cond
-	    ((sdl:is-valid-ptr p-w)
-	     (setf val (cffi:mem-aref p-w :int)))
-	    ((sdl:is-valid-ptr p-h)
-	     (setf val (cffi:mem-aref p-h :int))))
-	  (setf val r-val)))
+      (setf r-val (sdl-ttf-cffi::ttf-Size-UTF8 (sdl:fp font) text w h))
+      (setf val
+	    (case size
+	      (:w (cffi:mem-aref w :int))
+	      (:h (cffi:mem-aref h :int))
+	      (t (error "ERROR: GET-FONT-SIZE; :SIZE must be :W or :H")))))
     val))
 
 (defmethod _get-font-style_ ((font ttf-font))

@@ -13,7 +13,7 @@
     :author "Luke J Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>, Luke Crook <luke@balooga.com>"
     :licence "BSD"
-    :depends-on (cffi lispbuilder-sdl-cffi #+(or mswindows windows win32)lispbuilder-sdl-ttf-binaries)
+    :depends-on (cffi lispbuilder-sdl #+(or mswindows windows win32)lispbuilder-sdl-ttf-binaries)
     :components
     ((:module "cffi"
 	      :components

@@ -20,6 +20,7 @@
                               sdl:*yellow*)
     (sdl:draw-string-blended-* "Text UTF8 - Blended" 0 250
                                :color sdl:*black*)
+
     (sdl:update-display)
     (sdl:with-events ()
       (:quit-event () t)
