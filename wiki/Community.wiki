@@ -24,7 +24,7 @@ Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system]
  * [http://dto.github.com/notebook/blast.html Blast Tactics]
  * [http://lispgamesdev.blogspot.com/2009/07/preview-of-bratwurst.html Remake of the Amiga game Bratwurst]
  * Uxul-world, [http://wiki.github.com/dasuxullebt/uxul-world], and [http://uxul.wordpress.com/2009/04/07/a-detailed-preview-of-my-jnr-game-written-in-common-lisp/ JNR].
- * [http://github.com/sykopomp Common-Worm, and yashmup]
+ * [http://github.com/sykopomp Common-Worm, and yashmup], [http://sykosomatic.org/lisp/level1.ogv Video of yashmup]
  * [http://sourceforge.net/projects/latrunculi/ Latrunculi]
  * [http://code.google.com/p/lisp-game-engine/ Lisp-Game-Engine]
  * [http://dto.github.com/notebook/rlx.html RLX: a cross-platform graphical roguelike engine]
