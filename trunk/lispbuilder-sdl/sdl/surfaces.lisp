@@ -581,7 +581,7 @@ The new surface will inherit the pixel, alpha and color key components of the so
 
 Use `:ENABLE-COLOR-KEY` or `:ENABLE-ALPHA` to take advantage of hardware 
 colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily 
-utilize available harware acceleration if the surface was not initally created in video memory.
+utilize available hardware acceleration if the surface was not initally created in video memory.
 
 Use `:PIXEL-ALPHA` to enable the pixel alpha component \(alpha mask of 0xFF\) for the new surface.
 
@@ -640,10 +640,10 @@ Calls [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format) if converting to t
 
 Use `:ENABLE-COLOR-KEY` or `:ENABLE-ALPHA` to take advantage of hardware 
 colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily 
-utilize available harware acceleration if the surface was not initally created in video memory.
+utilize available hardware acceleration if the surface was not initally created in video memory.
 
-Will create the new surface in system menory when `TYPE` is `:SW`. 
-Will attempt to create the new surface in video menory when `TYPE` is `:HW`, 
+Will create the new surface in system memory when `TYPE` is `:SW`. 
+Will attempt to create the new surface in video memory when `TYPE` is `:HW`, 
 otherwise the surface is created in system memory if the combination 
 of color key and alpha do not allow hardware acceleration.
 
@@ -683,8 +683,8 @@ Use `:FREE` to delete the source `SURFACE`."
 Use `:COLOR-KEY` or `:ALPHA` to set the key color and surface alpha transparency.
 Hardware colorkey and alpha blit acceleration will be used if supported. 
 
-Will create the new surface in system menory when `TYPE` is `:SW`. 
-Will attempt to create the new surface in video menory when `TYPE` is `:HW`, 
+Will create the new surface in system memory when `TYPE` is `:SW`. 
+Will attempt to create the new surface in video memory when `TYPE` is `:HW`, 
 otherwise the surface is created in system memory if the combination 
 of color key and alpha do not allow hardware acceleration.
 
