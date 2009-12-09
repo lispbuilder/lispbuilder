@@ -104,6 +104,10 @@
                                     10 (incf y-pos 15)
                                     :color sdl:*white*
                                     :surface sdl:*default-display*)
+           (sdl:draw-string-solid-* (format nil "(CODE-CHAR unicode): ~S" (code-char key-unicode))
+                                    140 y-pos
+                                    :color sdl:*white*
+                                    :surface sdl:*default-display*)
 
            (sdl:draw-string-solid-* (format nil "--- --- ---")
                                     (sdl:cast-to-int

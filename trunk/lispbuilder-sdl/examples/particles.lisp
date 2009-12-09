@@ -157,7 +157,7 @@
 ;;; ----------------------------------------------------------------------
 ;;;  'Main' function.
 ;;; ----------------------------------------------------------------------
-(defun particles (&optional (frame-rate nil))
+(defun particles (&optional (frame-rate nil))   
   (sdl:with-init ()
     ;; Create a window
     (unless (sdl:window *screen-width* *screen-height*

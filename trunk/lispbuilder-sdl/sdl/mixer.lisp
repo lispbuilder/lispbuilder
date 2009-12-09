@@ -234,7 +234,7 @@
       ;; Pause the audio stream
       (pause-audio)
       (setf (slot-value *mixer* 'mixer-opened-p) nil))
-  #+lispbuilder-sdl-audio(sdl-cffi::sdl-glue-sdl-close-audio)
+  #+lispbuilder-sdl-audio(sdl-cffi::sdl-glue-sdl-close-audio);;(format t "sdl-cffi::sdl-glue-sdl-close-audio~%")
   #-lispbuilder-sdl-audio(sdl-cffi::sdl-close-audio)
   (quit-subsystems sdl:sdl-init-audio)
   (setf *managed-audio* nil))
