@@ -328,7 +328,7 @@ is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)
     (sdl-cffi::sdl-wm-set-caption window-caption icon-caption)))
 
 (defun get-caption ()
-  "Returns the caption and icon text for the display surface as a spread; \(VALUES title-captio icon caption\)"
+  "Returns the caption and icon text for the display surface as a spread; \(VALUES title-caption icon caption\)"
   (unless (cffi:null-pointer-p (sdl-cffi::SDL-Get-Video-Info))
     (cffi:with-foreign-objects ((title-handle :pointer)
                                 (icon-handle :pointer))

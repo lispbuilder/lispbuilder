@@ -11,7 +11,7 @@
     
     (let* ((sprite-sheet (sdl:load-image (merge-pathnames "ani2.bmp" sdl:*default-asset-path*)))
            ;; Create the list of cells
-           ;; Each 'cell' is the x/y width/height of one an image in the sprite sheet
+           ;; Each 'cell' is the x/y width/height of an image in the sprite sheet
            (sprite-cells (loop for y from 0 to 192 by 64
                                append (loop for x from 0 to 192 by 64
                                         collect (list x y 64 64))))

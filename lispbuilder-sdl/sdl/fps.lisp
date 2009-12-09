@@ -182,7 +182,6 @@ not calculated"))
             (incf fps-ticks dt)
             (decf accumulator dt)))))
 
-
 (defun (setf frame-rate) (rate &optional (fpsmanager *default-fpsmanager*))
   (setf (target-frame-rate fpsmanager) rate))
 
