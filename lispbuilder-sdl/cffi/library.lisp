@@ -16,6 +16,9 @@
 ;; This is where FINK installs SDL.
 #+darwin(pushnew #P"/sw/lib/" cffi:*foreign-library-directories*
 	             :test #'equal)
++;; This is where MacPorts installs SDL.
+#+darwin(pushnew #P"/opt/local/lib/" cffi:*foreign-library-directories*
+                 :test #'equal)
 
 (cffi:define-foreign-library sdl
   (:darwin (:or (:framework "SDL")
