@@ -2073,6 +2073,8 @@ A surface must have color keying enabled for color keying to be perfomed. The co
 
 Per-pixel and per-surface alpha blending are mutually exclusive with per-pixel alpha having priority over per-surface alpha, as described above and show in the table below. Per-surface alpha blending is only performed when the source source does not have an alpha channel (RGB). If the source surface has an alpha channel (RGBA) and per-surface alpha is enabled then per-pixel alpha is performed.
 
+The display will typically be an RGBA surface, so blitting a surface to the display will follow the rules defined in #3, #4 and #5 in the table below.
+
 The alpha channel and per-surface alpha of the *source* surface and not the destination surface are used when performing alpha blending.
 
 The following table summaries how per-pixel, per surface and color key settings are used during blitting;
