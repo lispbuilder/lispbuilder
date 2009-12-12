@@ -2078,12 +2078,12 @@ The alpha channel and per-surface alpha of the *source* surface and not the dest
 The following table summaries how per-pixel, per surface and color key settings are used during blitting;
 
 || || *Source*         || *Destination* || *Per-pixel Alpha* || *Per-surface Alpha* || *Color Keying* ||
-||1|| RGB(A) + :ALPHA  || RGB           || Yes               || Ignored             || Ignored        ||
+||1|| RGB(A) + :ALPHA  || RGB           || Performed         || Ignored             || Ignored        ||
 ||2|| RGB(A)           || RGB           || No                || No                  || Yes, if set    ||
-||3|| RGB    + :ALPHA  || RGB(A)        || No                || Yes                 || Yes, if set    ||
-||4|| RGB(A) + :ALPHA  || RGB(A)        || Yes               || Ignored             || Ignored        ||
+||3|| RGB    + :ALPHA  || RGB(A)        || No                || Performed           || Yes, if set    ||
+||4|| RGB(A) + :ALPHA  || RGB(A)        || Performed         || Ignored             || Ignored        ||
 ||5|| RGB(A)           || RGB(A)        || No                || No                  || Yes, if set    ||
-||6|| RGB    + :ALPHA  || RGB           || No                || Yes                 || Yes, if set    ||
+||6|| RGB    + :ALPHA  || RGB           || No                || Performed           || Yes, if set    ||
 ||6|| RGB              || RGB           || No                || No                  || Yes, if set    ||
 
  * #1 Is the alpha channel in destination left untouched?
