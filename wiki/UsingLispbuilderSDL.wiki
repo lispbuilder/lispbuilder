@@ -2098,17 +2098,14 @@ NOTE: `SDL:LOAD-IMAGE` will load an image having an alpha channel however the su
 
 {{{
     ;; Load the main image, converting the RGB surface into an RGBA surface.
-    (setf *particle-img* (sdl::convert-to-display-format :surface (sdl:load-image (sdl:create-path
-                                                                                   "particle.bmp"
-                                                                                   sdl:*default-asset-path*))
+    (setf *particle-img* (sdl::convert-to-display-format :surface (sdl:load-image "particle.bmp"))
                                                          :inherit nil
                                                          :pixel-alpha t
                                                          :free t))
 
     ;; Then replace the alpha channel of *particle-img* with
     ;; the Red channel that contains the alpha channel pixel data
-    (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp"
-                                                              sdl:*default-asset-path*)))
+    (sdl:with-surface (alpha (sdl:load-image "particle-alpha.bmp"))
       (sdl:copy-channel-to-alpha *particle-img* alpha :channel :r))
 }}}
 
