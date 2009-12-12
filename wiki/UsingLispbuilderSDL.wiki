@@ -2094,6 +2094,24 @@ The following table summaries how per-pixel, per surface and color key settings 
 
 Alpha blitting can be accelerated using `:RLE-ACCEL`.
 
+NOTE: `SDL:LOAD-IMAGE` will load an image having an alpha channel however the surface returned by `LOAD-IMAGE` is RGB only. To load the alpha channel of an image (an RGBA surface), use `SDL-GFX:LOAD-IMAGE` in `LISPBUILDER-SDL-GFX`. A workaround used in `SDL-EXAMPLES:PARTICLES` and show below is to use an image processor to save the alpha channel of the image as the red channel of a new 'alpha-image'. Then overwrite the (A) alpha channel of the image using the (R) channel of the 'alpha-image'.
+
+{{{
+    ;; Load the main image, converting the RGB surface into an RGBA surface.
+    (setf *particle-img* (sdl::convert-to-display-format :surface (sdl:load-image (sdl:create-path
+                                                                                   "particle.bmp"
+                                                                                   sdl:*default-asset-path*))
+                                                         :inherit nil
+                                                         :pixel-alpha t
+                                                         :free t))
+
+    ;; Then replace the alpha channel of *particle-img* with
+    ;; the Red channel that contains the alpha channel pixel data
+    (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp"
+                                                              sdl:*default-asset-path*)))
+      (sdl:copy-channel-to-alpha *particle-img* alpha :channel :r))
+}}}
+
 == Updating Surfaces and the Display ==
 
 The functions [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-display UPDATE-DISPLAY] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#update-surface UPDATE-SURFACE] update the SDL display surface (or OpenGL context) and general SDL surfaces respectively.
