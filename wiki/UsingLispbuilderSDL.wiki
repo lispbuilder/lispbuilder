@@ -2086,11 +2086,11 @@ The following table summaries how per-pixel, per surface and color key settings 
 ||6|| RGB    + :ALPHA  || RGB           || No                || Yes                 || Yes, if set    ||
 ||6|| RGB              || RGB           || No                || No                  || Yes, if set    ||
 
-#1 Is the alpha channel in destination left untouched?
-#2 RGB data copied from source.
-#3 Alpha component of copied pixels set to opaque.
-#4 Alpha blending is performed, but the alpha channel in the destination surface left untouched. This means that you cannot compose two arbitrary RGBA surfaces this way and get the result you would expect from "overlaying" them; the destination alpha will work as a mask.
-#5 RGBA data copied from source.
+ * #1 Is the alpha channel in destination left untouched?
+ * #2 RGB data copied from source.
+ * #3 Alpha component of copied pixels set to opaque.
+ * #4 Alpha blending is performed, but the alpha channel in the destination surface left untouched. This means that you cannot compose two arbitrary RGBA surfaces this way and get the result you would expect from "overlaying" them; the destination alpha will work as a mask.
+ * #5 RGBA data copied from source.
 
 Alpha blitting can be accelerated using `:RLE-ACCEL`.
 
