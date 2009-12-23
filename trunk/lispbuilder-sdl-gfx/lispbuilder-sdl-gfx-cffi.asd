@@ -16,7 +16,7 @@
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
-    :depends-on (cffi lispbuilder-sdl-cffi #+(or mswindows windows win32)lispbuilder-sdl-gfx-binaries)
+    :depends-on (cffi lispbuilder-sdl #+(or mswindows windows win32)lispbuilder-sdl-gfx-binaries)
     :components
     ((:module "cffi"
 	      :components
