@@ -70,3 +70,6 @@
              (sdl:draw-string-solid (format nil "alpha: ~A" (sdl:alpha image-2)) #(150 170))))
          
          (sdl:update-display))))))
+
+
+

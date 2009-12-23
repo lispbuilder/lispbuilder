@@ -566,7 +566,8 @@ of transparent pixels (i.e., pixels that match the key color)."
   (make-instance 'surface
 		 :width width :height height :x x :y y
 		 :enable-color-key (or color-key color-key-at)
-		 :color-key (or color-key color-key-at)
+		 :color-key color-key
+                 :color-key-at color-key-at
 		 :pixel-alpha pixel-alpha
 		 :enable-alpha (or alpha pixel-alpha)
 		 :alpha alpha

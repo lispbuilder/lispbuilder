@@ -13,13 +13,13 @@
                              (equal (sdl:b color-key) b))
                       0 1)))))
 
-(defun retrieve-character (start-x start-y width height surface color-key)
+(defun retrieve-mask (start-x start-y width height surface color-key)
   (loop for y from start-y below (+ start-y height)
         collect (retrieve-line start-x y width surface color-key)))
 
-(defun retrieve-character-map (mask surface color-key)
+(defun retrieve-mask-map (mask surface color-key)
   (loop for (x y w h) in mask
-        collect (retrieve-character x y w h surface color-key)))
+        collect (retrieve-mask x y w h surface color-key)))
 
 (defun convert-character-to-pitch (character pitch)
   (loop for line in character
@@ -45,7 +45,7 @@
 
 (defun convert-simple-font (definition surface)
   (loop for c across (character-map definition)
-        for m in (loop for char in (retrieve-character-map (character-mask definition)
+        for m in (loop for char in (retrieve-mask-map (character-mask definition)
                                                            surface (color-key definition))
                        collect (convert-character char (char-pitch definition)))
         do (loop for i from (* (char-code c) (char-size definition)) below ( + (* (char-code c) (char-size definition)) (char-size definition))
