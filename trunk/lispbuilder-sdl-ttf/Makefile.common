@@ -7,5 +7,5 @@
 LIB_NAME=lispbuilder-sdl-ttf-glue
 SO_LIB_NAME=lib$(LIB_NAME)
 
-STUBS=  $(SO_LIB_NAME).$(SHLIB_SUFFIX)
+STUBS=$(LIB_NAME).o $(SO_LIB_NAME).$(SHLIB_SUFFIX)
 
