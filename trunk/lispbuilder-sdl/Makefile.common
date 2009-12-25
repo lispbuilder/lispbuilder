@@ -1,0 +1,13 @@
+#### -*- Mode: Makefile -*-
+#### Author: Matthew Danish <mrd@debian.org>
+#### Common Makefile options
+
+#### Modified by: Luke Crook <luke@balooga.com>
+
+LIB_NAME=lispbuilder-sdl-glue
+
+SHLIB_NAME=lib$(LIB_NAME)
+OBJ_SUFFIX=o
+
+STUBS=$(LIB_NAME).$(OBJ_SUFFIX) $(SHLIB_NAME).$(SHLIB_SUFFIX)
+
