@@ -1,0 +1,16 @@
+#### -*- Mode: Makefile -*-
+#### Makefile for Darwin/PPC systems
+
+CC=gcc
+SHFLAGS=-bundle
+CFLAGS+=$(SHFLAGS) -g -Wall
+LDFLAGS+=$(SHFLAGS)
+SHLIB_SUFFIX=dylib
+SDL_CONFIG=sdl-config
+
+SDL_CFLAGS=$(CFLAGS) $(shell $(SDL_CONFIG) --cflags)
+SDL_LDFLAGS=$(LDFLAGS) $(shell $(SDL_CONFIG) --libs)
+
+SDL_GLUE_CFLAGS=$(SDL_CFLAGS)
+SDL_GLUE_LDFLAGS=$(LDFLAGS) -lSDL
+
