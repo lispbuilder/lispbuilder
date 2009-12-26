@@ -32,7 +32,11 @@
 // that uses this DLL. This way any other project whose source files include this file see 
 // LISPBUILDERSDLGLUE_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
-#define LISPBUILDERSDLGLUE_API __declspec(dllexport)
+#ifdef WIN32
+#define LISPBUILDERSDLGLUE_API extern __declspec(dllexport)
+#else
+#define LISPBUILDERSDLGLUE_API extern
+#endif 
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -50,17 +54,17 @@ SDL_sem* audio_buffer_lock = NULL; //SDL_CreateSemaphore(1);
 	lispbuilder-sdl and the callback */
 Uint8* audio_buffer = NULL;
 int audio_buffer_length = 0;
-	
-extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_WaitUntilBufferFull(void);
-extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_BufferFilled(void);
-extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_RequireBufferFill(void);
 
-extern LISPBUILDERSDLGLUE_API Uint8* SDL_glue_SDL_GetAudioBuffer(void);
-extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_GetAudioBufferLength(void);
+LISPBUILDERSDLGLUE_API int SDL_glue_SDL_WaitUntilBufferFull(void);
+LISPBUILDERSDLGLUE_API int SDL_glue_SDL_BufferFilled(void);
+LISPBUILDERSDLGLUE_API int SDL_glue_SDL_RequireBufferFill(void);
 
-extern LISPBUILDERSDLGLUE_API void SDLCALL SDL_glue_mixaudio(void *udata, Uint8 *stream, int len);
-extern LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained);
-extern LISPBUILDERSDLGLUE_API void SDLCALL SDL_glue_SDL_CloseAudio(void);
+LISPBUILDERSDLGLUE_API Uint8* SDL_glue_SDL_GetAudioBuffer(void);
+LISPBUILDERSDLGLUE_API int SDL_glue_SDL_GetAudioBufferLength(void);
+
+LISPBUILDERSDLGLUE_API void SDLCALL SDL_glue_mixaudio(void *udata, Uint8 *stream, int len);
+LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained);
+LISPBUILDERSDLGLUE_API void SDLCALL SDL_glue_SDL_CloseAudio(void);
 
 void (SDLCALL *callback)(void *userdata, Uint8 *stream, int len);
 

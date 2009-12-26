@@ -28,7 +28,6 @@
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 
-//#include "stdafx.h"
 #include "lispbuilder-sdl-glue.h"
 
 /* Set up for C function definitions, even when using C++ */
@@ -36,7 +35,7 @@
 extern "C" {
 #endif
 
-extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_WaitUntilBufferFull(void) {
+LISPBUILDERSDLGLUE_API int SDL_glue_SDL_WaitUntilBufferFull(void) {
     /*	Let lispbulder-sdl know to fill the audio buffer */
 	SDL_mutexP(buffer_fill_lock);
 	buffer_fill = 1;
@@ -45,7 +44,7 @@ extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_WaitUntilBufferFull(void) {
 	/*	And wait until lispbuilder-sdl has done so */
 	return SDL_SemWait(audio_buffer_lock);
 }
-extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_BufferFilled(void) {
+LISPBUILDERSDLGLUE_API int SDL_glue_SDL_BufferFilled(void) {
 	/* lispbuilder-sdl calls this function *after* filling the audio buffer. */
 	SDL_mutexP(buffer_fill_lock);
 	buffer_fill = -1;
@@ -55,19 +54,19 @@ extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_BufferFilled(void) {
 	return SDL_SemPost(audio_buffer_lock);
 }
 
-extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_RequireBufferFill(void) {
+LISPBUILDERSDLGLUE_API int SDL_glue_SDL_RequireBufferFill(void) {
 	return buffer_fill;
 }
 
-extern LISPBUILDERSDLGLUE_API Uint8* SDL_glue_SDL_GetAudioBuffer(void) {
+LISPBUILDERSDLGLUE_API Uint8* SDL_glue_SDL_GetAudioBuffer(void) {
 	return audio_buffer;
 }
 
-extern LISPBUILDERSDLGLUE_API int SDL_glue_SDL_GetAudioBufferLength(void) {
+LISPBUILDERSDLGLUE_API int SDL_glue_SDL_GetAudioBufferLength(void) {
 	return audio_buffer_length;
 }
 
-extern LISPBUILDERSDLGLUE_API void SDL_glue_mixaudio(void *unused, Uint8 *stream, int len) {
+LISPBUILDERSDLGLUE_API void SDL_glue_mixaudio(void *unused, Uint8 *stream, int len) {
 	/*	I can probably get rid of this by allocating the global audio buffer using the buffer
 		size in the allocated audio mixer. An optimization for later. */
 	if (audio_buffer == NULL) {
@@ -90,7 +89,7 @@ extern LISPBUILDERSDLGLUE_API void SDL_glue_mixaudio(void *unused, Uint8 *stream
     }
 }
 
-extern LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained) {
+LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_OpenAudio(SDL_AudioSpec *desired, SDL_AudioSpec *obtained) {
 	buffer_fill_lock = SDL_CreateMutex();
 	buffer_fill = -1;
 	audio_buffer_lock = SDL_CreateSemaphore(1);
@@ -98,7 +97,7 @@ extern LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_OpenAudio(SDL_AudioSpec *
 	return SDL_OpenAudio(desired, obtained);
 }
 
-extern LISPBUILDERSDLGLUE_API void SDLCALL SDL_glue_SDL_CloseAudio(void) {
+LISPBUILDERSDLGLUE_API void SDLCALL SDL_glue_SDL_CloseAudio(void) {
 	/* Seems this sequence of calls is quite important, or the glue-library will hang.
 		1) Bump the semaphore in case the callback is waiting on audio data.
 		2) Lock the callback. In effect returns when the callback returns. 
