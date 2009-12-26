@@ -154,12 +154,11 @@
           (slot-value *mixer* 'callback))
   
     (if (eql -1
-             #+lispbuilder-sdl-audio
-             (sdl-cffi::sdl-glue-SDL-Open-Audio requested-audio-spec
+             (if sdl-cffi::*glue-loaded-p*
+		 (sdl-cffi::sdl-glue-SDL-Open-Audio requested-audio-spec
                                                 (sdl:fp (audio-spec *mixer*)))
-             #-lispbuilder-sdl-audio
-             (sdl-cffi::SDL-Open-Audio requested-audio-spec
-                                       (sdl:fp (audio-spec *mixer*))))
+		 (sdl-cffi::SDL-Open-Audio requested-audio-spec
+                                       (sdl:fp (audio-spec *mixer*)))))
       (setf (slot-value *mixer* 'mixer-opened-p) nil)
       (setf (slot-value *mixer* 'mixer-opened-p) t))
     (when (mixer-opened-p *mixer*)
@@ -234,8 +233,9 @@
       ;; Pause the audio stream
       (pause-audio)
       (setf (slot-value *mixer* 'mixer-opened-p) nil))
-  #+lispbuilder-sdl-audio(sdl-cffi::sdl-glue-sdl-close-audio);;(format t "sdl-cffi::sdl-glue-sdl-close-audio~%")
-  #-lispbuilder-sdl-audio(sdl-cffi::sdl-close-audio)
+  (if sdl-cffi::*glue-loaded-p*
+      (sdl-cffi::sdl-glue-sdl-close-audio);;(format t "sdl-cffi::sdl-glue-sdl-close-audio~%")
+      (sdl-cffi::sdl-close-audio))
   (quit-subsystems sdl:sdl-init-audio)
   (setf *managed-audio* nil))
 
@@ -566,15 +566,17 @@
 ;            (force-output t)))))
 ;      (format t "*mixer* not yet initialized~%")))
 
-#+lispbuilder-sdl-audio
 (defun process-audio ()
-  (when (and *mixer*
-             (= (sdl-cffi::SDL-glue-SDL-Require-Buffer-Fill) 1))
+  (when (and sdl-cffi::*glue-loaded-p*
+	     *mixer*
+	     (= (sdl-cffi::SDL-glue-SDL-Require-Buffer-Fill) 1))
     (fill-audio-buffer (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer)
-                       (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer-length))
+		       (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer-length))
     (sdl-cffi::SDL-glue-SDL-Buffer-Filled)))
 
-;; This callback is not used if the glue library is used.
+;; This callback is only used if the glue library is not used available.
+;; Seems to work OK in Lispworks as this supports unknowm threads.
+;; Breaks in SBCL/CLISP etc.
 (cffi:defcallback default-fill-audio-buffer
     :pointer ((user-data :pointer)
               (stream :pointer)

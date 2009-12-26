@@ -706,7 +706,7 @@ The contents of the event are completely up to the programmer.
                                                             (rest (rest event))))))
                                       events))))
              (unless ,quit
-               #+lispbuilder-sdl-audio(process-audio)
+               (when sdl-cffi::*glue-loaded-p* (process-audio))
                (sdl:update-input-util (sdl:frame-time))
                (process-timestep *default-fpsmanager*
                                  ,idle-func)))
@@ -717,4 +717,3 @@ The contents of the event are completely up to the programmer.
 
 (defun released-p (state)
   (= state sdl-cffi::sdl-released))
-
