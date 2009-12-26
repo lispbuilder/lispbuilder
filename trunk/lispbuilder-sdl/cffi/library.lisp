@@ -46,4 +46,6 @@
 
 (when (handler-case (cffi:use-foreign-library sdl-glue)
         (load-foreign-library-error () nil))
-  (setf *glue-loaded-p* t))
+  (progn
+    (setf *glue-loaded-p* t)
+    (pushnew :lispbuilder-sdl-audio *features*)))
