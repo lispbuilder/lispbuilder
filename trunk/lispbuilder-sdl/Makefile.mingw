@@ -6,13 +6,12 @@ CFLAGS+=$(SHFLAGS) -g -Wall
 LDFLAGS+=$(SHFLAGS) -L../bin/
 SHLIB_SUFFIX=dll
 
-#SDL_CFLAGS=$(CFLAGS) -I"C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL-1.2.14/include" -ISDL
-#SDL_LDFLAGS=$(LDLAGS) -L"C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL-1.2.14/build" -lmingw32 -lSDLmain -lSDL -mwindows
-SDL_CFLAGS=$(CFLAGS) -I"C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL-1.2.14/include"
-SDL_LDFLAGS=$(LDFLAGS) -L"C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL-1.2.14/build"
+SDL_INCLUDE_DIR="C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL-1.2.14/include"
+SDL_BUILD_DIR="C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL-1.2.14/build"
 
-#SDL_GLUE_CFLAGS=$(SDL_CFLAGS)
-#SDL_GLUE_LDFLAGS=$(SDL_LDFLAGS) -L../bin/
+SDL_CFLAGS=$(CFLAGS) -I$(SDL_INCLUDE_DIR)
+SDL_LDFLAGS=$(LDFLAGS) -L$(SDL_BUILD_DIR)
+
 SDL_GLUE_CFLAGS=$(SDL_CFLAGS) -ISDL
-SDL_GLUE_LDFLAGS=$(SDL_LDFLAGS) -lSDL
+SDL_GLUE_LDFLAGS=$(SDL_LDFLAGS) -lmingw32 -lSDLmain -lSDL -mwindows #-lSDL
 
