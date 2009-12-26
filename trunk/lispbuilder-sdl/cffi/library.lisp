@@ -8,15 +8,15 @@
 ;;                  cffi:*foreign-library-directories*
 ;;                  :test #'equal))
 
-#+windows(eval-when (:compile-toplevel :load-toplevel :execute)
-                        (pushnew sdl-bin:*dll-path*
-                                 cffi:*foreign-library-directories*
-                                 :test #'equal))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (pushnew sdl-bin:*dll-path*
+           cffi:*foreign-library-directories*
+           :test #'equal))
 
 ;; This is where FINK installs SDL.
 #+darwin(pushnew #P"/sw/lib/" cffi:*foreign-library-directories*
 	             :test #'equal)
-+;; This is where MacPorts installs SDL.
+;; This is where MacPorts installs SDL.
 #+darwin(pushnew #P"/opt/local/lib/" cffi:*foreign-library-directories*
                  :test #'equal)
 

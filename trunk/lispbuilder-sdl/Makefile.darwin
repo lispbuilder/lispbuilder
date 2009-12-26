@@ -2,7 +2,7 @@
 #### Makefile for Darwin/PPC systems
 
 CC=g++
-SHFLAGS=-bundle
+SHFLAGS=-dynamiclib
 CFLAGS+=$(SHFLAGS) -g -Wall
 LDFLAGS+=$(SHFLAGS)
 SHLIB_SUFFIX=dylib
