@@ -35,7 +35,7 @@
   (:darwin (:or (:framework "liblispbuilder-sdl-glue")
                 (:default "liblispbuilder-sdl-glue")))
   (:unix (:or "liblispbuilder-sdl-glue"
-	      "lispbuilder-sdl-glue.so"))
+	      "liblispbuilder-sdl-glue.so"))
   (t (:or)))
 
 (cffi:use-foreign-library sdl)
