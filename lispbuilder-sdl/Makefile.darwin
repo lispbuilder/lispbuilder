@@ -8,6 +8,7 @@ LDFLAGS+=$(SHFLAGS)
 SHLIB_SUFFIX=dylib
 SDL_CONFIG=sdl-config
 
+#-lSDLmain -lSDL -framework Cocoa
 SDL_CFLAGS=$(CFLAGS) $(shell $(SDL_CONFIG) --cflags)
 SDL_LDFLAGS=$(LDFLAGS) $(shell $(SDL_CONFIG) --libs)
 

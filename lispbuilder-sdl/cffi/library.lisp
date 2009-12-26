@@ -31,14 +31,18 @@
 	      "libSDL")))
 
 (cffi:define-foreign-library sdl-glue
-  (:windows "lispbuilder-sdl-glue.dll")
-  (:darwin (:or (:framework "lispbuilder-sdl-glue")
-                (:default "lispbuilder-sdl-glue")))
-  (:unix (:or "lispbuilder-sdl-glue"
-	      "lispbuilder-sdl-glue.so")))
+  (:windows "liblispbuilder-sdl-glue.dll")
+  (:darwin (:or (:framework "liblispbuilder-sdl-glue")
+                (:default "liblispbuilder-sdl-glue")))
+  (:unix (:or "liblispbuilder-sdl-glue"
+	      "lispbuilder-sdl-glue.so"))
+  (t (:or)))
 
 (cffi:use-foreign-library sdl)
 
 (when (handler-case (cffi:use-foreign-library sdl-glue)
         (load-foreign-library-error () nil))
   (pushnew :lispbuilder-sdl-audio *features*))
+
+
+;;(defparameter *glue-loaded-p* (foreign-library-loaded-p 'sdl-glue))
