@@ -40,9 +40,10 @@
 
 (cffi:use-foreign-library sdl)
 
+;; cffi:foreign-library-loaded-p is not yet in the released version of CFFI
+;;(defparameter *glue-loaded-p* (cffi:foreign-library-loaded-p 'sdl-glue))
+(defparameter *glue-loaded-p* nil)
+
 (when (handler-case (cffi:use-foreign-library sdl-glue)
         (load-foreign-library-error () nil))
-  (pushnew :lispbuilder-sdl-audio *features*))
-
-
-;;(defparameter *glue-loaded-p* (foreign-library-loaded-p 'sdl-glue))
+  (setf *glue-loaded-p* t))
