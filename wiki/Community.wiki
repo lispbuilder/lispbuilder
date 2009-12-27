@@ -32,5 +32,5 @@ Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system]
  * [http://purevirtual.com/~anthony/jigsaw-puzzle/index.html Jigsaw Puzzle Game], and [http://anthonyf.wordpress.com/2006/12/27/a-lispy-jigsaw-puzzle-game/]
  * [http://code.google.com/p/blackthorn-engine/ Blackthorn], a 2D game engine based on an object tree like Lisp-Game-Engine. So far, two games have been built with Blackthorn (downloads available from the main project page):
   * Bunny Slayer, a top-down RPG in the style of Zelda.
-  * Thopter, a scrolling shooter game with multiplayer co-op support.
+  * Thopter, a scrolling shooter game with multiplayer co-op support. ([http://www.youtube.com/watch?v=5MDqC6XG-Ag Video])
  * [http://www.ludumdare.com/compo/2007/12/16/working-title-ruckus/ Ruckus: Entry into the Ludumdare '07 compo]
