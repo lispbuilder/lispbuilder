@@ -706,7 +706,7 @@ The contents of the event are completely up to the programmer.
                                                             (rest (rest event))))))
                                       events))))
              (unless ,quit
-               (when sdl-cffi::*glue-loaded-p* (process-audio))
+               (process-audio)
                (sdl:update-input-util (sdl:frame-time))
                (process-timestep *default-fpsmanager*
                                  ,idle-func)))

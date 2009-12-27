@@ -23,6 +23,10 @@
   (cffi:defcfun ("SDL_glue_SDL_GetAudioBufferLength"
 		 SDL-glue-SDL-Get-Audio-Buffer-length) :int))
 #-sbcl(progn
+	(cffi:defcfun ("SDL_glue_SDL_OpenAudio"
+		       sdl-glue-SDL-Open-Audio) :int
+	  (desired :pointer)
+	  (obtained :pointer))
 	(cffi:defcfun ("SDL_glue_SDL_CloseAudio"
 		       SDL-glue-SDL-Close-Audio) :void)
 	
