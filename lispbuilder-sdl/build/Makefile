@@ -6,7 +6,6 @@ include ../Makefile.common
 USR_SDL_LIBDIR=$(DESTDIR)/local/lib/
 SDL_LIBDIR=$(DESTDIR)/lib/
 
-
 all:
 
 clean:
