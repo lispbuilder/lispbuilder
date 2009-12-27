@@ -10,6 +10,7 @@ include ../Makefile.common
 
 all: $(SHLIB_NAME).$(SHLIB_SUFFIX)
 	cp $(SHLIB_NAME).$(SHLIB_SUFFIX) ../bin
+	mv $(SHLIB_NAME).$(SHLIB_SUFFIX) ../build
 
 $(LIB_NAME).$(OBJ_SUFFIX): $(LIB_NAME).cpp
 	$(CC) $(CPPFLAGS) $(SDL_GLUE_CFLAGS) -c -o $@ $<
