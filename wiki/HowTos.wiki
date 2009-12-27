@@ -1,3 +1,4 @@
 #summary How-To's and Other Guides
+#sidebar TableOfContentsSDL
 
  * [PortableInteractiveDevelopment Portable Interactive Development with SLIME]
