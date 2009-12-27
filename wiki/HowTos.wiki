@@ -2,3 +2,4 @@
 #sidebar TableOfContentsSDL
 
  * [PortableInteractiveDevelopment Portable Interactive Development with SLIME]
+ * [StandAloneExecutables Building Stand-Alone Executables]
