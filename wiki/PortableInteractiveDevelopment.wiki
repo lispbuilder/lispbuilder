@@ -2,7 +2,7 @@
 
 = Introduction =
 
-This how-to guide was originally written by Elliott Slaughter and posted on the mailing list. It has been reproduced here so that others can make use of it.
+This how-to guide was originally written by Elliott Slaughter and posted on the mailing list. It has been reproduced here so that others can make use of it. The guide describes how to connect the Emacs/SLIME IDE to Lisp and simultaneously run a game while using the interactive console, debugger, and editor features of SLIME.
 
 = How To: Portable Interactive Development with SLIME =
 
