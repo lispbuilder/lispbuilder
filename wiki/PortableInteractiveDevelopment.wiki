@@ -1,4 +1,5 @@
 #summary Portable Interactive Development with SLIME
+#sidebar TableOfContentsSDL
 
 = Introduction =
 
