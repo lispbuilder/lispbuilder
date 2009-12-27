@@ -64,7 +64,8 @@ NIL
 NIL
 > (let ((filename #+windows "main.exe" #-windows "main"))
     #+clisp (saveinitmem filename :init-function #'main :executable t :norc t)
-    #+sbcl (save-lisp-and-die filename :toplevel #'main :executable t))
+    #+sbcl (save-lisp-and-die filename :toplevel #'main :executable t)
+    #+clozure (save-application filename :toplevel-function #'main :prepend-kernel t))
 
 ;; TODO: Add Lispworks and Allegro.
 </pre>
