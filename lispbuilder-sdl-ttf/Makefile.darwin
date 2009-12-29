@@ -1,16 +1,21 @@
 #### -*- Mode: Makefile -*-
 #### Makefile for Darwin/PPC systems
 
-CC=gcc
-SHFLAGS=-bundle
+CC=gcc #CC=g++
+SHFLAGS=-dynamiclib
 CFLAGS+=$(SHFLAGS) -g -Wall
 LDFLAGS+=$(SHFLAGS)
 SHLIB_SUFFIX=dylib
 SDL_CONFIG=sdl-config
 
-SDL_CFLAGS=$(shell $(SDL_CONFIG) --cflags) $(CFLAGS)
-SDL_LDFLAGS=$(shell $(SDL_CONFIG) --libs) $(LDFLAGS)
+# look for sdl-config; else assume framework is in /Library/Frameworks
+ifneq ($(shell which $(SDL_CONFIG)),)
+SDL_CFLAGS=$(CFLAGS) $(shell $(SDL_CONFIG) --cflags)
+SDL_LDFLAGS=$(LDFLAGS) $(shell $(SDL_CONFIG) --libs)
+else
+SDL_CFLAGS=$(CFLAGS) -D_GNU_SOURCE=1 -D_THREAD_SAFE -I/Library/Frameworks/SDL.framework/Headers
+SDL_LDFLAGS=$(LDFLAGS) -framework SDL -framework Cocoa
+endif
 
-SDL_TTF_CFLAGS=$(SDL_CFLAGS)
-SDL_TTF_LDFLAGS=$(LDFLAGS) -lSDL_ttf
-
+SDL_GLUE_CFLAGS=$(SDL_CFLAGS)
+SDL_GLUE_LDFLAGS=$(SDL_LDFLAGS) -lSDL_ttf
