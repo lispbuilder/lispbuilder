@@ -1,9 +1,20 @@
 #### -*- Mode: Makefile -*-
 
 CC=gcc
-CFLAGS=-shared -Wall
-LDFLAGS=
+SHFLAGS=-shared
+CFLAGS+=$(SHFLAGS) -g -Wall
+LDFLAGS+=$(SHFLAGS) -L../bin/
 SHLIB_SUFFIX=dll
 
-SDL_TTF_CFLAGS=$(CFLAGS) -ISDL-1.2.11/include -ISDL_ttf-2.0.8
-SDL_TTF_LDFLAGS=$(LDFLAGS) -L../bin/ -lSDL_ttf
+SDL_INCLUDE_DIR="C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL-1.2.14/include"
+SDL_BUILD_DIR="C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL-1.2.14/build"
+
+SDL_TTF_INCLUDE_DIR=-I$(SDL_INCLUDE_DIR) -I"C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL_ttf-2.0.10"
+SDL_TTF_BUILD_DIR=-L$(SDL_BUILD_DIR) -L"C:/Documents and Settings/00U4440/My Documents/lexar/dev/SDL_ttf-2.0.10"
+
+SDL_CFLAGS=$(CFLAGS) -I$(SDL_INCLUDE_DIR) -I$(SDL_TTF_INCLUDE_DIR)
+SDL_LDFLAGS=$(LDFLAGS) -L$(SDL_BUILD_DIR) -I$(SDL_TTF_BUILD_DIR)
+
+SDL_GLUE_CFLAGS=$(SDL_CFLAGS) #-ISDL
+SDL_GLUE_LDFLAGS=$(SDL_LDFLAGS) -lmingw32 -lSDL_ttf -mwindows
+

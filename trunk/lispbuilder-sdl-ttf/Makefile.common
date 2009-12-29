@@ -5,7 +5,9 @@
 #### Modified by: Luke Crook <luke@balooga.com>
 
 LIB_NAME=lispbuilder-sdl-ttf-glue
-SO_LIB_NAME=lib$(LIB_NAME)
 
-STUBS=$(LIB_NAME).o $(SO_LIB_NAME).$(SHLIB_SUFFIX)
+SHLIB_NAME=lib$(LIB_NAME)
+OBJ_SUFFIX=o
+
+STUBS=$(LIB_NAME).$(OBJ_SUFFIX) $(SHLIB_NAME).$(SHLIB_SUFFIX)
 

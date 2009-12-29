@@ -7,7 +7,7 @@
 DESTDIR=/usr
 
 all: Makefile.opts
-	${MAKE} -C glue	
+	${MAKE} -C glue
 
 clean: Makefile.opts
 	${MAKE} -C glue clean
@@ -17,7 +17,8 @@ clean: Makefile.opts
 Makefile.opts:
 	(sh select_platform.sh)
 
-install_ttf:
-	${MAKE} -C build install_ttf DESTDIR=$(DESTDIR)
+install_glue:
+	${MAKE} -C build install_glue DESTDIR=$(DESTDIR)
 
-install: install_ttf 
+install: install_glue
+

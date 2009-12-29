@@ -8,14 +8,15 @@
 include ../Makefile.opts
 include ../Makefile.common
 
-all: $(SO_LIB_NAME).$(SHLIB_SUFFIX)
-	mv $(SO_LIB_NAME).$(SHLIB_SUFFIX) ../build
+all: $(SHLIB_NAME).$(SHLIB_SUFFIX)
+	cp $(SHLIB_NAME).$(SHLIB_SUFFIX) ../bin
+	mv $(SHLIB_NAME).$(SHLIB_SUFFIX) ../build
 
-$(LIB_NAME).o: $(LIB_NAME).c
-	$(CC) $(CPPFLAGS) $(SDL_TTF_CFLAGS) -c -o $@ $<
+$(LIB_NAME).$(OBJ_SUFFIX): $(LIB_NAME).c
+	$(CC) $(CPPFLAGS) $(SDL_GLUE_CFLAGS) -c -o $@ $<
 
-$(SO_LIB_NAME).$(SHLIB_SUFFIX): $(LIB_NAME).o
-	$(CC) $(SDL_TTF_LDFLAGS) -o $@ $<
+$(SHLIB_NAME).$(SHLIB_SUFFIX): $(LIB_NAME).$(OBJ_SUFFIX)
+	$(CC) $(SDL_GLUE_LDFLAGS) -o $@ $<
 
 clean:
 	rm -f $(STUBS)
