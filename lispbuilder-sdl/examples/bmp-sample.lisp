@@ -29,3 +29,18 @@
       (:key-down-event ()
        (when (sdl:key-down-p :sdl-key-escape)
          (sdl:push-quit-event))))))
+
+(defun bmp-sample-loop ()
+  (sdl:with-init ()
+    (sdl:window 320 320 :title-caption "Simple BMP example" :icon-caption "Simple BMP example")
+    (sdl:fill-surface sdl:*white* :surface sdl:*default-display*)
+    (loop repeat 100
+          collecting (sdl:load-image (merge-pathnames "lisp.bmp" sdl:*default-asset-path*)))
+    
+    (sdl:update-display)
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:video-expose-event () (sdl:update-display))
+      (:key-down-event ()
+       (when (sdl:key-down-p :sdl-key-escape)
+         (sdl:push-quit-event))))))

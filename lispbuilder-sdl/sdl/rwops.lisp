@@ -4,12 +4,13 @@
 (defclass rwops (foreign-object) ()
   (:default-initargs
    :gc t
-   ;;:free #'sdl-cffi::SDL-Free-RW
-   :free
-   #'(lambda (fp)
-             (when (is-valid-ptr fp)
-               (cffi:foreign-funcall-pointer (cffi:foreign-slot-value fp 'sdl-cffi::sdl-rwops 'sdl-cffi::close) ()
-                                             :pointer fp :int))))
+   :free #'sdl-cffi::SDL-Free-RW
+   ;;:free
+   ;;#'(lambda (fp)
+   ;;          (when (is-valid-ptr fp)
+   ;;            (cffi:foreign-funcall-pointer (cffi:foreign-slot-value fp 'sdl-cffi::sdl-rwops 'sdl-cffi::close) ()
+   ;;                                          :pointer fp :int)))
+   )
   (:documentation "A wrapper around a foreign SDL_RWops object.
 Free using [FREE](#free)."))
 
@@ -35,11 +36,6 @@ Free using [FREE](#free)."))
 				:adjustable nil)))
       (read-sequence content str)
       content)))
-
-(defun load-image-from-byte-sequence (array)
-  (let* ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array))
-	 (surf (make-instance 'surface :fp (sdl-cffi::sdl-load-bmp-rw (sdl-cffi::sdl-rw-from-mem mem-array (length array)) 1))))
-    surf))
 
 ;; (defmethod load-image-from-byte-sequence (array)
 ;;   (cffi:with-foreign-object (mem-array :unsigned-char (length array))

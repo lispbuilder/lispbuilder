@@ -10,10 +10,8 @@
 
 (defun create-RWops-from-file (filename)
   (let ((file-path (namestring filename)))
-    (if (and (stringp file-path) (probe-file file-path))
-	(let ((rwops (sdl-cffi::sdl-RW-From-File file-path "rb")))
-	  (if (is-valid-ptr rwops)
-	      rwops
-	      nil))
-	nil)))
+    (when (and (stringp file-path) (probe-file file-path))
+      (let ((rwops (sdl-cffi::sdl-RW-From-File file-path "rb")))
+        (when (is-valid-ptr rwops)
+          rwops)))))
 

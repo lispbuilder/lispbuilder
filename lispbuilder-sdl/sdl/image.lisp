@@ -5,7 +5,6 @@
 (defmethod load-image ((source rwops) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the `RWOPS` in `SOURCE`."
   (declare (ignore image-type force))
-  
   (let* ((surf-ptr (sdl-cffi::SDL-Load-BMP-RW (fp source) 0))
 	 (surf (make-instance 'surface
 			      :using-surface (if (cffi-sys:null-pointer-p surf-ptr)
@@ -44,12 +43,13 @@
 
 (defmethod load-image ((filename pathname) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the file at location `PATHNAME`."
+  (declare (ignore image-type force free-rwops))
   (load-image (namestring filename)
               :color-key color-key
               :alpha alpha
               :image-type image-type
               :force force
-              :free-rwops free-rwops
+              :free-rwops t
               :color-key-at color-key-at))
 
 (defmethod save-image ((surface sdl-surface) (filename string))
@@ -60,3 +60,6 @@
   "Saves the `SURFACE` as a `BMP` image to a file at location `FILENAME`."
   (save-image surface (namestring filename)))
 
+(defun load-image-from-byte-sequence (array)
+  (let ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array)))
+    (make-instance 'surface :fp (sdl-cffi::sdl-load-bmp-rw (sdl-cffi::sdl-rw-from-mem mem-array (length array)) 1))))
