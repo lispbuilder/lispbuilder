@@ -35,7 +35,7 @@
 extern "C" {
 #endif
 
-LISPBUILDERSDLGLUE_API int SDL_glue_SDL_WaitUntilBufferFull(void) {
+LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_WaitUntilBufferFull(void) {
     /*	Let lispbulder-sdl know to fill the audio buffer */
 	SDL_mutexP(buffer_fill_lock);
 	buffer_fill = 1;
@@ -44,7 +44,7 @@ LISPBUILDERSDLGLUE_API int SDL_glue_SDL_WaitUntilBufferFull(void) {
 	/*	And wait until lispbuilder-sdl has done so */
 	return SDL_SemWait(audio_buffer_lock);
 }
-LISPBUILDERSDLGLUE_API int SDL_glue_SDL_BufferFilled(void) {
+LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_BufferFilled(void) {
 	/* lispbuilder-sdl calls this function *after* filling the audio buffer. */
 	SDL_mutexP(buffer_fill_lock);
 	buffer_fill = -1;
@@ -54,19 +54,19 @@ LISPBUILDERSDLGLUE_API int SDL_glue_SDL_BufferFilled(void) {
 	return SDL_SemPost(audio_buffer_lock);
 }
 
-LISPBUILDERSDLGLUE_API int SDL_glue_SDL_RequireBufferFill(void) {
+LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_RequireBufferFill(void) {
 	return buffer_fill;
 }
 
-LISPBUILDERSDLGLUE_API Uint8* SDL_glue_SDL_GetAudioBuffer(void) {
+LISPBUILDERSDLGLUE_API Uint8* SDLCALL SDL_glue_SDL_GetAudioBuffer(void) {
 	return audio_buffer;
 }
 
-LISPBUILDERSDLGLUE_API int SDL_glue_SDL_GetAudioBufferLength(void) {
+LISPBUILDERSDLGLUE_API int SDLCALL SDL_glue_SDL_GetAudioBufferLength(void) {
 	return audio_buffer_length;
 }
 
-LISPBUILDERSDLGLUE_API void SDL_glue_mixaudio(void *unused, Uint8 *stream, int len) {
+LISPBUILDERSDLGLUE_API void SDLCALL SDL_glue_mixaudio(void *unused, Uint8 *stream, int len) {
 	/*	I can probably get rid of this by allocating the global audio buffer using the buffer
 		size in the allocated audio mixer. An optimization for later. */
 	if (audio_buffer == NULL) {
