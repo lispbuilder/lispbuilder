@@ -12,7 +12,7 @@ all:
 clean:
 	$(RM) $(STUBS)
 
-install_ttf:
+install_glue:
 	install -m 0644 $(SHLIB_NAME).$(SHLIB_SUFFIX) $(USR_SDL_LIBDIR)
 
 ifeq ($(wildcard $(SDL_LIBDIR)$(SHLIB_NAME).$(SHLIB_SUFFIX)),)
