@@ -466,10 +466,7 @@
                 (pointer-address
                  (cffi:mem-aref (foreign-slot-pointer audio-cvt
 						      'sdl-cffi::sdl-audio-cvt
-						      'sdl-cffi::buf) :pointer))))
-              ;; LJC
-	      (sdl-cffi::sdl-free-wav handle)
-	      )
+						      'sdl-cffi::buf) :pointer)))))
             (make-instance 'audio
                            :audio-buffer-handle
                            (make-instance 'audio-buffer
