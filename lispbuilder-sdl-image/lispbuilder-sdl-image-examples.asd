@@ -6,7 +6,7 @@
 
 (defsystem lispbuilder-sdl-image-examples
     :description "Examples describing the use of lispbuilder-sdl-image."
-    :version "0.4.1"
+    :version "0.5.0"
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "MIT"
@@ -21,10 +21,10 @@
 	       (:static-file "lisp.gif")
 	       (:static-file "lisp.jpg")
 	       (:static-file "lisp.lbm")
-	       (:static-file "lisp.pcx")
+               (:static-file "lisp.pcx")
 	       (:static-file "lisp.png")
 	       (:static-file "lisp.pbm")
 	       (:static-file "lisp.ppm")
 	       (:static-file "lisp.pgm")
 	       (:static-file "lisp.tga")
-	       (:static-file "lisp.tif")))))
+               (:static-file "lisp.tif")))))
