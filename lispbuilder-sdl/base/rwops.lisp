@@ -13,5 +13,6 @@
     (when (and (stringp file-path) (probe-file file-path))
       (let ((rwops (sdl-cffi::sdl-RW-From-File file-path "rb")))
         (when (is-valid-ptr rwops)
+          ;;(format t "create-RWops-from-file: ~A~%" rwops)
           rwops)))))
 
