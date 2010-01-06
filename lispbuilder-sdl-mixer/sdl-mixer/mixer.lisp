@@ -127,7 +127,7 @@ Do not attempt to use `MUSIC` after it is freed.")
 (defun get-number-sample-decoders ()
   (when (cffi:foreign-symbol-pointer "Mix_GetNumChunkDecoders" :library 'sdl-mixer-cffi::sdl-mixer)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "Mix_GetNumChunkDecoders" :library 'sdl-mixer-cffi::sdl-mixer)
-				  () :void nil :int)))
+				  () :int)))
 
 ;; extern DECLSPEC const char * SDLCALL Mix_GetChunkDecoder(int index);
 (defun get-sample-decoder (index)
@@ -141,7 +141,7 @@ Do not attempt to use `MUSIC` after it is freed.")
 (defun get-number-music-decoders ()
   (when (cffi:foreign-symbol-pointer "Mix_GetNumMusicDecoders" :library 'sdl-mixer-cffi::sdl-mixer)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "Mix_GetNumMusicDecoders" :library 'sdl-mixer-cffi::sdl-mixer)
-				  () :void nil :int)))
+				  () :int)))
 
 ;;extern DECLSPEC const char * SDLCALL Mix_GetMusicDecoder(int index);
 (defun get-music-decoder (index)
