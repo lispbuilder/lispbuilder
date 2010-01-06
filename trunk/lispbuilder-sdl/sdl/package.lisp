@@ -222,6 +222,9 @@
    #:image-p
    #:image-type-of
 
+   ;; base.lisp
+   #:gc-p
+
    ;; default-colors.lisp
    #:*black*
    #:*white*
@@ -532,6 +535,7 @@
    
    ;; pixel.lisp
    #:bit-depth
+   #:byte-depth
    #:r-mask
    #:g-mask
    #:b-mask
@@ -687,7 +691,14 @@
    #:app-mouse-focus
    #:app-input-focus
    #:app-active
-  
+
+   ;; version.lisp
+   #:library-version
+   #:version-number
+   #:sdl-library-version
+   #:sdl-glue-version
+   #:version-at-least
+   
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
    #:sdl-opengl

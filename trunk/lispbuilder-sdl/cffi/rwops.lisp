@@ -10,8 +10,8 @@
 	(hidden :pointer))
 
 (cffi:defcunion SDL_RWops_hidden
-	#+win32(win32io :pointer)
-	#-win32 (have-stdio-h :pointer)
+	#+win32(SDL_RWops_win32io :pointer)
+	#-win32(SDL_RWops_have_stdio_h :pointer)
 	(mem :pointer)
 	(unknown :pointer))
 

@@ -78,6 +78,7 @@
      (:file "audio")
      (:file "mixer")
      (:file "active")
+     (:file "version")
      (:static-file "bitstream-vera-copyright")
      (:static-file "Vera.ttf"))
     :serial t)

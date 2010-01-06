@@ -17,6 +17,14 @@
 		       sdl-cffi::SDL-Pixel-Format)
     sdl-cffi::BitsPerPixel))
 
+(defun byte-depth (&optional (surface *default-surface*))
+  "Returns the number of bytes per pixel, or bpp, of `SURFACE`."
+  (check-type surface sdl-surface)
+  (with-foreign-slots ((sdl-cffi::BytesPerPixel)
+		       (sdl-base:pixel-format (fp surface))
+		       sdl-cffi::SDL-Pixel-Format)
+    sdl-cffi::BytesPerPixel))
+
 (defun r-mask (&optional (surface *default-surface*))
   "Returns the red mask of `SURFACE`."
   (check-type surface sdl-surface)

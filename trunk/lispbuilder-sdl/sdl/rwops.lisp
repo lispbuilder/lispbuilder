@@ -4,7 +4,11 @@
 (defclass rwops (foreign-object) ()
   (:default-initargs
    :gc t
-   :free #'sdl-cffi::SDL-Free-RW
+   :free #'(lambda (fp)
+             (when (is-valid-ptr fp)
+               ;;(format t "SDL-Free-RW: ~A~%" fp)
+               (sdl-cffi::SDL-Free-RW fp)))
+   ;;   :free #'sdl-cffi::SDL-Free-RW
    ;;:free
    ;;#'(lambda (fp)
    ;;          (when (is-valid-ptr fp)
@@ -17,15 +21,13 @@ Free using [FREE](#free)."))
 (defun create-RWops-from-file (filename)
   "Creates and returns a new `RWOPS` object from the file at location `FILENAME`."
   (let ((rwops (sdl-base::create-RWops-from-file (namestring filename))))
-    (if (sdl-base::is-valid-ptr rwops)
-      (make-instance 'rwops :fp rwops)
-      nil)))
+    (when (sdl-base::is-valid-ptr rwops)
+      (make-instance 'rwops :fp rwops))))
 
 (defun create-RWops-from-byte-array (array)
   "Creates and returns a new `RWOPS` object from the Lisp array `ARRAY`."
-  (let* ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array))
-	 (rwops (make-instance 'rwops :fp (sdl-cffi::sdl-rw-from-mem mem-array (length array)))))
-    rwops))
+  (let ((mem-array (cffi:foreign-alloc :unsigned-char :initial-contents array)))
+    (make-instance 'rwops :fp (sdl-cffi::sdl-rw-from-mem mem-array (length array)))))
 
 (defun file-to-byte-sequence (filepath)
   "Load a file into an Array of unsigned-byte 8"
