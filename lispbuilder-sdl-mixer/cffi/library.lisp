@@ -20,6 +20,9 @@
 	      "libSDL_mixer-1.2.so"
 	      "libSDL_mixer-1.2.so.0")))
 
+(cffi:define-foreign-library mikmod
+  (:windows "mikmod.dll"))
+
 (cffi:define-foreign-library ogg
   (:windows "libogg-0.dll"))
 
@@ -32,6 +35,7 @@
 (cffi:define-foreign-library vorbisfile
   (:windows "libvorbisfile-3.dll"))
 
+(cffi:use-foreign-library mikmod)
 (cffi:use-foreign-library ogg)
 (cffi:use-foreign-library vorbis)
 (cffi:use-foreign-library vorbisfile)
