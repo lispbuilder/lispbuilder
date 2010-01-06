@@ -55,7 +55,8 @@
     (setf *sample* nil))
   (when *mixer-opened*
     (sdl-mixer:Close-Audio t)
-    (setf *mixer-opened* nil)))
+    (setf *mixer-opened* nil))
+  (sdl-mixer:quit))
 
 (defun sample-finished-action ()
   (sdl-mixer:register-sample-finished
@@ -78,6 +79,8 @@
     (setf (sdl:frame-rate) 60)
     (sdl:initialise-default-font)
     (sdl:enable-key-repeat 500 50)
+
+    (sdl-mixer:init :mp3 t)
 
     (setf *status* "Unable to open Audio Mixer.")
     

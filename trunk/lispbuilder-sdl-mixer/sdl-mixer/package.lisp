@@ -188,4 +188,17 @@
 ;;   #:*DEFAULT-MUSIC*
 ;;   #:*DEFAULT-CHUNK*
 
-   ))
+   #:mixer-library-version
+   #:mixer-glue-version
+
+   #:init-flac
+   #:init-mod
+   #:init-mp3
+   #:init-ogg
+   #:init
+   #:quit
+
+   #:flac-init-p
+   #:mod-init-p
+   #:mp3-init-p
+   #:ogg-init-p))

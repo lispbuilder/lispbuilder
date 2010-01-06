@@ -7,10 +7,10 @@
 ;;			   cffi:*foreign-library-directories*
 ;;			   :test #'equal))
 
-#+windows(eval-when (:compile-toplevel :load-toplevel :execute)
-           (pushnew sdl-mixer-bin:*dll-path*
-                    cffi:*foreign-library-directories*
-                    :test #'equal))
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (pushnew sdl-mixer-bin:*dll-path*
+	   cffi:*foreign-library-directories*
+	   :test #'equal))
 
 (cffi:define-foreign-library sdl-mixer
   (:darwin (:framework "SDL_mixer"))
