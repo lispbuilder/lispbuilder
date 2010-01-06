@@ -1,7 +1,6 @@
 
 (in-package #:sdl-mixer)
 
-
 ;; Configure Lispworks to allow
 ;; callbacks from foreign threads
 #+(and lispworks (not lispworks5.1) (not lispworks4.3)) (system:setup-for-alien-threads)
@@ -53,6 +52,105 @@ Do not attempt to use `MUSIC` after it is freed.")
 (defconstant +default-sample-buffer+ 4096
   "Default size of the sample output buffer is `4096` bytes")
 
+(defvar *initialized* 0)
+
+(defun mixer-library-version ()
+  (sdl:library-version (sdl-mixer-cffi::linked-version)))
+
+(defun mixer-glue-version ()
+  (sdl:version-number sdl-mixer-cffi::+sdl-mixer-major-version+
+                      sdl-mixer-cffi::+sdl-mixer-minor-version+
+                      sdl-mixer-cffi::+sdl-mixer-patch-level+))
+
+(defun initialized-p (flags)
+  (let ((fp (cffi:foreign-symbol-pointer "Mix_Init" :library 'sdl-mixer-cffi::sdl-mixer)))
+    (when fp
+      (when (/= 0 (logand (cffi:foreign-funcall-pointer fp () :int flags :int)
+			  flags))
+	(setf *initialized* (logior *initialized* flags))))))
+
+(defun init-flac ()
+  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-flac)))
+
+(defun init-mod ()
+  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mod)))
+
+(defun init-mp3 ()
+  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mp3)))
+
+(defun init-ogg ()
+  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-ogg)))
+
+(defun flac-init-p ()
+  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-flac)))
+
+(defun mod-init-p ()
+  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mod)))
+
+(defun mp3-init-p ()
+  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mp3)))
+
+(defun ogg-init-p ()
+  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-ogg)))
+
+(defun init (&key (flac nil) (mod nil) (mp3 nil) (ogg nil))
+  (initialized-p (logior (if flac (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-flac) 0)
+			 (if mod  (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mod)  0)
+			 (if mp3  (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mp3)  0)
+			 (if ogg  (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-ogg)  0))))
+
+(defun quit ()
+  (when (cffi:foreign-symbol-pointer "Mix_Quit" :library 'sdl-mixer-cffi::sdl-mixer)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "Mix_Quit" :library 'sdl-mixer-cffi::sdl-mixer)
+				  () :void)))
+
+;; /* Get a list of chunk/music decoders that this build of SDL_mixer provides.
+;;    This list can change between builds AND runs of the program, if external
+;;    libraries that add functionality become available.
+;;    You must successfully call Mix_OpenAudio() before calling these functions.
+;;    This API is only available in SDL_mixer 1.2.9 and later.
+
+;;    // usage...
+;;    int i;
+;;    const int total = Mix_GetNumChunkDecoders();
+;;    for (i = 0; i < total; i++)
+;;        printf("Supported chunk decoder: [%s]\n", Mix_GetChunkDecoder(i));
+
+;;    Appearing in this list doesn't promise your specific audio file will
+;;    decode...but it's handy to know if you have, say, a functioning Timidity
+;;    install.
+
+;;    These return values are static, read-only data; do not modify or free it.
+;;    The pointers remain valid until you call Mix_CloseAudio().
+;; */
+;; extern DECLSPEC int SDLCALL Mix_GetNumChunkDecoders(void);
+(defun get-number-sample-decoders ()
+  (when (cffi:foreign-symbol-pointer "Mix_GetNumChunkDecoders" :library 'sdl-mixer-cffi::sdl-mixer)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "Mix_GetNumChunkDecoders" :library 'sdl-mixer-cffi::sdl-mixer)
+				  () :void nil :int)))
+
+;; extern DECLSPEC const char * SDLCALL Mix_GetChunkDecoder(int index);
+(defun get-sample-decoder (index)
+  (let ((num (get-number-sample-decoders)))
+    (when (and (numberp num) (> num 0) (< index num))
+      (when (cffi:foreign-symbol-pointer "Mix_GetChunkDecoder" :library 'sdl-mixer-cffi::sdl-mixer)
+	(cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "Mix_GetChunkDecoder" :library 'sdl-mixer-cffi::sdl-mixer)
+				  () :int num :pointer)))))
+
+;;extern DECLSPEC int SDLCALL Mix_GetNumMusicDecoders(void);
+(defun get-number-music-decoders ()
+  (when (cffi:foreign-symbol-pointer "Mix_GetNumMusicDecoders" :library 'sdl-mixer-cffi::sdl-mixer)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "Mix_GetNumMusicDecoders" :library 'sdl-mixer-cffi::sdl-mixer)
+				  () :void nil :int)))
+
+;;extern DECLSPEC const char * SDLCALL Mix_GetMusicDecoder(int index);
+(defun get-music-decoder (index)
+  (let ((num (get-number-music-decoders)))
+    (when (and (numberp num) (> num 0) (< index num))
+      (when (cffi:foreign-symbol-pointer "Mix_GetMusicDecoder" :library 'sdl-mixer-cffi::sdl-mixer)
+	(cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "Mix_GetMusicDecoder" :library 'sdl-mixer-cffi::sdl-mixer)
+				  () :int num :pointer)))))
+
 (defun reserve-channels (channels)
   "Reserves, or excludes, the number of `CHANNELS` from default mixing. 
 The number of channels to reserve is from 0 to `\(- CHANNELS 1\)`.
@@ -96,11 +194,11 @@ Maintain references to both of these objects until the music can be freed."
 Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
   (let ((file (namestring filepath)))
     (if (and (stringp file) (probe-file file))
-      (let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV file)))
-        (if (sdl-base:is-valid-ptr chunk-fp)
-          (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
-          (error "Cannot load ~A." file)))
-      (error "Sample file ~A does not exist." file))))
+	(let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV file)))
+	  (if (sdl-base:is-valid-ptr chunk-fp)
+	      (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
+	      (error "Cannot load ~A." file)))
+	(error "Sample file ~A does not exist." file))))
 
 (defmethod load-sample ((rwops sdl:RWOPS))
   "Loads the sample from `RWOPS`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
@@ -171,7 +269,6 @@ Increase `CHUNKSIZE` to decrease CPU resources, if sound skips or if playing mus
   "Attempts to close the audio device. The audio device can be opened multiple times by [OPEN-AUDIO](#open-audio) 
 and to properly close the audio device, [CLOSE-AUDIO](#close-audio) should be called the same number of times. 
 Optionally `ALL` when `T` will forcibly close the audio device, no matter how many times the device was opened."
-
   (when *enable-callbacks*
     ;; Unregister the music finished callback
     (unregister-music-finished)

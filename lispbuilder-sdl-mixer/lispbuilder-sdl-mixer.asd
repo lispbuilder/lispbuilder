@@ -5,16 +5,16 @@
 (in-package #:lispbuilder-sdl-mixer-system)
 
 (defsystem lispbuilder-sdl-mixer
-  :description "lispbuilder-sdl-mixer: SDL_mixer v1.2.8 library wrapper and tools"
+  :description "lispbuilder-sdl-mixer: SDL_mixer v1.2.11 library wrapper and tools"
   :long-description
   "lispbuilder-sdl-mixer uses CFFI to be highly compatible across lisp 
     implementations. It includes a selection of utilities to assist  
     game programming in Common Lisp."
-  :version "0.3"
+  :version "0.4"
   :author "Luke Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>"
   :licence "MIT"
-  :depends-on (cffi lispbuilder-sdl-mixer-cffi)
+  :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-mixer-cffi)
   :perform (load-op :after (op lispbuilder-sdl-mixer)
 		    (pushnew :lispbuilder-sdl-mixer *features*))
   :components

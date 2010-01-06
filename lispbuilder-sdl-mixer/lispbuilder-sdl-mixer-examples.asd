@@ -9,7 +9,7 @@
 
 (defsystem lispbuilder-sdl-mixer-examples
     :description "Examples for the lispbuilder-sdl-mixer package."
-    :version "0.3"
+    :version "0.4"
     :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-mixer)
     :components
     ((:module "examples"
