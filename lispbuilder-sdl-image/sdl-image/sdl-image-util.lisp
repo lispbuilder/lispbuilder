@@ -3,6 +3,8 @@
 
 (in-package #:lispbuilder-sdl-image)
 
+(defvar *initialized* 0)
+
 (defun image-library-version ()
   (sdl:library-version (sdl-image-cffi::img-linked-version)))
 
@@ -11,86 +13,62 @@
                       sdl-image-cffi::sdl-image-minor-version
                       sdl-image-cffi::sdl-image-patch-level))
 
+(defun initialized-p (flags)
+  (let ((fp (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)))
+    (when fp
+      (when (/= 0 (logand (cffi:foreign-funcall-pointer fp () :int flags :int)
+			  flags))
+	(setf *initialized* (logior *initialized* flags))))))
+
 (defun init-jpg ()
-  (when (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)
-    (let ((flags (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image) :int 0 :int)))
-      (when (/= 0 (logand (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image)
-                                                :int (logior flags
-                                                             (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg))
-                                                :int)
-                          (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg)))
-        t))))
+  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg)))
 
 (defun init-png ()
-  (when (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)
-    (let ((flags (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image) :int 0 :int)))
-      (when (/= 0 (logand (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image)
-                                                :int (logior flags
-                                                             (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png))
-                                                :int)
-                          (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png)))
-        t))))
+  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png)))
 
 (defun init-tif ()
-  (when (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)
-    (let ((flags (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image) :int 0 :int)))
-      (when (/= 0 (logand (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image)
-                                                :int (logior flags
-                                                             (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif))
-                                                :int)
-                          (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif)))
-        t))))
+  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif)))
 
 (defun jpg-init-p ()
-  (when (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)
-    (when (/= 0 (logand (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image) :int 0 :int)
-                        (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg)))
-      t)))
+  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg)))
 
 (defun png-init-p ()
-  (when (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)
-    (when (/= 0 (logand (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image) :int 0 :int)
-                        (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png)))
-      t)))
+  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png)))
 
 (defun tif-init-p ()
-  (when (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)
-    (when (/= 0 (logand (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image) :int 0 :int)
-                        (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif)))
-      t)))
+  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif)))
 
 (defun init (&key (jpg nil) (png nil) (tif nil))
-  (let ((flags (logior (if jpg (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg) 0)
-                       (if png (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png) 0)
-                       (if tif (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif) 0))))
-    (when (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)
-      (when (/= 0 (logand (cffi:foreign-funcall ("IMG_Init" :library sdl-image-cffi::sdl-image) :int flags :int)
-                          flags))
-        t))))
+  (initialized-p (logior (if jpg (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg) 0)
+			 (if png (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png) 0)
+			 (if tif (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif) 0))))
 
 (defun quit ()
   (when (cffi:foreign-symbol-pointer "IMG_Quit" :library 'sdl-image-cffi::sdl-image)
-    (cffi:foreign-funcall ("IMG_Quit" :library sdl-image-cffi::sdl-image) :void)))
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "IMG_Quit" :library 'sdl-image-cffi::sdl-image)
+				  () :void)))
 
 (defun img-is-ico (source)
   (when (cffi:foreign-symbol-pointer "IMG_isICO" :library 'sdl-image-cffi::sdl-image)
-    (if (= 0 (cffi:foreign-funcall ("IMG_isICO" :library sdl-image-cffi::sdl-image) sdl-cffi::SDL-RWops source :int))
-      nil
+    (when (= 1 (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "IMG_isICO" :library 'sdl-image-cffi::sdl-image)
+					     () sdl-cffi::SDL-RWops source :int))
       t)))
 
 (defun img-is-cur (source)
   (when (cffi:foreign-symbol-pointer "IMG_isCUR" :library 'sdl-image-cffi::sdl-image)
-    (if (= 0 (cffi:foreign-funcall ("IMG_isCUR" :library sdl-image-cffi::sdl-image) sdl-cffi::SDL-RWops source :int))
-      nil
+    (when (= 1 (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "IMG_isCUR" :library 'sdl-image-cffi::sdl-image)
+					   () sdl-cffi::SDL-RWops source :int))
       t)))
 
 (defun img-load-ico-rw (source)
   (when (cffi:foreign-symbol-pointer "IMG_LoadICO_RW" :library 'sdl-image-cffi::sdl-image)
-    (cffi:foreign-funcall ("IMG_LoadICO_RW" :library sdl-image-cffi::sdl-image) sdl-cffi::SDL-RWops source sdl-cffi::sdl-surface)))
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "IMG_LoadICO_RW" :library 'sdl-image-cffi::sdl-image)
+					   ()  sdl-cffi::SDL-RWops source sdl-cffi::sdl-surface)))
 
 (defun img-load-cur-rw (source)
   (when (cffi:foreign-symbol-pointer "IMG_LoadCUR_RW" :library 'sdl-image-cffi::sdl-image)
-    (cffi:foreign-funcall ("IMG_LoadCUR_RW" :library sdl-image-cffi::sdl-image) sdl-cffi::SDL-RWops source sdl-cffi::sdl-surface)))
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "IMG_LoadCUR_RW" :library 'sdl-image-cffi::sdl-image)
+					   ()  sdl-cffi::SDL-RWops source sdl-cffi::sdl-surface)))
 
 (defmethod image-p ((source sdl:rwops) image-type)
   (case image-type
