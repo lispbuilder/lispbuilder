@@ -5,8 +5,8 @@
 (in-package #:lispbuilder-sdl-image-binaries-system)
 
 (defsystem lispbuilder-sdl-image-binaries
-  :description "lispbuilder-sdl-image-binaries: The windows binary for the SDL_image v1.2.6 library"
-  :version "1.2.6"
+  :description "lispbuilder-sdl-image-binaries: The windows binary for the SDL_image v1.2.10 library"
+  :version "1.2.10"
   :author "Sam Lantinga <slouken@libsdl.org>"
   :maintainer "Application Builder <application-builder@lispniks.com>"
   :licence "LGPL"

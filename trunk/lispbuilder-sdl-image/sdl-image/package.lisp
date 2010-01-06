@@ -23,7 +23,18 @@
 ;; 		lispbuilder-sdl:load-image)
   (:export
    ;; sdl-image-util.lisp
+   #:init
+   #:init-jpg
+   #:init-png
+   #:init-tif
+   #:jpg-init-p
+   #:png-init-p
+   #:tif-init-p
+   #:quit
    #:image-p
    #:image-type-of
    #:load-image
-   #:load-and-convert-image))
+   #:load-and-convert-image
+
+   #:image-library-version
+   #:image-glue-version))

@@ -4,6 +4,8 @@
 
 (defun convert-image-type (value)
   (values (case value
+	    (:ICO (cffi:foreign-string-alloc "ICO"))
+	    (:CUR (cffi:foreign-string-alloc "CUR"))
 	    (:TGA (cffi:foreign-string-alloc "TGA"))
 	    (:BMP (cffi:foreign-string-alloc "BMP"))
 	    (:PNM (cffi:foreign-string-alloc "PNM"))

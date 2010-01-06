@@ -1,15 +1,14 @@
-;;;; SDL_image v1.2.6 CFFI lisp wrapper
+;;;; SDL_image v1.2.10 CFFI lisp wrapper
 
 (in-package #:lispbuilder-sdl-image-cffi)
 
-(defctype sdl-version :pointer)
 (defctype image-return-val-0+1 (:wrapper :int :from-c return-val-0+1))
 (defctype image-type (:wrapper :string :to-c convert-image-type))
 (defctype free-src :boolean)
 
 (defconstant SDL-IMAGE-MAJOR-VERSION 1)
 (defconstant SDL-IMAGE-MINOR-VERSION 2)
-(defconstant SDL-IMAGE-PATCH-LEVEL 6)
+(defconstant SDL-IMAGE-PATCH-LEVEL 10)
 
 (defun VERSION (x)
   (with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) x sdl-cffi::SDL-version)
@@ -22,7 +21,12 @@
 ;; it should NOT be used to fill a version structure, instead you should
 ;; use the SDL_IMAGE_VERSION() macro.
 ;; extern DECLSPEC const SDL_version * SDLCALL IMG_Linked_Version(void);
-(defcfun ("IMG_Linked_Version" IMG-Linked-Version) sdl-version)
+(defcfun ("IMG_Linked_Version" IMG-Linked-Version) sdl-cffi::sdl-version)
+
+(cffi:defcenum img-init-flags
+  (:INIT-JPG #x01)
+  (:INIT-PNG #x02)
+  (:INIT-TIF #x04))
 
 ;; Load an image from an SDL data source.
 ;; The 'type' may be one of: "BMP", "GIF", "PNG", etc.
@@ -45,6 +49,14 @@
 (defcfun ("IMG_Load_RW" IMG-Load-RW) sdl-cffi::sdl-surface
   (src sdl-cffi::SDL-RWops)
   (freesrc free-src))
+
+;; extern DECLSPEC int SDLCALL IMG_isICO(SDL_RWops *src);
+#+latest(defcfun ("IMG_isICO" IMG-is-ICO) image-return-val-0+1
+  (src sdl-cffi::SDL-RWops))
+
+;; extern DECLSPEC int SDLCALL IMG_isCUR(SDL_RWops *src) ;
+#+latest(defcfun ("IMG_isCUR" IMG-is-CUR) image-return-val-0+1
+  (src sdl-cffi::SDL-RWops))
 
 ;; Functions to detect a file type, given a seekable source
 ;; extern DECLSPEC int SDLCALL IMG_isBMP(SDL_RWops *src);
@@ -92,6 +104,14 @@
   (src sdl-cffi::SDL-RWops))
 
 ;; Individual loading functions
+;; extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadICO_RW(SDL_RWops *src);
+#+latest(defcfun ("IMG_LoadICO_RW" IMG-Load-ICO-RW) sdl-cffi::sdl-surface
+  (src sdl-cffi::SDL-RWops))
+
+;; extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadCUR_RW(SDL_RWops *src);
+#+latest(defcfun ("IMG_LoadCUR_RW" IMG-Load-CUR-RW) sdl-cffi::sdl-surface
+  (src sdl-cffi::SDL-RWops))
+
 ;; extern DECLSPEC SDL_Surface * SDLCALL IMG_LoadBMP_RW(SDL_RWops *src);
 (defcfun ("IMG_LoadBMP_RW" IMG-Load-BMP-RW) sdl-cffi::sdl-surface
   (src sdl-cffi::SDL-RWops))
