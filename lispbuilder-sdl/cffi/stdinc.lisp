@@ -16,18 +16,16 @@
 (defcenum SDL-DUMMY-ENUM
 	:DUMMY-ENUM-VALUE)
 
-;;; Is this even cross platform between Windows, *nix, OSX?
 ;; extern DECLSPEC char * SDLCALL SDL_getenv(const char *name);
-(if (cffi:foreign-symbol-pointer "getenv")
-    (defcfun ("getenv" SDL-get-env) :pointer
-      (variable :string))
-    (defcfun ("SDL_getenv" SDL-get-env) :pointer
-	    (name :string)))
+(defun sdl-get-env (string)
+  (when (cffi:foreign-symbol-pointer "getenv")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "getenv") () :string string :pointer))
+  (when (cffi:foreign-symbol-pointer "SDL_getenv" :library 'sdl)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_getenv") () :string string :pointer)))
 
-;;; Is this even cross platform between Windows, *nix, OSX?
 ;; extern DECLSPEC int SDLCALL SDL_putenv(const char *variable);
-(if (cffi:foreign-symbol-pointer "putenv")
-    (defcfun ("putenv" SDL-put-env) :int
-      (variable :string))
-    (defcfun ("SDL_putenv" SDL-put-env) :int
-      (variable :string)))
+(defun sdl-put-env (string)
+  (when (cffi:foreign-symbol-pointer "putenv")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "putenv") () :string string :int))
+  (when (cffi:foreign-symbol-pointer "SDL_putenv" :library 'sdl)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_putenv") () :string string :int)))
