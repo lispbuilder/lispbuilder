@@ -29,11 +29,11 @@
 
 (defcfun ("Mix_Linked_Version" Linked-Version) sdl-cffi::sdl-version)
 
-(cffi:defcenum Init-Flags
-  (:INIT-FLAC #x01)
-  (:INIT-MOD  #x02)
-  (:INIT-MP3  #x04)
-  (:INIT-OGG  #x08))
+(cffi:defbitfield init-flags
+  (:flac #x01)
+  (:mod  #x02)
+  (:mp3  #x04)
+  (:ogg  #x08))
 
 (cffi:defcfun ("Mix_FreeChunk" FREE-CHUNK) :void
   (chunk :pointer))

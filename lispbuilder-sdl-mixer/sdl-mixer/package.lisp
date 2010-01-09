@@ -8,22 +8,22 @@
   (:documentation "The main package of `lispbuilder-sdl-mixer'.")
   (:import-from #:lispbuilder-sdl-mixer-cffi
 
-		 lispbuilder-sdl-cffi::+CHANNELS+
-		 lispbuilder-sdl-cffi::+DEFAULT-FREQUENCY+
-		 lispbuilder-sdl-cffi::+DEFAULT-CHANNELS+
-		 lispbuilder-sdl-cffi::+MAX-VOLUME+
-		 lispbuilder-sdl-cffi::+CHANNEL-POST+
-		 lispbuilder-sdl-cffi::SDL-MIXER-VERSION
-;;		 lispbuilder-sdl-cffi::VERSION
-		 lispbuilder-sdl-cffi::+DEFAULT-FORMAT+
+   lispbuilder-sdl-cffi::+CHANNELS+
+   lispbuilder-sdl-cffi::+DEFAULT-FREQUENCY+
+   lispbuilder-sdl-cffi::+DEFAULT-CHANNELS+
+   lispbuilder-sdl-cffi::+MAX-VOLUME+
+   lispbuilder-sdl-cffi::+CHANNEL-POST+
+   lispbuilder-sdl-cffi::SDL-MIXER-VERSION
+   ;;		 lispbuilder-sdl-cffi::VERSION
+   lispbuilder-sdl-cffi::+DEFAULT-FORMAT+
 
-		 lispbuilder-sdl-cffi::CHUNK
-		 lispbuilder-sdl-cffi::MUSIC
+   lispbuilder-sdl-cffi::CHUNK
+   lispbuilder-sdl-cffi::MUSIC
 		 
-		 ;; lispbuilder-sdl-cffi::this-fp
-;; 		 lispbuilder-sdl-cffi::gc-p
-;; 		 lispbuilder-sdl-cffi::simple-free
-		 )
+   ;; lispbuilder-sdl-cffi::this-fp
+   ;; 		 lispbuilder-sdl-cffi::gc-p
+   ;; 		 lispbuilder-sdl-cffi::simple-free
+   )
 
   (:export
 
@@ -175,30 +175,22 @@
 
    #:+CHANNEL-POST+
    #:SDL-MIXER-VERSION
-;;   #:VERSION
+   ;;   #:VERSION
 
-;;    #:this-fp
-;;    #:gc-p
-;;    #:simple-free
+   ;;    #:this-fp
+   ;;    #:gc-p
+   ;;    #:simple-free
 
    #:CHUNK
    #:MUSIC
    #:FREE
    
-;;   #:*DEFAULT-MUSIC*
-;;   #:*DEFAULT-CHUNK*
+   ;;   #:*DEFAULT-MUSIC*
+   ;;   #:*DEFAULT-CHUNK*
 
    #:mixer-library-version
    #:mixer-glue-version
 
-   #:init-flac
-   #:init-mod
-   #:init-mp3
-   #:init-ogg
-   #:init
-   #:quit
-
-   #:flac-init-p
-   #:mod-init-p
-   #:mp3-init-p
-   #:ogg-init-p))
+   #:init-mixer
+   #:mixer-init-p
+   #:quit-mixer))

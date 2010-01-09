@@ -49,10 +49,10 @@ The sample referenced by `MUSIC` can be freed by calling [FREE](#free).
 Do not free `MUSIC` when playing.
 Do not attempt to use `MUSIC` after it is freed.")
 
+(defvar *base-audio-format-support* (list :WAV))
+
 (defconstant +default-sample-buffer+ 4096
   "Default size of the sample output buffer is `4096` bytes")
-
-(defvar *initialized* 0)
 
 (defun mixer-library-version ()
   (sdl:library-version (sdl-mixer-cffi::linked-version)))
@@ -62,44 +62,36 @@ Do not attempt to use `MUSIC` after it is freed.")
                       sdl-mixer-cffi::+sdl-mixer-minor-version+
                       sdl-mixer-cffi::+sdl-mixer-patch-level+))
 
-(defun initialized-p (flags)
-  (let ((fp (cffi:foreign-symbol-pointer "Mix_Init" :library 'sdl-mixer-cffi::sdl-mixer)))
+(defun mixer-init-p (&rest flags)
+  ;; Singal an error if FLAGS are not of the supported types
+  (let ((types (set-exclusive-or (intersection flags (append *base-audio-format-support*
+						      (cffi:foreign-bitfield-symbol-list 'sdl-mixer-cffi::init-flags)))
+			  flags)))
+    (when types
+	(error "ERROR: INIT-P does not support the ~A types." types)))
+  (let ((fp (cffi:foreign-symbol-pointer "Mix_Init" :library 'sdl-mixer-cffi::sdl-mixer))
+	;; FLAGS can contain any of the supported mixer types, so make sure we only
+	;; logior the types supported by IMG_Init.
+	;; Example;
+	;; '(:ICO :BMP :LBM :JPG :PNG) -> '(:JPG :PNG)
+	(bit-flags (cffi:foreign-bitfield-value 'sdl-mixer-cffi::init-flags
+						(intersection (cffi:foreign-bitfield-symbol-list 'sdl-mixer-cffi::init-flags)
+							      flags)))
+	;; Then, create a new list from flags, without the formats supported by IMG_Init
+	;; Example;
+	;; '(:ICO :BMP :LBM :JPG :PNG) -> '(:JPG :PNG) -> '(:ICO :BMP :LBM)
+	(built-in-only (set-exclusive-or flags (intersection (cffi:foreign-bitfield-symbol-list 'sdl-mixer-cffi::init-flags) flags))))
     (when fp
-      (when (/= 0 (logand (cffi:foreign-funcall-pointer fp () :int flags :int)
-			  flags))
-	(setf *initialized* (logior *initialized* flags))))))
+      (let ((result (cffi:foreign-funcall-pointer fp () :int bit-flags :int)))
+	(if (> result 0)
+	    (when (/= 0 (logand result bit-flags))
+	      (append built-in-only (cffi:foreign-bitfield-symbols 'sdl-mixer-cffi::init-flags result)))
+	    built-in-only)))))
 
-(defun init-flac ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-flac)))
+(defun init-mixer (&rest flags)
+  (apply #'mixer-init-p flags))
 
-(defun init-mod ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mod)))
-
-(defun init-mp3 ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mp3)))
-
-(defun init-ogg ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-ogg)))
-
-(defun flac-init-p ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-flac)))
-
-(defun mod-init-p ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mod)))
-
-(defun mp3-init-p ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mp3)))
-
-(defun ogg-init-p ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-ogg)))
-
-(defun init (&key (flac nil) (mod nil) (mp3 nil) (ogg nil))
-  (initialized-p (logior (if flac (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-flac) 0)
-			 (if mod  (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mod)  0)
-			 (if mp3  (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-mp3)  0)
-			 (if ogg  (cffi:foreign-enum-value 'sdl-mixer-cffi::init-flags :init-ogg)  0))))
-
-(defun quit ()
+(defun quit-mixer ()
   (when (cffi:foreign-symbol-pointer "Mix_Quit" :library 'sdl-mixer-cffi::sdl-mixer)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "Mix_Quit" :library 'sdl-mixer-cffi::sdl-mixer)
 				  () :void)))
