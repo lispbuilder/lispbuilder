@@ -19,7 +19,7 @@
         (setf sample (sdl:load-audio (sdl:create-path "example.wav" sdl:*default-asset-path*)))
       
         ;; Start playing the audio stream
-        (when sample
+        (when (and sample (sdl:audio-opened-p))
           (sdl:play-audio)
           (sdl:play-audio sample)))
       
@@ -31,13 +31,15 @@
          (when (sdl:key-down-p :SDL-KEY-ESCAPE)
            (sdl:push-quit-event))
          (when (sdl:key-down-p :SDL-KEY-SPACE)
-           (sdl:play-audio (sdl:copy-audio sample))))
+           (when (sdl:audio-opened-p)
+	     (sdl:play-audio (sdl:copy-audio sample)))))
         (:idle ()
          (sdl:clear-display sdl:*black*)
-         (if (sdl:audio-playing-p)
-           (setf status (format nil "Number of audio samples playing: ~d"
-                                (sdl:audio-playing-p)))
-           (setf status "Audio complete. Press SPACE to restart."))
+         (when (sdl:audio-opened-p)
+	   (if (sdl:audio-playing-p)
+	       (setf status (format nil "Number of audio samples playing: ~d"
+				    (sdl:audio-playing-p)))
+	       (setf status "Audio complete. Press SPACE to restart.")))
          (sdl:draw-filled-circle (sdl:point :x (random 200) :y (random 10))
                                  (random 40)
                                  :color (sdl:any-color-but-this sdl:*black*)

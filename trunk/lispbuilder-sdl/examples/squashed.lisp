@@ -35,10 +35,12 @@
 	  (lasttick 0)
 	  (score 0)
 	  (bug? t) (racket? t) (blood? nil) (squash? nil) (squashed? nil)
-          (swat-effect (load-audio "bookclose2.wav"))
-          (squash-effects (list (load-audio "splat1a.wav")
+          (swat-effect (when (sdl:audio-opened-p)
+			 (load-audio "bookclose2.wav")) )
+          (squash-effects (when (sdl:audio-opened-p)
+			    (list (load-audio "splat1a.wav")
                                 (load-audio "splat2a.wav")
-                                (load-audio "splat3a.wav"))))
+                                (load-audio "splat3a.wav")))))
 
       (sdl:set-position-* bug :x (random 640) :y (random 480))
       (sdl:set-position-* racket :x 100 :y 100)
@@ -47,7 +49,8 @@
       (show-score score)
       (sdl:show-cursor nil)
 
-      (sdl:play-audio)
+      (when (sdl:audio-opened-p)
+	(sdl:play-audio))
 
       (sdl:with-events ()
         (:quit-event () t)
@@ -71,9 +74,11 @@
            (when (> levelticks 200)
              (decf levelticks 100))
            ;; Play one of the squashed sound effects.
-           (sdl:play-audio (sdl:copy-audio (nth (random 3) squash-effects))))
+           (when (sdl:audio-opened-p)
+	     (sdl:play-audio (sdl:copy-audio (nth (random 3) squash-effects)))))
          ;; Play the swatting sound effect.
-         (sdl:play-audio (sdl:copy-audio swat-effect)))
+         (when (sdl:audio-opened-p)
+	   (sdl:play-audio (sdl:copy-audio swat-effect))))
         (:idle ()
          (sdl:with-surface (disp sdl:*default-display*)
            ;; fill the background with white

@@ -98,6 +98,7 @@
     (audio-buffer-size (audio-spec self))
     (requested-audio-buffer-size self)))   
 
+
 (defun open-audio (&key
                    (frequency +DEFAULT-FREQUENCY+)
                    (format +DEFAULT-FORMAT+)
@@ -108,66 +109,59 @@
   ;; Close the audio subsystem in case it is already open.
   (sdl:close-audio)
   ;; Make sure that the audio subsystem is initialized.
-  (unless (init-audio)
-    (error "ERROR: Cannot initialize the audio subsystem."))
-
-  ;; Configure Lispworks to allow
-  ;; callbacks from unknown foreign threads
-  #+(and lispworks (not lispworks5.1) (not lispworks4.3))(system:setup-for-alien-threads)
+  (when (init-audio)
+     ;; Configure Lispworks to allow
+     ;; callbacks from unknown foreign threads
+     #+(and lispworks (not lispworks5.1) (not lispworks4.3))(system:setup-for-alien-threads)
  
-  (setf *mixer* (make-instance 'mixer
-                               :audio-volume volume
-                               :audio-format format
-                               :sample-frequency frequency
-                               :output-channels channels
-                               :audio-buffer-size audio-buffer-size
-                               :callback callback))
+     (setf *mixer* (make-instance 'mixer
+				  :audio-volume volume
+				  :audio-format format
+				  :sample-frequency frequency
+				  :output-channels channels
+				  :audio-buffer-size audio-buffer-size
+				  :callback callback))
 
-  (cffi:with-foreign-object (requested-audio-spec 'sdl-cffi::SDL-Audio-Spec)
-    ;; Set the desired sample frequency.
-    (setf (cffi:foreign-slot-value requested-audio-spec
-                                   'sdl-cffi::SDL-Audio-Spec
-                                   'sdl-cffi::freq)
-          (requested-sample-frequency *mixer*))
-    ;; Set the desired audio format.
-    (setf (cffi:foreign-slot-value requested-audio-spec
-                                   'sdl-cffi::SDL-Audio-Spec
-                                   'sdl-cffi::format)
-          (requested-audio-format *mixer*))
-    ;; Set the number of output channels.
-    (setf (cffi:foreign-slot-value requested-audio-spec
-                                   'sdl-cffi::SDL-Audio-Spec
-                                   'sdl-cffi::channels)
-          (requested-output-channels *mixer*))
-    ;; Set the output buffer size.
-    ;; This is not used by the glue library.
-    (setf (cffi:foreign-slot-value requested-audio-spec
-                                   'sdl-cffi::sdl-Audio-Spec
-                                   'sdl-cffi::samples)
-          (requested-audio-buffer-size *mixer*))
-    ;; Set the callback function
-    ;; This callback function is overwritten by callback function in the
-    ;; glue library if the glue library is used.
-    (setf (cffi:foreign-slot-value requested-audio-spec
-                                   'sdl-cffi::SDL-Audio-Spec
-                                   'sdl-cffi::callback)
-          (slot-value *mixer* 'callback))
+     (cffi:with-foreign-object (requested-audio-spec 'sdl-cffi::SDL-Audio-Spec)
+       ;; Set the desired sample frequency.
+       (setf (cffi:foreign-slot-value requested-audio-spec
+				      'sdl-cffi::SDL-Audio-Spec
+				      'sdl-cffi::freq)
+	     (requested-sample-frequency *mixer*))
+       ;; Set the desired audio format.
+       (setf (cffi:foreign-slot-value requested-audio-spec
+				      'sdl-cffi::SDL-Audio-Spec
+				      'sdl-cffi::format)
+	     (requested-audio-format *mixer*))
+       ;; Set the number of output channels.
+       (setf (cffi:foreign-slot-value requested-audio-spec
+				      'sdl-cffi::SDL-Audio-Spec
+				      'sdl-cffi::channels)
+	     (requested-output-channels *mixer*))
+       ;; Set the output buffer size.
+       ;; This is not used by the glue library.
+       (setf (cffi:foreign-slot-value requested-audio-spec
+				      'sdl-cffi::sdl-Audio-Spec
+				      'sdl-cffi::samples)
+	     (requested-audio-buffer-size *mixer*))
+       ;; Set the callback function
+       ;; This callback function is overwritten by callback function in the
+       ;; glue library if the glue library is used.
+       (setf (cffi:foreign-slot-value requested-audio-spec
+				      'sdl-cffi::SDL-Audio-Spec
+				      'sdl-cffi::callback)
+	     (slot-value *mixer* 'callback))
   
-    (if (eql -1
-             (if sdl-cffi::*glue-loaded-p*
-		 (sdl-cffi::sdl-glue-SDL-Open-Audio requested-audio-spec
-                                                (sdl:fp (audio-spec *mixer*)))
-		 (sdl-cffi::SDL-Open-Audio requested-audio-spec
-                                       (sdl:fp (audio-spec *mixer*)))))
-      (setf (slot-value *mixer* 'mixer-opened-p) nil)
-      (setf (slot-value *mixer* 'mixer-opened-p) t))
-    (when (mixer-opened-p *mixer*)
-      (setf (slot-value *mixer* 'output-audio-buffer-size)
-            (if (or (equal (audio-format *mixer*) sdl-cffi::audio-u16)
-                    (equal (audio-format *mixer*) sdl-cffi::audio-s16))
-              (* 2 (audio-buffer-size *mixer*))
-              (audio-buffer-size *mixer*)))
-      *mixer*)))
+       (if (eql -1 (sdl-cffi::open-audio requested-audio-spec (sdl:fp (audio-spec *mixer*))))
+	   (setf (slot-value *mixer* 'mixer-opened-p) nil)
+	   (setf (slot-value *mixer* 'mixer-opened-p) t))
+       (when (mixer-opened-p *mixer*)
+	 (setf (slot-value *mixer* 'output-audio-buffer-size)
+	       (if (or (equal (audio-format *mixer*) sdl-cffi::audio-u16)
+		       (equal (audio-format *mixer*) sdl-cffi::audio-s16))
+		   (* 2 (audio-buffer-size *mixer*))
+		   (audio-buffer-size *mixer*)))
+	 *mixer*))))
 
 (defmethod _play-audio_ ((self mixer) &key loop pos)
   (declare (ignore loop pos))
@@ -228,14 +222,13 @@
   (when obj
     (_audio-playing-p_ obj)))
 
+
 (defun close-audio ()
   (when (audio-opened-p)
-      ;; Pause the audio stream
-      (pause-audio)
-      (setf (slot-value *mixer* 'mixer-opened-p) nil))
-  (if sdl-cffi::*glue-loaded-p*
-      (sdl-cffi::sdl-glue-sdl-close-audio);;(format t "sdl-cffi::sdl-glue-sdl-close-audio~%")
-      (sdl-cffi::sdl-close-audio))
+    ;; Pause the audio stream
+    (pause-audio)
+    (setf (slot-value *mixer* 'mixer-opened-p) nil))
+  (sdl-cffi::close-audio)
   (quit-subsystems sdl:sdl-init-audio)
   (setf *managed-audio* nil))
 
@@ -572,12 +565,11 @@
 ;      (format t "*mixer* not yet initialized~%")))
 
 (defun process-audio ()
-  (when (and sdl-cffi::*glue-loaded-p*
-	     *mixer*
-	     (= (sdl-cffi::SDL-glue-SDL-Require-Buffer-Fill) 1))
-    (fill-audio-buffer (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer)
-		       (sdl-cffi::SDL-glue-SDL-Get-Audio-Buffer-length))
-    (sdl-cffi::SDL-glue-SDL-Buffer-Filled)))
+  (when (and (sdl-cffi::require-buffer-fill)
+	     *mixer*)
+    (fill-audio-buffer (sdl-cffi::Get-Audio-Buffer)
+		       (sdl-cffi::Get-Audio-Buffer-length))
+    (sdl-cffi::Buffer-Filled)))
 
 ;; This callback is only used if the glue library is not used available.
 ;; Seems to work OK in Lispworks as this supports unknowm threads.
