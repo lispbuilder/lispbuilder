@@ -23,14 +23,9 @@
 ;; 		lispbuilder-sdl:load-image)
   (:export
    ;; sdl-image-util.lisp
-   #:init
-   #:init-jpg
-   #:init-png
-   #:init-tif
-   #:jpg-init-p
-   #:png-init-p
-   #:tif-init-p
-   #:quit
+   #:init-image
+   #:image-init-p
+   #:quit-image
    #:image-p
    #:image-type-of
    #:load-image
