@@ -40,7 +40,7 @@
 	    built-in-only)))))
 
 (defun init-image (&rest systems)
-  (apply #'init-p systems))
+  (apply #'image-init-p systems))
 
 (defun quit-image ()
   (when (cffi:foreign-symbol-pointer "IMG_Quit" :library 'sdl-image-cffi::sdl-image)
