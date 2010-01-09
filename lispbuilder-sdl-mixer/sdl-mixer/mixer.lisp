@@ -165,6 +165,9 @@ Returns music as a new [MUSIC](#music) object, or NIL on error."
 	      (error "Cannot load ~A." file)))
 	(error "Music file ~A does not exist." file))))
 
+(defmethod load-music ((filepath PATHNAME))
+  (load-music (namestring filepath)))
+
 (defmethod load-music ((rwops SDL:RWOPS))
   "Loads the music file from `RWOPS`. Must be a `WAVE`, `MOD`, `MIDI`, `OGG` or `MP3` file.
 Returns music as a new [MUSIC](#music) object, or NIL on error."
@@ -191,6 +194,9 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
 	      (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
 	      (error "Cannot load ~A." file)))
 	(error "Sample file ~A does not exist." file))))
+
+(defmethod load-sample ((filepath PATHNAME))
+  (load-sample (namestring filepath)))
 
 (defmethod load-sample ((rwops sdl:RWOPS))
   "Loads the sample from `RWOPS`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
