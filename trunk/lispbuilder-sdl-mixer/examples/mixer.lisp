@@ -56,7 +56,7 @@
   (when *mixer-opened*
     (sdl-mixer:Close-Audio t)
     (setf *mixer-opened* nil))
-  (sdl-mixer:quit))
+  (sdl-mixer:quit-mixer))
 
 (defun sample-finished-action ()
   (sdl-mixer:register-sample-finished
@@ -67,8 +67,7 @@
 (defun music-finished-action ()
   (sdl-mixer:register-music-finished
    (lambda ()
-     nil
-     )))
+     nil)))
 
 (defun mixer()
   "Demonstrates music file basic playback"
@@ -80,7 +79,7 @@
     (sdl:initialise-default-font)
     (sdl:enable-key-repeat 500 50)
 
-    (sdl-mixer:init :mp3 t)
+    (sdl-mixer:init-mixer :mp3)
 
     (setf *status* "Unable to open Audio Mixer.")
     
