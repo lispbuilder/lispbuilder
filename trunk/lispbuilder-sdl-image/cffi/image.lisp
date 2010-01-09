@@ -23,10 +23,10 @@
 ;; extern DECLSPEC const SDL_version * SDLCALL IMG_Linked_Version(void);
 (defcfun ("IMG_Linked_Version" IMG-Linked-Version) sdl-cffi::sdl-version)
 
-(cffi:defcenum img-init-flags
-  (:INIT-JPG #x01)
-  (:INIT-PNG #x02)
-  (:INIT-TIF #x04))
+(cffi:defbitfield init-flags
+  (:jpg #x01)
+  (:png #x02)
+  (:tif #x04))
 
 ;; Load an image from an SDL data source.
 ;; The 'type' may be one of: "BMP", "GIF", "PNG", etc.

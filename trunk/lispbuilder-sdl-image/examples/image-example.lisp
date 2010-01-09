@@ -13,7 +13,7 @@
     ;; SDL_Image 1.2.8 and later allows the jpg, png and tif
     ;; libraries to be preloaded to speed subsequent
     ;; loading of these images.
-    (sdl-image:init :jpg t :png t :tif t)
+    (sdl-image:init-image :jpg :png :tif)
     (let ((images (list
                    (sdl:draw-string-solid-* "BMP" 0 0 :color sdl:*yellow*
                                             :surface (sdl-image:load-image (merge-pathnames "lisp.bmp" *bmp-path*)
@@ -41,15 +41,15 @@
                                                                            :color-key-at #(0 0)))
                    ;; SDL_Image 1.2.8 and later allow testing
                    ;; for png/jpg/tif support prior to loading the image.
-                   (when (sdl-image:png-init-p)
+                   (when (sdl-image:image-init-p :png)
                      (sdl:draw-string-solid-* "PNG" 0 0 :color sdl:*yellow*
                                               :surface (sdl-image:load-image (merge-pathnames "lisp.png" *bmp-path*)
                                                                              :color-key-at #(0 0))))
-                   (when (sdl-image:tif-init-p)
+                   (when (sdl-image:image-init-p :tif)
                      (sdl:draw-string-solid-* "TIF" 0 0 :color sdl:*yellow*
                                               :surface (sdl-image:load-image (merge-pathnames "lisp.tif" *bmp-path*)
                                                                              :color-key-at #(0 0))))
-                   (when (sdl-image:jpg-init-p)
+                   (when (sdl-image:image-init-p :jpg)
                      (sdl:draw-string-solid-* "JPG" 0 0 :color sdl:*yellow*
                                               :surface (sdl-image:load-image (merge-pathnames "lisp.jpg" *bmp-path*)
                                                                              :color-key-at #(0 0)))))))
@@ -66,7 +66,7 @@
       (:quit-event ()
        ;; SDL_Image 1.2.8 and later requires a corresponding
        ;; sdl-image:quit *if* sdl-image:init is used.
-       (sdl-image:quit)
+       (sdl-image:quit-image)
        t)
       (:key-down-event (:key key)
        (if (sdl:key= key :SDL-KEY-ESCAPE)

@@ -3,7 +3,7 @@
 
 (in-package #:lispbuilder-sdl-image)
 
-(defvar *initialized* 0)
+(defvar *base-image-format-support* (list :BMP :GIF :JPG :LBM :PCX :PNG :PNM :TGA :TIF :XCF :XPM :XV))
 
 (defun image-library-version ()
   (sdl:library-version (sdl-image-cffi::img-linked-version)))
@@ -13,37 +13,36 @@
                       sdl-image-cffi::sdl-image-minor-version
                       sdl-image-cffi::sdl-image-patch-level))
 
-(defun initialized-p (flags)
-  (let ((fp (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image)))
+(defun image-init-p (&rest flags)
+  ;; Singal an error if FLAGS are not of the supported types
+  (let ((types (set-exclusive-or (intersection flags (append *base-image-format-support*
+						      (cffi:foreign-bitfield-symbol-list 'sdl-image-cffi::init-flags)))
+			  flags)))
+    (when types
+	(error "ERROR: INIT-P does not support the ~A types." types)))
+  (let ((fp (cffi:foreign-symbol-pointer "IMG_Init" :library 'sdl-image-cffi::sdl-image))
+	;; FLAGS can contain any of the supported image types, so make sure we only
+	;; logior the types supported by IMG_Init.
+	;; Example;
+	;; '(:ICO :BMP :LBM :JPG :PNG) -> '(:JPG :PNG)
+	(bit-flags (cffi:foreign-bitfield-value 'sdl-image-cffi::init-flags
+						(intersection (cffi:foreign-bitfield-symbol-list 'sdl-image-cffi::init-flags)
+							      flags))) 
+	;; Then, create a new list from flags, without the formats supported by IMG_Init
+	;; Example;
+	;; '(:ICO :BMP :LBM :JPG :PNG) -> '(:JPG :PNG) -> '(:ICO :BMP :LBM)
+	(built-in-only (set-exclusive-or flags (intersection (cffi:foreign-bitfield-symbol-list 'sdl-image-cffi::init-flags) flags))))
     (when fp
-      (when (/= 0 (logand (cffi:foreign-funcall-pointer fp () :int flags :int)
-			  flags))
-	(setf *initialized* (logior *initialized* flags))))))
+      (let ((result (cffi:foreign-funcall-pointer fp () :int bit-flags :int)))
+	(if (> result 0)
+	    (when (/= 0 (logand result bit-flags))
+	      (append built-in-only (cffi:foreign-bitfield-symbols 'sdl-image-cffi::init-flags result)))
+	    built-in-only)))))
 
-(defun init-jpg ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg)))
+(defun init-image (&rest systems)
+  (apply #'init-p systems))
 
-(defun init-png ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png)))
-
-(defun init-tif ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif)))
-
-(defun jpg-init-p ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg)))
-
-(defun png-init-p ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png)))
-
-(defun tif-init-p ()
-  (initialized-p (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif)))
-
-(defun init (&key (jpg nil) (png nil) (tif nil))
-  (initialized-p (logior (if jpg (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-jpg) 0)
-			 (if png (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-png) 0)
-			 (if tif (cffi:foreign-enum-value 'sdl-image-cffi::img-init-flags :init-tif) 0))))
-
-(defun quit ()
+(defun quit-image ()
   (when (cffi:foreign-symbol-pointer "IMG_Quit" :library 'sdl-image-cffi::sdl-image)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "IMG_Quit" :library 'sdl-image-cffi::sdl-image)
 				  () :void)))
@@ -124,41 +123,41 @@
 	(sdl:free rwops)
 	result))))
 
-
 (defmethod load-image ((source sdl:rwops) &key color-key alpha (image-type nil) (force nil) (free-rwops t) (color-key-at nil))
   "Creates and returns a new surface from the image contained in the `RWOPS` structure in the source `SOURCE`."
-  (let ((image nil))
-    (setf image (if image-type
-                  (if force
-                    (case image-type
-                      (:ICO (img-Load-ICO-RW (sdl:fp source)))
-                      (:CUR (img-Load-CUR-RW (sdl:fp source)))
-                      (:BMP (sdl-image-cffi::img-Load-BMP-RW (sdl:fp source)))
-                      (:GIF (sdl-image-cffi::img-Load-GIF-RW (sdl:fp source)))
-                      (:JPG (sdl-image-cffi::img-Load-JPG-RW (sdl:fp source)))
-                      (:LBM (sdl-image-cffi::img-Load-LBM-RW (sdl:fp source)))
-                      (:PCX (sdl-image-cffi::img-Load-PCX-RW (sdl:fp source)))
-                      (:PNG (sdl-image-cffi::img-Load-PNG-RW (sdl:fp source)))
-                      (:PNM (sdl-image-cffi::img-Load-PNM-RW (sdl:fp source)))
-                      (:TGA (sdl-image-cffi::img-Load-TGA-RW (sdl:fp source)))
-                      (:TIF (sdl-image-cffi::img-Load-TIF-RW (sdl:fp source)))
-                      (:XCF (sdl-image-cffi::img-Load-XCF-RW (sdl:fp source)))
-                      (:XPM (sdl-image-cffi::img-Load-XPM-RW (sdl:fp source)))
-                      (:XV  (sdl-image-cffi::img-Load-XV-RW  (sdl:fp source))))
-                    (sdl-image-cffi::img-load-typed-rw (sdl:fp source) nil image-type))
-                  (sdl-image-cffi::img-Load-RW (sdl:fp source) free-rwops)))
+  (let* ((image (if image-type
+		    (if force
+			(case image-type
+			  (:ICO (img-Load-ICO-RW (sdl:fp source)))
+			  (:CUR (img-Load-CUR-RW (sdl:fp source)))
+			  (:BMP (sdl-image-cffi::img-Load-BMP-RW (sdl:fp source)))
+			  (:GIF (sdl-image-cffi::img-Load-GIF-RW (sdl:fp source)))
+			  (:JPG (sdl-image-cffi::img-Load-JPG-RW (sdl:fp source)))
+			  (:LBM (sdl-image-cffi::img-Load-LBM-RW (sdl:fp source)))
+			  (:PCX (sdl-image-cffi::img-Load-PCX-RW (sdl:fp source)))
+			  (:PNG (sdl-image-cffi::img-Load-PNG-RW (sdl:fp source)))
+			  (:PNM (sdl-image-cffi::img-Load-PNM-RW (sdl:fp source)))
+			  (:TGA (sdl-image-cffi::img-Load-TGA-RW (sdl:fp source)))
+			  (:TIF (sdl-image-cffi::img-Load-TIF-RW (sdl:fp source)))
+			  (:XCF (sdl-image-cffi::img-Load-XCF-RW (sdl:fp source)))
+			  (:XPM (sdl-image-cffi::img-Load-XPM-RW (sdl:fp source)))
+			  (:XV  (sdl-image-cffi::img-Load-XV-RW  (sdl:fp source))))
+			(sdl-image-cffi::img-load-typed-rw (sdl:fp source) free-rwops image-type))
+		    (sdl-image-cffi::img-Load-RW (sdl:fp source) free-rwops)))
+	 (surf (make-instance 'sdl:surface
+			      :using-surface (if (cffi-sys:null-pointer-p image)
+						 (error "ERROR: LOAD-IMAGE; cannot load file '~a'" (sdl-cffi::sdl-get-error))
+						 image)
+			      :enable-color-key (or color-key color-key-at)
+			      :color-key color-key
+			      :color-key-at color-key-at
+			      :enable-alpha alpha
+			      :alpha alpha)))
     (when free-rwops
       (setf (sdl:gc-p source) nil)
       ;;(sdl:free source)
       )
-    (when (sdl:is-valid-ptr image)
-      (make-instance 'sdl:surface
-		     :using-surface image
-		     :enable-color-key (or color-key color-key-at)
-		     :color-key color-key
-		     :color-key-at color-key-at
-		     :enable-alpha alpha
-		     :alpha alpha))))
+    surf))
 
 (defmethod load-image ((source VECTOR) &key color-key alpha (image-type nil) (force nil) (free-rwops t) (color-key-at nil))
   "Creates and returns a new surface from the image contained in the byte VECTOR in `SOURCE`."
