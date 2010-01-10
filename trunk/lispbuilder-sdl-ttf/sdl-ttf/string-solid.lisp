@@ -12,21 +12,17 @@
     (blit-surface font-surface surface))
   surface)
 
-#+lispbuilder-sdl-ttf-glue
 (defmethod _render-string-solid_ ((string string) (font ttf-font) (color color) free cache)
-  (let ((surf (with-foreign-color-copy (col-struct color)
-		(make-instance 'surface
-			       :fp (sdl-ttf-cffi::ttf-Render-UTF8-Solid (fp font) string col-struct)))))
+  (let ((surf nil))
+    (with-foreign-color-copy (col-struct color)
+      (setf surf (make-instance 'surface :fp (sdl-ttf-cffi::render-text-solid (fp font)
+                                                                              string
+                                                                              (if (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Solid")
+                                                                                col-struct
+                                                                                (+ (ash (b color) 16)
+                                                                                   (ash (g color) 8)
+                                                                                   (r color)))))))
     (when cache
       (setf (cached-surface font) surf))
     surf))
 
-#-lispbuilder-sdl-ttf-glue
-(defmethod _render-string-solid_ ((string string) (font ttf-font) (color color) free cache)
-  (let ((surf (make-instance 'surface
-                             :fp (sdl-ttf-cffi::ttf-Render-UTF8-Solid (fp font) string (+ (ash (b color) 16)
-                                                                                          (ash (g color) 8)
-                                                                                          (r color))))))
-    (when cache
-      (setf (cached-surface font) surf))
-    surf))

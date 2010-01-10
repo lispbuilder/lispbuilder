@@ -2,25 +2,22 @@
 
 (in-package #:lispbuilder-sdl-ttf-cffi)
 
-(defctype sdl-version :pointer)
 (defctype ttf-font (:wrapper :pointer :from-c return-font :from-c pass-font))
 (defctype ttf-return-val-0-1 (:wrapper :int :from-c return-val-0-1))
 (defctype ttf-return-val-0+1 (:wrapper :int :from-c return-val-0+1))
 (defctype ttf-font-style (:wrapper :int :from-c return-font-style :to-c pass-font-style))
 
-#+lispbuilder-sdl-ttf-glue(defctype sdl-color sdl-cffi::sdl-color)
-#-lispbuilder-sdl-ttf-glue(defctype sdl-color :uint32)
+(defctype sdl-color :uint32)
+(defctype sdl-glue-color sdl-cffi::sdl-color)
 
 (defctype ttf-swapped-unicode (:wrapper :int :to-c pass-swapped-unicode))
 
 ;; #define SDL_TTF_MAJOR_VERSION	2
-(defconstant TTF-MAJOR-VERSION 2)
-
 ;; #define SDL_TTF_MINOR_VERSION	0
-(defconstant TTF-MINOR-VERSION 0)
-
 ;; #define SDL_TTF_PATCHLEVEL	9
-(defconstant TTF-PATCH-LEVEL 9)
+(defconstant TTF-MAJOR-VERSION 2)
+(defconstant TTF-MINOR-VERSION 0)
+(defconstant TTF-PATCH-LEVEL   9)
 
 (defun VERSION (x)
   (setf (cffi:foreign-slot-value x 'sdl-cffi::sdl-version 'sdl-cffi::major) TTF-MAJOR-VERSION
@@ -32,7 +29,7 @@
 ;; it should NOT be used to fill a version structure, instead you should
 ;; use the SDL_TTF_VERSION() macro.
 ;; extern DECLSPEC const SDL_version * SDLCALL TTF_Linked_Version(void);
-(defcfun ("TTF_Linked_Version" ttf-Linked-Version) sdl-version)
+(defcfun ("TTF_Linked_Version" ttf-Linked-Version) sdl-cffi::sdl-version)
 
 ;; #define UNICODE_BOM_NATIVE	0xFEFF
 (defconstant UNICODE-BOM-NATIVE #xFEFF)
@@ -187,42 +184,30 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Solid(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderText_Solid" ttf-Render-Text-Solid) sdl-cffi::sdl-surface
-         (font ttf-font)
-         (text :string)
-         (fg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderText_Solid" ttf-Render-Text-Solid) sdl-cffi::sdl-surface
-         (font ttf-font)
-         (text :string)
-         (fg sdl-color))
+(defun render-text-solid (font text fg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Solid")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Solid")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderText_Solid")
+                                  () ttf-font font :string text sdl-color fg sdl-cffi::sdl-surface)))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Solid(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderUTF8_Solid" ttf-Render-UTF8-Solid) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderUTF8_Solid" ttf-Render-UTF8-Solid) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color))
+(defun render-utf8-solid (font text fg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderUTF8_Solid")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderUTF8_Solid")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderUTF8_Solid")
+                                  () ttf-font font :string text sdl-color fg sdl-cffi::sdl-surface)))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Solid(TTF_Font *font,
 ;; 				const Uint16 *text, SDL_Color fg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderUNICODE_Solid" ttf-Render-UNICODE-Solid) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :pointer)
-  (fg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderUNICODE_Solid" ttf-Render-UNICODE-Solid) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :pointer)
-  (fg sdl-color))
+(defun render-unicode-solid (font text fg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderUNICODE_Solid")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderUNICODE_Solid")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderUNICODE_Solid")
+                                  () ttf-font font :string text sdl-color fg sdl-cffi::sdl-surface)))
 
 ;; Create an 8-bit palettized surface and render the given glyph at
 ;; fast quality with the given font and color.  The 0 pixel is the
@@ -232,16 +217,12 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Solid(TTF_Font *font,
 ;; 					Uint16 ch, SDL_Color fg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderGlyph_Solid" ttf-Render-Glyph-Solid) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (ch :unsigned-short)
-  (fg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderGlyph_Solid" ttf-Render-Glyph-Solid) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (ch :unsigned-short)
-  (fg sdl-color))
+(defun render-glyph-solid (font ch fg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderGlyph_Solid")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderGlyph_Solid")
+                                  () ttf-font font :unsigned-short ch sdl-glue-color fg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderGlyph_Solid")
+                                  () ttf-font font :unsigned-short ch sdl-color fg sdl-cffi::sdl-surface)))
 
 ;; Create an 8-bit palettized surface and render the given text at
 ;; high quality with the given font and colors.  The 0 pixel is background,
@@ -249,48 +230,30 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Shaded(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg, SDL_Color bg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderText_Shaded" ttf-Render-Text-Shaded) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color)
-  (bg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderText_Shaded" ttf-Render-Text-Shaded) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color)
-  (bg sdl-color))
+(defun render-text-shaded (font text fg bg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Shaded")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Shaded")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-glue-color bg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderText_Shaded")
+                                  () ttf-font font :string text sdl-color fg sdl-color bg sdl-cffi::sdl-surface)))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Shaded(TTF_Font *font,
 ;; 								     const char *text, SDL_Color fg, SDL_Color bg) ;
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderUTF8_Shaded" ttf-Render-UTF8-Shaded) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color)
-  (bg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderUTF8_Shaded" ttf-Render-UTF8-Shaded) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color)
-  (bg sdl-color))
+(defun render-utf8-shaded (font text fg bg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderUTF8_Shaded")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderUTF8_Shaded")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-glue-color bg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderUTF8_Shaded")
+                                  () ttf-font font :string text sdl-color fg sdl-color bg sdl-cffi::sdl-surface)))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Shaded(TTF_Font *font,
 ;; 									const Uint16 *text, SDL_Color fg, SDL_Color bg)	;
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderUNICODE_Shaded" ttf-Render-UNICODE-Shaded) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :pointer)
-  (fg sdl-color)
-  (bg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderUNICODE_Shaded" ttf-Render-UNICODE-Shaded) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :pointer)
-  (fg sdl-color)
-  (bg sdl-color))
+(defun render-unicode-shaded (font text fg bg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderUNICODE_Shaded")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderUNICODE_Shaded")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-glue-color bg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderUNICODE_Shaded")
+                                  () ttf-font font :string text sdl-color fg sdl-color bg sdl-cffi::sdl-surface)))
 
 ;; Create an 8-bit palettized surface and render the given glyph at
 ;; high quality with the given font and colors.  The 0 pixel is background,
@@ -300,60 +263,42 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Shaded(TTF_Font *font,
 ;; 				Uint16 ch, SDL_Color fg, SDL_Color bg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderGlyph_Shaded" ttf-Render-Glyph-Shaded) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (ch :unsigned-short)
-  (fg sdl-color)
-  (bg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderGlyph_Shaded" ttf-Render-Glyph-Shaded) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (ch :unsigned-short)
-  (fg sdl-color)
-  (bg sdl-color))
+(defun render-glyph-shaded (font ch fg bg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderGlyph_Shaded")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderGlyph_Shaded")
+                                  () ttf-font font :unsigned-short ch sdl-glue-color fg sdl-glue-color bg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderGlyph_Shaded")
+                                  () ttf-font font :unsigned-short ch sdl-color fg sdl-color bg sdl-cffi::sdl-surface)))
 
 ;; Create a 32-bit ARGB surface and render the given text at high quality,
 ;; using alpha blending to dither the font with the given color.
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderText_Blended(TTF_Font *font,
 ;; 				const char *text, SDL_Color fg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderText_Blended" ttf-Render-Text-Blended) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderText_Blended" ttf-Render-Text-Blended) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color))
+(defun render-text-blended (font text fg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Blended")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Blended")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderText_Blended")
+                                  () ttf-font font :string text sdl-color fg sdl-cffi::sdl-surface)))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUTF8_Blended(TTF_Font *font,
 ;; 								      const char *text, SDL_Color fg) ;
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderUTF8_Blended" ttf-Render-UTF8-Blended) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderUTF8_Blended" ttf-Render-UTF8-Blended) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :string)
-  (fg sdl-color))
+(defun render-utf8-blended (font text fg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderUTF8_Blended")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderUTF8_Blended")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderUTF8_Blended")
+                                  () ttf-font font :string text sdl-color fg sdl-cffi::sdl-surface)))
 
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderUNICODE_Blended(TTF_Font *font,
 ;; 				const Uint16 *text, SDL_Color fg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderUNICODE_Blended" ttf-Render-UNICODE-Blended) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :pointer)
-  (fg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderUNICODE_Blended" ttf-Render-UNICODE-Blended) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (text :pointer)
-  (fg sdl-color))
+(defun render-unicode-blended (font text fg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderUNICODE_Blended")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderUNICODE_Blended")
+                                  () ttf-font font :string text sdl-glue-color fg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderUNICODE_Blended")
+                                  () ttf-font font :string text sdl-color fg sdl-cffi::sdl-surface)))
 
 ;; Create a 32-bit ARGB surface and render the given glyph at high quality,
 ;; using alpha blending to dither the font with the given color.
@@ -362,16 +307,12 @@
 ;; This function returns the new surface, or NULL if there was an error.
 ;; extern DECLSPEC SDL_Surface * SDLCALL TTF_RenderGlyph_Blended(TTF_Font *font,
 ;; 						Uint16 ch, SDL_Color fg);
-#+lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_glue_RenderGlyph_Blended" ttf-Render-Glyph-Blended) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (ch :unsigned-short)
-  (fg sdl-color))
-#-lispbuilder-sdl-ttf-glue
-(defcfun ("TTF_RenderGlyph_Blended" ttf-Render-Glyph-Blended) sdl-cffi::sdl-surface
-  (font ttf-font)
-  (ch :unsigned-short)
-  (fg sdl-color))
+(defun render-glyph-blended (font ch fg)
+  (if (cffi:foreign-symbol-pointer "TTF_glue_RenderGlyph_Blended")
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_glue_RenderGlyph_Blended")
+                                  () ttf-font font :unsigned-short ch sdl-glue-color fg sdl-cffi::sdl-surface)
+    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "TTF_RenderGlyph_Blended")
+                                  () ttf-font font :unsigned-short ch sdl-color fg sdl-cffi::sdl-surface)))
 
 ;; Close an opened font file
 ;; extern DECLSPEC void SDLCALL TTF_CloseFont(TTF_Font *font);

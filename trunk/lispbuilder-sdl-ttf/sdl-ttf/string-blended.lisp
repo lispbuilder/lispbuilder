@@ -10,22 +10,15 @@
     (blit-surface font-surface surface))
   surface)
 
-#+lispbuilder-sdl-ttf-glue
 (defmethod _render-string-blended_ ((string string) (color color) (font ttf-font) free cache)
-  (let ((surf 
-	 (with-foreign-color-copy (col-struct color)
-	   (make-instance 'surface
-			  :fp (sdl-ttf-cffi::ttf-Render-UTF8-blended (fp font) string col-struct)))))
-    (when cache
-      (setf (cached-surface font) surf))
-    surf))
-
-#-lispbuilder-sdl-ttf-glue
-(defmethod _render-string-blended_ ((string string) (color color) (font ttf-font) free cache)
-  (let ((surf (make-instance 'surface
-                             :fp (sdl-ttf-cffi::ttf-Render-UTF8-blended (fp font) string (+ (ash (b color) 16)
-                                                                                                (ash (g color) 8)
-                                                                                                (r color))))))
+  (let ((surf nil))
+    (with-foreign-color-copy (col-struct color)
+      (setf surf (make-instance 'surface :fp (sdl-ttf-cffi::render-text-blended (fp font) string
+                                                                                (if (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Blended")
+                                                                                  col-struct
+                                                                                  (+ (ash (b color) 16)
+                                                                                     (ash (g color) 8)
+                                                                                     (r color)))))))
     (when cache
       (setf (cached-surface font) surf))
     surf))
