@@ -20,8 +20,8 @@
    :gc t
    :free (let ((font-generation sdl-ttf:*generation*))
            #'(lambda (fp)
-               (when (and (sdl-ttf:is-init)
-                          (= (sdl-ttf:is-init) font-generation))
+               (when (and (sdl-ttf:ttf-init-p)
+                          (= (sdl-ttf:ttf-init-p) font-generation))
                  (sdl-ttf-cffi::ttf-close-font fp)))))
   (:documentation
    "A `FONT` object is wrapper around a foreign `TTF_Font` object. 
@@ -51,7 +51,7 @@ if successful, or `NIL` if the font cannot be closed or the `SDL_TTF` font libra
   font)
 
 (defmethod initialise-font ((self ttf-font-definition))
-  (unless (sdl-ttf:is-init)
+  (unless (sdl-ttf:ttf-init-p)
     (sdl-ttf:init-ttf))
   (open-font self))
 

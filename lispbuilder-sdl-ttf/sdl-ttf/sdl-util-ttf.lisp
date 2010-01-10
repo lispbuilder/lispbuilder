@@ -12,7 +12,18 @@
 ;;; Functions in this list are called when the macro SDL:WITH-INIT exits, and the function SDL:QUIT-SDL 
 (pushnew 'quit-ttf sdl:*external-quit-subsystems-on-exit*)
 
-(defun is-init ()
+(defun load-library ()
+  (sdl-ttf-cffi::load-library))
+
+(defun ttf-library-version ()
+  (sdl:library-version (sdl-ttf-cffi::ttf-linked-version)))
+
+(defun ttf-glue-version ()
+  (sdl:version-number sdl-ttf-cffi::ttf-major-version
+                      sdl-ttf-cffi::ttf-minor-version
+                      sdl-ttf-cffi::ttf-patch-level))
+
+(defun ttf-init-p ()
   "Queries the initialization status of the `SDL_TTF` truetype library. 
 Returns the current *GENERATION* if this library is already initialized and `NIL` if uninitialized."
   (if (sdl-ttf-cffi::ttf-was-init)
@@ -24,7 +35,7 @@ Returns the current *GENERATION* if this library is already initialized and `NIL
 (defun init-ttf ()
   "Initializes the `SDL_TTF` font library if uninitialized. Increments and returns *GENERATION* if the library 
 was uninitialized and is successfully initialized, or else returns `NIL` if uninitialized."
-  (if (is-init)
+  (if (ttf-init-p)
       *generation*
       (progn
 	(if (sdl-ttf-cffi::ttf-init)
@@ -33,5 +44,5 @@ was uninitialized and is successfully initialized, or else returns `NIL` if unin
 
 (defun quit-ttf ()
   "Uninitializes the `SDL_TTF` font library if already initialized."
-  (if (is-init)
+  (if (ttf-init-p)
       (sdl-ttf-cffi::ttf-quit)))
