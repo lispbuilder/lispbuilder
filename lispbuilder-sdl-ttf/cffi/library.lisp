@@ -16,28 +16,28 @@
 ;;(defparameter *glue-loaded-p* (cffi:foreign-library-loaded-p 'sdl-glue))
 (defparameter *glue-loaded-p* nil)
 
+(cffi:define-foreign-library zlib1
+  (:windows "zlib1.dll"))
+
+(cffi:define-foreign-library libfreetype-6
+  (:windows "libfreetype-6.dll"))
+
+(cffi:define-foreign-library sdl-ttf
+  (:darwin (:or (:framework "SDL_ttf")
+            (:framework "libSDL_ttf-2.0")))
+  (:windows (:or "SDL_ttf.dll"))
+  (:unix (:or "libSDL_ttf" "libSDL_ttf2.0" "libSDL_ttf-2.0.so.0")))
+
+(cffi:define-foreign-library sdl-ttf-glue
+  (:darwin (:or "liblispbuilder-sdl-ttf-glue"
+            "lispbuilder-sdl-ttf-glue"))
+  (:windows (:or "liblispbuilder-sdl-ttf-glue.dll"
+             "lispbuilder-sdl-ttf-glue.dll"))
+  (:unix "liblispbuilder-sdl-ttf-glue.so")
+  (t (:or)))
+
 (defun load-library ()
   (setf *glue-loaded-p* nil)
-
-  (cffi:define-foreign-library zlib1
-    (:windows "zlib1.dll"))
-
-  (cffi:define-foreign-library libfreetype-6
-    (:windows "libfreetype-6.dll"))
-
-  (cffi:define-foreign-library sdl-ttf
-    (:darwin (:or (:framework "SDL_ttf")
-              (:framework "libSDL_ttf-2.0")))
-    (:windows (:or "SDL_ttf.dll"))
-    (:unix (:or "libSDL_ttf" "libSDL_ttf2.0" "libSDL_ttf-2.0.so.0")))
-
-  (cffi:define-foreign-library sdl-ttf-glue
-    (:darwin (:or "liblispbuilder-sdl-ttf-glue"
-              "lispbuilder-sdl-ttf-glue"))
-    (:windows (:or "liblispbuilder-sdl-ttf-glue.dll"
-               "lispbuilder-sdl-ttf-glue.dll"))
-    (:unix "liblispbuilder-sdl-ttf-glue.so")
-    (t (:or)))
 
   ;; Load the win32 required libraries.
   (cffi:use-foreign-library zlib1)
@@ -47,10 +47,10 @@
   (cffi:use-foreign-library sdl-ttf)
 
   (when (handler-case (cffi:use-foreign-library sdl-ttf-glue)
-        (load-foreign-library-error () nil))
-  (progn
-    (setf *glue-loaded-p* t)
-    (pushnew :lispbuilder-sdl-ttf-glue *features*))))
+          (load-foreign-library-error () nil))
+    (progn
+      (setf *glue-loaded-p* t)
+      (pushnew :lispbuilder-sdl-ttf-glue *features*))))
 
 (eval-when (:load-toplevel :execute)
   (load-library))
