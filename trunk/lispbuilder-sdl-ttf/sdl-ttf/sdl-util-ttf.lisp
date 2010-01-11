@@ -13,7 +13,8 @@
 (pushnew 'quit-ttf sdl:*external-quit-subsystems-on-exit*)
 
 (defun load-library ()
-  (sdl-ttf-cffi::load-library))
+  (sdl-ttf-cffi::load-library)
+  (setf *generation* 0))
 
 (defun ttf-library-version ()
   (sdl:library-version (sdl-ttf-cffi::ttf-linked-version)))
