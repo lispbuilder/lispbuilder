@@ -193,4 +193,6 @@
 
    #:init-mixer
    #:mixer-init-p
-   #:quit-mixer))
+   #:quit-mixer
+
+   #:load-library))
