@@ -13,6 +13,9 @@
                       sdl-image-cffi::sdl-image-minor-version
                       sdl-image-cffi::sdl-image-patch-level))
 
+(defun load-library ()
+  (sdl-image-cffi::load-library))
+
 (defun image-init-p (&rest flags)
   ;; Singal an error if FLAGS are not of the supported types
   (let ((types (set-exclusive-or (intersection flags (append *base-image-format-support*
