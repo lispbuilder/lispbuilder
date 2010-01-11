@@ -32,4 +32,6 @@
    #:load-and-convert-image
 
    #:image-library-version
-   #:image-glue-version))
+   #:image-glue-version
+
+   #:load-library))
