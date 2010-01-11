@@ -62,6 +62,9 @@ Do not attempt to use `MUSIC` after it is freed.")
                       sdl-mixer-cffi::+sdl-mixer-minor-version+
                       sdl-mixer-cffi::+sdl-mixer-patch-level+))
 
+(defun load-library ()
+  (sdl-mixer-cffi::load-library))
+
 (defun mixer-init-p (&rest flags)
   ;; Singal an error if FLAGS are not of the supported types
   (let ((types (set-exclusive-or (intersection flags (append *base-audio-format-support*

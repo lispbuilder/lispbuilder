@@ -35,10 +35,15 @@
 (cffi:define-foreign-library vorbisfile
   (:windows "libvorbisfile-3.dll"))
 
-(cffi:use-foreign-library mikmod)
-(cffi:use-foreign-library ogg)
-(cffi:use-foreign-library vorbis)
-(cffi:use-foreign-library vorbisfile)
-(cffi:use-foreign-library smpeg)
-(cffi:use-foreign-library sdl-mixer)
+(eval-when (:load-toplevel :execute)
+  (defun load-library ()
+    (cffi:use-foreign-library mikmod)
+    (cffi:use-foreign-library ogg)
+    (cffi:use-foreign-library vorbis)
+    (cffi:use-foreign-library vorbisfile)
+    (cffi:use-foreign-library smpeg)
+    (cffi:use-foreign-library sdl-mixer)))
+
+(load-library)
+
 
