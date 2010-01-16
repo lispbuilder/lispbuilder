@@ -72,6 +72,8 @@
    lispbuilder-sdl-cffi::sdl-gl-get-proc-address
 
    #:sdl-library-version
+   #:version-number
+   #:get-library-version
    #:sdl-wrapper-version
    #:sdl-version-at-least
    #:image-library-version
@@ -764,6 +766,8 @@
    #:SDL-GL-GET-PROC-ADDRESS
 
    #:sdl-library-version
+   #:version-number
+   #:get-library-version
    #:sdl-wrapper-version
    #:sdl-version-at-least
    #:image-library-version
