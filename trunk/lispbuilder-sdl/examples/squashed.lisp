@@ -24,7 +24,7 @@
     ;; Open the audio mixer. Use a smaller buffer for lower latency.
     (sdl:open-audio :audio-buffer-size 1024)
     
-    (let ((bug (load-image "bug_2.bmp" #|"bug.bmp"|#))
+    (let ((bug (load-image "bug.bmp"))
 	  (racket (load-image "racket.bmp"))
 	  (blood (load-image "blood.bmp"))
 	  (squash (load-image "squash.bmp"))
