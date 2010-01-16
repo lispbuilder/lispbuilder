@@ -27,7 +27,11 @@
   (:windows "libogg-0.dll"))
 
 (cffi:define-foreign-library smpeg
-  (:windows "smpeg.dll"))
+  (:windows "smpeg.dll")
+  (:unix (:or "libsmpeg"
+              "libsmpeg.so"
+              "libsmpeg-0.4.so"
+              "libsmpeg-0.4.so.0")))
 
 (cffi:define-foreign-library vorbis
   (:windows "libvorbis-0.dll"))
