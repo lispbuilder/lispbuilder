@@ -6,7 +6,7 @@
 (defvar *base-image-format-support* (list :BMP :GIF :JPG :LBM :PCX :PNG :PNM :TGA :TIF :XCF :XPM :XV))
 
 (defun image-library-version ()
-  (sdl:library-version (sdl-image-cffi::img-linked-version)))
+  (sdl:get-library-version (sdl-image-cffi::image-linked-version)))
 
 (defun image-glue-version ()
   (sdl:version-number sdl-image-cffi::sdl-image-major-version
