@@ -175,7 +175,7 @@ The display is updated when `UPDATE` is `T`."
   "Returns a foreign pointer to the native SDL display window."
   (let ((wm-info (cffi:foreign-alloc 'sdl-cffi::SDL-Sys-WM-info)))
     ;; Set the wm-info structure to the current SDL version.
-    (sdl-cffi::sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
+    (sdl-cffi::set-sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
     (sdl-cffi::SDL-Get-WM-Info wm-info)
     ;; For Windows
     #+windows(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)

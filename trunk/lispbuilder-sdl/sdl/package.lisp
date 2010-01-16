@@ -70,6 +70,16 @@
    ;; (cl:defconstant SDL-BUTTON-WHEEL-RIGHT 7)
 
    lispbuilder-sdl-cffi::sdl-gl-get-proc-address
+
+   #:sdl-library-version
+   #:sdl-wrapper-version
+   #:sdl-version-at-least
+   #:image-library-version
+   #:image-wrapper-version
+   #:image-version-at-least
+
+   #:*image-loaded-p*
+
    )
 
   (:import-from #:lispbuilder-sdl-assets
@@ -149,6 +159,8 @@
    #:quit-audio
    #:quit-joysick
    #:quit-cdrom
+
+   #:load-library
    
    ;; input-util.lisp
    #:initialise-input-util
@@ -342,6 +354,13 @@
    #:video-resize-event-h
 
    ;; image.lisp
+   #:supported-image-formats
+   #:image-init-p
+   #:init-image
+   #:quit-image
+   #:image-p
+   #:image-type-of
+   #:image-supported-p
    #:load-image
    #:save-image
 
@@ -691,13 +710,6 @@
    #:app-mouse-focus
    #:app-input-focus
    #:app-active
-
-   ;; version.lisp
-   #:library-version
-   #:version-number
-   #:sdl-library-version
-   #:sdl-glue-version
-   #:version-at-least
    
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
@@ -750,6 +762,15 @@
 
    #:SDL-GL-GET-PROC-ADDRESS
 
+   #:sdl-library-version
+   #:sdl-wrapper-version
+   #:sdl-version-at-least
+   #:image-library-version
+   #:image-wrapper-version
+   #:image-version-at-least
+   
+   #:*image-loaded-p*
+   
    ;; Imports from lispbuilder-sdl-base  
 
    #:with-events

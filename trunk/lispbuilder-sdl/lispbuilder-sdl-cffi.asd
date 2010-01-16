@@ -17,7 +17,7 @@
     ((:module "cffi"
 	      :components
 	      ((:file "package")
- 	       (:file "library")
+               (:file "library")
 	       (:file "util")
 	       (:file "cffi-util")
 	       (:file "cffi-translate")
@@ -40,7 +40,12 @@
 	       (:file "sdl")
                (:file "glue")
 	       (:file "documentation"))
-	      :serial t)
+              :serial t)
+     (:module "sdl-image"
+	      :components
+	      ((:file "image-library")
+               (:file "sdl-image"))
+              :serial t)
      (:module "build"
 	      :components
 	      ((:static-file "sdlswig.i")))))

@@ -1,40 +1,43 @@
 
 (in-package #:lispbuilder-sdl-cffi) 
 
-;;;; Implementation of SDL macros follows
-
-(cl:defconstant SDL-MAJOR-VERSION 1)
-
-(cl:defconstant SDL-MINOR-VERSION 2)
-
-(cl:defconstant SDL-PATCH-LEVEL 14)
+(defconstant SDL-MAJOR-VERSION 1)
+(defconstant SDL-MINOR-VERSION 2)
+(defconstant SDL-PATCH-LEVEL 14)
 
 (cffi:defcstruct SDL-version
-	(major :unsigned-char)
-	(minor :unsigned-char)
-	(patch :unsigned-char))
+  (major :unsigned-char)
+  (minor :unsigned-char)
+  (patch :unsigned-char))
 
 (cffi:defcfun ("SDL_Linked_Version" SDL-Linked-Version) :pointer)
 
-
-
-(defun SDL-VERSION (x)
+(defun set-sdl-version (x)
   (cffi:with-foreign-slots ((major minor patch) x SDL-version)
     (setf major SDL-MAJOR-VERSION
           minor SDL-MINOR-VERSION
           patch SDL-PATCH-LEVEL)))
 
-(defun SDL-VERSION-NUM (major minor patch)
-        (+  (* major 1000)
-            (* minor 100)
-            patch))
+(defun version-number (major minor patch)
+  (+  (* major 1000)
+      (* minor 100)
+      patch))
 
-(defun SDL-COMPILED-VERSION ()
-  "Returns the version number of the SDL dynamic library."
-        (SDL-VERSION-NUM SDL-MAJOR-VERSION SDL-MINOR-VERSION SDL-PATCH-LEVEL))
+(defun version-at-least (version x y z)
+  (if (>= version (version-number x y z))
+      t
+      nil))
 
-(defun SDL-VERSION-AT-LEAST (x y z)
-  (if (>= (SDL-COMPILED-VERSION) (SDL-VERSION-NUM x y z))
-      1
-      0))
+(defun get-library-version (version)
+  (cffi:with-foreign-slots ((major minor patch) version sdl-version)
+    (version-number major minor patch)))
 
+(defun sdl-library-version ()
+  (get-library-version (sdl-linked-version)))
+
+(defun sdl-version-at-least (x y z)
+  (when (>= (sdl-library-version) (version-number x y z))
+      t))
+
+(defun sdl-wrapper-version ()
+  (version-number sdl-major-version sdl-minor-version sdl-patch-level))
