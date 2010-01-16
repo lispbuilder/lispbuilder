@@ -178,18 +178,12 @@
     (sdl:enable-key-repeat nil nil)
     ;; Load images. Convert the 24-bit particle surface into a 32bpp
     ;; surface with an alpha component
-    ;(setf *particle-img* (sdl::convert-to-display-format :surface (sdl:load-image (sdl:create-path
-    ;                                                                               "particle.bmp"
-    ;                                                                               sdl:*default-asset-path*))
-    ;                                                     :inherit nil
-    ;                                                     :pixel-alpha t
-    ;                                                     :free t))
-    (setf *particle-img* (sdl:convert-surface :surface (sdl:load-image (sdl:create-path
-                                                                        "particle.bmp"
-                                                                        sdl:*default-asset-path*))
-                                              :enable-alpha nil
-                                              :inherit nil
-                                              :free t))
+    (setf *particle-img* (sdl::convert-to-display-format :surface (sdl:load-image (sdl:create-path
+                                                                                  "particle.bmp"
+                                                                                  sdl:*default-asset-path*))
+                                                        :inherit nil
+                                                        :pixel-alpha t
+                                                        :free t))
     ;;(setf *particle-img* (sdl:load-image (sdl:create-path
     ;;                                      "particle.bmp"
     ;;                                      sdl:*default-asset-path*)))

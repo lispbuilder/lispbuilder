@@ -79,6 +79,7 @@
    #:image-version-at-least
 
    #:*image-loaded-p*
+   #:*glue-loaded-p*
 
    )
 
@@ -770,6 +771,7 @@
    #:image-version-at-least
    
    #:*image-loaded-p*
+   #:*glue-loaded-p*
    
    ;; Imports from lispbuilder-sdl-base  
 
