@@ -55,7 +55,7 @@ Do not attempt to use `MUSIC` after it is freed.")
   "Default size of the sample output buffer is `4096` bytes")
 
 (defun mixer-library-version ()
-  (sdl:library-version (sdl-mixer-cffi::linked-version)))
+  (sdl:get-library-version (sdl-mixer-cffi::linked-version)))
 
 (defun mixer-glue-version ()
   (sdl:version-number sdl-mixer-cffi::+sdl-mixer-major-version+
