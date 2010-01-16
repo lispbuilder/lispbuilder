@@ -27,9 +27,9 @@
 ;; use the SDL_IMAGE_VERSION() macro.
 ;; extern DECLSPEC const SDL_version * SDLCALL IMG_Linked_Version(void);
 (defun image-linked-version ()
-  (if *image-loaded-p*
-    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "IMG_Linked_Version" :library 'sdl-cffi::sdl-image)
-				  () sdl-cffi::sdl-version)))
+    (when (cffi:foreign-symbol-pointer "IMG_Linked_Version" :library 'sdl-image-cffi::sdl-image)
+      (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "IMG_Linked_Version" :library 'sdl-cffi::sdl-image)
+                                    () sdl-cffi::sdl-version)))
 
 ;; Load an image from an SDL data source.
 ;; The 'type' may be one of: "BMP", "GIF", "PNG", etc.
