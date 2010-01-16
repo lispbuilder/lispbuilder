@@ -14,7 +14,7 @@
     ;; libraries to be preloaded to speed subsequent
     ;; loading of these images.
     (sdl:init-image :jpg :png :tif)
-    (let* ((images (loop for format in (loop for format in (sdl:supported-image-formats) collecting (symbol-name format))
+    (let* ((images (loop for format in (loop for format in (sdl:supported-image-formats) collecting (string-downcase (symbol-name format)))
                          collecting (let ((supported? (sdl:image-supported-p (merge-pathnames (format nil "lisp.~A" format) sdl:*default-asset-path*))))
                                       (when supported?
                                         (sdl:draw-string-solid-* format 0 0 :color sdl:*yellow*
