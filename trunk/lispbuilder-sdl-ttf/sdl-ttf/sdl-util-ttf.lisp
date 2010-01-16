@@ -17,7 +17,7 @@
   (setf *generation* 0))
 
 (defun ttf-library-version ()
-  (sdl:library-version (sdl-ttf-cffi::ttf-linked-version)))
+  (sdl:get-library-version (sdl-ttf-cffi::ttf-linked-version)))
 
 (defun ttf-glue-version ()
   (sdl:version-number sdl-ttf-cffi::ttf-major-version
