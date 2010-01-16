@@ -304,3 +304,10 @@ already initialized.
   (quit-subsystems sdl-init-joystick force))
 (defun quit-cdrom (&optional force)
   (quit-subsystems sdl-init-cdrom force))
+
+(defun load-library ()
+  (setf sdl-cffi::*glue-loaded-p* nil
+        sdl-cffi::*image-loaded-p* nil)
+
+  (sdl-cffi::load-sdl-library)
+  (sdl-cffi::load-image-library))

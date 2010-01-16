@@ -189,4 +189,6 @@ and copy to a new surface when `NIL`.")
 
 (defparameter *default-fpsmanager* nil)
 
-
+(defvar *base-image-support* nil)
+(defvar *additional-image-support* nil)
+(defvar *current-image-support* *base-image-support*)

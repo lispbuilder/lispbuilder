@@ -7,10 +7,8 @@
   (sdl:set-caption (format nil "Squashed - Score: ~a" score) "Squashed"))
 
 (defun load-image (filename)
-  (sdl:convert-surface :surface
-                       (sdl:load-image (sdl:create-path filename
-                                                        sdl:*default-asset-path*)
-                                       :color-key (sdl:color :r 255 :g 255 :b 255))
+  (sdl:convert-surface :surface (sdl:load-image (merge-pathnames filename sdl:*default-asset-path*)
+                                                :color-key (sdl:color :r 255 :g 255 :b 255))
                        :free t))
 
 (defun load-audio (filename)
@@ -26,7 +24,7 @@
     ;; Open the audio mixer. Use a smaller buffer for lower latency.
     (sdl:open-audio :audio-buffer-size 1024)
     
-    (let ((bug (load-image "bug.bmp"))
+    (let ((bug (load-image "bug_2.bmp" #|"bug.bmp"|#))
 	  (racket (load-image "racket.bmp"))
 	  (blood (load-image "blood.bmp"))
 	  (squash (load-image "squash.bmp"))
@@ -39,8 +37,8 @@
 			 (load-audio "bookclose2.wav")) )
           (squash-effects (when (sdl:audio-opened-p)
 			    (list (load-audio "splat1a.wav")
-                                (load-audio "splat2a.wav")
-                                (load-audio "splat3a.wav")))))
+                                  (load-audio "splat2a.wav")
+                                  (load-audio "splat3a.wav")))))
 
       (sdl:set-position-* bug :x (random 640) :y (random 480))
       (sdl:set-position-* racket :x 100 :y 100)

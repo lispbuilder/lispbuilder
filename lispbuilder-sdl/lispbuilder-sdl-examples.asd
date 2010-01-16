@@ -46,5 +46,6 @@
                (:file "keys" :depends-on ("package"))
                (:file "alpha-example" :depends-on ("package"))
                (:file "active" :depends-on ("package"))
-               (:file "explosion" :depends-on ("package")))
+               (:file "explosion" :depends-on ("package"))
+               (:file "image-example" :depends-on ("package")))
                :serial t)))

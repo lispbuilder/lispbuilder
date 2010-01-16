@@ -2,11 +2,9 @@
 
 (in-package #:lispbuilder-sdl-cffi)
 
-;;#+windows(eval-when (:compile-toplevel :load-toplevel :execute)
-;;         (pushnew (merge-pathnames "../bin/"
-;;                                   (directory-namestring (or *load-truename* *default-pathname-defaults*)))
-;;                  cffi:*foreign-library-directories*
-;;                  :test #'equal))
+;; cffi:foreign-library-loaded-p is not yet in the released version of CFFI
+;;(defparameter *glue-loaded-p* (cffi:foreign-library-loaded-p 'sdl-glue))
+(defparameter *glue-loaded-p* nil)
 
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (pushnew sdl-bin:*dll-path*
@@ -38,14 +36,14 @@
 	      "liblispbuilder-sdl-glue.so"))
   (t (:or)))
 
-(cffi:use-foreign-library sdl)
+(defun load-sdl-library ()
+  (cffi:use-foreign-library sdl)
 
-;; cffi:foreign-library-loaded-p is not yet in the released version of CFFI
-;;(defparameter *glue-loaded-p* (cffi:foreign-library-loaded-p 'sdl-glue))
-(defparameter *glue-loaded-p* nil)
-
-(when (handler-case (cffi:use-foreign-library sdl-glue)
+  (when (handler-case (cffi:use-foreign-library sdl-glue)
         (load-foreign-library-error () nil))
   (progn
     (setf *glue-loaded-p* t)
-    (pushnew :lispbuilder-sdl-audio *features*)))
+    (pushnew :lispbuilder-sdl-audio *features*))))
+
+(eval-when (:load-toplevel :execute)
+  (load-sdl-library))
