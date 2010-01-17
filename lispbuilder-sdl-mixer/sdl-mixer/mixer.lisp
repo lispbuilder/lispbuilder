@@ -165,8 +165,8 @@ Returns music as a new [MUSIC](#music) object, or NIL on error."
 	(let ((music-fp (sdl-mixer-cffi::LOAD-MUS file)))
 	  (if (sdl-base:is-valid-ptr music-fp)
 	      (make-instance 'sdl-mixer-cffi::music :fp music-fp)
-	      (error "Cannot load ~A." file)))
-	(error "Music file ~A does not exist." file))))
+	      (error "Cannot load ~A. '~a'" file (sdl-cffi::sdl-get-error))))
+	(error "Music file ~A does not exist. '~a'" file (sdl-cffi::sdl-get-error)))))
 
 (defmethod load-music ((filepath PATHNAME))
   (load-music (namestring filepath)))
@@ -177,7 +177,7 @@ Returns music as a new [MUSIC](#music) object, or NIL on error."
   (let ((music-fp (sdl-mixer-cffi::LOAD-MUS-RW (sdl:fp rwops))))
     (if (sdl-base:is-valid-ptr music-fp)
 	(make-instance 'sdl-mixer-cffi::music :fp music-fp)
-	(error "Cannot load music from rwops ~A." rwops))))
+	(error "Cannot load music from rwops ~A. '~a'" rwops (sdl-cffi::sdl-get-error)))))
 
 (defmethod load-music ((array VECTOR))
   "Loads the music file from the byte `ARRAY`. Must be a `WAVE`, `MOD`, `MIDI`, `OGG` or `MP3` file.
@@ -195,8 +195,8 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
 	(let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV file)))
 	  (if (sdl-base:is-valid-ptr chunk-fp)
 	      (make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
-	      (error "Cannot load ~A." file)))
-	(error "Sample file ~A does not exist." file))))
+	      (error "Cannot load ~A. '~a'" file (sdl-cffi::sdl-get-error))))
+	(error "Sample file ~A does not exist. '~a'" file (sdl-cffi::sdl-get-error)))))
 
 (defmethod load-sample ((filepath PATHNAME))
   (load-sample (namestring filepath)))
@@ -207,7 +207,7 @@ Returns the sample as a new [CHUNK](#chunk) object, or NIL on error."
   (let ((chunk-fp (sdl-mixer-cffi::LOAD-WAV-RW (sdl:fp rwops) 0)))
     (if (sdl-base:is-valid-ptr chunk-fp)
 	(make-instance 'sdl-mixer-cffi::chunk :fp chunk-fp)
-	(error "Cannot load sample from rwops ~A." rwops))))
+	(error "Cannot load sample from rwops ~A. '~a'" rwops (sdl-cffi::sdl-get-error)))))
 
 (defmethod load-sample ((array VECTOR))
   "Loads the sample file from the byte `ARRAY`. Must be a `WAVE`, `AIFF`, `RIFF`, `OGG`, or `VOC` file.
