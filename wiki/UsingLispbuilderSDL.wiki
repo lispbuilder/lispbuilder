@@ -2036,6 +2036,11 @@ A surface is saved to disk as a BMP image using [http://lispbuilder.googlecode.c
 
 `IMAGE-SUPPORTED` will return `T` if the image is of a format that can be loaded by `LISPBUILDER-SDL`.
 
+{{{
+(IMAGE-SUPPORTED-P *image*)
+>> :BMP
+}}}
+
 
 == Positioning Surfaces ==
 
