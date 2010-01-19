@@ -348,10 +348,10 @@ T
 
 == List Modes ==
 
-[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list sorted largest to smallest of the width and height of the screens that will support the type of video surface requested in `:FLAGS`. 
+[http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#list-modes LIST-MODES] returns a list sorted largest to smallest of the width and height of the screens that will support the type of video surface requested in `FLAGS`. 
 
 {{{
-list-modes flags &optional surface => result
+list-modes flags => result
 }}}
 
 `FLAGS` can be one or more of the following;
@@ -373,7 +373,7 @@ For example;
 >> (SDL:INIT-VIDEO)
 T
 
->> (SDL:LIST-MODES '(SDL:SDL-HW-SURFACE SDL:SDL-FULLSCREEN SDL:SDL-DOUBLEBUF))
+>> (SDL:LIST-MODES SDL:SDL-HW-SURFACE SDL:SDL-FULLSCREEN SDL:SDL-DOUBLEBUF)
 (#(1280 800) #(1024 768) #(800 1280) #(800 600) #(768 1024) 
  #(640 480) #(640 400) #(600 800) #(512 384) #(480 640) #(400 640) 
  #(384 512) #(320 200))
