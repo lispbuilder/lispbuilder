@@ -2076,7 +2076,7 @@ Set a _clipping_ rectangle to limit the draw area on a destination surface. The 
 
 == Sprite Sheets ==
 
-`LISPBUILDER-SDL` can render a single frame from a sprite sheet. A sprite sheet is a single image comprised of multiple frames of animation.  By assigning a sequence of _cell_ rectangles to a sprite sheet, only the current frame will be drawn to the display at any one time. When a sprite sheet is the source of a blit, only the areas within the <em>cell</em> rectangle will be drawn. Thus cell is used when only a portion of the source surface must be blitted to a destination surface. 
+`LISPBUILDER-SDL` can render a single frame from a sprite sheet. A sprite sheet is a single image comprised of multiple frames of animation.  By assigning a sequence of _cell_ rectangles to a sprite sheet, only the current frame will be drawn to the display at any one time. When a sprite sheet is the source of a blit, only the areas within the <em>cell</em> rectangle will be drawn. Thus cells are used when only a portion of the source surface must be blitted to a destination surface. 
 
 http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/waddle.png
 
