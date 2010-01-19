@@ -249,14 +249,14 @@ video flags.
 (defun blit-fill-p ()
   (video-info :blit-fill))
 
-(defun list-modes (flags)
+(defun list-modes (&rest flags)
   "Returns a LIST of vectors sorted largest to smallest containing window or screen dimensions
 that will support the specified video `FLAGS`. `LIST-MODES` must be called after SDL is 
 initialised using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init).
 
 ##### Parameters
 
-* `FLAGS` is a bitmasked logior of one or more of the following; [SDL-SW-SURFACE](#sdl-sw-surface), 
+* `FLAGS` is one or more of the following; [SDL-SW-SURFACE](#sdl-sw-surface), 
 [SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
 [SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
 [SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
@@ -273,10 +273,10 @@ Returns `T` if any dimension will support the pixel format and video flags.
 
 ##### Example
 
-    \(LIST-MODES '\(SDL-HW-SURFACE SDL-FULLSCREEN\)\)"
+    \(LIST-MODES SDL-HW-SURFACE SDL-FULLSCREEN\)"
   (when (video-info)
     (let ((modes nil)
-          (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (sdl-base::set-flags flags))))
+          (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (apply #'logior flags))))
     (cond
       ((cffi:null-pointer-p listmodes) nil)
       ((equal (cffi:pointer-address listmodes) 4294967295) t)
