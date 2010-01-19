@@ -2070,11 +2070,35 @@ The composition rules that determine how the source surface is composed over the
 
 Use [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-color-key SET-COLOR-KEY], [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#clear-color-key CLEAR-COLOR-KEY] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-alpha SET-ALPHA] to modify the key color and alpha transparency properties of a surface after the surface has been created.
 
+== Clipping ==
+
 Set a _clipping_ rectangle to limit the draw area on a destination surface. The clipping rectangle for a surface is manipulated using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#get-clip-rect GET-CLIP-RECT] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-clip-rect SET-CLIP-RECT]. When this surface is the destination of a blit, only the area within the <em>clip</em> rectangle will be drawn into.
 
-Set a _cell_ rectangle to limit the surface area on the source surface. The cell rectangle for a surface is manipulated using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#clear-cell CLEAR-CELL] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-cell SET-CELL]. When this surface is the source of a blit, only the areas within the <em>cell</em> rectangle will be used. The cell is useful when only a small area of the source surface needs to be blitted to the destination surface. For example a sequence of images composed into a single sprite sheet and only the current frame of animation is to be drawn to the display at any one time.
+== Sprite Sheets ==
+
+`LISPBUILDER-SDL` can render a single frame from a sprite sheet. A sprite sheet is a single image comprised of multiple frames of animation.  By assigning a sequence of _cell_ rectangles to a sprite sheet, only the current frame will be drawn to the display at any one time. When a sprite sheet is the source of a blit, only the areas within the <em>cell</em> rectangle will be drawn. Thus cell is used when only a portion of the source surface must be blitted to a destination surface. 
 
 http://lispbuilder.googlecode.com/svn/trunk/lispbuilder-sdl/documentation/waddle.png
+
+After the sprite sheet is loaded using `LOAD-IMAGE`, the position and width height of each animation frame can be assigned using `CELLS`. A single frame from the sheet is rendered by giving the `:CELL` index to `DRAW-SURFACE`.
+
+{{{
+;; Load the sprite sheet
+(defparameter *sh* (sdl:load-image "ani2.bmp"))
+
+;; Create the cells.
+;; Each 'cell' is the x/y width/height of an image in the sprite sheet
+(defparameter *cells* (loop for y from 0 to 192 by 64
+                            append (loop for x from 0 to 192 by 64
+                                         collect (list x y 64 64))))
+;; Assign the cells to the sprite-sheet
+(setf (sdl:cells sprite-sheet) sprite-cells)
+
+;; Draw a frame of animation
+(sdl:draw-surface-at *sh* #(10 10) :cell 0)
+}}}
+
+The cell rectangle for a surface is manipulated using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#clear-cell CLEAR-CELL] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-cell SET-CELL]. 
 
 == Alpha Blending and Color Keying ==
 
