@@ -2098,6 +2098,8 @@ After the sprite sheet is loaded using `LOAD-IMAGE`, the position and width heig
 (sdl:draw-surface-at *sh* #(10 10) :cell 0)
 }}}
 
+The example `(SDL-EXAMPLES:EXPLOSION)` uses cells to animate an explosion.
+
 The cell rectangle for a surface is manipulated using [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#clear-cell CLEAR-CELL] and [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#set-cell SET-CELL]. 
 
 == Alpha Blending and Color Keying ==
