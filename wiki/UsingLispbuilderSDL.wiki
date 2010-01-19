@@ -2092,7 +2092,7 @@ After the sprite sheet is loaded using `LOAD-IMAGE`, the position and width heig
                             append (loop for x from 0 to 192 by 64
                                          collect (list x y 64 64))))
 ;; Assign the cells to the sprite-sheet
-(setf (sdl:cells sprite-sheet) sprite-cells)
+(setf (sdl:cells *sh*) *cells*)
 
 ;; Draw a frame of animation
 (sdl:draw-surface-at *sh* #(10 10) :cell 0)
