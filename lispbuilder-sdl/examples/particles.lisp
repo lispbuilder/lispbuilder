@@ -153,11 +153,16 @@
       (sdl:resize-window *screen-width* *screen-height* :sw t :resizable t)
       (sdl:resize-window *screen-width* *screen-height* :sw t :fullscreen t))
     (setf currently-fullscreen? (if currently-fullscreen? nil t))))
-    
+
+;;; ----------------------------------------------------------------------
+;;;  'Builing an executable in Lispworks' function.
+;;; ----------------------------------------------------------------------
+
 ;;; ----------------------------------------------------------------------
 ;;;  'Main' function.
 ;;; ----------------------------------------------------------------------
-(defun particles (&optional (frame-rate nil))   
+(defun particles (&optional (frame-rate nil))
+  (sdl:load-library)
   (sdl:with-init ()
     ;; Create a window
     (unless (sdl:window *screen-width* *screen-height*

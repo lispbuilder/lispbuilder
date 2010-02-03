@@ -19,7 +19,8 @@
      (:file "globals")
      ;;(:doc-file "README-SDL.txt")
      ;;(:static-file "SDL.dll")
-     ))
+     )
+    :serial t)
    ;;(:module "documentation"
    ;;	      :components
    ;;	      ((:doc-file "bin_README")

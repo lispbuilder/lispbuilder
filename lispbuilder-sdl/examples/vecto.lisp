@@ -4,7 +4,6 @@
 (defun vecto-test ()
   (sdl:with-init ()
     (sdl:window 200 200 :title-caption "VECTO, Test" :icon-caption "VECTO, Test")
-    (setf (sdl:frame-rate) 5)
     (sdl:fill-surface (sdl:color :r 255 :g 255 :b 255))
 
     (vecto:with-canvas (:width 100 :height 100)
@@ -37,17 +36,19 @@
 	  (dotimes (i rotations)
 	    (elbow (* i step)))))
 
-      (sdl:vecto->surface vecto::*graphics-state* sdl:*default-display* 0 0)
+      (sdl:vecto->surface sdl:*default-display*))
 
-      (sdl:with-events ()
-	(:video-expose-event () (sdl:update-display))
-	(:idle () (sdl:update-display))
-	(:quit-event () t)))))
+    (sdl:with-events ()
+      (:key-down-event ()
+       (when (sdl:key-pressed-p :sdl-key-escape)
+         (sdl:push-quit-event)))
+      (:video-expose-event () (sdl:update-display))
+      (:idle () (sdl:update-display))
+      (:quit-event () t))))
 
 (defun radiant-lambda ()
   (sdl:with-init ()
     (sdl:window 200 200 :title-caption "VECTO, Radiant-lambda" :icon-caption "VECTO, Radiant-lambda")
-    (setf (sdl:frame-rate) 5)
     (sdl:fill-surface (sdl:color :r 255 :g 255 :b 255))
 
     (vecto:with-canvas (:width 90 :height 90)
@@ -55,31 +56,33 @@
 	    (step (/ pi 7)))
 	(vecto:set-font font 40)
 	(vecto:translate 45 45)
-      (vecto:draw-centered-string 0 -10 ;;#(#x3BB)
-				  #(#\n))
-      (vecto:set-rgb-stroke 1 0 0)
-      (vecto:centered-circle-path 0 0 35)
-      (vecto:stroke)
-      (vecto:set-rgba-stroke 0 0 1.0 0.5)
-      (vecto:set-line-width 4)
-      (dotimes (i 14)
-        (vecto:with-graphics-state
-          (vecto:rotate (* i step))
-          (vecto:move-to 30 0)
-          (vecto:line-to 40 0)
-          (vecto:stroke))))
+        (vecto:draw-centered-string 0 -10 ;;#(#x3BB)
+                                    #(#\n))
+        (vecto:set-rgb-stroke 1 0 0)
+        (vecto:centered-circle-path 0 0 35)
+        (vecto:stroke)
+        (vecto:set-rgba-stroke 0 0 1.0 0.5)
+        (vecto:set-line-width 4)
+        (dotimes (i 14)
+          (vecto:with-graphics-state
+              (vecto:rotate (* i step))
+            (vecto:move-to 30 0)
+            (vecto:line-to 40 0)
+            (vecto:stroke))))
 
-      (sdl:vecto->surface vecto::*graphics-state* sdl:*default-display* 0 0)
+      (sdl:vecto->surface sdl:*default-display*))
 
-      (sdl:with-events ()
-	(:video-expose-event () (sdl:update-display))
-	(:idle () (sdl:update-display))
-	(:quit-event () t)))))
+    (sdl:with-events ()
+      (:key-down-event ()
+       (when (sdl:key-pressed-p :sdl-key-escape)
+         (sdl:push-quit-event)))
+      (:video-expose-event () (sdl:update-display))
+      (:idle () (sdl:update-display))
+      (:quit-event () t))))
 
 (defun feedlike-icon ()
   (sdl:with-init ()
     (sdl:window 200 200 :title-caption "VECTO, Feedlike-icon" :icon-caption "VECTO, Feedlike-icon")
-    (setf (sdl:frame-rate) 5)
     (sdl:fill-surface (sdl:color :r 255 :g 255 :b 255))
 
     (vecto:with-canvas (:width 100 :height 100)
@@ -102,17 +105,19 @@
 	(quarter-circle 20 20 60)
 	(vecto:stroke))
 
-      (sdl:vecto->surface vecto::*graphics-state* sdl:*default-display* 0 0)
+      (sdl:vecto->surface sdl:*default-display*))
 
-      (sdl:with-events ()
-	(:video-expose-event () (sdl:update-display))
-	(:idle () (sdl:update-display))
-	(:quit-event () t)))))
+    (sdl:with-events ()
+      (:key-down-event ()
+       (when (sdl:key-pressed-p :sdl-key-escape)
+         (sdl:push-quit-event)))
+      (:video-expose-event () (sdl:update-display))
+      (:idle () (sdl:update-display))
+      (:quit-event () t))))
 
 (defun star-clipping ()
   (sdl:with-init ()
     (sdl:window 200 200 :title-caption "VECTO, Star-clipping" :icon-caption "VECTO, Star-clipping")
-    (setf (sdl:frame-rate) 5)
     (sdl:fill-surface (sdl:color :r 255 :g 255 :b 255))
 
     (vecto:with-canvas (:width 200 :height 200)
@@ -136,13 +141,13 @@
 	     repeat 20 do
 	     (circle i))))
 
-      (sdl:vecto->surface vecto::*graphics-state* sdl:*default-display* 0 0)
+      (sdl:vecto->surface sdl:*default-display*))
 
-      (sdl:with-events ()
-	(:video-expose-event () (sdl:update-display))
-	(:idle () (sdl:update-display))
-	(:quit-event () t)))))
-
-
-
+    (sdl:with-events ()
+      (:key-down-event ()
+       (when (sdl:key-pressed-p :sdl-key-escape)
+         (sdl:push-quit-event)))
+      (:video-expose-event () (sdl:update-display))
+      (:idle () (sdl:update-display))
+      (:quit-event () t))))
 

@@ -5,6 +5,8 @@
 (export
  ;; glue-vecto.lisp
  '(vecto->surface
-   surface->vecto))
+   surface->vecto
+   surface-from-vecto
+   with-canvas))
 
 
