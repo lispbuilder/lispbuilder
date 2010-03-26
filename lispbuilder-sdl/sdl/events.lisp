@@ -353,7 +353,7 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
   `(progn
      ,@forms))
 
-(defmacro with-events ((&optional (type :poll)) &body events)
+(defmacro with-events ((&optional (type :poll) (sdl-event (new-event))) &body events)
   "`WITH-EVENTS` is a convenience macro for managing the main game loop. It processes 
 incoming SDL events and limits the game loop to the specified number of frames 
 per second.
@@ -673,10 +673,9 @@ The contents of the event are completely up to the programmer.
         T\)
      \(:IDLE \(\)
         ... \)\)"
-  (let ((quit (gensym "quit")) (sdl-event (gensym "sdl-event"))
+  (let ((quit (gensym "quit"))
 	(idle-func (gensym "idle-func")))
-    `(let ((,sdl-event (new-event))
-           (,quit nil)
+    `(let ((,quit nil)
            (,idle-func nil))
        (setf ,idle-func #'(lambda ()
                             ,@(remove nil 
