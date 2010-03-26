@@ -128,11 +128,10 @@ not calculated"))
   (declare (ignorable fn))
   (with-slots (current-ticks delta-ticks last-ticks index window not-through-p)
       self
-    
     (setf current-ticks (sdl-cffi::sdl-get-ticks)
           delta-ticks (- current-ticks last-ticks))
-
     (setf (svref window index) current-ticks)
+    
     (when not-through-p
       (when (>= index (1- (length window)))
         (setf not-through-p nil)))
@@ -169,7 +168,6 @@ not calculated"))
 ;;;; --------------------------
 ;;;; Lock timestep to Specified Rate
 ;;;; From http://www.gaffer.org/game-physics/fix-your-timestep/
-
 (defmethod process-timestep :before ((self fps-unlocked) fn)
   (declare (ignorable fn))
   (with-slots (fps-ticks delta-ticks dt max-dt accumulator physics-hook-function)
@@ -236,7 +234,7 @@ of 'n' frames."
 (defmacro with-timestep (&body body)
   `(progn
      (incf (accumulator *default-fpsmanager*) (if (> (delta-ticks *default-fpsmanager*)
-                                                               (max-dt *default-fpsmanager*))
+                                                     (max-dt *default-fpsmanager*))
                                                 (max-dt *default-fpsmanager*)
                                                 (delta-ticks *default-fpsmanager*)))
      (loop until (< (accumulator *default-fpsmanager*) (dt *default-fpsmanager*)) do
