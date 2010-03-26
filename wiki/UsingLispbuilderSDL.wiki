@@ -1077,7 +1077,7 @@ USER-EVENT is unique in that it is created by the user. USER-EVENT can be pushed
 === Syntax of WITH-EVENTS ===
 
 {{{
-(WITH-EVENTS (TYPE)  
+(WITH-EVENTS (TYPE SDL-EVENT)  
  (:ACTIVE-EVENT (:GAIN GAIN :STATE STATE)  
     ... )  
  (:KEY-DOWN-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)  
@@ -1114,6 +1114,8 @@ USER-EVENT is unique in that it is created by the user. USER-EVENT can be pushed
  (:IDLE ()  
     ... )) 
 }}}
+
+It is possible to get hold of the raw event using `SDL-EVENT` within the scope of `WITH-EVENTS`. 
 
 = Input State =
 == Querying the Keyboard State ==
