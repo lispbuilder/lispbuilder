@@ -10,7 +10,7 @@
   "lispbuilder-sdl-mixer uses CFFI to be highly compatible across lisp 
     implementations. It includes a selection of utilities to assist  
     game programming in Common Lisp."
-  :version "0.4"
+  :version "0.4.0"
   :author "Luke Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>"
   :licence "MIT"
