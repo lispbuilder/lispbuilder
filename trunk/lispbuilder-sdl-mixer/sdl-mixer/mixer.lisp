@@ -68,28 +68,24 @@ Do not attempt to use `MUSIC` after it is freed.")
 (defun mixer-init-p (&rest flags)
   ;; Singal an error if FLAGS are not of the supported types
   (let ((types (set-exclusive-or (intersection flags (append *base-audio-format-support*
-						      (cffi:foreign-bitfield-symbol-list 'sdl-mixer-cffi::init-flags)))
-			  flags)))
+                                                             (cffi:foreign-bitfield-symbol-list 'sdl-mixer-cffi::init-flags)))
+                                 flags)))
     (when types
-	(error "ERROR: INIT-P does not support the ~A types." types)))
+      (error "ERROR: INIT-P does not support the ~A types." types)))
   (let ((fp (cffi:foreign-symbol-pointer "Mix_Init" :library 'sdl-mixer-cffi::sdl-mixer))
 	;; FLAGS can contain any of the supported mixer types, so make sure we only
-	;; logior the types supported by IMG_Init.
-	;; Example;
-	;; '(:ICO :BMP :LBM :JPG :PNG) -> '(:JPG :PNG)
+	;; logior the types supported
 	(bit-flags (cffi:foreign-bitfield-value 'sdl-mixer-cffi::init-flags
 						(intersection (cffi:foreign-bitfield-symbol-list 'sdl-mixer-cffi::init-flags)
 							      flags)))
-	;; Then, create a new list from flags, without the formats supported by IMG_Init
-	;; Example;
-	;; '(:ICO :BMP :LBM :JPG :PNG) -> '(:JPG :PNG) -> '(:ICO :BMP :LBM)
+	;; Then, create a new list from flags, without the formats supported
 	(built-in-only (set-exclusive-or flags (intersection (cffi:foreign-bitfield-symbol-list 'sdl-mixer-cffi::init-flags) flags))))
     (when fp
       (let ((result (cffi:foreign-funcall-pointer fp () :int bit-flags :int)))
 	(if (> result 0)
-	    (when (/= 0 (logand result bit-flags))
-	      (append built-in-only (cffi:foreign-bitfield-symbols 'sdl-mixer-cffi::init-flags result)))
-	    built-in-only)))))
+          (when (/= 0 (logand result bit-flags))
+            (append built-in-only (cffi:foreign-bitfield-symbols 'sdl-mixer-cffi::init-flags result)))
+          built-in-only)))))
 
 (defun init-mixer (&rest flags)
   (apply #'mixer-init-p flags))
