@@ -5,7 +5,7 @@
 (defctype ttf-font (:wrapper :pointer :from-c return-font :from-c pass-font))
 (defctype ttf-return-val-0-1 (:wrapper :int :from-c return-val-0-1))
 (defctype ttf-return-val-0+1 (:wrapper :int :from-c return-val-0+1))
-(defctype ttf-font-style (:wrapper :int :from-c return-font-style :to-c pass-font-style))
+;;(defctype ttf-font-style (:wrapper :int :from-c return-font-style :to-c pass-font-style))
 
 (defctype sdl-color :uint32)
 (defctype sdl-glue-color sdl-cffi::sdl-color)
@@ -80,16 +80,14 @@
 ;; This font style is implemented by modifying the font glyphs, and
 ;; doesn't reflect any inherent properties of the truetype font file.
 ;; #define TTF_STYLE_NORMAL	0x00
-(defconstant TTF-STYLE-NORMAL #x00)
-
-;; #define TTF_STYLE_BOLD		0x01
-(defconstant TTF-STYLE-BOLD #x01)
-
+;; #define TTF_STYLE_BOLD	0x01
 ;; #define TTF_STYLE_ITALIC	0x02
-(defconstant TTF-STYLE-ITALIC #x02)
-
 ;; #define TTF_STYLE_UNDERLINE	0x04
-(defconstant TTF-STYLE-UNDERLINE #x04)
+(cffi:defbitfield ttf-font-style
+  (:STYLE-NORMAL #x00)
+  (:STYLE-BOLD #x01)
+  (:STYLE-ITALIC #x02)
+  (:STYLE-UNDERLINE  #x04))
 
 ;; extern DECLSPEC int SDLCALL TTF_GetFontStyle(TTF_Font *font);
 (defcfun ("TTF_GetFontStyle" ttf-Get-Font-Style) ttf-font-style
