@@ -13,7 +13,7 @@ The LISPBUILDER-SDL package relies on the external [http://www.libsdl.org/ libSD
 
  # Download & install [http://www.lispworks.com/downloads/index.html Lispworks Personal Edition].
  # Download & install [http://www.weitz.de/starter-pack/ Edi Weitz's Lisp Starter Pack].
- # Download & save [http://www.balooga.com/lispbuilder/config.lisp config.lisp] to the same location as the Lisp Starter Pack. _Note:_ `LispStarterPack.exe` and `config.lisp` must be in the same directory.
+ # Download & save [http://lispbuilder.googlecode.com/files/config.lisp config.lisp] to the same location as the Lisp Starter Pack. _Note:_ `LispStarterPack.exe` and `config.lisp` must be in the same directory.
  # Run `LispStarterPack.exe` and select the `LISPBUILDER-*` packages. The packages will be downloaded and installed (in `Win XP`) to  `"My Documents\Lisp Libraries"`.
 
 = Using LISPBUILDER-SDL =
