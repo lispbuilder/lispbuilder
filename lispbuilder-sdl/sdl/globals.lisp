@@ -192,3 +192,5 @@ and copy to a new surface when `NIL`.")
 (defvar *base-image-support* nil)
 (defvar *additional-image-support* nil)
 (defvar *current-image-support* *base-image-support*)
+
+(defvar *sdl-event* nil)

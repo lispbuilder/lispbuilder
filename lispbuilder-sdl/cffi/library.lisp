@@ -40,10 +40,10 @@
   (cffi:use-foreign-library sdl)
 
   (when (handler-case (cffi:use-foreign-library sdl-glue)
-        (load-foreign-library-error () nil))
-  (progn
-    (setf *glue-loaded-p* t)
-    (pushnew :lispbuilder-sdl-audio *features*))))
+          (load-foreign-library-error () nil))
+    (progn
+      (setf *glue-loaded-p* t)
+      (pushnew :lispbuilder-sdl-audio *features*))))
 
 (eval-when (:load-toplevel :execute)
   (load-sdl-library))

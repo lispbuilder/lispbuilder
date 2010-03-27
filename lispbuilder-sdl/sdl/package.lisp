@@ -132,6 +132,7 @@
    #:+MIN-AUDIO-8+
 
    #:*allow-convert-to-display-format*
+   #:*sdl-event*
    
    ;; init.lisp
    #:with-init
