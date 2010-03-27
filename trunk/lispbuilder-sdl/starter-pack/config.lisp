@@ -75,13 +75,13 @@
  :lispbuilder-sdl-ttf-binaries
  :lispbuilder-sdl)
 
-;; (:lispbuilder-sdl-mixer-binaries "lispbuilder-sdl-mixer-binaries."
-;; 				 "http://www.balooga.com/lispbuilder/win32-lispbuilder-sdl-mixer-binaries.tgz")
+(:lispbuilder-sdl-mixer-binaries "lispbuilder-sdl-mixer-binaries."
+ "http://www.balooga.com/lispbuilder/win32-lispbuilder-sdl-mixer-binaries.tgz")
 
-;; (:lispbuilder-sdl-mixer "lispbuilder-sdl-mixer."
-;; 			"http://www.balooga.com/lispbuilder/lispbuilder-sdl-mixer.tgz"
-;; 			:lispbuilder-sdl-mixer-binaries
-;; 			:lispbuilder-sdl)
+(:lispbuilder-sdl-mixer "lispbuilder-sdl-mixer."
+ "http://www.balooga.com/lispbuilder/lispbuilder-sdl-mixer.tgz"
+ :lispbuilder-sdl-mixer-binaries
+ :lispbuilder-sdl)
 
 ;; (:lispbuilder-openrm-binaries "lispbuilder-openrm-binaries."
 ;; 			      "http://www.balooga.com/lispbuilder/win32-lispbuilder-openrm-binaries.tgz")
