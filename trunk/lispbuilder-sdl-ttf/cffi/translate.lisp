@@ -41,10 +41,10 @@
   (let ((font-style 0))
     (dolist (style value)
       (case style
-	(:STYLE-NORMAL (logior TTF-STYLE-NORMAL font-style))
-	(:STYLE-BOLD (logior TTF-STYLE-BOLD font-style))
-	(:STYLE-ITALIC (logior TTF-STYLE-ITALIC font-style))
-	(:STYLE-UNDERLINE (logior TTF-STYLE-UNDERLINE font-style))
+	(:STYLE-NORMAL (logior TTF-STYLE-NORMAL font-style) (format t "NORMAL~%"))
+	(:STYLE-BOLD (logior TTF-STYLE-BOLD font-style) (format t "BOLD~%"))
+	(:STYLE-ITALIC (logior TTF-STYLE-ITALIC font-style) (format t "ITALIC~%"))
+	(:STYLE-UNDERLINE (logior TTF-STYLE-UNDERLINE font-style) (format t "UNDERLINE~%"))
 	(otherwise nil)))
     font-style))
 
