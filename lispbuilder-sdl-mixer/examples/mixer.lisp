@@ -66,8 +66,7 @@
 
 (defun music-finished-action ()
   (sdl-mixer:register-music-finished
-   (lambda ()
-     nil)))
+   (lambda ())))
 
 (defun mixer()
   "Demonstrates music file basic playback"
