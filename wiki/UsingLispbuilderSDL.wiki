@@ -1115,7 +1115,7 @@ USER-EVENT is unique in that it is created by the user. USER-EVENT can be pushed
     ... )) 
 }}}
 
-It is possible to get hold of the raw event using *SDL-EVENT* within the scope of `WITH-EVENTS`. 
+It is possible to get hold of the raw event using `*SDL-EVENT*` within the scope of `WITH-EVENTS`. 
 
 = Input State =
 == Querying the Keyboard State ==
