@@ -56,6 +56,25 @@ not calculated"))
     :initform 0
     :initarg :accumulator)))
 
+(defclass fps-mixed (fps-timestep fps-fixed)
+  ((fps-ticks
+    :accessor fps-ticks
+    :type integer
+    :initform 0
+    :initarg :time)
+   (dt
+    :reader _dt_
+    :initform 10
+    :initarg :dt)
+   (max-dt
+    :initform 100  
+    :initarg :max-dt)
+   (accumulator
+    :accessor accumulator
+    :type integer
+    :initform 0
+    :initarg :accumulator)))
+
 (defclass fps-unlocked (fps-timestep)
   ((physics-hook-function
     :accessor ps-fn
@@ -123,6 +142,15 @@ not calculated"))
 (defmethod (setf target-frame-rate) (rate (self fps-timestep))
   (declare (ignorable rate self))
   nil)
+
+(defmethod (setf target-frame-rate) (rate (self fps-mixed))
+  (declare (ignorable rate))
+  (with-slots (target-frame-rate) self
+    (if (numberp target-frame-rate)
+      (when (and (>= target-frame-rate (lower-limit self))
+                 (<= target-frame-rate (upper-limit self)))
+        (setf (frame-count self) 0
+              (rate-ticks self) (truncate (/ 1000 target-frame-rate)))))))
 
 (defmethod process-timestep :around ((self fps-manager) fn)
   (declare (ignorable fn))

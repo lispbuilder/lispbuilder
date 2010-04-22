@@ -13,7 +13,7 @@
       ;; Open the audio device. Use a smaller buffer size to reduce latency
       (unless (sdl:open-audio)
         (setf status "FAILED to open Audio device."))
-      (sdl:close-audio)
+      ;;(sdl:close-audio)
      
       (when (sdl:audio-opened-p)
         ;; Open the WAV file

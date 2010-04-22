@@ -631,6 +631,7 @@
    #:fps-fixed
    #:fps-unlocked
    #:fps-timestep
+   #:fps-mixed
    #:frame-rate
    #:average-fps
    #:frame-time
