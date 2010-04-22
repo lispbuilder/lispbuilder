@@ -253,7 +253,7 @@ already initialized.
     (sdl-cffi::sdl-quit)
     (let ((flags (sdl-base::set-flags flags)))
       ;; Close only specified subsystems
-      (when (= 0 flags)
+      (when (> 0 flags)
         (setf flags (sdl-base::set-flags (remove nil
                                                  (list (when video sdl-init-video)
                                                        (when cdrom sdl-init-cdrom)

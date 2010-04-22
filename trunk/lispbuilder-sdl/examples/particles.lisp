@@ -275,15 +275,21 @@
        (sdl:update-display)))))
 
 
-(defun particles-timestep ()
+(defun particles-timestep (&optional (frame-rate nil))
   (sdl:with-init ()
     ;; Create a window
     (unless (sdl:window *screen-width* *screen-height*
                         :title-caption "Particles Demo"
                         :icon-caption "Particles Demo"
                         :flags '(sdl:sdl-sw-surface sdl:sdl-resizable)
-                        :fps (make-instance 'sdl:fps-timestep))
+                        :fps
+                        ;;(make-instance 'sdl:fps-timestep)
+                        (make-instance 'sdl:fps-mixed)
+                        )
       (error "~&Unable to create a SDL window~%"))
+
+    ;; Fix the framerate
+    (setf (sdl:frame-rate) frame-rate)
 
     ;; Enable event filters.
     (sdl:enable-event-filters)
