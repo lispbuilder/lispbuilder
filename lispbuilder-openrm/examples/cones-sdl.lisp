@@ -6,14 +6,13 @@
    :width 400 :height 300
    :title-caption "Cones" :icon-caption "Cones"
    :name "window"
-   :pipe (make-instance 'rm::sdl-pipe
-                        :channel-format :RM-REDBLUE-STEREO-CHANNEL)))
+   :pipe (make-instance 'rm::sdl-pipe :channel-format :REDBLUE-STEREO-CHANNEL)))
 
 (defclass cones-scene (rm::scene rm::aux-trackball)()
   (:default-initargs
    :name "scene"
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-opaque
+   :dims :renderpass-3d
+   :opacity :renderpass-opaque
    :background-color (rm::color 0.4 0.4 0.4 1.0)
    :unlit-color (rm::color 1.0 1.0 1.0 1.0)
    :camera (make-instance 'rm::camera-3d

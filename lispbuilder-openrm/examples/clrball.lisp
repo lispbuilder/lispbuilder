@@ -6,32 +6,32 @@
 (defclass clrball-window (rm::native-window rm::aux-window) ()
   (:default-initargs
    :width 400
-    :height 300
-    :name "window"
-    :events '(rm::on-idle)))
+   :height 300
+   :name "window"
+   :events '(rm::on-idle)))
 
 (defclass clrball-scene (rm::scene rm::aux-trackball rm::aux-scene)()
   (:default-initargs
    :name "scene"
-    :dims :rm-renderpass-3D
-    :opacity :rm-renderpass-all
-    :compute-view-from-geometry t
-    :default-lighting t
-    :viewport t
-    :compute-bounding-box t
-    :compute-center t
-    :union-all t
-    :camera (make-instance 'rm::camera-3d :defaults t)))
+   :dims :renderpass-3D
+   :opacity :renderpass-all
+   :compute-view-from-geometry t
+   :default-lighting t
+   :viewport t
+   :compute-bounding-box t
+   :compute-center t
+   :union-all t
+   :camera (make-instance 'rm::camera-3d :defaults t)))
 
 (defclass transparent-node (rm::node) ()
   (:default-initargs
-   :dims :rm-renderpass-3d
-    :opacity :rm-renderpass-transparent))
+   :dims :renderpass-3d
+   :opacity :renderpass-transparent))
 
 (defclass opaque-node (rm::node) ()
   (:default-initargs
-   :dims :rm-renderpass-3d
-    :opacity :rm-renderpass-opaque))
+   :dims :renderpass-3d
+   :opacity :renderpass-opaque))
 
 (defclass transparent-sphere (rm::sphere-primitive) ()
   (:default-initargs
@@ -46,8 +46,8 @@
     :tesselate 32
     :rgb/a (rm::c4d 1.0 0.0 0.0 1.0)))
 
-(defmethod rm::on-idle ((window clrball-window))
-  (rm::dispatch-event *window* rm::on-paint))
+;;(defmethod rm::on-idle ((window clrball-window))
+;;  (rm::dispatch-event *window* rm::on-paint))
 
 (defun clrball ()
   (setf *window* (rm::make-instance 'clrball-window))

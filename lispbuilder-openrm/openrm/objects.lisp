@@ -3,8 +3,8 @@
 
 (defclass sphere (node)()
   (:default-initargs
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-all
+   :dims :renderpass-3d
+   :opacity :renderpass-all
    :compute-bounding-box t
    :radius 1.0
    :tesselate 512
@@ -12,8 +12,8 @@
 
 (defclass cone (node)()
   (:default-initargs
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-opaque
+   :dims :renderpass-3d
+   :opacity :renderpass-opaque
    :compute-bounding-box t
    :p-xy/z #(#(1.0 0.0 0.0)
              #(0.0 0.0 0.0))
@@ -22,8 +22,8 @@
 
 (defclass cylinder (node)()
   (:default-initargs
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-opaque
+   :dims :renderpass-3d
+   :opacity :renderpass-opaque
    :compute-bounding-box t
    :p-xy/z #(#(0.0 0.0 0.0)
              #(1.0 0.0 0.0))
@@ -32,7 +32,7 @@
 
 (defclass box (node)()
   (:default-initargs
-   :dims :rm-renderpass-3d
+   :dims :renderpass-3d
    :opacity :opaque
    :compute-bounding-box t
    :p-xy/z #(#(-1.0 -1.0 -1.0)
@@ -41,13 +41,13 @@
 
 (defclass app-list (node)()
   (:default-initargs
-   :dims :rm-renderpass-3d
+   :dims :renderpass-3d
    :opacity :opaque
    :compute-bounding-box t))
 
 (defclass sprite (node)()
   (:default-initargs
-   :dims :rm-renderpass-all
+   :dims :renderpass-all
    :opacity :opaque
    :compute-bounding-box t
    :p-xy/z #(0.0 0.0)))
@@ -58,11 +58,11 @@
                      keywords
                      (append (list :opacity opacity) keywords))))
     (replace keywords (list :opacity (cond ((eq opacity :opaque)
-                                            :rm-renderpass-opaque)
+                                            :renderpass-opaque)
                                            ((eq opacity :transparent)
-                                            :rm-renderpass-transparent)
+                                            :renderpass-transparent)
                                            ((eq opacity :all)
-                                            :rm-renderpass-all)
+                                            :renderpass-all)
                                            (t (error "Cannot set the opacity to ~A." opacity))))
              :start1 (position :opacity keywords))))
 
@@ -157,8 +157,8 @@
    (light-direction
     :reader light-direction))
   (:default-initargs
-   :dims :rm-renderpass-all
-   :opacity :rm-renderpass-all
+   :dims :renderpass-all
+   :opacity :renderpass-all
    :compute-bounding-box t
    :radius (coerce (rm::to-radian *default-spot-cutoff*) 'single-float)
    :target nil
@@ -189,7 +189,7 @@
                                        cutoff exponent
                                        direction)
   (unless target
-    (setf (slot-value self 'target-node) (rm-root-node)))
+    (setf (slot-value self 'target-node) (get-root-node)))
   
   (setf (slot-value self 'light-direction) direction)
   

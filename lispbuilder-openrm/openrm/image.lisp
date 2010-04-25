@@ -11,7 +11,7 @@
   (unless (this-fp self)
     (unless (or type dims depth format type)
       (error ":TYPE, :DIMS, :DEPTH, :FORMAT or :DATA-TYPE must not be NIL."))
-    (setf (slot-value self 'foreign-pointer-to-object)
+    (setf (slot-value self 'simfin::foreign-pointer-to-object)
           (rm-cffi::rm-image-new type (elt dims 0) (elt dims 1) depth format data-type (copy-data self))))
   (when image-data
     (setf (image-data self) image-data)))

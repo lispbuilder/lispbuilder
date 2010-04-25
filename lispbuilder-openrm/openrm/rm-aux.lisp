@@ -30,9 +30,42 @@
   ((trackball
     :reader trackball)))
 
-(defclass aux-window (generic-window)())
+(defclass aux-pipe (pipe)()
+  (:default-initargs
+   :target :PIPE-WGL ;; This needs to be dependent on OS
+   :processing-mode :PIPE-MULTISTAGE
+   :opaque-3d t
+   :transparent-3d t
+   :opaque-2d t
+   :swap-buffers nil
+   :notify-level :notify-full))
+
+(defclass aux-window (window)
+  ((window :initarg window :accessor window))
+  (:default-initargs
+   :pipe (make-instance 'aux-pipe)))
 
 (defclass aux-scene (generic-scene)())
+
+;;(defmethod initialize-instance :after ((window aux-window)
+;;                                       &key
+;;                                       title-caption width height
+;;                                       &allow-other-keys)
+;;  
+;;      ;; 2.2 create an OpenGL context
+;;      ;; 3. Create the window
+;;      (setf (window self)
+;;            (rm-cffi::rmaux-create-w-32window (fp (pipe self))
+;;                                              (cffi:null-pointer)
+;;                                              0 0 width height
+;;                                              title-caption
+;;                                               
+;;                                              sdl:window width height
+;;                                              :bpp bpp
+;;                                              :flags window-flags
+;;                                              :title-caption title-caption
+;;                                              :icon-caption icon-caption)))
+
 
 (defmethod initialize-instance :after ((self trackball)
                                        &key scene target dimensions &allow-other-keys)

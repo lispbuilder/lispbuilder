@@ -42,8 +42,8 @@
    :gc t
     :display-meta t
     :display-cone t
-    :dims :rm-renderpass-3d
-    :opacity :rm-renderpass-opaque))
+    :dims :renderpass-3d
+    :opacity :renderpass-opaque))
 
 (defmethod initialize-instance :around ((self meta-node)
 				       &key (display-meta nil))

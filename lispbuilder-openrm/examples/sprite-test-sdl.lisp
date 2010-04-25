@@ -31,7 +31,7 @@
     (dotimes (j num-height)
       (dotimes (i num-width)
         (incf a da)
-        (push (rm::new-sprite :dims :rm-renderpass-2d
+        (push (rm::new-sprite :dims :renderpass-2d
                               :opacity :opaque
                               :images (build-image a)
                               :xy/z (rm::vertex (+ x (* i dx))
@@ -52,16 +52,16 @@
                                           :transparent-3d t
                                           :opaque-2d t))
   (make-instance 'rm::scene
-                 :dims :rm-renderpass-2d
-                 :opacity :rm-renderpass-opaque
+                 :dims :renderpass-2d
+                 :opacity :renderpass-opaque
                  :window (rm::default-window)
                  :background-color (rm::color 0.3 0.3 0.3 1.0)
                  :camera (make-instance 'rm::camera-2d)
                  :compute-view-from-geometry nil
                  :children (make-instance 'rm::node
                                           :name "blocks"
-                                          :dims :rm-renderpass-all
-                                          :opacity :rm-renderpass-all
+                                          :dims :renderpass-all
+                                          :opacity :renderpass-all
                                           :unlit-color (rm::color 0.0 1.0 0.0 1.0)
                                           :children (build-tiles 60 60)))
   (setf (sdl:frame-rate) nil)

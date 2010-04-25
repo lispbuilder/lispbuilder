@@ -1,13 +1,12 @@
 
 (in-package #:rm)
 
-;(defclass openrm-object (foreign-object)
-;  ())
-
-(defclass trackable-object ()
+(defclass trackable ()
   ((id
   :reader id
-  :initform (generate-id))))
+  :initform (generate-id)))
+  (:documentation
+   "Creates and assigns a unique id to the object upon object creation."))
 
 (defclass copyable-object ()
   ((copy-data

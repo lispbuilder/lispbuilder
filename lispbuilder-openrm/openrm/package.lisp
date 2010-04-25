@@ -3,7 +3,7 @@
 (in-package #:cl-user)
 
 (defpackage #:lispbuilder-openrm
-  (:use #:cl #:cffi)
+  (:use #:cl #:cffi #:simfin)
   (:nicknames #:rm)
   (:documentation "The main package of `lispbuilder-openrm'.")
   (:export
@@ -35,7 +35,7 @@
    #:node
    #:new-node
    #:root-node
-   #:rm-root-node
+   #:get-root-node
    #:add-child-node
    #:add-primitive
 

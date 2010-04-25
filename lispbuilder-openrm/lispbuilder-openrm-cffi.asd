@@ -9,7 +9,7 @@
     :author "Luke Crook <luke@balooga.com>"
     :maintainer "Application Builder <application-builder@lispniks.com>"
     :licence "BSD"
-    :depends-on (cffi)
+    :depends-on (cffi lispbuilder-openrm-binaries)
     :components
     ((:module "cffi"
 	      :components

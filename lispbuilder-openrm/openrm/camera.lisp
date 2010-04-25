@@ -7,13 +7,13 @@
   ()
   (:default-initargs
    :fp (rm-cffi::rm-camera-2d-new)
-   :free (simple-free #'rm-cffi::rm-camera-2d-delete 'camera-2d)))
+   :free #'rm-cffi::rm-camera-2d-delete))
 
 (defclass camera-3D (camera)
   ()
   (:default-initargs
    :fp (rm-cffi::rm-camera-3d-new)
-   :free (simple-free #'rm-cffi::rm-camera-3d-delete 'camera-3d)))
+   :free #'rm-cffi::rm-camera-3d-delete))
 
 
 (defmacro with-camera ((var &optional camera (free-p t))

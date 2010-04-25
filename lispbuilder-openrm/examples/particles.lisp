@@ -131,13 +131,24 @@
 ;;;  Add and remove particles.
 ;;; ----------------------------------------------------------------------
 (defun create-particles (number)
-  (let ((particle.bmp (sdl:create-path "particle.bmp" sdl:*default-image-path*)))
+  (let ((particle.bmp (sdl::convert-to-display-format :surface (sdl:load-image (sdl:create-path
+                                                                                "particle.bmp"
+                                                                                sdl:*default-asset-path*))
+                                                      :inherit nil
+                                                      :pixel-alpha t
+                                                      :free t)))
+    ;; Replace the alpha channel of *particle-img* with
+    ;; the alpha map in particle-alpha.bmp
+    (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp"
+                                                              sdl:*default-asset-path*)))
+      (sdl:copy-channel-to-alpha particle.bmp alpha :channel :r))
+
     (incf *particle-count* number)
     (loop repeat number
           collect (init-particle (make-particle
                                   :obj (rm::new-sprite :p-xy/z #(10.0 10.0 48.0)
                                                        :images (rm::load-image particle.bmp)
-                                                       :dims :rm-renderpass-3d))))))
+                                                       :dims :renderpass-3d))))))
 (defun remove-particles ()
   (when *particles*
     (dotimes (i *increment*)
@@ -147,8 +158,8 @@
 
 (defclass pipe (rm::sdl-pipe)()
   (:default-initargs
-   :target :RM-PIPE-NOPLATFORM
-   :processing-mode :RM-PIPE-MULTISTAGE
+   :target :PIPE-NOPLATFORM
+   :processing-mode :PIPE-MULTISTAGE
    :opaque-3d t
    :transparent-3d t
    :opaque-2d t
@@ -167,8 +178,8 @@
 (defclass particles-scene (rm::scene)()
   (:default-initargs
    :name "particles-scene"
-   :dims :rm-renderpass-3D
-   :opacity :rm-renderpass-opaque
+   :dims :renderpass-3D
+   :opacity :renderpass-opaque
    :viewport t
    :background-color #(0.0 0.0 0.0 1.0)
    :camera (make-instance 'rm::camera-3d)

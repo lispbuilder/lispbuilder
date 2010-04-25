@@ -7,7 +7,7 @@
     (:wait (process-events-wait *window*))
     (t (error "PROCESS-EVENTS: TYPE must be :POLL or :WAIT"))))
 
-(defclass event () ())
+(defclass event ()())
 
 (defclass event-handler (event)
   ((event-handlers :initform nil)

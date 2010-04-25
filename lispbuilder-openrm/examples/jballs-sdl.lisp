@@ -24,8 +24,8 @@
 
 (defclass node (rm::node)()
   (:default-initargs
-   :dims :rm-renderpass-3D
-   :opacity :rm-renderpass-opaque
+   :dims :renderpass-3D
+   :opacity :renderpass-opaque
    :compute-bounding-box t))
 
 (defclass floor-quad (node)()

@@ -4,28 +4,143 @@
 
 (in-package #:rm-examples)
 
-(defun sphere-example-1 ()
-  (make-instance 'rm::sdl-window
-                 :name "window"
+(defun wire-box-example-1 ()
+  (make-instance 'rm::native-window
+                 :title-caption "Wire Box Example 1" :icon-caption "Wire Box Example 1"
                  :width 320 :height 240)
+  
+  (let ((box (rm::new-box :type :solid
+                          :rgb/a (rm:color 1.0 1.0 0.0 1.0)
+                          :xy/z #(#(-1.0 -1.0 -1.0)
+                                  #(1.0 1.0 1.0))))
+        (scenes (list (make-instance 'rm::scene
+                                     :window (rm::default-window)
+                                     :viewport #(0.0 0.0 0.5 0.5))
+                      (make-instance 'rm::scene
+                                     :window (rm::default-window)
+                                     :viewport #(0.5 0.0 1.0 0.5))
+                      (make-instance 'rm::scene
+                                     :window (rm::default-window)
+                                     :viewport #(0.0 0.5 0.5 1.0))
+                      (make-instance 'rm::scene
+                                     :window (rm::default-window)
+                                     :viewport #(0.5 0.5 1.0 1.0)))))
+
+    (mapcar #'(lambda (scene) (rm:add-scene scene (rm::default-window))) scenes)
+    (mapcar #'(lambda (scene) (rm::add-to-scene scene box)) scenes)
+    (mapcar #'rm::compute-bounding-box scenes)
+    (rm::union-all-boxes (rm::default-window))
+
+    (mapcar #'(lambda (scene)
+                (rm:with-camera (cam (make-instance 'rm::camera-3d))
+                  (rm::compute-view-from-geometry cam scene)
+                  (setf (rm::camera scene) cam))) scenes))
+  
+  (rm::process-events)
+  (rm::clean-up))
+
+(defun camera-wireframe ()
+  (make-instance 'rm::native-window
+                 :title-caption "Camera Wireframe" :icon-caption "Camera Wireframe"
+                 :width 320 :height 240)
+  
+  (let ((chasis-primitive (make-instance 'rm::box-wire-primitive
+                                      :rgb/a (rm:color 1.0 1.0 0.0 1.0)
+                                      :xy/z #(#(-1.0 -1.0 -1.0)
+                                              #(1.0 1.0 1.0))
+                                      :compute-bounding-box t))
+        (lense-primitive (make-instance 'cone-primitive
+                                        :rgb/a rgb/a
+                                        :xy/z (vector direction #(0.0 0.0 0.0))
+                                        :normals normals
+                                        :bounding-box p-bounding-box
+                                        :compute-bounding-box p-compute-bounding-box
+                                        :tesselate tesselate :radius radius
+                                        :display-list display-list
+                                        :app-display-list app-display-list))
+        (scenes (list (make-instance 'rm::scene
+                                     :window (rm::default-window)
+                                     :viewport #(0.0 0.0 0.5 0.5))
+                      (make-instance 'rm::scene
+                                     :window (rm::default-window)
+                                     :viewport #(0.5 0.0 1.0 0.5))
+                      (make-instance 'rm::scene
+                                     :window (rm::default-window)
+                                     :viewport #(0.0 0.5 0.5 1.0))
+                      (make-instance 'rm::scene
+                                     :window (rm::default-window)
+                                     :viewport #(0.5 0.5 1.0 1.0)))))
+
+    (mapcar #'(lambda (scene) (rm:add-scene scene (rm::default-window))) scenes)
+    (mapcar #'(lambda (scene) (rm::add-to-scene scene box)) scenes)
+    (mapcar #'rm::compute-bounding-box scenes)
+    (rm::union-all-boxes (rm::default-window))
+
+    (mapcar #'(lambda (scene)
+                (rm:with-camera (cam (make-instance 'rm::camera-3d))
+                  (rm::compute-view-from-geometry cam scene)
+                  (setf (rm::camera scene) cam))) scenes))
+  
+  (rm::process-events)
+  (rm::clean-up))
+
+
+
+
+(defvar *window* nil)
+(defvar *scene* nil)
+(defvar *node* nil)
+(defvar *prim* nil)
+
+(setf *window* (make-instance 'rm::native-window :name "window"
+                              :width 320 :height 240))
+
+(setf *prim* (make-instance 'rm::sphere-primitive
+                            :radius 1.0
+                            :tesselate 512
+                            :rgb/a #(1.0 1.0 0.0 1.0);;(rm::c4d 1.0 1.0 0.0 1.0)
+                            :xy/z #(1.0 1.0 0.0 1.0);;(rm::v3d 0.0 0.0 0.0)
+                            ))
+
+(setf *scene* (make-instance 'rm::scene :name "scene"
+                             :window *window*
+                             :default-camera t
+                             :default-lighting t
+                             :dims :renderpass-3d
+                             :opacity :renderpass-opaque))
+
+(setf *node* (make-instance 'rm::node
+                            :compute-bounding-box t
+                            :name "sphere"))
+
+(rm:add-primitive *prim* *node*)
+(rm::add-to-scene *scene* *node*)
+(rm::compute-bounding-box *node*)
+(rm:add-scene *scene* *window*)
+(rm::assign-defaults (rm::camera *scene*))
+(rm::assign-default-lighting *scene*)
+(rm::process-events)
+(rm::clean-up)
+
+(defun sphere-example-1 ()
   (let* ((window (make-instance 'rm::native-window :name "window"
 				:width 320 :height 240))
 	 (scene (make-instance 'rm::scene :name "scene"
-		   :window window
-		   :default-camera t
-		   :default-lighting t
-		   :dims :rm-renderpass-3d
-		   :opacity :rm-renderpass-opaque
-		   :children (list
-			      (make-instance 'rm::node
-					     :compute-bounding-box t
-					     :name "sphere"
-					     :primitives (list
-							  (make-instance 'rm::sphere-primitive
-									 :radius 1.0
-									 :tesselate 512
-									 :rgb/a (rm::c4d 1.0 1.0 0.0 1.0)
-									 :xy/z (rm::v3d 0.0 0.0 0.0))))))))
+                               :window window
+                               :default-camera t
+                               :default-lighting t
+                               :dims :renderpass-3d
+                               :opacity :renderpass-opaque
+                               :children (list
+                                          (make-instance 'rm::node
+                                                         :compute-bounding-box t
+                                                         :name "sphere"
+                                                         :primitives (list
+                                                                      (make-instance 'rm::sphere-primitive
+                                                                                     :radius 1.0
+                                                                                     :tesselate 512
+                                                                                     :rgb/a (rm::c4d 1.0 1.0 0.0 1.0)
+                                                                                     :xy/z (rm::v3d 0.0 0.0 0.0))))))))
     
     (rm::show-window window)
     (rm::process-events-wait)
@@ -41,8 +156,8 @@
 (defclass scene (rm::scene) ()
   (:default-initargs
    :name "scene"
-    :dims :rm-renderpass-3d
-    :opacity :rm-renderpass-opaque
+    :dims :renderpass-3d
+    :opacity :renderpass-opaque
     :default-camera t
     :default-lighting t))
 
@@ -73,8 +188,8 @@
   (let* ((window (make-instance 'rm::native-window :name "window"
 				:width 320 :height 240))
 	 (scene (make-instance 'rm::scene :name "scene"
-		   :dims :rm-renderpass-3d
-		   :opacity :rm-renderpass-opaque))
+		   :dims :renderpass-3d
+		   :opacity :renderpass-opaque))
 	 (sphere (make-instance 'rm::node :name "sphere")))
 
     ;; Sphere Primitive
