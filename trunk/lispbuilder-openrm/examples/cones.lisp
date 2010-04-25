@@ -9,13 +9,13 @@
     :height 300
     :name "window"
     :events '(rm::on-idle)
-    :pipe (make-instance 'rm::native-pipe :channel-format :RM-REDBLUE-STEREO-CHANNEL)))
+    :pipe (make-instance 'rm::native-pipe :channel-format :REDBLUE-STEREO-CHANNEL)))
 
 (defclass cones-scene (rm::scene rm::aux-trackball rm::aux-scene)()
   (:default-initargs
    :name "scene"
-    :dims :rm-renderpass-3D
-    :opacity :rm-renderpass-opaque
+    :dims :renderpass-3D
+    :opacity :renderpass-opaque
     :compute-view-from-geometry t
     :default-lighting t
     :viewport t

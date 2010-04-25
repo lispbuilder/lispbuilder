@@ -10,8 +10,8 @@
 
 (defclass clrball-scene (rm::scene rm::aux-trackball)()
   (:default-initargs
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-all
+   :dims :renderpass-3d
+   :opacity :renderpass-all
    :name "scene"))
 
 (defun clrball-1-sdl ()
@@ -47,15 +47,15 @@
 
 (defclass opaque-node (rm::node) ()
   (:default-initargs
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-opaque
+   :dims :renderpass-3d
+   :opacity :renderpass-opaque
    :compute-bounding-box t
    :background-color (rm::color 0.0 0.0 0.0 0.0)))
 
 (defclass transparent-node (rm::node) ()
   (:default-initargs
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-transparent
+   :dims :renderpass-3d
+   :opacity :renderpass-transparent
    :compute-bounding-box t
    :diffuse-color (rm::color 0.1 0.1 1.0 0.75)
    :ambient-color (rm::color 1.0 1.0 1.0 0.5)

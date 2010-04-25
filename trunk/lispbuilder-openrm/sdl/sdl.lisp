@@ -12,22 +12,19 @@
 
 (defclass sdl-pipe (pipe)()
   (:default-initargs
-   :target :RM-PIPE-NOPLATFORM
-   :processing-mode :RM-PIPE-MULTISTAGE
+   :target :PIPE-NOPLATFORM
+   :processing-mode :PIPE-MULTISTAGE
    :opaque-3d t
    :transparent-3d t
    :opaque-2d t
    :swap-buffers nil
-   :notify-level t))
+   :notify-level :notify-full))
 
 (defclass sdl-window (window)
   ((surface
     :reader surface
     :initform nil
     :initarg :surface)
-   (hwnd
-    :initform nil
-    :initarg :hwnd)
    (default-display
     :reader default-display))
   (:default-initargs
@@ -97,7 +94,9 @@
           (pushnew sdl:SDL-RESIZABLE window-flags))
         (unless frame
           (pushnew sdl:SDL-NO-FRAME window-flags)))
-    
+
+      ;; 2.2 create an OpenGL context
+      ;; 3. Create the window
       (setf surface (sdl:window width height
                                 :bpp bpp
                                 :flags window-flags
@@ -106,6 +105,20 @@
   (unless surface
     (error "ERROR: SDL Surface or OpenGL context cannot be created."))
 
+   ;; 3.2 Assign an OpenGL context to the RMpipe using rmPipeSetContext.
+   ;; SDL creates its own context.
+   ;; The following seems to work, but it might not.
+   (unless (rm-cffi::rm-pipe-set-context (fp (pipe window))
+                                         ;;(rm-cffi::wgl-get-current-context)
+                                         (opengl-context window))
+     (error 'set-opengl-context-error :self (pipe window)))
+
+    (if (text-support-p (pipe window))
+      (unless (rm-cffi::rm-pipe-set-window (fp (pipe window)) (hwnd window) (slot-value window 'width) (slot-value window 'height))
+        (error 'pipe-set-window-error :self (pipe window)))
+      (unless (rm-cffi::rm-pipe-set-window-size (fp (pipe window)) (slot-value window 'width) (slot-value window 'height))
+        (error 'pipe-set-window-error :self (pipe window))))
+    
   (setf (slot-value window 'surface) surface
         *quit* nil
         (slot-value window 'default-display) (sdl:create-surface width height :rle-accel nil)
@@ -114,15 +127,39 @@
 (defmethod close-window ((self sdl-window))
   (log5:log-for (free) "CLOSE-WINDOW: ~A" self)
   (free (pipe self))
-  (setf (pipe self) nil)
-  (delete-window (hwnd self)))
-
-(defmethod close-windows ()
-  (loop for (hwnd . window) in *windows* do
-       (close-window window)))
+  (setf (pipe self) nil))
 
 (defmethod hwnd ((self sdl-window))
-  (sdl:get-native-window))
+  (let ((wm-info (cffi:foreign-alloc 'sdl-cffi::SDL-Sys-WM-info)))
+    ;; Set the wm-info structure to the current SDL version.
+    (sdl-cffi::set-sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
+    (sdl-cffi::SDL-Get-WM-Info wm-info)
+    ;; For Windows
+    #+windows(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
+    ;; For X
+    #-windows(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
+                                                                                            'sdl-cffi::SDL-Sys-WM-info
+                                                                                            'sdl-cffi::info)
+                                                                 'sdl-cffi::SDL-Sys-WM-info-info
+                                                                 'sdl-cffi::x11)
+                                      'sdl-cffi::SDL-Sys-WM-info-info-x11
+                                      'sdl-cffi::window)))
+
+(defmethod opengl-context ((self sdl-window))
+  (let ((wm-info (cffi:foreign-alloc 'sdl-cffi::SDL-Sys-WM-info)))
+    ;; Set the wm-info structure to the current SDL version.
+    (sdl-cffi::set-sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
+    (sdl-cffi::SDL-Get-WM-Info wm-info)
+    ;; For Windows
+    #+windows(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::hglrc)
+    ;; For X
+    #-windows(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
+                                                                                              'sdl-cffi::SDL-Sys-WM-info
+                                                                                              'sdl-cffi::info)
+                                                                   'sdl-cffi::SDL-Sys-WM-info-info
+                                                                   'sdl-cffi::x11)
+                                        'sdl-cffi::SDL-Sys-WM-info-info-x11
+                                        'sdl-cffi::hglrc)))
 
 (defmethod clean-up :after (&optional (quit-rm nil))
   (sdl-cffi::SDL-Quit))
@@ -468,7 +505,7 @@
 	 (loop until (or *quit* (eq (sdl-cffi::SDL-Wait-Event sdl-event) 0)) do
 	      (event-types sdl-event window))
 	 (unless *quit*
-           (sdl-base::process-timestep sdl-base::*default-fpsmanager*
+           (sdl::process-timestep sdl:*default-fpsmanager*
                                        idle-func)))))
 
 (defmethod process-events-poll ((window sdl-window))
@@ -478,7 +515,7 @@
 	 (loop until (or *quit* (eq (sdl-cffi::SDL-Poll-Event sdl-event) 0)) do
 	      (event-types sdl-event window))
 	 (unless *quit*
-	   (sdl-base::process-timestep sdl-base::*default-fpsmanager*
+           (sdl::process-timestep sdl:*default-fpsmanager*
                                        idle-func)))))
 
 ;;;;;

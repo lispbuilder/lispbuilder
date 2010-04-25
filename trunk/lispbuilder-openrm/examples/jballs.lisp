@@ -20,8 +20,8 @@
 (defclass jballs-scene (rm::scene rm::aux-trackball)()
   (:default-initargs
    :name "default-scene"
-    :dims :rm-renderpass-3D
-    :opacity :rm-renderpass-opaque
+    :dims :renderpass-3D
+    :opacity :renderpass-opaque
     :compute-view-from-geometry t
     :viewport t
     :compute-bounding-box t
@@ -32,8 +32,8 @@
 (defclass node (rm::node)()
   (:default-initargs
     :compute-bounding-box t
-    :dims :rm-renderpass-3D
-    :opacity :rm-renderpass-opaque))
+    :dims :renderpass-3D
+    :opacity :renderpass-opaque))
 
 (defclass sloth (node)()
   (:default-initargs

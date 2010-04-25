@@ -4,13 +4,33 @@
 
 (in-package #:rm-examples)
 
+
+(defun box-example-1 ()
+  (make-instance 'rm::sdl-window
+                 :title-caption "Sphere Example 1" :icon-caption "Sphere Example 1"
+                 :width 320 :height 240)
+  (make-instance 'rm::scene
+                 :dims :renderpass-3d
+                 :opacity :renderpass-all
+                 :compute-bounding-box t
+                 :compute-view-from-geometry t
+                 :union-all t
+                 :window (rm::default-window)
+                 :children (rm::new-sphere :radius 1.0
+                                           :tesselate 512
+                                           :rgb/a (rm:color 1.0 1.0 0.0 1.0)
+                                           :xy/z (rm::vertex 0.0 0.0 0.0)))
+  (rm::process-events)
+  (rm::clean-up))
+
+
 (defun sphere-example-1 ()
   (make-instance 'rm::sdl-window
                  :title-caption "Sphere Example 1" :icon-caption "Sphere Example 1"
                  :width 320 :height 240)
   (make-instance 'rm::scene
-                 :dims :rm-renderpass-3d
-                 :opacity :rm-renderpass-all
+                 :dims :renderpass-3d
+                 :opacity :renderpass-all
                  :compute-bounding-box t
                  :compute-view-from-geometry t
                  :union-all t
@@ -27,8 +47,8 @@
                  :title-caption "Sphere Example 2" :icon-caption "Sphere Example 2"
                  :width 320 :height 240
                  :scene (make-instance 'rm::scene
-                                       :dims :rm-renderpass-3d
-                                       :opacity :rm-renderpass-all
+                                       :dims :renderpass-3d
+                                       :opacity :renderpass-all
                                        :children (rm::new-sphere :radius 1.0
                                                                   :tesselate 512
                                                                   :rgb/a (rm::c4d 1.0 1.0 0.0 1.0))))
@@ -45,8 +65,8 @@
                  :title-caption "Sphere Example 3" :icon-caption "Sphere Example 3"
                  :width 320 :height 240)
   (make-instance 'rm::scene
-                 :dims :rm-renderpass-3d
-                 :opacity :rm-renderpass-all
+                 :dims :renderpass-3d
+                 :opacity :renderpass-all
                  :window (rm::default-window)
                  :children (make-instance 'rm::node
                                           :compute-bounding-box t
@@ -77,8 +97,8 @@
   (make-instance 'window)
   (make-instance 'rm::scene
                  :window (rm::default-window)
-                 :dims :rm-renderpass-3d
-                 :opacity :rm-renderpass-all
+                 :dims :renderpass-3d
+                 :opacity :renderpass-all
                  :children (make-instance 'rm::node
                                            :compute-bounding-box t
                                            :children (make-instance 'sphere-prim)))
@@ -91,8 +111,8 @@
 (defun sphere-example-5 ()
   (make-instance 'window :title-caption "Sphere Example 5" :icon-caption "Sphere Example 5")
   (let ((scene (make-instance 'rm::scene
-                              :dims :rm-renderpass-3d
-                              :opacity :rm-renderpass-all))
+                              :dims :renderpass-3d
+                              :opacity :renderpass-all))
         (sphere-node (make-instance 'rm::node))
         (prim (make-instance 'rm::sphere-primitive)))
 
@@ -177,8 +197,8 @@
                  :title-caption "Quad Example 1" :icon-caption "Quad Example 1"
                  :width 320 :height 240)
   (make-instance 'rm::scene
-                 :dims :rm-renderpass-3d
-                 :opacity :rm-renderpass-all
+                 :dims :renderpass-3d
+                 :opacity :renderpass-all
                  :compute-bounding-box t
                  :compute-view-from-geometry t
                  :union-all t
@@ -192,8 +212,8 @@
                  :title-caption "Box Example 1" :icon-caption "Box Example 1"
                  :width 320 :height 240)
   (make-instance 'rm::scene
-                 :dims :rm-renderpass-3d
-                 :opacity :rm-renderpass-all
+                 :dims :renderpass-3d
+                 :opacity :renderpass-all
                  :compute-bounding-box t
                  :compute-view-from-geometry t
                  :union-all t

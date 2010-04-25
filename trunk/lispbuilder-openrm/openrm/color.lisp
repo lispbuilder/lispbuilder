@@ -51,7 +51,7 @@
 
 (defmethod initialize-instance :after ((self color-array) &key)
   (when (and (slot-value self 'create-function) (size self))
-    (setf (slot-value self 'foreign-pointer-to-object) (funcall (slot-value self 'create-function) (size self)))))
+    (setf (slot-value self 'simfin::foreign-pointer-to-object) (funcall (slot-value self 'create-function) (size self)))))
 
 (defmethod initialize-instance :after ((self c3d)
                                        &key r g b)

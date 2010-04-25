@@ -14,7 +14,7 @@
   :author "Luke Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>"
   :licence "BSD"
-  :depends-on (cffi lispbuilder-openrm-cffi lispbuilder-openrm-base trivial-garbage log5)
+  :depends-on (cffi lispbuilder-openrm-cffi lispbuilder-openrm-base trivial-garbage log5 simple-finalizer)
   :perform (load-op :after (op lispbuilder-openrm)
 		    (pushnew :lispbuilder-openrm *features*))
   :components
@@ -25,7 +25,7 @@
 	     (:file "globals")
 	     (:file "generics")
 	     (:file "util")
-	     (:file "base")
+             ;;(:file "base")
 	     (:file "openrm")
 	     (:file "events")
 	     (:file "color")

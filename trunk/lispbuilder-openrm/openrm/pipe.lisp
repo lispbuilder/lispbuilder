@@ -1,74 +1,171 @@
 
 (in-package #:rm)
 
+(define-condition pipe-creation-error (error)
+  ((self :initarg :self :reader self)))
+
+(define-condition set-opengl-context-error (error)
+  ((self :initarg :self :reader self)))
+
+(define-condition pipe-set-window-error (error)
+  ((self :initarg :self :reader self)))
+
+(define-condition pipe-make-current-error (error)
+  ((self :initarg :self :reader self)))
+
+(define-condition swap-buffer-error (error)
+  ((self :initarg :self :reader self)))
+
+(define-condition rendering-pass-error (error)
+  ((pipe :initarg :pipe :reader get-pipe)
+   (opaque-3d :initarg :opaque-3d :reader opaque-3d-p)
+   (transparent-3d :initarg :transparent-3d-p :reader transparent-3d-p)
+   (opaque-2d :initarg :opaque-2d :reader opaque-2d-p)))
+
+(define-condition processing-mode-error (error)
+  ((pipe :initarg :pipe :reader get-pipe)
+   (mode :initarg :mode :reader get-processing-mode)))
+
 (defclass rm-pipe (foreign-object)()
   (:default-initargs
    :free (simple-free #'rm-cffi::rm-pipe-delete 'rm-pipe)))
 
-(defclass pipe (rm-pipe) ()
+(defclass pipe (rm-pipe)
+  ((target-platform
+    :initarg :target
+    :reader target-platform)
+   (text-support
+    :initarg :text-support-p
+    :reader text-support-p))
   (:default-initargs
-   :target :RM-PIPE-NOPLATFORM
-   :processing-mode :RM-PIPE-MULTISTAGE
+   ;; Do not get any bright ideas and assign anything to :fp,
+   ;; as this will short-circuit normal pipe behaviour.
+   :target :PIPE-NOPLATFORM
+   :processing-mode :PIPE-MULTISTAGE
    :opaque-3d t
    :transparent-3d t
    :opaque-2D t
    :swap-buffers nil
    :display-list t
    :init-matrix-stack t
-   :channel-format :rm-mono-channel
+   :channel-format :MONO-CHANNEL
    :background-color (color 0.2 0.2 0.3 1.0)
-   :notify-level :FULL))
+   :notify-level :NOTIFY-FULL
+   :text-support-p t)
+  (:documentation
+   "A `PIPE` contains all the information that pertains to
+the display environment, including window handles and the OpenGL context.
+
+\(1\) Use `:SWAP-BUFFERS` to set the swapbuffer function.
+    Specifying a `:TARGET` of `:PIPE-NOPLATFORM` will result in no swapbuffers function being
+    assigned to the `PIPE` and the application is then responsible for performing the
+    swapbuffers call.
+(2) Use `:TARGET` to set the target platform.
+    `:TARGET` must be one of `:PIPE-GLX`, `:PIPE-WGL`, `:PIPE-CR` or `:PIPE-NOPLATFORM`.
+    `:PIPE-GLX` specifies use on any X-based system that has the GLX extension
+     \(supports OpenGL through the server\).
+     Opens the X display referenced by the $DISPLAY environment variable and
+     assigns it to the RMpipe using rmxPipeSetDisplay.
+    `:PIPE-WGL` specifies use on a Win32 platform.
+    `:PIPE-CR` specifies use only on a Chromium-enabled system.
+    `:PIPE-NOPLATFORM` is intended to be used by applications that want to perform
+    all OpenGL context management, including swapping the buffers.
+
+;;Display to the RMpipe using rmxPipeSetDisplay if either of the following is true:
+;;(1) your scene graph contains RM_TEXT primitives, or (2) RM will be performing
+;;the SwapBuffers operation. If neither is true, then you do not need to assign a Display
+;;to the RMpipe when using the RM_PIPE_NOPLATFORM enumerator.
+
+\(3\) The default `:CHANNEL-FORMAT` if `:MONO-CHANNEL`, which corresponds to
+    an OpenGL visual that has RGBA color buffers, a depth buffer, and is doublebuffered.
+    The channel format can be set after a `PIPE` is created, but
+    before a winfows is created or drawing occurs, using `CHANNEL-FORMAT`.
+\(4\) The default `:PROCESSING-MODE` is `:PIPE-MULTISTAGE`. This mode corresponds
+    to serial rendering using a two-stage pipeline. You can set the processing
+    mode after a `PIPE` is created but before `PIPE-MAKE-CURRENT` using `PROCESSING-MODE`.
+    Other processing modes (not yet tested) include;
+    `:PIPE-SERIAL`, `:PIPE-MULTISTAGE-PARALLEL`, `:PIPE-MULTISTAGE-VIEW-PARALLEL`,
+    `:PIPE-SERIAL-NOBLOCK`, `:PIPE-MULTISTAGE-NOBLOCK and `:PIPE-MULTISTAGE-PARALLEL-NOBLOCK`.
+\(5\) The post render barrier function is set to NULL (see rmPipeSetPostRender-
+    BarrierFunc - TBD).
+\(6\) The post render function is set to NULL (see rmPipeSetPostRenderFunc - TBD).
+\(7\) Each of the following three passes of the multipass rendering engine is enabled
+    by default: `OPAQUE-3D`, `TRANSPARENT-3D`, `OPAQUE-2D`. Applications are unable to
+    change the order of these rendering passes, but may enable or disable a given
+    rendering pass with `ENABLE-RENDER-PASS`.
+\(8\) The `PIPE` will use OpenGL display lists during rendering. You can globally
+    enable or disable use of display lists on an using RMpipe with the routine
+    `ENABLE-DISPLAY-LIST`.
+\(9\) The `PIPE` takes control of the OpenGL matrix stack during rendering.
+    This behavior assumes that RM is not sharing the OpenGL context with any
+    other processes. You can change this behavior with `INIT-MATRIX-STACK`.
+\(10\) Context management. If you specify one of `:PIPE-GLX`, `:PIPE-WGL`, or
+     `:PIPE-CR`, a platform-specific routine will be assigned to the `PIPE`
+     that will be used to create a platform-appropriate OpenGL context when your
+     application makes a call to `PIPE-MAKE-CURRENT`. If you specify
+     `:PIPE-NOPLATFORM, your application must create and make current
+     an appropriate OpenGL context, but need not assign it to the `PIPE`.
+\(11\) The frame rate for the `PIPE` is set to -1, which means that no attempt will
+     be made to marshal frame rendering times."))
+
+(defmethod initialize-instance :before ((self pipe) &key
+                                        fp
+                                        &allow-other-keys)
+  ;; 1. Call rmInit to initialize RM.
+  (unless fp
+    (init-rm)))
 
 (defmethod initialize-instance :after ((self pipe) &key
-				       target processing-mode
+                                       target processing-mode
                                        opaque-3d transparent-3d opaque-2D
                                        channel-format
-                                       dimensions
+                                       ;;dimensions
                                        display-list swap-buffers
                                        init-matrix-stack
                                        background-color
                                        notify-level)
-  (unless *initialised*
-    (setf *initialised* t)
-    (rm-cffi::rm-Init))
+  (unless (this-fp self)
+    ;; Turn on all warnings from the OpenRM library itself.
+    ;; Invaluable for debugging purposes.
+    (set-notify-level notify-level)
 
-  (set-notify-level notify-level)
+    ;; 2.1 Create an RMpipe object with rmPipeNew. After the pipe has been created, but
+    ;; before you create a window.
+    (let ((pipe-fp (rm-cffi::rm-Pipe-New target)))
+      (if (cffi:null-pointer-p pipe-fp)
+        (error 'pipe-creation-error :self self)
+        (setf (slot-value self 'simfin::foreign-pointer-to-object) pipe-fp)))
   
-  (setf (slot-value self 'foreign-pointer-to-object) (rm-cffi::rm-Pipe-New target))
-  
-  (when (cffi:null-pointer-p (fp self))
-    (error "Cannot create OpenRM Pipe: ~A" (fp self)))
-  
-  (unless (set-render-pass self opaque-3d transparent-3d opaque-2d)
-    (error "Cannot specify the rendering pass."))
-  (unless (setf (processing-mode self) processing-mode)
-    (error "Cannot specify the processing mode."))
+    (enable-render-pass self :opaque-3d opaque-3d :transparent-3d transparent-3d :opaque-2d opaque-2d)
+    (setf (processing-mode self) processing-mode)
 
-  (setf (swap-buffers self) swap-buffers)
-  (setf (init-matrix-stack self) init-matrix-stack)
-  (setf (channel-format self) channel-format)
-  (setf (display-list-p self) display-list)
+    (setf (swap-buffers self) swap-buffers)
+    (setf (init-matrix-stack self) init-matrix-stack)
+    (setf (channel-format self) channel-format)
+
+    (when display-list
+      (enable-display-list self))
   
-  (when dimensions
-    (setf (dimensions self) dimensions))
-  (when background-color
-    (setf (background-color self) background-color)))
+    ;;(when dimensions
+    ;;  (setf (dimensions self) dimensions))
+  
+    (when background-color
+      (setf (background-color self) background-color))))
 
 (defun set-notify-level (level)
+  "Sets the warning level.
+   `:NOTIFY-SILENCE` will turn all warnings off.
+   `:NOTIFY-FULL` will turn all warnings on."
+  (check-type level keyword)
   (setf *notify-level* level)
-  (cond
-   ((not level)
-    (rm-cffi::rm-notify-level :rm-notify-silence))
-   ((eq level :FULL)
-    (rm-cffi::rm-notify-level :rm-notify-full))
-   (t
-    (rm-cffi::rm-notify-level :rm-notify-full))))
+  (rm-cffi::rm-notify-level *notify-level*))
 
 (defmethod (setf swap-buffers)(value (self pipe))
   (if (not value)
     (rm-cffi::rm-Pipe-Set-Swap-Buffers-Func (fp self) (cffi:null-pointer))
     (if (cffi:pointerp value)
-      (rm-cffi::rm-Pipe-Set-Swap-Buffers-Func (fp self) value)))
+      (rm-cffi::rm-Pipe-Set-Swap-Buffers-Func (fp self) value)
+      (error 'swap-buffer-error :self self)))
   self)
 
 (defmethod swap-buffers ((self pipe))
@@ -91,7 +188,8 @@ nothing that precludes it's use directly by applications, if so desired."
 (defmethod dimensions ((self rm-pipe))
   (vector (width self) (height self)))
 (defmethod (setf dimensions) ((size vector) (self rm-pipe))
-  (rm-cffi::rm-pipe-set-window-size (fp self) (elt size 0) (elt size 1)))
+  (unless (rm-cffi::rm-pipe-set-window-size (fp self) (elt size 0) (elt size 1))
+    (error 'pipe-set-window-error :self self)))
 
 (defmethod channel-format ((self rm-pipe))
   (rm-cffi::rm-pipe-get-channel-format (fp self)))
@@ -102,6 +200,10 @@ nothing that precludes it's use directly by applications, if so desired."
   (rm-cffi::rm-pipe-get-display-list-enable (fp self)))
 (defmethod (setf display-list-p) (value (self rm-pipe))
   (rm-cffi::rm-pipe-set-display-list-enable (fp self) value))
+(defmethod enable-display-list ((self rm-pipe))
+  (setf (display-list-p self) t))
+(defmethod disable-display-list ((self rm-pipe))
+  (setf (display-list-p self) nil))
 
 (defmethod frame-rate ((self rm-pipe))
   "Returns the `PIPE` render rate in frames per second.
@@ -118,23 +220,28 @@ Returns `-1` for an unconstrained rendering rate, and `NIL` on error."
 (defmethod delete-pipe ((self pipe))
   (free self))
 
-(defmethod set-render-pass ((self pipe) opaque-3d transparent-3d opaque-2d)
-  (setf opaque-3d (if opaque-3d :rm-true :rm-false))
-  (setf transparent-3d (if transparent-3d :rm-true :rm-false))
-  (setf opaque-2d (if opaque-2d :rm-true :rm-false))
-  (rm-cffi::rm-Pipe-Set-Render-Pass-Enable (fp self) opaque-3d transparent-3d opaque-2D))
+(defmethod enable-render-pass ((self pipe) &key (opaque-3d t) (transparent-3d t) (opaque-2d t))
+  (unless (rm-cffi::rm-Pipe-Set-Render-Pass-Enable (fp self) opaque-3d transparent-3d opaque-2D)
+    (error 'rendering-pass-error :pipe self :opaque-3d opaque-3d :transparent-3d transparent-3d :opaque-2d opaque-2d)))
 
 (defmethod opaque-3d-p ((self pipe))
   (cffi:with-foreign-object (render-pass :pointer)
     (rm-cffi::rm-pipe-get-render-pass-enable (fp self)
                                              render-pass
                                              (cffi:null-pointer)
-                                             (cffi:null-pointer))
+                                            (cffi:null-pointer))
     (if (eq :rm-true
             (foreign-enum-keyword 'rm-cffi::rm-enum-wrapper
                                   (cffi::mem-aref render-pass :int)))
       t
       nil)))
+
+(defmethod (setf opaque-3d-p) (value (self pipe))
+  (let ((opaque-3d value)
+        (transparent-3d (transparent-3d-p self))
+        (opaque-2d (opaque-2d-p self)))
+    (unless (rm-cffi::rm-Pipe-Set-Render-Pass-Enable (fp self) opaque-3d transparent-3d opaque-2D)
+      (error 'rendering-pass-error :pipe self :opaque-3d opaque-3d :transparent-3d transparent-3d :opaque-2d opaque-2d))))
 
 (defmethod transparent-3d-p ((self pipe))
   (cffi:with-foreign-object (render-pass :pointer)
@@ -148,6 +255,13 @@ Returns `-1` for an unconstrained rendering rate, and `NIL` on error."
       t
       nil)))
 
+(defmethod (setf transparent-3d-p) (value (self pipe))
+  (let ((opaque-3d (opaque-3d-p self))
+        (transparent-3d value)
+        (opaque-2d (opaque-2d-p self)))
+    (unless (rm-cffi::rm-Pipe-Set-Render-Pass-Enable (fp self) opaque-3d transparent-3d opaque-2D)
+      (error 'rendering-pass-error :pipe self :opaque-3d opaque-3d :transparent-3d transparent-3d :opaque-2d opaque-2d))))
+
 (defmethod opaque-2d-p ((self pipe))
   (cffi:with-foreign-object (render-pass :pointer)
     (rm-cffi::rm-pipe-get-render-pass-enable (fp self)
@@ -160,15 +274,22 @@ Returns `-1` for an unconstrained rendering rate, and `NIL` on error."
       t
       nil)))
 
+(defmethod (setf opaque-2d-p) (value (self pipe))
+  (let ((opaque-3d (opaque-3d-p self))
+        (transparent-3d (transparent-3d-p self))
+        (opaque-2d value))
+    (unless (rm-cffi::rm-Pipe-Set-Render-Pass-Enable (fp self) opaque-3d transparent-3d opaque-2D)
+      (error 'rendering-pass-error :pipe self :opaque-3d opaque-3d :transparent-3d transparent-3d :opaque-2d opaque-2d))))
+
 (defmethod (setf processing-mode) (value (self pipe))
-  (rm-cffi::rm-Pipe-Set-Processing-Mode (fp self) value))
+  (unless (rm-cffi::rm-Pipe-Set-Processing-Mode (fp self) value)
+    (error 'processing-mode-error :pipe self :mode value)))
 (defmethod processing-mode ((self pipe))
   (rm-cffi::rm-pipe-get-processing-mode (fp self)))
 
 (defmethod (setf init-matrix-stack) (value (self pipe))
-  (if value
-    (rm-cffi::rm-pipe-set-init-matrix-stack-mode (fp self) :rm-true)
-    (rm-cffi::rm-pipe-set-init-matrix-stack-mode (fp self) :rm-false)))
+  (unless (rm-cffi::rm-pipe-set-init-matrix-stack-mode (fp self) value)
+    (error 'init-matrix-stack-error :pipe self :mode value)))
 (defmethod init-matrix-stack ((self pipe))
   (rm-cffi::rm-pipe-get-init-matrix-stack-mode (fp self)))
 
@@ -190,13 +311,13 @@ Returns `-1` for an unconstrained rendering rate, and `NIL` on error."
       col)))
 
 (defmethod pipe-make-current ((self pipe))
-  (rm-cffi::rm-Pipe-Make-Current (fp self)))
+  (unless (rm-cffi::rm-Pipe-Make-Current (fp self))
+    (error 'pipe-make-current-error :self self)))
 
 (defmethod print-object ((obj pipe) stream)
   (print-unreadable-object (obj stream :type t)
     (format stream "\(
 :GC-P              ~s
-:COPY-P            ~s
 :WIDTH, HEIGHT     ~s
 :OPAQUE-3D-P       ~s
 :TRANSPARENT-3D-P  ~s
@@ -208,8 +329,8 @@ Returns `-1` for an unconstrained rendering rate, and `NIL` on error."
 :DISPLAY-LIST-P    ~s
 :FRAME-RATE        ~s
 \)"
-          (gc-p obj) (copy-p obj) (dimensions obj)
-          (opaque-3d-p obj) (transparent-3d-p obj) (opaque-2d-p obj)
-          (channel-format obj) (init-matrix-stack obj) (processing-mode obj)
-          (background-color obj) (display-list-p obj) (frame-rate obj)
+            (gc-p obj) (dimensions obj)
+            (opaque-3d-p obj) (transparent-3d-p obj) (opaque-2d-p obj)
+            (channel-format obj) (init-matrix-stack obj) (processing-mode obj)
+            (background-color obj) (display-list-p obj) (frame-rate obj)
           )))

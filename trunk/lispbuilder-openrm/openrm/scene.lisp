@@ -39,7 +39,7 @@
   ;; #3 - FP == root-node
   (when (root-node-p self)
     (log5:log-for (info) "SCENE set to ROOT-NODE")
-    (setf (slot-value self 'parent-window) (rm::rm-root-node)))
+    (setf (slot-value self 'parent-window) (get-root-node)))
 
   ;; #4 - WINDOW
   (when window

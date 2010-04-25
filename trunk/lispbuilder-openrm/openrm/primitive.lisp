@@ -7,6 +7,14 @@
    :gc t
    :free (simple-free #'rm-cffi::rm-primitive-delete 'primitive)))
 
+(defclass poly-primitive (primitive)()
+  (:default-initargs
+   :fp (rm-cffi::rm-Primitive-New :rm-polys)))
+
+(defclass quad-primitive (primitive)()
+  (:default-initargs
+   :fp (rm-cffi::rm-Primitive-New :rm-quads)))
+
 (defclass box-solid-primitive (primitive)()
   (:default-initargs
    :fp (rm-cffi::rm-Primitive-New :rm-box-3d)))

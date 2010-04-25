@@ -10,8 +10,6 @@
 
 (defgeneric make-window (event-handler width height &key pipe x y node parent-node))
 
-(defgeneric free (obj))
-
 (defgeneric width (obj))
 (defgeneric height (obj))
 
@@ -152,9 +150,6 @@ Turns on automatic garbage collection when `T`. Turns off automatic garbage coll
 
 (defgeneric viewport (object))
 (defgeneric (setf viewport) (value object))
-
-(defgeneric gc-p (object))
-(defgeneric (setf gc-p) (value object))
 
 (defgeneric install-timer (window interval function))
 (defgeneric clear-timer (window))

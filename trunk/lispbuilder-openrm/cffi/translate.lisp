@@ -81,6 +81,12 @@
     (1 t)
     (otherwise (cffi:foreign-enum-keyword 'rm-enum-wrapper value))))
 
+(defun pointer-to-from-rm-enum (value)
+  (case (cffi::mem-aref value :int)
+    ((-1 0) nil)
+    (1 t)
+    (otherwise (foreign-enum-keyword 'rm-enum-wrapper (cffi::mem-aref value :int)))))
+
 ;; (defmethod translate-from-foreign (value (type (eql 'rm-enum)))
 ;;   (format t "value == ~A~%" value)
 ;;   (case value

@@ -49,7 +49,7 @@
 
 (defmethod initialize-instance :after ((self vertex-array) &key)
   (when (and (slot-value self 'create-function) (size self))
-    (setf (slot-value self 'foreign-pointer-to-object) (funcall (slot-value self 'create-function) (size self)))))
+    (setf (slot-value self 'simfin::foreign-pointer-to-object) (funcall (slot-value self 'create-function) (size self)))))
 
 (defmethod initialize-instance :after ((self v2d) &key x y)
   (let ((fp (fp self)))

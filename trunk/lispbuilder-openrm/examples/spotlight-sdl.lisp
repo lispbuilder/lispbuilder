@@ -41,8 +41,8 @@
 (defclass spotlight-sdl-scene (rm::scene)()
   (:default-initargs
    :name "scene"
-   :dims :rm-renderpass-3d
-   :opacity :rm-renderpass-opaque
+   :dims :renderpass-3d
+   :opacity :renderpass-opaque
    :background-color *background-color*
    :camera (make-instance 'camera)
    :lights (make-instance 'rm::arena-light :xy/z (rm::color 5.0 7.5 5.0))

@@ -1,72 +1,72 @@
 
-(in-package #:rm)
+(in-package #:simfin)
 
 (defclass foreign-object ()
   ((foreign-pointer-to-object
     :reader fp
-    :initform nil
+    :initform (error ":FP must not be NIL.")
     :initarg :fp)
    (garbage-collect
     :reader gc-p
     :initform t
     :initarg :gc)
    (free-function
-    :initform (error "FREE-FUNCTION must not be NIL.")
-    :initarg :free)))
+    :initform #'cffi:foreign-free
+    :initarg :free))
+  (:documentation 
+   "A wrapper around the foreign object stored in `FP`.
+    Finalizes the foreign object using the function in `:FREE` when `GC-P` is `T` when the wrapper is garbage collected.
+    The foreign object is explicitely freed by calling `FREE`."))
 
 (defmethod initialize-instance :around ((self foreign-object)
-				       &key)
+                                        &key &allow-other-keys)
   (call-next-method)
   (when (gc-p self)
-    (let ((foreign-pointer (this-fp self))
+    (let ((foreign-pointer (slot-value self 'foreign-pointer-to-object))
 	  (foreign-free (slot-value self 'free-function)))
-      (tg:finalize self (lambda ()
-			  (log5:log-for (tg) "FINALIZE: ~A" foreign-pointer)
-			  (log5:log-for (tg) "   FINALIZE Attempt: ~A" foreign-pointer)
-			  (funcall foreign-free foreign-pointer)
-			  (log5:log-for (tg) "   FINALIZE Complete: ~A" foreign-pointer))))))
+      (unless foreign-pointer
+        (error "`:FP` is NIL. No foreign object defined."))
+      (unless foreign-free
+        (error "`:FREE` is NIL. No function to free the foreign object defined."))
+      (tg:finalize self (lambda () (funcall foreign-free foreign-pointer))))))
 
+(defgeneric fp (foreign-object)
+  (:documentation "Returns the foreign object reference."))
+
+(defgeneric free (foreign-object)
+  (:documentation "An explicit cleanup method. When freed, `GC-P` will be NIL."))
 (defmethod free ((self foreign-object))
-  ;; This is the general explicit clenup method for all OpenRM objects.
-  ;; Objects that subclass OPENRM-OBJECT should specify an :AFTER
-  ;; method on FREE to clean up any additional fields, if necessary.
-  (log5:log-for (manual-free) "FREE: \(MANUAL FREE\) ~A" (this-fp self))
-  (log5:log-for (manual-free) "   FREE Attempt \(MANUAL FREE\) ~A" (this-fp self))
-  (funcall (slot-value self 'free-function) (this-fp self))
-  (tg:cancel-finalization self)
-  (log5:log-for (manual-free) "   FREE COMPETE \(MANUAL FREE\) ~A" (this-fp self))
+  (when (slot-value self 'free-function)
+    (funcall (slot-value self 'free-function) (slot-value self 'foreign-pointer-to-object)))
   (setf (slot-value self 'foreign-pointer-to-object) nil
-	(slot-value self 'garbage-collect) nil))
+	(slot-value self 'garbage-collect) nil
+        (slot-value self 'free-function) nil)
+  (tg:cancel-finalization self))
 
-;; Fixme , TODO. This is so very wrong.
-;; Everything inherits from openrm-object, so having
-;; an rm-primitive-delete is going to seriously screw things up.
+(defgeneric (setf gc-p) (value foreign-object)
+  (:documentation "Enables or disables finalization."))
 (defmethod (setf gc-p) (value (self foreign-object))
   (if value
-      (let ((foreign-pointer (this-fp self))
-	    (foreign-free (slot-value self 'free-function)))
-	(setf (slot-value self 'garbage-collect) t)
-	(tg:cancel-finalization self)
-	(tg:finalize self (lambda ()
-			    (log5:log-for (tg) "FINALIZE: ~A" foreign-pointer)
-			    (log5:log-for (tg) "   FINALIZE Attempt: ~A" foreign-pointer)  
-			    (funcall foreign-free foreign-pointer)
-			    (log5:log-for (tg) "   FINALIZE Complete: ~A" foreign-pointer))))
-      (progn
-	(setf (slot-value self 'garbage-collect) nil)
-	(log5:log-for (tg) "CANCEL-FINALIZATION: ~A" (this-fp self))
-	(log5:log-for (tg) "   CANCEL-FINALIZATION Attempt: ~A" (this-fp self))
-	(tg:cancel-finalization self)
-	(log5:log-for (tg) "   CANCEL-FINALIZATION Complete: ~A" (this-fp self)))))
+    (let ((foreign-pointer (slot-value self 'foreign-pointer-to-object))
+          (foreign-free (slot-value self 'free-function)))
+      (unless foreign-pointer
+        (error "`:FP` is NIL. No foreign object defined."))
+      (unless foreign-free
+        (error "`:FREE` is NIL. No function to free the foreign object defined."))
+      (setf (slot-value self 'garbage-collect) t)
+      (tg:cancel-finalization self)
+      (tg:finalize self (lambda () (funcall foreign-free foreign-pointer))))
+    (progn
+      (setf (slot-value self 'garbage-collect) nil)
+      (tg:cancel-finalization self))))
 
+(defgeneric this-fp (foreign-object)
+  (:documentation "Returns the foreign object reference. This method may not be redefined by a subclass."))
 (defmethod this-fp ((self foreign-object))
-  "Returns the reference to the foreign object for this OPENRM-OBJECT.
-The difference between FP and THIS-FP, is that FP can be overriden, for example
-to refer to the TARGET-NODE of a META-NODE."
   (slot-value self 'foreign-pointer-to-object))
 
 (defun simple-free (func-fp type)
+  (declare (ignore type))
   #'(lambda (obj-fp)
-      (when (is-valid-ptr obj-fp)
-	(log5:log-for (free) "      SIMPLE-FREE: ~A ~A" type obj-fp)
+      (when (and (cffi:pointerp obj-fp) (cffi:null-pointer-p obj-fp))
 	(funcall func-fp obj-fp))))

@@ -1,6 +1,8 @@
 
 (in-package #:rm)
 
+(defvar *target-platform* nil)
+
 (defvar *rm-root-node* nil)
 (defvar *current-window* nil)
 (defvar *current-camera* nil)
@@ -20,6 +22,11 @@
 (defvar *initialised* nil)
 (defvar *type* nil)
 
+(defvar *openrm-swap-buffers*
+  (cond ((cffi:foreign-symbol-pointer "rmPipeSwapBuffersX11" :library 'lispbuilder-openrm-cffi::librm)
+         (cffi:foreign-symbol-pointer "rmPipeSwapBuffersX11" :library 'lispbuilder-openrm-cffi::librm))
+        ((cffi:foreign-symbol-pointer "rmPipeSwapBuffersWin32" :library 'lispbuilder-openrm-cffi::librm)
+         (cffi:foreign-symbol-pointer "rmPipeSwapBuffersWin32" :library 'lispbuilder-openrm-cffi::librm))))
 
 (defconstant +mouse-left-button+ #x1)
 (defconstant +mouse-right-button+ #x2)

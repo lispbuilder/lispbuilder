@@ -102,24 +102,32 @@
          (sprite (rm::new-sprite :xy/z (calculate-image-center (rm::default-window) image)
                                  :images image)))
 
+    (setf (sdl:frame-rate) nil)
+
+    
     (rm::add-node sprite (rm::default-scene))
 
-    (setf (sdl:frame-rate) nil)
+    (let ((100-frames-p (every-n-frames 100)))
       
-    (sdl:with-events ()
-      (:key-down-event ()
-       (sdl:push-quit-event))
-      (:quit-event () t)
-      (:idle ()
-       (sdl:draw-filled-circle-* (random 320) (random 240) (random 50)
-                                 :color (sdl:color :r (random 255)
-                                                   :g (random 255)
-                                                   :b (random 255)))
-       (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
-                 10 200 sdl:*default-font* sdl:*default-surface*
-                 (funcall 100-frames-p))
+      (sdl:initialise-default-font sdl:*font-5x7*)
+      (draw-fps "Calculating FPS....." 10 200
+                sdl:*default-font* sdl:*default-surface* t)
+
+      
+      (sdl:with-events ()
+        (:key-down-event ()
+         (sdl:push-quit-event))
+        (:quit-event () t)
+        (:idle ()
+         (sdl:draw-filled-circle-* (random 320) (random 240) (random 50)
+                                   :color (sdl:color :r (random 255)
+                                                     :g (random 255)
+                                                     :b (random 255)))
+         (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
+                   10 200 sdl:*default-font* sdl:*default-surface*
+                   (funcall 100-frames-p))
        
-       (rm::render))))
+         (rm::render)))))
   (rm::clean-up))
 
 

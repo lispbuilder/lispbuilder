@@ -1,6 +1,13 @@
 (in-package #:rm)
 
-(defclass rm-node (foreign-object trackable-object)
+;;  "A primitive is eligible for automatic garbage collection up until it is added to the scene graph.
+;;Thereafter the primitive must be explicitly freed by the user. The node is again eligible for garbage collection
+;;when subsequently removed from the scene graph and its reference count is zero."
+
+(define-condition node-creation-error (error)
+  ((self :initarg :node :reader node)))
+
+(defclass rm-node (foreign-object trackable)
   ((name
     :reader name
     :initform ""
@@ -9,11 +16,11 @@
 (defclass node (rm-node)
   ((dims
     :reader dims
-    :initform :rm-renderpass-all
+    :initform :renderpass-all
     :initarg :dims)
    (opacity
     :reader opacity
-    :initform :rm-renderpass-all
+    :initform :renderpass-all
     :initarg :opacity))
   (:default-initargs
    :traverse t
@@ -24,39 +31,35 @@
 (defclass root-node (rm-node) ()
   (:default-initargs
    :name "root-node"
+   :traverse t
+   :pick t
    :gc nil
    :free #'(lambda (node-fp)
              (declare (ignore node-fp))
              ;; Do Nothing. We should not be here.
-             nil)))
-
-(defun free-node (node-fp)
-  (when (is-valid-ptr node-fp)
-    (when (cffi:pointer-eq (rm-cffi::rm-root-node) node-fp)
-      (error "Cannot delete the RM Root Node."))
-    (rm-cffi::rm-node-delete node-fp)))
-
-(defmethod free ((self root-node))
-  "A primitive is eligible for automatic garbage collection up until it is added to the scene graph.
-Thereafter the primitive must be explicitly freed by the user. The node is again eligible for garbage collection
-when subsequently removed from the scene graph and its reference count is zero."
-  nil)
+             nil))
+  (:documentation
+   "This is a convenience class for (make-instance 'node :gc nil)"))
 
 (defmethod initialize-instance :after ((self node)
-                                       &key (node nil))
+                                       &key node)
   (if (this-fp self)
     (log5:log-for (create) "initialize-instance.NODE from :FP: ~A, ~A, ~A"
                   self (id self) (this-fp self))
     (progn
       (if node
-        (setf (slot-value self 'foreign-pointer-to-object) (this-fp node))
-        (setf (slot-value self 'foreign-pointer-to-object) (rm-cffi::rm-Node-New (name self)
-                                                                                 (dims self)
-                                                                                 (opacity self))))
+        (setf (slot-value self 'simfin::foreign-pointer-to-object) (this-fp node))
+        (setf (slot-value self 'simfin::foreign-pointer-to-object) (rm-cffi::rm-Node-New (name self)
+                                                                                         (dims self)
+                                                                                         (opacity self))))
+      
+      (when (cffi:null-pointer-p (slot-value self 'simfin::foreign-pointer-to-object))
+        (error 'node-creation-error :node self))
+      
       (log5:log-for (create) "initialize-instance.NODE: ~A, ~A, ~A, ~A"
                     self (id self) (name self) (this-fp self))
-      (if (or (root-node-p self) node)
-        (setf (gc-p self) nil)
+      (if (root-node-p self)
+        (setf (gc-p self) nil) ;; Turn off GC if this points to the root scene graph node.
         (rm-cffi::rm-Node-Set-Client-Data (this-fp self)
                                           (cffi::make-pointer (id self))
                                           (cffi:callback client-data-proc)))))
@@ -64,7 +67,8 @@ when subsequently removed from the scene graph and its reference count is zero."
     (log5:log-for (create) "NODE set to ROOT-NODE: ~A, ~A, ~A" self (id self) (name self))))
 
 (defmethod initialize-instance :after ((self root-node) &key)
-  (setf (slot-value self 'foreign-pointer-to-object) (rm-cffi::rm-root-node)))
+  (setf (slot-value self 'simfin::foreign-pointer-to-object) (rm-cffi::rm-root-node))
+  (setf (gc-p self) nil))
 
 (defmethod initialize-instance :around ((self rm-node)
 					&key traverse pick center compute-center
@@ -75,10 +79,6 @@ when subsequently removed from the scene graph and its reference count is zero."
 					light-model specular-exponent
 					primitives children compute-bounding-box union-all
                                         camera compute-view-from-geometry)
-  (unless *initialised*
-    (setf *initialised* t)
-    (rm-cffi::rm-Init))
-
   (call-next-method)
 
   (loop :for child :in (if (listp children) children (list children)) :do
@@ -129,15 +129,22 @@ when subsequently removed from the scene graph and its reference count is zero."
   (when camera
     (setf (camera self) camera)))
 
-(defun rm-root-node ()
-  ;; TODO: Set *rm-root-node* to NIL when the OpenRM library is closed.
-  (if *rm-root-node*
-      *rm-root-node*
-      (setf *rm-root-node* (make-instance 'root-node))))
+(defun get-root-node ()
+  "Returns the root node of the scene graph."
+  (if (and *rm-root-node*
+           (root-node-p *rm-root-node*))
+    *rm-root-node*
+    (setf *rm-root-node* (make-instance 'root-node))))
+
+;;(defun rm-root-node ()
+;;  ;; TODO: Set *rm-root-node* to NIL when the OpenRM library is closed.
+;;  (if *rm-root-node*
+;;      *rm-root-node*
+;;      (setf *rm-root-node* (make-instance 'root-node))))
 
 (defmethod attach-to-root-node ((node node))
   "Attaches the specified node NODE to the OpenRM root node."
-  (add-to-node (rm-root-node) node))
+  (add-to-node (get-root-node) node))
 
 (defmethod add-to-node ((parent rm-node) (child node))
   (rm-cffi::rm-Node-Add-Child (fp parent) (fp child))
@@ -193,20 +200,20 @@ when subsequently removed from the scene graph and its reference count is zero."
   "Delete everthing in the scene graph, with
 the exception of the root RMnode. Remove cameras and lights from the root node."
   (log5:log-for (free) "DELETE-SCENE-GRAPH")
-  (assign-default-lighting (rm-root-node))
-  ;(remove-light (rm-root-node))
-  (remove-camera (rm-root-node))
+  (assign-default-lighting (get-root-node))
+  ;(remove-light (get-root-node))
+  (remove-camera (get-root-node))
   ;; SCENE and WINDOW can both be set to the RM-ROOT-NODE
   ;; therefore to be safe, delete any camera or lights set
   ;; on the root node.
-  (loop for node in (remove-duplicates (loop for child in (get-children (rm-root-node))
+  (loop for node in (remove-duplicates (loop for child in (get-children (get-root-node))
                                              collecting child)
 				       :test #'(lambda (x y)
 						 (node-eq x y)))
         do (progn
              (log5:log-for (free) "Remove from ROOT-NODE: ~A, ~A, ~A"
                            node (get-client-data node) (this-fp node))
-             (rm-cffi::rm-node-remove-child (fp (rm-root-node)) (this-fp node))
+             (rm-cffi::rm-node-remove-child (fp (get-root-node)) (this-fp node))
              (log5:log-for (free) "RM-SUB-TREE-DELETE rooted at: ~A, ~A, ~A"
                            node (get-client-data node) (fp node))
              (rm-cffi::rm-sub-tree-delete (this-fp node)))))
@@ -532,10 +539,9 @@ the exception of the root RMnode. Remove cameras and lights from the root node."
 (defgeneric root-node-p (node)
   (:documentation "Returns T if NODE is the RM-ROOT-NODE. Returns NIL otherwise"))
 (defmethod root-node-p ((node rm-node))
-  (if (cffi:pointer-eq (rm-cffi::rm-root-node)
-		       (this-fp node))
-      t
-      nil))
+  (when (cffi:pointer-eq (rm-cffi::rm-root-node)
+                         (this-fp node))
+    node))
 
 (defgeneric node-eq (node1 node2)
   (:documentation "Returns T if NODE1 and NODE2 contain the same foreign RMNODE. 
@@ -555,6 +561,7 @@ Returns NIL otherwise."))
 	nil)))
 
 (defmethod (setf viewport) (viewport (self rm-node))
+  "When T, sets the viewport to fill the OpenGL window. {0.0 0.0 1.0 1.0\)."
   (if viewport
       (setf (viewport self) #(0.0 0.0 1.0 1.0))
       (when (rm-cffi::rm-node-set-scene-viewport (fp self) (cffi:null-pointer))
@@ -578,8 +585,8 @@ Returns NIL otherwise."))
           (when (rm-cffi::rm-node-set-scene-viewport (fp self) fv)
             viewport))))))
 
-(defun print-scene-graph (filename &optional (node (rm::rm-root-node)))
-  (rm-cffi::rm-print-scene-graph (rm::fp node) :rm-true filename))
+(defun print-scene-graph (filename &optional (node (get-root-node)))
+  (rm-cffi::rm-print-scene-graph (fp node) :rm-true filename))
 
 ;;;
 ;;; Camera
@@ -776,3 +783,9 @@ Returns NIL otherwise."))
 
 (defun add-primitive (prim &optional (node *default-node*))
   (add-to-node node prim))
+
+(defun free-node (node-fp)
+  (when (is-valid-ptr node-fp)
+    (when (cffi:pointer-eq (rm-cffi::rm-root-node) node-fp)
+      (error "Cannot delete the RM Root Node."))
+    (rm-cffi::rm-node-delete node-fp)))

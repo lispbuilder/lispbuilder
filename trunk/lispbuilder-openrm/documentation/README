@@ -1,3 +1,5 @@
+-*- mode: org -*-
+
 CFFI OpenRM Wrapper and sample code
 (C)2006 Luke John Crook
 
@@ -8,3 +10,80 @@ See CONTRIBUTORS for the list of credits.
 See "documentation/index.html" for instructions on the download and installation of lispbuilder-openrm.
 
 The lispbuilder homepage is located at http://lispbuilder.sourceforge.net/
+
+
+* Initializing OpenRM
+
+** 1 Call rmInit to initialize RM.
+initialize-instance :before ((self pipe))
+- (init-rm)
+
+** 2.1 Create an RMpipe object with rmPipeNew. After the pipe has been created, but before you create a window, 
+initialize-instance :after ((self pipe))
+- (rm-cffi::rm-Pipe-New target)
+
+** 2.2 create an OpenGL context
+For SDL; initialize-instance :after ((window sdl-window)
+For Win32 Native; initialize-instance :around ((window native-window))
+- (sdl:window width height)
+
+** 3.1 Create the window.
+For SDL; initialize-instance :after ((window sdl-window))
+For Win32 Native; initialize-instance :around ((window native-window))
+
+** 3.2 Assign an OpenGL context to the RMpipe using rmPipeSetContext.
+For SDL; SDL creates its own Opengl context.
+initialize-instance :around ((self generic-window)
+
+
+** 4. Assign window dimensions and the window handle to the RMpipe. 
+initialize-instance :around ((self generic-window))
+
+Note that
+parameters to rmPipeSetWindow differ in type depending upon whether you are
+using X or Windows. If you assign the window handle to the RMpipe, you will
+also be specifying the window dimensions in the same call. On the other hand, if
+you don’t assign a window handle to the RMpipe, you need to explicitly assign
+window geometry attributes to the RMpipe using rmPipeSetWindowSize. This
+information is needed to ensure that RM correctly computes view transformations.
+
+** 5. Make the RMpipe “current” using rmPipeMakeCurrent.
+initialize-instance :around ((self generic-window))
+
+ This step serves two
+purposes: to make the OpenGL context “current,” and to perform additional
+RMpipe initialization that depends upon the presence of a valid OpenGL context.
+
+** 6. Assign an initialization function. 
+Not set, because rmaux is not used.
+
+If your application needs to use OpenGL calls
+directly or indirectly (e.g., using rmuImageResize with the hardware method),
+placing such calls in or after the initialization callback will ensure that OpenGL
+is fully initialized. When the initialization callback is invoked, you can assume
+that OpenGL is ready for use.
+
+** 7. Assign action handlers as needed, then enter the event loop, calling the framebased
+renderer as needed. 
+process-events
+
+RMaux provides action handler “kits” that implement
+3D geometry and viewpoint transformations. You can define your own action
+handlers that may be used to augment the mappings defined by action handler
+kits.
+
+* OpenRM Initialization
+
+|   # | Operation                                    | OpenRM Aux           | SDL                 | win32+NO-PLATFORM   | win32+WGL           | Notes                            |
+|-----+----------------------------------------------+----------------------+---------------------+---------------------+---------------------+----------------------------------|
+|   1 | Initialize OpenRM                            | init-rm              | init-rm             | init-rm             | init-rm             |                                  |
+|   2 | Create a pipe                                | rmPipeNew            | rmPipeNew           | rmPipeNew           | rmPipeNew           |                                  |
+|   3 | Create a window                              | rmauxCreateW32Window | SDL:WINDOW          | CreateWindow        | CreateWindow        |                                  |
+|   4 | Assign window dimensions                     | ?                    | rmPipeSetWindowSize | rmPipeSetWindowSize | rmPipeSetWindow     |                                  |
+| 5.1 | Assign X to pipe (Only for text)             | rmxPipeSetDisplay    |                     |                     |                     |                                  |
+| 5.1 | Assign window handle to pipe (Only for text) | ?                    | rmPipeSetWindow     | rmPipeSetWindow     | rmPipeSetWindow     | Is this necessary if #4 is done? |
+|   6 | Create the OpenGL context                    | ?                    | SDL:WINDOW          | rmPipeCreateContext | rmPipeCreateContext |                                  |
+|   7 | Assign the OpenGL context                    | ?                    | ?                   | ?                   | N/A                 |                                  |
+|   7 | Make the pipe current                        | ?                    | rmPipeMakeCurrent   | rmPipeMakeCurrent   | rmPipeMakeCurrent   |                                  |
+|   8 | Assign an initialization function.           | ?                    | N/A                 | N/A                 | N/A                 |                                  |
+|   9 | Assign action handlers                       |                      |                     |                     |                     |                                  |
