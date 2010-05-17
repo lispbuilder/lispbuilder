@@ -66,10 +66,10 @@
 (defun SDL-BUTTON-RMASK ()
   (SDL-BUTTON SDL-BUTTON-RIGHT))
 
-(defun sdl-button-wumask ()
+(defun SDL-BUTTON-WUMASK ()
   (SDL-BUTTON sdl-button-wheel-up))
 
-(defun sdl-button-wdmask ()
+(defun SDL-BUTTON-WDMASK ()
   (SDL-BUTTON sdl-button-wheel-down))
 
 (defun SDL-BUTTON-X1MASK ()

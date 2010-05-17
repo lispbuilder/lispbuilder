@@ -21,74 +21,80 @@
 
 (defparameter *events*
   (create-events (list (list :active-event
-                             (create-event (list (list :gain 'active-event-gain)
-                                                 (list :state 'active-event-state))))
+                             (create-event (list (list :gain 'active-gain)
+                                                 (list :state 'active-state))))
                        (list :key-down-event
-                             (create-event (list (list :state 'key-event-state)
-                                                 (list :scancode 'key-event-scancode)
-                                                 (list :key 'key-event-key)
-                                                 (list :mod 'key-event-mod)
-                                                 (list :mod-key 'key-event-mod-key)
-                                                 (list :unicode 'key-event-unicode))))
+                             (create-event (list (list :state 'key-state)
+                                                 (list :scancode 'key-scancode)
+                                                 (list :key 'key-key)
+                                                 (list :mod 'key-mod)
+                                                 (list :mod-key 'key-mod-key)
+                                                 (list :unicode 'key-unicode))))
                        (list :key-up-event
-                             (create-event (list (list :state 'key-event-state)
-                                                 (list :scancode 'key-event-scancode)
-                                                 (list :key 'key-event-key)
-                                                 (list :mod 'key-event-mod)
-                                                 (list :mod-key 'key-event-mod-key)
-                                                 (list :unicode 'key-event-unicode))))
+                             (create-event (list (list :state 'key-state)
+                                                 (list :scancode 'key-scancode)
+                                                 (list :key 'key-key)
+                                                 (list :mod 'key-mod)
+                                                 (list :mod-key 'key-mod-key)
+                                                 (list :unicode 'key-unicode))))
                        (list :mouse-motion-event
-                             (create-event (list (list :state 'mouse-motion-event-state)
-                                                 (list :x 'mouse-motion-event-x)
-                                                 (list :y 'mouse-motion-event-y)
-                                                 (list :x-rel 'mouse-motion-event-x-rel)
-                                                 (list :y-rel 'mouse-motion-event-y-rel))))
+                             (create-event (list (list :state 'mouse-motion-button)
+                                                 (list :x 'mouse-motion-x)
+                                                 (list :y 'mouse-motion-y)
+                                                 (list :x-rel 'mouse-motion-x-rel)
+                                                 (list :y-rel 'mouse-motion-y-rel))))
                        (list :mouse-button-down-event
-                             (create-event (list (list :button 'mouse-button-event-button)
-                                                 (list :state 'mouse-button-event-state)
-                                                 (list :x 'mouse-button-event-x)
-                                                 (list :y 'mouse-button-event-y))))
+                             (create-event (list (list :button 'mouse-button-button)
+                                                 (list :state 'mouse-button-state)
+                                                 (list :x 'mouse-button-x)
+                                                 (list :y 'mouse-button-y))))
                        (list :mouse-button-up-event
-                             (create-event (list (list :button 'mouse-button-event-button)
-                                                 (list :state 'mouse-button-event-state)
-                                                 (list :x 'mouse-button-event-x)
-                                                 (list :y 'mouse-button-event-y))))
+                             (create-event (list (list :button 'mouse-button-button)
+                                                 (list :state 'mouse-button-state)
+                                                 (list :x 'mouse-button-x)
+                                                 (list :y 'mouse-button-y))))
                        (list :joy-axis-motion-event
-                             (create-event (list (list :which 'joy-axis-motion-event-which)
-                                                 (list :axis 'joy-axis-motion-event-axis)
-                                                 (list :value 'joy-axis-motion-event-value))))
+                             (create-event (list (list :which 'joy-axis-motion-which)
+                                                 (list :axis 'joy-axis-motion-axis)
+                                                 (list :value 'joy-axis-motion-value))))
                        (list :joy-button-down-event
-                             (create-event (list (list :which 'joy-button-event-which)
-                                                 (list :button 'joy-button-event-button)
-                                                 (list :state 'joy-button-event-state))))
+                             (create-event (list (list :which 'joy-button-which)
+                                                 (list :button 'joy-button-button)
+                                                 (list :state 'joy-button-state))))
                        (list :joy-button-up-event
-                             (create-event (list (list :which 'joy-button-event-which)
-                                                 (list :button 'joy-button-event-button)
-                                                 (list :state 'joy-button-event-state))))
+                             (create-event (list (list :which 'joy-button-which)
+                                                 (list :button 'joy-button-button)
+                                                 (list :state 'joy-button-state))))
                        (list :joy-hat-motion-event
-                             (create-event (list (list :which 'joy-hat-motion-event-which)
-                                                 (list :axis 'joy-hat-motion-event-axis)
-                                                 (list :value 'joy-hat-motion-event-value))))
+                             (create-event (list (list :which 'joy-hat-motion-which)
+                                                 (list :axis 'joy-hat-motion-axis)
+                                                 (list :value 'joy-hat-motion-value))))
                        (list :joy-ball-motion-event
-                             (create-event (list (list :which 'joy-ball-motion-event-which)
-                                                 (list :ball 'joy-ball-motion-event-ball)
-                                                 (list :x-rel 'joy-ball-motion-event-x-rel)
-                                                 (list :y-rel 'joy-ball-motion-event-y-rel))))
+                             (create-event (list (list :which 'joy-ball-motion-which)
+                                                 (list :ball 'joy-ball-motion-ball)
+                                                 (list :x-rel 'joy-ball-motion-x-rel)
+                                                 (list :y-rel 'joy-ball-motion-y-rel))))
                        (list :video-resize-event
-                             (create-event (list (list :w 'video-resize-event-w)
-                                                 (list :h 'video-resize-event-h))))
+                             (create-event (list (list :w 'video-resize-w)
+                                                 (list :h 'video-resize-h))))
                        (list :video-expose-event
                              (create-event nil))
                        (list :sys-wm-event
                              (create-event nil))
                        (list :user-event
-                             (create-event (list (list :type 'user-event-type)
-                                                 (list :code 'user-event-code)
-                                                 (list :data1 'user-event-data1)
-                                                 (list :data2 'user-event-data2)))))))
+                             (create-event (list (list :type 'user-type)
+                                                 (list :code 'user-code)
+                                                 (list :data1 'user-data1)
+                                                 (list :data2 'user-data2)))))))
+
 
 (defun get-event-type (sdl-event)
   (cffi:foreign-enum-keyword 'sdl-cffi::Event-Type (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)))
+
+(defun event-type (sdl-event)
+  (if (keywordp sdl-event)
+    :IDLE-EVENT
+    (get-event-type sdl-event)))
 
 (defun event= (sdl-event event-type &optional event-type-end)
   "Returns `T` if `SDL-EVENT` is of `EVENT-TYPE`.
@@ -97,46 +103,78 @@
 :MOUSE-BUTTON-DOWN-EVENT, :MOUSE-BUTTON-UP-EVENT, :JOY-AXIS-MOTION-EVENT, :JOY-BALL-MOTION-EVENT, 
 :JOY-HAT-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :QUIT-EVENT, 
 :SYS-WM-EVENT, :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :USER-EVENT."
-  (if event-type-end
-    (if (and (>= (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
-                 (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type))
-             (< (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
-                (- (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type-end) 1)))
-      t
-      nil)
-    (if (= (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type)
-           (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type))
-      t
-      nil)))
+  (unless (keywordp sdl-event)
+    (if event-type-end
+      (and (>= (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
+               (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type))
+           (< (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
+              (- (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type-end) 1)))
+      (= (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type)
+         (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)))))
 
-(defun active-event-gain (sdl-event)
+(defun active-event-p (event)
+  (eq (event-type event) :ACTIVE-EVENT))
+(defun key-down-event-p (event)
+  (eq (event-type event) :KEY-DOWN-EVENT))
+(defun key-up-event-p (event)
+  (eq (event-type event) :KEY-UP-EVENT))
+(defun mouse-motion-event-p (event)
+  (eq (event-type event) :MOUSE-MOTION-EVENT))
+(defun mouse-button-down-event-p (event)
+  (eq (event-type event) :MOUSE-BUTTON-DOWN-EVENT))
+(defun mouse-button-up-event-p (event)
+  (eq (event-type event) :MOUSE-BUTTON-UP-EVENT))
+(defun joy-axis-motion-event-p (event)
+  (eq (event-type event) :JOY-AXIS-MOTION-EVENT))
+(defun joy-button-down-event-p (event)
+  (eq (event-type event) :JOY-BUTTON-DOWN-EVENT))
+(defun joy-button-up-event-p (event)
+  (eq (event-type event) :JOY-BUTTON-UP-EVENT))
+(defun joy-hat-motion-event-p (event)
+  (eq (event-type event) :JOY-HAT-MOTION-EVENT))
+(defun joy-ball-motion-event-p (event)
+  (eq (event-type event) :JOY-BALL-MOTION-EVENT))
+(defun video-resize-event-p (event)
+  (eq (event-type event) :VIDEO-RESIZE-EVENT))
+(defun video-expose-event-p (event)
+  (eq (event-type event) :VIDEO-EXPOSE-EVENT))
+(defun sys-wm-event-p (event)
+  (eq (event-type event) :SYS-WM-EVENT))
+(defun quit-event-p (event)
+  (eq (event-type event) :QUIT-EVENT))
+(defun user-event-p (event)
+  (event= event :USER-EVENT :NUM-EVENTS))
+(defun idle-event-p (event)
+  (eq (event-type event) :idle-event))
+
+(defun active-gain (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::gain))
 
-(defun active-event-state (sdl-event)
+(defun active-state (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::state))
 
-(defun key-event-state (sdl-event)
+(defun key-state (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Keyboard-Event 'sdl-cffi::state))
 
-(defun key-event-scancode (sdl-event)
+(defun key-scancode (sdl-event)
   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
                                                       'sdl-cffi::sdl-keyboard-event
                                                       'sdl-cffi::keysym)
                            'sdl-cffi::sdl-key-sym 'sdl-cffi::scancode))
 
-(defun key-event-key (sdl-event)
+(defun key-key (sdl-event)
   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
                                                       'sdl-cffi::sdl-keyboard-event
                                                       'sdl-cffi::keysym)
                            'sdl-cffi::sdl-key-sym 'sdl-cffi::sym))
 
-(defun key-event-mod (sdl-event)
+(defun key-mod (sdl-event)
   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
                                                       'sdl-cffi::sdl-keyboard-event
                                                       'sdl-cffi::keysym)
                            'sdl-cffi::sdl-key-sym 'sdl-cffi::mod))
 
-(defun key-event-mod-key (sdl-event)
+(defun key-mod-key (sdl-event)
   (let ((mod-state (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
                                                                        'sdl-cffi::sdl-keyboard-event
                                                                        'sdl-cffi::keysym)
@@ -147,88 +185,150 @@
                                        0)
                                 key)))))
 
-(defun key-event-unicode (sdl-event)
+(defun key-unicode (sdl-event)
   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
                                                       'sdl-cffi::sdl-keyboard-event
                                                       'sdl-cffi::keysym)
                            'sdl-cffi::sdl-key-sym 'sdl-cffi::unicode))
 
-(defun mouse-motion-event-state (sdl-event)
+(defun mouse-motion-button (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::state))
-(defun mouse-motion-event-x (sdl-event)
+(defun mouse-motion-x (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::x))
-(defun mouse-motion-event-y (sdl-event)
+(defun mouse-motion-y (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::y))
-(defun mouse-motion-event-x-rel (sdl-event)
+(defun mouse-motion-x-rel (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::xrel))
-(defun mouse-motion-event-y-rel (sdl-event)
+(defun mouse-motion-y-rel (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::yrel))
 
-(defun mouse-button-event-button (sdl-event)
+(defun mouse-button-button (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button))
-(defun mouse-button-event-state (sdl-event)
+(defun mouse-button-state (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::state))
-(defun mouse-button-event-x (sdl-event)
+(defun mouse-button-x (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::x))
-(defun mouse-button-event-y (sdl-event)
+(defun mouse-button-y (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::y))
 
-(defun joy-axis-motion-event-which (sdl-event)
+(defun joy-axis-motion-which (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::which))
-(defun joy-axis-motion-event-axis (sdl-event)
+(defun joy-axis-motion-axis (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::axis))
-(defun joy-axis-motion-event-value (sdl-event)
+(defun joy-axis-motion-value (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::value))
 
-(defun joy-hat-motion-event-which (sdl-event)
+(defun joy-hat-motion-which (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-joy-hat-event 'sdl-cffi::which))
-(defun joy-hat-motion-event-axis (sdl-event)
+(defun joy-hat-motion-axis (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-joy-hat-event 'sdl-cffi::hat))
-(defun joy-hat-motion-event-value (sdl-event)
+(defun joy-hat-motion-value (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-joy-hat-event 'sdl-cffi::value))
 
-(defun joy-ball-motion-event-which (sdl-event)
+(defun joy-ball-motion-which (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::which))
-(defun joy-ball-motion-event-ball (sdl-event)
+(defun joy-ball-motion-ball (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::ball))
-(defun joy-ball-motion-event-x-rel (sdl-event)
+(defun joy-ball-motion-x-rel (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::xrel))
-(defun joy-ball-motion-event-y-rel (sdl-event)
+(defun joy-ball-motion-y-rel (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::yrel))
 
-(defun joy-button-event-which (sdl-event)
+(defun joy-button-which (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which))
-(defun joy-button-event-button (sdl-event)
+(defun joy-button-button (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::button))
-(defun joy-button-event-state (sdl-event)
+(defun joy-button-state (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::state))
 
 
-(defun user-event-type (sdl-event)
+(defun user-type (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::type))
-(defun user-event-code (sdl-event)
+(defun user-code (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::code))
-(defun user-event-data1 (sdl-event)
+(defun user-data1 (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data1))
-(defun user-event-data2 (sdl-event)
+(defun user-data2 (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data2))
 
 
-(defun video-resize-event-w (sdl-event)
+(defun video-resize-w (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::w))
-(defun video-resize-event-h (sdl-event)
+(defun video-resize-h (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::h))
 
+(defun return-args (params event event-fp)
+  (loop for (user-val arg) in params
+        collect (cond
+                 ((gethash (if (keywordp arg) arg (intern (symbol-name arg) "KEYWORD")) event)
+                  `(,user-val (,(gethash (intern (symbol-name arg) "KEYWORD") event) ,event-fp)))
+                 (t (error "~A is not a valid parameter." arg)))))
+
+(defmacro with-event ((&rest params) event-fp event &body body)
+  `(let (,@(return-args params (gethash event *events*) event-fp))
+     ,@body))
+
+(defmacro with-active-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :active-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-key-down-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :key-down-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-key-up-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :key-up-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-mouse-motion-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :mouse-motion-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-mouse-button-down-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :mouse-button-down-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-mouse-button-up-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :mouse-button-up-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-joy-axis-motion-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :joy-axis-motion-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-joy-button-down-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :joy-button-down-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-joy-button-up-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :joy-button-up-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-joy-hat-motion-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :joy-hat-motion-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-joy-ball-motion-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :joy-ball-motion-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-video-resize-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :video-resize-event *events*) event-fp))
+     ,@body))
+
+(defmacro with-user-event ((&rest params) event-fp &body body)
+  `(let (,@(return-args params (gethash :user-event *events*) event-fp))
+     ,@body))
 
 
 (cffi:defcallback event-filter
     :int ((sdl-event sdl-cffi::sdl-event))
   ;; The following events are necessary for input-util.lisp.
-  (case (get-event-type sdl-event)
-    (:key-down-event (handle-key-down (key-event-key sdl-event)))
-    (:key-up-event (handle-key-up (key-event-key sdl-event)))
-    (:mouse-button-down-event (handle-mouse-down (mouse-button-event-button sdl-event)))
-    (:mouse-button-up-event (handle-mouse-up (mouse-button-event-button sdl-event))))
+  (case (event-type sdl-event)
+    (:key-down-event (handle-key-down (key-key sdl-event)))
+    (:key-up-event (handle-key-up (key-key sdl-event)))
+    (:mouse-button-down-event (handle-mouse-down (mouse-button-button sdl-event)))
+    (:mouse-button-up-event (handle-mouse-up (mouse-button-button sdl-event))))
 
   ;; Handle any user-specified event filters.
   (if *event-filters*
@@ -301,10 +401,20 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
     (setf (cffi:foreign-slot-value event 'sdl-cffi::SDL-event 'type) (cffi:foreign-enum-value 'sdl-cffi::EVENT-TYPE event-type))
     event))
 
+(defun free-event (event*)
+  (cffi:foreign-free event*))
+
+(defun get-event (event)
+  (if (= (sdl-cffi::SDL-Poll-Event event) 0)
+   :IDLE-EVENT
+   event))
+
 (defun push-quit-event ()
   "Pushes a new `SDL_Event` of type `:QUIT-EVENT` onto the event queue."
   (let ((quit (new-event :quit-event)))
     (sdl-cffi::SDL-Push-Event quit)
+    ;; The event can be safely freed, as SDL makes a copy
+    ;; of the event when it is added to the event queue.
     (cffi:foreign-free quit)))
 
 ;;/* There are no functions directly affecting the quit event */
@@ -336,7 +446,7 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
                            nil)))
 	((null keyword))
       (push (list (first keyword) (second keyword)) keyword-list))
-    `((event= ,sdl-event ,event-type)
+    `(,event-type
       (let (,@(mapcar #'(lambda (key)
                           (when (gethash (first key) event)
                             `(,(second key)
@@ -345,7 +455,8 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
         ,@forms))))
 
 (defun expand-quit (sdl-event forms quit)
-  `((event= ,sdl-event :QUIT-EVENT)
+  (declare (ignore sdl-event))
+  `(:QUIT-EVENT
     (setf ,quit (funcall #'(lambda ()
 			     ,@forms)))))
 
@@ -693,7 +804,7 @@ The contents of the event are completely up to the programmer.
                             (:poll `(= 0 (sdl-cffi::SDL-Poll-Event ,sdl-event)))
                             (:wait `(or ,quit (= 0 (sdl-cffi::SDL-Wait-Event ,sdl-event))))
                             (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type))) do
-                   (cond
+                   (case (event-type ,sdl-event)
                     ,@(remove nil 
                               (mapcar #'(lambda (event)
                                           (if (eq (first event) :quit-event)
@@ -712,10 +823,11 @@ The contents of the event are completely up to the programmer.
                (sdl:update-input-util (sdl:frame-time))
                (process-timestep *default-fpsmanager*
                                  ,idle-func)))
-       (cffi:foreign-free ,sdl-event))))
+       (free-event ,sdl-event))))
 
 (defun pressed-p (state)
   (= state sdl-cffi::sdl-pressed))
 
 (defun released-p (state)
   (= state sdl-cffi::sdl-released))
+
