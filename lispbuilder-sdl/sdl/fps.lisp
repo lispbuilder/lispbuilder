@@ -270,3 +270,43 @@ of 'n' frames."
              ,@body
              (incf (fps-ticks *default-fpsmanager*) (dt *default-fpsmanager*))
              (decf (accumulator *default-fpsmanager*) (dt *default-fpsmanager*))))))
+
+(defmacro with-frame-rate (&body body)
+  ;;
+  ;; around
+  (let ((self  (gensym "self-"))
+        (delta (gensym "delta-")))
+    `(let ((,self *default-fpsmanager*)
+           (,delta nil))
+       
+       (setf (current-ticks ,self) (sdl-cffi::sdl-get-ticks)
+             (delta-ticks ,self) (- (current-ticks ,self) (last-ticks ,self)))
+       (setf (svref (average-window ,self) (index ,self)) (current-ticks ,self))
+       
+       (when (not-through-p ,self)
+         (when (>= (index ,self) (1- (length (average-window ,self))))
+           (setf (not-through-p ,self) nil)))
+
+       ;; call-next-method
+       ,@body
+
+       ;;
+       ;; after
+       (when (target-frame-rate ,self)
+         (incf (frame-count ,self))
+         (let ((,delta (truncate (- (+ (delay-ticks ,self) (* (frame-count ,self)
+                                                             (rate-ticks ,self)))
+                                   (current-ticks ,self)))))
+           (if (> ,delta 0)
+             (sdl-cffi::sdl-delay (if (> ,delta (max-dt ,self))
+                                    (max-dt ,self)
+                                    ,delta))
+             (setf (frame-count ,self) 0
+                   (delay-ticks ,self) (current-ticks ,self)))))
+
+       ;;
+       ;; around
+       (unless (< (incf (index ,self)) (length (average-window ,self)))
+         (setf (index ,self) 0))
+       (setf (last-ticks ,self) (current-ticks ,self)))))
+  

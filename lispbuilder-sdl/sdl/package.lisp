@@ -315,11 +315,46 @@
    #:disable-event-filters
    #:with-events
    #:new-event
+   #:free-event
    #:quit-requested-p
    #:push-quit-event
    #:push-user-event
    #:pump-events
    #:get-event-type
+   #:event-type
+
+   #:active-event-p
+   #:key-down-event-p
+   #:key-up-event-p
+   #:mouse-motion-event-p
+   #:mouse-button-down-event-p
+   #:mouse-button-up-event-p
+   #:joy-axis-motion-event-p
+   #:joy-button-down-event-p
+   #:joy-button-up-event-p
+   #:joy-hat-motion-event-p
+   #:joy-ball-motion-event-p
+   #:video-resize-event-p
+   #:video-expose-event-p
+   #:sys-wm-event-p
+   #:quit-event-p
+   #:user-event-p
+   #:idle-event-p
+   #:get-event
+   #:with-active-event
+   #:with-key-down-event
+   #:with-key-up-event
+   #:with-mouse-motion-event
+   #:with-mouse-button-down-event
+   #:with-mouse-button-up-event
+   #:with-joy-axis-motion-event
+   #:with-joy-button-down-event
+   #:with-joy-button-up-event
+   #:with-joy-hat-motion-event
+   #:with-joy-ball-motion-event
+   #:with-video-resize-event
+   #:with-user-event
+   
    #:active-event-gain
    #:active-event-state
    #:key-event-state
@@ -356,6 +391,7 @@
    #:user-event-data2
    #:video-resize-event-w
    #:video-resize-event-h
+   
 
    ;; image.lisp
    #:supported-image-formats

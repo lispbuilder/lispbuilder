@@ -102,6 +102,7 @@
    ;; particles.lisp
    #:particles
    #:particles-timestep
+   #:particles-event-loop
 
    ;; fireworks.lisp
    #:fireworks

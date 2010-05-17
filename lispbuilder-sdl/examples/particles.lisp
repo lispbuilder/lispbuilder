@@ -140,8 +140,8 @@
 ;;;  Define the callback to be used in the event filter.
 ;;; ----------------------------------------------------------------------
 (defun resize-screen (sdl-event)
-  (sdl:resize-window (sdl::video-resize-event-w sdl-event)
-                     (sdl::video-resize-event-h sdl-event))
+  (sdl:resize-window (sdl::video-resize-w sdl-event)
+                     (sdl::video-resize-h sdl-event))
   t)
 
 ;;; ----------------------------------------------------------------------
@@ -387,3 +387,114 @@
                   
        ;; Flip back/front buffers
        (sdl:update-display)))))
+
+(defun particles-event-loop (&optional (frame-rate nil))
+  (sdl:with-init ()
+    ;; Create a window
+    (unless (sdl:window *screen-width* *screen-height*
+                        :title-caption "Particles Demo"
+                        :icon-caption "Particles Demo"
+                        :flags '(sdl:sdl-sw-surface sdl:sdl-resizable)
+                        :fps
+                        ;;(make-instance 'sdl:fps-timestep)
+                        (make-instance 'sdl:fps-mixed)
+                        )
+      (error "~&Unable to create a SDL window~%"))
+
+    ;; Fix the framerate
+    (setf (sdl:frame-rate) frame-rate)
+
+    ;; Enable event filters.
+    (sdl:enable-event-filters)
+    ;; Remove any existing filters.
+    (sdl:remove-all-event-filters)
+    ;; Handle the :video-resize-event
+    (sdl::set-event-filter :video-resize-event #'resize-screen)
+
+    ;; Enable key repeat. Set to default values.
+    (sdl:enable-key-repeat nil nil)
+
+    ;; Load images. Convert the 24-bit particle surface into a 32bpp
+    ;; surface with an alpha component
+    (setf *particle-img* (sdl::convert-to-display-format :surface (sdl:load-image (sdl:create-path
+                                                                                   "particle.bmp"
+                                                                                   sdl:*default-asset-path*))
+                                                         :inherit nil
+                                                         :pixel-alpha t
+                                                         :free t))
+
+    ;; Replace the alpha channel of *particle-img* with
+    ;; the alpha map in particle-alpha.bmp
+    (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp"
+                                                              sdl:*default-asset-path*)))
+      (sdl:copy-channel-to-alpha *particle-img* alpha :channel :r))
+
+    ;; Load the bitmap fonts
+    (setf *font-large* (sdl:initialise-font sdl:*font-8x13*))
+    (setf *font-small* (sdl:initialise-font sdl:*font-7x14*))
+
+    ;; Render the initial text.
+    ;; We cache the rendered string in the FONT object.
+    ;; Drawing the font to the display then involves a fast blit.
+    (draw-cached-string (format nil "{ESC} = Exit, {P} Add 100 Particles, {L} Remove 100 Particles, {SPACE} = Toggle Fullscreen.")
+                        5 5 *font-large* sdl:*default-display* t)
+    (draw-cached-string (format nil "Particles: ~d, Framerate: Calculating...."
+                                *particle-count*)
+                        5 35 *font-small* sdl:*default-display* t)
+
+    ;; Create the particles
+    (setf *particles* nil)
+    (dotimes (i *particle-count*)
+      (push (init-particle (make-particle)) *particles*))
+
+    ;; Event loop
+    (loop with event* = (sdl:new-event)
+          for event = (sdl::get-event event*) then (sdl::get-event event*)
+          while event do
+          (case (sdl:event-type event)
+            (:idle-event
+             (sdl::with-frame-rate ()
+               ;; Clear screen
+               (sdl:clear-display sdl:*black*)
+
+               (sdl:with-timestep ()
+                 ;; Update the particles
+                 (dolist (p *particles*)
+                   (update-particle p (/ (sdl::dt) 1000))))
+
+               ;; Update the particles
+               (dolist (p *particles*)
+                 (sdl:draw-surface-at-* *particle-img*
+                                        (round (vec2-x (particle-pos p)))
+                                        (round (vec2-y (particle-pos p)))))
+               ;; Display text.
+               (draw-cached-string nil 5 5 *font-large* sdl:*default-display* nil)
+         
+               (if (funcall *frames-p*)
+                 (draw-cached-string (format nil "Particles: ~d, Framerate: ~f, timescale: ~f, dt: ~f"
+                                             *particle-count* (truncate (sdl:average-fps)) (sdl:time-scale) (sdl:dt))
+                                     5 35 *font-small* sdl:*default-display* t)
+                 (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
+                  
+               ;; Flip back/front buffers
+               (sdl:update-display)))
+         
+            (:key-down-event
+             (sdl:with-key-down-event ((k key)) event
+               (case k
+                 (:sdl-key-escape (sdl:push-quit-event))
+                 (:sdl-key-p (add-particles))
+                 (:sdl-key-l (remove-particles))
+                 (:sdl-key-space (toggle-fullscreen)))))
+
+            (:mouse-motion-event
+             (sdl:with-mouse-motion-event ((x x) (y y)) event
+               (setf *mouse-x* x
+                     *mouse-y* y)))
+
+            (:video-expose-event
+             (sdl:update-display))
+         
+            (:quit-event
+             (loop-finish)))
+          finally (sdl:free-event event*))))
