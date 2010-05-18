@@ -30,8 +30,8 @@
 (defclass display-surface (sdl-surface) ()
   (:default-initargs
    :display-surface-p t
-    :gc nil
-    :free #'(lambda (fp) fp))
+   :gc nil
+   :free #'(lambda (fp) fp))
   (:documentation
    "The current display surface. Can be accessed using `SDL:*DEFAULT-DISPLAY*`."))
 

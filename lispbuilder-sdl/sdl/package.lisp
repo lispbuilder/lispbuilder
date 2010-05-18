@@ -676,6 +676,7 @@
    #:max-dt
    #:ticks
    #:with-timestep
+   #:with-frame-rate
    #:system-ticks
    #:physics-hook-p
    #:set-physics-hook
