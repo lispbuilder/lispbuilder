@@ -93,7 +93,7 @@
 
 (defun event-type (sdl-event)
   (if (keywordp sdl-event)
-    :IDLE-EVENT
+    :idle
     (get-event-type sdl-event)))
 
 (defun event= (sdl-event event-type &optional event-type-end)
@@ -145,7 +145,7 @@
 (defun user-event-p (event)
   (event= event :USER-EVENT :NUM-EVENTS))
 (defun idle-event-p (event)
-  (eq (event-type event) :idle-event))
+  (eq (event-type event) :idle))
 
 (defun active-gain (sdl-event)
   (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::gain))
@@ -406,7 +406,7 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 
 (defun get-event (event)
   (if (= (sdl-cffi::SDL-Poll-Event event) 0)
-   :IDLE-EVENT
+   :idle
    event))
 
 (defun push-quit-event ()

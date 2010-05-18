@@ -337,7 +337,8 @@ Returns a new `FONT`, or `NIL` if unsuccessful."))
 
 (defgeneric window (width height &key bpp flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
                           title-caption icon-caption fps position
-                          video-driver audio-driver opengl-attributes)
+                          video-driver audio-driver opengl-attributes
+                          event-filter)
   (:documentation
   "Creates a new SDL window of pixel width `WIDTH` and height `HEIGHT` using SDL_SetVideoMode.
 

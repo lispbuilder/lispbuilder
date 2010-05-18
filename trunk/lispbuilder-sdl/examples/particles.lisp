@@ -282,10 +282,7 @@
                         :title-caption "Particles Demo"
                         :icon-caption "Particles Demo"
                         :flags '(sdl:sdl-sw-surface sdl:sdl-resizable)
-                        :fps
-                        ;;(make-instance 'sdl:fps-timestep)
-                        (make-instance 'sdl:fps-mixed)
-                        )
+                        :fps (make-instance 'sdl:fps-mixed))
       (error "~&Unable to create a SDL window~%"))
 
     ;; Fix the framerate
@@ -395,10 +392,8 @@
                         :title-caption "Particles Demo"
                         :icon-caption "Particles Demo"
                         :flags '(sdl:sdl-sw-surface sdl:sdl-resizable)
-                        :fps
-                        ;;(make-instance 'sdl:fps-timestep)
-                        (make-instance 'sdl:fps-mixed)
-                        )
+                        :fps (make-instance 'sdl:fps-mixed)
+                        :position 'center)
       (error "~&Unable to create a SDL window~%"))
 
     ;; Fix the framerate
@@ -452,8 +447,9 @@
           for event = (sdl::get-event event*) then (sdl::get-event event*)
           while event do
           (case (sdl:event-type event)
-            (:idle-event
-             (sdl::with-frame-rate ()
+            (:idle
+             (sdl:update-input-util (sdl:frame-time))
+             (sdl:with-frame-rate ()
                ;; Clear screen
                (sdl:clear-display sdl:*black*)
 
@@ -480,7 +476,7 @@
                (sdl:update-display)))
          
             (:key-down-event
-             (sdl:with-key-down-event ((k key)) event
+             (sdl:with-key-down-event ((k :key)) event
                (case k
                  (:sdl-key-escape (sdl:push-quit-event))
                  (:sdl-key-p (add-particles))
@@ -488,13 +484,11 @@
                  (:sdl-key-space (toggle-fullscreen)))))
 
             (:mouse-motion-event
-             (sdl:with-mouse-motion-event ((x x) (y y)) event
+             (sdl:with-mouse-motion-event ((x :x) (y :y)) event
                (setf *mouse-x* x
                      *mouse-y* y)))
 
-            (:video-expose-event
-             (sdl:update-display))
+            (:video-expose-event (sdl:update-display))
          
-            (:quit-event
-             (loop-finish)))
+            (:quit-event (loop-finish)))
           finally (sdl:free-event event*))))

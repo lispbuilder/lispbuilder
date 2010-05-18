@@ -47,7 +47,8 @@
 
 (defclass display (display-surface) ()
   (:default-initargs
-   :fps (make-instance 'sdl:fps-fixed)))
+   :fps (make-instance 'sdl:fps-fixed)
+   :event-filter (cffi:callback event-filter)))
 
 (defmethod initialize-instance :before ((self display) &key position video-driver audio-driver)
   ;; Set the x/y window position
@@ -63,7 +64,8 @@
 (defmethod initialize-instance :after ((self display) &key
                                        (width 0) (height 0) (bpp 0) (title-caption "") (icon-caption "")
                                        flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
-                                       fps opengl-attributes)
+                                       fps opengl-attributes
+                                       event-filter)
   
   (unless flags
     (setf flags (remove nil (list (when sw sdl-sw-surface)
@@ -103,15 +105,11 @@
   ;; Prime the input handling code
   (quit-input-util)
   (initialise-input-util)
-  (sdl-cffi::sdl-set-event-filter (cffi:callback event-filter)))
+  (if event-filter
+    (sdl-cffi::sdl-set-event-filter event-filter)
+    (sdl-cffi::sdl-set-event-filter (cffi:null-pointer))))
 
-(defmethod window (width height
-                         ;&key (bpp 0) (title-caption "") (icon-caption "")
-                         ;flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
-                         ;(fps (make-instance 'fps-fixed))
-                         ;position
-                         ;video-driver audio-driver
-                         &rest rest)
+(defmethod window (width height &rest rest)
   (let ((window (apply #'make-instance 'display (append rest (list :width width :height height)))))
     (when (fp window)
       window)))
