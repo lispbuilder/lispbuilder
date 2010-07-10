@@ -11,11 +11,11 @@ SDL_CONFIG=sdl-config
 # look for sdl-config; else assume framework is in /Library/Frameworks
 ifneq ($(shell which $(SDL_CONFIG)),)
 SDL_CFLAGS=$(CFLAGS) $(shell $(SDL_CONFIG) --cflags)
-SDL_LDFLAGS=$(LDFLAGS) $(shell $(SDL_CONFIG) --libs)
+SDL_LDFLAGS=$(LDFLAGS) $(shell $(SDL_CONFIG) --libs) -lSDL_ttf
 else
-SDL_CFLAGS=$(CFLAGS) -D_GNU_SOURCE=1 -D_THREAD_SAFE -I/Library/Frameworks/SDL.framework/Headers
-SDL_LDFLAGS=$(LDFLAGS) -framework SDL -framework Cocoa
+SDL_CFLAGS=$(CFLAGS) -D_GNU_SOURCE=1 -D_THREAD_SAFE -I/Library/Frameworks/SDL.framework/Headers -I/Library/Frameworks/SDL_ttf.framework/Headers
+SDL_LDFLAGS=$(LDFLAGS) -framework SDL -framework SDL_ttf -framework Cocoa
 endif
 
 SDL_GLUE_CFLAGS=$(SDL_CFLAGS)
-SDL_GLUE_LDFLAGS=$(SDL_LDFLAGS) -lSDL_ttf
+SDL_GLUE_LDFLAGS=$(SDL_LDFLAGS)
