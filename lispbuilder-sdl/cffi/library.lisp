@@ -11,6 +11,12 @@
            cffi:*foreign-library-directories*
            :test #'equal))
 
+#+darwin
+(eval-when (:compile-toplevel :load-toplevel :execute)
+  (pushnew sdl-bin:*dll-path*
+           cffi:*darwin-framework-directories*
+           :test #'equal))
+
 ;; This is where FINK installs SDL.
 #+darwin(pushnew #P"/sw/lib/" cffi:*foreign-library-directories*
 	             :test #'equal)
