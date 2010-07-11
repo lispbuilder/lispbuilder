@@ -11,6 +11,6 @@
   :author "Brad Beveridge"
   :maintainer "Application Builder <application-builder@lispniks.com>"
   :licence "BSD"
-  :depends-on (cffi)
+  :depends-on (cffi lispbuilder-sdl-binaries)
   :components ((:module "cocoahelper"
                 :components ((:file "cocoahelper")))))
