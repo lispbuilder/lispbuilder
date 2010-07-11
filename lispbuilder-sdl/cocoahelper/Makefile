@@ -21,9 +21,12 @@ cocoahelper.framework: cocoahelper.dylib
 	ln -fs Versions/A/Resources cocoahelper.framework/Resources
 	ln -fs Versions/A/Headers cocoahelper.framework/Headers
 	ln -fs A cocoahelper.framework/Versions/Current
-# Change the load path to be relative to the location of the  framework rather
-# than relative to the executable that loaded the framework.
-# This will only have an effect if you linked against SDL.framework.
+# The following two commands fix the paths for the cocoahelper framework:
+# The one first fixes the name so that it refers to its location inside the
+# framework. (As far as I can tell, this doesn't actually affect anything).
+	install_name_tool -id @executable_path/../Frameworks/Version/A/Resources/cocoahelper cocoahelper.framework/cocoahelper
+# The second one changes the load path to be relative to the location of the
+# framework rather than relative to the executable that loaded the framework.
 	install_name_tool -change @executable_path/../Frameworks/SDL.framework/Versions/A/SDL @loader_path/../../../../SDL.framework/Versions/A/SDL cocoahelper.framework/cocoahelper
 
 clean:
