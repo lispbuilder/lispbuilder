@@ -116,44 +116,33 @@ Free using [FREE](#free)."))
 
 (defmacro with-surface ((var &optional surface (free t))
 			&body body)
-  (let ((surface-ptr (gensym "surface-prt-"))
-	(body-value (gensym "body-value-"))
+  (let ((body-value (gensym "body-value-"))
 	(free-value (gensym "free-value-")))
-    `(let* ((,@(if surface
-		   `(,var ,surface)
-		   `(,var ,var)))
-	    (*default-surface* ,var)
-	    (,body-value nil)
-	    (,free-value ,free))
-       (declare (ignorable ,free-value))
-       (symbol-macrolet ((,(intern (string-upcase (format nil "~A.width" var))) (width ,var))
-			 (,(intern (string-upcase (format nil "~A.height" var))) (height ,var))
-			 (,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
-			 (,(intern (string-upcase (format nil "~A.y" var))) (y ,var)))
-                (declare (ignorable ,(intern (string-upcase (format nil "~A.width" var)))
-                                    ,(intern (string-upcase (format nil "~A.height" var)))
-                                    ,(intern (string-upcase (format nil "~A.x" var)))
-                                    ,(intern (string-upcase (format nil "~A.y" var)))))
-	 (sdl-base::with-surface (,surface-ptr (fp ,var) nil)
-	   (setf ,body-value (progn ,@body))))
-       ,(if free
-          `(progn
-	     (when ,free-value
-	       (free ,var))
-	     ,body-value)
-	  `(progn
-	     ,body-value)))))
+    `(let ,(when surface
+             `((,var ,surface)))
+       (let ((*default-surface* ,var)
+             (,body-value nil)
+             (,free-value ,free))
+         (symbol-macrolet ((,(intern (string-upcase (format nil "~A.width" var))) (width ,var))
+                           (,(intern (string-upcase (format nil "~A.height" var))) (height ,var))
+                           (,(intern (string-upcase (format nil "~A.x" var))) (x ,var))
+                           (,(intern (string-upcase (format nil "~A.y" var))) (y ,var)))
+           (declare (ignorable ,(intern (string-upcase (format nil "~A.width" var)))
+                               ,(intern (string-upcase (format nil "~A.height" var)))
+                               ,(intern (string-upcase (format nil "~A.x" var)))
+                               ,(intern (string-upcase (format nil "~A.y" var)))))
+           (setf ,body-value (progn ,@body)))
+         (when ,free-value
+           (free ,var))
+         ,body-value))))
 
 (defmethod (setf cells) ((num integer) (self surface))
-  (setf (slot-value self 'cells) (make-array num :initial-contents (loop repeat num collect (get-rectangle-* self))))
+  (setf (slot-value self 'cells) (make-array num :initial-element (get-rectangle-* self)))
   (setf (cell-index self) 0))
 
 (defmethod (setf cells) ((rects list) (self surface))
   (setf (slot-value self 'cells) (make-array (length rects) :initial-contents (loop for rect in rects
-                                                                                    collect (rectangle :x (elt rect 0)
-                                                                                                       :y (elt rect 1)
-                                                                                                       :w (elt rect 2)
-                                                                                                       :h (elt rect 3)))))
+                                                                                    collect (copy-rectangle rect))))
   (setf (cell-index self) 0))
 
 (defmethod (setf cells) ((rects vector) (self surface))
@@ -198,16 +187,20 @@ Free using [FREE](#free)."))
 
 (defmacro with-locked-surface ((var &optional surface)
 			       &body body)
-  (let ((surface-ptr (gensym "surface-prt-"))
-	(body-value (gensym "body-value-")))
-    `(let* ((,@(if surface
-		   `(,var ,surface)
-		   `(,var ,var)))
-	    (*default-surface* ,var)
-	    (,body-value nil))
-       (sdl-base::with-locked-surface (,surface-ptr (fp ,var))
-	 (setf ,body-value (progn ,@body)))
-       ,body-value)))
+  (let ((body-value (gensym "body-value-")))
+    `(let ,(when surface
+             `((,var ,surface)))
+       (let ((*default-surface* ,var)
+             (,body-value nil))
+         (with-surface (,var ,surface nil)
+           (unwind-protect 
+               (progn (when (must-lock? (fp ,var))
+                        (when (/= (sdl-cffi::sdl-Lock-Surface (fp ,var)) 0)
+                          (error "Cannot lock surface")))
+                 (setf ,body-value (progn ,@body)))
+             (when (must-lock? (fp ,var))
+               (Sdl-Cffi::Sdl-Unlock-Surface (fp ,var)))))
+         ,body-value))))
 
 (defmacro with-locked-surfaces (bindings &rest body)
   (if bindings
@@ -853,7 +846,7 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
   surface)
 
 (defun fill-surface-* (r g b &key (a nil) (template nil)
-		       (surface *default-surface*) (update nil) (clipping t))
+		       (surface *default-surface*) (update nil) (clipping nil))
   "Fill the surface with the specified color `R` `G` `B` `:A` `A`.
  See [FILL-SURFACE](#fill-surface)."
   (unless surface
@@ -863,9 +856,7 @@ expect from \"overlaying\" them; the destination alpha will work as a mask."
     (check-type template rectangle))
   (sdl-base::fill-surface (fp surface)
 			  (map-color-* r g b a surface)
-			  :template (if template
-					(fp template)
-					(cffi:null-pointer))
+			  :template (when template (fp template))
 			  :clipping clipping
 			  :update update)
   surface)
