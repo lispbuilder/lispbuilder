@@ -10,24 +10,19 @@
 (defmacro with-surface ((var &optional surface (free t))
 			&body body)
   "Don't use this for managing the display surface."
-  (let ((body-value (gensym "body-value-")))
-    (if (or surface (atom var))
-	`(let ((,body-value nil)
-	       (,@(if surface
-		      `(,var ,surface)
-		      `(,var ,var))))
-	   (symbol-macrolet ((w (surf-w ,var))
-			     (h (surf-h ,var)))
-             (declare (ignorable w h))
-	     (setf ,body-value (progn ,@body)))
-	   (when ,free
-	     (sdl-cffi::sdl-Free-Surface ,var))
-	   ,body-value)
-	(error "VAR must be a symbol or variable, not a function."))))
+  (let ((body-value (gensym "body-value-"))
+        (free-value (gensym "free-value-")))
+    `(let ,(when surface
+             `((,var ,surface)))
+       (let ((,body-value nil)
+             (,free-value ,free))
+         (setf ,body-value (progn ,@body))
+         (when ,free-value
+           (sdl-cffi::sdl-Free-Surface ,var))
+         ,body-value))))
 
 (defmacro with-surface-slots ((var &optional surface)
 			      &body body)
-  "Don't use this for managing the display surface."
   `(with-surface (,var ,surface nil)
      ,@body))
 
@@ -44,14 +39,17 @@
 
 (defmacro with-locked-surface ((var &optional surface)
 				&body body)
-  `(with-surface (,var ,surface ,nil)
-     (unwind-protect 
-         (progn (when (must-lock? ,var)
-                  (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
-                    (error "Cannot lock surface")))
-           ,@body)
-       (when (must-lock? ,var)
-         (Sdl-Cffi::Sdl-Unlock-Surface ,var)))))
+  (let ((body-value (gensym "body-value-")))
+    `(let ((,body-value nil))
+       (with-surface (,var ,surface ,nil)
+         (unwind-protect 
+             (progn (when (must-lock? ,var)
+                      (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
+                        (error "Cannot lock surface")))
+               (setf ,body-value (progn ,@body))
+           (when (must-lock? ,var)
+             (Sdl-Cffi::Sdl-Unlock-Surface ,var)))))
+       ,body-value)))
 
 (defmacro with-locked-surfaces (bindings &rest body)
   (if bindings
@@ -359,9 +357,8 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
    Use :update to call SDL_UpdateRect, using :template if provided. This allows for a 
    'dirty recs' screen update.
 *Note*: `TEMPLATE` is clipped to the surface `SURFACE`, when `CLIPPING` is `T`."
-  (if template
-    (progn (when clipping
-             (setf template (clip-to-surface template surface)))
+  (if (and template (not (cffi:null-pointer-p template)))
+    (progn (when clipping (setf template (clip-to-surface template surface)))
       (sdl-cffi::sdl-Fill-Rect surface template color))
     (sdl-cffi::sdl-Fill-Rect surface (cffi:null-pointer) color))
   (when update
