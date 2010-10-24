@@ -205,7 +205,7 @@ blitting the glyph on the screen.
   "Returns the maximum pixel descent of all glyphs of font `FONT`. 
 This can also be interpreted as the distance from the baseline to the bottom of the font. 
 It could be used when drawing an individual glyph relative to a bottom point, 
-by combining it with the glyph’s maxy metric to resolve the top of the rectangle used when 
+by combining it with the glyph's maxy metric to resolve the top of the rectangle used when 
 blitting the glyph on the screen. 
 
 ##### Parameters
@@ -242,7 +242,7 @@ This is usually larger than the [GET-FONT-HEIGHT](#get-font-height) of the font.
   "Returns the number of faces 'sub-fonts' available in the font `FONT`. 
 This is a count of the number of specific fonts (based on size and style and other
  typographical features perhaps) contained in the font itself. It seems to be a useless
- fact to know, since it can’t be applied in any other `SDL_TTF` functions.
+ fact to know, since it can't be applied in any other `SDL_TTF` functions.
 
 ##### Parameters
 
