@@ -9,7 +9,7 @@
 (defparameter *input-util-initialised* nil)
 (defparameter *input-event-status* nil)
 
-(defstruct input-status status time prev-time)
+(defstruct input-status status time prev-time prev-status)
 
 (defstruct joystick
   fp
@@ -24,30 +24,41 @@
   ball-y-motion
   status)
 
+(defmacro with-input-status(input status &body body)
+  `(let ((,status (gethash input *input-event-status*)))
+     ,@body))
+
 (defun input-eq (input input-status)
   "Returns `T` if the input is eq to input-status.
-
 ##### Returns
 `T` if the input is held
 "
-  (let ((status (gethash input *input-event-status*)))
+  (with-input-status input status
     (if (input-status-p status)
       (eq input-status (input-status-status status))
       nil)))
 
 (defun input-set-p (input input-status)
   "Returns `T` if the status for input has just been set
-
 ##### Returns
 `T` if the input was just pressed
 "
-  (when (and (input-eq input input-status)
-             (= 0.0 (time-in-current-state input)))
-    input-status))
+  (with-input-status input status 
+
+    (if (and nil status)
+	(format t "test ~a status ~a prev ~a time ~a~%" input 
+		(input-status-status status) 
+		(input-status-prev-status status)
+		(input-status-time status)))
+	
+    (and status
+	 (eq input-status (input-status-status status))
+	 (not (eq input-status (input-status-prev-status status))))))
 
 (defun handle-input (input input-status)
   (let ((status (get-or-create-input-status input)))
-    (setf (input-status-status status) input-status
+    (setf (input-status-prev-status status) (input-status-status status)
+	  (input-status-status status) input-status
           (input-status-prev-time status) (input-status-time status)
           (input-status-time status) 0.0)))
 
@@ -85,7 +96,7 @@ is created and added to the hash table"
     (if (input-status-p status)
       status
       (setf (gethash input *input-event-status*) 
-            (make-input-status :status 'unknown :time 0.0 :prev-time 0.0)))))
+            (make-input-status :status 'unknown :time 0.0 :prev-time 0.0 :prev-status 'unknown)))))
 
 (defun initialise-input-util()
   "Initialises the input util system. This just creates the data structure that input status information 
@@ -102,8 +113,8 @@ is stored in, and maintains a global variable to track initialisation status.
 (defun debug-view-inputs()
   (loop for input being the hash-keys of *input-event-status* do
         (let ((status (gethash input *input-event-status*)))
-          (format t "input ~a status ~a time ~a prev time ~a~%" input (input-status-status status) 
-                  (input-status-time status) (input-status-prev-time status)))))
+          (format t "update input ~a status ~a time ~a prev time ~a prev status ~a~%" input (input-status-status status) 
+                  (input-status-time status) (input-status-prev-time status) (input-status-prev-status status)))))
 
 (defun update-input-util(time)
   "This must be called once for each time period you are updating the application, in order 
@@ -114,9 +125,13 @@ to update key, mouse button & joystick information.
 
 ##### Returns
 "
-;  (debug-view-keys)
+
   (loop for input-status being the hash-values of *input-event-status* do
-       (incf (input-status-time input-status) time)))
+       (incf (input-status-time input-status) time)
+       (setf (input-status-prev-status input-status) (input-status-status input-status)))
+
+  ;(debug-view-inputs)
+  )
 
 (defun quit-input-util()
   "This is called when you quit your app to free up input information data
@@ -143,6 +158,7 @@ to update key, mouse button & joystick information.
 * `KEY` is the SDL key definition for the key that is now up (for example :SDL-KEY-ESCAPE)
 ##### Returns
 "
+  ;(format t "key up ~a~%" key)
   (handle-input key 'released))
 
 (defun handle-key-down(key)
@@ -152,6 +168,7 @@ to update key, mouse button & joystick information.
 * `KEY` is the SDL key definition for the key that is now down (for example :SDL-KEY-ESCAPE)
 ##### Returns
 "
+  ;(format t "key down ~a~%" key)
   (handle-input key 'pressed))
 
 (defun key-held-p(key)

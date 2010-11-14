@@ -804,7 +804,8 @@ The contents of the event are completely up to the programmer.
                             (:poll `(= 0 (sdl-cffi::SDL-Poll-Event ,sdl-event)))
                             (:wait `(or ,quit (= 0 (sdl-cffi::SDL-Wait-Event ,sdl-event))))
                             (otherwise (error "WITH-EVENTS: TYPE ~A, must be :POLL or :WAIT." type))) do
-                   (case (event-type ,sdl-event)
+		  
+		  (case (event-type ,sdl-event)
                     ,@(remove nil 
                               (mapcar #'(lambda (event)
                                           (if (eq (first event) :quit-event)
@@ -820,9 +821,11 @@ The contents of the event are completely up to the programmer.
                                       events))))
              (unless ,quit
                (process-audio)
-               (sdl:update-input-util (sdl:frame-time))
+
                (process-timestep *default-fpsmanager*
-                                 ,idle-func)))
+                                 ,idle-func)
+	       (sdl:update-input-util (sdl:frame-time))
+	       ))
        (free-event ,sdl-event))))
 
 (defun pressed-p (state)
