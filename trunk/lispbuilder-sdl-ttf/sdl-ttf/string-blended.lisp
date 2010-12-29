@@ -5,12 +5,12 @@
 (in-package #:lispbuilder-sdl)
 
 (defmethod _draw-string-blended-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font ttf-font) (color color))
-  (with-surface (font-surface (_render-string-blended_ string color font nil nil) t)
+  (with-surface (font-surface (_render-string-blended_ string font color nil nil) t)
     (set-surface-* font-surface :x x :y y)
     (blit-surface font-surface surface))
   surface)
 
-(defmethod _render-string-blended_ ((string string) (color color) (font ttf-font) free cache)
+(defmethod _render-string-blended_ ((string string) (font ttf-font) (color color) free cache)
   (let ((surf nil))
     (with-foreign-color-copy (col-struct color)
       (setf surf (make-instance 'surface :fp (sdl-ttf-cffi::render-text-blended (fp font) string
