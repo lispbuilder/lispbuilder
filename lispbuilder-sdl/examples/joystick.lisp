@@ -110,7 +110,7 @@
   (sdl:with-init (sdl:sdl-init-joystick)
     (sdl:window 600 240 :title-caption "Joystick" :icon-caption "Joystick")
     (setf (sdl:frame-rate) 30)
-    (sdl:initialise-default-font)
+    (sdl:initialise-default-font sdl:*font-8x8*)
 
     (sdl-cffi::sdl-joystick-event-state sdl-cffi::sdl-enable)
     
@@ -122,43 +122,43 @@
     
     (sdl:with-events ()
       (:quit-event ()
-		   (when *joystick*
-		     (close-joystick *joystick*))
-		   t)
+       (when *joystick*
+         (close-joystick *joystick*))
+       t)
       (:key-down-event (:key key)
-		       (cond
-			 ((sdl:key= key :sdl-key-escape)
-			  (sdl:push-quit-event))
-			 ((sdl:key= key :sdl-key-space)
-			  (when *joystick*
-			    (close-joystick *joystick*)
-			    (incf *current-joystick-index*)
-			    (when (>= *current-joystick-index* *num-joysticks*)
-			      (setf *current-joystick-index* 0))
-			    (setf *joystick* (new-joystick *current-joystick-index*))))))
+       (cond
+        ((eq key :sdl-key-escape)
+         (sdl:push-quit-event))
+        ((eq key :sdl-key-space)
+         (when *joystick*
+           (close-joystick *joystick*)
+           (incf *current-joystick-index*)
+           (when (>= *current-joystick-index* *num-joysticks*)
+             (setf *current-joystick-index* 0))
+           (setf *joystick* (new-joystick *current-joystick-index*))))))
       (:joy-axis-motion-event (:WHICH WHICH :AXIS AXIS :VALUE VALUE)
-			      (setf (joystick-axis-motion *joystick*) (new-axis-motion-event which axis value)))
+       (setf (joystick-axis-motion *joystick*) (new-axis-motion-event which axis value)))
       (:joy-button-down-event (:WHICH WHICH :BUTTON BUTTON :STATE STATE)
-			      (setf (joystick-button-down *joystick*) (new-button-down-event which button state)))
+       (setf (joystick-button-down *joystick*) (new-button-down-event which button state)))
       (:joy-button-up-event (:WHICH WHICH :BUTTON BUTTON :STATE STATE)
-			    (setf (joystick-button-up *joystick*) (new-button-up-event which button state)))
+       (setf (joystick-button-up *joystick*) (new-button-up-event which button state)))
       (:joy-hat-motion-event (:WHICH WHICH :AXIS AXIS :VALUE VALUE)
-			     (setf (joystick-hat-motion *joystick*) (new-hat-motion-event which axis value)))
+       (setf (joystick-hat-motion *joystick*) (new-hat-motion-event which axis value)))
       (:joy-ball-motion-event (:WHICH WHICH :BALL BALL :X-REL X-REL :Y-REL Y-REL)
-			      (setf (joystick-ball-motion *joystick*) (new-ball-motion-event which ball x-rel y-rel)))
+       (setf (joystick-ball-motion *joystick*) (new-ball-motion-event which ball x-rel y-rel)))
       (:video-expose-event ()
-			   (sdl:update-display))
+       (sdl:update-display))
       (:idle ()
-	     (sdl:clear-display sdl:*black*)
-	     (sdl:draw-string-solid-* (format nil "Joystick Test")
-				      300 5
-				      :color sdl:*white*
-				      :justify :center)
-	     (sdl:draw-string-solid-* (format nil "SPACE to test next joystick. ESC to exit.")
-				      300 15
-				      :color sdl:*white*
-				      :justify :center)	     
-	     (if *joystick*
-		 (print-joystick *joystick*)
-		 (print-status))
-	     (sdl:update-display)))))
+       (sdl:clear-display sdl:*black*)
+       (sdl:draw-string-solid-* (format nil "Joystick Test")
+                                300 5
+                                :color sdl:*white*
+                                :justify :center)
+       (sdl:draw-string-solid-* (format nil "SPACE to test next joystick. ESC to exit.")
+                                300 15
+                                :color sdl:*white*
+                                :justify :center)	     
+       (if *joystick*
+         (print-joystick *joystick*)
+         (print-status))
+       (sdl:update-display)))))

@@ -19,11 +19,14 @@
                 :icon-caption "simple-font-demo-1")
     (setf (sdl:frame-rate) 2) ; Set target framerate (or 0 for unlimited)
 
-    (let ((1st-font (sdl:initialise-default-font sdl:*font-10x20*))
-	  (2nd-font (sdl:initialise-default-font sdl:*font-10x20*)))
+    (let ((1st-font (sdl:initialise-font sdl:*font-10x20*))
+	  (2nd-font (sdl:initialise-font sdl:*font-10x20*)))
       
       (sdl:with-events  ()
 	(:quit-event () t)
+        (:key-down-event ()
+         (when (sdl:key-pressed-p :sdl-key-escape)
+           (sdl:push-quit-event)))
 	(:idle ()
          ;; fill the background
          (sdl:clear-display (sdl:color :r #x22 :g #x22 :b #x44))
@@ -61,6 +64,9 @@
       
       (sdl:with-events  ()
 	(:quit-event () t)
+        (:key-down-event ()
+         (when (sdl:key-pressed-p :sdl-key-escape)
+           (sdl:push-quit-event)))
 	(:idle ()
          ;; fill the background
          (sdl:clear-display (sdl:color :r #x22 :g #x22 :b #x44))

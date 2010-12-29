@@ -140,7 +140,7 @@
 	(sdl:with-events ()
 	  (:quit-event () t)
           (:key-down-event (:key key)
-           (when (sdl:key= key :SDL-KEY-ESCAPE)
+           (when (eq key :SDL-KEY-ESCAPE)
              (sdl:push-quit-event)))
 	  (:idle ()
            (sdl:draw-box (sdl:random-rectangle width height rect)

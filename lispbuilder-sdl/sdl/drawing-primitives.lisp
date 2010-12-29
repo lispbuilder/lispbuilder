@@ -80,7 +80,15 @@
     (+ c1 (* val (+ c2 (* val (+ c3 (* c4 val))))))))
 
 (defun draw-bezier (vertices
-		    &key (clipping t) (surface *default-surface*) (color *default-color*) (segments 20) (style :SOLID))
+		    &key (clipping t) (surface *default-surface*) (color *default-color*) (segments 20) (style :SOLID)
+                    (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (if gfx-loaded-p
+    (gfx-draw-bezier vertices :surface surface :color color :segments segments :style style)
+    (_draw-bezier_ vertices :clipping clipping :surface surface :color color :segments segments :style style :gfx-loaded-p gfx-loaded-p)))
+
+(defun _draw-bezier_ (vertices
+		    &key (clipping t) (surface *default-surface*) (color *default-color*) (segments 20) (style :SOLID)
+                    (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draw a bezier curve of [COLOR](#color) to [SURFACE](#surface). The shape of the Bezier curve is defined by several control points. 
 A control point is a vertex containing an X and Y coordinate pair.
 
@@ -121,7 +129,8 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 				     (x p3) (y p3)
 				     (x p4) (y p4)
 				     :segments segments)
-		    :clipping clipping :surface surface :color color :style style)))
+		    :clipping clipping :surface surface :color color :style style
+                    :gfx-loaded-p gfx-loaded-p)))
 
 (defmacro with-bezier ((&optional (style :SOLID) (segments 20)) &body body)
   "Draw a bezier curve of `\*DEFAULT-COLOR\*` to `\*DEFAULT-SURFACE\*`.
@@ -277,7 +286,7 @@ Use `:POINTS` to draw a single pixel at each waypoint.
     (nconc points (list p3))))
   
 (defun draw-curve (vertices &key (clipping t) (surface *default-surface*) (color *default-color*)
-		   (segments 20) (style :SOLID))
+		   (segments 20) (style :SOLID) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draw a Cattmul-Rom spline of [COLOR](#color) to [SURFACE](#surface). 
 The shape of the curve is defined by waypoints. 
 A waypoint is a vertex containing an X and Y coordinate pair.
@@ -308,17 +317,16 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_"
-  ;; Create the curve between each successive group of four control points in the list.
   (loop
      for p1 in vertices
      for p2 in (cdr vertices)
      for p3 in (cddr vertices)
      for p4 in (cdddr vertices)
      do (draw-shape (generate-curve p1 p2 p3 p4 segments) 
-		    :style style :clipping clipping :surface surface :color color)))
+		    :style style :clipping clipping :surface surface :color color :gfx-loaded-p gfx-loaded-p)))
 
 (defun draw-shape (vertices &key (clipping t) (surface *default-surface*) (color *default-color*)
-		   (style :SOLID))
+		   (style :SOLID) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draw a polygon of [COLOR](#color) to [SURFACE](#surface) using `VERTICES`.
 
 ##### Parameters
@@ -355,7 +363,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 	for p2 in (cdr vertices)
 	do (draw-line p1 p2
 		      :clipping clipping
-		      :surface surface :color color)))
+		      :surface surface :color color :gfx-loaded-p gfx-loaded-p)))
     (:dash
      (do* ((p1 vertices (if (cdr p1)
 			  (cddr p1)
@@ -365,7 +373,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 	       (null p1)))
        (draw-line (first p1) (first p2)
 		  :clipping clipping
-		  :surface surface :color color)))
+		  :surface surface :color color :gfx-loaded-p gfx-loaded-p)))
     (:points
      (loop for point in vertices
 	do (draw-pixel point
@@ -373,7 +381,8 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 		       :surface surface
 		       :color color)))))
 
-(defun draw-line-* (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil))
+(defun draw-line-* (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil)
+                       (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draws a line of [COLOR](#color) to [SURFACE](#surface).
 
 ##### Parameters
@@ -389,80 +398,90 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_
-* `:AA` not supported in _LISPBUILDER-SDL_"
-  (declare (ignore aa)
+* `:AA` ignored in _LISPBUILDER-SDL_"
+  (declare (ignorable clipping aa))
+  (if gfx-loaded-p
+    (gfx-draw-line-* x0 y0
+                     x1 y1
+                     :color color :surface surface :aa aa)
+    (_draw-line-*_ x0 y0
+                   x1 y1
+                   :clipping clipping :color color :surface surface :aa aa)))
+
+(defun _draw-line-*_ (x0 y0 x1 y1 &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil))
+  (declare (ignorable aa)
            (type fixnum x0 y0 x1 y1))
   (unless surface
     (setf surface *default-display*))
   (check-type surface sdl-surface)
   (check-type color color)
   (cond
-    ((eq x0 x1)
-     ;; Optimization. If (eq x0 x1) then draw using vline.
-     (draw-vline x0 y0 y1 :surface surface :color color :clipping nil))
-    ((eq y0 y1)
-     ;; Optimization. If (eq y0 y1) then draw using hline.
-     (draw-hline x0 x1 y0 :surface surface :color color :clipping nil))
-    (t
-     (when clipping
-       ;; simple clipping, should be improved with Cohen-Sutherland line clipping
-       (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
-       (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
+   ((eq x0 x1)
+    ;; Optimization. If (eq x0 x1) then draw using vline.
+    (_draw-vline_ x0 y0 y1 :surface surface :color color :clipping nil))
+   ((eq y0 y1)
+    ;; Optimization. If (eq y0 y1) then draw using hline.
+    (_draw-hline_ x0 x1 y0 :surface surface :color color :clipping nil))
+   (t
+    (when clipping
+      ;; simple clipping, should be improved with Cohen-Sutherland line clipping
+      (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
+      (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
        
-     ;; draw line with Bresenham algorithm
-     (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
-	   (color (map-color color surface)))
-       (declare (type fixnum x y dx dy)
-		(type (unsigned-byte 32) color))
-       (when (> x0 x1)
-	 (rotatef x0 x1)
-	 (rotatef y0 y1))
-       (setf e 0)
-       (setf x x0)
-       (setf y y0)
-       (setf dx (- x1 x0))
-       (setf dy (- y1 y0))
+    ;; draw line with Bresenham algorithm
+    (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
+          (color (map-color color surface)))
+      (declare (type fixnum x y dx dy)
+               (type (unsigned-byte 32) color))
+      (when (> x0 x1)
+        (rotatef x0 x1)
+        (rotatef y0 y1))
+      (setf e 0)
+      (setf x x0)
+      (setf y y0)
+      (setf dx (- x1 x0))
+      (setf dy (- y1 y0))
 
-       (with-pixel (pix (fp surface))
-	 (if (>= dy 0)
-	     (if (>= dx dy)
-		 (loop for x from x0 to x1 do
-		      (write-pixel pix x y color)
-		      (if (< (* 2 (+ e dy)) dx)
-			  (incf e dy)
-			  (progn
-			    (incf y)
-			    (incf e (- dy dx)))))
-		 (loop for y from y0 to y1 do
-		      (write-pixel pix x y color)
-		      (if (< (* 2 (+ e dx)) dy)
-			  (incf e dx)
-			  (progn
-			    (incf x)
-			    (incf e (- dx dy))))))
-	     (if (>= dx (- dy))
-		 (loop for x from x0 to x1 do
-		      (write-pixel pix x y color)
-		      (if (> (* 2 (+ e dy)) (- dx))
-			  (incf e dy)
-			  (progn
-			    (decf y)
-			    (incf e (+ dy dx)))))
-		 (progn
-		   (rotatef x0 x1)
-		   (rotatef y0 y1)
-		   (setf x x0)
-		   (setf dx (- x1 x0))
-		   (setf dy (- y1 y0))
-		   (loop for y from y0 to y1 do
-			(write-pixel pix x y color)
-			(if (> (* 2 (+ e dx)) (- dy))
-			    (incf e dx)
-			    (progn
-			      (decf x)
-			      (incf e (+ dx dy)))))))))))))
+      (with-pixel (pix (fp surface))
+                  (if (>= dy 0)
+                    (if (>= dx dy)
+                      (loop for x from x0 to x1 do
+                            (write-pixel pix x y color)
+                            (if (< (* 2 (+ e dy)) dx)
+                              (incf e dy)
+                              (progn
+                                (incf y)
+                                (incf e (- dy dx)))))
+                      (loop for y from y0 to y1 do
+                            (write-pixel pix x y color)
+                            (if (< (* 2 (+ e dx)) dy)
+                              (incf e dx)
+                              (progn
+                                (incf x)
+                                (incf e (- dx dy))))))
+                    (if (>= dx (- dy))
+                      (loop for x from x0 to x1 do
+                            (write-pixel pix x y color)
+                            (if (> (* 2 (+ e dy)) (- dx))
+                              (incf e dy)
+                              (progn
+                                (decf y)
+                                (incf e (+ dy dx)))))
+                      (progn
+                        (rotatef x0 x1)
+                        (rotatef y0 y1)
+                        (setf x x0)
+                        (setf dx (- x1 x0))
+                        (setf dy (- y1 y0))
+                        (loop for y from y0 to y1 do
+                              (write-pixel pix x y color)
+                              (if (> (* 2 (+ e dx)) (- dy))
+                                (incf e dx)
+                                (progn
+                                  (decf x)
+                                  (incf e (+ dx dy)))))))))))))
 
-(defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil))
+(defun draw-line (p1 p2 &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-LINE-*](#draw-line-*).
 
 ##### Parameters
@@ -474,11 +493,17 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 * Also supported in _LISPBUILDER-SDL-GFX_"
     (check-types point p1 p2)
     (draw-line-* (x p1) (y p1)
-		 (x p2) (y p2)
-		 :clipping clipping :color color :surface surface :aa aa))
+                 (x p2) (y p2)
+                 :clipping clipping :color color :surface surface :aa aa :gfx-loaded-p gfx-loaded-p))
 
+(defun draw-vline (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping nil) (template nil)
+                     (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable clipping template))
+  (if gfx-loaded-p
+    (gfx-draw-vline x y0 y1 :surface surface :color color)
+    (_draw-vline_ x y0 y1 :surface surface :color color :clipping clipping :template template)))
 
-(defun draw-vline (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping nil) (template nil))
+(defun _draw-vline_ (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping nil) (template nil))
   "Draw a vertical line of [COLOR](#color) from `Y0` to `Y1` through `X` onto [SURFACE](#surface). 
 
 ##### Parameters
@@ -512,8 +537,15 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 				:template (sdl-base::rectangle-from-edges-* x y0 x y1 template)
 				:clipping clipping
 				:update nil))))
+
+(defun draw-hline (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping nil) (template nil)
+                      (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable clipping template))
+  (if gfx-loaded-p
+    (gfx-draw-hline x0 x1 y :surface surface :color color)
+    (_draw-hline_ x0 x1 y :surface surface :color color :clipping clipping :template template)))
   
-(defun draw-hline (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping nil) (template nil))
+(defun _draw-hline_ (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping nil) (template nil))
   "Draw a horizontal line of [COLOR](#color) from `X0` to `X1` through `Y` onto onto [SURFACE](#surface). 
 
 ##### Parameters
@@ -580,7 +612,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
       (free surf)))
   rect)
 
-(defun draw-box-* (x y w h &key (clipping nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
+(defun draw-box-* (x y w h &key (clipping nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil) (gfx-loaded-p *gfx-loaded-p*))
   "Draws a filled rectangle of [COLOR](#color) to [SURFACE](#surface).
 
 ##### Parameters
@@ -599,11 +631,21 @@ is blitted to `SURFACE`.
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_"
-  (with-rectangle (template (rectangle :x x :y y :w w :h h))
-    (draw-box template :clipping clipping :surface surface :color color
-	      :stroke-color stroke-color :alpha alpha)))
+  (if gfx-loaded-p
+    (draw-box-edges-* x y (+ x w) (+ y h) :surface surface :color color)
+    (with-rectangle (template (rectangle :x x :y y :w w :h h))
+      (draw-box template :clipping clipping :surface surface :color color
+                :stroke-color stroke-color :alpha alpha))))
 
-(defun draw-box-edges-* (x1 y1 x2 y2 &key (clipping nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
+(defun draw-box-edges-* (x0 y0 x1 y1
+                            &key (clipping nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil)
+                            (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable clipping alpha stroke-color))
+  (if (and gfx-loaded-p (not stroke-color))
+    (gfx-draw-box-edges-* x0 y0 x1 y1 :surface surface :color color)
+    (_draw-box-edges-*_ x0 y0 x1 y1 :surface surface :color color :clipping clipping :stroke-color stroke-color :alpha alpha)))
+
+(defun _draw-box-edges-*_ (x1 y1 x2 y2 &key (clipping nil) (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
   "Draws a filled rectangle of [COLOR](#color) to [SURFACE](#surface).
 
 ##### Parameters
@@ -668,10 +710,10 @@ is blitted to `SURFACE`.
 	  (x (if alpha 0 x))
 	  (y (if alpha 0 y)))
       (with-rectangle (template (rectangle))
-	(draw-hline x x+width y :surface surf :color color :clipping clipping :template template)
-	(draw-hline x x+width y+height :surface surf :color color :clipping clipping :template template)
-	(draw-vline x y y+height :surface surf :color color :clipping clipping :template template)
-	(draw-vline x+width y y+height :surface surf :color color :clipping clipping :template template))
+	(_draw-hline_ x x+width y :surface surf :color color :clipping clipping :template template)
+	(_draw-hline_ x x+width y+height :surface surf :color color :clipping clipping :template template)
+	(_draw-vline_ x y y+height :surface surf :color color :clipping clipping :template template)
+	(_draw-vline_ x+width y y+height :surface surf :color color :clipping clipping :template template))
       (when alpha
 	(draw-surface-at-* surf x y :surface surface)
 	(free surf))))
@@ -684,6 +726,13 @@ is blitted to `SURFACE`.
 
 
 (defun draw-rectangle-edges-* (x0 y0 x1 y1
+                                  &key (clipping nil) (surface *default-surface*) (color *default-color*) (alpha nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable clipping alpha))
+  (if gfx-loaded-p
+    (gfx-draw-rectangle-edges-* x0 y0 x1 y1 :surface surface :color color)
+    (_draw-rectangle-edges-*_ x0 y0 x1 y1 :surface surface :color color :clipping clipping :alpha alpha)))
+  
+(defun _draw-rectangle-edges-*_ (x0 y0 x1 y1
 			       &key (clipping nil) (surface *default-surface*) (color *default-color*) (alpha nil))
   "Draw a rectangle outline of [COLOR](#color) to [SURFACE](#surface).
 
@@ -707,7 +756,7 @@ is blitted to `SURFACE`.
     (draw-rectangle template :surface surface :clipping clipping :color color :alpha alpha))
   surface)
 
-(defun draw-pixel (point &key (clipping t) (surface *default-surface*) (color *default-color*))
+(defun draw-pixel (point &key (clipping t) (surface *default-surface*) (color *default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-PIXEL-*](#draw-pixel-*).
 
 ##### Parameters
@@ -718,9 +767,14 @@ is blitted to `SURFACE`.
 
 * Also supported in _LISPBUILDER-SDL-GFX_"
   (check-type point point)
-  (draw-pixel-* (x point) (y point) :clipping clipping :surface surface :color color))
+  (draw-pixel-* (x point) (y point) :clipping clipping :surface surface :color color :gfx-loaded-p gfx-loaded-p))
 
-(defun draw-pixel-* (x y &key (clipping t) (surface *default-surface*) (color *default-color*))
+(defun draw-pixel-* (x y &key (clipping t) (surface *default-surface*) (color *default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (if gfx-loaded-p
+    (gfx-draw-pixel-* x y :surface surface :color color)
+    (_draw-pixel-*_ x y :clipping clipping :surface surface :color color)))
+  
+(defun _draw-pixel-*_ (x y &key (clipping t) (surface *default-surface*) (color *default-color*))
   "Draw a single pixel of [COLOR](#color) to the [SURFACE](#surface) at the specified `X` and `Y` coordiates. 
 
 ##### Parameters
@@ -742,8 +796,8 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
     (sdl-base::check-bounds 0 (- (width surface) 1) x)
     (sdl-base::check-bounds 0 (- (height surface) 1) y))
   (with-pixel (pix (fp surface))
-    (write-pixel pix x y (map-color color surface)))
-  surface)
+              (write-pixel pix x y (map-color color surface)))
+      surface)
 
 (defun read-pixel (point &key (clipping t) (surface *default-surface*))
   "See [READ-PIXEL-*](#read-pixel-*).
@@ -781,7 +835,8 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
       (declare (ignore rgba))
       (color :r r :g g :b b :a a))))
 
-(defun draw-filled-circle (p1 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
+(defun draw-filled-circle (p1 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil)
+                              (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*).
 
 ##### Parameters
@@ -793,9 +848,16 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 * Also supported in _LISPBUILDER-SDL-GFX_"
   (check-type p1 point)
   (draw-filled-circle-* (x p1) (y p1) r
-			:surface surface :color color :stroke-color stroke-color :alpha alpha))
+			:surface surface :color color :stroke-color stroke-color :alpha alpha :gfx-loaded-p gfx-loaded-p))
 
-(defun draw-filled-circle-* (x0 y0 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
+(defun draw-filled-circle-* (x0 y0 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil)
+                                (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable stroke-color alpha))
+  (if (and gfx-loaded-p (not stroke-color))
+    (gfx-draw-filled-circle-* x0 y0 r :surface surface :color color)
+    (_draw-filled-circle-*_ x0 y0 r :surface surface :color color :stroke-color stroke-color :alpha alpha)))
+
+(defun _draw-filled-circle-*_ (x0 y0 r &key (surface *default-surface*) (color *default-color*) (stroke-color nil) (alpha nil))
   "Draws a filled circle of [COLOR](#color) to [SURFACE](#surface).
 
 ##### Parameters
@@ -834,8 +896,8 @@ is blitted to `SURFACE`.
 	    (ddf-y (the fixnum (* -2 r))))
 	(declare (type fixnum f ddf-x ddf-y))
 	(with-rectangle (template (rectangle))
-	  (draw-vline x0 (the fixnum (+ y0 r)) (the fixnum (- y0 r)) :color color :surface surf :clipping nil :template template)
-	  (draw-hline (the fixnum (+ x0 r)) (the fixnum (- x0 r)) y0 :color color :surface surf :clipping nil :template template))
+	  (_draw-vline_ x0 (the fixnum (+ y0 r)) (the fixnum (- y0 r)) :color color :surface surf :clipping nil :template template)
+	  (_draw-hline_ (the fixnum (+ x0 r)) (the fixnum (- x0 r)) y0 :color color :surface surf :clipping nil :template template))
 	(do ((x 0)
 	     (y r))
 	    ((<= y x))
@@ -848,18 +910,18 @@ is blitted to `SURFACE`.
 	  (incf ddf-x 2)
 	  (incf f (1+ ddf-x))
 	  (with-rectangle (template (rectangle))
-	    (draw-hline (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (+ y0 y)) :color color :surface surf :clipping nil
+	    (_draw-hline_ (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (+ y0 y)) :color color :surface surf :clipping nil
 			:template template)
-	    (draw-hline (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (- y0 y)) :color color :surface surf :clipping nil
+	    (_draw-hline_ (the fixnum (+ x0 x)) (the fixnum (- x0 x)) (the fixnum (- y0 y)) :color color :surface surf :clipping nil
 			:template template)
-	    (draw-hline (the fixnum (+ x0 y)) (the fixnum (- x0 y)) (the fixnum (+ y0 x)) :color color :surface surf :clipping nil
+	    (_draw-hline_ (the fixnum (+ x0 y)) (the fixnum (- x0 y)) (the fixnum (+ y0 x)) :color color :surface surf :clipping nil
 			:template template)
-	    (draw-hline (the fixnum (+ x0 y)) (the fixnum(- x0 y))  (the fixnum (- y0 x)) :color color :surface surf :clipping nil
+	    (_draw-hline_ (the fixnum (+ x0 y)) (the fixnum(- x0 y))  (the fixnum (- y0 x)) :color color :surface surf :clipping nil
 			:template template)))
 
 	;; Draw the circle outline when a color is specified.
 	(when stroke-color
-	  (draw-circle-* x0 y0 r :surface surf :color stroke-color))))
+	  (_draw-circle-*_ x0 y0 r :surface surf :color stroke-color))))
 
     (when alpha
       (draw-surface-at-* surf (the fixnum (- x0 r)) (the fixnum (- y0 r)) :surface surface)
@@ -870,7 +932,7 @@ is blitted to `SURFACE`.
 		    (surface *default-surface*)
 		    (color *default-color*)
 		    (alpha nil)
-		    (aa nil))
+		    (aa nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-CIRCLE-*](#draw-circle-*).
 
 ##### Parameters
@@ -883,9 +945,19 @@ is blitted to `SURFACE`.
 * `:AA` ignored in _LISPBUILDER-SDL_"
   (check-type p1 point)
   (draw-circle-* (x p1) (y p1) r
-		 :surface surface :color color :alpha alpha :aa aa))
+		 :surface surface :color color :alpha alpha :aa aa :gfx-loaded-p gfx-loaded-p))
 
 (defun draw-circle-* (x0 y0 r &key
+                         (surface *default-surface*)
+                         (color *default-color*)
+                         (alpha nil)
+                         (aa nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable alpha))
+  (if gfx-loaded-p
+    (gfx-draw-circle-* x0 y0 r :surface surface :color color :aa aa)
+    (_draw-circle-*_ x0 y0 r :surface surface :color color :aa aa :alpha alpha)))
+
+(defun _draw-circle-*_ (x0 y0 r &key
 		      (surface *default-surface*)
 		      (color *default-color*)
 		      (alpha nil)
@@ -998,7 +1070,14 @@ is blitted to `SURFACE`.
 	  (free surf)))))
     surface)
 
-(defun draw-trigon (p1 p2 p3 &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil))
+(defun draw-trigon (p1 p2 p3 &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil)
+                       (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable clipping))
+  (if gfx-loaded-p
+    (gfx-draw-trigon p1 p2 p3 :surface surface :color color :aa aa)
+    (_draw-trigon_ p1 p2 p3 :surface surface :color color :aa aa :clipping clipping)))
+
+(defun _draw-trigon_ (p1 p2 p3 &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil))
   "Draw the outline of a trigon or triangle, of [COLOR](#color) to [SURFACE](#surface).
 Use [DRAW-FILLED-TRIGON-*](#draw-filled-trigon-*) to draw a filled trigon.
 
@@ -1020,11 +1099,33 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
    (unless surface
     (setf surface *default-display*))
  (check-type color color)
- (draw-line p1 p2 :surface surface :color color :clipping clipping)
- (draw-line p2 p3 :surface surface :color color :clipping clipping)
- (draw-line p3 p1 :surface surface :color color :clipping clipping))
- 
-(defun draw-polygon (vertices &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil))
+ (_draw-line-*_ p1 p2 :surface surface :color color :clipping clipping)
+ (_draw-line-*_ p2 p3 :surface surface :color color :clipping clipping)
+ (_draw-line-*_ p3 p1 :surface surface :color color :clipping clipping))
+
+(defun draw-filled-trigon (p1 p2 p3 &key (surface *default-surface*) (color *default-color*) (clipping t) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  "Draw a filled trigon of [COLOR](#color) to the [SURFACE](#surface)
+
+##### Parameters
+
+* `P1`, `P2` and `P3` specify the vertices of the trigon, of type `SDL:POINT`.
+* `:SURFACE` is the target [SURFACE](#surface).
+* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a).
+
+##### Packages
+
+* Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignorable clipping))
+  (if gfx-loaded-p
+    (gfx-draw-filled-trigon p1 p2 p3 :surface surface :color color)))
+
+(defun draw-polygon (vertices &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable clipping))
+  (if gfx-loaded-p
+    (gfx-draw-polygon vertices :surface surface :color color :aa aa)
+    (_draw-polygon_ vertices :surface surface :color color :aa aa :clipping clipping :gfx-loaded-p gfx-loaded-p)))
+
+(defun _draw-polygon_ (vertices &key (surface *default-surface*) (color *default-color*) (clipping t) (aa nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draw the circumference of a polygon of [COLOR](#color) to [SURFACE](#surface) using the vertices in `POINTS`.
 Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*) to draw a filled polygon.
 
@@ -1046,11 +1147,27 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
   (unless surface
     (setf surface *default-display*))
   (check-type color color)
-  (draw-shape vertices :style :solid :clipping clipping :surface surface :color color))
+  (draw-shape vertices :style :solid :clipping clipping :surface surface :color color :gfx-loaded-p gfx-loaded-p))
+
+(defun draw-filled-polygon (vertices &key (surface *default-surface*) (color *default-color*) (clipping t) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  "Draw a filled polygon of [COLOR](#color) to the [SURFACE](#surface)
+
+##### Parameters
+
+* `VERTICES` is the list of vertices of type `SDL:POINT`.
+* `:SURFACE` is the target [SURFACE](#surface).
+* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a).
+
+##### Packages
+
+* Supported in _LISPBUILDER-SDL-GFX_"
+  (declare (ignorable clipping))
+  (if gfx-loaded-p
+    (gfx-draw-filled-polygon vertices :surface surface :color color)))
 
 ;; Placeholders for LISPBUILDERL-SDL-GFX
 
-(defun draw-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (aa nil))
+(defun draw-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (aa nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-ELLIPSE-*](#draw-ellipse-*).
 
 ##### Parameters
@@ -1060,10 +1177,9 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore p1 rx ry surface color aa))
-  nil)
+  (draw-ellipse-* (x p1) (y p1) rx ry :surface surface :color color :aa aa :gfx-loaded-p gfx-loaded-p))
 
-(defun draw-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (aa nil))
+(defun draw-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (aa nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draws an ellipse circumference of [COLOR](#color) to the [SURFACE](#surface).
 Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 
@@ -1077,10 +1193,11 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore x y rx ry surface color aa))
-  nil)
+  (declare (ignorable x y rx ry surface color aa))
+  (if gfx-loaded-p
+    (gfx-draw-ellipse-* x y rx ry :surface surface :color color :aa aa)))
   
-(defun draw-filled-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filled-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*).
 
 ##### Parameters
@@ -1090,10 +1207,9 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore p1 rx ry surface color))
-  nil)
+  (draw-filled-ellipse-* (x p1) (y p1) rx ry :surface surface :color color :gfx-loaded-p gfx-loaded-p))
 
-(defun draw-filled-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filled-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draws a filled ellipse of [COLOR](#color) to the [SURFACE](#surface).
 
 ##### Parameters
@@ -1106,10 +1222,11 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore x y rx ry surface color))
-  nil)
+  (declare (ignorable x y rx ry surface color))
+  (if gfx-loaded-p
+    (gfx-draw-filled-ellipse-* x y rx ry :surface surface :color color)))
 
-(defun draw-pie (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-pie (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-PIE-*](#draw-pie-*).
 
 ##### Parameters
@@ -1119,11 +1236,9 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore p1 rad start end surface color))
-  nil)
+  (draw-pie-* (x p1) (y p1) rad start end :surface surface :color color :gfx-loaded-p gfx-loaded-p))
 
-
-(defun draw-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draws a pie of [COLOR](#color) to the [SURFACE](#surface).
 Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 
@@ -1139,10 +1254,11 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore x y rad start end surface color))
-  nil)
+  (declare (ignorable x y rad start end surface color))
+  (if gfx-loaded-p
+    (gfx-draw-pie-* x y rad start end :surface surface :color color)))
 
-(defun draw-filled-pie (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filled-pie (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-FILLED-PIE-*](#draw-filled-pie-*).
 
 ##### Parameters
@@ -1152,10 +1268,9 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore p1 rad start end surface color))
-  nil)
+  (draw-filled-pie-* (x p1) (y p1) rad start end :surface surface :color color :gfx-loaded-p gfx-loaded-p))
 
-(defun draw-filled-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*))
+(defun draw-filled-pie-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draws a filled pie of [COLOR](#color) to the [SURFACE](#surface)
 
 ##### Parameters
@@ -1170,37 +1285,215 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore x y rad start end surface color))
-  nil)
+  (declare (ignorable x y rad start end surface color))
+  (if gfx-loaded-p
+    (gfx-draw-filled-pie-* x y rad start end :surface surface :color color)))
 
-(defun draw-filled-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "Draw a filled trigon of [COLOR](#color) to the [SURFACE](#surface)
+(defun draw-arc (p1 rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (draw-arc-* (sdl:x p1) (sdl:y p1) rad start end :surface surface :color color :gfx-loaded-p gfx-loaded-p))
+
+(defun draw-arc-* (x y rad start end &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (if gfx-loaded-p
+    (gfx-draw-arc-* x y rad start end :surface surface :color color)))
+
+(defun rotate-surface (degrees &key (surface sdl:*default-surface*) (free nil) (zoom 1) (smooth nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (declare (ignorable free))
+  (if gfx-loaded-p
+    (gfx-roto-zoom-surface degrees zoom smooth :surface surface)
+    (_rotate-surface_ degrees :surface surface :free free :zoom zoom :smooth smooth)))
+
+(defun rotate-surface-xy (degrees &key (surface sdl:*default-surface*) (free nil) (zoomx 1) (zoomy 1) (smooth nil)
+                                  (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+    "Returns a new [SURFACE](#surface) rotated to `DEGREES`.
 
 ##### Parameters
 
-* `P1`, `P2` and `P3` specify the vertices of the trigon, of type `SDL:POINT`.
-* `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `DEGREES` is the rotation in degrees. 
+* `:SURFACE` is the surface to rotate [SURFACE](#surface).
+* `:FREE` when `T` will free `SURFACE`.
+* `:ZOOMX` and `ZOOMY` are the the scaling factors.
+A negative scaling factor will flip the corresponding axis. 
+_Note_: Flipping is only supported with anti-aliasing turned off.
+* `:SMOOTH` when `T` will anti-aliase the new surface.
 
 ##### Packages
 
-* Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore p1 p2 p3 surface color))
-  nil)
+* Supported in _LISPBUILDER-SDL-GFX_
+* _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
+  (declare (ignorable free))
+  (if gfx-loaded-p
+    (gfx-roto-zoom-xy degrees zoomx zoomy smooth :surface surface)))
 
+(defun roto-zoom-surface (angle zoom smooth &key (surface sdl:*default-surface*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (check-type surface sdl:surface)
+  (if gfx-loaded-p
+    (gfx-roto-zoom-surface angle zoom smooth :surface surface)))
 
-(defun draw-filled-polygon (vertices &key (surface sdl:*default-surface*) (color sdl:*default-color*))
-  "Draw a filled polygon of [COLOR](#color) to the [SURFACE](#surface)
+(defun roto-zoom-xy (angle zoomx zoomy smooth &key (surface sdl:*default-surface*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (check-type surface sdl:surface)
+  (if gfx-loaded-p
+    (gfx-roto-zoom-xy angle zoomx zoomy smooth :surface surface)))
+
+(defun roto-zoom-size (width height angle zoom &key (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (if gfx-loaded-p
+    (gfx-roto-zoom-size width height angle zoom)))
+
+(defun roto-zoom-size-xy (width height angle zoomx zoomy &key (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (if gfx-loaded-p
+    (gfx-roto-zoom-size-xy width height angle zoomx zoomy)))
+
+(defun zoom-surface (zoomx zoomy &key (surface *default-surface*) (free nil) (smooth nil) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  "Returns a new [SURFACE](#surface) scaled to `ZOOMX` and `ZOOMY`.
 
 ##### Parameters
 
-* `VERTICES` is the list of vertices of type `SDL:POINT`.
-* `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:ZOOMX` and `ZOOMY` are the scaling factors. 
+A negative scaling factor will flip the corresponding axis. 
+_Note_: Flipping is only supported with anti-aliasing turned off.
+* `:SURFACE` is the surface to rotate [SURFACE](#surface).
+* `:FREE` when `T` will free `SURFACE`.
+* `:SMOOTH` when `T` will anti-aliase the new surface.
 
 ##### Packages
 
-* Supported in _LISPBUILDER-SDL-GFX_"
-  (declare (ignore vertices surface color))
-  nil)
+* Supported in _LISPBUILDER-SDL-GFX_
+* _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
+  (declare (ignorable zoomx zoomy surface free smooth))
+  (if gfx-loaded-p
+    (gfx-zoom-surface zoomx zoomy :surface surface :smooth smooth :free free)))
+
+(defun zoom-surface-size (width height zoomx zoomy &key (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
+  (if gfx-loaded-p
+    (gfx-zoom-surface-size width height zoomx zoomy)))
+
+;;; Anthony Fairchild.
+;;; http://article.gmane.org/gmane.lisp.cl-lispbuilder.general/559
+(defun _rotate-surface_ (degrees &key (surface *default-surface*) (free nil) (zoom 1) (smooth nil))
+  "Returns a new [SURFACE](#surface) rotated to `DEGREES`.
+
+##### Parameters
+
+* `DEGREES` is the rotation in degrees. 
+* `:SURFACE` is the surface to rotate [SURFACE](#surface).
+* `:FREE` when `T` will free `SURFACE`.
+* `:ZOOM` is the scaling factor.
+* `:SMOOTH` when `T` will anti-aliase the new surface.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_
+* _LISPBUILDER-SDL_ supports rotations of only `0`, `90`, `180`, or `270` degrees. 
+_LISPBUILDER-SDL-GFX_ supports any rotation.
+* _LISPBUILDER-SDL_ ignores `:SMOOTH`. _LISPBUILDER-SDL-GFX_ supports `:SMOOTH`.
+* _LISPBUILDER-SDL_ ignores `:ZOOM`. _LISPBUILDER-SDL-GFX_ supports `:ZOOM`.
+* _LISPBUILDER-SDL-GFX_ ignores `:FREE`."
+  (declare (ignore zoom smooth)
+           (type fixnum degrees)
+ 	   (optimize (speed 3)(safety 0)))
+  (unless (member degrees '(0 90 180 270))
+    (error "ERROR, ROTATE-SURFACE: degrees ~A is not one of 0, 90, 180 or 270" degrees))
+  (if (= 0 degrees)
+      ;; in the case of 0 degrees, just return the surface
+      (let ((new-surf (copy-surface :surface surface)))
+	(when free
+	  (free surface))
+	new-surf)
+      ;; else do rotation
+      (let* ((even (evenp (/ degrees 90)))
+	     (w (width surface))
+	     (h (height surface))
+	     (new-w (if even w h))
+	     (new-h (if even h w)))
+	(declare (type fixnum w h new-w new-h))
+	(with-surfaces ((src surface free)
+			(dst (make-instance 'surface
+					    :using-surface surface
+					    :width new-w :height new-h
+					    :bpp (bit-depth surface)
+					    :enable-alpha (alpha-enabled-p surface)
+					    :enable-color-key (color-key-enabled-p surface)
+					    :alpha (when (alpha-enabled-p surface) (alpha surface))
+					    :color-key (when (color-key-enabled-p surface) (color-key surface))
+					    :pixel-alpha (pixel-alpha-enabled-p surface)) nil))
+	  (let ((new-x (case degrees
+			 (90  #'(lambda (x y)
+				  (declare (ignore x)(type fixnum x y))
+				  (the fixnum (+ (the fixnum (1- new-w)) (the fixnum (- 0 y))))))
+			 (180 #'(lambda (x y)
+				  (declare (ignore y)(type fixnum x y))
+				  (the fixnum (+ (the fixnum (1- new-w)) (the fixnum (- 0 x))))))
+			 (270 #'(lambda (x y)
+				  (declare (ignore x)(type fixnum x y))
+				  y))
+			 (otherwise #'(lambda (x y)
+					(declare (ignore y)(type fixnum x y))
+					x))))
+		(new-y (case degrees
+			 (90  #'(lambda (x y)
+				  (declare (ignore y)(type fixnum x y))
+				  x))
+			 (180 #'(lambda (x y)
+				  (declare (ignore x)(type fixnum x y))
+				  (the fixnum (+ (the fixnum (1- new-h)) (the fixnum(- 0 y))))))
+			 (270 #'(lambda (x y)
+				  (declare (ignore y)(type fixnum x y))
+				  (the fixnum (+ (the fixnum (1- new-h)) (the fixnum (- 0 x))))))
+			 (otherwise  #'(lambda (x y)
+					 (declare (ignore x)(type fixnum x y))
+					 y)))))
+ 	    (declare (type fixnum w h))
+	    (with-pixels ((src (fp src))
+				    (dst (fp dst)))
+	      (loop :for x :from 0 :to (1- w)
+		 :do (loop :for y :from 0 :to (1- h)
+			:do (write-pixel dst
+						   (funcall new-x x y)
+						   (funcall new-y x y)
+						   (read-pixel src x y))))))
+	  dst))))
+
+
+(defun draw-aa-line (p1 p2 &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
+  (sdl:check-types sdl:point p1 p2)
+  (if gfx-loaded-p
+    (sdl::gfx-draw-aa-line-* (sdl:x p1) (sdl:y p1) (sdl:x p2) (sdl:y p2) :surface surface :color color)))
+
+(defun draw-aa-circle (p1 r &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
+  (check-type p1 sdl:point)
+  (if gfx-loaded-p
+    (gfx-draw-aa-circle-* (sdl:x p1) (sdl:y p1) r :surface surface :color color)))
+
+(defun draw-aa-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
+  (check-type p1 sdl:point)
+  (if gfx-loaded-p
+    (gfx-draw-aa-ellipse-* (sdl:x p1) (sdl:y p1) rx ry :surface surface :color color)))
+
+(defun draw-aa-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
+  (sdl:check-types sdl:point p1 p2 p3)
+  (unless surface
+    (setf surface sdl:*default-display*))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:color)
+  (if gfx-loaded-p
+    (gfx-draw-aa-trigon p1 p2 p3 :surface surface :color color)))
+
+(defun draw-aa-polygon (vertices &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
+  (check-type vertices (and list (not null)) "Vertices must be a LIST of SDL:POINTs")
+  (unless surface
+    (setf surface sdl:*default-display*))
+  (check-type surface sdl:sdl-surface)
+  (check-type color sdl:color)
+  (if gfx-loaded-p
+    (gfx-draw-aa-polygon vertices :surface surface :color color)))
+
+
+;; SDL_gfx 2.0.16
+;; (defun shrink-surface (factor-x factor-y &key (surface sdl:*default-surface*))
+;;   "Returns a new 32bit or 8bit SDl:SURFACE from the SDL:SURFACE :SURFACE.
+;;     FACTOR-X and FACTOR-Y are the shrinking ratios \(i.e. 2=1/2 the size,
+;;     3=1/3 the size, etc.\) The destination surface is antialiased by averaging
+;;     the source box RGBA or Y information. If the surface is not 8bit
+;;     or 32bit RGBA/ABGR it will be converted into a 32bit RGBA format on the fly."
+;;   (check-type surface sdl:surface)
+;;   (sdl:surface (sdl-gfx-cffi::shrinkSurface (sdl:fp surface) factor-x factor-y)))
 

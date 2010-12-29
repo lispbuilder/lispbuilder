@@ -11,7 +11,7 @@
   (declare (ignore string font color free cache))
   nil)
 
-(defmethod _draw-string-blended-*_ ((string string) (x integer) (y integer) justify (color color) (surface sdl-surface) (font font))
+(defmethod _draw-string-blended-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font font) (color color))
   (declare (ignore string x y justify color surface font))
   nil)
 

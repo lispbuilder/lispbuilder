@@ -24,6 +24,7 @@
   (:windows (:or "libtiff-3.dll")))
 
 (defun load-image-library ()
+  (setf *image-loaded-p* nil)
   (when (handler-case (cffi:use-foreign-library sdl-image)
           (load-foreign-library-error () nil))
     (progn

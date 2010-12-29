@@ -31,7 +31,7 @@ Free using [FREE](#free)"))
 (defmethod initialise-font ((self bitmap-font-definition))
   (make-instance 'sdl-bitmap-font :font-definition self))
 
-(defun initialise-default-font (&optional (font-definition *font-8x8*))
+(defun initialise-default-font (&optional (font-definition (if *gfx-loaded-p* *gfx-font-8x8* *font-8x8*)))
   "Returns a new [SDL-BITMAP-FONT](#sdl-bitmap-font) initialized from `FONT-DEFINITION` data, or `NIL` 
 if the font cannot be created. `FONT-DEFINITION` is set to `\*font-8x8\*` if unspecified. 
 Binds the symbol `\*DEFAULT-FONT\*` to the new font to be used as the default for subsequent 

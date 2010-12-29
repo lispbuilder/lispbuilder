@@ -45,6 +45,10 @@
   (declare (ignore pixels))
   (error "PIXEL-PITCH only valid within WITH-PIXEL/S."))
 
+(defmacro with-pixels (bindings &rest body)
+  (if bindings
+      (return-with-pixels bindings body)))
+
 (defmacro with-pixel ((var surface) &body body)
   (let ((surface-fp (gensym "surface-fp-"))
 	(pixel-def (gensym "pixels-def-")))
@@ -69,10 +73,6 @@
 	     (declare (ignorable #'read-pixel #'write-pixel
 				 #'pixel-data #'pixel-bpp #'pixel-pitch))
 	     ,@body))))))
-
-(defmacro with-pixels (bindings &rest body)
-  (if bindings
-      (return-with-pixels bindings body)))
 
 (defun return-with-pixels (bindings body)
   (if bindings
