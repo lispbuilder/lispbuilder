@@ -10,8 +10,8 @@
 
     (dotimes (i num)
       (sdl:with-color (col (sdl:color :r (* i grayvalues) :g (* i grayvalues) :b (* i grayvalues)))
-	(sdl-gfx:draw-filled-ellipse-* xloc yloc (- size (* i steps)) (- size (* i steps))
-				       :surface sdl:*default-display*)))))
+	(sdl-gfx:draw-filled-ellipse (sdl:point :x xloc :y yloc) (- size (* i steps)) (- size (* i steps))
+                                     :surface sdl:*default-display*)))))
 
 (defun functions ()
   (let ((width 200) (height 200))

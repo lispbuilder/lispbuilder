@@ -14,7 +14,7 @@
       (sdl:window width height)
       (setf (sdl:frame-rate) 0)
       
-      (sdl-gfx:initialise-default-font)
+      (sdl-gfx:initialise-default-font sdl:*gfx-font-8x8*)
       (draw-fps "Calculating FPS....." 10 50 sdl:*default-font* sdl:*default-surface* t)
 
       (sdl:with-events ()
@@ -24,7 +24,7 @@
 			     (sdl:push-quit-event)))
 	(:idle ()
 	       (dotimes (i *circles-per-frame*)
-		 (sdl-gfx:draw-filled-Circle-* (random width) (random height) (random 100)
+		 (sdl-gfx:draw-filled-Circle (sdl:point :x (random width) :y (random height)) (random 100)
 					       :color (sdl:color :r (random 255) :g (random 255) :b (random 255) :a (random 255))
 					       :surface sdl:*default-display*))
 	       (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))

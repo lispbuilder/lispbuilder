@@ -172,16 +172,16 @@
 	(setf i (get-square-coords-i metaball x-resolution y-resolution))
 	(setf j (get-square-coords-j metaball x-resolution y-resolution))
 
-	(sdl-gfx:draw-line-* (sdl:cast-to-int (* i x-resolution))
-			     (sdl:cast-to-int (* j y-resolution))
-			     (sdl:cast-to-int (* (+ i 1) x-resolution))
-			     (sdl:cast-to-int (* (+ j 1) y-resolution))
-			     :surface surface :color color)
-	(sdl-gfx:draw-line-* (sdl:cast-to-int (* (+ i 1) x-resolution))
-			     (sdl:cast-to-int (* j y-resolution))
-			     (sdl:cast-to-int (* i x-resolution))
-			     (sdl:cast-to-int (* (+ j 1) y-resolution))
-			     :surface surface :color color)))))
+	(sdl-gfx:draw-line (sdl:point :x (sdl:cast-to-int (* i x-resolution))
+                                      :y (sdl:cast-to-int (* j y-resolution)))
+                           (sdl:point :x (sdl:cast-to-int (* (+ i 1) x-resolution))
+                                      :y (sdl:cast-to-int (* (+ j 1) y-resolution)))
+                           :surface surface :color color)
+	(sdl-gfx:draw-line (sdl:point :x (sdl:cast-to-int (* (+ i 1) x-resolution))
+                                      :y (sdl:cast-to-int (* j y-resolution)))
+			   (sdl:point :x (sdl:cast-to-int (* i x-resolution))
+                                      :y (sdl:cast-to-int (* (+ j 1) y-resolution)))
+                           :surface surface :color color)))))
 
 (defun handle-keypress (key)
   (case key
@@ -306,9 +306,9 @@
 							     (+ j (aref offset p1-idx 1))))))
 
 			    ;; Draw Line
-			    (sdl-gfx:draw-line-* iso-p1-x iso-p1-y
-						 iso-p2-x iso-p2-y
-						 :color color :surface surface)
+			    (sdl-gfx:draw-line (sdl:point :x iso-p1-x :y iso-p1-y)
+                                               (sdl:point :x iso-p2-x :y iso-p2-y)
+                                               :color color :surface surface)
 			    (setf (aref square-flag i j) 1)))))))))))
 
 

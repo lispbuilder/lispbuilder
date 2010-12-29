@@ -7,31 +7,135 @@
   (:nicknames #:sdl-gfx)
   (:documentation "The main package of `lispbuilder-gfx-sdl'.")
   (:import-from #:lispbuilder-sdl
-		lispbuilder-sdl:draw-font
-		lispbuilder-sdl:draw-font-at
-		lispbuilder-sdl:draw-font-at-*
-		lispbuilder-sdl:*font-5x7*
-		lispbuilder-sdl:*font-5x8*
-		lispbuilder-sdl:*font-6x9*
-		lispbuilder-sdl:*font-6x10*
-		lispbuilder-sdl:*font-6x12*
-		lispbuilder-sdl:*font-6x13*
-		lispbuilder-sdl:*font-6x13B*
-		lispbuilder-sdl:*font-6x13O*
-		lispbuilder-sdl:*font-7x13*
-		lispbuilder-sdl:*font-7x13B*
-		lispbuilder-sdl:*font-7x13O*
-		lispbuilder-sdl:*font-7x14*
-		lispbuilder-sdl:*font-7x14B*
-		lispbuilder-sdl:*font-8x8*
-		lispbuilder-sdl:*font-8x13*
-		lispbuilder-sdl:*font-8x13B*
-		lispbuilder-sdl:*font-8x13O*
-		lispbuilder-sdl:*font-9x15*
-		lispbuilder-sdl:*font-9x15B*
-		lispbuilder-sdl:*font-9x18*
-		lispbuilder-sdl:*font-9x18B*
-		lispbuilder-sdl:*font-10x20*)
+   #:*font-5x7*
+   #:*font-5x8*
+   #:*font-6x9*
+   #:*font-6x10*
+   #:*font-6x12*
+   #:*font-6x13*
+   #:*font-6x13B*
+   #:*font-6x13O*
+   #:*font-7x13*
+   #:*font-7x13B*
+   #:*font-7x13O*
+   #:*font-7x14*
+   #:*font-7x14B*
+   #:*font-8x8*
+   #:*font-8x13*
+   #:*font-8x13B*
+   #:*font-8x13O*
+   #:*font-9x15*
+   #:*font-9x15B*
+   #:*font-9x18*
+   #:*font-9x18B*
+   #:*font-10x20*
+   #:*gfx-font-8x8*
+   #:*gfx-font-5x7*
+   #:*gfx-font-5x8*
+   #:*gfx-font-6x9*
+   #:*gfx-font-6x10*
+   #:*gfx-font-6x12*
+   #:*gfx-font-6x13*
+   #:*gfx-font-6x13B*
+   #:*gfx-font-6x13O*
+   #:*gfx-font-7x13*
+   #:*gfx-font-7x13B*
+   #:*gfx-font-7x13O*
+   #:*gfx-font-7x14*
+   #:*gfx-font-7x14B*
+   #:*gfx-font-8x13*
+   #:*gfx-font-8x13B*
+   #:*gfx-font-8x13O*
+   #:*gfx-font-9x15*
+   #:*gfx-font-9x15B*
+   #:*gfx-font-9x18*
+   #:*gfx-font-9x18B*
+   #:*gfx-font-10x20*
+
+   
+   #:SMOOTHING-OFF
+   #:SMOOTHING-ON
+
+   ;;; sdl-gfx-util.lisp   
+   #:add-vertex
+   #:add-vertex-*
+   #:draw-aa-circle
+   #:draw-aa-ellipse
+   #:draw-aa-line
+   #:draw-aa-polygon
+   #:draw-aa-trigon
+   #:draw-bezier
+   #:draw-box
+   #:draw-box-*
+   #:draw-circle
+   #:draw-circle-*
+   #:draw-curve
+   #:draw-ellipse
+   #:draw-ellipse-*
+   #:draw-filled-Circle
+   #:draw-filled-Circle-*
+   #:draw-filled-Ellipse
+   #:draw-filled-Ellipse-*
+   #:draw-filled-Pie
+   #:draw-filled-Pie-*
+   #:draw-filled-Polygon
+   #:draw-filled-Trigon
+   #:draw-hline
+   #:draw-line
+   #:draw-line-*
+   #:draw-pie
+   #:draw-pie-*
+   #:draw-pixel
+   #:draw-pixel-*
+   #:draw-polygon
+   #:draw-rectangle
+   #:draw-rectangle-*
+   #:roto-zoom-surface
+   #:roto-zoom-Size
+   #:roto-zoom-Size-XY
+   #:roto-zoom-XY
+   #:draw-shape
+   #:draw-trigon
+   #:draw-vline
+   #:draw-vline
+   #:zoom-surface
+   #:zoom-surface-Size
+   #:gfx-Primitives-Set-Font
+   #:t-Color-RGBA
+   #:t-Color-Y
+   #:with-bezier
+   #:with-curve
+   #:with-shape
+   #:draw-arc
+   #:draw-arc-*
+
+
+   #:rotate-surface
+   #:rotate-surface-xy
+   #:zoom-surface
+
+   ;;; font.lisp
+   #:font
+   #:initialise-default-font
+   #:initialise-font
+   #:render-string-shaded
+   #:draw-character-shaded
+   #:draw-character-shaded-*
+   #:draw-string-shaded
+   #:draw-string-shaded-*
+   #:render-string-solid
+   #:draw-character-solid
+   #:draw-character-solid-*
+   #:draw-string-solid
+   #:draw-string-solid-*
+   #:set-default-font
+
+   ;;; Exports from lispbuilder-sdl
+   #:draw-font
+   #:draw-font-at
+   #:draw-font-at-*
+
+)
   (:export
 
    ;;; globals.lisp
@@ -149,6 +253,9 @@
    #:with-bezier
    #:with-curve
    #:with-shape
+   #:draw-arc
+   #:draw-arc-*
+
 
    #:rotate-surface
    #:rotate-surface-xy
@@ -170,15 +277,36 @@
    #:draw-string-solid
    #:draw-string-solid-*
    #:set-default-font
-   #:font-width
-   #:font-height
 
    ;;; Exports from lispbuilder-sdl
    #:draw-font
    #:draw-font-at
    #:draw-font-at-*
 
-   ;;; Exports from lispbuilder-sdl-gfx-cffi
+   ;;; Exports from lispbuilder-sdl
+   #:*gfx-font-8x8*
+   #:*gfx-font-5x7*
+   #:*gfx-font-5x8*
+   #:*gfx-font-6x9*
+   #:*gfx-font-6x10*
+   #:*gfx-font-6x12*
+   #:*gfx-font-6x13*
+   #:*gfx-font-6x13B*
+   #:*gfx-font-6x13O*
+   #:*gfx-font-7x13*
+   #:*gfx-font-7x13B*
+   #:*gfx-font-7x13O*
+   #:*gfx-font-7x14*
+   #:*gfx-font-7x14B*
+   #:*gfx-font-8x13*
+   #:*gfx-font-8x13B*
+   #:*gfx-font-8x13O*
+   #:*gfx-font-9x15*
+   #:*gfx-font-9x15B*
+   #:*gfx-font-9x18*
+   #:*gfx-font-9x18B*
+   #:*gfx-font-10x20*
+
    #:*font-8x8*
    #:*font-5x7*
    #:*font-5x8*
@@ -201,5 +329,6 @@
    #:*font-9x18*
    #:*font-9x18B*
    #:*font-10x20*
+
    ))
 

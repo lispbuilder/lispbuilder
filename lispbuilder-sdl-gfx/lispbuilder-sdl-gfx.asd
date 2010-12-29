@@ -23,12 +23,7 @@
   ((:module "sdl-gfx"
 	    :components
 	    ((:file "package")
-	     (:file "globals" :depends-on ("package"))
-	     (:file "util" :depends-on ("package"))
-	     (:file "font" :depends-on ("package" "globals"))
-	     (:file "string-solid" :depends-on ("font"))
-	     (:file "string-shaded" :depends-on ("font"))
-	     (:file "sdl-gfx-util" :depends-on ("package" "util" "globals"))))
+	     (:file "font" :depends-on ("package"))))
    (:module "documentation"
 	    :components
 	    ((:html-file "lispbuilder-sdl-gfx")
