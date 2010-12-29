@@ -6,6 +6,7 @@
 (in-package #:sdl-image-examples) 
 
 (defun image-example ()
+  (sdl:load-library)
   (sdl:with-init ()
     (sdl:window 540 350 :title-caption "Loading images of various formats." :icon-caption "IMAGE-EXAMPLE")
     (setf (sdl:frame-rate) 30)
