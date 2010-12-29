@@ -370,10 +370,10 @@
 
 
 (defcfun ("pixelColor" pixel-Color) :int
-  (dst sdl-cffi::sdl-surface)
-  (x :int16)
-  (y :int16)
-  (color :uint32))
+         (dst sdl-cffi::sdl-surface)
+         (x :int16)
+         (y :int16)
+         (color :uint32))
 
 (defcfun ("pixelRGBA" pixel-RGBA) :int
   (dst sdl-cffi::sdl-surface)

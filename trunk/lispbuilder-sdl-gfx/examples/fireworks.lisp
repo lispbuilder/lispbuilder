@@ -12,7 +12,7 @@
     (let ((world (make-world))
 	  (100-frames-p (every-n-frames 500)))
 
-      (sdl-gfx:initialise-default-font sdl-gfx:*font-5x7*)
+      (sdl-gfx:initialise-default-font sdl-gfx:*gfx-font-5x7*)
       (draw-fps "Calculating FPS....." 10 10 sdl:*default-font* sdl:*default-surface* t)
       
       (sdl:WITH-EVENTS ()
@@ -31,7 +31,7 @@
 
 (defun dim-screen ()
   (sdl-gfx:draw-box-* 0 0 *width* *height* 
-		  :color (sdl:color :r 0 :g 0 :b 0 :a 20)))
+                      :color (sdl:color :r 0 :g 0 :b 0 :a 20)))
 
 (defun random-pos ()
   (vector (random *width*)

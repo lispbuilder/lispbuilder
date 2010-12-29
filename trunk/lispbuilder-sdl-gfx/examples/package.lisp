@@ -5,7 +5,7 @@
 (defpackage #:lispbuilder-sdl-gfx-examples
   (:use #:cl #:cffi)
   (:nicknames #:sdl-gfx-examples)
-  (:export #:inbuilt-font
+  (:export #:inbuilt-fonts
            #:random-circles
            #:setup-and-draw
            #:width-height
