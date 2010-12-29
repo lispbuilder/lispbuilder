@@ -73,12 +73,15 @@ Frees `FONT` when `WITH-FONT` goes out of scope, and sets `\*DEFAULT-FONT\* to `
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_"
-  `(let ((,font (initialise-font ,font-definition)))
+  (let ((body-value (gensym "body-value-")))
+    `(let ((,font (initialise-font ,font-definition))
+           (,body-value nil))
      (with-default-font (,font)
-       ,@body)
+       (setf ,body-value (progn ,@body)))
      (free ,font)
      (when (eq *default-font* ,font)
-       (setf *default-font* nil))))
+       (setf *default-font* nil))
+     ,body-value)))
 
 (defun set-font-style (style &key (font *default-font*))
   "Sets the rendering style `STYLE` of font `FONT`. This will flush the internal cache of previously 

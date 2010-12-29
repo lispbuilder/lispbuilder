@@ -234,11 +234,23 @@ Returns the rectangle `RECTANGLE` as RESULT."
     (when h (setf rect.h (sdl-base:to-int h))))
   rectangle)
 
-(defmethod copy-rectangle ((self rectangle ))
+(defmethod copy-rectangle ((self rectangle))
   (rectangle :x (x self)
              :y (y self)
              :w (width self)
              :h (height self)))
+
+(defmethod copy-rectangle ((self vector))
+  (rectangle :x (aref self 0)
+             :y (aref self 1)
+             :w (aref self 2)
+             :h (aref self 3)))
+
+(defmethod copy-rectangle ((self list))                   
+  (rectangle :x (elt self 0)
+             :y (elt self 1)
+             :w (elt self 2)
+             :h (elt self 3)))
 
 ;; (defmethod color-* ((rectangle rectangle))
 ;;   "Returns the color of the rectangle `RECTANGLE`."

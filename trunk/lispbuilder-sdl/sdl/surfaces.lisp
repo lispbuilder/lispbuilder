@@ -136,25 +136,25 @@ Free using [FREE](#free)."))
            (free ,var))
          ,body-value))))
 
-(defmethod (setf cells) ((num integer) (self surface))
+(defmethod (setf cells) ((num integer) (self sdl-surface))
   (setf (slot-value self 'cells) (make-array num :initial-element (get-rectangle-* self)))
   (setf (cell-index self) 0))
 
-(defmethod (setf cells) ((rects list) (self surface))
+(defmethod (setf cells) ((rects list) (self sdl-surface))
   (setf (slot-value self 'cells) (make-array (length rects) :initial-contents (loop for rect in rects
                                                                                     collect (copy-rectangle rect))))
   (setf (cell-index self) 0))
 
-(defmethod (setf cells) ((rects vector) (self surface))
+(defmethod (setf cells) ((rects vector) (self sdl-surface))
   (setf (slot-value self 'cells) (make-array (length rects) :initial-contents (loop for rect across rects
                                                                                     collect (copy-rectangle rect))))
   (setf (cell-index self) 0))
 
-(defmethod (setf cells) ((rect rectangle) (self surface))
+(defmethod (setf cells) ((rect rectangle) (self sdl-surface))
   (setf (slot-value self 'cells) (make-array 1 :initial-element (copy-rectangle rect)))
   (setf (cell-index self) 0))
 
-(defmethod copy-cells ((self surface) &optional index)
+(defmethod copy-cells ((self sdl-surface) &optional index)
   (copy-cells (cells self) index))
 
 (defmethod copy-cells ((self vector) &optional index)
@@ -166,7 +166,7 @@ Free using [FREE](#free)."))
 (defmethod copy-cells ((self rectangle) &optional index)
   (make-array 1 :initial-element (copy-rectangle self)))
 
-(defmethod reset-cells ((self surface))
+(defmethod reset-cells ((self sdl-surface))
   (setf (slot-value self 'cells) (make-array 1 :initial-element (get-rectangle-* self)))
   (setf (cell-index self) 0))
 

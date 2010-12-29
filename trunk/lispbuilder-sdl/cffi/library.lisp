@@ -44,6 +44,7 @@
 
 (defun load-sdl-library ()
   (cffi:use-foreign-library sdl)
+  (setf *glue-loaded-p* nil)
 
   (when (handler-case (cffi:use-foreign-library sdl-glue)
           (load-foreign-library-error () nil))

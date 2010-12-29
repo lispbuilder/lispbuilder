@@ -46,6 +46,12 @@
 	      ((:file "image-library")
                (:file "sdl-image"))
               :serial t)
+     (:module "sdl-gfx"
+	      :components
+	      ((:file "gfx-library")
+               ;;(:file "sdl-gfx")
+               )
+              :serial t)
      (:module "build"
 	      :components
 	      ((:static-file "sdlswig.i")))))

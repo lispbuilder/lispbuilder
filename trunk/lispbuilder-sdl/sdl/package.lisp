@@ -82,6 +82,7 @@
 
    #:*image-loaded-p*
    #:*glue-loaded-p*
+   #:*gfx-loaded-p*
 
    )
 
@@ -272,10 +273,13 @@
    #:draw-shape
    #:draw-line-*
    #:draw-line
+   #:draw-aa-line
    #:draw-vline
    #:draw-hline
    #:draw-box
    #:draw-box-*
+   #:draw-arc
+   #:draw-arc-*
 
    #:draw-rectangle
    #:draw-rectangle-*
@@ -286,17 +290,21 @@
    #:read-pixel-*
 
    #:draw-circle
+   #:draw-aa-circle
    #:draw-circle-*
    #:draw-filled-circle
    #:draw-filled-circle-*
 
    #:draw-trigon
+   #:draw-aa-trigon
    #:draw-filled-trigon
    
    #:draw-polygon
+   #:draw-aa-polygon
    #:draw-filled-polygon
 
    #:draw-ellipse
+   #:draw-aa-ellipse
    #:draw-ellipse-*
    #:draw-filled-ellipse
    #:draw-filled-ellipse-*
@@ -570,6 +578,29 @@
    #:*font-9x18B*
    #:*font-10x20*
 
+   #:*gfx-font-8x8*
+   #:*gfx-font-5x7*
+   #:*gfx-font-5x8*
+   #:*gfx-font-6x9*
+   #:*gfx-font-6x10*
+   #:*gfx-font-6x12*
+   #:*gfx-font-6x13*
+   #:*gfx-font-6x13B*
+   #:*gfx-font-6x13O*
+   #:*gfx-font-7x13*
+   #:*gfx-font-7x13B*
+   #:*gfx-font-7x13O*
+   #:*gfx-font-7x14*
+   #:*gfx-font-7x14B*
+   #:*gfx-font-8x13*
+   #:*gfx-font-8x13B*
+   #:*gfx-font-8x13O*
+   #:*gfx-font-9x15*
+   #:*gfx-font-9x15B*
+   #:*gfx-font-9x18*
+   #:*gfx-font-9x18B*
+   #:*gfx-font-10x20*
+
    ;; simple-font-data.lisp
    #:*simple-font-4x5*
 
@@ -591,7 +622,15 @@
    #:render-string-blended
    #:draw-string-blended
    #:draw-string-blended-*
-   
+
+   ;; gfx-string-solid.lisp
+   #:draw-character-solid
+   #:draw-character-solid-*
+
+   ;; gfx-string-shaded.lisp
+   #:draw-character-shaded
+   #:draw-character-shaded-*
+
    ;; pixel.lisp
    #:bit-depth
    #:byte-depth
@@ -815,6 +854,8 @@
    
    #:*image-loaded-p*
    #:*glue-loaded-p*
+
+   #:*gfx-loaded-p*
    
    ;; Imports from lispbuilder-sdl-base  
 

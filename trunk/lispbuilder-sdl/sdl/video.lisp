@@ -96,12 +96,18 @@
             *default-display* self)
       (setf *default-display* nil)))
 
+  (setf (slot-value self 'position-rect) (rectangle))
+
+  ;; Set the cells for the display
+  (setf (cells self) 1)
+  (setf (cell-index self) 0)
+
   ;; And set the captions
   (set-caption title-caption icon-caption)
 
   ;; Set the frame rate manager
   (setf *default-fpsmanager* fps)
-  
+
   ;; Prime the input handling code
   (quit-input-util)
   (initialise-input-util)

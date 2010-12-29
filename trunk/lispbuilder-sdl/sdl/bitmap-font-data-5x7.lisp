@@ -1,11 +1,8 @@
 
 (in-package #:lispbuilder-sdl)
 
-(defparameter *font-5x7*
-  (make-instance 'bitmap-font-definition
-   :width 5
-   :height 7
-   :data #(0 168 0 136 0 168 0 0 32 112 248 112 32 0 168 80 168 80 168 80 168 160 224 160
+(defparameter *5x7-font-data*
+  #(0 168 0 136 0 168 0 0 32 112 248 112 32 0 168 80 168 80 168 80 168 160 224 160
 	   112 32 32 0 224 128 248 160 48 32 0 96 128 224 80 96 80 0 128 128 240 32 48 32
 	   0 32 80 32 0 0 0 0 32 32 248 32 32 248 0 192 160 160 160 32 56 0 160 160 120
 	   80 16 16 0 32 32 32 224 0 0 0 0 0 0 224 32 32 32 0 0 0 56 32 32 32 32 32 32 56
@@ -73,6 +70,23 @@
 	   144 96 0 0 96 0 240 0 96 0 0 0 112 176 208 224 0 64 32 144 144 144 112 0 32 64
 	   144 144 144 112 0 96 0 144 144 144 112 0 80 0 144 144 144 112 0 32 64 144 144
 	   80 32 64 0 128 224 144 144 224 128 80 0 144 144 80 32 64))
+
+(defparameter *font-5x7*
+  (make-instance 'bitmap-font-definition
+   :width 5
+   :height 7
+   :data *5x7-font-data*)
+  "Contains the font data for an 5x7 bitmap font.
+
+##### Packages
+
+* Also supported in _LISPBUILDER-SDL-GFX_")
+
+(defparameter *gfx-font-5x7*
+  (make-instance 'gfx-font-definition
+   :width 5
+   :height 7
+   :data *5x7-font-data*)
   "Contains the font data for an 5x7 bitmap font.
 
 ##### Packages
