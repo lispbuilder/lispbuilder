@@ -1458,15 +1458,27 @@ _LISPBUILDER-SDL-GFX_ supports any rotation.
   (if gfx-loaded-p
     (sdl::gfx-draw-aa-line-* (sdl:x p1) (sdl:y p1) (sdl:x p2) (sdl:y p2) :surface surface :color color)))
 
+(defun draw-aa-line-* (x1 y1 x2 y2 &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
+  (if gfx-loaded-p
+    (sdl::gfx-draw-aa-line-* x1 y1 x2 y2 :surface surface :color color)))
+
 (defun draw-aa-circle (p1 r &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
   (check-type p1 sdl:point)
   (if gfx-loaded-p
     (gfx-draw-aa-circle-* (sdl:x p1) (sdl:y p1) r :surface surface :color color)))
 
+(defun draw-aa-circle-* (x y r &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
+  (if gfx-loaded-p
+    (gfx-draw-aa-circle-* x y r :surface surface :color color)))
+
 (defun draw-aa-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
   (check-type p1 sdl:point)
   (if gfx-loaded-p
     (gfx-draw-aa-ellipse-* (sdl:x p1) (sdl:y p1) rx ry :surface surface :color color)))
+
+(defun draw-aa-ellipse-* (x y rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
+  (if gfx-loaded-p
+    (gfx-draw-aa-ellipse-* x y rx ry :surface surface :color color)))
 
 (defun draw-aa-trigon (p1 p2 p3 &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p *gfx-loaded-p*))
   (sdl:check-types sdl:point p1 p2 p3)

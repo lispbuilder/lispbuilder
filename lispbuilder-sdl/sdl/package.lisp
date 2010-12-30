@@ -274,6 +274,7 @@
    #:draw-line-*
    #:draw-line
    #:draw-aa-line
+   #:draw-aa-line-*
    #:draw-vline
    #:draw-hline
    #:draw-box
@@ -292,6 +293,7 @@
    #:draw-circle
    #:draw-aa-circle
    #:draw-circle-*
+   #:draw-aa-circle-*
    #:draw-filled-circle
    #:draw-filled-circle-*
 
@@ -301,6 +303,7 @@
    
    #:draw-polygon
    #:draw-aa-polygon
+   #:draw-aa-polygon-*
    #:draw-filled-polygon
 
    #:draw-ellipse
