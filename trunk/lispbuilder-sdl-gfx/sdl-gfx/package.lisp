@@ -60,8 +60,11 @@
    #:add-vertex
    #:add-vertex-*
    #:draw-aa-circle
+   #:draw-aa-circle-*
    #:draw-aa-ellipse
+   #:draw-aa-ellipse-*
    #:draw-aa-line
+   #:draw-aa-line-*
    #:draw-aa-polygon
    #:draw-aa-trigon
    #:draw-bezier
