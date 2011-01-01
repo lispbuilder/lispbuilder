@@ -62,3 +62,21 @@
   (if path
     (namestring (merge-pathnames filename path))
     filename))
+
+
+(defun within-range (p1 p2 distance)
+  "Returns true `T`, if the distance between the `POINT`s `P1` `P2` is <= the distance `DISTANCE`."
+  (>= distance (distance p1 p2)))
+
+(defun within-range-* (x1 y1 x2 y2 distance)
+  "Returns true `T`, if the distance between the coordinates `X1`, `Y1` and `X2`, `Y2` is <= the distance `DISTANCE`."
+  (>= distance (distance-* x1 y1 x2 y2)))
+
+(defun distance (p1 p2)
+  "Returns the distance between the `POINT`s `P1` and `P2`."
+  (distance-* (x p1) (y p1) (x p2) (y p2)))
+
+(defun distance-* (x1 y1 x2 y2)
+  "Returns the distance between the coordinates `X1`, `Y1` and `X2`, `Y2`."
+  (sqrt (+ (expt (- x1 x2) 2) 
+	   (expt (- y1 y2) 2))))

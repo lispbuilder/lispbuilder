@@ -1096,12 +1096,12 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 * `:AA` ignored in _LISPBUILDER-SDL_"
   (declare (ignore aa))
   (check-types point p1 p2 p3)
-   (unless surface
+  (check-type color color)
+  (unless surface
     (setf surface *default-display*))
- (check-type color color)
- (_draw-line-*_ p1 p2 :surface surface :color color :clipping clipping)
- (_draw-line-*_ p2 p3 :surface surface :color color :clipping clipping)
- (_draw-line-*_ p3 p1 :surface surface :color color :clipping clipping))
+  (_draw-line-*_ (x p1) (y p1) (x p2) (y p2) :surface surface :color color :clipping clipping)
+  (_draw-line-*_ (x p2) (y p2) (x p3) (y p3) :surface surface :color color :clipping clipping)
+  (_draw-line-*_ (x p3) (y p3) (x p1) (y p1) :surface surface :color color :clipping clipping))
 
 (defun draw-filled-trigon (p1 p2 p3 &key (surface *default-surface*) (color *default-color*) (clipping t) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "Draw a filled trigon of [COLOR](#color) to the [SURFACE](#surface)
@@ -1443,13 +1443,13 @@ _LISPBUILDER-SDL-GFX_ supports any rotation.
 					 y)))))
  	    (declare (type fixnum w h))
 	    (with-pixels ((src (fp src))
-				    (dst (fp dst)))
+			  (dst (fp dst)))
 	      (loop :for x :from 0 :to (1- w)
 		 :do (loop :for y :from 0 :to (1- h)
 			:do (write-pixel dst
-						   (funcall new-x x y)
-						   (funcall new-y x y)
-						   (read-pixel src x y))))))
+					 (funcall new-x x y)
+					 (funcall new-y x y)
+					 (read-pixel src x y))))))
 	  dst))))
 
 

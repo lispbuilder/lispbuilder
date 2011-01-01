@@ -164,6 +164,7 @@ Free using [FREE](#free)."))
                                                       collect (copy-rectangle cell)))))
 
 (defmethod copy-cells ((self rectangle) &optional index)
+  (declare (ignorable index))
   (make-array 1 :initial-element (copy-rectangle self)))
 
 (defmethod reset-cells ((self sdl-surface))
