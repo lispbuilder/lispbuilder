@@ -241,7 +241,7 @@
 
 (defmethod load-image ((filename pathname) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the file at location `PATHNAME`."
-  (declare (ignore image-type force free-rwops))
+  (declare (ignore free-rwops))
   (load-image (namestring filename)
               :color-key color-key
               :alpha alpha
