@@ -12,7 +12,7 @@
     and provides Graphic Primitives, Rotozoomimg, Framerate control, and 
     MMX image filters. The wrapper is implemeted using CFFI to be highly 
     compatible across lisp implementations."
-  :version "0.7.0"
+  :version "0.8.0"
   :author "Luke Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>"
   :licence "MIT"
