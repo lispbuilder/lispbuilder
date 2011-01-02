@@ -9,7 +9,7 @@
   :description "lispbuilder-sdl-image: SDL_image 1.2.10 library wrapper and tools"
   :long-description
   "lispbuilder-sdl-image is a wrapper for the SDL_image 1.2.10 library."
-  :version "0.5.0"
+  :version "0.6.0"
   :author "Luke Crook <luke@balooga.com>"
   :maintainer "Application Builder <application-builder@lispniks.com>"
   :licence "MIT"
