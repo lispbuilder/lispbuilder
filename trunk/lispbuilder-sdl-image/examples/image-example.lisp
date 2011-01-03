@@ -39,6 +39,7 @@
                    (sdl:draw-string-solid-* "TGA" 0 0 :color sdl:*yellow*
                                             :surface (sdl-image:load-image (merge-pathnames "lisp.tga" *bmp-path*)
                                                                            :image-type :TGA ; TGA must be specified
+									   :force t ; And loaded by force
                                                                            :color-key-at #(0 0)))
                    ;; SDL_Image 1.2.8 and later allow testing
                    ;; for png/jpg/tif support prior to loading the image.
@@ -53,7 +54,8 @@
                    (when (sdl-image:image-init-p :jpg)
                      (sdl:draw-string-solid-* "JPG" 0 0 :color sdl:*yellow*
                                               :surface (sdl-image:load-image (merge-pathnames "lisp.jpg" *bmp-path*)
-                                                                             :color-key-at #(0 0)))))))
+                                                                             :color-key-at #(0 0))))
+		   )))
       (loop for image in (remove nil images)
             for i from 0
             for (y x) = (multiple-value-list (floor i 4))
