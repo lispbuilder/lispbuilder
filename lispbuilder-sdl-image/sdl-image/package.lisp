@@ -16,13 +16,16 @@
   (:use #:cl #:cffi)
   (:nicknames #:sdl-image)
   (:documentation "The methods defined here extend any methods already defined in `lispbuilder-sdl'.")
-  ;; (:import-from #:lispbuilder-sdl
-;; 		lispbuilder-sdl:image-p
-;; 		lispbuilder-sdl:image-type-of
-;; 		lispbuilder-sdl:load-and-convert-image
-;; 		lispbuilder-sdl:load-image)
+  (:import-from #:lispbuilder-sdl
+		#:init-image
+		#:image-init-p
+		#:quit-image
+		#:image-p
+		#:image-type-of
+		#:load-image
+		#:load-and-convert-image
+		#:image-library-version)
   (:export
-   ;; sdl-image-util.lisp
    #:init-image
    #:image-init-p
    #:quit-image
@@ -30,8 +33,7 @@
    #:image-type-of
    #:load-image
    #:load-and-convert-image
-
    #:image-library-version
-   #:image-glue-version
 
+   ;; sdl-image-util.lisp
    #:load-library))
