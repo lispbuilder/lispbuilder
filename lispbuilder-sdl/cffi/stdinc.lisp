@@ -18,14 +18,16 @@
 
 ;; extern DECLSPEC char * SDLCALL SDL_getenv(const char *name);
 (defun sdl-get-env (string)
-  (when (cffi:foreign-symbol-pointer "getenv")
-    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "getenv") () :string string :pointer))
-  (when (cffi:foreign-symbol-pointer "SDL_getenv" :library 'sdl)
-    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_getenv") () :string string :pointer)))
+  (cond
+    ((cffi:foreign-symbol-pointer "SDL_getenv" :library 'sdl)
+     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_getenv") () :string string :pointer))
+    ((cffi:foreign-symbol-pointer "getenv")
+     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "getenv") () :string string :pointer))))
 
 ;; extern DECLSPEC int SDLCALL SDL_putenv(const char *variable);
 (defun sdl-put-env (string)
-  (when (cffi:foreign-symbol-pointer "putenv")
-    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "putenv") () :string string :int))
-  (when (cffi:foreign-symbol-pointer "SDL_putenv" :library 'sdl)
-    (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_putenv") () :string string :int)))
+  (cond
+    ((cffi:foreign-symbol-pointer "SDL_putenv" :library 'sdl)
+     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_putenv") () :string string :int))
+    ((cffi:foreign-symbol-pointer "putenv")
+     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "putenv") () :string string :int))))
