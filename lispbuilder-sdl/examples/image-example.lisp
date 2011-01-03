@@ -19,10 +19,11 @@
                                       (when supported?
                                         (sdl:draw-string-solid-* format 0 0 :color sdl:*yellow*
                                                                  :surface (sdl:load-image supported? :color-key-at #(0 0))))))))
-      ;;(sdl:draw-string-solid-* "TGA" 0 0 :color sdl:*yellow*
-      ;;                           :surface (sdl:load-image (merge-pathnames "lisp.tga" *bmp-path*)
-      ;;                                                    :image-type :TGA ; TGA must be specified
-      ;;                                                    :color-key-at #(0 0)))
+      (sdl:draw-string-solid-* "TGA" 0 0 :color sdl:*yellow*
+                                 :surface (sdl:load-image (merge-pathnames "lisp.tga" sdl:*default-asset-path*)
+                                                          :image-type :TGA ; TGA must be specified
+							  :force t
+                                                          :color-key-at #(0 0)))
       (loop for image in (remove nil images)
             for i from 0
             for (y x) = (multiple-value-list (floor i 4))

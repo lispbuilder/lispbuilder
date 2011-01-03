@@ -414,6 +414,8 @@
    #:image-supported-p
    #:load-image
    #:save-image
+   #:load-and-convert-image
+   #:image-library-version
 
    ;; point.lisp
    #:with-point
