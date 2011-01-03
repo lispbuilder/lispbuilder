@@ -1349,59 +1349,19 @@ And thanks to the wonders of Lisp indentation we are able to visualize the color
 
 The LISPBUILDER-SDL core functionality can be extended by using one or more of the following packages;
 
-  * LISPBUILDER-SDL will support additional image formats such as PNG and JPG, using [http://www.libsdl.org/projects/SDL_image/ SDL_image] when installed.
-  * *lispbuilder-sdl-gfx*: 2D graphical effects such as zooming, rotation, circles, polygons and squares, using [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]
+  * LISPBUILDER-SDL will support additional image formats such as PNG and JPG, using [http://www.libsdl.org/projects/SDL_image/ SDL_image] when the SDL_image binary is detected.
+  * LISPBUILDER-SDL will automatically call functions from  [http://www.ferzkopp.net/joomla/content/view/19/14/ SDL_gfx] when the SDL_gfx binary is detected.
   * *lispbuilder-sdl-mixer*: Sound mixing, using [http://www.libsdl.org/projects/SDL_mixer/ SDL_mixer] a multi-channel audio mixer library
   * *lispbuilder-sdl-ttf*: True-type font rendering, using [http://www.libsdl.org/projects/SDL_ttf/ SDL_ttf]
   * *lispbuilder-sdl-net*: Networking, using [http://www.libsdl.org/projects/SDL_net/ SDL_net] a cross-platform, blocking network library.
 
-== LISPBUILDER-SDL-GFX ==
+== SDL_gfx ==
 
-=== Overview ===
+SDL_gfx is a native C library with support for many graphics primitives graphics. 
 
-`LISPBUILDER-SDL-GFX` provides support for the rendering of several graphics primitives directly to SDL surfaces via a native library. 
+See [http://www.ferzkopp.net/joomla/content/view/19/14/ SDL_gfx] for download & installation instructions. 
 
-Functions and symbols exported from the LISPBUILDER-SDL-GFX package are accessible using the LISPBUILDER-SDL-GFX: prefix or the shorter form SDL-GFX: nickname. 
-
-=== Loading LISPBUILDER-SDL-GFX ===
-
-After [http://code.google.com/p/lispbuilder/wiki/DownloadInstallation#lispbuilder-sdl-gfx installation] is complete, `LISPBUILDER-SDL-GFX` can be loaded by entering the following at the `REPL`;
-
-{{{
-(ASDF:OPERATE 'ASDF:LOAD-OP :LISPBUILDER-SDL-GFX)
-}}}
-
-=== Loading LISPBUILDER-SDL-GFX Examples ===
-
-Enter the following at the REPL to load the examples in the `LISPBUILDER-SDL-GFX-EXAMPLES package`;
-
-{{{
-(asdf:operate 'asdf:load-op :lispbuilder-sdl-gfx-examples)
-}}}
-	
-
-The following examples are contained in the package `LISPBUILDER-SDL-GFX-EXAMPLES`: 
-
-{{{
-(SDL-GFX-EXAMPLES:RECURSION)
-(SDL-GFX-EXAMPLES:METABALLS)
-(SDL-GFX-EXAMPLES:POINTS-AND-LINES)
-(SDL-GFX-EXAMPLES:FUNCTIONS)
-(SDL-GFX-EXAMPLES:WIDTH-HEIGHT)
-(SDL-GFX-EXAMPLES:INBUILT-FONT)
-(SDL-GFX-EXAMPLES:BEZIER)
-(SDL-GFX-EXAMPLES:VERTICES)
-(SDL-GFX-EXAMPLES:SHAPE-PRIMITIVES)
-(SDL-GFX-EXAMPLES:SETUP-AND-DRAW)
-(SDL-GFX-EXAMPLES:DISTANCE-2D)
-(SDL-GFX-EXAMPLES:RANDOM-CIRCLES)
-(SDL-GFX-EXAMPLES:OBJECTS)
-}}}
-
-=== Using LISPBUILDER-SDL-GFX ===
-
-The `LISPBUILDER-SDL-GFX` APIs have the same signature as the `LISPBUILDER-SDL` versions. See the [http://lispbuilder.googlecode.com/svn/trunk/documentation/lispbuilder-sdl.html#contents LISPBUILDER-SDL API Reference] for the APIs supported by `LISPBUILDER-SDL-GFX`.
-
+Alternatively for win32 users, these libraries are included in the `LISPBUILDER-SDL` [http://code.google.com/p/lispbuilder/wiki/WindowsSBCL#Install_LISPBUILDER-SDL_and_Binaries binary distribution].
 
 == SDL_image ==
 
@@ -1534,12 +1494,12 @@ The following table described the font capabilities of `LISPBUILDER-SDL`;
 
 || *Package* || *"Simple" Fonts* || *Bitmap Fonts* || *Truetype Fonts* || 
 || `LISPBUILDER-SDL` || Yes || Yes || Yes, using `VECTO` ||
-|| `LISPBUILDER-SDL-GFX` || - || Yes || - ||
+|| `SDL_gfx` || - || Yes || - ||
 || `LISPBUILDER-SDL-TTF` || - || - || Yes ||
 
-Shown above, `LISPBUILDER-SDL` is able to both render bitmap and Truetype fonts. The advantage when using only `LISPBUILDER-SDL` and optionally `VECTO` is that additional external foreign libraries are not needed. The advantage when `LISPBUILDER-SDL-GFX` and `LISPBUILDER-SDL-TTF` is speed.
+Shown above, `LISPBUILDER-SDL` is able to both render bitmap and Truetype fonts. The advantage when using only `LISPBUILDER-SDL` and optionally `VECTO` is that additional external foreign libraries are not needed. The advantage when SDL_gfx is detected or `LISPBUILDER-SDL-TTF` is used is speed.
 
-`LISPBUILDER-SDL`, `LISPBUILDER-SDL-GFX` and `LISPBUILDER-SDL-TTF` use the same text and font API function calls. `VECTO` uses its own API as described [http://www.xach.com/lisp/vecto/#sect-text here].
+`LISPBUILDER-SDL` and `LISPBUILDER-SDL-TTF` use the same text and font API function calls. `VECTO` uses its own API as described [http://www.xach.com/lisp/vecto/#sect-text here].
 
 == Fonts ==
 
