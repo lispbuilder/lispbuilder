@@ -115,13 +115,13 @@ If that all works you can now try an example:
 
 = Download and Installation of the Optional Packages = 
 
-== lispbuilder-sdl-gfx ==
+== SDL_gfx ==
 
-[http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx] must be installed in order for LISPBUILDER-SDL-GFX work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]. Linux users should use their package managers to install the RPM's or DEBs.
+Many drawing functions can be sped up if SDL_gfx is installed [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]. Windows/Mac users should download and install the binaries from [http://www.ferzkopp.net/Software/SDL_gfx-2.0/ SDL_gfx]. Linux users should use their package managers to install the RPM's or DEBs.
 
-== lispbuilder-sdl-image ==
+== SDL_image ==
 
-[http://www.libsdl.org/projects/SDL_image/ SDL_image] must be installed in order for LISPBUILDER-SDL-IMAGE work. Windows users can use Edi Weitz's Lisp Starter Pack to install this library. Otherwise, Windows/Mac users should download and install the binaries from [http://www.libsdl.org/projects/SDL_image/ SDL_image]. Linux users should use their package managers to install the RPM's or DEBs.
+[http://www.libsdl.org/projects/SDL_image/ SDL_image] when installed will add support for many more image formats to LISPBUILDER-SDL than just BMP. Windows/Mac users should download and install the binaries from [http://www.libsdl.org/projects/SDL_image/ SDL_image]. Linux users should use their package managers to install the RPM's or DEBs.
 
 == lispbuilder-sdl-mixer ==
 
