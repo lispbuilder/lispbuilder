@@ -52,6 +52,19 @@
    "This object is garbage collected and the `SDL_Surface` object freed when out of scope.
 Free using [FREE](#free)."))
 
+(defclass pinned-surface (surface)
+  ((pinned-vector
+    :accessor pinned-vector
+    :initform nil
+    :initarg :pinned-vector))
+  (:default-initargs
+   :display-surface-p nil
+    :gc t
+    :free (simple-free 'sdl-cffi::sdl-free-surface 'surface))
+  (:documentation
+   "This object is garbage collected and the `SDL_Surface` object freed when out of scope.
+Free using [FREE](#free)."))
+
 (defclass rectangle-array ()
   ((foreign-pointer-to-rectangle :accessor fp :initform nil :initarg :rectangle)
    (length :reader len :initform nil :initarg :length)))
