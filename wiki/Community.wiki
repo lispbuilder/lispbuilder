@@ -4,7 +4,7 @@
 
 = Mailing List =
 
-Send support questions to the [http://www.lispniks.com/mailman/listinfo/application-builder LISPBUILDER mailing list].
+Send support questions to the [http://groups.google.com/group/lispbuilder LISPBUILDER mailing list].
 
 = Wiki =
 
