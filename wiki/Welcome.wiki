@@ -39,9 +39,7 @@ The installation instructions for each package are as follows;
 
 [http://groups.google.com/group/lispbuilder http://groups.google.com/intl/en/images/logos/groups_logo_sm.gif]
 
-*Lispbuilder*
-
-[http://groups.google.com/group/lispbuilder Visit this group]
+*Lispbuilder:* [http://groups.google.com/group/lispbuilder Visit this group]
 
 = References & Links =
 
