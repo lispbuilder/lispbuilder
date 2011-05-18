@@ -44,5 +44,3 @@ The installation instructions for each package are as follows;
 = References & Links =
 
   * [http://wiki.alu.org/Application_Builder/ The Application Builder page] on the ALU's (Association of Lisp Users) wiki.
-  * [http://www.lispniks.com/mailman/listinfo/application-builder LISPBUILER mailing list].
-  * [http://wiki.alu.org/Gardeners_Projects Common Lisp Gardeners]
