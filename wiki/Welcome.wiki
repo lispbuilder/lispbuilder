@@ -37,7 +37,19 @@ The installation instructions for each package are as follows;
 
 = Support =
 
-Send support questions to the [http://www.lispniks.com/mailman/listinfo/application-builder LISPBUILDER mailing list].
+<table style="background-color: #fff; padding: 5px;" cellspacing=0>
+  <tr><td>
+  <img src="http://groups.google.com/intl/en/images/logos/groups_logo_sm.gif"
+         height=30 width=140 alt="Google Groups">
+  </td></tr>
+  <tr><td style="padding-left: 5px;font-size: 125%">
+  <b>Lispbuilder</b>
+  </td></tr>
+  <tr><td style="padding-left: 5px">
+  <a href="http://groups.google.com/group/lispbuilder">Visit this group</a>
+  </td></tr>
+</table>
+
 
 = References & Links =
 
