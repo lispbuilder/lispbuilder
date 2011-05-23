@@ -222,7 +222,7 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
       surf)))
 
 (defun create-surface (width height
-		       &key (bpp 32) surface (type :sw) enable-color-key pixel-alpha enable-alpha rle-accel pixels pitch)
+		       &key (bpp 32) surface (type :sw) enable-color-key pixel-alpha enable-alpha rle-accel pixels pitch mask)
   "create a surface compatible with the supplied :surface, if provided."
   (let ((surf nil) (flags nil))
     (when enable-color-key
@@ -247,25 +247,34 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
                                                      sdl-cffi::BitsPerPixel
                                                      sdl-cffi::Rmask sdl-cffi::Gmask sdl-cffi::Bmask sdl-cffi::Amask)))
 	(let ((Rmask 0) (Gmask 0) (Bmask 0) (Amask 0))
-          ;; Set masks according to endianess of machine
-	  ;; Little-endian (X86)
-	  #+(or X86 PC386 little-endian)
-	  (progn
-	    (setf rmask #x000000ff
-		  gmask #x0000ff00
-		  bmask #x00ff0000)
-	    (when pixel-alpha
-	      (setf amask #xff000000)))
-	  ;; Big-endian (Motorola)
-	  #-(or X86 PC386 little-endian)
-	  (progn
-	    (setf rmask #xff000000
-		  gmask #x00ff0000
-		  bmask #x0000ff00)
-	    (when pixel-alpha
-	      (setf amask #x000000ff)))
-	  (if (and pixels pitch)
-	      ;; Pixels not yet supported.
+          ;; Set masks if custom mask is specified.
+          (if mask
+            (progn
+              (format t "Setting mask%")
+              (setf rmask (elt mask 0)
+                    gmask (elt mask 1)
+                    bmask (elt mask 2)
+                    amask (elt mask 3)))
+            ;; Otherwise according to endianess of machine
+            (progn
+              ;; Little-endian (X86)
+              #+(or X86 PC386 little-endian)
+              (progn
+                (setf rmask #x000000ff
+                      gmask #x0000ff00
+                      bmask #x00ff0000)
+                (when pixel-alpha
+                  (setf amask #xff000000)))
+              ;; Big-endian (Motorola)
+              #-(or X86 PC386 little-endian)
+              (progn
+                (setf rmask #xff000000
+                      gmask #x00ff0000
+                      bmask #x0000ff00)
+                (when pixel-alpha
+                  (setf amask #x000000ff)))))
+            (if (and pixels pitch)
+              ;; Pixels not yet supported.
 	      nil
 	      (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
 							   width height

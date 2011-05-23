@@ -82,6 +82,7 @@ Free using [FREE](#free)."))
 				       rle-accel
                                        (cells 1)
                                        (cell-index 0)
+                                       mask
 				       &allow-other-keys)
   ;; A surface can be created any of four ways:
   ;; 1) Using SDL_Surface in :SURFACE only. No surface parameters may be set.
@@ -100,7 +101,8 @@ Free using [FREE](#free)."))
 				      :pixel-alpha pixel-alpha
 				      :enable-alpha enable-alpha
 				      :type type
-				      :rle-accel rle-accel))
+				      :rle-accel rle-accel
+                                      :mask mask))
       ;; Takes care of (3)
       (if using-surface
 	  (setf (slot-value surface 'foreign-pointer-to-object)
@@ -552,7 +554,7 @@ of transparent pixels (i.e., pixels that match the key color)."
   rectangle)
 
 (defun create-surface (width height
-		       &key (bpp 32) (type :sw) color-key color-key-at pixel-alpha alpha (rle-accel t) (x 0) (y 0))
+		       &key (bpp 32) (type :sw) color-key color-key-at pixel-alpha alpha (rle-accel t) (x 0) (y 0) mask)
   "Creates and returns a new `SURFACE` with the dimensions `WIDTH` and `HEIGHT`.
 
 `:COLOR-KEY` sets the color key of the surface and enables color-keying. 
@@ -580,7 +582,8 @@ of transparent pixels (i.e., pixels that match the key color)."
 		 :alpha alpha
 		 :type type
 		 :rle-accel rle-accel
-		 :bpp bpp))
+		 :bpp bpp
+                 :mask mask))
 
 (defun convert-to-display-format (&key (surface *default-surface*) enable-alpha enable-color-key pixel-alpha (free nil) (inherit t))
   "Returns a new surface matching the pixel format and color of the video frame buffer \(`*display surface*\), 
