@@ -232,16 +232,15 @@
 (defmethod load-image ((filename string) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the file at location `FILENAME`."
   (declare (ignore free-rwops))
-  (let ((file (namestring filename)))
-    (if (and (stringp file) (probe-file file))
-      (load-image (create-RWops-from-file file)
-                  :color-key color-key
-                  :color-key-at color-key-at
-                  :alpha alpha
-                  :free-rwops t
-		  :image-type image-type
-		  :force force)
-      (error "File ~A does not exist." file))))
+  (if (probe-file filename)
+    (load-image (create-RWops-from-file (namestring (probe-file filename)))
+                :color-key color-key
+                :color-key-at color-key-at
+                :alpha alpha
+                :free-rwops t
+                :image-type image-type
+                :force force)
+    (error "File ~A does not exist." filename)))
 
 (defmethod load-image ((filename pathname) &key color-key alpha image-type force free-rwops (color-key-at nil))
   "Returns a new `SURFACE` from the file at location `PATHNAME`."
