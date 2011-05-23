@@ -433,7 +433,6 @@ When `FADE` is `NIL` or `0` the fade effect is immediate. Default is `NIL`.
 	(version nil))
     (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) sdl-version sdl-cffi::sdl-version)
       (setf version (vector sdl-cffi::major sdl-cffi::minor sdl-cffi::patch)))
-    (cffi:foreign-free sdl-version)
     version))
 
 (defun query-spec ()
