@@ -9,7 +9,7 @@
 || Allegro || Yes || Yes || Yes || ?? || ||
 || CMUCL || NA || Yes || ?? || ?? || ||
 || CLISP || Yes || Yes || Yes || Yes || ||
-|| Clozure CL || Yes || Yes || Yes * || ?? || * CCL on OS X requires [http://common-lisp.net/project/qitab/ a single-threaded build] in order to avoid thread safety issues with Cocoa. ||
+|| Clozure CL || Yes || Yes || Yes`*` || ?? || `*`CCL on OS X requires [http://common-lisp.net/project/qitab/ a single-threaded build] in order to avoid thread safety issues with Cocoa. ||
 || ECL || Yes || Yes || No || ?? || ECL (CVS as of 2009-08-14) compiles on MinGW. ECL on OS X breaks in cocoahelper. ||
 
 = Download & Installation for Windows =
