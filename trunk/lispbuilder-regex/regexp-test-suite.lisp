@@ -2,7 +2,7 @@
 ;; FILE
 ;; Name             : regexp-test-suite.cl
 ;; Date             : 2002-03-01
-;; Author           : Sébastien SAINT-SEVIN
+;; Author           : SÃ©bastien SAINT-SEVIN
 ;; Purpose          : testing module for regular expressions
 ;;
 ;; Modified by KMP to run under both rightmost and leftmost matches.
@@ -43,7 +43,7 @@
       ;;     (modified to use new syntax)
       ;; -------------------------------------------------------
       ;; All have been slightly modified to follow the syntax
-      ;; I use in this module - Sébastien Saint-Sevin, 2002
+      ;; I use in this module - SÃ©bastien Saint-Sevin, 2002
       ;; -------------------------------------------------------
 
       ("a*a*"           "aaaaaa"        t t       ("aaaaaa"))
@@ -406,7 +406,7 @@
       ;; *******************************************************
       ;; the tests that follows are from:
       ;; -------------------------------------------------------
-      ;; Sébastien Saint-Sevin, 2002
+      ;; SÃ©bastien Saint-Sevin, 2002
       ;; -------------------------------------------------------
 
       ;; some basics
