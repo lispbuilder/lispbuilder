@@ -76,7 +76,7 @@
   ;;                              )
   ;;  (error 'set-opengl-context-error :self (pipe self)))
 
-  ;; 5. Make the RMpipe “current” using rmPipeMakeCurrent.
+  ;; 5. Make the RMpipe current using rmPipeMakeCurrent.
   (pipe-make-current (pipe self))
   
   (when scene
