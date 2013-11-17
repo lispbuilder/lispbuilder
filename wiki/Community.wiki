@@ -16,7 +16,7 @@ From time to time, project members are available on the IRC-channel, #lisp.
 
 = Bugs and Features =
 
-Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system] to report bugs and request features. There is also an [https://groups.google.com/d/forum/lispbuilder-issues announce-only mailing list] for tracking issues.
+Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system] to report bugs and request features. There is also an [https://groups.google.com/d/forum/lispbuilder-issues read-only mailing list] for tracking issues.
 
 = Projects using LISPBUILDER-SDL =
 
