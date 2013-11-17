@@ -2,9 +2,13 @@
 #sidebar TableOfContentsSDL
 
 
-= Mailing List =
+= Mailing Lists =
 
-Send support questions to the [http://groups.google.com/group/lispbuilder LISPBUILDER mailing list].
+There are two mailing lists:
+
+  * [http://groups.google.com/group/lispbuilder General discussion mailing list] for inquiries, feature requests, bug reports, and miscellaneous discussion. Recommended for users and developers.
+
+  * [https://groups.google.com/d/forum/lispbuilder-commits Tracker mailing list] for tracking commits and issues. Recommended for developers.
 
 = Wiki =
 
@@ -12,11 +16,11 @@ You are [http://code.google.com/p/lispbuilder/wiki/LispbuilderSDL reading it]. N
 
 = Chat =
 
-From time to time, project members are available on the IRC-channel, #lisp. 
+From time to time, project members and other Lisp community members are available on the IRC channel #lisp.
 
 = Bugs and Features =
 
-Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system] to report bugs and request features. There is also a [https://groups.google.com/d/forum/lispbuilder-issues read-only mailing list] for tracking issues.
+Use the [http://code.google.com/p/lispbuilder/issues/list issue tracking system] to report bugs and request features. Feel free to discuss issues on the mailing list before posting, if you have any questions.
 
 = Projects using LISPBUILDER-SDL =
 
