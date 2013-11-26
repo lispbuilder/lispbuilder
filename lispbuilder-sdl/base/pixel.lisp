@@ -56,9 +56,9 @@
        (with-locked-surface (,surface-fp)
 	 (let* ((,pixel-def (make-pixels :fp-reader (generate-read-pixel ,surface-fp)
 					 :fp-writer (generate-write-pixel ,surface-fp)
-					 :fp-data (foreign-slot-value ,surface-fp 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels)
-					 :bpp (foreign-slot-value (pixel-format ,surface-fp) 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel)
-					 :pitch (foreign-slot-value ,surface-fp 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch)))
+					 :fp-data (foreign-slot-value ,surface-fp '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pixels)
+					 :bpp (foreign-slot-value (pixel-format ,surface-fp) '(:struct sdl-cffi::SDL-Pixel-Format) 'sdl-cffi::BytesPerPixel)
+					 :pitch (foreign-slot-value ,surface-fp '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pitch)))
 		(,var ,pixel-def))
 	   (labels ((write-pixel (pixels x y color)
 		      (funcall (pixels-fp-writer pixels) x y color))
@@ -82,9 +82,9 @@
 
 (defun generate-write-pixel (surface)
   (let* ((format (pixel-format surface))
-	 (bpp (foreign-slot-value format 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel))
-	 (pixel-address (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels))
-	 (pitch (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch)))
+	 (bpp (foreign-slot-value format '(:struct sdl-cffi::SDL-Pixel-Format) 'sdl-cffi::BytesPerPixel))
+	 (pixel-address (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pixels))
+	 (pitch (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pitch)))
     (declare (type fixnum bpp pitch))
     (labels ((offset (x y)
 	       (declare (type fixnum x y))
@@ -119,9 +119,9 @@
 
 (defun generate-read-pixel (surface)
   (let* ((format (pixel-format surface))
-	 (bpp (foreign-slot-value format 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel))
-	 (pixel-address (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels))
-	 (pitch (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch)))
+	 (bpp (foreign-slot-value format '(:struct sdl-cffi::SDL-Pixel-Format) 'sdl-cffi::BytesPerPixel))
+	 (pixel-address (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pixels))
+	 (pitch (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pitch)))
     (labels ((offset (x y)
 	       (declare (type fixnum x y))
 	       (+ (the fixnum (* x bpp))
@@ -167,11 +167,11 @@
   "Set the pixel at (x, y) to the given value 
    NOTE: The surface must be locked before calling this.
    Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
-  (let* ((format (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::format))
-	 (bpp (foreign-slot-value format 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel))
-	 (offset (+ (* y (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch))
+  (let* ((format (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::format))
+	 (bpp (foreign-slot-value format '(:struct sdl-cffi::SDL-Pixel-Format) 'sdl-cffi::BytesPerPixel))
+	 (offset (+ (* y (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pitch))
 		    (* x bpp)))
-	 (pixel-address (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels)))
+	 (pixel-address (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pixels)))
     (cond
       ((= bpp 1) 
        (setf (mem-aref pixel-address :unsigned-char offset) color))
@@ -195,10 +195,10 @@
    NOTE: The surface must be locked before calling this.
    Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
   (let* ((format (pixel-format surface))
-	 (bpp (foreign-slot-value format 'sdl-cffi::SDL-Pixel-Format 'sdl-cffi::BytesPerPixel))
-	 (offset (+ (* y (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pitch))
+	 (bpp (foreign-slot-value format '(:struct sdl-cffi::SDL-Pixel-Format) 'sdl-cffi::BytesPerPixel))
+	 (offset (+ (* y (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pitch))
 		    (* x bpp)))
-	 (pixel-address (foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::Pixels)))
+	 (pixel-address (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pixels)))
     (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char) (a :unsigned-char))
       (sdl-cffi::SDL-Get-RGBA (cond
 				((= bpp 1) 

@@ -89,7 +89,7 @@
 
 
 (defun get-event-type (sdl-event)
-  (cffi:foreign-enum-keyword 'sdl-cffi::Event-Type (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)))
+  (cffi:foreign-enum-keyword 'sdl-cffi::Event-Type (cffi:foreign-slot-value sdl-event '(:union sdl-cffi::sdl-event) 'sdl-cffi::type)))
 
 (defun event-type (sdl-event)
   (if (keywordp sdl-event)
@@ -105,12 +105,12 @@
 :SYS-WM-EVENT, :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :USER-EVENT."
   (unless (keywordp sdl-event)
     (if event-type-end
-      (and (>= (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
+      (and (>= (cffi:foreign-slot-value sdl-event '(:union sdl-cffi::sdl-event) 'sdl-cffi::type)
                (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type))
-           (< (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)
+           (< (cffi:foreign-slot-value sdl-event '(:union sdl-cffi::sdl-event) 'sdl-cffi::type)
               (- (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type-end) 1)))
       (= (cffi:foreign-enum-value 'sdl-cffi::Event-Type event-type)
-         (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type)))))
+         (cffi:foreign-slot-value sdl-event '(:union sdl-cffi::sdl-event) 'sdl-cffi::type)))))
 
 (defun active-event-p (event)
   (eq (event-type event) :ACTIVE-EVENT))
@@ -148,37 +148,37 @@
   (eq (event-type event) :idle))
 
 (defun active-gain (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::gain))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Active-Event) 'sdl-cffi::gain))
 
 (defun active-state (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Active-Event 'sdl-cffi::state))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Active-Event) 'sdl-cffi::state))
 
 (defun key-state (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Keyboard-Event 'sdl-cffi::state))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Keyboard-Event) 'sdl-cffi::state))
 
 (defun key-scancode (sdl-event)
   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-                                                      'sdl-cffi::sdl-keyboard-event
+                                                      '(:struct sdl-cffi::sdl-keyboard-event)
                                                       'sdl-cffi::keysym)
-                           'sdl-cffi::sdl-key-sym 'sdl-cffi::scancode))
+                           '(:struct sdl-cffi::sdl-key-sym) 'sdl-cffi::scancode))
 
 (defun key-key (sdl-event)
   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-                                                      'sdl-cffi::sdl-keyboard-event
+                                                      '(:struct sdl-cffi::sdl-keyboard-event)
                                                       'sdl-cffi::keysym)
-                           'sdl-cffi::sdl-key-sym 'sdl-cffi::sym))
+                           '(:struct sdl-cffi::sdl-key-sym) 'sdl-cffi::sym))
 
 (defun key-mod (sdl-event)
   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-                                                      'sdl-cffi::sdl-keyboard-event
+                                                      '(:struct sdl-cffi::sdl-keyboard-event)
                                                       'sdl-cffi::keysym)
-                           'sdl-cffi::sdl-key-sym 'sdl-cffi::mod))
+                           '(:struct sdl-cffi::sdl-key-sym) 'sdl-cffi::mod))
 
 (defun key-mod-key (sdl-event)
   (let ((mod-state (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-                                                                       'sdl-cffi::sdl-keyboard-event
+                                                                       '(:struct sdl-cffi::sdl-keyboard-event)
                                                                        'sdl-cffi::keysym)
-                                            'sdl-cffi::sdl-key-sym 'sdl-cffi::mod)))
+                                            '(:struct sdl-cffi::sdl-key-sym) 'sdl-cffi::mod)))
     (remove nil (loop for key in (cffi:foreign-enum-keyword-list 'sdl-cffi::sdl-mod)
                       collect (when (> (logand mod-state
                                                (foreign-enum-value 'sdl-cffi::sdl-mod key))
@@ -187,75 +187,75 @@
 
 (defun key-unicode (sdl-event)
   (cffi:foreign-slot-value (cffi:foreign-slot-pointer sdl-event
-                                                      'sdl-cffi::sdl-keyboard-event
+                                                      '(:struct sdl-cffi::sdl-keyboard-event)
                                                       'sdl-cffi::keysym)
-                           'sdl-cffi::sdl-key-sym 'sdl-cffi::unicode))
+                           '(:struct sdl-cffi::sdl-key-sym) 'sdl-cffi::unicode))
 
 (defun mouse-motion-button (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::state))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::SDL-Mouse-Motion-Event) 'sdl-cffi::state))
 (defun mouse-motion-x (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::x))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::SDL-Mouse-Motion-Event) 'sdl-cffi::x))
 (defun mouse-motion-y (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::y))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::SDL-Mouse-Motion-Event) 'sdl-cffi::y))
 (defun mouse-motion-x-rel (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::xrel))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::SDL-Mouse-Motion-Event) 'sdl-cffi::xrel))
 (defun mouse-motion-y-rel (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::SDL-Mouse-Motion-Event 'sdl-cffi::yrel))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::SDL-Mouse-Motion-Event) 'sdl-cffi::yrel))
 
 (defun mouse-button-button (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::button))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Mouse-Button-Event) 'sdl-cffi::button))
 (defun mouse-button-state (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::state))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Mouse-Button-Event) 'sdl-cffi::state))
 (defun mouse-button-x (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::x))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Mouse-Button-Event) 'sdl-cffi::x))
 (defun mouse-button-y (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Mouse-Button-Event 'sdl-cffi::y))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Mouse-Button-Event) 'sdl-cffi::y))
 
 (defun joy-axis-motion-which (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::which))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Axis-Event) 'sdl-cffi::which))
 (defun joy-axis-motion-axis (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::axis))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Axis-Event) 'sdl-cffi::axis))
 (defun joy-axis-motion-value (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Axis-Event 'sdl-cffi::value))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Axis-Event) 'sdl-cffi::value))
 
 (defun joy-hat-motion-which (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-joy-hat-event 'sdl-cffi::which))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::sdl-joy-hat-event) 'sdl-cffi::which))
 (defun joy-hat-motion-axis (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-joy-hat-event 'sdl-cffi::hat))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::sdl-joy-hat-event) 'sdl-cffi::hat))
 (defun joy-hat-motion-value (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-joy-hat-event 'sdl-cffi::value))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::sdl-joy-hat-event) 'sdl-cffi::value))
 
 (defun joy-ball-motion-which (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::which))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Ball-Event) 'sdl-cffi::which))
 (defun joy-ball-motion-ball (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::ball))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Ball-Event) 'sdl-cffi::ball))
 (defun joy-ball-motion-x-rel (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::xrel))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Ball-Event) 'sdl-cffi::xrel))
 (defun joy-ball-motion-y-rel (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Ball-Event 'sdl-cffi::yrel))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Ball-Event) 'sdl-cffi::yrel))
 
 (defun joy-button-which (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::which))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Button-Event) 'sdl-cffi::which))
 (defun joy-button-button (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::button))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Button-Event) 'sdl-cffi::button))
 (defun joy-button-state (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Joy-Button-Event 'sdl-cffi::state))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Joy-Button-Event) 'sdl-cffi::state))
 
 
 (defun user-type (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::type))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-User-Event) 'sdl-cffi::type))
 (defun user-code (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::code))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-User-Event) 'sdl-cffi::code))
 (defun user-data1 (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data1))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-User-Event) 'sdl-cffi::data1))
 (defun user-data2 (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-User-Event 'sdl-cffi::data2))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-User-Event) 'sdl-cffi::data2))
 
 
 (defun video-resize-w (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::w))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Resize-Event) 'sdl-cffi::w))
 (defun video-resize-h (sdl-event)
-  (cffi:foreign-slot-value sdl-event 'sdl-cffi::Sdl-Resize-Event 'sdl-cffi::h))
+  (cffi:foreign-slot-value sdl-event '(:struct sdl-cffi::Sdl-Resize-Event) 'sdl-cffi::h))
 
 (defun return-args (params event event-fp)
   (loop for (user-val arg) in params
@@ -322,7 +322,7 @@
 
 
 (cffi:defcallback event-filter
-    :int ((sdl-event sdl-cffi::sdl-event))
+    :int ((sdl-event (:pointer (:union SDL-cffi::sdl-event))))
   ;; The following events are necessary for input-util.lisp.
   (case (event-type sdl-event)
     (:key-down-event (handle-key-down (key-key sdl-event)))
@@ -332,7 +332,7 @@
 
   ;; Handle any user-specified event filters.
   (if *event-filters*
-    (let ((hook (gethash (cffi:foreign-slot-value sdl-event 'sdl-cffi::sdl-event 'sdl-cffi::type) *filter-event-hooks*)))
+    (let ((hook (gethash (cffi:foreign-slot-value sdl-event '(:union sdl-cffi::sdl-event) 'sdl-cffi::type) *filter-event-hooks*)))
       (if hook
         (if (funcall hook sdl-event)
           1
@@ -397,8 +397,8 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 :JOY-HAT-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :QUIT-EVENT, 
 :SYS-WM-EVENT, :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :USER-EVENT."
 	   event-type))
-  (let ((event (cffi:foreign-alloc 'sdl-cffi::sdl-event)))
-    (setf (cffi:foreign-slot-value event 'sdl-cffi::SDL-event 'type) (cffi:foreign-enum-value 'sdl-cffi::EVENT-TYPE event-type))
+  (let ((event (cffi:foreign-alloc '(:union sdl-cffi::sdl-event))))
+    (setf (cffi:foreign-slot-value event '(:union sdl-cffi::SDL-event) 'type) (cffi:foreign-enum-value 'sdl-cffi::EVENT-TYPE event-type))
     event))
 
 (defun free-event (event*)
@@ -431,9 +431,9 @@ the `OPTIONAL` event type `EVENT-TYPE` is unspecified.
 (defun push-user-event (&key (code 0) (data1 nil) (data2 nil))
   "Pushes a new `SDL_Event` of type `:USER-EVENT` onto the event queue."
   (let ((event (new-event :USER-EVENT)))
-    (setf (cffi:foreign-slot-value event 'sdl-cffi::SDL-user-event 'sdl-cffi::code) code
-	  (cffi:foreign-slot-value event 'sdl-cffi::SDL-user-event 'sdl-cffi::data1) (cffi:convert-to-foreign data1 :pointer)
-          (cffi:foreign-slot-value event 'sdl-cffi::SDL-user-event 'sdl-cffi::data2) (cffi:convert-to-foreign data2 :pointer))
+    (setf (cffi:foreign-slot-value event '(:struct sdl-cffi::SDL-user-event) 'sdl-cffi::code) code
+	  (cffi:foreign-slot-value event '(:struct sdl-cffi::SDL-user-event) 'sdl-cffi::data1) (cffi:convert-to-foreign data1 :pointer)
+          (cffi:foreign-slot-value event '(:struct sdl-cffi::SDL-user-event) 'sdl-cffi::data2) (cffi:convert-to-foreign data2 :pointer))
     (sdl-cffi::SDL-Push-Event event)
     (cffi:foreign-free event)))
 
@@ -833,4 +833,3 @@ The contents of the event are completely up to the programmer.
 
 (defun released-p (state)
   (= state sdl-cffi::sdl-released))
-

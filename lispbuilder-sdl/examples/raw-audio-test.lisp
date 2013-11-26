@@ -33,8 +33,8 @@
     (setf (sdl:frame-rate) 5)
     (sdl:initialise-default-font)
 
-    (cffi:with-foreign-objects ((audio-spec-desired 'sdl-cffi::SDL-Audio-Spec)
-                                (audio-spec-obtained 'sdl-cffi::SDL-Audio-Spec)
+    (cffi:with-foreign-objects ((audio-spec-desired '(:struct sdl-cffi::SDL-Audio-Spec))
+                                (audio-spec-obtained '(:struct sdl-cffi::SDL-Audio-Spec))
 				(wav-buffer-handle :pointer)
 				(wav-buffer-length :pointer))
       ;; Open the WAV file
@@ -57,7 +57,7 @@
 	      *audio-remaining* *audio-length*)
         (cffi:with-foreign-slots ((sdl-cffi::callback 
 				   sdl-cffi::userdata)
-				  audio-spec-desired sdl-cffi::SDL-Audio-Spec)
+                                  audio-spec-desired (:struct sdl-cffi::SDL-Audio-Spec))
 	  ;; Set the callback used to fill the audio buffer
 	  (setf sdl-cffi::callback (cffi:callback fill-audio-buffer)
 		sdl-cffi::userdata (cffi:null-pointer)))

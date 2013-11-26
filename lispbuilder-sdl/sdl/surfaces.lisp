@@ -320,7 +320,7 @@ Free using [FREE](#free)."))
 (defun get-surface-attribute (surface attribute)
   "Returns `T` if the attribute is set for the surface surface, or returns `NIL` otherwise."
   (unless (cffi:null-pointer-p surface)
-    (/= 0 (logand (cffi:foreign-slot-value surface 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+    (/= 0 (logand (cffi:foreign-slot-value surface '(:struct sdl-cffi::sdl-surface) 'sdl-cffi::flags)
                   attribute))))
 
 (defun surface-info (surface &optional (info nil))
@@ -355,14 +355,14 @@ return `INFO` as `T` or `NIL` if supported by the surface.
                                       SDL-PRE-ALLOC))))
       (if attribute
         (if (eq (logand attribute
-                        (cffi:foreign-slot-value (fp surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags))
+                        (cffi:foreign-slot-value (fp surface) '(:struct sdl-cffi::sdl-surface) 'sdl-cffi::flags))
                 attribute)
           t
           nil)))
     (remove nil (mapcar #'(lambda (query)
                             (let ((info (first query))
                                   (description (second query)))
-                              (let ((result (logand (cffi:foreign-slot-value (fp surface) 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+                              (let ((result (logand (cffi:foreign-slot-value (fp surface) '(:struct sdl-cffi::sdl-surface) 'sdl-cffi::flags)
                                                     info)))
                                 (unless (eq result 0)
                                   description))))

@@ -67,7 +67,7 @@
     (setf (slot-value self 'callback) (cffi:callback default-fill-audio-buffer)))
   ;; Set the user data pointer.
   (setf (cffi:foreign-slot-value (sdl:fp (audio-spec self))
-                                 'sdl-cffi::SDL-Audio-Spec
+                                 '(:struct sdl-cffi::SDL-Audio-Spec)
                                  'sdl-cffi::userdata)
         user-data))
 
@@ -122,33 +122,33 @@
 				  :audio-buffer-size audio-buffer-size
 				  :callback callback))
 
-     (cffi:with-foreign-object (requested-audio-spec 'sdl-cffi::SDL-Audio-Spec)
+     (cffi:with-foreign-object (requested-audio-spec '(:struct sdl-cffi::SDL-Audio-Spec))
        ;; Set the desired sample frequency.
        (setf (cffi:foreign-slot-value requested-audio-spec
-				      'sdl-cffi::SDL-Audio-Spec
+				      '(:struct sdl-cffi::SDL-Audio-Spec)
 				      'sdl-cffi::freq)
 	     (requested-sample-frequency *mixer*))
        ;; Set the desired audio format.
        (setf (cffi:foreign-slot-value requested-audio-spec
-				      'sdl-cffi::SDL-Audio-Spec
+				      '(:struct sdl-cffi::SDL-Audio-Spec)
 				      'sdl-cffi::format)
 	     (requested-audio-format *mixer*))
        ;; Set the number of output channels.
        (setf (cffi:foreign-slot-value requested-audio-spec
-				      'sdl-cffi::SDL-Audio-Spec
+				      '(:struct sdl-cffi::SDL-Audio-Spec)
 				      'sdl-cffi::channels)
 	     (requested-output-channels *mixer*))
        ;; Set the output buffer size.
        ;; This is not used by the glue library.
        (setf (cffi:foreign-slot-value requested-audio-spec
-				      'sdl-cffi::sdl-Audio-Spec
+				      '(:struct sdl-cffi::sdl-Audio-Spec)
 				      'sdl-cffi::samples)
 	     (requested-audio-buffer-size *mixer*))
        ;; Set the callback function
        ;; This callback function is overwritten by callback function in the
        ;; glue library if the glue library is used.
        (setf (cffi:foreign-slot-value requested-audio-spec
-				      'sdl-cffi::SDL-Audio-Spec
+				      '(:struct sdl-cffi::SDL-Audio-Spec)
 				      'sdl-cffi::callback)
 	     (slot-value *mixer* 'callback))
   
@@ -308,7 +308,7 @@
   (load-sample (namestring filename)))
 
 (defmethod build-audio-cvt ((audio audio) (mixer mixer))
-  (cffi:with-foreign-object (audio-cvt 'sdl-cffi::sdl-audio-cvt)
+  (cffi:with-foreign-object (audio-cvt '(:struct sdl-cffi::sdl-audio-cvt))
     (when (> (sdl-cffi::sdl-build-audio-cvt audio-cvt
                                             (audio-format audio)
                                             (output-channels audio)
@@ -320,7 +320,7 @@
       (cffi:with-foreign-slots ((sdl-cffi::buf sdl-cffi::len sdl-cffi::len-mult
                                                sdl-cffi::len-ratio
                                                sdl-cffi::len-cvt)
-                                audio-cvt sdl-cffi::sdl-audio-cvt)
+                                audio-cvt (:struct sdl-cffi::sdl-audio-cvt))
         (setf sdl-cffi::len (audio-length audio)
               sdl-cffi::buf (cffi:foreign-alloc :unsigned-char
                                                 :count (* (audio-length audio)
@@ -381,7 +381,7 @@
           (let* ((cvt-buffer
                   (make-pointer
                    (pointer-address (foreign-slot-value audio-cvt
-                                                        'sdl-cffi::sdl-audio-cvt
+                                                        '(:struct sdl-cffi::sdl-audio-cvt)
                                                         'sdl-cffi::buf))))
                  (buffer
                   (cond
@@ -449,7 +449,7 @@
               ;                                                'sdl-cffi::sdl-audio-cvt
               ;                                                'sdl-cffi::buf))
               (setf (cffi:mem-aref handle :pointer) (foreign-slot-pointer audio-cvt
-                                                                          'sdl-cffi::sdl-audio-cvt
+                                                                          '(:struct sdl-cffi::sdl-audio-cvt)
                                                                           'sdl-cffi::buf))
               ;(format t "2. sample-handle->wave: ~A~%" (cffi:mem-aref handle :pointer))
 
@@ -458,7 +458,7 @@
                (make-pointer
                 (pointer-address
                  (cffi:mem-aref (foreign-slot-pointer audio-cvt
-						      'sdl-cffi::sdl-audio-cvt
+						      '(:struct sdl-cffi::sdl-audio-cvt)
 						      'sdl-cffi::buf) :pointer)))))
             (make-instance 'audio
                            :audio-buffer-handle
