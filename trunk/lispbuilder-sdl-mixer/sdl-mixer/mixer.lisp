@@ -431,7 +431,7 @@ When `FADE` is `NIL` or `0` the fade effect is immediate. Default is `NIL`.
     "Returns the version number of the SDL_mixer dynamic library in use as #\(`MAJOR` `MINOR` `PATCH`\)."
   (let ((sdl-version (sdl-mixer-cffi::linked-version))
 	(version nil))
-    (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) sdl-version sdl-cffi::sdl-version)
+    (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) sdl-version (:struct sdl-cffi::sdl-version))
       (setf version (vector sdl-cffi::major sdl-cffi::minor sdl-cffi::patch)))
     version))
 

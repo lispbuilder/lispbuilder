@@ -27,7 +27,7 @@
 (defconstant +SDL-MIXER-MINOR-VERSION+ 2)
 (defconstant +SDL-MIXER-PATCH-LEVEL+   11)
 
-(defcfun ("Mix_Linked_Version" Linked-Version) sdl-cffi::sdl-version)
+(defcfun ("Mix_Linked_Version" Linked-Version) (:pointer (:struct sdl-cffi::sdl-version)))
 
 (cffi:defbitfield init-flags
   (:flac #x01)
@@ -42,7 +42,7 @@
   (music :pointer))
 
 (defun SDL-MIXER-VERSION (sdl-version)
-  (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) sdl-version sdl-cffi::sdl-version)
+  (cffi:with-foreign-slots ((sdl-cffi::major sdl-cffi::minor sdl-cffi::patch) sdl-version (:struct sdl-cffi::sdl-version))
     (setf sdl-cffi::major +SDL-MIXER-MAJOR-VERSION+
           sdl-cffi::minor +SDL-MIXER-MINOR-VERSION+
           sdl-cffi::patch +SDL-MIXER-PATCH-LEVEL+)))
@@ -303,4 +303,3 @@
   (channel :int))
 
 (cffi:defcfun ("Mix_CloseAudio" Close-Audio) :void)
-
