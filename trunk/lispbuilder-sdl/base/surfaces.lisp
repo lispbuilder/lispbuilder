@@ -72,19 +72,19 @@
        ,body-value)))
 
 (defun surface-flag (surface flag)
-  (logand (cffi:foreign-slot-value surface 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+  (logand (cffi:foreign-slot-value surface '(:struct sdl-cffi::sdl-surface) 'sdl-cffi::flags)
 	  flag))
 
 (defun alpha-enabled-p (surface)
   (surface-flag surface sdl-cffi::SDL-SRC-ALPHA))
 (defun alpha (surface)
-  (cffi:foreign-slot-value (pixel-format surface) 'sdl-cffi::sdl-pixel-format 'sdl-cffi::alpha))
+  (cffi:foreign-slot-value (pixel-format surface) '(:struct sdl-cffi::sdl-pixel-format) 'sdl-cffi::alpha))
 (defun color-key-enabled-p (surface)
   (surface-flag surface sdl-cffi::SDL-SRC-COLOR-KEY))
 (defun color-key (surface)
-  (cffi:foreign-slot-value (pixel-format surface) 'sdl-cffi::sdl-pixel-format 'sdl-cffi::colorkey))
+  (cffi:foreign-slot-value (pixel-format surface) '(:struct sdl-cffi::sdl-pixel-format) 'sdl-cffi::colorkey))
 (defun pixel-alpha-enabled-p (surface)
-  (cffi:foreign-slot-value (pixel-format surface) 'sdl-cffi::sdl-pixel-format 'sdl-cffi::amask))
+  (cffi:foreign-slot-value (pixel-format surface) '(:struct sdl-cffi::sdl-pixel-format) 'sdl-cffi::amask))
 (defun rle-accel-enabled-p (surface)
   (surface-flag surface sdl-cffi::SDL-RLE-ACCEL))
 
@@ -93,7 +93,7 @@
 		       (if value sdl-cffi::SDL-SRC-ALPHA 0))))
     (with-foreign-slots ((sdl-cffi::alpha)
 			 (pixel-format surface)
-			 sdl-cffi::SDL-Pixel-Format)
+			 (:struct sdl-cffi::SDL-Pixel-Format))
       (sdl-cffi::SDL-Set-Alpha surface flags sdl-cffi::alpha))))
 
 (defun (setf alpha) (value surface)
@@ -106,7 +106,7 @@
 		       (if value sdl-cffi::SDL-SRC-COLOR-KEY 0))))
     (with-foreign-slots ((sdl-cffi::colorkey)
 			 (pixel-format surface)
-			 sdl-cffi::SDL-Pixel-Format)
+			 (:struct sdl-cffi::SDL-Pixel-Format))
       (sdl-cffi::SDL-Set-Color-Key surface flags sdl-cffi::colorkey))))
 
 (defun (setf color-key) (value surface)
@@ -121,14 +121,14 @@
 			   (alpha-enabled-p surface))))
 	(with-foreign-slots ((sdl-cffi::alpha)
 			     (pixel-format surface)
-			     sdl-cffi::SDL-Pixel-Format)
+			     (:struct sdl-cffi::SDL-Pixel-Format))
 	  (sdl-cffi::SDL-Set-Alpha surface flags sdl-cffi::alpha))))
     ((> (color-key-enabled-p surface) 0)
      (let ((flags (logior (if value sdl-cffi::SDL-RLE-ACCEL 0)
 			  (color-key-enabled-p surface))))
        (with-foreign-slots ((sdl-cffi::colorkey)
 			    (pixel-format surface)
-			    sdl-cffi::SDL-Pixel-Format)
+			    (:struct sdl-cffi::SDL-Pixel-Format))
 	 (sdl-cffi::SDL-Set-Color-Key surface flags sdl-cffi::colorkey))))))
 
 ;; (defun set-color-key (surface color &optional (enable-color-key nil) (rle-accel nil))
@@ -241,7 +241,7 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
                             sdl-cffi::Bmask
                             sdl-cffi::Amask)
                            (pixel-format surface)
-                           sdl-cffi::SDL-Pixel-Format)
+                           (:struct sdl-cffi::SDL-Pixel-Format))
         (setf surf (sdl-cffi::SDL-Create-RGB-Surface (set-flags flags)
                                                      width height
                                                      sdl-cffi::BitsPerPixel
@@ -289,23 +289,23 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
    Returns
     T if the surface can be locked.
     NIL if the surface cannot be locked."
-  (or (/= 0 (cffi:foreign-slot-value surface 'sdl-cffi::sdl-surface 'sdl-cffi::offset))
-      (/= 0 (logand (cffi:foreign-slot-value surface 'sdl-cffi::sdl-surface 'sdl-cffi::flags)
+  (or (/= 0 (cffi:foreign-slot-value surface '(:struct sdl-cffi::sdl-surface) 'sdl-cffi::offset))
+      (/= 0 (logand (cffi:foreign-slot-value surface '(:struct sdl-cffi::sdl-surface) 'sdl-cffi::flags)
 		    (logior sdl-cffi::SDL-HW-SURFACE
 			    sdl-cffi::SDL-ASYNC-BLIT
 			    sdl-cffi::SDL-RLE-ACCEL)))))
 
 (defun pixel-format (surface)
   "Returns the pixel format of a surface."
-  (cffi:foreign-slot-value surface 'sdl-cffi::SDL-Surface 'sdl-cffi::format))
+  (cffi:foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::format))
 
 (defun surf-w (surface)
   "return the width of the SDL_surface."
-  (cffi:foreign-slot-value surface 'sdl-cffi::Sdl-Surface 'sdl-cffi::w))
+  (cffi:foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::w))
 
 (defun surf-h (surface)
   "return the height of the Sdl-Surface." 
-  (cffi:foreign-slot-value surface 'sdl-cffi::Sdl-Surface 'sdl-cffi::h))
+  (cffi:foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::h))
 
 (defun clip-to-surface (template surface)
   "Clips the rectangle `TEMPLATE` to the surface `SURFACE`s `X`, `Y`, `WIDTH` and `HEIGHT`.
@@ -398,4 +398,3 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
 	 (cffi:mem-aref r :uint8)
 	 (cffi:mem-aref g :uint8)
 	 (cffi:mem-aref b :uint8)))))
-

@@ -121,8 +121,8 @@ Returns a new `RGBA` [COLOR-A](#color-a) from the specified `R`ed, `G`reen, `B`l
 (defmacro with-foreign-color-copy ((struct color) &body body)
   "Creates and assigns a new foreign `SDL_Color` to `STRUCT`. Then copies the color components from `COLOR` into `STRUCT`.
 `STRUCT` is free'd when out of scope." 
-  `(cffi:with-foreign-object (,struct 'sdl-cffi::SDL-Color)
-     (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct sdl-cffi::SDL-Color)
+  `(cffi:with-foreign-object (,struct '(:struct sdl-cffi::SDL-Color))
+     (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct (:struct sdl-cffi::SDL-Color))
        (setf sdl-cffi::r (r ,color)
 	     sdl-cffi::g (g ,color)
 	     sdl-cffi::b (b ,color)))
@@ -147,5 +147,3 @@ Returns a new `RGBA` [COLOR-A](#color-a) from the specified `R`ed, `G`reen, `B`l
   (color :r (if (> (r color) 254)
 		0
 		255)))
-
-

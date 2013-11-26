@@ -13,7 +13,7 @@
 (cffi:defcfun ("SDL_Linked_Version" SDL-Linked-Version) :pointer)
 
 (defun set-sdl-version (x)
-  (cffi:with-foreign-slots ((major minor patch) x SDL-version)
+  (cffi:with-foreign-slots ((major minor patch) x (:struct SDL-version))
     (setf major SDL-MAJOR-VERSION
           minor SDL-MINOR-VERSION
           patch SDL-PATCH-LEVEL)))
@@ -29,7 +29,7 @@
       nil))
 
 (defun get-library-version (version)
-  (cffi:with-foreign-slots ((major minor patch) version sdl-version)
+  (cffi:with-foreign-slots ((major minor patch) version (:struct SDL-version))
     (version-number major minor patch)))
 
 (defun sdl-library-version ()

@@ -13,7 +13,7 @@
 or the contents of rectangle SRC if specified."
   (if src
       (clone-rectangle src)
-      (let ((new-rect (cffi:foreign-alloc 'sdl-cffi::sdl-rect)))
+      (let ((new-rect (cffi:foreign-alloc '(:struct sdl-cffi::sdl-rect))))
 	(setf (rect-x new-rect) x
 	      (rect-y new-rect) y
 	      (rect-w new-rect) w
@@ -37,7 +37,7 @@ or the contents of rectangle SRC if specified."
                    (setf ,mbody (progn ,@body))
                    (when ,free-p
                      (cffi:foreign-free ,var)))
-                `(cffi:with-foreign-object (,var 'sdl-cffi::SDL-Rect)
+                `(cffi:with-foreign-object (,var '(:struct sdl-cffi::SDL-Rect))
                    (setf ,mbody (progn ,@body))))
 	     ,mbody)
           (error "VAR must be a symbol or variable, not a function.")))))
@@ -64,31 +64,31 @@ or the contents of rectangle SRC if specified."
 
 (declaim (inline rect-x))
 (defun rect-x (rect)
-  (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::x))
+  (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::x))
 (defun (setf rect-x) (x-val rect)
   (declare (type fixnum x-val))
-  (setf (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::x) x-val))
+  (setf (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::x) x-val))
 
 (declaim (inline rect-y))
 (defun rect-y (rect)
-  (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::y))
+  (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::y))
 (defun (setf rect-y) (y-val rect)
   (declare (type fixnum y-val))
-  (setf (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::y) y-val))
+  (setf (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::y) y-val))
 
 (declaim (inline rect-w))
 (defun rect-w (rect)
-  (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w))
+  (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::w))
 (defun (setf rect-w) (w-val rect)
   (declare (type fixnum w-val))
-  (setf (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w) w-val))
+  (setf (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::w) w-val))
 
 (declaim (inline rect-h))
 (defun rect-h (rect)
-  (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
+  (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::h))
 (defun (setf rect-h) (h-val rect)
   (declare (type fixnum h-val))
-  (setf (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h) h-val))
+  (setf (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::h) h-val))
 
 (declaim (inline rect-x2))
 (defun rect-x2 (rect)
@@ -117,5 +117,5 @@ or the contents of rectangle SRC if specified."
 (defun clone-rectangle (src)
   "Initializes and returns a new rectangle with the contents of the rectangle SRC. SRC and DST are both of type SDL_Rect."
   (if (is-valid-ptr src)
-      (copy-rectangle src (cffi:foreign-alloc 'sdl-cffi::sdl-rect))
+      (copy-rectangle src (cffi:foreign-alloc '(:struct sdl-cffi::sdl-rect)))
       (error "SRC and DST must be of type SDL_Rect.")))

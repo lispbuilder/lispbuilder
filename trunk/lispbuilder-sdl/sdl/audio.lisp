@@ -122,7 +122,7 @@
 
 (defclass audio-spec (sdl::foreign-object)()
   (:default-initargs
-   :fp (cffi:foreign-alloc 'sdl-cffi::SDL-Audio-Spec)
+   :fp (cffi:foreign-alloc '(:struct sdl-cffi::SDL-Audio-Spec))
    :gc t
    :free #'cffi:foreign-free))
 
@@ -139,47 +139,47 @@
 
 (defmethod sample-frequency ((self audio-spec))
   (cffi:foreign-slot-value (audio-spec self)
-                           'sdl-cffi::sdl-Audio-Spec
+                           '(:struct sdl-cffi::sdl-Audio-Spec)
                            'sdl-cffi::freq))
 
 (defmethod audio-format ((self audio-spec))
   (cffi:foreign-slot-value (audio-spec self)
-                           'sdl-cffi::sdl-Audio-Spec
+                           '(:struct sdl-cffi::sdl-Audio-Spec)
                            'sdl-cffi::format))
 
 (defmethod output-channels ((self audio-spec))
   (cffi:foreign-slot-value (audio-spec self)
-                           'sdl-cffi::sdl-Audio-Spec
+                           '(:struct sdl-cffi::sdl-Audio-Spec)
                            'sdl-cffi::channels))
 
 (defmethod audio-silence ((self audio-spec))
   (cffi:foreign-slot-value (audio-spec self)
-                           'sdl-cffi::sdl-Audio-Spec
+                           '(:struct sdl-cffi::sdl-Audio-Spec)
                            'sdl-cffi::silence))
 
 (defmethod audio-buffer-size ((self audio-spec))
   (cffi:foreign-slot-value (audio-spec self)
-                           'sdl-cffi::sdl-Audio-Spec
+                           '(:struct sdl-cffi::sdl-Audio-Spec)
                            'sdl-cffi::samples))
 
 (defmethod audio-buffer-size-calculated ((self audio-spec))
   (cffi:foreign-slot-value (audio-spec self)
-                           'sdl-cffi::sdl-Audio-Spec
+                           '(:struct sdl-cffi::sdl-Audio-Spec)
                            'sdl-cffi::size))
 
 (defmethod spec-callback ((self audio-spec))
   (cffi:foreign-slot-value (audio-spec self)
-                           'sdl-cffi::sdl-Audio-Spec
+                           '(:struct sdl-cffi::sdl-Audio-Spec)
                            'sdl-cffi::callback))
 
 (defmethod spec-user-data ((self audio-spec))
   (cffi:foreign-slot-value (audio-spec self)
-                           'sdl-cffi::sdl-Audio-Spec
+                           '(:struct sdl-cffi::sdl-Audio-Spec)
                            'sdl-cffi::userdata))
 
 (defclass audio-cvt (sdl::foreign-object) ()
   (:default-initargs
-   :fp (cffi:foreign-alloc 'sdl-cffi::sdl-audio-cvt)
+   :fp (cffi:foreign-alloc '(:struct sdl-cffi::sdl-audio-cvt))
    :gc t
    :free #'cffi:foreign-free))
 

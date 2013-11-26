@@ -67,7 +67,7 @@
 	(type :unsigned-char)
 	(which :unsigned-char)
 	(state :unsigned-char)
-	(keysym SDL-key-sym))
+	(keysym (:struct SDL-key-sym)))
 
 (cffi:defcstruct SDL-Mouse-Motion-Event
 	(type :unsigned-char)
@@ -134,19 +134,19 @@
 
 (cffi:defcunion SDL-Event
 	(type :unsigned-char)
-	(active SDL-Active-Event)
-	(key SDL-Keyboard-Event)
-	(motion SDL-Mouse-Motion-Event)
-	(button SDL-Mouse-Button-Event)
-	(jaxis SDL-Joy-Axis-Event)
-	(jball SDL-Joy-Ball-Event)
-	(jhat SDL-Joy-Hat-Event)
-	(jbutton SDL-Joy-Button-Event)
-	(resize SDL-Resize-Event)
-	(expose SDL-Expose-Event)
-	(quit SDL-Quit-Event)
-	(user SDL-User-Event)
-	(syswm SDL-Sys-WM-Event))
+	(active (:struct SDL-Active-Event))
+	(key (:struct SDL-Keyboard-Event))
+	(motion (:struct SDL-Mouse-Motion-Event))
+	(button (:struct SDL-Mouse-Button-Event))
+	(jaxis (:struct SDL-Joy-Axis-Event))
+	(jball (:struct SDL-Joy-Ball-Event))
+	(jhat (:struct SDL-Joy-Hat-Event))
+	(jbutton (:struct SDL-Joy-Button-Event))
+	(resize (:struct SDL-Resize-Event))
+	(expose (:struct SDL-Expose-Event))
+	(quit (:struct SDL-Quit-Event))
+	(user (:struct SDL-User-Event))
+	(syswm (:struct SDL-Sys-WM-Event)))
 
 (cffi:defcfun ("SDL_PumpEvents" SDL-Pump-Events) :void)
 

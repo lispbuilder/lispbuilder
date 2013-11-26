@@ -177,19 +177,19 @@ The display is updated when `UPDATE` is `T`."
 
 (defun get-native-window ()
   "Returns a foreign pointer to the native SDL display window."
-  (let ((wm-info (cffi:foreign-alloc 'sdl-cffi::SDL-Sys-WM-info)))
+  (let ((wm-info (cffi:foreign-alloc '(:struct sdl-cffi::SDL-Sys-WM-info))))
     ;; Set the wm-info structure to the current SDL version.
-    (sdl-cffi::set-sdl-version (cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::version))
+    (sdl-cffi::set-sdl-version (cffi:foreign-slot-value wm-info '(:struct sdl-cffi::SDL-Sys-WM-info) 'sdl-cffi::version))
     (sdl-cffi::SDL-Get-WM-Info wm-info)
     ;; For Windows
     #+windows(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
     ;; For X
     #-windows(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
-                                                                                            'sdl-cffi::SDL-Sys-WM-info
+                                                                                            '(:struct sdl-cffi::SDL-Sys-WM-info)
                                                                                             'sdl-cffi::info)
                                                                  'sdl-cffi::SDL-Sys-WM-info-info
                                                                  'sdl-cffi::x11)
-                                      'sdl-cffi::SDL-Sys-WM-info-info-x11
+                                      '(:struct sdl-cffi::SDL-Sys-WM-info-info-x11)
                                       'sdl-cffi::window)))
 
 
@@ -199,7 +199,7 @@ The display is updated when `UPDATE` is `T`."
 using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)."
   (let ((video-info (sdl-cffi::SDL-Get-Video-Info)))
     (unless (cffi:null-pointer-p video-info)
-      (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::video-mem))))
+      (cffi:foreign-slot-value video-info '(:struct sdl-cffi::sdl-video-info) 'sdl-cffi::video-mem))))
 
 (defun video-dimensions ()
   "Returns the best video dimensions if called before a window is created, using [WINDOW](#window). 
@@ -207,8 +207,8 @@ Returns the current video dimensions if called after a window is created.
 Must be called after SDL is initialized using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)"
   (let ((video-info (sdl-cffi::SDL-Get-Video-Info)))
     (unless (cffi:null-pointer-p video-info)
-      (vector (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::current-w)
-	  (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::current-h)))))
+      (vector (cffi:foreign-slot-value video-info '(:struct sdl-cffi::sdl-video-info) 'sdl-cffi::current-w)
+	  (cffi:foreign-slot-value video-info '(:struct sdl-cffi::sdl-video-info) 'sdl-cffi::current-h)))))
 
 (defun video-info (&rest info)
   "Returns information about the video hardware. 
@@ -231,8 +231,8 @@ video flags.
     (unless (cffi:null-pointer-p video-info)
       (if info
         (remove nil (loop for attribute in info
-                          collecting (find attribute (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::flags))))
-        (cffi:foreign-slot-value video-info 'sdl-cffi::sdl-video-info 'sdl-cffi::flags)))))
+                          collecting (find attribute (cffi:foreign-slot-value video-info '(:struct sdl-cffi::sdl-video-info) 'sdl-cffi::flags))))
+        (cffi:foreign-slot-value video-info '(:struct sdl-cffi::sdl-video-info) 'sdl-cffi::flags)))))
 
 (defun hw-available-p ()
   (video-info :hw-available))
@@ -287,9 +287,9 @@ Returns `T` if any dimension will support the pixel format and video flags.
       (t
        (do ((i 0 (1+ i)))
              ((cffi:null-pointer-p (cffi:mem-aref listmodes :pointer i)) (reverse modes))
-           (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes :pointer i) 'sdl-cffi::sdl-rect)))
-             (setf modes (cons (vector (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::w)
-                                       (cffi:foreign-slot-value rect 'sdl-cffi::sdl-rect 'sdl-cffi::h))
+           (let ((rect (cffi:mem-ref (cffi:mem-aref listmodes :pointer i) '(:struct sdl-cffi::sdl-rect))))
+             (setf modes (cons (vector (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::w)
+                                       (cffi:foreign-slot-value rect '(:struct sdl-cffi::sdl-rect) 'sdl-cffi::h))
                                modes)))))))))
 
 (defun query-cursor ()

@@ -83,7 +83,7 @@
 	(pixels :pointer)
 	(offset :int)
 	(hwdata :pointer)
-	(clip-rect SDL-Rect)
+	(clip-rect (:struct SDL-Rect))
 	(unused1 :unsigned-int)
 	(locked :unsigned-int)
 	(map :pointer)
@@ -401,7 +401,7 @@ Indicates that surface uses preallocated memory.")
   (Amask :unsigned-int))
 
 (cffi:defcfun ("SDL_FreeSurface" sdl-Free-Surface) :void
-  (surface sdl-surface))
+  (surface (:pointer (:struct sdl-surface))))
 
 (cffi:defcfun ("SDL_LockSurface" SDL-Lock-Surface) :int
   (surface :pointer))
@@ -429,11 +429,11 @@ Indicates that surface uses preallocated memory.")
   (alpha :unsigned-char))
 
 (cffi:defcfun ("SDL_SetClipRect" sdl-Set-Clip-Rect) :void
-  (surface sdl-surface)
+  (surface (:pointer (:struct sdl-surface)))
   (rect sdl-rectangle))
 
 (cffi:defcfun ("SDL_GetClipRect" sdl-Get-Clip-Rect) :void
-  (surface sdl-surface)
+  (surface (:pointer (:struct sdl-surface)))
   (rect sdl-rectangle))
 
 
@@ -443,19 +443,19 @@ Indicates that surface uses preallocated memory.")
   (flags :unsigned-int))
 
 (cffi:defcfun ("SDL_UpperBlit" sdl-Upper-Blit) :int
-  (src sdl-surface)
+  (src (:pointer (:struct sdl-surface)))
   (srcrect sdl-rectangle)
-  (dst sdl-surface)
+  (dst (:pointer (:struct sdl-surface)))
   (dstrect sdl-rectangle))
 
 (cffi:defcfun ("SDL_LowerBlit" SDL-Lower-Blit) :int
-  (src sdl-surface)
+  (src (:pointer (:struct sdl-surface)))
   (srcrect sdl-rectangle)
-  (dst sdl-surface)
+  (dst (:pointer (:struct sdl-surface)))
   (dstrect sdl-rectangle))
 
 (cffi:defcfun ("SDL_FillRect" sdl-Fill-Rect) :int
-  (dst sdl-surface)
+  (dst (:pointer (:struct sdl-surface)))
   (dstrect sdl-rectangle)
   (color :unsigned-int))
 
@@ -560,4 +560,3 @@ Indicates that surface uses preallocated memory.")
 
 (defun SDL-Blit-Surface (src srcrect dst dstrect)
   (SDL-Upper-Blit src srcrect dst dstrect))
-

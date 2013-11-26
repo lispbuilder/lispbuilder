@@ -72,14 +72,14 @@
 (defun image-is-bmp (source)
   ;; start = SDL_RWtell(src);
   (let  ((is-bmp nil)
-         (start (cffi:foreign-funcall-pointer (cffi:foreign-slot-value source 'sdl-cffi::sdl-rwops 'sdl-cffi::seek)
+         (start (cffi:foreign-funcall-pointer (cffi:foreign-slot-value source '(:struct sdl-cffi::sdl-rwops) 'sdl-cffi::seek)
                                               () :pointer source
                                               :int 0
                                               :int sdl-cffi::rw-seek-cur
                                               :pointer)))
     ;; if ( SDL_RWread(src, magic, sizeof(magic), 1) ) {
     (cffi:with-foreign-pointer (str 2)
-      (let ((result (cffi:foreign-funcall-pointer (cffi:foreign-slot-value source 'sdl-cffi::sdl-rwops 'sdl-cffi::read)
+      (let ((result (cffi:foreign-funcall-pointer (cffi:foreign-slot-value source '(:struct sdl-cffi::sdl-rwops) 'sdl-cffi::read)
                                                   () :pointer source
                                                   :string str
                                                   :int 2
@@ -93,7 +93,7 @@
           (when (string-equal (cffi:foreign-string-to-lisp str :count 2 :encoding :ascii) "BM")
             (setf is-bmp t)))))
     ;; SDL_RWseek(src, start, SEEK_SET);
-    (cffi:foreign-funcall-pointer (cffi:foreign-slot-value source 'sdl-cffi::sdl-rwops 'sdl-cffi::seek)
+    (cffi:foreign-funcall-pointer (cffi:foreign-slot-value source '(:struct sdl-cffi::sdl-rwops) 'sdl-cffi::seek)
                                   () :pointer source
                                   :pointer start
                                   :int sdl-cffi::rw-seek-set

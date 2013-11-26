@@ -29,9 +29,9 @@
            (xevent :pointer))
 
 #-windows(defcstruct SDL-Sys-WM-msg
-           (version SDL-version)
+           (version (:struct SDL-version))
            (subsystem SDL-SYS-WM-TYPE)
-           (event SDL-Sys-WM-msg-event))
+           (event (:union SDL-Sys-WM-msg-event)))
 
 #-windows(defcstruct SDL-Sys-WM-info-info-x11
            (display :pointer)
@@ -43,13 +43,12 @@
            (gfxdisplay :pointer))
 
 #-windows(defcunion SDL-Sys-WM-info-info
-           (x11 SDL-Sys-WM-info-info-x11))
+           (x11 (:struct SDL-Sys-WM-info-info-x11)))
 
 #-windows(defcstruct SDL-Sys-WM-info
-           (version SDL-version)
+           (version (:struct SDL-version))
            (subsystem SDL-SYS-WM-TYPE)
-           (info SDL-Sys-WM-info-info))
+           (info (:union SDL-Sys-WM-info-info)))
 
 (defcfun ("SDL_GetWMInfo" SDL-Get-WM-Info) :int
   (info :pointer))
-
