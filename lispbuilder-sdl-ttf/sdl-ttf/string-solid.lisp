@@ -25,4 +25,3 @@
     (when cache
       (setf (cached-surface font) surf))
     surf))
-
