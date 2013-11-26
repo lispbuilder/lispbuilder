@@ -84,4 +84,3 @@
                                  (sdl:cast-to-int (- (/ rotozoom-window-height 2)
                                                      (/ (sdl:height alien-image) 2))))
                                 (sdl:update-display))))))
-
