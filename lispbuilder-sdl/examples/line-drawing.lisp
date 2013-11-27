@@ -5,14 +5,14 @@
 
 ;;;; From "http://www.frank-buss.de/lisp/canvas.html"
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defun line-drawing ()
   (sdl:with-init ()
     (sdl:window 300 300 :title-caption "Line Drawing" :icon-caption "Line Drawing")
     (setf (sdl:frame-rate) 5)
     (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
-    
+
     (sdl:with-surface (surf sdl:*default-display*)
       (sdl:draw-box (sdl:rectangle-from-edges-* 50 50 250 250)
 		    :color (sdl:color :r 0 :g 255 :b 255))
@@ -21,7 +21,7 @@
               do (sdl:draw-line-* (- 300 i) 50 50 i))
 	(sdl:draw-line-* 250 250 250 50)
 	(sdl:draw-line-* 250 250 50 250))
-      (sdl:update-display)      
+      (sdl:update-display)
       (sdl:with-events ()
 	(:quit-event () t)
 	(:key-down-event (:key key)

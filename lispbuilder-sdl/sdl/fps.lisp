@@ -8,7 +8,7 @@ RATE > 0 will lock the game loop to the specified frame rate, and
 calculate the average frame rate over a number of frames.
 RATE = 0 will unlock the frame rate, and calculate the average
 frame rate over a number of frames.
-RATE < 0 will unlock the frame rate. The average frane rate is 
+RATE < 0 will unlock the frame rate. The average frane rate is
 not calculated"))
 
 (defgeneric process-timestep (fpsmngr fn)
@@ -48,7 +48,7 @@ not calculated"))
     :initform 10
     :initarg :dt)
    (max-dt
-    :initform 100  
+    :initform 100
     :initarg :max-dt)
    (accumulator
     :accessor accumulator
@@ -67,7 +67,7 @@ not calculated"))
     :initform 10
     :initarg :dt)
    (max-dt
-    :initform 100  
+    :initform 100
     :initarg :max-dt)
    (accumulator
     :accessor accumulator
@@ -159,16 +159,16 @@ not calculated"))
     (setf current-ticks (sdl-cffi::sdl-get-ticks)
           delta-ticks (- current-ticks last-ticks))
     (setf (svref window index) current-ticks)
-    
+
     (when not-through-p
       (when (>= index (1- (length window)))
         (setf not-through-p nil)))
-  
+
     (call-next-method)
 
     (unless (< (incf index) (length window))
       (setf index 0))
-  
+
     (setf last-ticks current-ticks)))
 
 (defmethod process-timestep ((self fps-manager) fn)
@@ -220,7 +220,7 @@ not calculated"))
 calculate the average frame rate over a number of frames.
 `RATE` = `0` will unlock the frame rate, and calculate the average
 frame rate over a number of frames.
-`RATE` < `0` will unlock the frame rate. The average frane rate is 
+`RATE` < `0` will unlock the frame rate. The average frane rate is
 not calculated.
 
 See [WITH-EVENTS](#with-events), and [AVERAGE-FPS](#average-fps)."
@@ -278,11 +278,11 @@ of 'n' frames."
         (delta (gensym "delta-")))
     `(let ((,self *default-fpsmanager*)
            (,delta nil))
-       
+
        (setf (current-ticks ,self) (sdl-cffi::sdl-get-ticks)
              (delta-ticks ,self) (- (current-ticks ,self) (last-ticks ,self)))
        (setf (svref (average-window ,self) (index ,self)) (current-ticks ,self))
-       
+
        (when (not-through-p ,self)
          (when (>= (index ,self) (1- (length (average-window ,self))))
            (setf (not-through-p ,self) nil)))
@@ -309,4 +309,4 @@ of 'n' frames."
        (unless (< (incf (index ,self)) (length (average-window ,self)))
          (setf (index ,self) 0))
        (setf (last-ticks ,self) (current-ticks ,self)))))
-  
+

@@ -34,7 +34,7 @@
 
 (defgeneric display (m-rect &key surface))
 (defmethod display ((m-rect m-rect) &key (surface sdl:*default-display*))
-  (dotimes (i (tt m-rect))      
+  (dotimes (i (tt m-rect))
     (sdl:draw-box-* (sdl-base:to-int (sdl-base::clamp-to-sshort (+ (x m-rect)
 						  (* i (+ (d m-rect)
 							  (w m-rect))))))
@@ -71,12 +71,12 @@
          (display *r2*)
          (display *r3*)
          (display *r4*)
-	       
+
          (move-to-x *r1* (- mouse-x (/ *objects-width* 2)) 30)
          (move-to-x *r2* (mod (+ mouse-x (* *objects-width* 0.05)) *objects-width*) 20)
          (move-to-x *r3* (/ mouse-x 4) 40)
          (move-to-x *r4* (- mouse-x (/ *objects-width* 2)) 50)
-	       
+
          (move-to-y *r1* (+ mouse-y (* *objects-height* 0.1)) 30)
          (move-to-y *r2* (+ mouse-y (* *objects-height* 0.025)) 20)
          (move-to-y *r3* (- mouse-y (* *objects-height* 0.025)) 40)

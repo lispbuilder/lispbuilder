@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html> 
+<html>
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
@@ -9,16 +9,16 @@
   h3, h4 { text-decoration: underline; }
   a { text-decoration: none; padding: 1px 2px 1px 2px; }
   a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
-  a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+  a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; }
   a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
   a.none { text-decoration: none; padding: 0; }
-  a.none:visited { text-decoration: none; padding: 0; } 
-  a.none:hover { text-decoration: none; border: none; padding: 0; } 
-  a.none:focus { text-decoration: none; border: none; padding: 0; } 
-  a.noborder { text-decoration: none; padding: 0; } 
-  a.noborder:visited { text-decoration: none; padding: 0; } 
-  a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
-  a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+  a.none:visited { text-decoration: none; padding: 0; }
+  a.none:hover { text-decoration: none; border: none; padding: 0; }
+  a.none:focus { text-decoration: none; border: none; padding: 0; }
+  a.noborder { text-decoration: none; padding: 0; }
+  a.noborder:visited { text-decoration: none; padding: 0; }
+  a.noborder:hover { text-decoration: none; border: none; padding: 0; }
+  a.noborder:focus { text-decoration: none; border: none; padding: 0; }
   pre.none { padding:5px; background-color:#ffffff }
   </style>
 </head>
@@ -414,12 +414,12 @@ current version is 0.1.0.
 <p><br>[Special variable]<br><a class=none name='*default-color*'><b>*default-color*</b></a>
 <blockquote><br>
 
-<p>Functions that accept the <code>KEY</code>word parameter <code>COLOR</code> will most likely bind to the symbol <code>*DEFAULT-COLOR*</code> by default if <code>COLOR</code> is not specified. </p><p>A color is bound to <code>*DEFAULT-COLOR*</code> by the following macro: <a href="#with-color">WITH-COLOR</a>. </p><h5>Example</h5><pre><code>(DRAW-BOX A-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)  
-(DRAW-BOX B-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)  
-(DRAW-BOX C-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*) </code></pre><p>The above can be shortened by setting <code>*DEFAULT-COLOR*</code> to <code>*BLACK*</code>. </p><pre><code>(WITH-SURFACE (DISP SDL:*DEFAULT-DISPLAY*)  
-  (WITH-COLOR (COL SDL:*BLACK*)  
-    (DRAW-BOX A-BOX)  
-    (DRAW-BOX B-BOX)  
+<p>Functions that accept the <code>KEY</code>word parameter <code>COLOR</code> will most likely bind to the symbol <code>*DEFAULT-COLOR*</code> by default if <code>COLOR</code> is not specified. </p><p>A color is bound to <code>*DEFAULT-COLOR*</code> by the following macro: <a href="#with-color">WITH-COLOR</a>. </p><h5>Example</h5><pre><code>(DRAW-BOX A-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)
+(DRAW-BOX B-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*)
+(DRAW-BOX C-BOX :SURFACE SDL:DEFAULT-DISPLAY* :COLOR SDL:*BLACK*) </code></pre><p>The above can be shortened by setting <code>*DEFAULT-COLOR*</code> to <code>*BLACK*</code>. </p><pre><code>(WITH-SURFACE (DISP SDL:*DEFAULT-DISPLAY*)
+  (WITH-COLOR (COL SDL:*BLACK*)
+    (DRAW-BOX A-BOX)
+    (DRAW-BOX B-BOX)
     (DRAW-BOX C-BOX))) </code></pre>
 
 </blockquote>
@@ -444,15 +444,15 @@ current version is 0.1.0.
 <p><br>[Special variable]<br><a class=none name='*default-font*'><b>*default-font*</b></a>
 <blockquote><br>
 
-<p>Functions that accept the <code>KEY</code>word parameter <code>FONT</code> will most likely bind to the symbol <code>*DEFAULT-FONT*</code> by default if <code>FONT</code> is not specified. </p><p>A font is bound to <code>*DEFAULT-FONT*</code> by the following; <a href="#with-default-font">WITH-DEFAULT-FONT</a>, <a href="#with-font">WITH-FONT</a> and <a href="#initialise-default-font">INITIALISE-DEFAULT-FONT</a>. </p><h5>Example</h5><pre><code>(draw-string-solid-* &quot;draw string centered&quot; 100 100  
-                      :justify :center :color sdl:*white* :font a-font)  
-(draw-string-solid-* &quot;draw string left&quot; 100 100  
-                      :justify :left :color sdl:*white* :font a-font)  
-(draw-string-solid-* &quot;draw string right&quot; 100 100  
-                      :justify :right :color sdl:*white* :font a-font) </code></pre><p>The above can be shortened by setting <code>*DEFAULT-FONT*</code> to <code>a-font</code>. </p><pre><code>(WITH-DEFAULT-FONT (a-font)  
-  (WITH-COLOR (COL SDL:*WHITE*)  
-    (DRAW-STRING-SOLID-* &quot;draw string centered&quot; 100 100 :JUSTIFY :CENTER)  
-    (DRAW-STRING-SOLID-* &quot;draw string left&quot; 100 100 :JUSTIFY :LEFT)  
+<p>Functions that accept the <code>KEY</code>word parameter <code>FONT</code> will most likely bind to the symbol <code>*DEFAULT-FONT*</code> by default if <code>FONT</code> is not specified. </p><p>A font is bound to <code>*DEFAULT-FONT*</code> by the following; <a href="#with-default-font">WITH-DEFAULT-FONT</a>, <a href="#with-font">WITH-FONT</a> and <a href="#initialise-default-font">INITIALISE-DEFAULT-FONT</a>. </p><h5>Example</h5><pre><code>(draw-string-solid-* &quot;draw string centered&quot; 100 100
+                      :justify :center :color sdl:*white* :font a-font)
+(draw-string-solid-* &quot;draw string left&quot; 100 100
+                      :justify :left :color sdl:*white* :font a-font)
+(draw-string-solid-* &quot;draw string right&quot; 100 100
+                      :justify :right :color sdl:*white* :font a-font) </code></pre><p>The above can be shortened by setting <code>*DEFAULT-FONT*</code> to <code>a-font</code>. </p><pre><code>(WITH-DEFAULT-FONT (a-font)
+  (WITH-COLOR (COL SDL:*WHITE*)
+    (DRAW-STRING-SOLID-* &quot;draw string centered&quot; 100 100 :JUSTIFY :CENTER)
+    (DRAW-STRING-SOLID-* &quot;draw string left&quot; 100 100 :JUSTIFY :LEFT)
     (DRAW-STRING-SOLID-* &quot;draw string right&quot; 100 100 :JUSTIFY :RIGHT))) </code></pre>
 
 </blockquote>
@@ -513,11 +513,11 @@ current version is 0.1.0.
 <p><br>[Special variable]<br><a class=none name='*default-surface*'><b>*default-surface*</b></a>
 <blockquote><br>
 
-<p>Functions that accept the <code>KEY</code>word parameter <code>:SURFACE</code> will most likely bind to the symbol <code>*DEFAULT-SURFACE*</code> by default if <code>SURFACE</code> is not specified. </p><p>A surface is bound to <code>*DEFAULT-SURFACE*</code> by the following macros: <a href="#with-surface">WITH-SURFACE</a>, and <a href="#with-surfaces">WITH-SURFACES</a>. </p><h5>Example</h5><pre><code>(DRAW-SURFACE SURF-1 :SURFACE SDL:*DEFAULT-DISPLAY*)  
-(DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*)  
-(DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*) </code></pre><p>The above can be shortened using by setting the <code>*DEFAULT-SURFACE*</code> to the display surface. </p><pre><code>(WITH-SURFACE (DISP SDL:*DEFAULT-DISPLAY*)  
-  (DRAW-SURFACE SURF-1)  
-  (DRAW-SURFACE SURF-2)  
+<p>Functions that accept the <code>KEY</code>word parameter <code>:SURFACE</code> will most likely bind to the symbol <code>*DEFAULT-SURFACE*</code> by default if <code>SURFACE</code> is not specified. </p><p>A surface is bound to <code>*DEFAULT-SURFACE*</code> by the following macros: <a href="#with-surface">WITH-SURFACE</a>, and <a href="#with-surfaces">WITH-SURFACES</a>. </p><h5>Example</h5><pre><code>(DRAW-SURFACE SURF-1 :SURFACE SDL:*DEFAULT-DISPLAY*)
+(DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*)
+(DRAW-SURFACE SURF-2 :SURFACE SDL:*DEFAULT-DISPLAY*) </code></pre><p>The above can be shortened using by setting the <code>*DEFAULT-SURFACE*</code> to the display surface. </p><pre><code>(WITH-SURFACE (DISP SDL:*DEFAULT-DISPLAY*)
+  (DRAW-SURFACE SURF-1)
+  (DRAW-SURFACE SURF-2)
   (DRAW-SURFACE SURF-2)) </code></pre>
 
 </blockquote>
@@ -1703,10 +1703,10 @@ current version is 0.1.0.
 <p><br>[Function]<br><a class=none name='draw-bezier'><b>draw-bezier</b> <i>vertices <tt>&amp;key</tt> clipping surface color segments style</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a bezier curve of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. The shape of the Bezier curve is defined by several control points. A control point is a vertex containing an X and Y coordinate pair. </p><h5>Parameters</h5><ul><li><code>:VERTICES</code> is a list of control points of <a href="#point">POINT</a>.</li><li><code>:STYLE</code> describes the line style used to draw the curve and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li><li><code>:SEGMENTS</code> is the number of line segments used to draw the curve. The default is 20 segments if unspecified. The greater the number of segments, the smoother the curve. </li><li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>.</li><li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.</li><li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>. SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li></ul><h5>Example</h5><pre><code>(DRAW-BEZIER (LIST (SDL:POINT :X 60  :Y 40)  
-                     (SDL:POINT :X 160 :Y 10)  
-                     (SDL:POINT :X 170 :Y 150)  
-                     (SDL:POINT :X 60 :Y 150))  
+<p>Draw a bezier curve of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. The shape of the Bezier curve is defined by several control points. A control point is a vertex containing an X and Y coordinate pair. </p><h5>Parameters</h5><ul><li><code>:VERTICES</code> is a list of control points of <a href="#point">POINT</a>.</li><li><code>:STYLE</code> describes the line style used to draw the curve and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li><li><code>:SEGMENTS</code> is the number of line segments used to draw the curve. The default is 20 segments if unspecified. The greater the number of segments, the smoother the curve. </li><li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>.</li><li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.</li><li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>. SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li></ul><h5>Example</h5><pre><code>(DRAW-BEZIER (LIST (SDL:POINT :X 60  :Y 40)
+                     (SDL:POINT :X 160 :Y 10)
+                     (SDL:POINT :X 170 :Y 150)
+                     (SDL:POINT :X 60 :Y 150))
                :style :SOLID) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li><li><code>:STYLE</code> is ignored in <code>LISPBUILDER-SDL-GFX</code>.</li></ul>
 
 </blockquote>
@@ -1767,9 +1767,9 @@ current version is 0.1.0.
 <p><br>[Function]<br><a class=none name='draw-curve'><b>draw-curve</b> <i>vertices <tt>&amp;key</tt> clipping surface color segments style</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a Cattmul-Rom spline of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. The shape of the curve is defined by waypoints. A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Parameters</h5><ul><li><code>VERTICES</code> is a list of waypoints or vetices for the spline, of <a href="#point">POINT</a></li><li><code>STYLE</code> describes the line style used to draw the curve and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li><li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline. Default is 20 segments if unspecified. The greater the number of segments, the smoother the spline. </li><li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>.</li><li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.</li><li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>. SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li></ul><h5>Example</h5><pre><code>(DRAW-CURVE (LIST (SDL:POINT :X 60  :Y 40)  
-    	  (SDL:POINT :X 160 :Y 10)  
-	  (SDL:POINT :X 170 :Y 150)  
+<p>Draw a Cattmul-Rom spline of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a>. The shape of the curve is defined by waypoints. A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Parameters</h5><ul><li><code>VERTICES</code> is a list of waypoints or vetices for the spline, of <a href="#point">POINT</a></li><li><code>STYLE</code> describes the line style used to draw the curve and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li><li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline. Default is 20 segments if unspecified. The greater the number of segments, the smoother the spline. </li><li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>.</li><li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.</li><li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>. SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li></ul><h5>Example</h5><pre><code>(DRAW-CURVE (LIST (SDL:POINT :X 60  :Y 40)
+    	  (SDL:POINT :X 160 :Y 10)
+	  (SDL:POINT :X 170 :Y 150)
 	  (SDL:POINT :X 60  :Y 150))) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
 
 </blockquote>
@@ -2094,9 +2094,9 @@ current version is 0.1.0.
 <p><br>[Function]<br><a class=none name='draw-shape'><b>draw-shape</b> <i>vertices <tt>&amp;key</tt> clipping surface color style</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a polygon of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a> using <code>VERTICES</code>. </p><h5>Parameters</h5><ul><li><code>VERTICES</code> is a list of vertices, of <code>POINT</code></li><li><code>STYLE</code> describes the line style used to draw the polygon and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li><li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>.</li><li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.</li><li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>. SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li></ul><h5>Example</h5><pre><code>(DRAW-SHAPE (LIST (SDL:POINT :X 60  :Y 40)  
-	    (SDL:POINT :X 160 :Y 10)  
-	    (SDL:POINT :X 170 :Y 150)  
+<p>Draw a polygon of <a href="#color">COLOR</a> to <a href="#surface">SURFACE</a> using <code>VERTICES</code>. </p><h5>Parameters</h5><ul><li><code>VERTICES</code> is a list of vertices, of <code>POINT</code></li><li><code>STYLE</code> describes the line style used to draw the polygon and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li><li><code>:SURFACE</code> is the target <a href="#surface">SURFACE</a>.</li><li><code>:COLOR</code> is the line color, of <a href="#color">COLOR</a> or <a href="#color-a">COLOR-A</a>.</li><li><code>:CLIPPING</code> when left as the default value <code>T</code> will ensure that the shape is clipped to the dimensions of <code>SURFACE</code>. SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave <code>CLIPPING</code> as <code>T</code>. </li></ul><h5>Example</h5><pre><code>(DRAW-SHAPE (LIST (SDL:POINT :X 60  :Y 40)
+	    (SDL:POINT :X 160 :Y 10)
+	    (SDL:POINT :X 170 :Y 150)
 	    (SDL:POINT :X 60  :Y 150))) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
 
 </blockquote>
@@ -2923,7 +2923,7 @@ current version is 0.1.0.
 <p><br>[Generic function]<br><a class=none name='image-p'><b>image-p</b> <i>source image-type</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns <code>T</code> when the image type in <code>SOURCE</code> is of <code>IMAGE-TYPE</code>. Returns <code>NIL</code> otherwise. Attempts to detect the image type using the <em>magic number</em> contained in the image if one is available.  <code>NIL</code> is always returned for images of type <code>TGA</code> as a <code>TGA</code> image does not contain a <em>magic number</em>.  <code>IMAGE-TYPE</code> must be one of <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>. </p><h5>Example</h5><pre><code>(RWOPS-P SOURCE :IMAGE-TYPE :BMP)  
+<p>Returns <code>T</code> when the image type in <code>SOURCE</code> is of <code>IMAGE-TYPE</code>. Returns <code>NIL</code> otherwise. Attempts to detect the image type using the <em>magic number</em> contained in the image if one is available.  <code>NIL</code> is always returned for images of type <code>TGA</code> as a <code>TGA</code> image does not contain a <em>magic number</em>.  <code>IMAGE-TYPE</code> must be one of <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>. </p><h5>Example</h5><pre><code>(RWOPS-P SOURCE :IMAGE-TYPE :BMP)
 (IMAGE-P &quot;image.bmp&quot; :IMAGE-TYPE :BMP) </code></pre><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-IMAGE</em></li></ul>
 
 </blockquote>
@@ -2936,7 +2936,7 @@ current version is 0.1.0.
 <p><br>[Generic function]<br><a class=none name='image-type-of'><b>image-type-of</b> <i>source</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the type of image in source <code>SOURCE</code>. Attempts to detect the image type using the <em>magic number</em> contained in the image if one is available.  Returns one of <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>, if the image type can be determined. Returns <code>NIL</code> if the image cannot be determined (The <em>magic number</em> is not supported or the <em>magic number</em> is not found).  <code>NIL</code> is always returned for images of type <code>TGA</code> as a <code>TGA</code> image does not contain a <em>magic number</em>. </p><h5>Example</h5><pre><code>(IMAGE-TYPE-OF SOURCE)  
+<p>Returns the type of image in source <code>SOURCE</code>. Attempts to detect the image type using the <em>magic number</em> contained in the image if one is available.  Returns one of <code>:BMP</code>, <code>:GIF</code>, <code>:JPG</code>, <code>:LBM</code>, <code>:PCX</code>, <code>:PNG</code>, <code>:PNM</code>, <code>:TIF</code>, <code>:XCF</code>, <code>:XPM</code> or <code>:XV</code>, if the image type can be determined. Returns <code>NIL</code> if the image cannot be determined (The <em>magic number</em> is not supported or the <em>magic number</em> is not found).  <code>NIL</code> is always returned for images of type <code>TGA</code> as a <code>TGA</code> image does not contain a <em>magic number</em>. </p><h5>Example</h5><pre><code>(IMAGE-TYPE-OF SOURCE)
 (IMAGE-TYPE-OF &quot;image.bmp&quot;) </code></pre><h5>Packages</h5><ul><li>Supported in <em>LISPBUILDER-SDL-IMAGE</em></li></ul>
 
 </blockquote>
@@ -4837,7 +4837,7 @@ current version is 0.1.0.
 <p><br>[Function]<br><a class=none name='video-driver-name'><b>video-driver-name</b> <i></i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Returns the driver name of the initialised video driver. The driver name is a <code>STRING</code> containing a one-word identifier like &quot;x11&quot; or &quot;windib&quot;. Returns &#039;NIL&#039; if the video driver is not already initialised with <a href="#init-sdl">INIT-SDL</a> or <a href="#with-init">WITH-INIT</a>. </p><h5>Example</h5><pre><code>(sdl:with-init ()  
+<p>Returns the driver name of the initialised video driver. The driver name is a <code>STRING</code> containing a one-word identifier like &quot;x11&quot; or &quot;windib&quot;. Returns &#039;NIL&#039; if the video driver is not already initialised with <a href="#init-sdl">INIT-SDL</a> or <a href="#with-init">WITH-INIT</a>. </p><h5>Example</h5><pre><code>(sdl:with-init ()
   (sdl:video-driver-name)) &gt;&gt; &quot;windib&quot; </code></pre>
 
 </blockquote>
@@ -4924,7 +4924,7 @@ current version is 0.1.0.
 <p><br>[Function]<br><a class=none name='window'><b>window</b> <i>width height <tt>&amp;key</tt> bpp flags title-caption icon-caption</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Creates a new SDL window of pixel width <code>WIDTH</code> and height <code>HEIGHT</code> using SDL_SetVideoMode. </p><p>Use <code>SDL-SW-SURFACE</code> if you plan on doing per-pixel manipulations, or blit surfaces with alpha channels, and require a high framerate. When you use hardware surfaces like <code>SDL-HW-SURFACE</code>, SDL copies the surfaces from video memory to system memory when you lock them, and back when you unlock them. This can cause a major performance hit. (Be aware that you may request a hardware surface, but receive a software surface. Many platforms can only provide a hardware surface when using <code>SDL-FULL-SCREEN.) </code>SDL-HW-SURFACE` is best used when the surfaces you&#039;ll be blitting can also be stored in video memory. </p><p><em>Note:</em> To control the position on the screen when creating a windowed surface, set the environment variables <code>SDL_VIDEO_CENTERED=center</code> or <code>SDL_VIDEO_WINDOW_POS=x,y</code>. These may be set using <a href="#sdl-put-env">SDL-PUT-ENV</a>. </p><h5>Parameters</h5><ul><li><code>WIDTH</code> the pixel width of the window, of type <code>INTEGER</code>.</li><li><code>HEIGHT</code> the pixel height of the window, of type <code>INTEGER</code>. If <code>WIDTH</code> and <code>HEIGHT</code> are both <code>0</code>, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). </li><li><code>BPP</code> the number of bits per pixel. Defaults to <code>0</code> which is the current display bits per pixel. <em>Note:</em> A <code>BPP</code> of <code>24</code> uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, use a <code>BPP</code> of 32. </li><li><code>FLAGS</code> is a bitmasked logior of one or more of the following; <a href="#sdl-sw-surface">SDL-SW-SURFACE</a>, <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>, <a href="#sdl-async-blit">SDL-ASYNC-BLIT</a>, <a href="#sdl-any-format">SDL-ANY-FORMAT</a>, <a href="#sdl-hw-palette">SDL-HW-PALETTE</a>, <a href="#sdl-doublebuf">SDL-DOUBLEBUF</a>, <a href="#sdl-fullscreen">SDL-FULLSCREEN</a>, <a href="#sdl-opengl">SDL-OPENGL</a>, <a href="#sdl-resizable">SDL-RESIZABLE</a> and <a href="#SDL-NO-FRAME">SDL-NO-FRAME</a>. </li><li><code>TITLE-CAPTION</code> is the title that appears in the Window title bar, of type <code>STRING</code>.</li><li><code>ICON-CAPTION</code> is the title that appears when the Window is minimized, of type <code>STRING</code>.</li></ul><h5>Returns</h5><ul><li>Returns a new <code>DISPLAY-SURFACE</code> if successful, <code>NIL</code> if unsuccessful. Whatever flags SDL_SetVideoMode could satisfy are set in the flags member of <code>SURFACE</code>. The <code>SURFACE</code> returned is freed by SDL and should never be freed by the caller. This rule includes consecutive calls to <code>WINDOW</code> (i.e. upon resize or resolution change) - any existing surface will be released automatically by SDL. </li></ul><h5>Example</h5><pre><code>(WINDOW 320 240 :TITLE-CAPTION &quot;Random-Rects&quot; :ICON-CAPTION &quot;Random-Rects&quot;  
+<p>Creates a new SDL window of pixel width <code>WIDTH</code> and height <code>HEIGHT</code> using SDL_SetVideoMode. </p><p>Use <code>SDL-SW-SURFACE</code> if you plan on doing per-pixel manipulations, or blit surfaces with alpha channels, and require a high framerate. When you use hardware surfaces like <code>SDL-HW-SURFACE</code>, SDL copies the surfaces from video memory to system memory when you lock them, and back when you unlock them. This can cause a major performance hit. (Be aware that you may request a hardware surface, but receive a software surface. Many platforms can only provide a hardware surface when using <code>SDL-FULL-SCREEN.) </code>SDL-HW-SURFACE` is best used when the surfaces you&#039;ll be blitting can also be stored in video memory. </p><p><em>Note:</em> To control the position on the screen when creating a windowed surface, set the environment variables <code>SDL_VIDEO_CENTERED=center</code> or <code>SDL_VIDEO_WINDOW_POS=x,y</code>. These may be set using <a href="#sdl-put-env">SDL-PUT-ENV</a>. </p><h5>Parameters</h5><ul><li><code>WIDTH</code> the pixel width of the window, of type <code>INTEGER</code>.</li><li><code>HEIGHT</code> the pixel height of the window, of type <code>INTEGER</code>. If <code>WIDTH</code> and <code>HEIGHT</code> are both <code>0</code>, then the width and height of the current video mode is used (or the desktop mode, if no mode has been set). </li><li><code>BPP</code> the number of bits per pixel. Defaults to <code>0</code> which is the current display bits per pixel. <em>Note:</em> A <code>BPP</code> of <code>24</code> uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, use a <code>BPP</code> of 32. </li><li><code>FLAGS</code> is a bitmasked logior of one or more of the following; <a href="#sdl-sw-surface">SDL-SW-SURFACE</a>, <a href="#sdl-hw-surface">SDL-HW-SURFACE</a>, <a href="#sdl-async-blit">SDL-ASYNC-BLIT</a>, <a href="#sdl-any-format">SDL-ANY-FORMAT</a>, <a href="#sdl-hw-palette">SDL-HW-PALETTE</a>, <a href="#sdl-doublebuf">SDL-DOUBLEBUF</a>, <a href="#sdl-fullscreen">SDL-FULLSCREEN</a>, <a href="#sdl-opengl">SDL-OPENGL</a>, <a href="#sdl-resizable">SDL-RESIZABLE</a> and <a href="#SDL-NO-FRAME">SDL-NO-FRAME</a>. </li><li><code>TITLE-CAPTION</code> is the title that appears in the Window title bar, of type <code>STRING</code>.</li><li><code>ICON-CAPTION</code> is the title that appears when the Window is minimized, of type <code>STRING</code>.</li></ul><h5>Returns</h5><ul><li>Returns a new <code>DISPLAY-SURFACE</code> if successful, <code>NIL</code> if unsuccessful. Whatever flags SDL_SetVideoMode could satisfy are set in the flags member of <code>SURFACE</code>. The <code>SURFACE</code> returned is freed by SDL and should never be freed by the caller. This rule includes consecutive calls to <code>WINDOW</code> (i.e. upon resize or resolution change) - any existing surface will be released automatically by SDL. </li></ul><h5>Example</h5><pre><code>(WINDOW 320 240 :TITLE-CAPTION &quot;Random-Rects&quot; :ICON-CAPTION &quot;Random-Rects&quot;
                  :FLAGS &#039;(SDL-DOUBLEBUF SDL-FULLSCREEN)) </code></pre>
 
 </blockquote>
@@ -4937,11 +4937,11 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-bezier'><b>with-bezier</b> <i>(<tt>&amp;optional</tt> style segments) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a bezier curve of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. The shape of the Bezier curve is defined by control points. A control point is a vertex containing an X and Y coordinate pair. </p><p>The number of segments <code>SEGENTS</code> used to draw the Bezier curve defaults to 10. The greater the number of segments, the smoother the Bezier curve. </p><h5>Local Methods</h5><p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>POINT</code>, or</li><li><code>ADD-VERTEX-*</code> which is the x/y spread version</li></ul><p><code>ADD-VERTEX</code> and <code>ADD-VERTEX-*</code> are valid only within the scop of <code>WITH-BEZIER</code>. </p><h5>Parameters</h5><ul><li><code>STYLE</code> is one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. When <code>STYLE</code> is <code>:SOLID</code>, a single continuous line is drawn through the specified waypoints. When <code>STYLE</code> is <code>:DASH</code>, a line is drawn to alternate waypoint pairs. When <code>STYLE</code> is <code>:POINTS</code>, a single point is drawn at each waypoint. </li><li><code>SEGMENTS</code> is the number of segments used to draw the Bezier curve. Default is 20 segments if unspecified. The greater the number of segments, the smoother the curve. </li></ul><h5>Example</h5><pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))  
-   (WITH-BEZIER ()  
-     (ADD-VERTEX-* 60  40)  
-     (ADD-VERTEX-* 160 10)  
-     (ADD-VERTEX-* 170 150)  
+<p>Draw a bezier curve of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. The shape of the Bezier curve is defined by control points. A control point is a vertex containing an X and Y coordinate pair. </p><p>The number of segments <code>SEGENTS</code> used to draw the Bezier curve defaults to 10. The greater the number of segments, the smoother the Bezier curve. </p><h5>Local Methods</h5><p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>POINT</code>, or</li><li><code>ADD-VERTEX-*</code> which is the x/y spread version</li></ul><p><code>ADD-VERTEX</code> and <code>ADD-VERTEX-*</code> are valid only within the scop of <code>WITH-BEZIER</code>. </p><h5>Parameters</h5><ul><li><code>STYLE</code> is one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. When <code>STYLE</code> is <code>:SOLID</code>, a single continuous line is drawn through the specified waypoints. When <code>STYLE</code> is <code>:DASH</code>, a line is drawn to alternate waypoint pairs. When <code>STYLE</code> is <code>:POINTS</code>, a single point is drawn at each waypoint. </li><li><code>SEGMENTS</code> is the number of segments used to draw the Bezier curve. Default is 20 segments if unspecified. The greater the number of segments, the smoother the curve. </li></ul><h5>Example</h5><pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
+   (WITH-BEZIER ()
+     (ADD-VERTEX-* 60  40)
+     (ADD-VERTEX-* 160 10)
+     (ADD-VERTEX-* 170 150)
      (ADD-VERTEX-* 60  150))) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
 
 </blockquote>
@@ -4966,11 +4966,11 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-curve'><b>with-curve</b> <i>(<tt>&amp;optional</tt> style segments) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a Cattmul-Rom spline of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. The shape of the curve is defined by waypoints. A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Local Methods</h5><p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or</li><li><code>ADD-VERTEX-*</code> which is the x/y spread version</li></ul><p><code>ADD-VERTEX</code> and <code>ADD-VERTEX-*</code> are valid only within the scope of <code>WITH-CURVE</code>. </p><h5>Parameters</h5><ul><li><code>STYLE</code> describes the line style used to draw the curve and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li><li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline. Default is 20 segments if unspecified. The greater the number of segments, the smoother the spline. </li></ul><h5>Example</h5><pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))  
-   (WITH-CURVE (:SOLID 30)  
-     (ADD-VERTEX-* 60  40)  
-     (ADD-VERTEX-* 160 10)  
-     (ADD-VERTEX-* 170 150)  
+<p>Draw a Cattmul-Rom spline of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. The shape of the curve is defined by waypoints. A waypoint is a vertex containing an X and Y coordinate pair. </p><h5>Local Methods</h5><p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or</li><li><code>ADD-VERTEX-*</code> which is the x/y spread version</li></ul><p><code>ADD-VERTEX</code> and <code>ADD-VERTEX-*</code> are valid only within the scope of <code>WITH-CURVE</code>. </p><h5>Parameters</h5><ul><li><code>STYLE</code> describes the line style used to draw the curve and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li><li><code>SEGMENTS</code> is the number of segments used to draw the Catmull-Rom spline. Default is 20 segments if unspecified. The greater the number of segments, the smoother the spline. </li></ul><h5>Example</h5><pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
+   (WITH-CURVE (:SOLID 30)
+     (ADD-VERTEX-* 60  40)
+     (ADD-VERTEX-* 160 10)
+     (ADD-VERTEX-* 170 150)
      (ADD-VERTEX-* 60  150))) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
 
 </blockquote>
@@ -4983,7 +4983,7 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-default-font'><b>with-default-font</b> <i>(font) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets <code>*DEFAULT-FONT*</code> to <code>FONT</code> within the scope of <code>WITH-DEFAULT-FONT</code>. </p><h5>Example</h5><pre><code>(WITH-DEFAULT-FONT (new-font)  
+<p>Sets <code>*DEFAULT-FONT*</code> to <code>FONT</code> within the scope of <code>WITH-DEFAULT-FONT</code>. </p><h5>Example</h5><pre><code>(WITH-DEFAULT-FONT (new-font)
     (DRAW-CHARACTER-SHADED-* &quot;Hello World!&quot; 0 0 F-COLOR B-COLOR)) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em> and <em>LISPBUILDER-SDL-TTF</em></li></ul>
 
 </blockquote>
@@ -4996,68 +4996,68 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-events'><b>with-events</b> <i>(<tt>&amp;optional</tt> type) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p><code>WITH-EVENTS</code> is a convenience macro for managing the main game loop. It processes incoming SDL events and limits the game loop to the specified number of frames per second. </p><p>Both the <a href="#sdl-poll-event">SDL-POLL-EVENT</a> and <a href="#sdl-wait-event">SDL-WAIT-EVENT</a> event mechanisms are supported by specifying the <code>TYPE</code> as <code>:POLL</code> or <code>:WAIT</code> respectively. </p><p><em>NOTE:</em> <code>WITH-EVENTS</code> must be called in the same thread used to set the video mode. </p><h5>Example</h5><pre><code>(SDL:WITH-EVENTS (:POLL)  
-  (:QUIT-EVENT () T)  
-  (:KEY-DOWN-EVENT (:KEY KEY)  
-      (WHEN (SDL:KEY= KEY :SDL-KEY-ESCAPE)  
-        (SDL:PUSH-QUIT-EVENT)))  
-  (:VIDEO-EXPOSE-EVENT () (SDL:UPDATE-DISPLAY)))))) </code></pre><h5>Frame Rate Limiting</h5><p>The frame rate is specified using <a href="#frame-rate">FRAME-RATE</a>. For example to set the frame rate to 60 frames per second: </p><pre><code>(SETF (SDL:FRAME-RATE) 60) </code></pre><h5>Event Syntax</h5><p>Events are specified using the format <code>(:EVENT-TYPE (&amp;amp;KEYS KEYS))</code> </p><ul><li><code>EVENT-TYPE</code> must be one of the following <code>KEY</code>words; <code>:ACTIVE-EVENT, :KEY-DOWN-EVENT, :KEY-UP-EVENT, :MOUSE-MOTION-EVENT, :MOUSE-BUTTON-DOWN-EVENT, :MOUSE-BUTTON-UP-EVENT, :JOY-AXIS-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :JOY-HAT-MOTION-EVENT, :JOY-BALL-MOTION-EVENT, :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :SYS-WM-EVENT, :QUIT-EVENT, :USER-EVENT</code> or <code>:IDLE</code>. </li><li><code>KEYS</code> specify the members of the event to return and are specific to each event type. These are discussed in detail below. </li></ul><p><em>NOTE:</em> <code>:QUIT-EVENT</code> must return <code>T</code> to exit the <code>WITH-EVENT</code> macro. </p><p><em>NOTE:</em> <code>:IDLE</code> is ignored when <code>TYPE</code> is <code>:WAIT</code>. </p><h5>Polling for Events</h5><p>When <code>TYPE</code> is <code>:POLL</code>, <code>WITH-EVENTS</code> will continually poll for currently pending events. If no events are available then the game loop is run and the forms in <code>:IDLE</code> are executed. </p><h5>Waiting for Events</h5><p>When <code>TYPE</code> is <code>:WAIT</code>, <code>WITH-EVENTS</code> will sleep indefinitely for the next available event. If no events are available then the game loop is paused. </p><h5>The :IDLE Event</h5><pre><code> (:IDLE ()  
-    &amp;BODY BODY) </code></pre><p>The <code>:IDLE</code> event is special in that it is not generated by SDL. Rather the forms  in <code>:IDLE</code> are executed once each game loop after event queue is emptied. <code>:IDLE</code> is ignored when the event mechanism specified by <code>TYPE</code> is <code>:WAIT</code>. </p><h5>Active Event</h5><pre><code>(:ACTIVE-EVENT (:GAIN GAIN :STATE STATE)  
+<p><code>WITH-EVENTS</code> is a convenience macro for managing the main game loop. It processes incoming SDL events and limits the game loop to the specified number of frames per second. </p><p>Both the <a href="#sdl-poll-event">SDL-POLL-EVENT</a> and <a href="#sdl-wait-event">SDL-WAIT-EVENT</a> event mechanisms are supported by specifying the <code>TYPE</code> as <code>:POLL</code> or <code>:WAIT</code> respectively. </p><p><em>NOTE:</em> <code>WITH-EVENTS</code> must be called in the same thread used to set the video mode. </p><h5>Example</h5><pre><code>(SDL:WITH-EVENTS (:POLL)
+  (:QUIT-EVENT () T)
+  (:KEY-DOWN-EVENT (:KEY KEY)
+      (WHEN (SDL:KEY= KEY :SDL-KEY-ESCAPE)
+        (SDL:PUSH-QUIT-EVENT)))
+  (:VIDEO-EXPOSE-EVENT () (SDL:UPDATE-DISPLAY)))))) </code></pre><h5>Frame Rate Limiting</h5><p>The frame rate is specified using <a href="#frame-rate">FRAME-RATE</a>. For example to set the frame rate to 60 frames per second: </p><pre><code>(SETF (SDL:FRAME-RATE) 60) </code></pre><h5>Event Syntax</h5><p>Events are specified using the format <code>(:EVENT-TYPE (&amp;amp;KEYS KEYS))</code> </p><ul><li><code>EVENT-TYPE</code> must be one of the following <code>KEY</code>words; <code>:ACTIVE-EVENT, :KEY-DOWN-EVENT, :KEY-UP-EVENT, :MOUSE-MOTION-EVENT, :MOUSE-BUTTON-DOWN-EVENT, :MOUSE-BUTTON-UP-EVENT, :JOY-AXIS-MOTION-EVENT, :JOY-BUTTON-DOWN-EVENT, :JOY-BUTTON-UP-EVENT, :JOY-HAT-MOTION-EVENT, :JOY-BALL-MOTION-EVENT, :VIDEO-RESIZE-EVENT, :VIDEO-EXPOSE-EVENT, :SYS-WM-EVENT, :QUIT-EVENT, :USER-EVENT</code> or <code>:IDLE</code>. </li><li><code>KEYS</code> specify the members of the event to return and are specific to each event type. These are discussed in detail below. </li></ul><p><em>NOTE:</em> <code>:QUIT-EVENT</code> must return <code>T</code> to exit the <code>WITH-EVENT</code> macro. </p><p><em>NOTE:</em> <code>:IDLE</code> is ignored when <code>TYPE</code> is <code>:WAIT</code>. </p><h5>Polling for Events</h5><p>When <code>TYPE</code> is <code>:POLL</code>, <code>WITH-EVENTS</code> will continually poll for currently pending events. If no events are available then the game loop is run and the forms in <code>:IDLE</code> are executed. </p><h5>Waiting for Events</h5><p>When <code>TYPE</code> is <code>:WAIT</code>, <code>WITH-EVENTS</code> will sleep indefinitely for the next available event. If no events are available then the game loop is paused. </p><h5>The :IDLE Event</h5><pre><code> (:IDLE ()
+    &amp;BODY BODY) </code></pre><p>The <code>:IDLE</code> event is special in that it is not generated by SDL. Rather the forms  in <code>:IDLE</code> are executed once each game loop after event queue is emptied. <code>:IDLE</code> is ignored when the event mechanism specified by <code>TYPE</code> is <code>:WAIT</code>. </p><h5>Active Event</h5><pre><code>(:ACTIVE-EVENT (:GAIN GAIN :STATE STATE)
    &amp;BODY BODY) </code></pre><p>When the mouse leaves or enters the window area an <code>SDL-APP-MOUSE-FOCUS</code> type activation event is generated.<br />
- If the mouse has entered the window then <code>GAIN</code> will be <code>1</code>, otherwise <code>GAIN</code> will be <code>0</code>.  An <code>SDL-APP-INPUT-FOCUS</code> type activation event occurs when the application loses or gains keyboard focus, usually when a different application is made active. Finally, an <code>SDL-APP-ACTIVE</code> type event occurs when the application is either minimised/iconified, <code>GAIN</code> is <code>0</code>, or restored. A single event can have multiple values set in <code>STATE</code>. <em>Note:</em> This event does not occur when an application window is first created. </p><ul><li><code>GAIN</code> is <code>0</code> if the event is a loss or <code>1</code> if it is a gain.</li><li><code>STATE</code> a bitmask of the following values: <code>SDL-APP-MOUSE-FOCUS</code> if mouse focus was gained or lost, <code>SDL-APP-INPUT-FOCUS</code> if input focus was gained or lost, and <code>SDL-APP-ACTIVE</code> if the application was iconified, <code>GAIN</code> is <code>0</code>, or restored <code>GAIN</code> is <code>1</code>. </li></ul><h5>Keyboard Events</h5><pre><code>(:KEY-DOWN-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)  
-   &amp;BODY BODY)  
-(:KEY-UP-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)  
-   &amp;BODY BODY) </code></pre><p>A keyboard event generally occurs when a key is released or when a key is pressed. The information on the key that generated the event is stored in <code>KEY</code> and <code>MOD</code>. </p><p>The <code>SDL-CAPS-LOCK</code> and <code>SDL-NUM-LOCK</code> keys are special cases and report an <code>SDL-KEY-DOWN</code> when first pressed, then an <code>SDL-RELEASED</code> when released and pressed again. These keys KEYUP and KEYDOWN events are therefore analogous to the state of  the caps lock and num lock LEDs rather than the keys themselves. These special  cases are required for compatibility with Sun workstations. </p><p><em>Note:</em> Repeating <code>SDL-KEY-DOWN</code> events will occur if key repeat is enabled using <a href="#sdl-enable-key-repeat">SDL-ENABLE-KEY-REPEAT</a>. </p><ul><li><code>STATE</code> is <code>SDL-PRESSED</code> or <code>SDL-RELEASED</code> if the key is pressed or released respectively.</li><li><code>SCANCODE</code> is the hardware-dependent scancode returned by the keyboard.</li><li><code>KEY</code> is is the SDL-defined value of the key that generated the event. The SDL-defined value for <code>KEY</code> generally takes the following format: <code>:SDL-KEY-0</code> to <code>:SDL-KEY-1</code> for numeric keys. <code>SDL-KEY-a</code> to <code>SDL-KEY-z</code> for alpha keys in the range a-z. Other keys are generally spelled out, for example <code>SDL-KEY-PAGEDOWN</code>, <code>SDL-KEY-F1</code> or <code>SDL-KEY-NUMLOCK</code> . </li><li><code>MOD</code> is current state of the keyboard modifiers as explained in SDL_GetModState. One or more of <code>:SDL-KEY-MOD-NONE, :SDL-KEY-MOD-LSHIFT, :SDL-KEY-MOD-RSHIFT, :SDL-KEY-MOD-LCTRL, :SDL-KEY-MOD-RCTRL, :SDL-KEY-MOD-LALT, :SDL-KEY-MOD-RALT, :SDL-KEY-MOD-LMETA, :SDL-KEY-MOD-RMETA, :SDL-KEY-MOD-NUM, :SDL-KEY-MOD-CAPS, :SDL-KEY-MOD-MODE or :SDL-KEY-MOD-RESERVED</code>. </li><li><code>UNICODE</code> is the translated character. The unicode field is only used when UNICODE translation is enabled with SDL_EnableUNICODE. If unicode is non-zero then this is the UNICODE character corresponding to the keypress. If the high 9 bits of the character are 0, then this maps to the equivalent ASCII character. </li></ul><h5>Mouse Motion Event</h5><pre><code>(:MOUSE-MOTION-EVENT (:STATE STATE :X X :Y Y :X-REL X-REL :Y-REL Y-REL)  
-   &amp;BODY BODY) </code></pre><p>A <code>MOUSE-MOTION-EVENT</code> event occurs when the mouse moves within the application window or when <a href="#SDL-WARP-MOUSE">SDL-WARP-MOUSE</a> is called. Both the absolute <code>X</code> and <code>Y</code> and relative <code>X-REL</code> and <code>Y-REL</code> coordinates are reported along with the current button state <code>STATE</code>. The button state can be interpreted using <a href="#sdl-button">SDL-BUTTON</a>, see <a href="#sdl-get-mouse-state">SDL-GET-MOUSE-STATE</a>. </p><p>If the cursor is hidden using <a href="#sdl-show-cursor">SDL-SHOW-CURSOR</a> and the input is grabbed using <a href="#sdl-wm-grab-input">SDL-WM-GRAB-INPUT</a>, then the mouse will give relative motion events even when the cursor reaches the edge of the screen. This is currently only implemented on Windows and Linux/Unix-alikes. </p><ul><li><code>STATE</code> is the current button state.</li><li><code>X</code> is the <code>X</code> coordinates of the mouse</li><li><code>Y</code> is the <code>Y</code> coordinates of the mouse</li><li><code>X-REL</code> is the relative motion in the <code>X</code> direction</li><li><code>Y-REL</code> is the relative motion in the <code>Y</code> direction</li></ul><h5>Mouse Button Events</h5><pre><code> (:MOUSE-BUTTON-DOWN-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)  
-   &amp;BODY BODY)  
- (:MOUSE-BUTTON-UP-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)  
-   &amp;BODY BODY) </code></pre><p>When a mouse button press or release is detected the number of the button pressed (from 1 to 255, with 1 usually being the left button and 2 the right) is placed into <code>BUTTON</code>, the position of the mouse when this event occured is stored in the <code>X</code> and the <code>Y</code> fields. </p><p>Mouse wheel events are reported as buttons 4 (up) and 5 (down). Two events are generated i.e. a <code>SDL-MOUSE-BUTTON-DOWN</code> followed by a <code>SDL-MOUSE-BUTTON-UP</code> event. </p><ul><li><code>BUTTON</code> is the mouse button index which is one of <code>SDL-BUTTON-LEFT</code>, <code>SDL-BUTTON-MIDDLE</code>, <code>SDL-BUTTON-RIGHT</code>, <code>SDL-BUTTON-WHEELUP</code> or <code>SDL-BUTTON-WHEELDOWN</code>. </li><li><code>STATE</code> is the state of the button which is <code>SDL-PRESSED</code> or <code>SDL-RELEASED</code>.</li><li><code>X</code> is the <code>X</code> coordinates of the mouse at press/release time.</li><li><code>Y</code> is the <code>Y</code> coordinates of the mouse at press/release time.</li></ul><h5>Joystick Motion Event</h5><pre><code>(:JOY-AXIS-MOTION-EVENT (:WHICH WHICH :AXIS AXIS :VALUE VALUE)  
-   &amp;BODY BODY) </code></pre><p>A JOY-AXIS-MOTION-EVENT event occurs whenever a user moves an axis on the joystick. </p><ul><li><code>WHICH</code> is the joystick device index. The index of the joystick that reported the event.</li><li><code>AXIS</code> is the joystick axis index</li><li><code>VALUE</code> is the current position of the axis (range: -32768 to 32767)</li></ul><h5>Joystick Button Events</h5><pre><code>(:JOY-BUTTON-DOWN-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)  
-   &amp;BODY BODY)  
-(:JOY-BUTTON-UP-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)  
+ If the mouse has entered the window then <code>GAIN</code> will be <code>1</code>, otherwise <code>GAIN</code> will be <code>0</code>.  An <code>SDL-APP-INPUT-FOCUS</code> type activation event occurs when the application loses or gains keyboard focus, usually when a different application is made active. Finally, an <code>SDL-APP-ACTIVE</code> type event occurs when the application is either minimised/iconified, <code>GAIN</code> is <code>0</code>, or restored. A single event can have multiple values set in <code>STATE</code>. <em>Note:</em> This event does not occur when an application window is first created. </p><ul><li><code>GAIN</code> is <code>0</code> if the event is a loss or <code>1</code> if it is a gain.</li><li><code>STATE</code> a bitmask of the following values: <code>SDL-APP-MOUSE-FOCUS</code> if mouse focus was gained or lost, <code>SDL-APP-INPUT-FOCUS</code> if input focus was gained or lost, and <code>SDL-APP-ACTIVE</code> if the application was iconified, <code>GAIN</code> is <code>0</code>, or restored <code>GAIN</code> is <code>1</code>. </li></ul><h5>Keyboard Events</h5><pre><code>(:KEY-DOWN-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)
+   &amp;BODY BODY)
+(:KEY-UP-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)
+   &amp;BODY BODY) </code></pre><p>A keyboard event generally occurs when a key is released or when a key is pressed. The information on the key that generated the event is stored in <code>KEY</code> and <code>MOD</code>. </p><p>The <code>SDL-CAPS-LOCK</code> and <code>SDL-NUM-LOCK</code> keys are special cases and report an <code>SDL-KEY-DOWN</code> when first pressed, then an <code>SDL-RELEASED</code> when released and pressed again. These keys KEYUP and KEYDOWN events are therefore analogous to the state of  the caps lock and num lock LEDs rather than the keys themselves. These special  cases are required for compatibility with Sun workstations. </p><p><em>Note:</em> Repeating <code>SDL-KEY-DOWN</code> events will occur if key repeat is enabled using <a href="#sdl-enable-key-repeat">SDL-ENABLE-KEY-REPEAT</a>. </p><ul><li><code>STATE</code> is <code>SDL-PRESSED</code> or <code>SDL-RELEASED</code> if the key is pressed or released respectively.</li><li><code>SCANCODE</code> is the hardware-dependent scancode returned by the keyboard.</li><li><code>KEY</code> is is the SDL-defined value of the key that generated the event. The SDL-defined value for <code>KEY</code> generally takes the following format: <code>:SDL-KEY-0</code> to <code>:SDL-KEY-1</code> for numeric keys. <code>SDL-KEY-a</code> to <code>SDL-KEY-z</code> for alpha keys in the range a-z. Other keys are generally spelled out, for example <code>SDL-KEY-PAGEDOWN</code>, <code>SDL-KEY-F1</code> or <code>SDL-KEY-NUMLOCK</code> . </li><li><code>MOD</code> is current state of the keyboard modifiers as explained in SDL_GetModState. One or more of <code>:SDL-KEY-MOD-NONE, :SDL-KEY-MOD-LSHIFT, :SDL-KEY-MOD-RSHIFT, :SDL-KEY-MOD-LCTRL, :SDL-KEY-MOD-RCTRL, :SDL-KEY-MOD-LALT, :SDL-KEY-MOD-RALT, :SDL-KEY-MOD-LMETA, :SDL-KEY-MOD-RMETA, :SDL-KEY-MOD-NUM, :SDL-KEY-MOD-CAPS, :SDL-KEY-MOD-MODE or :SDL-KEY-MOD-RESERVED</code>. </li><li><code>UNICODE</code> is the translated character. The unicode field is only used when UNICODE translation is enabled with SDL_EnableUNICODE. If unicode is non-zero then this is the UNICODE character corresponding to the keypress. If the high 9 bits of the character are 0, then this maps to the equivalent ASCII character. </li></ul><h5>Mouse Motion Event</h5><pre><code>(:MOUSE-MOTION-EVENT (:STATE STATE :X X :Y Y :X-REL X-REL :Y-REL Y-REL)
+   &amp;BODY BODY) </code></pre><p>A <code>MOUSE-MOTION-EVENT</code> event occurs when the mouse moves within the application window or when <a href="#SDL-WARP-MOUSE">SDL-WARP-MOUSE</a> is called. Both the absolute <code>X</code> and <code>Y</code> and relative <code>X-REL</code> and <code>Y-REL</code> coordinates are reported along with the current button state <code>STATE</code>. The button state can be interpreted using <a href="#sdl-button">SDL-BUTTON</a>, see <a href="#sdl-get-mouse-state">SDL-GET-MOUSE-STATE</a>. </p><p>If the cursor is hidden using <a href="#sdl-show-cursor">SDL-SHOW-CURSOR</a> and the input is grabbed using <a href="#sdl-wm-grab-input">SDL-WM-GRAB-INPUT</a>, then the mouse will give relative motion events even when the cursor reaches the edge of the screen. This is currently only implemented on Windows and Linux/Unix-alikes. </p><ul><li><code>STATE</code> is the current button state.</li><li><code>X</code> is the <code>X</code> coordinates of the mouse</li><li><code>Y</code> is the <code>Y</code> coordinates of the mouse</li><li><code>X-REL</code> is the relative motion in the <code>X</code> direction</li><li><code>Y-REL</code> is the relative motion in the <code>Y</code> direction</li></ul><h5>Mouse Button Events</h5><pre><code> (:MOUSE-BUTTON-DOWN-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)
+   &amp;BODY BODY)
+ (:MOUSE-BUTTON-UP-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)
+   &amp;BODY BODY) </code></pre><p>When a mouse button press or release is detected the number of the button pressed (from 1 to 255, with 1 usually being the left button and 2 the right) is placed into <code>BUTTON</code>, the position of the mouse when this event occured is stored in the <code>X</code> and the <code>Y</code> fields. </p><p>Mouse wheel events are reported as buttons 4 (up) and 5 (down). Two events are generated i.e. a <code>SDL-MOUSE-BUTTON-DOWN</code> followed by a <code>SDL-MOUSE-BUTTON-UP</code> event. </p><ul><li><code>BUTTON</code> is the mouse button index which is one of <code>SDL-BUTTON-LEFT</code>, <code>SDL-BUTTON-MIDDLE</code>, <code>SDL-BUTTON-RIGHT</code>, <code>SDL-BUTTON-WHEELUP</code> or <code>SDL-BUTTON-WHEELDOWN</code>. </li><li><code>STATE</code> is the state of the button which is <code>SDL-PRESSED</code> or <code>SDL-RELEASED</code>.</li><li><code>X</code> is the <code>X</code> coordinates of the mouse at press/release time.</li><li><code>Y</code> is the <code>Y</code> coordinates of the mouse at press/release time.</li></ul><h5>Joystick Motion Event</h5><pre><code>(:JOY-AXIS-MOTION-EVENT (:WHICH WHICH :AXIS AXIS :VALUE VALUE)
+   &amp;BODY BODY) </code></pre><p>A JOY-AXIS-MOTION-EVENT event occurs whenever a user moves an axis on the joystick. </p><ul><li><code>WHICH</code> is the joystick device index. The index of the joystick that reported the event.</li><li><code>AXIS</code> is the joystick axis index</li><li><code>VALUE</code> is the current position of the axis (range: -32768 to 32767)</li></ul><h5>Joystick Button Events</h5><pre><code>(:JOY-BUTTON-DOWN-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)
+   &amp;BODY BODY)
+(:JOY-BUTTON-UP-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)
    &amp;BODY BODY) </code></pre><p>A <code>JOY-BUTTON-DOWN-EVENT</code> or <code>JOY-BUTTON-DOWN-EVENT</code> event occurs whenever a user presses or releases a button on a joystick. <br />
-</p><ul><li><code>WHICH</code> is the index of the joystick that reported the event.</li><li><code>BUTTON</code> is the button pressed that caused the event.</li><li><code>STATE</code> is the current state of the button and is either <code>SDL-PRESSED</code> or <code>SDL-RELEASED</code>. </li></ul><h5>Joystick Hat Motion Event</h5><pre><code>   (:JOY-HAT-MOTION-EVENT (:WHICH WHICH :HAT HAT :VALUE VALUE)  
-     &amp;BODY BODY) </code></pre><p>A <code>JOY-HAT-MOTION-EVENT</code> event occurs when ever a user moves a hat on the joystick. </p><ul><li><code>WHICH</code> is the index of the joystick that reported the event.</li><li><code>HAT</code> is the index of the hat that generated the event.</li><li><code>VALUE</code> is the current position of the hat, a bitwise OR&#039;d combination of the following values <code>SDL-HAT-CENTERED</code>, <code>SDL-HAT-UP</code>, <code>SDL-HAT-RIGHT</code>, <code>SDL-HAT-DOWN</code>, <code>SDL-HAT-LEFT</code>, <code>SDL-HAT-RIGHT-UP</code>, <code>SDL-HAT-RIGHT-DOWN</code>, <code>SDL-HAT-LEFT-UP</code> and <code>SDL-HAT-LEFT-DOWN</code>. </li></ul><h5>Joystick Ball Motion Event</h5><pre><code>(:JOY-BALL-MOTION-EVENT (:WHICH WHICH :BALL BALL :X-REL X-REL :Y-REL Y-REL)  
-  &amp;BODY BODY) </code></pre><p>A <code>JOY-BALL-MOTION-EVENT</code> event occurs when a user moves a trackball on the joystick. Trackballs only return relative motion. </p><ul><li><code>WHICH</code> is the index of the joystick that reported the event.</li><li><code>BALL</code> is the index of the trackball that generated the event.</li><li><code>X-REL</code> is the change in <code>X</code> position of the ball since it was last polled (last cycle of the event loop). </li><li><code>Y-REL</code> is the change in <code>Y</code> position of the ball since it was last polled (last cycle of the event loop). </li></ul><h5>Quit Event</h5><pre><code>(:QUIT-EVENT ()  
-   &amp;BODY BODY) </code></pre><p>If <code>QUIT-EVENT</code> is filtered or ignored then it is impossible for the user to close the window. If <code>QUIT-EVENT</code> is accepted and returns <code>T</code> then the application window will be closed. <em>Note:</em> Screen updates will continue to report success even though the application is no longer visible. If <code>QUIT-EVENT</code> is accepted and returns <code>NIL</code> then the application window will <em>not</em> be closed. <a href="#sdl_quit-requested">SDL_QUIT-REQUESTED</a> will return non-zero if a <code>QUIT-EVENT</code> event is pending. </p><h5>SDL Window Resize Event</h5><pre><code>(:VIDEO-RESIZE-EVENT (:W W :H H)  
-   ...) </code></pre><p>When <code>SDL-RESIZABLE</code> is passed as a flag to <a href="#window">WINDOW</a>, the user is allowed to resize the application window. When the window is resized a <code>VIDEO-RESIZE-EVENT</code> event is reported, with the new window width and height values stored in <code>W</code> and <code>H</code> respectively. When an <code>VIDEO-RESIZE-EVENT</code> event is recieved the window should be resized to the new dimensions using <a href="#window">WINDOW</a>. </p><ul><li><code>W</code> is the window width as an <code>INTEGER</code>.</li><li><code>H</code> is the window height as an INTERGER`.</li></ul><h5>SDL Window Expose Event</h5><pre><code>(:VIDEO-EXPOSE-EVENT ()  
-   ...) </code></pre><p><code>VIDEO-EXPOSE-EVENT</code> is triggered when the screen has been modified outside of the application, usually by the window manager, and needs to be redrawn. </p><h5>System Window Events</h5><pre><code>(:SYS-WM-EVENT ()  
-   ...) </code></pre><p>The system window manager event contains a pointer to system-specific information about unknown window manager events. If this event is enabled using <a href="#sdl-event-state">SDL-EVENT-STATE</a>, it will be generated whenever unhandled events are received from the window manager. This can be used, for example, to implement cut-and-paste in your application. If you want to obtain system-specific information about the window manager, you can fill in the version member of a <code>SDL-SYS-WM-INFO</code> structure using <a href="#sdl-version">SDL-VERSION</a>, and pass it to the function: <a href="#sdl-get-wm-info">SDL-GET-WM-INFO</a> </p><h5>User</h5><pre><code>(:USER-EVENT (:TYPE TYPE :CODE CODE :DATA1 DATA1 :DATA2 DATA2)  
-   ...) </code></pre><p><code>USER-EVENT</code> is unique in that it is created by the user not SDL. <code>USER-EVENT</code> can be pushed onto the event queue using <a href="#push-user-event">PUSH-USER-EVENT</a>. The contents of the event are completely up to the programmer. </p><ul><li><code>TYPE</code> is  a value from <code>SDL-USER-EVENT to </code>(- SDL-NUM-EVENTS 1)` inclusive.</li><li><code>CODE</code> is a user defined event code</li><li><code>DATA1</code> is a user defined data pointer</li><li><code>DATA2</code> is a user defined data pointer</li></ul><h5>Syntax</h5><pre><code>(WITH-EVENTS (TYPE)  
- (:ACTIVE-EVENT (:GAIN GAIN :STATE STATE)  
-    ... )  
- (:KEY-DOWN-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)  
-    ... )  
- (:KEY-UP-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)  
-    ...)  
- (:MOUSE-MOTION-EVENT (:STATE STATE :X X :Y Y :X-REL X-REL :Y-REL Y-REL)  
-    ...)  
- (:MOUSE-BUTTON-DOWN-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)  
-    ...)  
- (:MOUSE-BUTTON-UP-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)  
-    ...)  
- (:JOY-AXIS-MOTION-EVENT (:WHICH WHICH :AXIS AXIS :VALUE VALUE)  
-    ...)  
- (:JOY-BUTTON-DOWN-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)  
-    ...)  
- (:JOY-BUTTON-UP-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)  
-    ...)  
- (:JOY-HAT-MOTION-EVENT (:WHICH WHICH :HAT HAT :VALUE VALUE)  
-    ...)  
- (:JOY-BALL-MOTION-EVENT (:WHICH WHICH :BALL BALL :X-REL X-REL :Y-REL Y-REL)  
-    ...)  
- (:VIDEO-RESIZE-EVENT (:W W :H H)  
-    ...)  
- (:VIDEO-EXPOSE-EVENT ()  
-    ...)  
- (:SYS-WM-EVENT ()  
-    ...)  
- (:USER-EVENT (:TYPE TYPE :CODE CODE :DATA1 DATA1 :DATA2 DATA2)  
-    ...)  
- (:QUIT-EVENT ()  
-    ...  
-    T)  
- (:IDLE ()  
+</p><ul><li><code>WHICH</code> is the index of the joystick that reported the event.</li><li><code>BUTTON</code> is the button pressed that caused the event.</li><li><code>STATE</code> is the current state of the button and is either <code>SDL-PRESSED</code> or <code>SDL-RELEASED</code>. </li></ul><h5>Joystick Hat Motion Event</h5><pre><code>   (:JOY-HAT-MOTION-EVENT (:WHICH WHICH :HAT HAT :VALUE VALUE)
+     &amp;BODY BODY) </code></pre><p>A <code>JOY-HAT-MOTION-EVENT</code> event occurs when ever a user moves a hat on the joystick. </p><ul><li><code>WHICH</code> is the index of the joystick that reported the event.</li><li><code>HAT</code> is the index of the hat that generated the event.</li><li><code>VALUE</code> is the current position of the hat, a bitwise OR&#039;d combination of the following values <code>SDL-HAT-CENTERED</code>, <code>SDL-HAT-UP</code>, <code>SDL-HAT-RIGHT</code>, <code>SDL-HAT-DOWN</code>, <code>SDL-HAT-LEFT</code>, <code>SDL-HAT-RIGHT-UP</code>, <code>SDL-HAT-RIGHT-DOWN</code>, <code>SDL-HAT-LEFT-UP</code> and <code>SDL-HAT-LEFT-DOWN</code>. </li></ul><h5>Joystick Ball Motion Event</h5><pre><code>(:JOY-BALL-MOTION-EVENT (:WHICH WHICH :BALL BALL :X-REL X-REL :Y-REL Y-REL)
+  &amp;BODY BODY) </code></pre><p>A <code>JOY-BALL-MOTION-EVENT</code> event occurs when a user moves a trackball on the joystick. Trackballs only return relative motion. </p><ul><li><code>WHICH</code> is the index of the joystick that reported the event.</li><li><code>BALL</code> is the index of the trackball that generated the event.</li><li><code>X-REL</code> is the change in <code>X</code> position of the ball since it was last polled (last cycle of the event loop). </li><li><code>Y-REL</code> is the change in <code>Y</code> position of the ball since it was last polled (last cycle of the event loop). </li></ul><h5>Quit Event</h5><pre><code>(:QUIT-EVENT ()
+   &amp;BODY BODY) </code></pre><p>If <code>QUIT-EVENT</code> is filtered or ignored then it is impossible for the user to close the window. If <code>QUIT-EVENT</code> is accepted and returns <code>T</code> then the application window will be closed. <em>Note:</em> Screen updates will continue to report success even though the application is no longer visible. If <code>QUIT-EVENT</code> is accepted and returns <code>NIL</code> then the application window will <em>not</em> be closed. <a href="#sdl_quit-requested">SDL_QUIT-REQUESTED</a> will return non-zero if a <code>QUIT-EVENT</code> event is pending. </p><h5>SDL Window Resize Event</h5><pre><code>(:VIDEO-RESIZE-EVENT (:W W :H H)
+   ...) </code></pre><p>When <code>SDL-RESIZABLE</code> is passed as a flag to <a href="#window">WINDOW</a>, the user is allowed to resize the application window. When the window is resized a <code>VIDEO-RESIZE-EVENT</code> event is reported, with the new window width and height values stored in <code>W</code> and <code>H</code> respectively. When an <code>VIDEO-RESIZE-EVENT</code> event is recieved the window should be resized to the new dimensions using <a href="#window">WINDOW</a>. </p><ul><li><code>W</code> is the window width as an <code>INTEGER</code>.</li><li><code>H</code> is the window height as an INTERGER`.</li></ul><h5>SDL Window Expose Event</h5><pre><code>(:VIDEO-EXPOSE-EVENT ()
+   ...) </code></pre><p><code>VIDEO-EXPOSE-EVENT</code> is triggered when the screen has been modified outside of the application, usually by the window manager, and needs to be redrawn. </p><h5>System Window Events</h5><pre><code>(:SYS-WM-EVENT ()
+   ...) </code></pre><p>The system window manager event contains a pointer to system-specific information about unknown window manager events. If this event is enabled using <a href="#sdl-event-state">SDL-EVENT-STATE</a>, it will be generated whenever unhandled events are received from the window manager. This can be used, for example, to implement cut-and-paste in your application. If you want to obtain system-specific information about the window manager, you can fill in the version member of a <code>SDL-SYS-WM-INFO</code> structure using <a href="#sdl-version">SDL-VERSION</a>, and pass it to the function: <a href="#sdl-get-wm-info">SDL-GET-WM-INFO</a> </p><h5>User</h5><pre><code>(:USER-EVENT (:TYPE TYPE :CODE CODE :DATA1 DATA1 :DATA2 DATA2)
+   ...) </code></pre><p><code>USER-EVENT</code> is unique in that it is created by the user not SDL. <code>USER-EVENT</code> can be pushed onto the event queue using <a href="#push-user-event">PUSH-USER-EVENT</a>. The contents of the event are completely up to the programmer. </p><ul><li><code>TYPE</code> is  a value from <code>SDL-USER-EVENT to </code>(- SDL-NUM-EVENTS 1)` inclusive.</li><li><code>CODE</code> is a user defined event code</li><li><code>DATA1</code> is a user defined data pointer</li><li><code>DATA2</code> is a user defined data pointer</li></ul><h5>Syntax</h5><pre><code>(WITH-EVENTS (TYPE)
+ (:ACTIVE-EVENT (:GAIN GAIN :STATE STATE)
+    ... )
+ (:KEY-DOWN-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)
+    ... )
+ (:KEY-UP-EVENT (:STATE STATE :SCANCODE SCANCODE :KEY KEY :MOD MOD :UNICODE UNICODE)
+    ...)
+ (:MOUSE-MOTION-EVENT (:STATE STATE :X X :Y Y :X-REL X-REL :Y-REL Y-REL)
+    ...)
+ (:MOUSE-BUTTON-DOWN-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)
+    ...)
+ (:MOUSE-BUTTON-UP-EVENT (:BUTTON BUTTON :STATE STATE :X X :Y Y)
+    ...)
+ (:JOY-AXIS-MOTION-EVENT (:WHICH WHICH :AXIS AXIS :VALUE VALUE)
+    ...)
+ (:JOY-BUTTON-DOWN-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)
+    ...)
+ (:JOY-BUTTON-UP-EVENT (:WHICH WHICH :BUTTON BUTTON :STATE STATE)
+    ...)
+ (:JOY-HAT-MOTION-EVENT (:WHICH WHICH :HAT HAT :VALUE VALUE)
+    ...)
+ (:JOY-BALL-MOTION-EVENT (:WHICH WHICH :BALL BALL :X-REL X-REL :Y-REL Y-REL)
+    ...)
+ (:VIDEO-RESIZE-EVENT (:W W :H H)
+    ...)
+ (:VIDEO-EXPOSE-EVENT ()
+    ...)
+ (:SYS-WM-EVENT ()
+    ...)
+ (:USER-EVENT (:TYPE TYPE :CODE CODE :DATA1 DATA1 :DATA2 DATA2)
+    ...)
+ (:QUIT-EVENT ()
+    ...
+    T)
+ (:IDLE ()
     ... )) </code></pre>
 
 </blockquote>
@@ -5070,7 +5070,7 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-font'><b>with-font</b> <i>(font font-definition) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Sets <code>*DEFAULT-FONT*</code> to a new <a href="#bitmap-font">BITMAP-FONT</a> in <code>FONT</code> within the scope of <code>WITH-FONT</code>. Frees <code>FONT</code> when <code>WITH-FONT</code> goes out of scope, and sets <code>*DEFAULT-FONT* to </code>NIL. </p><h5>Example</h5><pre><code>(WITH-FONT (new-font *font-8x8*)  
+<p>Sets <code>*DEFAULT-FONT*</code> to a new <a href="#bitmap-font">BITMAP-FONT</a> in <code>FONT</code> within the scope of <code>WITH-FONT</code>. Frees <code>FONT</code> when <code>WITH-FONT</code> goes out of scope, and sets <code>*DEFAULT-FONT* to </code>NIL. </p><h5>Example</h5><pre><code>(WITH-FONT (new-font *font-8x8*)
     (DRAW-CHARACTER-SHADED-* &quot;Hello World!&quot; 0 0 F-COLOR B-COLOR)) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
 
 </blockquote>
@@ -5095,19 +5095,19 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-init'><b>with-init</b> <i>flags declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p><code>WITH-INIT</code> is a convenience macro that will attempt to initialise the SDL library and SDL subsystems prior to executing the forms in <code>BODY</code>. Upon exit <code>WITH-INIT</code> will uninitialize the SDL library and SDL subsystems. </p><p>The lispbuilder-sdl initialization routines are somewhat complicated by the fact that a Lisp development environment will load a foreign library once but then initialise and uninitialise the library multiple times. A C/C++ development environment will open and then close a library after each execution, freeing all resources left hanging by incomplete or buggy uninitialise functions. C libraries may therefore frequently core dump in a Lisp environment when resources are not feed properly prior to the library being reinitialized. </p><p>LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control of the initialisation/uninitialisation of foreign libraries. The fuctions that provide these capabilities are as follows: </p><ul><li><a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a></li><li><a href="#quit-on-exit">QUIT-ON-EXIT</a></li><li><a href="#list-sub-systems">LIST-SUB-SYSTEMS</a></li><li><a href="#return-sub-systems-of-status">RETURN-SUB-SYSTEMS-OF-STATUS</a></li><li><a href="#init-sub-systems">INIT-SUB-SYSTEMS</a></li><li><a href="#quit-sub-systems">QUIT-SUB-SYSTEMS</a></li><li><a href="#init-sdl">INIT-SDL</a></li><li><a href="#quit-sdl">QUIT-SDL</a></li></ul><h5>Defaults</h5><ul><li>By default <code>WITH-INIT</code> will only initialise the <code>SDL-INIT-VIDEO</code> SDL subsystem. Additional SDL subsystems can be initialized by calling <a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a>. </li><li>By default <code>WITH-INIT</code> will only uninitialise the <code>SDL-INIT-VIDEO</code> SDL subsystem. Additional SDL subsystems can be uninitialized by calling <a href="#quit-on-exit">QUIT-ON-EXIT</a>. </li></ul><h6>Initialisation/Uninitialisation of the SDL library</h6><p>The SDL library is initialised only: </p><ul><li>If the library is not yet already initialized, or</li><li><a href="#sdl-init-on-startup">SDL-INIT-ON-STARTUP</a> is <code>T</code>.</li></ul><p>The SDL library is uninitialised only: </p><ul><li>When <a href="#sdl-quit-on-exit">SDL-QUIT-ON-EXIT</a> is <code>T</code>.</li></ul><h6>Initialisation/Uninitialisation of external libraries</h6><p>Hooks are provided to allow external libraries to be initialized or uninitialised automatically following the initialisation or uninitialisation of the SDL library. </p><p>To initialise an external library, push a function that initialises the external library onto <code>*EXTERNAL-INIT-ON-STARTUP*</code>. The function must take no arguments. For example: </p><pre><code>(defun init-ttf ()  
-   (if (is-init)  
-     t  
-     (sdl-ttf-cffi::ttf-init)))  
-(pushnew &#039;init-ttf sdl:*external-init-on-startup*) </code></pre><p>To uninitialise an external library, push a function that uninitialises the external library onto  <code>*EXTERNAL-QUIT-ON-EXIT*</code>. The function must take no arguments. For example: </p><pre><code>(defun quit-ttf ()  
-   (if (is-init)  
-     (sdl-ttf-cffi::ttf-quit)))  
-(pushnew &#039;quit-ttf sdl:*external-quit-on-exit*) </code></pre><h5>Parameters</h5><ul><li><code>FLAGS</code> may be one or more of: <code>SDL-INIT-EVERYTHING</code>, <code>SDL-INIT-VIDEO</code>, <code>SDL-INIT-CDROM</code>, <code>SDL-INIT-AUDIO</code>, <code>SDL-INIT-TIMER</code>, <code>SDL-INIT-JOYSTICK</code>, <code>SDL-INIT-EVENTTHREAD</code> and <code>SDL-INIT-NOPARACHUTE</code>. <em>Note</em>: When <code>FLAGS</code> is set by <code>WITH-INIT</code>, subsequent calls to <a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a> and <a href="#quit-on-exit">QUIT-ON-EXIT</a> are ignored. <code>WITH-INIT</code> will only initialize and uninitialize the subsytems specified in <code>FLAGS</code>. </li></ul><h5>Example</h5><pre><code>(with-init (SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)  
-  ....)  
- 
-(with-init ()  
-  (INITIALIZE-ON-STARTUP SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)  
-  (QUIT-ON-EXIT SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)  
+<p><code>WITH-INIT</code> is a convenience macro that will attempt to initialise the SDL library and SDL subsystems prior to executing the forms in <code>BODY</code>. Upon exit <code>WITH-INIT</code> will uninitialize the SDL library and SDL subsystems. </p><p>The lispbuilder-sdl initialization routines are somewhat complicated by the fact that a Lisp development environment will load a foreign library once but then initialise and uninitialise the library multiple times. A C/C++ development environment will open and then close a library after each execution, freeing all resources left hanging by incomplete or buggy uninitialise functions. C libraries may therefore frequently core dump in a Lisp environment when resources are not feed properly prior to the library being reinitialized. </p><p>LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control of the initialisation/uninitialisation of foreign libraries. The fuctions that provide these capabilities are as follows: </p><ul><li><a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a></li><li><a href="#quit-on-exit">QUIT-ON-EXIT</a></li><li><a href="#list-sub-systems">LIST-SUB-SYSTEMS</a></li><li><a href="#return-sub-systems-of-status">RETURN-SUB-SYSTEMS-OF-STATUS</a></li><li><a href="#init-sub-systems">INIT-SUB-SYSTEMS</a></li><li><a href="#quit-sub-systems">QUIT-SUB-SYSTEMS</a></li><li><a href="#init-sdl">INIT-SDL</a></li><li><a href="#quit-sdl">QUIT-SDL</a></li></ul><h5>Defaults</h5><ul><li>By default <code>WITH-INIT</code> will only initialise the <code>SDL-INIT-VIDEO</code> SDL subsystem. Additional SDL subsystems can be initialized by calling <a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a>. </li><li>By default <code>WITH-INIT</code> will only uninitialise the <code>SDL-INIT-VIDEO</code> SDL subsystem. Additional SDL subsystems can be uninitialized by calling <a href="#quit-on-exit">QUIT-ON-EXIT</a>. </li></ul><h6>Initialisation/Uninitialisation of the SDL library</h6><p>The SDL library is initialised only: </p><ul><li>If the library is not yet already initialized, or</li><li><a href="#sdl-init-on-startup">SDL-INIT-ON-STARTUP</a> is <code>T</code>.</li></ul><p>The SDL library is uninitialised only: </p><ul><li>When <a href="#sdl-quit-on-exit">SDL-QUIT-ON-EXIT</a> is <code>T</code>.</li></ul><h6>Initialisation/Uninitialisation of external libraries</h6><p>Hooks are provided to allow external libraries to be initialized or uninitialised automatically following the initialisation or uninitialisation of the SDL library. </p><p>To initialise an external library, push a function that initialises the external library onto <code>*EXTERNAL-INIT-ON-STARTUP*</code>. The function must take no arguments. For example: </p><pre><code>(defun init-ttf ()
+   (if (is-init)
+     t
+     (sdl-ttf-cffi::ttf-init)))
+(pushnew &#039;init-ttf sdl:*external-init-on-startup*) </code></pre><p>To uninitialise an external library, push a function that uninitialises the external library onto  <code>*EXTERNAL-QUIT-ON-EXIT*</code>. The function must take no arguments. For example: </p><pre><code>(defun quit-ttf ()
+   (if (is-init)
+     (sdl-ttf-cffi::ttf-quit)))
+(pushnew &#039;quit-ttf sdl:*external-quit-on-exit*) </code></pre><h5>Parameters</h5><ul><li><code>FLAGS</code> may be one or more of: <code>SDL-INIT-EVERYTHING</code>, <code>SDL-INIT-VIDEO</code>, <code>SDL-INIT-CDROM</code>, <code>SDL-INIT-AUDIO</code>, <code>SDL-INIT-TIMER</code>, <code>SDL-INIT-JOYSTICK</code>, <code>SDL-INIT-EVENTTHREAD</code> and <code>SDL-INIT-NOPARACHUTE</code>. <em>Note</em>: When <code>FLAGS</code> is set by <code>WITH-INIT</code>, subsequent calls to <a href="#initialize-on-startup">INITIALIZE-ON-STARTUP</a> and <a href="#quit-on-exit">QUIT-ON-EXIT</a> are ignored. <code>WITH-INIT</code> will only initialize and uninitialize the subsytems specified in <code>FLAGS</code>. </li></ul><h5>Example</h5><pre><code>(with-init (SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
+  ....)
+
+(with-init ()
+  (INITIALIZE-ON-STARTUP SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
+  (QUIT-ON-EXIT SDL-INIT-VIDEO SDL-INIT-CDROM SDL-INIT-AUDIO)
   ....) </code></pre>
 
 </blockquote>
@@ -5156,7 +5156,7 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-rectangle'><b>with-rectangle</b> <i>(var <tt>&amp;optional</tt> rectangle free) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>A convenience macro that binds <code>*DEFAULT-RECTANGLE*</code> to <code>VAR</code> within the scope of <code>WITH-RECTANGLE</code>. <code>VAR</code> must be of type <code>RECTANGLE</code>. <code>VAR</code> is set to <code>RECTANGLE</code> when <code>RECTANGLE</code> is not <code>NIL</code>. <code>VAR</code> is freed when <code>FREE</code> is <code>T</code>. </p><h5>Example</h5><pre><code>(WITH-RECTANGLE (a-rect (RECTANGLE :x 0 :y 0 :w 100 :h 100))  
+<p>A convenience macro that binds <code>*DEFAULT-RECTANGLE*</code> to <code>VAR</code> within the scope of <code>WITH-RECTANGLE</code>. <code>VAR</code> must be of type <code>RECTANGLE</code>. <code>VAR</code> is set to <code>RECTANGLE</code> when <code>RECTANGLE</code> is not <code>NIL</code>. <code>VAR</code> is freed when <code>FREE</code> is <code>T</code>. </p><h5>Example</h5><pre><code>(WITH-RECTANGLE (a-rect (RECTANGLE :x 0 :y 0 :w 100 :h 100))
     ...) </code></pre>
 
 </blockquote>
@@ -5169,9 +5169,9 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-rectangles'><b>with-rectangles</b> <i>bindings declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>A convenience macro that binds multiple rectangles as per <a href="#with-rectangle">WITH-RECTANGLE</a>. </p><h5>Example</h5><pre><code>(WITH-RECTANGLES ((a-rect (RECTANGLE :x 0 :y 0 :w 100 :h 100))  
-                  ((b-rect (RECTANGLE :x 0 :y 100 :w 100 :h 100))  
-                  ((c-rect (RECTANGLE :x 0 :y 200 :w 100 :h 100)))  
+<p>A convenience macro that binds multiple rectangles as per <a href="#with-rectangle">WITH-RECTANGLE</a>. </p><h5>Example</h5><pre><code>(WITH-RECTANGLES ((a-rect (RECTANGLE :x 0 :y 0 :w 100 :h 100))
+                  ((b-rect (RECTANGLE :x 0 :y 100 :w 100 :h 100))
+                  ((c-rect (RECTANGLE :x 0 :y 200 :w 100 :h 100)))
     ...) </code></pre>
 
 </blockquote>
@@ -5184,11 +5184,11 @@ current version is 0.1.0.
 <p><br>[Macro]<br><a class=none name='with-shape'><b>with-shape</b> <i>(<tt>&amp;optional</tt> style) declaration* statement*</i> =&gt; <i>result</i></a>
 <blockquote><br>
 
-<p>Draw a polygon of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. </p><h5>Local Methods</h5><p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or</li><li><code>ADD-VERTEX-*</code> which is the x/y spread version</li></ul><p>ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE. </p><h5>Parameters</h5><ul><li><code>STYLE</code> describes the line style used to draw the shape and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li></ul><h5>Example</h5><pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))  
-   (WITH-SHAPE (:POINTS)  
-     (ADD-VERTEX-* 60  40)  
-     (ADD-VERTEX-* 160 10)  
-     (ADD-VERTEX-* 170 150)  
+<p>Draw a polygon of <code>*DEFAULT-COLOR*</code> to <code>*DEFAULT-SURFACE*</code>. </p><h5>Local Methods</h5><p>A vertex may be added using: </p><ul><li><code>ADD-VERTEX</code> which accepts an <code>SDL:POINT</code>, or</li><li><code>ADD-VERTEX-*</code> which is the x/y spread version</li></ul><p>ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE. </p><h5>Parameters</h5><ul><li><code>STYLE</code> describes the line style used to draw the shape and may be one of <code>:SOLID</code>, <code>:DASH</code>, or <code>:POINTS</code>. Use <code>:SOLID</code> to draw a single continuous line through the specified waypoints. Use <code>:DASH</code> to draw a line between alternate waypoint pairs. Use <code>:POINTS</code> to draw a single pixel at each waypoint. </li></ul><h5>Example</h5><pre><code>(SDL:WITH-COLOR (COL (SDL:COLOR))
+   (WITH-SHAPE (:POINTS)
+     (ADD-VERTEX-* 60  40)
+     (ADD-VERTEX-* 160 10)
+     (ADD-VERTEX-* 170 150)
      (ADD-VERTEX-* 60  150))) </code></pre><h5>Packages</h5><ul><li>Also supported in <em>LISPBUILDER-SDL-GFX</em></li></ul>
 
 </blockquote>

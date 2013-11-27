@@ -48,7 +48,7 @@
 	  (mmanager-line manager) (make-array '(16 5)
 					      :initial-contents '((-1 -1 -1 -1 -1)
 								  (0   3 -1 -1 -1)
-								  (0   1 -1 -1 -1) 
+								  (0   1 -1 -1 -1)
 								  (3   1 -1 -1 -1)
 								  (1   2 -1 -1 -1)
 								  (1   2  0  3 -1)
@@ -258,11 +258,11 @@
 			    (incf n)
 			    (setf edge-2-idx (aref line square-idx n))
 			    (incf n)
-			      
+
 			    ;; Edge 1
 			    (setf p1-idx (aref square-edge edge-1-idx 0)
 				  p2-idx (aref square-edge edge-1-idx 1))
-				  
+
 			    (setf val1 (aref meta-grid
 					     (+ i (aref offset p1-idx 0))
 					     (+ j (aref offset p1-idx 1)))
@@ -281,11 +281,11 @@
 							  (+ (* temp (- (+ j (aref offset p2-idx 1))
 									(+ j (aref offset p1-idx 1))))
 							     (+ j (aref offset p1-idx 1))))))
-				  
+
 			    ;; Edge 2
 			    (setf p1-idx (aref square-edge edge-2-idx 0)
 				  p2-idx (aref square-edge edge-2-idx 1))
-				  
+
 			    (setf val1 (aref meta-grid
 					     (+ i (aref offset p1-idx 0))
 					     (+ j (aref offset p1-idx 1)))
@@ -325,8 +325,8 @@
 	 (meta-color (sdl:color :r 175 :g 175 :b 175)) (meta-center-color (sdl:color :r 200 :g 0 :b 0)) (grid-color (sdl:color :r 75 :g 75 :b 75))
 	 (mb-pressed? nil)
 	 (meta-balls (setup))
-	 (manager (new-mmanager :y-res res-width :x-res res-height :iso-value 16.0 
-				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0 
+	 (manager (new-mmanager :y-res res-width :x-res res-height :iso-value 16.0
+				:viscosity 15.0 :min-viscosity 1.0 :max-viscosity 20.0
 				:x-squares horizontal-res :y-squares vertical-res))
 	 (100-frames-p (every-n-frames 100)))
 
@@ -344,7 +344,7 @@
 	(draw-grid (mmanager-x-squares manager) (mmanager-y-squares manager)
 		   (mmanager-x-res manager) (mmanager-y-res manager)
 		   grid-color grid)
-	
+
 	(sdl:with-events ()
 	  (:quit-event () t)
 	  (:key-down-event (:key key) (handle-keypress key))

@@ -2,7 +2,7 @@
 ;;;;; "http://projects.tuxee.net/cl-vectors/section-tutorial#tutorial"
 ;;;;; (C)2006 Luke J Crook
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defun cl-vectors-1 ()
   (let ((width 300) (height 200))
@@ -28,7 +28,7 @@
       (sdl:window width height :title-caption "CL-VECTORS, Tutorial #2")
       (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
-      
+
       (let ((state (aa:make-state)))	; create the state
 	;; the 1st triangle
 	(aa:line-f state 200 50 250 150) ; describe the 3 sides
@@ -40,7 +40,7 @@
 	(aa:line-f state 175 100 75 25)
 	(let ((put-pixel (sdl:image-put-pixel sdl:*default-display* #(0 0 0))))
 	  (aa:cells-sweep state put-pixel) ; render it
-	  
+
 	  (sdl:with-events ()
 	    (:quit-event () t)
 	    (:video-expose-event () (sdl:update-display))
@@ -52,7 +52,7 @@
       (sdl:window width height :title-caption "CL-VECTORS, Tutorial #3")
       (setf (sdl:frame-rate) 5)
       (sdl:clear-display (sdl:color :r 255 :g 255 :b 255))
-      
+
       (let ((state1 (aa:make-state))
 	    (state2 (aa:make-state)))
 	;; the 1st triangle

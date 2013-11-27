@@ -3,8 +3,8 @@
 ;;;; (C)2008 Justin Heyes-Jones, Luke Crook
 ;;;; see COPYING for license
 
-(in-package #:sdl-examples) 
-  
+(in-package #:sdl-examples)
+
 (defparameter *window-x* 400)
 (defparameter *window-y* 400)
 
@@ -16,7 +16,7 @@
 	  (if (sdl:key-held-p key)
 	      "Held"
 	      "Not Held"))))
-  
+
 (defun sdl-input()
   (sdl:with-init ()
     (let ((font (sdl:initialise-default-font sdl:*font-10x20*)))
@@ -24,25 +24,25 @@
       (setf (sdl:frame-rate) 30)
       (sdl:with-events ()
 	(:quit-event () t)
-	
+
         (:key-down-event (:key key)
          (if (sdl:key= key :SDL-KEY-ESCAPE)
            (sdl:push-quit-event)))
-	
+
 	(:idle ()
          ;; simple text print out for press and releases
          (if (sdl:key-pressed-p :SDL-KEY-A)
            (format t "A pressed~%"))
-		   
+
          (if (sdl:key-released-p :SDL-KEY-A)
            (format t "A released~%"))
 
          ;; fill the background
          (sdl:clear-display (sdl:color :r #x00 :g #x00 :b #x00))
 
-         ;; draw A key status 
+         ;; draw A key status
          (sdl:draw-string-solid-* (format nil "A key state : ~a" (get-key-status-as-string :SDL-KEY-A))
-                                  20 40 
+                                  20 40
                                   :color sdl:*white* :font font :justify :left)
 
          (sdl:draw-string-solid-* (format nil "A key time : ~06,2f" (sdl:key-time-in-current-state :SDL-KEY-A))

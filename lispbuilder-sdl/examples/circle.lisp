@@ -1,5 +1,5 @@
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defun circle-1 ()
   (sdl:with-init ()
@@ -8,11 +8,11 @@
                   :title-caption "Circle-1: Circles & Filled Circles"
                   :icon-caption "Circle-1: Circles & Filled Circles")
       (setf (sdl:frame-rate) 200)
-      
+
       (sdl:initialise-default-font sdl:*font-5x7*)
       (draw-fps "Calculating FPS....." 10 200
                 sdl:*default-font* sdl:*default-surface* t)
-           
+
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))
@@ -35,16 +35,16 @@
 
 (defun circle-2 ()
   (sdl:with-init ()
-    (let ((100-frames-p (every-n-frames 100)))      
+    (let ((100-frames-p (every-n-frames 100)))
       (sdl:window 320 240
 		  :title-caption "Circle-2: Filled Circles with circumference"
 		  :icon-caption "Circle-2: Filled Circles with circumference")
       (setf (sdl:frame-rate) 200)
-      
+
       (sdl:initialise-default-font sdl:*font-5x7*)
       (draw-fps "Calculating FPS....."
                 10 200 sdl:*default-font* sdl:*default-surface* t)
-    
+
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))
@@ -60,13 +60,13 @@
          ;; but only render the font once every 100 frames.
          (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
                    10 200 sdl:*default-font* sdl:*default-surface*
-                   (funcall 100-frames-p))	     
+                   (funcall 100-frames-p))
          (sdl:update-display))))))
 
 (defun circle-3 ()
   (sdl:with-init ()
     (let ((100-frames-p (every-n-frames 100)))
-      
+
       (sdl:window 640 480
                   :title-caption "Circle-3: Alpha Filled Circles"
                   :icon-caption "Circle-3: Alpha Filled Circles")
@@ -75,7 +75,7 @@
       (sdl:initialise-default-font sdl:*font-5x7*)
       (draw-fps "Calculating FPS....."
                 10 200 sdl:*default-font* sdl:*default-surface* t)
-    
+
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))
@@ -105,7 +105,7 @@
       (sdl:initialise-default-font sdl:*font-5x7*)
       (draw-fps "Calculating FPS....."
                 10 200 sdl:*default-font* sdl:*default-surface* t)
-    
+
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))

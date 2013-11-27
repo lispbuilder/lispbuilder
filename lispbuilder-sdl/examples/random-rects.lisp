@@ -3,14 +3,14 @@
 ;;;; (C)2006 Luke Crook
 ;;;; see COPYING for license
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defun random-rects ()
   (let ((width 320) (height 240))
     (sdl:with-init ()
       (let ((100-frames-p (every-n-frames 1000))
 	    (rect (sdl:rectangle)))
-	    
+
 	(sdl:window width height
 		    :title-caption "random-rects"
 		    :icon-caption "random-rects")
@@ -41,7 +41,7 @@
 
 (defun random-rect ()
   (let ((width 320) (height 240))
-    (sdl:with-init ()     
+    (sdl:with-init ()
       (sdl:window width height
                   :title-caption "random-rect"
                   :icon-caption "random-rect")
@@ -76,7 +76,7 @@
 (defun random-box-1 ()
   (let ((width 320) (height 240))
     (sdl:with-init ()
-      (let ((rect (sdl:rectangle)))	
+      (let ((rect (sdl:rectangle)))
         (sdl:window width height
 		    :title-caption "Random solid box"
 		    :icon-caption "Random solid box")
@@ -94,7 +94,7 @@
 (defun random-box-2 ()
   (let ((width 320) (height 240))
     (sdl:with-init ()
-      ;; Using the :WAIT event model so me may as well unlock the frame rate.      
+      ;; Using the :WAIT event model so me may as well unlock the frame rate.
       (sdl:window width height
                   :title-caption "Random solid box with outline"
                   :icon-caption "Random solid box with outline")
@@ -127,7 +127,7 @@
     (sdl:with-init ()
       (let ((500-frames-p (every-n-frames 500))
 	    (rect (sdl:rectangle)))
-	        
+
 	(sdl:window width height
 		    :title-caption "Random alpha Box"
 		    :icon-caption "Random alpha Box")
@@ -163,7 +163,7 @@
   (let ((width 320) (height 240))
     (sdl:with-init ()
       (let ((500-frames-p (every-n-frames 500)))
-	              
+
 	(sdl:window width height
                     :title-caption "Random alpha box with outline"
                     :icon-caption "Random alpha Box with outline")

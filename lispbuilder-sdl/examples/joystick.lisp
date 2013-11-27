@@ -113,13 +113,13 @@
     (sdl:initialise-default-font sdl:*font-8x8*)
 
     (sdl-cffi::sdl-joystick-event-state sdl-cffi::sdl-enable)
-    
+
     (setf *num-joysticks* (sdl:num-joysticks)
 	  *current-joystick-index* 0)
 
     (when (> *num-joysticks* 0)
       (setf *joystick* (new-joystick *current-joystick-index*)))
-    
+
     (sdl:with-events ()
       (:quit-event ()
        (when *joystick*
@@ -157,7 +157,7 @@
        (sdl:draw-string-solid-* (format nil "SPACE to test next joystick. ESC to exit.")
                                 300 15
                                 :color sdl:*white*
-                                :justify :center)	     
+                                :justify :center)
        (if *joystick*
          (print-joystick *joystick*)
          (print-status))

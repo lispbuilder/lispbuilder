@@ -42,7 +42,7 @@
   (let ((body-value (gensym "body-value-")))
     `(let ((,body-value nil))
        (with-surface (,var ,surface ,nil)
-         (unwind-protect 
+         (unwind-protect
              (progn (when (must-lock? ,var)
                       (when (/= (sdl-cffi::sdl-Lock-Surface ,var) 0)
                         (error "Cannot lock surface")))
@@ -202,7 +202,7 @@
 
 (defun convert-surface (surface to-surface
 			&key enable-color-key enable-alpha (rle-accel nil) (type :sw) (free nil))
-  "Returns a new surface of the specified pixel format, 
+  "Returns a new surface of the specified pixel format,
 and then copies and maps the given surface to it. Returns NIL if the surface cannot be converted."
   (let ((flags nil))
     (when enable-color-key
@@ -304,7 +304,7 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
   (cffi:foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::w))
 
 (defun surf-h (surface)
-  "return the height of the Sdl-Surface." 
+  "return the height of the Sdl-Surface."
   (cffi:foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::h))
 
 (defun clip-to-surface (template surface)
@@ -337,7 +337,7 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
   "Updates the screen using the keyword co-ordinates in the Vector, :template.
    All co-ordinates default to 0, updating the entire screen."
   (if template
-      (progn 
+      (progn
 	(when clipping
 	  (setf template (clip-to-surface template surface)))
 	(sdl-cffi::SDL-Update-Rect surface (rect-x template) (rect-y template) (rect-w template) (rect-h template)))
@@ -363,7 +363,7 @@ and then copies and maps the given surface to it. Returns NIL if the surface can
 (defun fill-surface (surface color &key (template nil) (update nil) (clipping nil))
   "Fill the entire surface with the specified RGB/A color.
    Use :template to specify the SDL_Rect to be used as the fill template.
-   Use :update to call SDL_UpdateRect, using :template if provided. This allows for a 
+   Use :update to call SDL_UpdateRect, using :template if provided. This allows for a
    'dirty recs' screen update.
 *Note*: `TEMPLATE` is clipped to the surface `SURFACE`, when `CLIPPING` is `T`."
   (if (and template (not (cffi:null-pointer-p template)))

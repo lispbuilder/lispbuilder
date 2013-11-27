@@ -71,26 +71,26 @@
 
 (defun gfx-init-frame-rate (fps-manager)
   (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_initFramerate" :library 'sdl-cffi::sdl-gfx)
-                                () 
+                                ()
                                 :pointer fps-manager
                                 :void))
 
 (defun gfx-set-frame-rate (fps-manager rate)
   (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_setFramerate" :library 'sdl-cffi::sdl-gfx)
-                                () 
+                                ()
                                 :pointer fps-manager
                                 :int rate
                                 :int))
 
 (defun gfx-get-frame-rate (fps-manager)
   (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_getFramerate" :library 'sdl-cffi::sdl-gfx)
-                                () 
+                                ()
                                 :pointer fps-manager
                                 :int))
 
 (defun gfx-frame-rate-delay (fps-manager)
   (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "SDL_framerateDelay" :library 'sdl-cffi::sdl-gfx)
-                                () 
+                                ()
                                 :pointer fps-manager
                                 :void))
 
@@ -101,7 +101,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aalineRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x0
                                   :int16 y0
@@ -113,7 +113,7 @@
                                   return-a color
                                   :int)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aalineColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x0
                                   :int16 y0
@@ -131,7 +131,7 @@
     (gfx-draw-aa-line-* x0 y0 x1 y1 :surface surface :color color)
     (if (a color)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "lineRGBA" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     :int16 x0
                                     :int16 y0
@@ -143,7 +143,7 @@
                                     return-a color
                                     :int)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "lineColor" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     :int16 x0
                                     :int16 y0
@@ -159,7 +159,7 @@
   (check-type color color)
   (if (a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "pixelRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -169,7 +169,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "pixelColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -183,7 +183,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "hlineRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x0
                                   :int16 x1
@@ -194,7 +194,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "hlineColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x0
                                   :int16 x1
@@ -209,7 +209,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "vlineRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y0
@@ -220,7 +220,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "vlineColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y0
@@ -235,7 +235,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "rectangleRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x0
                                   :int16 y0
@@ -247,7 +247,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "rectangleColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x0
                                   :int16 y0
@@ -263,7 +263,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "boxRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x0
                                   :int16 y0
@@ -275,7 +275,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "boxColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x0
                                   :int16 y0
@@ -291,7 +291,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aacircleRGBA" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       :int16 x
                                       :int16 y
@@ -302,7 +302,7 @@
                                       return-a color
                                       :int)
         (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aacircleColor" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       :int16 x
                                       :int16 y
@@ -319,7 +319,7 @@
     (gfx-draw-aa-circle-* x y r :surface surface :color color)
     (if (sdl:a color)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "circleRGBA" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     :int16 x
                                     :int16 y
@@ -330,7 +330,7 @@
                                     return-a color
                                     :int)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "circleColor" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     :int16 x
                                     :int16 y
@@ -345,7 +345,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledCircleRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -356,7 +356,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledCircleColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -371,7 +371,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aaellipseRGBA" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       :int16 x
                                       :int16 y
@@ -383,7 +383,7 @@
                                       return-a color
                                       :int)
         (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aaellipseColor" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       :int16 x
                                       :int16 y
@@ -401,7 +401,7 @@
     (gfx-draw-aa-ellipse-* x y rx ry :surface surface :color color)
     (if (sdl:a color)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "ellipseRGBA" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     :int16 x
                                     :int16 y
@@ -413,7 +413,7 @@
                                     return-a color
                                     :int)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "ellipseColor" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     :int16 x
                                     :int16 y
@@ -429,7 +429,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledEllipseRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -441,7 +441,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledEllipseColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -457,7 +457,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "pieRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -470,7 +470,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "pieColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -486,7 +486,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledPieRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -499,7 +499,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledPieColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   :int16 x
                                   :int16 y
@@ -517,7 +517,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aatrigonRGBA" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   return-x p1
                                   return-y p1
@@ -531,7 +531,7 @@
                                   return-a color
                                   :int)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aatrigonColor" :library 'sdl-cffi::sdl-gfx)
-                                  () 
+                                  ()
                                   surface-pointer surface
                                   return-x p1
                                   return-y p1
@@ -552,7 +552,7 @@
     (gfx-draw-aa-trigon p1 p2 p3 :surface surface :color color)
     (if (sdl:a color)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "trigonRGBA" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     return-x p1
                                     return-y p1
@@ -566,7 +566,7 @@
                                     return-a color
                                     :int)
       (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "trigonColor" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     return-x p1
                                     return-y p1
@@ -585,7 +585,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledTrigonRGBA" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       return-x p1
                                       return-y p1
@@ -599,7 +599,7 @@
                                       return-a color
                                       :int)
         (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledTrigonColor" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       return-x p1
                                       return-y p1
@@ -621,7 +621,7 @@
 	(poly-surface nil))
     (if (sdl:a color)
       (setf poly-surface (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aapolygonRGBA" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       :pointer x-array
                                       :pointer y-array
@@ -632,7 +632,7 @@
                                       return-a color
                                       :int))
       (setf poly-surface (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "aapolygonColor" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       :pointer x-array
                                       :pointer y-array
@@ -656,7 +656,7 @@
           (poly-surface nil))
       (if (sdl:a color)
         (setf poly-surface (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "polygonRGBA" :library 'sdl-cffi::sdl-gfx)
-                                                         () 
+                                                         ()
                                                          surface-pointer surface
                                                          :pointer x-array
                                                          :pointer y-array
@@ -667,7 +667,7 @@
                                                          return-a color
                                                          :int))
         (setf poly-surface (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "polygonColor" :library 'sdl-cffi::sdl-gfx)
-                                                         () 
+                                                         ()
                                                          surface-pointer surface
                                                          :pointer x-array
                                                          :pointer y-array
@@ -689,7 +689,7 @@
 	(poly-surface nil))
     (if (sdl:a color)
       (setf poly-surface (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledPolygonRGBA" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     :pointer x-array
                                     :pointer y-array
@@ -700,7 +700,7 @@
                                     return-a color
                                     :int))
       (setf poly-surface (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "filledPolygonColor" :library 'sdl-cffi::sdl-gfx)
-                                    () 
+                                    ()
                                     surface-pointer surface
                                     :pointer x-array
                                     :pointer y-array
@@ -725,7 +725,7 @@
         (length (length vertices)))
     (if (sdl:a color)
       (setf bezier-surface (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "bezierRGBA" :library 'sdl-cffi::sdl-gfx)
-                                                         () 
+                                                         ()
                                                          surface-pointer surface
                                                          :pointer x-array
                                                          :pointer y-array
@@ -737,7 +737,7 @@
                                                          return-a color
                                                          :int))
       (setf bezier-surface (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "bezierColor" :library 'sdl-cffi::sdl-gfx)
-                                                         () 
+                                                         ()
                                                          surface-pointer surface
                                                          :pointer x-array
                                                          :pointer y-array
@@ -756,7 +756,7 @@
   (check-type color sdl:color)
   (if (sdl:a color)
     (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "arcRGBA" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       :int16 x
                                       :int16 y
@@ -769,7 +769,7 @@
                                       return-a color
                                       :int)
         (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "arcColor" :library 'sdl-cffi::sdl-gfx)
-                                      () 
+                                      ()
                                       surface-pointer surface
                                       :int16 x
                                       :int16 y
@@ -782,7 +782,7 @@
 (defun gfx-roto-zoom-surface (angle zoom smooth &key (surface sdl:*default-surface*))
   (check-type surface sdl:surface)
   (make-instance 'sdl:surface :fp (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "rotozoomSurface" :library 'sdl-cffi::sdl-gfx)
-                                                                () 
+                                                                ()
                                                                 surface-pointer surface
                                                                 return-int-to-double angle
                                                                 return-int-to-double zoom
@@ -792,7 +792,7 @@
 (defun gfx-roto-zoom-xy (angle zoomx zoomy smooth &key (surface sdl:*default-surface*))
   (check-type surface sdl:surface)
   (make-instance 'sdl:surface :fp (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "rotozoomSurfaceXY" :library 'sdl-cffi::sdl-gfx)
-                                                                () 
+                                                                ()
                                                                 surface-pointer surface
                                                                 return-int-to-double angle
                                                                 return-int-to-double zoomx
@@ -831,7 +831,7 @@
   (declare (ignorable free))
   (check-type surface sdl:surface)
   (make-instance 'sdl:surface :fp (cffi:foreign-funcall-pointer (cffi:foreign-symbol-pointer "zoomSurface" :library 'sdl-cffi::sdl-gfx)
-                                                                () 
+                                                                ()
                                                                 surface-pointer surface
                                                                 return-int-to-double zoomx
                                                                 return-int-to-double zoomy

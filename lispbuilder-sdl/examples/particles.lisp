@@ -2,17 +2,17 @@
 ;;;; ---------------------------------------------------------------------
 ;;;;  Particle Demo: a simple SDL demo using common lisp.
 ;;;;  Copyright (C) 2007  Nicolas Martyanoff <khaelin@gmail.com>
-;;;; 
+;;;;
 ;;;;  This program is free software: you can redistribute it and/or modify
 ;;;;  it under the terms of the GNU General Public License as published by
 ;;;;  the Free Software Foundation, either version 3 of the License, or
 ;;;;  (at your option) any later version.
-;;;; 
+;;;;
 ;;;;  This program is distributed in the hope that it will be useful,
 ;;;;  but WITHOUT ANY WARRANTY; without even the implied warranty of
 ;;;;  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ;;;;  GNU General Public License for more details.
-;;;; 
+;;;;
 ;;;;  You should have received a copy of the GNU General Public License
 ;;;;  along with this program. If not, see <http://ww.gnu.org/licenses/>.
 ;;;; ---------------------------------------------------------------------
@@ -89,7 +89,7 @@
   pos velocity)
 
 ;;; ----------------------------------------------------------------------
-;;;  Initialize a particle, position it to the center of the screen, 
+;;;  Initialize a particle, position it to the center of the screen,
 ;;;  and give it a random velocity.
 ;;; ----------------------------------------------------------------------
 (defun init-particle (p)
@@ -194,7 +194,7 @@
     ;;                                      sdl:*default-asset-path*)))
 
     ;;(format t "surface-info: ~A~%" (sdl:surface-info *particle-img*))
-      
+
     ;; Replace the alpha channel of *particle-img* with
     ;; the alpha map in particle-alpha.bmp
     (sdl:with-surface (alpha (sdl:load-image (sdl:create-path "particle-alpha.bmp"
@@ -203,7 +203,7 @@
 
 
     ;;(setf *particle-img* (sdl:copy-surface :surface *particle-img* :inherit nil :rle-accel t :free t :fill nil))
-    
+
     ;; (format t "surface-info: ~A~%" (sdl:surface-info *particle-img*))
 
     ;; Load the bitmap fonts
@@ -255,7 +255,7 @@
       (:idle
        ;; Clear screen
        (sdl:clear-display sdl:*black*)
-         
+
        ;; Update/Draw the particles
        (dolist (p *particles*)
          (update-particle p (sdl:time-scale))
@@ -264,13 +264,13 @@
                                   (round (vec2-x pos)) (round (vec2-y pos)))))
        ;; Display text.
        (draw-cached-string "" 5 5 *font-large* sdl:*default-display* nil)
-         
+
        (if (funcall *frames-p*)
          (draw-cached-string (format nil "Particles: ~d, Framerate: ~f, timescale: ~f"
                                      *particle-count* (truncate (sdl:average-fps)) (sdl:time-scale))
                              5 35 *font-small* sdl:*default-display* t)
          (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
-         
+
        ;; Flip back/front buffers
        (sdl:update-display)))))
 
@@ -375,13 +375,13 @@
                                 (round (vec2-y (particle-pos p)))))
        ;; Display text.
        (draw-cached-string nil 5 5 *font-large* sdl:*default-display* nil)
-         
+
        (if (funcall *frames-p*)
          (draw-cached-string (format nil "Particles: ~d, Framerate: ~f, timescale: ~f, dt: ~f"
                                      *particle-count* (truncate (sdl:average-fps)) (sdl:time-scale) (sdl:dt))
                              5 35 *font-small* sdl:*default-display* t)
          (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
-                  
+
        ;; Flip back/front buffers
        (sdl:update-display)))))
 
@@ -465,16 +465,16 @@
                                         (round (vec2-y (particle-pos p)))))
                ;; Display text.
                (draw-cached-string nil 5 5 *font-large* sdl:*default-display* nil)
-         
+
                (if (funcall *frames-p*)
                  (draw-cached-string (format nil "Particles: ~d, Framerate: ~f, timescale: ~f, dt: ~f"
                                              *particle-count* (truncate (sdl:average-fps)) (sdl:time-scale) (sdl:dt))
                                      5 35 *font-small* sdl:*default-display* t)
                  (draw-cached-string nil 5 35 *font-small* sdl:*default-display* nil))
-                  
+
                ;; Flip back/front buffers
                (sdl:update-display)))
-         
+
             (:key-down-event
              (sdl:with-key-down-event ((k :key)) event
                (case k
@@ -489,6 +489,6 @@
                      *mouse-y* y)))
 
             (:video-expose-event (sdl:update-display))
-         
+
             (:quit-event (loop-finish)))
           finally (sdl:free-event event*))))

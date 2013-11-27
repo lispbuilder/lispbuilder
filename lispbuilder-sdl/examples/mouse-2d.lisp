@@ -6,7 +6,7 @@
 
 (defun mouse-2d ()
   (let ((width 200) (height 200))
-    (sdl:with-init ()     
+    (sdl:with-init ()
       (sdl:window width height :title-caption "Mouse 2D, from Processing.org")
       (setf (sdl:frame-rate) 60)
       (sdl:with-events ()
@@ -47,7 +47,7 @@
            (sdl:push-quit-event)))
         (:video-expose-event ()
          (sdl:update-display))
-        (:idle () 
+        (:idle ()
          (sdl:clear-display sdl:*black*)
          (sdl:draw-surface movable-surface :surface sdl:*default-display*)
          (sdl:update-display))))))
@@ -66,7 +66,7 @@
       (:idle ()
        ;; Clear the display each game loop
        ;;(sdl:clear-display sdl:*black*)
-       
+
        ;; Draw the box having a center at the mouse x/y coordinates.
        (sdl:draw-box (sdl:rectangle-from-midpoint-* (sdl:mouse-x) (sdl:mouse-y) 20 20)
                      :color (if (sdl:mouse-left-p) ;; Change the color of the box if the left mouse button is depressed

@@ -1,5 +1,5 @@
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 
 

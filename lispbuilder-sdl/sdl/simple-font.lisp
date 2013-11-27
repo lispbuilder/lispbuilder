@@ -28,7 +28,7 @@
 
 (defun split-character (character)
   (loop for line in character
-        append (loop repeat (/ (length line) 8) 
+        append (loop repeat (/ (length line) 8)
                      for start = 0 then (incf start 8)
                      for end = (+ start 8) then (incf end 8)
                      collect (subseq line start end))))

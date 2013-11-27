@@ -3,17 +3,17 @@
 ;;;; Functions
 
 (defmacro with-init (flags &body body)
-  "`WITH-INIT` is a convenience macro that will attempt to initialise the SDL library and SDL subsystems 
+  "`WITH-INIT` is a convenience macro that will attempt to initialise the SDL library and SDL subsystems
 prior to executing the forms in `BODY`. Upon exit `WITH-INIT` will uninitialize the SDL library and SDL subsystems.
 
-The lispbuilder-sdl initialization routines are somewhat complicated by the fact that 
-a Lisp development environment will load a foreign library once but then 
-initialise and uninitialise the library multiple times. A C/C++ development environment will open and then 
-close a library after each execution, freeing all resources left hanging by incomplete 
-or buggy uninitialise functions. C libraries may therefore frequently core dump in a Lisp environment when 
+The lispbuilder-sdl initialization routines are somewhat complicated by the fact that
+a Lisp development environment will load a foreign library once but then
+initialise and uninitialise the library multiple times. A C/C++ development environment will open and then
+close a library after each execution, freeing all resources left hanging by incomplete
+or buggy uninitialise functions. C libraries may therefore frequently core dump in a Lisp environment when
 resources are not feed properly prior to the library being reinitialized.
 
-LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control 
+LISPBUILDER-SDL provides functionality affording the programmer a finer granularity of control
 of the initialisation/uninitialisation of foreign libraries. The
 fuctions that provide these capabilities are as follows:
 * [INIT-SUBSYSTEMS](#init-subsystems)
@@ -25,7 +25,7 @@ fuctions that provide these capabilities are as follows:
 
 ##### Defaults
 
-`WITH-INIT` will initialize the SDL subsystem and additional subsystems in `:FLAGS` if specified. If `:FLAGS` is not specified, then 
+`WITH-INIT` will initialize the SDL subsystem and additional subsystems in `:FLAGS` if specified. If `:FLAGS` is not specified, then
 initializes the subsystems specified by [INITIALIZE-SUBSYSTEMS-ON-STARTUP](#initialize-subsystems-on-startup).
 `WITH-INIT` will uninitialize the SDL subsystem and additional subsystems in `:FLAGS` if specified.
 
@@ -39,17 +39,17 @@ The SDL library is uninitialized only:
 
 ###### Initialisation/Uninitialisation of external libraries
 
-Hooks are provided to allow external libraries to be initialized or uninitialised automatically following 
+Hooks are provided to allow external libraries to be initialized or uninitialised automatically following
 the initialisation or uninitialisation of the SDL library.
 
-To initialise an external library, push a function that initialises the external library onto 
+To initialise an external library, push a function that initialises the external library onto
 `\*EXTERNAL-INIT-SUBSYSTEMS-ON-STARTUP\*`. The function must take no arguments. For example:
 
     \(defun init-ttf \(\)
        \(if \(is-init\)
          t
          \(sdl-ttf-cffi::ttf-init\)\)\)
-    \(pushnew 'init-ttf sdl:*external-init-subsystems-on-startup*\) 
+    \(pushnew 'init-ttf sdl:*external-init-subsystems-on-startup*\)
 
 To uninitialise an external library, push a function that uninitialises the external library onto
  `\*EXTERNAL-QUIT-SUBSYSTEMS-ON-EXIT\*`. The function must take no arguments. For example:
@@ -61,10 +61,10 @@ To uninitialise an external library, push a function that uninitialises the exte
 
 ##### Parameters
 
-* `FLAGS` may be one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
-`SDL-INIT-JOYSTICK`, and `SDL-INIT-NOPARACHUTE`. *Note*: When `FLAGS` is set by 
-`WITH-INIT`, subsequent calls to [INITIALIZE-SUBSYSTEMS-ON-STARTUP](#initialize-subsystems-on-startup) and 
-[QUIT-SUBSYSTEMS-ON-EXIT](#quit-subsystems-on-exit) are ignored. `WITH-INIT` will only initialize and uninitialize the subsytems 
+* `FLAGS` may be one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`,
+`SDL-INIT-JOYSTICK`, and `SDL-INIT-NOPARACHUTE`. *Note*: When `FLAGS` is set by
+`WITH-INIT`, subsequent calls to [INITIALIZE-SUBSYSTEMS-ON-STARTUP](#initialize-subsystems-on-startup) and
+[QUIT-SUBSYSTEMS-ON-EXIT](#quit-subsystems-on-exit) are ignored. `WITH-INIT` will only initialize and uninitialize the subsytems
 specified in `FLAGS`.
 
 ##### Example
@@ -84,7 +84,7 @@ specified in `FLAGS`.
        (quit-sdl :flags ',flags))))
 
 (defun quit-on-exit-p ()
-  "Returns `T` if the SDL library will be uninitialised in a call to [QUIT-SDL](#quit-sdl), or [WITH-INIT](#with-init). 
+  "Returns `T` if the SDL library will be uninitialised in a call to [QUIT-SDL](#quit-sdl), or [WITH-INIT](#with-init).
 Returns `NIL` otherwise."
   *quit-on-exit*)
 (defun set-quit-on-exit (val)
@@ -96,7 +96,7 @@ Returns `NIL` otherwise."
 
 ##### Parameters
 
-* `FLAGS` may be one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+* `FLAGS` may be one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`,
 `SDL-INIT-JOYSTICK` and `SDL-INIT-NOPARACHUTE`, or `NIL` to not initialize any
 subsystems.
 
@@ -117,7 +117,7 @@ subsystems.
 
 ##### Parameters
 
-* `FLAGS` may be one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+* `FLAGS` may be one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`,
 `SDL-INIT-JOYSTICK` and `SDL-INIT-NOPARACHUTE` , or `NIL` to not uninitialize any
 subsystems.
 
@@ -169,7 +169,7 @@ subsystems.
     subsystems))
 
 (defun return-subsystems-of-status (flags status)
-  "Returns the `STATUS` of the the specified SDL subsystems in `FLAGS`. 
+  "Returns the `STATUS` of the the specified SDL subsystems in `FLAGS`.
 
 ##### Parameters
 * `FLAGS` must contain one or more of: `SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`,
@@ -190,9 +190,9 @@ subsystems.
 
 (defun init-subsystems (subsystems &optional force)
   "Initializes only the SDL subsystems specified in `FLAGS` that are not
-already initialized. 
+already initialized.
 `subsystems` is a list containing the one or more of:
-`SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`,
 `SDL-INIT-JOYSTICK`, and
 `SDL-INIT-NOPARACHUTE`.
 
@@ -209,7 +209,7 @@ already initialized.
   "Uninitializes only the SDL subsystems specified in the `FLAGS` that are
 already initialized.
 `subsystems` is a list containing the one or more of:
-`SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`, 
+`SDL-INIT-VIDEO`, `SDL-INIT-CDROM`, `SDL-INIT-AUDIO`,
 `SDL-INIT-JOYSTICK` and `SDL-INIT-NOPARACHUTE`.
 
 `QUIT-SUBSYSTEMS` can be called only after SDL is successfully intialized using [INIT-SDL](#init-sdl)."

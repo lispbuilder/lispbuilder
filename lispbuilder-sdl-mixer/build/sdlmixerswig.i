@@ -1,4 +1,4 @@
-%insert("lisphead") 
+%insert("lisphead")
 %{
 ;;;; SDL_mixer CFFI lisp wrapper
 ;;;; Part of the CL-Gardeners project
@@ -104,9 +104,9 @@
 
 ;;;; These defctypes are used by the CFFI translation functions
 ;;;; see the typemap definition below.
-(cffi:defctype mix-chunk-fp (:wrapper :pointer 
+(cffi:defctype mix-chunk-fp (:wrapper :pointer
 				      :to-c to-mix-chunk))
-(cffi:defctype mix-music-fp (:wrapper :pointer 
+(cffi:defctype mix-music-fp (:wrapper :pointer
 				      :to-c to-mix-music))
 
 
@@ -153,7 +153,7 @@ typedef signed int	Sint32;
 %ignore Mix_GetError;
 
 // The following functions are defined below.
-// The finalize method for TRIVIAL-GARBAGE passes the foreign pointer to 
+// The finalize method for TRIVIAL-GARBAGE passes the foreign pointer to
 // the free functions.
 %ignore Mix_FreeChunk;
 %ignore Mix_FreeMusic;

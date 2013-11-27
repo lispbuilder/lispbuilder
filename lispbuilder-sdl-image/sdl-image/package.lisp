@@ -11,7 +11,7 @@
 ;; 		"IMAGE-TYPE-OF"
 ;; 		"LOAD-IMAGE"
 ;; 		"LOAD-AND-CONVERT-IMAGE")))
-	  
+
 (defpackage #:lispbuilder-sdl-image
   (:use #:cl #:cffi)
   (:nicknames #:sdl-image)

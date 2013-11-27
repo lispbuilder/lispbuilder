@@ -6,7 +6,7 @@
   (:use #:cl)
   (:nicknames #:sdl-mixer-bin)
   (:documentation "The main package of `lispbuilder-sdl-mixer'.")
-  
+
   (:export
 
    ;; globals.lisp

@@ -6,7 +6,7 @@
   (:use #:cl)
   (:nicknames #:sdl-ttf-bin)
   (:documentation "The main package of `lispbuilder-sdl-ttf'.")
-  
+
   (:export
 
    ;; globals.lisp

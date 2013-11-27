@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-cffi) 
+(in-package #:lispbuilder-sdl-cffi)
 
 (defconstant SDL-MAJOR-VERSION 1)
 (defconstant SDL-MINOR-VERSION 2)

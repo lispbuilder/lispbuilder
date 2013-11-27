@@ -22,9 +22,9 @@
                    for angle from 360 above 0 by 5
                    collecting (sdl-gfx:rotate-surface angle :smooth t
                                                       :surface alien-image))))
-      
+
       (let ((rotated-image rotos))
-	
+
 	(sdl:with-events ()
 	  (:quit-event () t)
 	  (:idle ()
@@ -42,7 +42,7 @@
                                                         (/ (sdl:width image) 2)))
                                     (sdl:cast-to-int (- (/ rotozoom-window-height 2)
                                                         (/ (sdl:height image) 2))))
-		   
+
              (sdl:update-display))))))))
 
 (defun zoom ()
@@ -59,7 +59,7 @@
                                                          sdl:*default-image-path*)
 					:color-key-at (sdl:point :x 0 :y 0)))
            (zoom-x 1.0) (zoom-y 1.0))
-                 
+
       (sdl:with-events ()
         (:quit-event () t)
         (:key-down-event (:key key)

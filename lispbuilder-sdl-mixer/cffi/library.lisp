@@ -37,7 +37,7 @@
 
 (defun load-library ()
   (cffi:use-foreign-library sdl-mixer)
-  
+
   (when (handler-case (cffi:use-foreign-library mikmod)
           (load-foreign-library-error () nil)))
   (when (handler-case (cffi:use-foreign-library ogg)

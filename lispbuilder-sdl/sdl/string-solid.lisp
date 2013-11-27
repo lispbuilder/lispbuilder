@@ -33,7 +33,7 @@
                                    (color *default-color*)
                                    (free nil)
                                    (cache nil))
-  "Render the string `STRING` using font `FONT` with text color `COLOR` to a new `SURFACE`. 
+  "Render the string `STRING` using font `FONT` with text color `COLOR` to a new `SURFACE`.
 The dimensions of the new surface are height == `FONT` height, and width == `FONT` width * `STRING` length.
 The surface background is transparent and therefore can be keyed over other surfaces.
 Use `:CACHE T` to cache the new surface in the `FONT` object.
@@ -42,8 +42,8 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Parameters
 
-* `STRING` is the text to render. 
-* `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `STRING` is the text to render.
+* `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified.
 * `COLOR` color is the text color, of type `COLOR`.
 * `FREE` when `T` will free any exisitng cached surface in `FONT`.
 * `CACHE` when `T` will cache the newly created SURFACE in `FONT`. Any cached surface can be accessed using
@@ -88,9 +88,9 @@ The text is keyed onto `SURFACE`.
 
 ##### Parameters
 
-* `STRING` is the text to render. 
+* `STRING` is the text to render.
 * `X` and `Y` are the `X` and `Y` position coordinates, as `INTEGERS`.
-* `FONT` is the font face used to render the string. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `FONT` is the font face used to render the string. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified.
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` color is the text color, of type `COLOR`.
 

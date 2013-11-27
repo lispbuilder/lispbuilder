@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-  
+
   <head>
     <title>LISPBUILDER</title>
     <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=iso-8859-1" />
@@ -15,14 +15,14 @@
       max-width: 50em;
       background-color: white;
       }
-      
+
       a, a:visited {
       text-decoration: none;
       color: maroon;
       }
-      
+
       /* index */
-      
+
       div.index {
       position: fixed;
       top: 0px;
@@ -35,109 +35,109 @@
       background-color: #DCDCDC;
       border-right: thin black solid;
       }
-      
+
       div.index ol {
       color: navy;
       margin: 0px;
       padding-left: 0px;
       }
-      
+
       div.index ol li {
       list-style: none;
       }
-      
+
       div.index ol li:before {
       display: marker;
       content: counter(heading1) ". ";
       counter-increment: heading1;
       }
-      
+
       div.index ol ol {
       padding-left: 10px;
       font-size: 10px;
       list-style: none;
       counter-reset: heading2;
       }
-      
+
       div.index ol ol li:before {
       display: marker;
       content: counter(heading1)"." counter(heading2)" ";
       counter-increment: heading2;
       }
-      
+
       /* heading styles */
-      
+
       body > h1 {
       margin-top: 0px;
       }
-      
+
       h1 {
       margin-top: 40px;
       margin-bottom: 0px;
       color: #4682B4;
       }
-      
+
       h1:before {
       display: marker;
       content: counter(chapter) ". ";
       counter-increment: chapter;
       counter-reset: section1;
       }
-      
+
       h1 + p {
       margin-top: 5px;
       }
-      
+
       h2 {
       margin-top: 20px;
       color: #000000;
       margin-bottom: 0px;
       }
-      
+
       h2:before {
       display: marker;
       content: counter(chapter) "." counter(section1) "  ";
       counter-increment: section1;
       }
-      
+
       h2 + p {
       margin-top: 0px;
       }
-      
+
       h3 {
       margin-top: 20px;
       color: #000000;
       margin-bottom: 0px;
       }
-      
+
       h3:before {
       display: marker;
       content: counter(chapter) "." counter(section1) "." counter(section2) "  ";
       counter-increment: section2;
       }
-      
+
       h3 + p {
       margin-top: 0px;
       }
-      
+
       h4 {
       margin-top: 20px;
       color: #000000;
       margin-bottom: 0px;
       }
-      
+
       h4:before {
       display: marker;
       content: counter(chapter) "." counter(section1) "." counter(section2) "." counter(section3) "  ";
       counter-increment: section3;
       }
-      
+
       h4 + p {
       margin-top: 0px;
       }
-      
+
       /* generated content for images and tables */
-      
+
       img:after {
       content: "[" counter(image) "] " attr(title);
       counter-increment: image;
@@ -148,7 +148,7 @@
       margin-bottom: 20px;
       color: black;
       }
-      
+
       table:after {
       content: "Table " counter(table) ": " attr(summary);
       counter-increment: table;
@@ -161,13 +161,13 @@
       white-space: nowrap;
       color: black;
       }
-      
+
       /* code for examples, code and pathnames*/
-      
+
       div.example table {
       color: black;
       }
-      
+
       div.example, div.code, div.path, div.sequence {
       margin: 10px 0px;
       border: 1px black solid;
@@ -176,29 +176,29 @@
       counter-reset: image;
       color: maroon;
       }
-      
+
       div.example:before {
       content: "Example " counter(example);
       counter-increment: example;
       display: block;
       }
-      
+
       div.example + p {
       margin-bottom: 0px;
       }
-      
+
       div.code:before {
       content: "Code";
       }
-      
+
       div.path:before {
       content: "Path";
       }
-      
+
       div.sequence:before {
       content: "Sequence";
       }
-      
+
       p.reference:before {
       display: marker;
       content: "[" counter(reference) "]";
@@ -206,23 +206,23 @@
       font-weight: bold;
       margin-right: 5px;
       }
-      
+
       div.code:before, div.example:before, div.path:before, div.sequence:before {
       font-weight: bold;
       font-size: 15px;
       margin-bottom: 20px;
       color: black;
       }
-      
+
       pre {
       color: Green;
       margin: 0px;
       padding: 0px;
       }
-      
-      
+
+
       /* equation counter */
-      
+
       e:after {
       content: "[" counter(equation) "]";
       counter-increment: equation;
@@ -230,25 +230,25 @@
       float: right;
       margin-right: 10px;
       }
-      
+
       /* to prevent the CC image from being numbered */
-      
+
       img[alt="Creative Commons License"] {
       display: inline;
       }
-      
+
       img[alt="Creative Commons License"]:after {
       display: none;
       }
-      
+
       div#cc {
       background-color: #DCDCDC;
       border: thin black solid;
       padding: 10px;
       font-size: 10px;
       }
-      
-      
+
+
       /* Table Design */
       /* http://www.duoh.com/csstutorials/csstables/ */
       #mytable {
@@ -256,14 +256,14 @@
       padding: 0;
       margin: 0;
       }
-      
+
       caption {
       padding: 0 0 5px 0;
-      width: 700px;	 
+      width: 700px;
       font: italic 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
       text-align: right;
       }
-      
+
       th {
       font: bold 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
       color: #4f6b72;
@@ -276,14 +276,14 @@
       padding: 6px 6px 6px 12px;
       background: #CAE8EA url(images/bg_header.jpg) no-repeat;
       }
-      
+
       th.nobg {
       border-top: 0;
       border-left: 0;
       border-right: 1px solid #C1DAD7;
       background: none;
       }
-      
+
       td {
       border-right: 1px solid #C1DAD7;
       border-bottom: 1px solid #C1DAD7;
@@ -291,20 +291,20 @@
       padding: 6px 6px 6px 12px;
       color: #4f6b72;
       }
-      
-      
+
+
       td.alt {
       background: #F5FAFA;
       color: #797268;
       }
-      
+
       th.spec {
       border-left: 1px solid #C1DAD7;
       border-top: 0;
       background: #fff url(images/bullet1.gif) no-repeat;
       font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
       }
-      
+
       th.specalt {
       border-left: 1px solid #C1DAD7;
       border-top: 0;
@@ -312,19 +312,19 @@
       font: bold 10px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
       color: #797268;
       }
-      
+
     </style>
   </head>
-  
+
   <!--
       (CC) 2003 Luke Crook. Some Rights Reserved.
       http://creativecommons.org/licenses/by/1.0
       This page is licensed under a Creative Commons License.
-      
+
       Maintained by the Common Lisp Application Builder project at www.lispbuilder.org
-      
+
       The entire styleguide was copied wholesale from http://www.markschenk.com/cssexp/publication/article.xml
-      
+
       (CC) 2003 Mark Schenk. Some Rights Reserved.
       http://creativecommons.org/licenses/by/1.0
       This page is licensed under a Creative Commons License.
@@ -355,6 +355,6 @@
 <p>
   <a href="http://www.balooga.com/index.html">BACK</a>
 </p>
-  
+
 </body>
 </html>

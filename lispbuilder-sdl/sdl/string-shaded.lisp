@@ -31,7 +31,7 @@
 			    (free nil)
 			    (cache nil))
   "Render the string `STRING` using font `FONT` with text color `FG-COLOR` and background color `BG-COLOR`
-to a new `SURFACE`. 
+to a new `SURFACE`.
 The dimensions of the new surface are height == `FONT` height, and width == `FONT` width * `STRING` length.
 The surface background is filled with `BG-COLOR` so the surface cannot be keyed over other surfaces.
 Use `:CACHE T` to cache the new surface in the `FONT` object.
@@ -40,9 +40,9 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 
 ##### Parameters
 
-* `STRING` is the text to render. 
-* `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to 
-`*DEFAULT-FONT*` if unspecified. 
+* `STRING` is the text to render.
+* `FONT` is the font face used to render the `STRING`. Of type `FONT`.  Bound to
+`*DEFAULT-FONT*` if unspecified.
 * `FG-COLOR` color is the text color, of type `COLOR`
 * `BG-COLOR` color is the background color used to fill the surface, of type `COLOR`
 * `FREE` when `T` will free any exisiting cached surface in `FONT`.
@@ -82,14 +82,14 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 			    (surface *default-surface*)
 			    (font *default-font*))
   "Draw text `STRING` at location `X` `Y` using font `FONT` with text color `FG-COLOR` and background color `BG-COLOR`
-onto surface `SURFACE`. 
+onto surface `SURFACE`.
 The surface background is filled with `BG-COLOR` so the surface cannot be keyed over other surfaces.
 
-* `STRING` is the text to render. 
+* `STRING` is the text to render.
 * `X` and `Y` are the `X` and `Y` coordinates, as `INTEGERS`.
 * `FG-COLOR` color is the text color, of type `COLOR`
 * `BG-COLOR` color is the background color used to fill the surface `SURFACE`, of type `COLOR`
-* `FONT` is the font face used to render the text. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified. 
+* `FONT` is the font face used to render the text. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified.
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 
 ##### Returns

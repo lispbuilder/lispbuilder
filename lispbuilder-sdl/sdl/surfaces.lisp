@@ -116,7 +116,7 @@ Free using [FREE](#free)."))
 
   (when x (setf (x surface) x))
   (when y (setf (y surface) y))
-  
+
   (when (or (and surface width height)
 	    (and width height)
 	    using-surface)
@@ -209,7 +209,7 @@ Free using [FREE](#free)."))
        (let ((*default-surface* ,var)
              (,body-value nil))
          (with-surface (,var ,surface nil)
-           (unwind-protect 
+           (unwind-protect
                (progn (when (must-lock? (fp ,var))
                         (when (/= (sdl-cffi::sdl-Lock-Surface (fp ,var)) 0)
                           (error "Cannot lock surface")))
@@ -254,7 +254,7 @@ Free using [FREE](#free)."))
   "Returns the `Y` position coordinate of `SURFACE` as an `INTEGER`."
   (y (position-rect surface)))
 (defmethod (setf y) (y-val (surface sdl-surface))
-  "Sets the integer `Y` position coordinate of `SURFACE`."  
+  "Sets the integer `Y` position coordinate of `SURFACE`."
   (setf (y (position-rect surface)) y-val))
 
 (defmethod point-* ((surface sdl-surface))
@@ -329,10 +329,10 @@ Free using [FREE](#free)."))
 ##### Parameters
 
 * `SURFACE` is an SDL surface of type [SDL-SURFACE](#sdl-surface).
-* `INFO` must be one of `NIL`, [SDL-SW-SURFACE](#sdl-sw-surface), 
+* `INFO` must be one of `NIL`, [SDL-SW-SURFACE](#sdl-sw-surface),
 [SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
-[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
-[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
+[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette),
+[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen),
 [SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable)
 [SDL-HW-ACCEL](#sdl-hw-accel), [SDL-SRC-COLOR-KEY](#sdl-src-color-key),
 [SDL-RLE-ACCEL](#sdl-rle-accel), [SDL-SRC-ALPHA](#sdl-src-alpha)
@@ -397,7 +397,7 @@ return `INFO` as `T` or `NIL` if supported by the surface.
   "Returns `T` if the surface uses pre-allocated memory."
   (get-surface-attribute (fp surface) sdl-pre-alloc))
 (defmethod hardware-palette-p ((surface sdl-surface))
-  "Returns `T` if the surface has an exclusive palette." 
+  "Returns `T` if the surface has an exclusive palette."
   (get-surface-attribute (fp surface) sdl-hw-palette))
 (defmethod alpha-enabled-p ((surface sdl-surface))
   (get-surface-attribute (fp surface) sdl-src-alpha))
@@ -409,7 +409,7 @@ return `INFO` as `T` or `NIL` if supported by the surface.
 (defmethod (setf alpha-enabled-p) (value (surface sdl-surface))
   (setf (sdl-base::alpha-enabled-p (fp surface)) value))
 (defun enable-alpha (value &key (surface *default-surface*))
-  "Enable surface alpha blending for when `T`. Disable surface alpha blending when `NIL`. 
+  "Enable surface alpha blending for when `T`. Disable surface alpha blending when `NIL`.
 A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha blending."
   (setf (alpha-enabled-p surface) value))
 
@@ -444,8 +444,8 @@ A `SURFACE` need not have a pixel alpha component \(RGBA\) to use surface alpha 
 (defmethod (setf rle-accel-enabled-p) (value (surface sdl-surface))
   (setf (sdl-base::rle-accel-enabled-p (fp surface)) value))
 (defun enable-rle-accel (value &key (surface *default-surface*))
-  "Enables RLE blit acceleration when `T`, disables RLE acceleration when `NIL`. 
-RLE acceleration can substantially speed up blitting of images with large horizontal runs 
+  "Enables RLE blit acceleration when `T`, disables RLE acceleration when `NIL`.
+RLE acceleration can substantially speed up blitting of images with large horizontal runs
 of transparent pixels (i.e., pixels that match the key color)."
   (setf (rle-accel-enabled-p surface) value))
 
@@ -461,17 +461,17 @@ of transparent pixels (i.e., pixels that match the key color)."
   t)
 
 ;; (defun set-color-key (color &key (surface *default-surface*) (rle-accel t))
-;;   "Set the color key \(transparent pixel\). 
+;;   "Set the color key \(transparent pixel\).
 
 ;; ##### Paremeters
 
-;; * `COLOR` the transparent pixel color, of type [COLOR](#color), or [COLOR-A](#color-a). 
+;; * `COLOR` the transparent pixel color, of type [COLOR](#color), or [COLOR-A](#color-a).
 ;; When 'NIL' will disable color keying.
 ;; * `RLE-ACCEL` when `T` will use RLE information when blitting. See [RLE-CCEL](#rle-accel)."
 ;;   (check-type surface sdl-surface)
 ;;   (check-type color color)
 ;;   (sdl-base::set-color-key (fp surface) (map-color color surface) rle-accel))
-  
+
 ;; (defun set-alpha (alpha &key (surface *default-surface*) (source-alpha nil) (rle-accel nil))
 ;;   "Set the transparency,  alpha blending and RLE acceleration properties of `SURFACE`.
 
@@ -479,7 +479,7 @@ of transparent pixels (i.e., pixels that match the key color)."
 
 ;; * `ALPHA` sets the `SURFACE` transparency. Allowable values are `NIL`, or any `INTEGER` between `0` and `255` inclusive.
 ;; `0` is  transparent and `255` being opaque.
-;; *Note*: The per-surface alpha value of 128 is considered a special case and is optimised, so it's much faster than other per-surface values. 
+;; *Note*: The per-surface alpha value of 128 is considered a special case and is optimised, so it's much faster than other per-surface values.
 ;; * `SOURCE-ALPHA` will enable or disable alpha blending for `SURFACE`.
 ;; * `RLE-ACCEL` will enable or disable RLE acceleration when blitting. See [RLE-ACCEL](#rle-accel)."
 ;;   (check-type surface sdl-surface)
@@ -557,15 +557,15 @@ of transparent pixels (i.e., pixels that match the key color)."
 		       &key (bpp 32) (type :sw) color-key color-key-at pixel-alpha alpha (rle-accel t) (x 0) (y 0) mask)
   "Creates and returns a new `SURFACE` with the dimensions `WIDTH` and `HEIGHT`.
 
-`:COLOR-KEY` sets the color key of the surface and enables color-keying. 
+`:COLOR-KEY` sets the color key of the surface and enables color-keying.
 
 `:ALPHA` sets the surface alpha transparency and enables alpha blending. This allows a pixel color of `RGB` with the surface `A`.
 
 `:PIXEL-ALPHA` enables a pixel alpha component \(alpha mask of 0xFF\) on the new surface. This allows a pixel color of `RGBA`.
 
-`:RLE-ACCEL` enables RLE blit acceleration. 
+`:RLE-ACCEL` enables RLE blit acceleration.
 
-`:BPP` is the pixel depth of the surface, and my be 8, 16, 24 or 32. 
+`:BPP` is the pixel depth of the surface, and my be 8, 16, 24 or 32.
 
 `:TYPE` attempts to create the `SURFACE` in video memory when `:HW`, and in system memory when `:SW`
 
@@ -586,12 +586,12 @@ of transparent pixels (i.e., pixels that match the key color)."
                  :mask mask))
 
 (defun convert-to-display-format (&key (surface *default-surface*) enable-alpha enable-color-key pixel-alpha (free nil) (inherit t))
-  "Returns a new surface matching the pixel format and color of the video frame buffer \(`*display surface*\), 
-that is suitable for fast blitting. 
+  "Returns a new surface matching the pixel format and color of the video frame buffer \(`*display surface*\),
+that is suitable for fast blitting.
 The new surface will inherit the pixel, alpha and color key components of the source, *unless* `:INHERIT` is `NIL`.
 
-Use `:ENABLE-COLOR-KEY` or `:ENABLE-ALPHA` to take advantage of hardware 
-colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily 
+Use `:ENABLE-COLOR-KEY` or `:ENABLE-ALPHA` to take advantage of hardware
+colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily
 utilize available hardware acceleration if the surface was not initally created in video memory.
 
 Use `:PIXEL-ALPHA` to enable the pixel alpha component \(alpha mask of 0xFF\) for the new surface.
@@ -601,21 +601,21 @@ Use `:FREE` to delete the source `SURFACE`.
 Differences between [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format), [CONVERT-SURFACE](#convert-surface),
 [COPY-SURFACE](#copy-surface), and [CREATE-SURFACE](#create-surface);
 
-* [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format) 
-** will always attempt to create a surface in video memory using hardware acceleration if key color and surface alpha are supported. 
-** A pixel alpha component can be specified. 
-** New surface is filled with old surface. 
- 
+* [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format)
+** will always attempt to create a surface in video memory using hardware acceleration if key color and surface alpha are supported.
+** A pixel alpha component can be specified.
+** New surface is filled with old surface.
+
 * [CONVERT-SURFACE](#convert-surface)
 ** calls [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format) if converting a surface to the display format.
 ** paramatized option to create new surface in video or system memory.
-** Pixel format and color match that of the source surface. 
-** New surface is filled with old surface. 
+** Pixel format and color match that of the source surface.
+** New surface is filled with old surface.
 
-* [COPY-SURFACE](#copy-surface) 
+* [COPY-SURFACE](#copy-surface)
 ** paramatized option to create new surface in video or system memory.
 ** copies a portion or all of the source surface to a new destination surface
-** A pixel alpha component can be specified. 
+** A pixel alpha component can be specified.
 ** New surface can be filled with the old surface, or the color key or both."
   (check-type surface sdl-surface)
   (if *allow-convert-to-display-format*
@@ -627,7 +627,7 @@ Differences between [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format), [CO
                                                         enable-color-key)
                                     :enable-alpha (if inherit
                                                     (alpha-enabled-p surface)
-                                                    (or enable-alpha pixel-alpha)) 
+                                                    (or enable-alpha pixel-alpha))
                                     :pixel-alpha (if inherit
                                                    (pixel-alpha-enabled-p surface)
                                                    pixel-alpha)
@@ -649,13 +649,13 @@ Differences between [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format), [CO
   "Converts `:SURFACE` and returns a new surface matching the pixel format and color of `:TO-SURFACE`.
 Calls [CONVERT-TO-DISPLAY-FORMAT](#convert-to-display-format) if converting to the display format.
 
-Use `:ENABLE-COLOR-KEY` or `:ENABLE-ALPHA` to take advantage of hardware 
-colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily 
+Use `:ENABLE-COLOR-KEY` or `:ENABLE-ALPHA` to take advantage of hardware
+colorkey or alpha blit acceleration. Enabling these flags once a surface is created will not necessarily
 utilize available hardware acceleration if the surface was not initally created in video memory.
 
-Will create the new surface in system memory when `TYPE` is `:SW`. 
-Will attempt to create the new surface in video memory when `TYPE` is `:HW`, 
-otherwise the surface is created in system memory if the combination 
+Will create the new surface in system memory when `TYPE` is `:SW`.
+Will attempt to create the new surface in video memory when `TYPE` is `:HW`,
+otherwise the surface is created in system memory if the combination
 of color key and alpha do not allow hardware acceleration.
 
 The new surface will inherit the pixel, alpha and color key components of the source, *unless* `:INHERIT` is `NIL`.
@@ -689,14 +689,14 @@ Use `:FREE` to delete the source `SURFACE`."
                           (fill t) (color-key-fill t)
                           (pixel-format nil)
                           cells cell-index)
-  "Returns a copy of `:SURFACE`. 
+  "Returns a copy of `:SURFACE`.
 
 Use `:COLOR-KEY` or `:ALPHA` to set the key color and surface alpha transparency.
-Hardware colorkey and alpha blit acceleration will be used if supported. 
+Hardware colorkey and alpha blit acceleration will be used if supported.
 
-Will create the new surface in system memory when `TYPE` is `:SW`. 
-Will attempt to create the new surface in video memory when `TYPE` is `:HW`, 
-otherwise the surface is created in system memory if the combination 
+Will create the new surface in system memory when `TYPE` is `:SW`.
+Will attempt to create the new surface in video memory when `TYPE` is `:HW`,
+otherwise the surface is created in system memory if the combination
 of color key and alpha do not allow hardware acceleration.
 
 The new surface will be filled with the old surface unless `:FILL` is `NIL`.
@@ -757,7 +757,7 @@ Use `:FREE` to delete the source `SURFACE`."
     (when free
       (free surface))
     new-surface))
- 
+
 (defun update-surface (surface &optional template)
   "Updates the surface"
   (check-type surface sdl-surface)
@@ -775,10 +775,10 @@ Use `:FREE` to delete the source `SURFACE`."
   surface)
 
 (defun blit-surface (source &optional (surface *default-surface*) cell)
-  "Performs a fast blit of the `SOURCE` surface to the destination `SURFACE`. The area defined 
-by the `SOURCE` cell is blitted to the area defined by the destination clipping rectangle. 
+  "Performs a fast blit of the `SOURCE` surface to the destination `SURFACE`. The area defined
+by the `SOURCE` cell is blitted to the area defined by the destination clipping rectangle.
 The blit function should not be called on a locked surface.
-The results of blitting operations vary greatly depending on whether a surface ALPHA channel is set 
+The results of blitting operations vary greatly depending on whether a surface ALPHA channel is set
 on the source surface or not. The priorty of how color key and alpha attributes interact with surface blitting is as follows:
 
 * source surface with `ALPHA` + `PIXEL-ALPHA`: Blit using per-pixel alpha only
@@ -787,36 +787,36 @@ on the source surface or not. The priorty of how color key and alpha attributes 
 * source surface with `COLOR-KEY`: Blit using the colour key
 * source surface: Blit using opaque rectangular blit
 
-An ALPHA channel has the following effect on blitting operations: 
+An ALPHA channel has the following effect on blitting operations:
 
-* _RGBA to RGB_ with [ALPHA-ENABLED-P](#alpha-enabled-p): 
-The source is alpha-blended with the destination, using the alpha channel. [COLOR-KEY-ENABLED-P](#color-key-enabled-p) 
+* _RGBA to RGB_ with [ALPHA-ENABLED-P](#alpha-enabled-p):
+The source is alpha-blended with the destination, using the alpha channel. [COLOR-KEY-ENABLED-P](#color-key-enabled-p)
 and the per-surface alpha are ignored.
-* _RGBA to RGB_ without [ALPHA-ENABLED-P](#alpha-enabled-p): 
-The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored. 
+* _RGBA to RGB_ without [ALPHA-ENABLED-P](#alpha-enabled-p):
+The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored.
 If [COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set, only the pixels not matching the colorkey value are copied.
-* _RGB to RGBA_ with [ALPHA-ENABLED-P](#alpha-enabled-p): 
-The source is alpha-blended with the destination using the per-surface alpha value. If 
-[COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set, only the pixels not matching the colorkey value are copied. 
+* _RGB to RGBA_ with [ALPHA-ENABLED-P](#alpha-enabled-p):
+The source is alpha-blended with the destination using the per-surface alpha value. If
+[COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set, only the pixels not matching the colorkey value are copied.
 The alpha channel of the copied pixels is set to opaque.
-* _RGB to RGBA_ without [ALPHA-ENABLED-P](#alpha-enabled-p): 
-The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque. 
+* _RGB to RGBA_ without [ALPHA-ENABLED-P](#alpha-enabled-p):
+The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque.
 If [COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set, only the pixels not matching the colorkey value are copied.
-* _RGBA to RGBA_ with [ALPHA-ENABLED-P](#alpha-enabled-p): 
-The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination 
+* _RGBA to RGBA_ with [ALPHA-ENABLED-P](#alpha-enabled-p):
+The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination
 surface is left untouched. [COLOR-KEY-ENABLED-P](#color-key-enabled-p) is ignored.
-* _RGBA to RGBA_ without [ALPHA-ENABLED-P](#alpha-enabled-p):	
-The RGBA data is copied to the destination surface. If [COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set, 
+* _RGBA to RGBA_ without [ALPHA-ENABLED-P](#alpha-enabled-p):
+The RGBA data is copied to the destination surface. If [COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set,
 only the pixels not matching the colorkey value are copied.
-* _RGB to RGB_ with [ALPHA-ENABLED-P](#alpha-enabled-p): 
-The source is alpha-blended with the destination using the per-surface alpha value. 
+* _RGB to RGB_ with [ALPHA-ENABLED-P](#alpha-enabled-p):
+The source is alpha-blended with the destination using the per-surface alpha value.
 If [COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set, only the pixels not matching the colorkey value are copied.
 * _RGB to RGB_ without [ALPHA-ENABLED-P](#alpha-enabled-p):
-The RGB data is copied from the source. If [COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set, only the pixels not 
+The RGB data is copied from the source. If [COLOR-KEY-ENABLED-P](#color-key-enabled-p) is set, only the pixels not
 matching the colorkey value are copied.
 
-*Note*: _RGBA to RGBA_ blits \(with [ALPHA-ENABLED-P](#alpha-enabled-p) set\) keep the alpha of the destination 
-surface. This means that you cannot compose two arbitrary _RGBA_ surfaces this way and get the result you would 
+*Note*: _RGBA to RGBA_ blits \(with [ALPHA-ENABLED-P](#alpha-enabled-p) set\) keep the alpha of the destination
+surface. This means that you cannot compose two arbitrary _RGBA_ surfaces this way and get the result you would
 expect from \"overlaying\" them; the destination alpha will work as a mask."
   (unless surface
     (setf surface *default-display*))

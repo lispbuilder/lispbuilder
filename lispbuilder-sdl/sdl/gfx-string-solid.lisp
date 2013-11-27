@@ -22,7 +22,7 @@
 
 ##### Parameters
 
-* `P1` is the `X` and `Y` coordinates to render the character onto `SURFACE`, 
+* `P1` is the `X` and `Y` coordinates to render the character onto `SURFACE`,
 of type `SDL:POINT`."
   (check-type p1 sdl:point)
   (draw-character-solid-* c (sdl:x p1) (sdl:y p1)
@@ -46,9 +46,9 @@ The character is keyed over `SURFACE`.
 
 ##### Parameters
 
-* `C` is the character to render. 
+* `C` is the character to render.
 * `X` and `Y` are the x and y position coordinates, as `INTEGERS`.
-* `FONT` is the font face used to render the character. Of type `FONT`.  Bound to `\*DEFAULT-FONT\*` if unspecified. 
+* `FONT` is the font face used to render the character. Of type `FONT`.  Bound to `\*DEFAULT-FONT\*` if unspecified.
 * `SURFACE` is the target surface, of type `SDL:SDL-SURFACE`. Bound to `SDL:\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` color is the character color, of type `SDL:COLOR`.
 

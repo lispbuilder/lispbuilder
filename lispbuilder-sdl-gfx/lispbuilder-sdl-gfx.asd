@@ -7,10 +7,10 @@
 (defsystem lispbuilder-sdl-gfx
   :description "lispbuilder-sdl-gfx: SDL_gfx v2.0.16 library wrapper and tools"
   :long-description
-  "lispbuilder-sdl-gfx is a wrapper for the SDL_gfx v2.0.16 library. 
+  "lispbuilder-sdl-gfx is a wrapper for the SDL_gfx v2.0.16 library.
     The SDL_gfx library extends the base functionality implemented by SDL
-    and provides Graphic Primitives, Rotozoomimg, Framerate control, and 
-    MMX image filters. The wrapper is implemeted using CFFI to be highly 
+    and provides Graphic Primitives, Rotozoomimg, Framerate control, and
+    MMX image filters. The wrapper is implemeted using CFFI to be highly
     compatible across lisp implementations."
   :version "0.8.0"
   :author "Luke Crook <luke@balooga.com>"

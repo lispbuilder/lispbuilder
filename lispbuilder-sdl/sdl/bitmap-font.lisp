@@ -14,12 +14,12 @@
 
 (defclass sdl-bitmap-font (bitmap-font) ()
   (:documentation
-   "The `SDL-BITMAP-FONT` object manages the resources for a bitmap font. 
-Prior to the first call to a `RENDER-STRING*` function, 
-the cached [SURFACE](#surface) is `NIL`. 
+   "The `SDL-BITMAP-FONT` object manages the resources for a bitmap font.
+Prior to the first call to a `RENDER-STRING*` function,
+the cached [SURFACE](#surface) is `NIL`.
 
-The cached surface is created by a call to any of the RENDER-STRING* functions. 
-Use [DRAW-FONT](#draw-font), [DRAW-FONT-AT](#draw-font-at) 
+The cached surface is created by a call to any of the RENDER-STRING* functions.
+Use [DRAW-FONT](#draw-font), [DRAW-FONT-AT](#draw-font-at)
 or [DRAW-FONT-AT-*](#draw-font-at-*) to draw the cached surface.
 
 Free using [FREE](#free)"))
@@ -32,9 +32,9 @@ Free using [FREE](#free)"))
   (make-instance 'sdl-bitmap-font :font-definition self))
 
 (defun initialise-default-font (&optional (font-definition (if *gfx-loaded-p* *gfx-font-8x8* *font-8x8*)))
-  "Returns a new [SDL-BITMAP-FONT](#sdl-bitmap-font) initialized from `FONT-DEFINITION` data, or `NIL` 
-if the font cannot be created. `FONT-DEFINITION` is set to `\*font-8x8\*` if unspecified. 
-Binds the symbol `\*DEFAULT-FONT\*` to the new font to be used as the default for subsequent 
+  "Returns a new [SDL-BITMAP-FONT](#sdl-bitmap-font) initialized from `FONT-DEFINITION` data, or `NIL`
+if the font cannot be created. `FONT-DEFINITION` is set to `\*font-8x8\*` if unspecified.
+Binds the symbol `\*DEFAULT-FONT\*` to the new font to be used as the default for subsequent
 font rendering or drawing operations.
 
 ##### Packages
@@ -53,7 +53,7 @@ font rendering or drawing operations.
 (defun get-character (char fg-color bg-color &key
                            (font *default-font*))
   "Returns the [SURFACE](#surface) asociated with `CHAR`. Returns a new [SURFACE](#surface) if
-either of the foreground or background colors `FG-COLOR` or `BG-COLOR` 
+either of the foreground or background colors `FG-COLOR` or `BG-COLOR`
 are different than specified for the existing surface."
   (check-type char character)
   (check-type fg-color color)
@@ -87,7 +87,7 @@ are different than specified for the existing surface."
 	      (and (not bg-color) (glyph-bg-color glyph)))
       (setf (glyph-bg-color glyph) bg-color)
       (setf redraw? t))
-    
+
     ;; Redraw the chracter if fg- or bg-color mismatch or
     ;; a surface was created.
     (when redraw?
@@ -120,7 +120,7 @@ are different than specified for the existing surface."
 
 ##### Parameters
 
-* `P1` is the `X` and `Y` coordinates to render the text onto `SURFACE`, of type POINT."  
+* `P1` is the `X` and `Y` coordinates to render the text onto `SURFACE`, of type POINT."
   (check-type p1 point)
   (draw-character-* c (x p1) (y p1) fg-color bg-color
 		    :font font
@@ -129,15 +129,15 @@ are different than specified for the existing surface."
 (defun draw-character-* (c x y fg-color bg-color &key
 			 (font *default-font*)
 			 (surface *default-surface*))
-  "Draw the character `C` at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR` 
-onto surface `SURFACE`. 
+  "Draw the character `C` at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR`
+onto surface `SURFACE`.
 
 If `BG-COLOR` is `NIL`, then the glyph is rendered using the `SOLID` mode.
 If `BG-COLOR` is NOT `NIL`, then the glyph is rendered using the `SHADED` mode.
 
 ##### Parameters
 
-* `C` is the character to render. 
+* `C` is the character to render.
 * `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
 * `FG-COLOR` is the foreground color used to render text, of type `COLOR`
 * `BG-COLOR` is the background color used to render text, of type `COLOR`
@@ -164,13 +164,13 @@ If `BG-COLOR` is NOT `NIL`, then the glyph is rendered using the `SHADED` mode.
 
 (defun draw-string-left-justify-* (str x y fg-color bg-color &key
 				   (surface *default-surface*)
-				   (font *default-font*))  
-  "Draw the text in the string `STR` *starting* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR` 
+				   (font *default-font*))
+  "Draw the text in the string `STR` *starting* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR`
 onto surface `SURFACE`.
 
 ##### Parameters
 
-* `STR` is the text to render. 
+* `STR` is the text to render.
 * `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
 * `FG-COLOR` is the foreground color used to render text, of type `COLOR`
 * `BG-COLOR` is the background color used to render text, of type `COLOR`
@@ -190,12 +190,12 @@ onto surface `SURFACE`.
 (defun draw-string-right-justify-* (str x y fg-color bg-color &key
 				    (surface *default-surface*)
 				    (font *default-font*))
-  "Draw the text in the string `STR` *ending* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR` 
+  "Draw the text in the string `STR` *ending* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR`
 onto surface `SURFACE`.
 
 ##### Parameters
 
-* `STR` is the text to render. 
+* `STR` is the text to render.
 * `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
 * `FG-COLOR` is the foreground color used to render text, of type `COLOR`
 * `BG-COLOR` is the background color used to render text, of type `COLOR`
@@ -217,12 +217,12 @@ onto surface `SURFACE`.
 (defun draw-string-centered-* (str x y fg-color bg-color &key
 			       (surface *default-surface*)
 			       (font *default-font*))
-  "Draw the text in the string `STR` *with midpoint centered* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR` 
+  "Draw the text in the string `STR` *with midpoint centered* at location `X` and `Y` using font `FONT` with foreground and background colors `FG-COLOR` and `BG-COLOR`
 onto surface `SURFACE`.
 
 ##### Parameters
 
-* `STR` is the text to render. 
+* `STR` is the text to render.
 * `X` and `Y` are the X and Y position coordinates, as `INTEGERS`.
 * `FG-COLOR` is the foreground color used to render text, of type `COLOR`
 * `BG-COLOR` is the background color used to render text, of type `COLOR`

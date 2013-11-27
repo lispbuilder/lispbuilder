@@ -3,26 +3,26 @@
 ;;;; (C)2006 Justin Heyes-Jones, Luke John Crook
 ;;;; see COPYING for license
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defun alpha-example ()
   (sdl:with-init ()
     (sdl:window 320 180 :title-caption "Simple BMP alpha example" :icon-caption "Simple BMP alpha example")
-    
+
     (sdl:enable-key-repeat nil nil)
     (setf (sdl:frame-rate) 30)
     (sdl:initialise-default-font sdl:*font-5x7*)
-    
+
     (let* ((image-1 (sdl:load-image (sdl:create-path "lisp.bmp" sdl:*default-asset-path*) :alpha 0))
            (image-2 (sdl:load-image (sdl:create-path "lisp.bmp" sdl:*default-asset-path*) :alpha 255))
            (alpha-1 (sdl:alpha image-1))
            (alpha-2 (sdl:alpha image-2))
            (alpha-1-enabled (sdl:alpha-enabled-p image-1))
            (alpha-2-enabled (sdl:alpha-enabled-p image-2)))
-      
+
       (sdl:with-events ()
         (:quit-event () t)
-        
+
         (:key-down-event ()
          (when (sdl:key-pressed-p :sdl-key-escape)
            (sdl:push-quit-event))
@@ -44,9 +44,9 @@
 
          (setf (sdl:alpha image-1) alpha-1)
          (setf (sdl:alpha image-2) alpha-2))
-        
+
         (:video-expose-event () (sdl:update-display))
-        
+
         (:idle ()
          (sdl:clear-display sdl:*white*)
          (sdl:draw-surface-at image-1 #(10 10))
@@ -62,13 +62,13 @@
 
              (sdl:draw-string-solid "-------------------------" #(10 150))
              (sdl:draw-string-solid "-------------------------" #(150 150))
-         
+
              (sdl:draw-string-solid (format nil "alpha-enabled-p: ~A" (sdl:alpha-enabled-p image-1)) #(10 160))
              (sdl:draw-string-solid (format nil "alpha-enabled-p: ~A" (sdl:alpha-enabled-p image-2)) #(150 160))
 
              (sdl:draw-string-solid (format nil "alpha: ~A" (sdl:alpha image-1)) #(10 170))
              (sdl:draw-string-solid (format nil "alpha: ~A" (sdl:alpha image-2)) #(150 170))))
-         
+
          (sdl:update-display))))))
 
 

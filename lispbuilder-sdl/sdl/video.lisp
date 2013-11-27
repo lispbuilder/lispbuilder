@@ -66,7 +66,7 @@
                                        flags sw hw fullscreen async-blit any-format palette double-buffer opengl resizable no-frame
                                        fps opengl-attributes
                                        event-filter)
-  
+
   (unless flags
     (setf flags (remove nil (list (when sw sdl-sw-surface)
                                   (when hw sdl-hw-surface)
@@ -87,7 +87,7 @@
 	    (unless (integerp val)
 	      (error "ERROR: WINDOW :OPENGL-ATTRIBUTES not valid for ~A and ~A" attribute val))
 	    (sdl:set-gl-attribute attribute val))))
-   
+
   ;; Make sure the display surface is created
   (let ((surface (sdl-cffi::SDL-Set-Video-Mode (cast-to-int width) (cast-to-int height)
                                                bpp (sdl-base::set-flags flags))))
@@ -146,11 +146,11 @@
                 :fps *default-fpsmanager*)))
 
 (defun update-display (&optional (surface *default-display*))
-  "`UPDATE-DISPLAY` will flip the SDL video buffers and update 
+  "`UPDATE-DISPLAY` will flip the SDL video buffers and update
 the screen `SURFACE` if `SDL-HW-SURFACE` is set in [WINDOW](#window). If double buffering is not enabled then
  SDL will perform an [SDL-UPDATE-RECT](#sdl-update-rect) on the entire screen.
 
-If there is an active OpenGL contenxt, then `UPDATE-DISPLAY` will call 
+If there is an active OpenGL contenxt, then `UPDATE-DISPLAY` will call
 [SDL-GL-SWAP-BUFFERS](#sdl-gl-swap-buffers) to update the OpenGL display display.
 
 `SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified."
@@ -162,7 +162,7 @@ If there is an active OpenGL contenxt, then `UPDATE-DISPLAY` will call
 
 (defun clear-display (color &key (surface *default-display*) update)
   "Fills the display `SURFACE` using color `COLOR`.
-`SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified. 
+`SURFACE` is bound to `\*DEFAULT-DISPLAY*\` if unspecified.
 The display is updated when `UPDATE` is `T`."
   (let ((fp (fp surface)))
     (sdl-cffi::sdl-Fill-Rect fp (cffi:null-pointer) (map-color color surface))
@@ -195,14 +195,14 @@ The display is updated when `UPDATE` is `T`."
 
 
 (defun video-memory ()
-  "Returns the amount of video memory of the graphics hardware. Must be called after SDL is initialized 
+  "Returns the amount of video memory of the graphics hardware. Must be called after SDL is initialized
 using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)."
   (let ((video-info (sdl-cffi::SDL-Get-Video-Info)))
     (unless (cffi:null-pointer-p video-info)
       (cffi:foreign-slot-value video-info '(:struct sdl-cffi::sdl-video-info) 'sdl-cffi::video-mem))))
 
 (defun video-dimensions ()
-  "Returns the best video dimensions if called before a window is created, using [WINDOW](#window). 
+  "Returns the best video dimensions if called before a window is created, using [WINDOW](#window).
 Returns the current video dimensions if called after a window is created.
 Must be called after SDL is initialized using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init)"
   (let ((video-info (sdl-cffi::SDL-Get-Video-Info)))
@@ -211,12 +211,12 @@ Must be called after SDL is initialized using [INIT-SDL](#init-sdl) or [WITH-INI
 	  (cffi:foreign-slot-value video-info '(:struct sdl-cffi::sdl-video-info) 'sdl-cffi::current-h)))))
 
 (defun video-info (&rest info)
-  "Returns information about the video hardware. 
-`VIDEO-INFO` must be called after SDL is initialised using [INIT-SDL](#init-sdl) or 
+  "Returns information about the video hardware.
+`VIDEO-INFO` must be called after SDL is initialised using [INIT-SDL](#init-sdl) or
 [WITH-INIT](#with-init).
-If `VIDEO-INFO` is called before [WINDOW](#window), the information returned is of 
-the *best* video mode. If `VIDEO-INFO` is called after [WINDOW](#window), the information 
-returned is of the *current* video mode. 
+If `VIDEO-INFO` is called before [WINDOW](#window), the information returned is of
+the *best* video mode. If `VIDEO-INFO` is called after [WINDOW](#window), the information
+returned is of the *current* video mode.
 
 ##### Parameters
 
@@ -255,24 +255,24 @@ video flags.
 
 (defun list-modes (&rest flags)
   "Returns a LIST of vectors sorted largest to smallest containing window or screen dimensions
-that will support the specified video `FLAGS`. `LIST-MODES` must be called after SDL is 
+that will support the specified video `FLAGS`. `LIST-MODES` must be called after SDL is
 initialised using [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init).
 
 ##### Parameters
 
-* `FLAGS` is one or more of the following; [SDL-SW-SURFACE](#sdl-sw-surface), 
+* `FLAGS` is one or more of the following; [SDL-SW-SURFACE](#sdl-sw-surface),
 [SDL-HW-SURFACE](#sdl-hw-surface), [SDL-ASYNC-BLIT](#sdl-async-blit),
-[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette), 
-[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen), 
+[SDL-ANY-FORMAT](#sdl-any-format), [SDL-HW-PALETTE](#sdl-hw-palette),
+[SDL-DOUBLEBUF](#sdl-doublebuf), [SDL-FULLSCREEN](#sdl-fullscreen),
 [SDL-OPENGL](#sdl-opengl), [SDL-RESIZABLE](#sdl-resizable) and [SDL-NO-FRAME](#sdl-no-frame).
 * `SURFACE` A surface of type [SDL-SURFACE](#sdl-surface]), or `NIL`. WHEN `NIL`, the pixel format will be
 that returned by [SDL-GET-VIDEO-INFO](#sdl-get-video-info]).
 
 ##### Returns
 
-* Returns a list of `VECTOR`s of display dimensions, sorted largest to smallest, that will support 
+* Returns a list of `VECTOR`s of display dimensions, sorted largest to smallest, that will support
 the pixel format of surface `SURFACE`; for example `(#(1024 768) #(640 480) #(512 384) #(320 240))`.
-Returns `NIL` if there are no dimensions available for a particular pixel format. 
+Returns `NIL` if there are no dimensions available for a particular pixel format.
 Returns `T` if any dimension will support the pixel format and video flags.
 
 ##### Example
@@ -293,16 +293,16 @@ Returns `T` if any dimension will support the pixel format and video flags.
                                modes)))))))))
 
 (defun query-cursor ()
-  "Queries the current state of the cursor. 
-Returns `T` if the cursor is enabled and shown on the display. Returns `NIL` if the cursor 
+  "Queries the current state of the cursor.
+Returns `T` if the cursor is enabled and shown on the display. Returns `NIL` if the cursor
 is disabled and hidden."
   (case (sdl-cffi::SDL-Show-Cursor sdl-cffi::sdl-query)
     (sdl-cffi::sdl-disable nil)
     (sdl-cffi::sdl-enable t)))
 
 (defun video-driver-name ()
-  "Returns the driver name of the initialised video driver. The driver name is a `STRING` containing a 
-one-word identifier like \"x11\" or \"windib\". Returns 'NIL' if the video driver 
+  "Returns the driver name of the initialised video driver. The driver name is a `STRING` containing a
+one-word identifier like \"x11\" or \"windib\". Returns 'NIL' if the video driver
 is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init).
 
 ##### Example

@@ -14,7 +14,7 @@
 
       (sdl-gfx:initialise-default-font sdl-gfx:*gfx-font-5x7*)
       (draw-fps "Calculating FPS....." 10 10 sdl:*default-font* sdl:*default-surface* t)
-      
+
       (sdl:WITH-EVENTS ()
 	(:QUIT-EVENT () T)
 	(:KEY-DOWN-EVENT
@@ -30,7 +30,7 @@
 	 (sdl:UPDATE-DISPLAY))))))
 
 (defun dim-screen ()
-  (sdl-gfx:draw-box-* 0 0 *width* *height* 
+  (sdl-gfx:draw-box-* 0 0 *width* *height*
                       :color (sdl:color :r 0 :g 0 :b 0 :a 20)))
 
 (defun random-pos ()

@@ -10,7 +10,7 @@
 
    ;; active.lisp
    #:active-event
-   
+
    ;; bezier.lisp
    #:bezier
 
@@ -85,14 +85,14 @@
    #:circle-3
    #:circle-4
    #:circle-5
-   
+
    ;; stroke.lisp
    #:stroke
 
    ;; mouse-2d.lisp
    #:mouse-2d
    #:mouse-surface-2d
-   
+
    ;; squashed.lisp
    #:squashed
 

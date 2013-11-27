@@ -55,7 +55,7 @@ If `POINT` is not `NIL`, then `VAR is set to `POINT`."
   point)
 
 (defmethod set-point ((dst vector) (src vector))
-  "Sets the `X` and `Y` coordinates of the destination point `DST` to the coordinates in 
+  "Sets the `X` and `Y` coordinates of the destination point `DST` to the coordinates in
 the source point `SRC`. Returns the destination point `DST`."
   (set-point-* dst :x (x src) :y (y src))
   dst)

@@ -1,6 +1,6 @@
 ;;; -*- lisp -*-
 
-(in-package #:lispbuilder-sdl-cffi) 
+(in-package #:lispbuilder-sdl-cffi)
 
 ;; cffi:foreign-library-loaded-p is not yet in the released version of CFFI
 ;;(defparameter *image-loaded-p* (cffi:foreign-library-loaded-p 'sdl-image))
@@ -10,7 +10,7 @@
     (:darwin (:framework "SDL_image"))
     (:windows (:or "SDL_image.dll" "SDL_image1.2.dll"))
     (:unix (:or "libSDL_image-1.2.so.0"
-            "libSDL_image1.2" 
+            "libSDL_image1.2"
             "libSDL_image.so"))
     (t (:or)))
 

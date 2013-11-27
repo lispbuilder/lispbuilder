@@ -24,7 +24,7 @@ If `FP' is `NIL` then a foreign SDL_Rect is created. If `FP` is a pointer to a f
 
 (defun random-rectangle (bound-w bound-h &optional (rectangle (rectangle)))
   "Creates and return s a new `RECTANGLE` of random x, y width and height within the specified
-bounds of width `BOUND-W` and height `BOUND-H`. `RECTANGLE` if unset will force the creation of a 
+bounds of width `BOUND-W` and height `BOUND-H`. `RECTANGLE` if unset will force the creation of a
 new `RECTANGLE` object. `RECTANGLE` if set will be modified with the coordinates."
   (declare (type fixnum bound-w bound-h))
   (check-type rectangle rectangle)
@@ -44,19 +44,19 @@ new `RECTANGLE` object. `RECTANGLE` if set will be modified with the coordinates
 (defun rectangle-from-edges (p1 p2 &optional (rectangle (rectangle)))
   "See [RECTANGLE-FROM-EDGES-*](#rectangle-from-edges-*).
 
-* `P1` and `P2` are `POINTS` that specify the bounds of the `RECTANGLE`. 
+* `P1` and `P2` are `POINTS` that specify the bounds of the `RECTANGLE`.
 `P1` specifies the top left coordinate. `P2` specifies the lower right coordinate."
   (rectangle-from-edges-* (x p1) (y p1) (x p2) (y p2) rectangle))
 
 (defun rectangle-from-edges-* (x1 y1 x2 y2 &optional (rectangle (rectangle)))
-  "Returns a new `RECTANGLE` using the bounds specified by the `INTEGERS` `X1`, `X2`, `Y1` and `Y2`. 
-The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT = \(- Y2 Y1\) 
+  "Returns a new `RECTANGLE` using the bounds specified by the `INTEGERS` `X1`, `X2`, `Y1` and `Y2`.
+The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT = \(- Y2 Y1\)
 
 ##### Parameters
 
-* `X1`, `Y1` specify the top left coordinate as `INTEGERS`. 
-* `X2`, `Y2` specify the bottom right coordinate as `INTEGERS`. 
-* `RECTANGLE` if unset will force the creation of a new `RECTANGLE` object. 
+* `X1`, `Y1` specify the top left coordinate as `INTEGERS`.
+* `X2`, `Y2` specify the bottom right coordinate as `INTEGERS`.
+* `RECTANGLE` if unset will force the creation of a new `RECTANGLE` object.
 `RECTANGLE` if set will be modified with the coordinates."
   (check-type rectangle rectangle)
   (set-rectangle-* rectangle
@@ -66,8 +66,8 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 		   :h (1+ (abs (- y2 y1)))))
 
 (defun rectangle-from-midpoint-* (x y w h &optional (rectangle (rectangle)))
-  "Returns a `RECTANGLE` of width `W` and height `H` with the rectangle mid-point at coordinates `X` and `Y`. 
-`RECTANGLE` if unset will force the creation of a new `RECTANGLE` object. 
+  "Returns a `RECTANGLE` of width `W` and height `H` with the rectangle mid-point at coordinates `X` and `Y`.
+`RECTANGLE` if unset will force the creation of a new `RECTANGLE` object.
 `RECTANGLE` if set will be modified with the coordinates."
   (check-type rectangle rectangle)
   (set-rectangle-* rectangle
@@ -78,7 +78,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
 
 (defmacro with-rectangle ((var &optional rectangle (free t))
 			  &body body)
-  "A convenience macro that binds `\*DEFAULT-RECTANGLE\*` to `VAR` within the scope of `WITH-RECTANGLE`. 
+  "A convenience macro that binds `\*DEFAULT-RECTANGLE\*` to `VAR` within the scope of `WITH-RECTANGLE`.
 `VAR` must be of type `RECTANGLE`.
 `VAR` is set to `RECTANGLE` when `RECTANGLE` is not `NIL`.
 `VAR` is freed when `FREE` is `T`.
@@ -178,7 +178,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
   (setf (sdl-base::rect-h (fp rectangle)) h-val))
 
 (defmethod point-* ((rectangle rectangle))
-  "Returns the `X` and `Y` coordinates of the rectangle `RECTANGLE` as a spread. 
+  "Returns the `X` and `Y` coordinates of the rectangle `RECTANGLE` as a spread.
   The `RESULT` is `\(VALUES X Y\)`"
   (values (x rectangle) (y rectangle)))
 
@@ -211,7 +211,7 @@ The coordinates of the rectangle are X = X1, Y = Y1, WIDTH = \(- X2 X1\), HEIGHT
   (set-rectangle-* rectangle :x x :y y))
 
 (defmethod rectangle-* ((rectangle rectangle))
-  "Returns the `X`, `Y`, `WIDTH` and `HEIGHT` coordinates of the rectangle `RECTANGLE` as a spread. 
+  "Returns the `X`, `Y`, `WIDTH` and `HEIGHT` coordinates of the rectangle `RECTANGLE` as a spread.
 The `RESULT` is `\(VALUES X Y WIDTH HEIGHT\)`"
   (values (x rectangle) (y rectangle) (width rectangle) (height rectangle)))
 
@@ -225,7 +225,7 @@ The `RESULT` is `\(VALUES X Y WIDTH HEIGHT\)`"
 
 (defmethod set-rectangle-* ((rectangle rectangle) &key x y w h)
   "Sets the coordinates of the rectangle `RECTANGLE` to the specified `X`, `Y` , width `W` and height `HEIGHT` coordinates.
-`X`, `Y`, `W` and `H` are `KEY`word parameters of type `INTEGER`. 
+`X`, `Y`, `W` and `H` are `KEY`word parameters of type `INTEGER`.
 Returns the rectangle `RECTANGLE` as RESULT."
   (sdl-base::with-rectangle (rect (fp rectangle) nil)
     (when x (setf rect.x (sdl-base:to-int x)))
@@ -246,7 +246,7 @@ Returns the rectangle `RECTANGLE` as RESULT."
              :w (aref self 2)
              :h (aref self 3)))
 
-(defmethod copy-rectangle ((self list))                   
+(defmethod copy-rectangle ((self list))
   (rectangle :x (elt self 0)
              :y (elt self 1)
              :w (elt self 2)

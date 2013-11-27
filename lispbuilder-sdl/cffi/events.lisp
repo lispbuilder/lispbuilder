@@ -1,4 +1,4 @@
-(in-package #:lispbuilder-sdl-cffi) 
+(in-package #:lispbuilder-sdl-cffi)
 
 (cffi:defcenum Event-Type
 	(:NO-EVENT 0)
@@ -239,7 +239,7 @@
           (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-BUTTON-DOWN-EVENT))
           (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :JOY-BUTTON-UP-EVENT))))
 
-(defun SDL-VIDEO-RESIZE-MASK () 
+(defun SDL-VIDEO-RESIZE-MASK ()
   (SDL-EVENT-MASK (cffi:foreign-enum-value 'Event-Type :VIDEO-RESIZE-EVENT)))
 
 (defun SDL-VIDEO-EXPOSE-MASK ()

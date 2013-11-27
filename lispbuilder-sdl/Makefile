@@ -21,4 +21,3 @@ install_glue:
 	${MAKE} -C build install_glue DESTDIR=$(DESTDIR)
 
 install: install_glue
-

@@ -164,7 +164,7 @@
 			(mem-aref a :unsigned-char)))))))))
 
 (defun set-pixel (surface x y color)
-  "Set the pixel at (x, y) to the given value 
+  "Set the pixel at (x, y) to the given value
    NOTE: The surface must be locked before calling this.
    Also NOTE: Have not tested 1,2,3 bpp surfaces, only 4 bpp"
   (let* ((format (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::format))
@@ -173,11 +173,11 @@
 		    (* x bpp)))
 	 (pixel-address (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pixels)))
     (cond
-      ((= bpp 1) 
+      ((= bpp 1)
        (setf (mem-aref pixel-address :unsigned-char offset) color))
-      ((= bpp 2) 
+      ((= bpp 2)
        (setf (mem-aref pixel-address :unsigned-short (/ offset 2)) color))
-      ((= bpp 3) 
+      ((= bpp 3)
        #+(or little-endian PC386 X86 I386)
        (setf (mem-aref pixel-address :unsigned-char offset) (logand (ash color -16) #xff)
 	     (mem-aref pixel-address :unsigned-char (1+ offset)) (logand (ash color -8) #xff)
@@ -186,7 +186,7 @@
        (setf (mem-aref pixel-address :unsigned-char offset) (logand color #xff)
 	     (mem-aref pixel-address :unsigned-char (1+ offset)) (logand (ash color -8) #xff)
 	     (mem-aref pixel-address :unsigned-char (+ 2 offset)) (logand (ash color -16) #xff)))
-      ((= bpp 4) 
+      ((= bpp 4)
        (setf (mem-aref pixel-address :unsigned-int (/ offset 4)) color))))
   (values x y))
 
@@ -201,9 +201,9 @@
 	 (pixel-address (foreign-slot-value surface '(:struct sdl-cffi::SDL-Surface) 'sdl-cffi::Pixels)))
     (cffi:with-foreign-objects ((r :unsigned-char) (g :unsigned-char) (b :unsigned-char) (a :unsigned-char))
       (sdl-cffi::SDL-Get-RGBA (cond
-				((= bpp 1) 
+				((= bpp 1)
 				 (mem-aref pixel-address :unsigned-char offset))
-				((= bpp 2) 
+				((= bpp 2)
 				 (mem-aref pixel-address :unsigned-short (/ offset 2)))
 				((= bpp 3)
 				 #-(or little-endian PC386 X86 I386)
@@ -218,7 +218,7 @@
 				 (mem-aref pixel-address :unsigned-int (/ offset 4))))
 			      format
 			      r g b a)
-      (values format 
+      (values format
 	      (mem-aref r :unsigned-char)
 	      (mem-aref g :unsigned-char)
 	      (mem-aref b :unsigned-char)

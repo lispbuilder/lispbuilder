@@ -2,7 +2,7 @@
 ;;;;; "http://www.processing.org/learning/examples/setupdraw.html"
 ;;;;; (C)2006 Luke J Crook
 
-(in-package #:sdl-gfx-examples) 
+(in-package #:sdl-gfx-examples)
 
 (defun setup-and-draw ()
   (let ((width 200) (height 200)

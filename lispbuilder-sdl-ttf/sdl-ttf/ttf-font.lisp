@@ -24,10 +24,10 @@
                           (= (sdl-ttf:ttf-init-p) font-generation))
                  (sdl-ttf-cffi::ttf-close-font fp)))))
   (:documentation
-   "A `FONT` object is wrapper around a foreign `TTF_Font` object. 
+   "A `FONT` object is wrapper around a foreign `TTF_Font` object.
 
-The `FONT` object maintains the most recent surface `SDL:SURFACE` created by a call to any of the 
-`RENDER-STRING*` functions. Use [DRAW-FONT](#draw-font), [DRAW-FONT-AT](#draw-font-at) 
+The `FONT` object maintains the most recent surface `SDL:SURFACE` created by a call to any of the
+`RENDER-STRING*` functions. Use [DRAW-FONT](#draw-font), [DRAW-FONT-AT](#draw-font-at)
 or [DRAW-FONT-AT-*](#draw-font-at-*) to draw the cached surface.
 
 Prior to the first call to a `RENDER-STRING*` function, the cached surface is `NIL`."))
@@ -41,8 +41,8 @@ Prior to the first call to a `RENDER-STRING*` function, the cached surface is `N
                      :font-definition definition))))
 
 (defmethod close-font ((font ttf-font))
-  "Closes the font `FONT` when the `SDL_TTF` font library is intitialized. 
-NOTE: `CLOSE-FONT` does not uninitialise the font library, and does not bind `\*DEFAULT-FONT\*` to `NIL`. Returns `T` 
+  "Closes the font `FONT` when the `SDL_TTF` font library is intitialized.
+NOTE: `CLOSE-FONT` does not uninitialise the font library, and does not bind `\*DEFAULT-FONT\*` to `NIL`. Returns `T`
 if successful, or `NIL` if the font cannot be closed or the `SDL_TTF` font library is not initialized."
   (sdl:free font))
 

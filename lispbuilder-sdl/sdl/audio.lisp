@@ -381,8 +381,8 @@ or `NIL` if `AUDIO` is halted."
 
 
 (defun audio-driver-name ()
-  "Returns the driver name of the initialised audio driver. The driver name is a `STRING` containing a 
-one-word identifier like \"x11\" or \"windib\". Returns 'NIL' if the audio driver 
+  "Returns the driver name of the initialised audio driver. The driver name is a `STRING` containing a
+one-word identifier like \"x11\" or \"windib\". Returns 'NIL' if the audio driver
 is not already initialised with [INIT-SDL](#init-sdl) or [WITH-INIT](#with-init).
 
 ##### Example

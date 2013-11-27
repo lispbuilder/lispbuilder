@@ -1,5 +1,5 @@
 ;;; -*- lisp -*-
- 
+
 (in-package #:cl-user)
 
 (defpackage #:lispbuilder-sdl-gfx
@@ -52,11 +52,11 @@
    #:*gfx-font-9x18B*
    #:*gfx-font-10x20*
 
-   
+
    #:SMOOTHING-OFF
    #:SMOOTHING-ON
 
-   ;;; sdl-gfx-util.lisp   
+   ;;; sdl-gfx-util.lisp
    #:add-vertex
    #:add-vertex-*
    #:draw-aa-circle
@@ -145,7 +145,7 @@
    #:*default-font*
 
    ;;; gfx.lisp
-   
+
 ;;    #:FPS-DEFAULT
 ;;    #:FPS-LOWER-LIMIT
 ;;    #:FPS-UPPER-LIMIT
@@ -203,7 +203,7 @@
    #:SMOOTHING-OFF
    #:SMOOTHING-ON
 
-   ;;; sdl-gfx-util.lisp   
+   ;;; sdl-gfx-util.lisp
    #:add-vertex
    #:add-vertex-*
    #:draw-aa-circle

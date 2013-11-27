@@ -1,5 +1,5 @@
 
-(in-package #:lispbuilder-sdl-cffi) 
+(in-package #:lispbuilder-sdl-cffi)
 
 (cffi:defcstruct HWND__
 	(unused :int))

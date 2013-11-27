@@ -78,5 +78,5 @@
 
 (defun distance-* (x1 y1 x2 y2)
   "Returns the distance between the coordinates `X1`, `Y1` and `X2`, `Y2`."
-  (sqrt (+ (expt (- x1 x2) 2) 
+  (sqrt (+ (expt (- x1 x2) 2)
 	   (expt (- y1 y2) 2))))

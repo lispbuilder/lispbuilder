@@ -1,5 +1,5 @@
 <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
-<html> 
+<html>
 
   <head>
     <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\">
@@ -9,64 +9,64 @@
 	h3, h4 { text-decoration: underline; }
 	a { text-decoration: none; padding: 1px 2px 1px 2px; }
 	a:visited { text-decoration: none; padding: 1px 2px 1px 2px; }
-	a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; } 
+	a:hover { text-decoration: none; padding: 1px 1px 1px 1px; border: 1px solid #000000; }
 	a:focus { text-decoration: none; padding: 1px 2px 1px 2px; border: none; }
 	a.none { text-decoration: none; padding: 0; }
-	a.none:visited { text-decoration: none; padding: 0; } 
-	a.none:hover { text-decoration: none; border: none; padding: 0; } 
-	a.none:focus { text-decoration: none; border: none; padding: 0; } 
-	a.noborder { text-decoration: none; padding: 0; } 
-	a.noborder:visited { text-decoration: none; padding: 0; } 
-	a.noborder:hover { text-decoration: none; border: none; padding: 0; } 
-	a.noborder:focus { text-decoration: none; border: none; padding: 0; }  
+	a.none:visited { text-decoration: none; padding: 0; }
+	a.none:hover { text-decoration: none; border: none; padding: 0; }
+	a.none:focus { text-decoration: none; border: none; padding: 0; }
+	a.noborder { text-decoration: none; padding: 0; }
+	a.noborder:visited { text-decoration: none; padding: 0; }
+	a.noborder:hover { text-decoration: none; border: none; padding: 0; }
+	a.noborder:focus { text-decoration: none; border: none; padding: 0; }
 	pre.none { padding:5px; background-color:#ffffff }
 	/* code for examples, code and pathnames*/
-      
+
 	div.code, div.path {
 	color: black;
 	}
 
 	div.repl {
 	color: Green;
-	}      
+	}
 
       </style>
     </head>
-    
+
     <body bgcolor=white>
-      
+
       <h3> ~2:*~A - ~A</h3>
-    
+
       <blockquote>
 	<br>&nbsp;</br><h3><a name=abstract class=none>Abstract</a></h3>
-      
+
       <p>
-	LISPBUILDER-SDL comprises several of packages that allow game development using Common Lisp. 
-	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for  
-	<a href="http://www.libsdl.org">SDL</a> and other graphics, sound, physics, character animation 
-	and 3D libraries. LISPBUILDER-SDL core functionality includes 
+	LISPBUILDER-SDL comprises several of packages that allow game development using Common Lisp.
+	LISPBUILDER-SDL provides a set of bindings and Lispy abstractions for
+	<a href="http://www.libsdl.org">SDL</a> and other graphics, sound, physics, character animation
+	and 3D libraries. LISPBUILDER-SDL core functionality includes
 	window and event management, 2D graphics, 3D graphics using OpenGL and sound support.
 	The goal for the LISPBUILDER-SDL project is to become a useful resource for the development of games in Lisp.
       </p>
 
       <p>
 	<a href="http://www.libsdl.org">SDL</a> provides the low-level 2D rendering support.
-	LISPBUILDER-SDL adds 2D graphical effects such as rotation, 
+	LISPBUILDER-SDL adds 2D graphical effects such as rotation,
 	rendering circles, polygons, squares, Bezier and Cuttmull-Rom curves as well as bitmap font support.
-	Additional packages provide native C drawing functions, True Type font rendering, 
+	Additional packages provide native C drawing functions, True Type font rendering,
 	loading of multiple image formats, a sound mixer and networking support.
-	The lispbuilder packages are meant to work together with each package providing a specific core set of 
-	functionality. For example, an image that is loaded by lispbuilder-sdl-image may be rotated using 
+	The lispbuilder packages are meant to work together with each package providing a specific core set of
+	functionality. For example, an image that is loaded by lispbuilder-sdl-image may be rotated using
 	lispbuilder-sdl-gfx. Text may be rendered to a surface using lispbuilder-sdl-ttf and finally blitted to
 	the display using lispbuilder-sdl.
       </p>
-      
+
 	<p>
 	  The code comes with
-	  a <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a> so you can basically 
+	  a <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a> so you can basically
 	  do with it whatever you want.
 	</p>
-	
+
 	<p>
 	  <font color=red>Download shortcut:</font> <a href="http://lispbuilder.googlecode.com/files/~A.tgz">http://lispbuilder.googlecode.com/files/~:*~A.tgz</a>.
 	</p>
@@ -86,7 +86,7 @@
       (:video-expose-event (sdl:update-display))))
       </pre>
     </div>
-    
+
     <br>&nbsp;</br><h3><a class=none name="contents">Contents</a></h3>
       <ol>
 	<li><a href="#top">LISPBUILDER-SDL</a></li>
@@ -101,27 +101,27 @@
 	    ~}    </ul>
 	  <li><a href="#ack">Acknowledgements</a></li>
 	</ol>
-      </div>      
-      
-	
+      </div>
+
+
       <br>&nbsp;</br><h3><a class=none name="download">Download</a></h3>
 
 	<p>
-	  <font color=red>Current Version:</font> The latest stable version of ~2:*~A, together with this documentation can be downloaded from 
+	  <font color=red>Current Version:</font> The latest stable version of ~2:*~A, together with this documentation can be downloaded from
 	  <a href="http://lispbuilder.googlecode.com/files/~2:*~A.tgz">http://lispbuilder.googlecode.com/files/~:*~A.tgz</a>.
 	</p>
-		
+
 	<br>&nbsp;</br><h3><a class=none name="support">Documentation, Support & Mailing Lists</a></h3>
-	
+
 	See the `LISPBUILDER-SDL` documentation at <a href="http://lispbuilder.googlecode.com">lispbuilder.googlecode.com</a>.
 
 	<br>&nbsp;</br><h3><a class=none name="license">License</a></h3>
 	<p>
-	  LISPBUILDER-SDL is distributed under the 
+	  LISPBUILDER-SDL is distributed under the
 	  <a href="http://en.wikipedia.org/wiki/MIT_License">MIT-style license</a>.
 	</p>
-	  
+
       <br>&nbsp;</br><h3><a class=none name="dictionary">The ~A dictionary</a></h3>
-	  
-	
-	
+
+
+
