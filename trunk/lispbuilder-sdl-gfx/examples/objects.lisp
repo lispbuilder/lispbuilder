@@ -52,7 +52,7 @@
 
       (sdl-gfx:initialise-default-font)
       (draw-fps "Calculating FPS....." 10 150 sdl:*default-font* sdl:*default-display* t)
-      
+
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))
@@ -79,5 +79,5 @@
 	       (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
 			 10 150 sdl:*default-font* sdl:*default-display*
 			 (funcall 100-frames-p))
-		 
+
 	       (sdl:update-display))))))

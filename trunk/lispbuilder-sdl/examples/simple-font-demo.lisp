@@ -1,8 +1,8 @@
 ;;;; demo of simple fixed with font code
 ; (C)2006 Justin Heyes-Jones
 
-(in-package #:sdl-examples)  
- 
+(in-package #:sdl-examples)
+
 ; window or screen height
 (defparameter *WINDOW-WIDTH* 640)
 (defparameter *WINDOW-HEIGHT* 480)
@@ -21,7 +21,7 @@
 
     (let ((1st-font (sdl:initialise-font sdl:*font-10x20*))
 	  (2nd-font (sdl:initialise-font sdl:*font-10x20*)))
-      
+
       (sdl:with-events  ()
 	(:quit-event () t)
         (:key-down-event ()
@@ -47,7 +47,7 @@
                                   (screen-center-x) (+ (screen-center-y) 10)
                                   :justify :right
                                   :color sdl:*white* :font 1st-font)
-         ;; Update the whole screen 
+         ;; Update the whole screen
          (sdl:update-display))))))
 
 (defun simple-font-demo-2 ()
@@ -61,7 +61,7 @@
 
     (let ((1st-font (sdl:initialise-font sdl:*simple-font-4x5*))
 	  (2nd-font (sdl:initialise-font sdl:*simple-font-4x5*)))
-      
+
       (sdl:with-events  ()
 	(:quit-event () t)
         (:key-down-event ()
@@ -87,5 +87,5 @@
                                   (screen-center-x) (+ (screen-center-y) 10)
                                   :justify :right
                                   :color sdl:*white* :font 1st-font)
-         ;; Update the whole screen 
+         ;; Update the whole screen
          (sdl:update-display))))))

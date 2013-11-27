@@ -7,8 +7,8 @@
 (defsystem lispbuilder-sdl-mixer
   :description "lispbuilder-sdl-mixer: SDL_mixer v1.2.11 library wrapper and tools"
   :long-description
-  "lispbuilder-sdl-mixer uses CFFI to be highly compatible across lisp 
-    implementations. It includes a selection of utilities to assist  
+  "lispbuilder-sdl-mixer uses CFFI to be highly compatible across lisp
+    implementations. It includes a selection of utilities to assist
     game programming in Common Lisp."
   :version "0.5.0"
   :author "Luke Crook <luke@balooga.com>"

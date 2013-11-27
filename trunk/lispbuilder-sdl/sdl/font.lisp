@@ -84,14 +84,14 @@ Frees `FONT` when `WITH-FONT` goes out of scope, and sets `\*DEFAULT-FONT\* to `
      ,body-value)))
 
 (defun set-font-style (style &key (font *default-font*))
-  "Sets the rendering style `STYLE` of font `FONT`. This will flush the internal cache of previously 
+  "Sets the rendering style `STYLE` of font `FONT`. This will flush the internal cache of previously
 rendered glyphs, even if there is no change in style, so it may be best to check the
- current style using [GET-FONT-STYLE](#get-font-style) first. 
+ current style using [GET-FONT-STYLE](#get-font-style) first.
 
 ##### Parameters
 
-* `FONT` is a `FONT` object. 
-* `STYLE` is a list of one or more: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`. 
+* `FONT` is a `FONT` object.
+* `STYLE` is a list of one or more: `:STYLE-NORMAL`, `:STYLE-BOLD`, `:STYLE-ITALIC`, `:STYLE-UNDERLINE`.
 NOTE: Combining `:STYLE-UNDERLINE` with anything  can cause a segfault, other combinations may also do this.
 
 ##### Packages
@@ -100,19 +100,19 @@ NOTE: Combining `:STYLE-UNDERLINE` with anything  can cause a segfault, other co
   (_set-font-style_ font style))
 
 (defun get-Glyph-Metric (ch &key metric (font sdl:*default-font*))
-  "Returns the glyph metrics `METRIC` for the character `CH`, or `NIL` upon error. 
+  "Returns the glyph metrics `METRIC` for the character `CH`, or `NIL` upon error.
 
 ##### Parameters
 
 * `CH` is a UNICODE chararacter specified as an `INTEGER`.
-* `FONT` is a `FONT` object from which to retrieve the glyph metrics of the character `CH`. Binds to `*\DEFAULT-FONT\*` 
+* `FONT` is a `FONT` object from which to retrieve the glyph metrics of the character `CH`. Binds to `*\DEFAULT-FONT\*`
 by default.
-* `METRIC` is a `KEY`word argument and may be one of; 
-`:MINX`, for the minimum `X` offset.  
-`:MAXX`, for the maximum `X` offset. 
-`:MINY`, for the minimum `Y` offset. 
-`:MAXY`, for the maximum `Y` offset. 
-`:ADVANCE`, for the advance offset. 
+* `METRIC` is a `KEY`word argument and may be one of;
+`:MINX`, for the minimum `X` offset.
+`:MAXX`, for the maximum `X` offset.
+`:MINY`, for the minimum `Y` offset.
+`:MAXY`, for the maximum `Y` offset.
+`:ADVANCE`, for the advance offset.
 
 ##### Returns
 
@@ -128,13 +128,13 @@ by default.
   (_get-glyph-metric_ font ch metric))
 
 (defun get-Font-Size (text &key size (font sdl:*default-font*))
-  "Calculates and returns the resulting `SIZE` of the `SDL:SURFACE` that is required to render the 
-text `TEXT`, or `NIL` on error. No actual rendering is performed, however correct kerning is calculated for the 
-actual width. The height returned is the same as returned using [GET-FONT-HEIGHT](#get-font-height). 
+  "Calculates and returns the resulting `SIZE` of the `SDL:SURFACE` that is required to render the
+text `TEXT`, or `NIL` on error. No actual rendering is performed, however correct kerning is calculated for the
+actual width. The height returned is the same as returned using [GET-FONT-HEIGHT](#get-font-height).
 
 ##### Parameters
 
-* `TEXT` is the string to size, of type `STRING`. 
+* `TEXT` is the string to size, of type `STRING`.
 * `SIZE` must be one of; `:W` for the text width or `:H` for the text height.
 * `FONT` is the font used to calculate the size of the `TEXT`. Binds to `\*DEFAULT-FONT\*` by default.
 
@@ -148,12 +148,12 @@ actual width. The height returned is the same as returned using [GET-FONT-HEIGHT
   (_get-font-size_ font text size))
 
 (defun get-font-style (&key (font sdl:*default-font*))
-  "Returns the rendering style of the font `FONT`. If no style is set then `:STYLE-NORMAL` is returned, 
+  "Returns the rendering style of the font `FONT`. If no style is set then `:STYLE-NORMAL` is returned,
 or `NIL` upon error.
-  
+
 ##### Parameters
 
-* `FONT` is a `FONT` object. Binfs to `\*DEFAULT-FONT\*` by default. 
+* `FONT` is a `FONT` object. Binfs to `\*DEFAULT-FONT\*` by default.
 
 ##### Returns
 
@@ -165,15 +165,15 @@ or `NIL` upon error.
   (_get-font-style_ font))
 
 (defun get-font-height (&key (font sdl:*default-font*))
-  "Returns the maximum pixel height of all glyphs of font `FONT`. 
-Use this height for rendering text as close together vertically as possible, 
-though adding at least one pixel height to it will space it so they can't touch. 
-Remember that `SDL_TTF` doesn't handle multiline printing so you are responsible 
-for line spacing, see [GET-FONT-LINE-SKIP](#get-font-line-skip) as well. 
+  "Returns the maximum pixel height of all glyphs of font `FONT`.
+Use this height for rendering text as close together vertically as possible,
+though adding at least one pixel height to it will space it so they can't touch.
+Remember that `SDL_TTF` doesn't handle multiline printing so you are responsible
+for line spacing, see [GET-FONT-LINE-SKIP](#get-font-line-skip) as well.
 
 ##### Parameters
 
-* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default. 
+* `FONT` is a `FONT` object. Binds to `\*DEFAULT-FONT\*` by default.
 
 ##### Returns
 
@@ -185,11 +185,11 @@ for line spacing, see [GET-FONT-LINE-SKIP](#get-font-line-skip) as well.
   (_get-font-height_ font))
 
 (defun get-font-ascent (&key (font sdl:*default-font*))
-  "Returns the maximum pixel ascent of all glyphs of font `FONT`. 
-This can also be interpreted as the distance from the top of the font to the baseline. 
-It could be used when drawing an individual glyph relative to a top point, 
-by combining it with the glyph's maxy metric to resolve the top of the rectangle used when 
-blitting the glyph on the screen. 
+  "Returns the maximum pixel ascent of all glyphs of font `FONT`.
+This can also be interpreted as the distance from the top of the font to the baseline.
+It could be used when drawing an individual glyph relative to a top point,
+by combining it with the glyph's maxy metric to resolve the top of the rectangle used when
+blitting the glyph on the screen.
 
 ##### Parameters
 
@@ -205,11 +205,11 @@ blitting the glyph on the screen.
   (_get-font-ascent_ font))
 
 (defun get-font-descent (&key (font sdl:*default-font*))
-  "Returns the maximum pixel descent of all glyphs of font `FONT`. 
-This can also be interpreted as the distance from the baseline to the bottom of the font. 
-It could be used when drawing an individual glyph relative to a bottom point, 
-by combining it with the glyph's maxy metric to resolve the top of the rectangle used when 
-blitting the glyph on the screen. 
+  "Returns the maximum pixel descent of all glyphs of font `FONT`.
+This can also be interpreted as the distance from the baseline to the bottom of the font.
+It could be used when drawing an individual glyph relative to a bottom point,
+by combining it with the glyph's maxy metric to resolve the top of the rectangle used when
+blitting the glyph on the screen.
 
 ##### Parameters
 
@@ -225,8 +225,8 @@ blitting the glyph on the screen.
   (_get-font-descent_ font))
 
 (defun get-font-line-skip (&key (font sdl:*default-font*))
-  "Returns the recommended pixel height of a rendered line of text of the font `FONT`. 
-This is usually larger than the [GET-FONT-HEIGHT](#get-font-height) of the font. 
+  "Returns the recommended pixel height of a rendered line of text of the font `FONT`.
+This is usually larger than the [GET-FONT-HEIGHT](#get-font-height) of the font.
 
 ##### Parameters
 
@@ -242,7 +242,7 @@ This is usually larger than the [GET-FONT-HEIGHT](#get-font-height) of the font.
   (_get-font-line-skip_ font))
 
 (defun get-font-faces (&key (font sdl:*default-font*))
-  "Returns the number of faces 'sub-fonts' available in the font `FONT`. 
+  "Returns the number of faces 'sub-fonts' available in the font `FONT`.
 This is a count of the number of specific fonts (based on size and style and other
  typographical features perhaps) contained in the font itself. It seems to be a useless
  fact to know, since it can't be applied in any other `SDL_TTF` functions.
@@ -261,8 +261,8 @@ This is a count of the number of specific fonts (based on size and style and oth
   (_get-font-faces_ font))
 
 (defun font-fixed-width-p (&key (font sdl:*default-font*))
-  "Returns `T` if the font face is of a fixed width, or `NIL` otherwise. 
-Fixed width fonts are monospace, meaning every character that exists in the font is the same width. 
+  "Returns `T` if the font face is of a fixed width, or `NIL` otherwise.
+Fixed width fonts are monospace, meaning every character that exists in the font is the same width.
 
 ##### Parameters
 
@@ -278,7 +278,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
   (_font-fixed-width-p_ font))
 
 (defun get-font-face-family-name (&key (font sdl:*default-font*))
-  "Returns the current font face family name of font `FONT` or `NIL` if the information is unavailable. 
+  "Returns the current font face family name of font `FONT` or `NIL` if the information is unavailable.
 
 ##### Parameters
 
@@ -294,7 +294,7 @@ Fixed width fonts are monospace, meaning every character that exists in the font
   (_get-font-face-family-name_ font))
 
 (defun get-font-face-style-name (&key (font sdl:*default-font*))
-  "Returns the current font face style name of font `FONT`, or `NIL` if the information is unavailable. 
+  "Returns the current font face style name of font `FONT`, or `NIL` if the information is unavailable.
 
 
 ##### Parameters

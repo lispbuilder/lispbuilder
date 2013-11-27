@@ -36,7 +36,7 @@
 
 (defun set-flags (&rest keyword-args)
   (if (listp (first keyword-args))
-    (let ((keywords 
+    (let ((keywords
            (mapcar #'(lambda (x)
                        (eval x))
                    (first keyword-args))))

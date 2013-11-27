@@ -10,7 +10,7 @@
 
    ;; globals.lisp
    #:*generation*
-     
+
    ;; sdl-util-ttf.lisp
    #:ttf-init-p
    #:init-ttf

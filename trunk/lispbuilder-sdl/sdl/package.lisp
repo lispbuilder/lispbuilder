@@ -27,7 +27,7 @@
    lispbuilder-sdl-cffi::sdl-init-everything
    lispbuilder-sdl-cffi::sdl-init-video
    lispbuilder-sdl-cffi::sdl-init-cdrom
-   lispbuilder-sdl-cffi::sdl-init-audio 
+   lispbuilder-sdl-cffi::sdl-init-audio
    lispbuilder-sdl-cffi::sdl-init-timer
    lispbuilder-sdl-cffi::sdl-init-joystick
    lispbuilder-sdl-cffi::sdl-init-eventthread
@@ -102,7 +102,7 @@
    #:*default-font-path*
    #:*default-audio-path*
    #:*default-image-path*
-   
+
    #:*default-surface*
    #:*default-color*
    #:*default-position*
@@ -117,7 +117,7 @@
    ;;#:*default-font-path*
    #:*default-simple-font*
    #:*default-ttf-font*
-   
+
    #:*mixer*
    #:*managed-audio*
    #:+DEFAULT-FORMAT+
@@ -134,7 +134,7 @@
 
    #:*allow-convert-to-display-format*
    #:*sdl-event*
-   
+
    ;; init.lisp
    #:with-init
    #:initialize-subsystems-on-startup
@@ -166,20 +166,20 @@
    #:quit-cdrom
 
    #:load-library
-   
+
    ;; input-util.lisp
    #:initialise-input-util
    #:update-input-util
    #:quit-input-util
-   #:key-pressed-p 
-   #:key-released-p 
+   #:key-pressed-p
+   #:key-released-p
    #:key-held-p
    #:key-time-in-current-state
    #:key-time-in-previous-state
    #:handle-key-up
    #:handle-key-down
-   #:mouse-pressed-p 
-   #:mouse-released-p 
+   #:mouse-pressed-p
+   #:mouse-released-p
    #:mouse-held-p
    #:mouse-time-in-current-state
    #:mouse-time-in-previous-state
@@ -251,7 +251,7 @@
    #:*yellow*
    #:*cyan*
    #:*magenta*
-   
+
    ;; color.lisp
    #:sdl-color
    #:color
@@ -284,7 +284,7 @@
 
    #:draw-rectangle
    #:draw-rectangle-*
-  
+
    #:draw-pixel
    #:draw-pixel-*
    #:read-pixel
@@ -300,7 +300,7 @@
    #:draw-trigon
    #:draw-aa-trigon
    #:draw-filled-trigon
-   
+
    #:draw-polygon
    #:draw-aa-polygon
    #:draw-aa-polygon-*
@@ -316,7 +316,7 @@
    #:draw-pie-*
    #:draw-filled-pie
    #:draw-filled-pie-*
-  
+
    ;; events.lisp
    #:event=
    #:set-event-filter
@@ -365,7 +365,7 @@
    #:with-joy-ball-motion-event
    #:with-video-resize-event
    #:with-user-event
-   
+
    #:active-event-gain
    #:active-event-state
    #:key-event-state
@@ -402,7 +402,7 @@
    #:user-event-data2
    #:video-resize-event-w
    #:video-resize-event-h
-   
+
 
    ;; image.lisp
    #:supported-image-formats
@@ -443,7 +443,7 @@
    #:flood-fill-*
    #:flood-fill-stack
    #:flood-fill-stack-*
-   
+
    ;; surfaces.lisp
    #:sdl-surface
    #:surface
@@ -555,10 +555,10 @@
    #:set-default-font
    #:default-font-p
 
-   ;;    #:with-load-font   
+   ;;    #:with-load-font
    #:initialise-default-font
    #:initialise-font
-   
+
    ;; bitmap-font-data.lisp
    #:*font-8x8*
    #:*font-5x7*
@@ -612,7 +612,7 @@
    ;; simple-font.lisp
    #:simple-font-definition
    #:create-simple-font-definition
-   
+
    ;; string-solid.lisp
    #:render-string-solid
    #:draw-string-solid
@@ -652,7 +652,7 @@
    #:with-pixel
    #:with-pixels
    #:pixels
-   
+
    ;; audio.lisp
    #:audio-spec
    #:print-object
@@ -703,7 +703,7 @@
    #:load-audio
    #:default-fill-audio-buffer
    #:audio-driver-name
-   
+
    ;; assets/globals.lisp
    ;;#:*default-font-path*
 
@@ -729,7 +729,7 @@
    #:unicode-enabled-p
    #:enable-unicode
    #:disable-unicode
-   
+
    #:enable-key-repeat
    #:disable-key-repeat
    #:key-repeat-enabled-p
@@ -796,19 +796,19 @@
    #:app-mouse-focus
    #:app-input-focus
    #:app-active
-   
+
    ;; Imports from lispbuilder-sdl-cffi
    #:sdl-get-ticks
    #:sdl-opengl
    #:sdl-init-everything
    #:sdl-init-video
    #:sdl-init-cdrom
-   #:sdl-init-audio 
+   #:sdl-init-audio
    #:sdl-init-timer
    #:sdl-init-joystick
    #:sdl-init-eventthread
    #:sdl-init-noparachute
-   
+
    #:sdl-sw-surface
    #:sdl-hw-surface
    #:sdl-async-blit
@@ -856,13 +856,13 @@
    #:image-library-version
    #:image-wrapper-version
    #:image-version-at-least
-   
+
    #:*image-loaded-p*
    #:*glue-loaded-p*
 
    #:*gfx-loaded-p*
-   
-   ;; Imports from lispbuilder-sdl-base  
+
+   ;; Imports from lispbuilder-sdl-base
 
    #:with-events
    #:push-quit-event

@@ -19,7 +19,7 @@
 
    lispbuilder-sdl-cffi::CHUNK
    lispbuilder-sdl-cffi::MUSIC
-		 
+
    ;; lispbuilder-sdl-cffi::this-fp
    ;; 		 lispbuilder-sdl-cffi::gc-p
    ;; 		 lispbuilder-sdl-cffi::simple-free
@@ -27,36 +27,36 @@
 
   (:export
 
-   ;; 4.1 General 
+   ;; 4.1 General
    ;; 4.1.1 Mix_Linked_Version
    #:Linked-Version
    ;; 4.1.2 Mix_OpenAudio
    #:Open-Audio
    ;; 4.1.3 Mix_CloseAudio
    #:Close-Audio
-   ;; 4.1.4 Mix_SetError 
-   ;; 4.1.5 Mix_GetError 
+   ;; 4.1.4 Mix_SetError
+   ;; 4.1.5 Mix_GetError
    ;; 4.1.6 Mix_QuerySpec
    #:audio-frequency-p
    #:audio-format-p
    #:audio-channels-p
    #:audio-opened-p
 
-   ;; 4.2 Samples 
+   ;; 4.2 Samples
    ;; 4.2.1 Mix_LoadWAV
    #:Load-sample
-   ;; 4.2.2 Mix_LoadWAV_RW 
-   ;; 4.2.3 Mix_QuickLoad_WAV 
-   ;; 4.2.4 Mix_QuickLoad_RAW 
+   ;; 4.2.2 Mix_LoadWAV_RW
+   ;; 4.2.3 Mix_QuickLoad_WAV
+   ;; 4.2.4 Mix_QuickLoad_RAW
    ;; 4.2.5 Mix_VolumeChunk
    #:SAMPLE-VOLUME
    ;; 4.2.6 Mix_FreeChunk
    #:FREE
 
-   ;; 4.3 Channels 
+   ;; 4.3 Channels
    ;; 4.3.1 Mix_AllocateChannels
    #:ALLOCATE-CHANNELS
-   ;; 4.3.2 Mix_Volume 
+   ;; 4.3.2 Mix_Volume
    #:CHANNEL-VOLUME
    ;; 4.3.3 Mix_PlayChannel
    #:PLAY-SAMPLE
@@ -91,7 +91,7 @@
    ;; 4.3.16 Mix_GetChunk
    #:SAMPLE-FROM-CHANNEL
 
-   ;; 4.4 Groups 
+   ;; 4.4 Groups
    ;; 4.4.1 Mix_ReserveChannels
    #:RESERVE-CHANNELS
    ;; 4.4.2 Mix_GroupChannel
@@ -111,7 +111,7 @@
    ;; 4.4.9 Mix_HaltGroup
    ;; #:HALT-SAMPLE
 
-   ;; 4.5 Music 
+   ;; 4.5 Music
    ;; 4.5.1 Mix_LoadMUS
    #:Load-MUSIC
    ;; 4.5.2 Mix_FreeMusic
@@ -153,16 +153,16 @@
    #:MUSIC-PAUSED-P
    ;; 4.5.19 Mix_FadingMusic
    #:MUSIC-FADING-P
-   ;; 4.5.20 Mix_GetMusicHookData 
+   ;; 4.5.20 Mix_GetMusicHookData
 
-   ;; 4.6 Effects 
-   ;; 4.6.1 Mix_RegisterEffect 
-   ;; 4.6.2 Mix_UnregisterEffect 
-   ;; 4.6.3 Mix_UnregisterAllEffects 
-   ;; 4.6.4 Mix_SetPostMix 
-   ;; 4.6.5 Mix_SetPanning 
-   ;; 4.6.6 Mix_SetDistance 
-   ;; 4.6.7 Mix_SetPosition 
+   ;; 4.6 Effects
+   ;; 4.6.1 Mix_RegisterEffect
+   ;; 4.6.2 Mix_UnregisterEffect
+   ;; 4.6.3 Mix_UnregisterAllEffects
+   ;; 4.6.4 Mix_SetPostMix
+   ;; 4.6.5 Mix_SetPanning
+   ;; 4.6.6 Mix_SetDistance
+   ;; 4.6.7 Mix_SetPosition
    ;; 4.6.8 Mix_SetReverseStereo
 
 
@@ -184,7 +184,7 @@
    #:CHUNK
    #:MUSIC
    #:FREE
-   
+
    ;;   #:*DEFAULT-MUSIC*
    ;;   #:*DEFAULT-CHUNK*
 

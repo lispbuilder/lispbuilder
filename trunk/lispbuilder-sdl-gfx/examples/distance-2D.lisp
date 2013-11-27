@@ -2,7 +2,7 @@
 ;;;;; "http://www.processing.org/learning/examples/distance2d.html"
 ;;;;; (C)2006 Luke J Crook
 
-(in-package #:sdl-gfx-examples) 
+(in-package #:sdl-gfx-examples)
 
 (defun distance-2D ()
   (let ((width 200) (height 200) (mouse-x 0) (mouse-y 0)

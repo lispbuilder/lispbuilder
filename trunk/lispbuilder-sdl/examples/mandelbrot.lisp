@@ -5,7 +5,7 @@
 ;;;; see COPYING for license
 ;;;; From "http://www.frank-buss.de/lisp/canvas.html"
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defvar *x0* 0.2)
 (defvar *y0* 0.5)
@@ -40,7 +40,7 @@
 									   (mod (* 7 (the fixnum c)) 256)
 									   (mod (* 2 (the fixnum c)) 256))))))))))
 
-(defun mandelbrot 
+(defun mandelbrot
        (&optional (width *mandelbrot-width*) (height *mandelbrot-height*)
                   (x0 *x0*) (y0 *y0*) (x1 *x1*) (y1 *y1*))
   "main program to draw navigate mandelbrot set"
@@ -71,7 +71,7 @@
                 (new-height (* old-height *zoom-ratio*))
                 (new-mid-x (+ x0 (* x-ratio old-width)))
                 (new-mid-y (+ y0 (* y-ratio old-height))))
-           (setf x0 
+           (setf x0
                  (- new-mid-x (/ new-width 2.0)))
            (setf y0
                  (- new-mid-y (/ new-height 2.0)))
@@ -119,7 +119,7 @@
                 (new-height (* old-height *zoom-ratio*))
                 (new-mid-x (+ x0 (* x-ratio old-width)))
                 (new-mid-y (+ y0 (* y-ratio old-height))))
-           (setf x0 
+           (setf x0
                  (- new-mid-x (/ new-width 2.0)))
            (setf y0
                  (- new-mid-y (/ new-height 2.0)))

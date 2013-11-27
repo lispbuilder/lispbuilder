@@ -3,7 +3,7 @@
 ;;;; (C)2006 Justin Heyes-Jones, Luke J Crook.
 ;;;; see COPYING for license
 
-(in-package #:sdl-image-examples) 
+(in-package #:sdl-image-examples)
 
 (defun image-example ()
   (sdl:load-library)
@@ -64,7 +64,7 @@
             do (sdl:draw-surface-at image position)))
 
     (sdl:update-display)
-      
+
     (sdl:with-events ()
       (:quit-event ()
        ;; SDL_Image 1.2.8 and later requires a corresponding

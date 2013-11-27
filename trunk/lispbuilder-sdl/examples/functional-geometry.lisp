@@ -21,7 +21,7 @@
     (0 '(0 0))
     (1 (car vectors))
     (otherwise (flet ((p+p (v1 v2)
-                        (destructuring-bind (vx0 vy0) v1 
+                        (destructuring-bind (vx0 vy0) v1
                           (destructuring-bind (vx1 vy1) v2
                             (list (+ vx0 vx1) (+ vy0 vy1))))))
                  (reduce #'p+p vectors)))))
@@ -89,8 +89,8 @@
   (quartet p (rot (rot (rot p))) (rot p) (rot (rot p))))
 
 ;; defines part p of the fish
-(defparameter *p* 
-  (grid 16 16 
+(defparameter *p*
+  (grid 16 16
         '(((4 4) (6 0)) ((0 3)(3 4)) ((3 4)(0 8))
           ((0 8)(0 3)) ((4 5)(7 6)) ((7 6)(4 10))
           ((4 10)(4 5)) ((11 0)(10 4)) ((10 4)(8 8))
@@ -104,7 +104,7 @@
 
 ;; defines part q of the fish
 (defparameter *q*
-  (grid 16 16 
+  (grid 16 16
         '(((2 0)(4 5)) ((4 5)(4 7)) ((4 0)(6 5))
           ((6 5)(6 7)) ((6 0)(8 5)) ((8 5)(8 8))
           ((8 0)(10 6)) ((10 6)(10 9)) ((10 0)(14 11))
@@ -119,7 +119,7 @@
 
 ;; defines part r of the fish
 (defparameter *r*
-  (grid 16 16 
+  (grid 16 16
         '(((0 12)(1 14)) ((0 8)(2 12)) ((0 4)(5 10))
           ((0 0)(8 8)) ((1 1)(4 0)) ((2 2)(8 0))
           ((3 3)(8 2)) ((8 2)(12 0)) ((5 5)(12 3))
@@ -130,8 +130,8 @@
           ((15 15)(16 14)))))
 
 ;; defines part s of the fish
-(defparameter *s* 
-  (grid 16 16 
+(defparameter *s*
+  (grid 16 16
         '(((0 0)(4 2)) ((4 2)(8 2)) ((8 2)(16 0))
           ((0 4)(2 1)) ((0 6)(7 4)) ((0 8)(8 6))
           ((0 10)(7 8)) ((0 12)(7 10)) ((0 14)(7 13))
@@ -172,7 +172,7 @@
   (quartet (blank) (blank) (blank) *u*))
 (defparameter *corner2*
   (quartet *corner1* *side1* (rot *side1*) *u*))
-(defparameter *pseudocorner* 
+(defparameter *pseudocorner*
   (quartet *corner2* *side2* (rot *side2*) (rot *t*)))
 (defparameter *fishes*
   (cycle *pseudocorner*))

@@ -5,11 +5,11 @@
 (in-package #:lispbuilder-sdl-ttf)
 
 ;;; Add INIT-TTF to LISPBUILDER-SDL's external initialization list.
-;;; Functions in this list are called within the macro SDL:WITH-INIT, and the function SDL:INIT-SDL 
+;;; Functions in this list are called within the macro SDL:WITH-INIT, and the function SDL:INIT-SDL
 (pushnew 'init-ttf sdl:*external-init-subsystems-on-startup*)
 
 ;;; Add the QUIT-TTF to LISPBUILDER-SDL's external uninitialization list.
-;;; Functions in this list are called when the macro SDL:WITH-INIT exits, and the function SDL:QUIT-SDL 
+;;; Functions in this list are called when the macro SDL:WITH-INIT exits, and the function SDL:QUIT-SDL
 (pushnew 'quit-ttf sdl:*external-quit-subsystems-on-exit*)
 
 (defun load-library ()
@@ -25,7 +25,7 @@
                       sdl-ttf-cffi::ttf-patch-level))
 
 (defun ttf-init-p ()
-  "Queries the initialization status of the `SDL_TTF` truetype library. 
+  "Queries the initialization status of the `SDL_TTF` truetype library.
 Returns the current *GENERATION* if this library is already initialized and `NIL` if uninitialized."
   (if (sdl-ttf-cffi::ttf-was-init)
       *generation*
@@ -34,7 +34,7 @@ Returns the current *GENERATION* if this library is already initialized and `NIL
 ;;; Functions
 
 (defun init-ttf ()
-  "Initializes the `SDL_TTF` font library if uninitialized. Increments and returns *GENERATION* if the library 
+  "Initializes the `SDL_TTF` font library if uninitialized. Increments and returns *GENERATION* if the library
 was uninitialized and is successfully initialized, or else returns `NIL` if uninitialized."
   (if (ttf-init-p)
       *generation*

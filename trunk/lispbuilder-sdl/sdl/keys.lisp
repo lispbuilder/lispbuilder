@@ -9,9 +9,9 @@
 
 (defun enable-unicode ()
   "Unicode translation is enabled with STATE is T, and disabled when STATE is NIL.
-To obtain the character codes corresponding to received keyboard events, Unicode translation must first be turned on 
-using this function. The translation incurs a slight overhead for each keyboard event and is therefore disabled by default. 
-For each subsequently received key down event, the unicode member of the SDL_keysym structure will then contain 
+To obtain the character codes corresponding to received keyboard events, Unicode translation must first be turned on
+using this function. The translation incurs a slight overhead for each keyboard event and is therefore disabled by default.
+For each subsequently received key down event, the unicode member of the SDL_keysym structure will then contain
 the corresponding character code, or zero for keysyms that do not correspond to any character code.
 Note that only key press events will be translated, not release events.
 Returns the previous unicode translation state."
@@ -19,18 +19,18 @@ Returns the previous unicode translation state."
 
 (defun disable-unicode ()
   "Unicode translation is enabled with STATE is T, and disabled when STATE is NIL.
-To obtain the character codes corresponding to received keyboard events, Unicode translation must first be turned on 
-using this function. The translation incurs a slight overhead for each keyboard event and is therefore disabled by default. 
-For each subsequently received key down event, the unicode member of the SDL_keysym structure will then contain 
+To obtain the character codes corresponding to received keyboard events, Unicode translation must first be turned on
+using this function. The translation incurs a slight overhead for each keyboard event and is therefore disabled by default.
+For each subsequently received key down event, the unicode member of the SDL_keysym structure will then contain
 the corresponding character code, or zero for keysyms that do not correspond to any character code.
 Note that only key press events will be translated, not release events.
 Returns the previous unicode translation state."
   (= (sdl-cffi::SDL-Enable-UNICODE 0) 1))
 
 (defun enable-key-repeat (delay interval)
-  "Enables the keyboard repeat rate. DELAY specifies how long the key must be pressed before it begins repeating, 
+  "Enables the keyboard repeat rate. DELAY specifies how long the key must be pressed before it begins repeating,
 it then repeats at the speed specified by INTERVAL. Both DELAY and INTERVAL are expressed in milliseconds.
-Setting DELAY or INTERVAL to NIL will set the default values of 
+Setting DELAY or INTERVAL to NIL will set the default values of
 SDL-DEFAULT-REPEAT-DELAY and SDL-DEFAULT-REPEAT-INTERVAL respectively.
 _NOTE_: `ENABLE-KEY-REPEAT` must be called after the SDL library has been
 initialized to have an effect."
@@ -54,7 +54,7 @@ initialized to have an effect."
     (cffi:with-foreign-objects ((fp-delay :int)
 				(fp-interval :int))
       (sdl-cffi::SDL-Get-Key-Repeat fp-delay fp-interval)
-      (setf delay (cffi:mem-aref fp-delay :int) 
+      (setf delay (cffi:mem-aref fp-delay :int)
 	    interval (cffi:mem-aref fp-interval :int)))
     (values delay interval)))
 
@@ -64,7 +64,7 @@ initialized to have an effect."
 
 (defun key-repeat-interval ()
     "Returns the current key repeat interval, in milliseconds."
-  (multiple-value-bind (delay interval)    
+  (multiple-value-bind (delay interval)
       (key-repeat-enabled-p)
     (declare (ignore delay))
     interval))
@@ -87,11 +87,11 @@ initialized to have an effect."
                                   key))))))
 
 (defun key-state-p (&optional key)
-  "Returns all keys that are currently depressed as a LIST. 
+  "Returns all keys that are currently depressed as a LIST.
 Returns KEY if KEY is currently depressed, returns NIL otherwise.
 Note: Use SDL_PumpEvents to update the state array.
-Note: This function gives you the current state after all events have been processed, 
-so if a key or button has been pressed and released before you process events, 
+Note: This function gives you the current state after all events have been processed,
+so if a key or button has been pressed and released before you process events,
 then the pressed state will never show up in the getstate calls.
 Note: This function doesn't take into account whether shift is currently depressed.
 For example: \(KEY-STATE-P :SDL-KEY-F1\)"
@@ -102,18 +102,18 @@ For example: \(KEY-STATE-P :SDL-KEY-F1\)"
 (defun key-down-p (key)
   "Returns `KEY` if currently depressed, returns NIL otherwise.
 Note: Use SDL_PumpEvents to update the state array.
-Note: This function returns the current state after all events have been processed, 
-so if a key or button has been pressed and released before you process events, 
+Note: This function returns the current state after all events have been processed,
+so if a key or button has been pressed and released before you process events,
 then the pressed state will never show up in the getstate calls.
 Note: This function doesn't take into account whether shift is currently depressed.
 For example: \(KEY-DOWN-P :SDL-KEY-F1\)"
   (get-key-state key))
 
 (defun keys-down-p ()
-  "Returns all keys that are currently depressed as a LIST. 
+  "Returns all keys that are currently depressed as a LIST.
 Note: Use SDL_PumpEvents to update the state array.
-Note: This function returns the current state after all events have been processed, 
-so if a key or button has been pressed and released before you process events, 
+Note: This function returns the current state after all events have been processed,
+so if a key or button has been pressed and released before you process events,
 then the pressed state will never show up in the getstate calls.
 Note: This function doesn't take into account whether shift is currently depressed.
 For example: \(KEYS-DOWN-P\)"
@@ -133,11 +133,11 @@ For example: \(KEYS-DOWN-P\)"
                                 key)))))
 
 (defun mod-state-p (&optional key)
-  "Returns all modifier keys that are currently depressed as a LIST. 
+  "Returns all modifier keys that are currently depressed as a LIST.
 Returns KEY if KEY is currently depressed, returns NIL otherwise.
 Note: Use SDL_PumpEvents to update the state array.
-Note: This function gives you the current state after all events have been processed, 
-so if a key or button has been pressed and released before you process events, 
+Note: This function gives you the current state after all events have been processed,
+so if a key or button has been pressed and released before you process events,
 then the pressed state will never show up in the getstate calls.
 For example: \(GET-MOD-STATE :SDL-KEY-MOD-LCTRL)"
   (if key
@@ -147,17 +147,17 @@ For example: \(GET-MOD-STATE :SDL-KEY-MOD-LCTRL)"
 (defun mod-down-p (mod)
   "Returns `MOD` if currently depressed, returns NIL otherwise.
 Note: Use SDL_PumpEvents to update the state array.
-Note: This function gives you the current state after all events have been processed, 
-so if a key or button has been pressed and released before you process events, 
+Note: This function gives you the current state after all events have been processed,
+so if a key or button has been pressed and released before you process events,
 then the pressed state will never show up in the getstate calls.
 For example: \(MOD-DOWN-P :SDL-KEY-MOD-LCTRL\)"
   (get-mod-state mod))
 
 (defun mods-down-p ()
-  "Returns all modifier keys that are currently depressed as a LIST. 
+  "Returns all modifier keys that are currently depressed as a LIST.
 Note: Use SDL_PumpEvents to update the state array.
-Note: This function gives you the current state after all events have been processed, 
-so if a key or button has been pressed and released before you process events, 
+Note: This function gives you the current state after all events have been processed,
+so if a key or button has been pressed and released before you process events,
 then the pressed state will never show up in the getstate calls.
 For example: \(MODS-DOWN-P\)"
   (get-mods-state))

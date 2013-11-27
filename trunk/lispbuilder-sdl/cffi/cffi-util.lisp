@@ -4,7 +4,7 @@
 ;;; Macro to handle defenum (thanks to Frank Buss for this SWIG/CFFI feature)
 ;; this handles anonymous enum types differently
 
-(defmacro defenum (&body enums)	
+(defmacro defenum (&body enums)
  `(progn ,@(loop for value in enums
                  for index = 0 then (1+ index)
                  when (listp value) do (setf index (second value)

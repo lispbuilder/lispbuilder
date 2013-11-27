@@ -2,12 +2,12 @@
 ;;;;; "http://www.processing.org/learning/examples/setupdraw.html"
 ;;;;; (C)2006 Luke J Crook
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defun setup-and-draw ()
   (let ((width 200) (height 200)
 	(y 100))
-    (sdl:with-init ()      
+    (sdl:with-init ()
       (sdl:window width height :title-caption "Setup and Draw, from Processing.org")
       (setf (sdl:frame-rate) 30)
       (sdl:with-events ()

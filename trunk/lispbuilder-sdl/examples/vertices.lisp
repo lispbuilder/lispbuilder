@@ -2,7 +2,7 @@
 ;;;;; "http://www.processing.org/learning/examples/vertices.html"
 ;;;;; (C)2006 Luke J Crook
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 
 (defun vertices ()

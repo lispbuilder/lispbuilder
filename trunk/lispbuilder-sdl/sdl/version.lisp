@@ -1,4 +1,2 @@
 
 (in-package #:lispbuilder-sdl)
-
-

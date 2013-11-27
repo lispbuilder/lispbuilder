@@ -3,7 +3,7 @@
 ;;;; (C)2006 Luke Crook
 ;;;; see COPYING for license
 
-(in-package #:sdl-gfx-examples) 
+(in-package #:sdl-gfx-examples)
 
 (defvar *current-y* 0)
 (defvar *prev-font-height* 0)

@@ -32,7 +32,7 @@
     (if (equal TTF-STYLE-BOLD (logand value TTF-STYLE-BOLD))
 	(push :STYLE-BOLD font-style))
     (if (equal TTF-STYLE-ITALIC (logand value TTF-STYLE-ITALIC))
-	(push :STYLE-ITALIC font-style))    
+	(push :STYLE-ITALIC font-style))
     (if (equal TTF-STYLE-UNDERLINE (logand value TTF-STYLE-UNDERLINE))
 	(push :STYLE-UNDERLINE font-style))
     font-style))

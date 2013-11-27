@@ -3,7 +3,7 @@
 ;;;; (C)2006 Luke Crook
 ;;;; see COPYING for license
 
-(in-package #:sdl-gfx-examples) 
+(in-package #:sdl-gfx-examples)
 
 (defvar *circles-per-frame* 1)
 
@@ -13,7 +13,7 @@
     (sdl:with-init ()
       (sdl:window width height)
       (setf (sdl:frame-rate) 0)
-      
+
       (sdl-gfx:initialise-default-font sdl:*gfx-font-8x8*)
       (draw-fps "Calculating FPS....." 10 50 sdl:*default-font* sdl:*default-surface* t)
 

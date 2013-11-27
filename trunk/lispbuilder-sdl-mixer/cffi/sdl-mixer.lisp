@@ -17,9 +17,9 @@
 
 ;;;; These defctypes are used by the CFFI translation functions
 ;;;; see the typemap definition below.
-(cffi:defctype mix-chunk-fp (:wrapper :pointer 
+(cffi:defctype mix-chunk-fp (:wrapper :pointer
 				      :to-c to-mix-chunk))
-(cffi:defctype mix-music-fp (:wrapper :pointer 
+(cffi:defctype mix-music-fp (:wrapper :pointer
 				      :to-c to-mix-music))
 
 

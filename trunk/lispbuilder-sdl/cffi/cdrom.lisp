@@ -1,4 +1,4 @@
-(in-package #:lispbuilder-sdl-cffi) 
+(in-package #:lispbuilder-sdl-cffi)
 
 (cl:defconstant SDL-MAX-TRACKS 99)
 
@@ -73,13 +73,13 @@
 
 (defconstant CD-FPS 75)
 (defun FRAMES-TO-MSF (f)
-  (values 
+  (values
    (mod f CD-FPS)
    (mod (/ f CD-FPS) 60)
    (/ (/ f CD-FPS) 60)))
 
 (defun MSF-TO-FRAMES (M S F)
-  (+ 
+  (+
    (* M 60 CD-FPS)
    (* S CD-FPS)
    F))

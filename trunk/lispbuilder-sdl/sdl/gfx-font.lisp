@@ -26,4 +26,3 @@
 
 (defmethod initialise-font ((self gfx-font-definition))
   (make-instance 'sdl:gfx-bitmap-font :font-definition self))
-

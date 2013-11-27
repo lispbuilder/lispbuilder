@@ -43,14 +43,14 @@
 ##### Returns
 `T` if the input was just pressed
 "
-  (with-input-status input status 
+  (with-input-status input status
 
     (if (and nil status)
-	(format t "test ~a status ~a prev ~a time ~a~%" input 
-		(input-status-status status) 
+	(format t "test ~a status ~a prev ~a time ~a~%" input
+		(input-status-status status)
 		(input-status-prev-status status)
 		(input-status-time status)))
-	
+
     (and status
 	 (eq input-status (input-status-status status))
 	 (not (eq input-status (input-status-prev-status status))))))
@@ -95,11 +95,11 @@ is created and added to the hash table"
   (let ((status (gethash input *input-event-status*)))
     (if (input-status-p status)
       status
-      (setf (gethash input *input-event-status*) 
+      (setf (gethash input *input-event-status*)
             (make-input-status :status 'unknown :time 0.0 :prev-time 0.0 :prev-status 'unknown)))))
 
 (defun initialise-input-util()
-  "Initialises the input util system. This just creates the data structure that input status information 
+  "Initialises the input util system. This just creates the data structure that input status information
 is stored in, and maintains a global variable to track initialisation status.
 
 ##### Parameters
@@ -113,12 +113,12 @@ is stored in, and maintains a global variable to track initialisation status.
 (defun debug-view-inputs()
   (loop for input being the hash-keys of *input-event-status* do
         (let ((status (gethash input *input-event-status*)))
-          (format t "update input ~a status ~a time ~a prev time ~a prev status ~a~%" input (input-status-status status) 
+          (format t "update input ~a status ~a time ~a prev time ~a prev status ~a~%" input (input-status-status status)
                   (input-status-time status) (input-status-prev-time status) (input-status-prev-status status)))))
 
 (defun update-input-util(time)
-  "This must be called once for each time period you are updating the application, in order 
-to update key, mouse button & joystick information. 
+  "This must be called once for each time period you are updating the application, in order
+to update key, mouse button & joystick information.
 
 ##### Parameters
 * `TIME` is the time in seconds this update represents
@@ -149,7 +149,7 @@ to update key, mouse button & joystick information.
   (setf *input-event-status* nil))
 
 ;;;;; Begin key handling
-;;;;; 
+;;;;;
 
 (defun handle-key-up(key)
   "You must call this when a key up event occurs
@@ -312,7 +312,7 @@ Time mouse was in previous state
 "
   (time-in-previous-state button))
 
-;;;;; 
+;;;;;
 ;;;;; End mouse handling
 
 ;;;;; Begin Joystick handling
@@ -327,5 +327,5 @@ Time mouse was in previous state
 ;;"
 ;;  (handle-joystick-input index button 'released))
 
-;;;;; 
+;;;;;
 ;;;;; End Joystick handling

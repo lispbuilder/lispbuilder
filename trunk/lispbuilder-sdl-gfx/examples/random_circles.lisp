@@ -3,7 +3,7 @@
 ;;;; (C)2006 Luke Crook
 ;;;; see COPYING for license
 
-(in-package #:sdl-gfx-examples) 
+(in-package #:sdl-gfx-examples)
 
 (defvar *circles-per-frame* 1)
 

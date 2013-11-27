@@ -43,4 +43,3 @@
                                       "      Seems to be a SDL library issue.")
                        #(10 40))
          (sdl:update-display))))))
-

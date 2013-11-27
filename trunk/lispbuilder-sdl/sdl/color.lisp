@@ -27,8 +27,8 @@ Returns a new `RGBA` [COLOR-A](#color-a) from the specified `R`ed, `G`reen, `B`l
 
 (defmacro with-color ((var &optional color (free t))
 		      &body body)
-  "A convience macro that binds `\*DEFAULT-COLOR\*` to `VAR` within the scope of `WITH-COLOR`. 
-`VAR` is set to `COLOR` when `COLOR` is not `NIL`.`VAR` must be of type [COLOR](#color), or [COLOR-A](#color-a). 
+  "A convience macro that binds `\*DEFAULT-COLOR\*` to `VAR` within the scope of `WITH-COLOR`.
+`VAR` is set to `COLOR` when `COLOR` is not `NIL`.`VAR` must be of type [COLOR](#color), or [COLOR-A](#color-a).
 `VAR` is freed using [FREE](#free) when `FREE` is `T`."
   `(let* ((,@(if color
 		 `(,var ,color)
@@ -95,7 +95,7 @@ Returns a new `RGBA` [COLOR-A](#color-a) from the specified `R`ed, `G`reen, `B`l
 			      r g b a)
       (sdl-cffi::sdl-map-rgb (sdl-base::pixel-format (fp surface))
 			     r g b)))
-  
+
 (defmethod map-color ((color color) &optional (surface *default-surface*))
   (map-color-* (r color) (g color) (b color) nil surface))
 
@@ -120,7 +120,7 @@ Returns a new `RGBA` [COLOR-A](#color-a) from the specified `R`ed, `G`reen, `B`l
 
 (defmacro with-foreign-color-copy ((struct color) &body body)
   "Creates and assigns a new foreign `SDL_Color` to `STRUCT`. Then copies the color components from `COLOR` into `STRUCT`.
-`STRUCT` is free'd when out of scope." 
+`STRUCT` is free'd when out of scope."
   `(cffi:with-foreign-object (,struct '(:struct sdl-cffi::SDL-Color))
      (cffi:with-foreign-slots ((sdl-cffi::r sdl-cffi::g sdl-cffi::b) ,struct (:struct sdl-cffi::SDL-Color))
        (setf sdl-cffi::r (r ,color)

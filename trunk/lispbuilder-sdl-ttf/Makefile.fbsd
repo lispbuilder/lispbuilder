@@ -7,7 +7,7 @@ LDFLAGS+=$(SHFLAGS) -lc
 SHLIB_SUFFIX=so
 SDL_CONFIG=sdl11-config		# sane default for FreeBSD, should be detected anyway
 
-SDL_CFLAGS=$(shell $(SDL_CONFIG) --cflags) $(CFLAGS) 
+SDL_CFLAGS=$(shell $(SDL_CONFIG) --cflags) $(CFLAGS)
 SDL_LDFLAGS=$(shell $(SDL_CONFIG) --libs) $(LDFLAGS)
 
 SDL_GLUE_CFLAGS=$(SDL_CFLAGS)

@@ -9,7 +9,7 @@
 
 ;; Coefficients for Matrix M
 ;; For catmull-rom-spline
-(defvar *M11*	 0.0)	
+(defvar *M11*	 0.0)
 (defvar *M12*	 1.0)
 (defvar *M13*	 0.0)
 (defvar *M14*	 0.0)
@@ -89,21 +89,21 @@
 (defun _draw-bezier_ (vertices
 		    &key (clipping t) (surface *default-surface*) (color *default-color*) (segments 20) (style :SOLID)
                     (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
-  "Draw a bezier curve of [COLOR](#color) to [SURFACE](#surface). The shape of the Bezier curve is defined by several control points. 
+  "Draw a bezier curve of [COLOR](#color) to [SURFACE](#surface). The shape of the Bezier curve is defined by several control points.
 A control point is a vertex containing an X and Y coordinate pair.
 
 ##### Parameters
 
 * `:VERTICES` is a list of control points of [POINT](#point).
-* `:STYLE` describes the line style used to draw the curve and may be one of 
-`:SOLID`, `:DASH`, or `:POINTS`. Use `:SOLID` to draw a single continuous line through the specified waypoints. 
+* `:STYLE` describes the line style used to draw the curve and may be one of
+`:SOLID`, `:DASH`, or `:POINTS`. Use `:SOLID` to draw a single continuous line through the specified waypoints.
 Use `:DASH` to draw a line between alternate waypoint pairs. Use `:POINTS` to draw a single pixel at each waypoint.
 * `:SEGMENTS` is the number of line segments used to draw the curve.
-The default is 20 segments if unspecified. The greater the number of segments, 
+The default is 20 segments if unspecified. The greater the number of segments,
 the smoother the curve.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
-* `:CLIPPING` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:CLIPPING` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`.
 SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave `CLIPPING` as `T`.
 
 ##### Example
@@ -134,7 +134,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 
 (defmacro with-bezier ((&optional (style :SOLID) (segments 20)) &body body)
   "Draw a bezier curve of `\*DEFAULT-COLOR\*` to `\*DEFAULT-SURFACE\*`.
-The shape of the Bezier curve is defined by control points. 
+The shape of the Bezier curve is defined by control points.
 A control point is a vertex containing an X and Y coordinate pair.
 
 The number of segments `SEGENTS` used to draw the Bezier curve defaults to 10.
@@ -143,20 +143,20 @@ The greater the number of segments, the smoother the Bezier curve.
 ##### Local Methods
 
 A vertex may be added using:
-* `ADD-VERTEX` which accepts an `POINT`, or 
+* `ADD-VERTEX` which accepts an `POINT`, or
 * `ADD-VERTEX-*` which is the x/y spread version
 
 `ADD-VERTEX` and `ADD-VERTEX-*` are valid only within the scop of `WITH-BEZIER`.
 
 ##### Parameters
 
-* `STYLE` is one of `:SOLID`, `:DASH`, or `:POINTS`. 
-When `STYLE` is `:SOLID`, a single continuous line is drawn through the 
+* `STYLE` is one of `:SOLID`, `:DASH`, or `:POINTS`.
+When `STYLE` is `:SOLID`, a single continuous line is drawn through the
 specified waypoints.
 When `STYLE` is `:DASH`, a line is drawn to alternate waypoint pairs.
 When `STYLE` is `:POINTS`, a single point is drawn at each waypoint.
-* `SEGMENTS` is the number of segments used to draw the Bezier curve.  
-Default is 20 segments if unspecified. The greater the number of segments, 
+* `SEGMENTS` is the number of segments used to draw the Bezier curve.
+Default is 20 segments if unspecified. The greater the number of segments,
 the smoother the curve.
 
 ##### Example
@@ -183,26 +183,26 @@ the smoother the curve.
 
 (defmacro with-curve ((&optional (style :SOLID) (segments 20)) &body body)
   "Draw a Cattmul-Rom spline of `\*DEFAULT-COLOR\*` to `\*DEFAULT-SURFACE\*`.
-The shape of the curve is defined by waypoints. 
+The shape of the curve is defined by waypoints.
 A waypoint is a vertex containing an X and Y coordinate pair.
 
 ##### Local Methods
 
 A vertex may be added using:
-* `ADD-VERTEX` which accepts an `SDL:POINT`, or 
+* `ADD-VERTEX` which accepts an `SDL:POINT`, or
 * `ADD-VERTEX-*` which is the x/y spread version
 
 `ADD-VERTEX` and `ADD-VERTEX-*` are valid only within the scope of `WITH-CURVE`.
 
 ##### Parameters
 
-* `STYLE` describes the line style used to draw the curve and may be one of 
-`:SOLID`, `:DASH`, or `:POINTS`. 
-Use `:SOLID` to draw a single continuous line through the specified waypoints. 
-Use `:DASH` to draw a line between alternate waypoint pairs. 
+* `STYLE` describes the line style used to draw the curve and may be one of
+`:SOLID`, `:DASH`, or `:POINTS`.
+Use `:SOLID` to draw a single continuous line through the specified waypoints.
+Use `:DASH` to draw a line between alternate waypoint pairs.
 Use `:POINTS` to draw a single pixel at each waypoint.
-* `SEGMENTS` is the number of segments used to draw the Catmull-Rom spline.  
-Default is 20 segments if unspecified. The greater the number of segments, 
+* `SEGMENTS` is the number of segments used to draw the Catmull-Rom spline.
+Default is 20 segments if unspecified. The greater the number of segments,
 the smoother the spline.
 
 ##### Example
@@ -234,17 +234,17 @@ the smoother the spline.
 ##### Local Methods
 
 A vertex may be added using:
-* `ADD-VERTEX` which accepts an `SDL:POINT`, or 
+* `ADD-VERTEX` which accepts an `SDL:POINT`, or
 * `ADD-VERTEX-*` which is the x/y spread version
 
 ADD-VERTEX and ADD-VERTEX-* are valid only within the scop of WITH-SHAPE.
 
 ##### Parameters
 
-* `STYLE` describes the line style used to draw the shape and may be one of 
-`:SOLID`, `:DASH`, or `:POINTS`. 
-Use `:SOLID` to draw a single continuous line through the specified waypoints. 
-Use `:DASH` to draw a line between alternate waypoint pairs. 
+* `STYLE` describes the line style used to draw the shape and may be one of
+`:SOLID`, `:DASH`, or `:POINTS`.
+Use `:SOLID` to draw a single continuous line through the specified waypoints.
+Use `:DASH` to draw a line between alternate waypoint pairs.
 Use `:POINTS` to draw a single pixel at each waypoint.
 
 ##### Example
@@ -284,27 +284,27 @@ Use `:POINTS` to draw a single pixel at each waypoint.
     ;; NOTE: There must be a more efficient way to add the first and last points to the point list.
     (push p2 points)
     (nconc points (list p3))))
-  
+
 (defun draw-curve (vertices &key (clipping t) (surface *default-surface*) (color *default-color*)
 		   (segments 20) (style :SOLID) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
-  "Draw a Cattmul-Rom spline of [COLOR](#color) to [SURFACE](#surface). 
-The shape of the curve is defined by waypoints. 
+  "Draw a Cattmul-Rom spline of [COLOR](#color) to [SURFACE](#surface).
+The shape of the curve is defined by waypoints.
 A waypoint is a vertex containing an X and Y coordinate pair.
 
 ##### Parameters
 
 * `VERTICES` is a list of waypoints or vetices for the spline, of [POINT](#point)
-* `STYLE` describes the line style used to draw the curve and may be one of 
-`:SOLID`, `:DASH`, or `:POINTS`. 
-Use `:SOLID` to draw a single continuous line through the specified waypoints. 
-Use `:DASH` to draw a line between alternate waypoint pairs. 
+* `STYLE` describes the line style used to draw the curve and may be one of
+`:SOLID`, `:DASH`, or `:POINTS`.
+Use `:SOLID` to draw a single continuous line through the specified waypoints.
+Use `:DASH` to draw a line between alternate waypoint pairs.
 Use `:POINTS` to draw a single pixel at each waypoint.
-* `SEGMENTS` is the number of segments used to draw the Catmull-Rom spline.  
-Default is 20 segments if unspecified. The greater the number of segments, 
+* `SEGMENTS` is the number of segments used to draw the Catmull-Rom spline.
+Default is 20 segments if unspecified. The greater the number of segments,
 the smoother the spline.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
-* `:CLIPPING` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:CLIPPING` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`.
 SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave `CLIPPING` as `T`.
 
 ##### Example
@@ -322,7 +322,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
      for p2 in (cdr vertices)
      for p3 in (cddr vertices)
      for p4 in (cdddr vertices)
-     do (draw-shape (generate-curve p1 p2 p3 p4 segments) 
+     do (draw-shape (generate-curve p1 p2 p3 p4 segments)
 		    :style style :clipping clipping :surface surface :color color :gfx-loaded-p gfx-loaded-p)))
 
 (defun draw-shape (vertices &key (clipping t) (surface *default-surface*) (color *default-color*)
@@ -332,14 +332,14 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 ##### Parameters
 
 * `VERTICES` is a list of vertices, of `POINT`
-* `STYLE` describes the line style used to draw the polygon and may be one of 
-`:SOLID`, `:DASH`, or `:POINTS`. 
-Use `:SOLID` to draw a single continuous line through the specified waypoints. 
-Use `:DASH` to draw a line between alternate waypoint pairs. 
+* `STYLE` describes the line style used to draw the polygon and may be one of
+`:SOLID`, `:DASH`, or `:POINTS`.
+Use `:SOLID` to draw a single continuous line through the specified waypoints.
+Use `:DASH` to draw a line between alternate waypoint pairs.
 Use `:POINTS` to draw a single pixel at each waypoint.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
-* `:CLIPPING` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:CLIPPING` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`.
 SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave `CLIPPING` as `T`.
 
 ##### Example
@@ -391,8 +391,8 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 * `X1` `Y1` are the end X/Y coordinates of the line, of `INTEGER`.
 * `:AA` determines if the line is to be drawn using antialiasing. _NOTE_: Supported only in `LISPBUILDER-SDL-GFX`, otherwise ignored.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
-* `:CLIPPING` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`. 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:CLIPPING` when left as the default value `T` will ensure that the shape is clipped to the dimensions of `SURFACE`.
 SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave `CLIPPING` as `T`.
 
 ##### Packages
@@ -427,7 +427,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
       ;; simple clipping, should be improved with Cohen-Sutherland line clipping
       (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
       (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
-       
+
     ;; draw line with Bresenham algorithm
     (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
           (color (map-color color surface)))
@@ -504,14 +504,14 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
     (_draw-vline_ x y0 y1 :surface surface :color color :clipping clipping :template template)))
 
 (defun _draw-vline_ (x y0 y1 &key (surface *default-surface*) (color *default-color*) (clipping nil) (template nil))
-  "Draw a vertical line of [COLOR](#color) from `Y0` to `Y1` through `X` onto [SURFACE](#surface). 
+  "Draw a vertical line of [COLOR](#color) from `Y0` to `Y1` through `X` onto [SURFACE](#surface).
 
 ##### Parameters
 
-* `X` is the horizontal `INTEGER` coordinate that the vertical line must intersect.  
+* `X` is the horizontal `INTEGER` coordinate that the vertical line must intersect.
 * `Y0` and `Y1` are the vertical start and end points of the line, of `INTEGER`.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
 * `:CLIPPING` is `NIL` The default is `NIL` as the SDL library will perform the necessary clipping automatically.
 * `:TEMPLATE` specifies an optional [RECTANGLE](#rectangle) to fill the surface. Will not free `TEMPLATE`.
 
@@ -544,16 +544,16 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
   (if gfx-loaded-p
     (gfx-draw-hline x0 x1 y :surface surface :color color)
     (_draw-hline_ x0 x1 y :surface surface :color color :clipping clipping :template template)))
-  
+
 (defun _draw-hline_ (x0 x1 y &key (surface *default-surface*) (color *default-color*) (clipping nil) (template nil))
-  "Draw a horizontal line of [COLOR](#color) from `X0` to `X1` through `Y` onto onto [SURFACE](#surface). 
+  "Draw a horizontal line of [COLOR](#color) from `X0` to `X1` through `Y` onto onto [SURFACE](#surface).
 
 ##### Parameters
 
 * `X0` and `X1` are the horizontal start and end points of the line, of type `INTEGER`.
-* `Y` is the vertical `INTEGER` coordinate that the horizontal line must intersect.  
+* `Y` is the vertical `INTEGER` coordinate that the horizontal line must intersect.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
 * `:CLIPPING` is `NIL` The default is `NIL` as the SDL library will perform the necessary clipping automatically.
 * `:TEMPLATE` specifies an optional [RECTANGLE](#rectangle) to fill the surface. Will not free `TEMPLATE`.
 
@@ -579,7 +579,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 				:template (sdl-base::rectangle-from-edges-* x0 y x1 y template)
 				:clipping clipping
 				:update nil))))
-  
+
 (defun draw-box (rect &key
 		 (clipping nil) (surface *default-surface*)
 		 (color *default-color*) (stroke-color nil) (alpha nil))
@@ -620,7 +620,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 * `X` and `Y` are the `INTEGER` coordinates of the top-left corner of the rectangle.
 * `W` and `H` are the width and height of the rectangle, of type `INTEGER`.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
 * `:STROKE-COLOR` when not `NIL` will draw a `1` pixel line of color `COLOR` around the perimiter of the box.
 * `:ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
 *Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
@@ -653,7 +653,7 @@ is blitted to `SURFACE`.
 * `X0` and `Y0` are the `INTEGER` coordinates of the top-left corner of the rectangle.
 * `X1` and `Y1` are the `INTEGER` coordinates of the bottom-right corner of the rectangle.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
 * `:STROKE-COLOR` when not `NIL` will draw a `1` pixel line of color `COLOR` around the perimiter of the box.
 * `:ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
 *Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
@@ -691,7 +691,7 @@ is blitted to `SURFACE`.
 * `X` and `Y` are the `INTEGER` coordinates of the top-left corner of the rectangle.
 * `W` and `H` are the width and height of the rectangle, of type `INTEGER`.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
 * `:ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
 *Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
 is blitted to `SURFACE`.
@@ -731,7 +731,7 @@ is blitted to `SURFACE`.
   (if gfx-loaded-p
     (gfx-draw-rectangle-edges-* x0 y0 x1 y1 :surface surface :color color)
     (_draw-rectangle-edges-*_ x0 y0 x1 y1 :surface surface :color color :clipping clipping :alpha alpha)))
-  
+
 (defun _draw-rectangle-edges-*_ (x0 y0 x1 y1
 			       &key (clipping nil) (surface *default-surface*) (color *default-color*) (alpha nil))
   "Draw a rectangle outline of [COLOR](#color) to [SURFACE](#surface).
@@ -741,7 +741,7 @@ is blitted to `SURFACE`.
 * `X0` and `Y0` are the `INTEGER` coordinates of the top-left corner of the rectangle.
 * `X0` and `Y0` are the `INTEGER` coordinates of the bottom-right corner of the rectangle.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
 * `:ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
 *Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
 is blitted to `SURFACE`.
@@ -773,16 +773,16 @@ is blitted to `SURFACE`.
   (if gfx-loaded-p
     (gfx-draw-pixel-* x y :surface surface :color color)
     (_draw-pixel-*_ x y :clipping clipping :surface surface :color color)))
-  
+
 (defun _draw-pixel-*_ (x y &key (clipping t) (surface *default-surface*) (color *default-color*))
-  "Draw a single pixel of [COLOR](#color) to the [SURFACE](#surface) at the specified `X` and `Y` coordiates. 
+  "Draw a single pixel of [COLOR](#color) to the [SURFACE](#surface) at the specified `X` and `Y` coordiates.
 
 ##### Parameters
 
 * `X` and `Y` specify the coordinates of the pixel, and are of type `INTEGER`.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a). 
-* `:CLIPPING` when left as the default value `T` will ensure that the pixel is clipped to the dimensions of `SURFACE`. 
+* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:CLIPPING` when left as the default value `T` will ensure that the pixel is clipped to the dimensions of `SURFACE`.
 SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave `CLIPPING` as `T`.
 
 ##### Packages
@@ -813,14 +813,14 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
   (read-pixel-* (x point) (y point) :clipping clipping :surface surface))
 
 (defun read-pixel-* (x y &key (clipping t) (surface *default-surface*))
-  "Read the [COLOR](#color) of the pixel at `X` and `Y` coordiates from [SURFACE](#surface). 
+  "Read the [COLOR](#color) of the pixel at `X` and `Y` coordiates from [SURFACE](#surface).
 
 ##### Parameters
 
 * `X` and `Y` specify the coordinates of the pixel, and are of type `INTEGER`.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a). 
-* `:CLIPPING` when left as the default value `T` will ensure that the pixel is clipped to the dimensions of `SURFACE`. 
+* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:CLIPPING` when left as the default value `T` will ensure that the pixel is clipped to the dimensions of `SURFACE`.
 SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave `CLIPPING` as `T`.
 
 ##### Packages
@@ -865,7 +865,7 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
 * `X0` and `Y0` specify the center coordinate of the circle, of type `INTEGER`.
 * `R` is the circle radius, of type `INTEGER`.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
 * `:STROKE-COLOR` when not `NIL` will draw a `1` pixel line of color `COLOR` around the perimiter of the box.
 * `:ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
 *Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
@@ -882,7 +882,7 @@ is blitted to `SURFACE`.
   (check-type color color)
   (if stroke-color
       (check-type stroke-color color))
-  
+
   (let ((surf (if alpha (create-surface (the fixnum (1+ (the fixnum (* r 2))))
 					(the fixnum (1+ (the fixnum (* r 2))))
 					:alpha alpha
@@ -971,7 +971,7 @@ Use [DRAW-FILLED-CIRCLE-*](#draw-filled-circle-*) to draw a filled circle.
 * `R` is the circle r, of type `INTEGER`.
 * `:AA` determines if the line is to be drawn using antialiasing.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a). 
+* `:COLOR` is the line color, of [COLOR](#color) or [COLOR-A](#color-a).
 * `:ALPHA` when between `0` and `255` is used as the alpha transparency value when blitting the rectangle onto `SURFACE`.
 *Note:* An intermediate surface is created, the rectangle is drawn onto this intermediate surface and then this surface
 is blitted to `SURFACE`.
@@ -993,14 +993,14 @@ is blitted to `SURFACE`.
 			(>= y 0) (< y h))
 		   t
 		   nil)))
-      
+
       (let* ((width (if alpha (1+ (* r 2)) (width surface)))
 	     (height (if alpha (1+ (* r 2)) (height surface)))
 	     (surf (if alpha (create-surface width height :alpha alpha :pixel-alpha (a color)) surface))
 	     (col (map-color color surf)))
 	(let ((x0 (if alpha r x0))
 	      (y0 (if alpha r y0)))
-	  
+
 	  (let ((x-pos 0) (y-pos 0))
 	    (with-pixel (pix (fp surf))
 	      (setf x-pos x0
@@ -1030,7 +1030,7 @@ is blitted to `SURFACE`.
 		(incf x)
 		(incf ddf-x 2)
 		(incf f (1+ ddf-x))
-	    
+
 		(setf x-pos (+ x0 x)
 		      y-pos (+ y0 y))
 		(when (in-bounds x-pos y-pos width height)
@@ -1064,7 +1064,7 @@ is blitted to `SURFACE`.
 		(when (in-bounds x-pos y-pos width height)
 		  (write-pixel pix x-pos y-pos col)) ;     setPixel(x0 - y, y0 - x);
 		))))
-      
+
 	(when alpha
 	  (draw-surface-at-* surf (- x0 r) (- y0 r) :surface surface)
 	  (free surf)))))
@@ -1084,10 +1084,10 @@ Use [DRAW-FILLED-TRIGON-*](#draw-filled-trigon-*) to draw a filled trigon.
 ##### Parameters
 
 * `P1`, `P2` and `P3` specify the vertices of the trigon, of type `SDL:POINT`.
-* `:AA` determines if the line is to be drawn using antialiasing. 
+* `:AA` determines if the line is to be drawn using antialiasing.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a). 
-* `:CLIPPING` when left as the default value `T` will ensure that the pixel is clipped to the dimensions of `SURFACE`. 
+* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:CLIPPING` when left as the default value `T` will ensure that the pixel is clipped to the dimensions of `SURFACE`.
 SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave `CLIPPING` as `T`.
 
 ##### Packages
@@ -1134,8 +1134,8 @@ Use [DRAW-FILLED-POLYGON-*](#draw-filled-polygon-*) to draw a filled polygon.
 * `:POINTS` is the list of vertices for the polygon. `POINTS` is a list of `POINT`s.
 * `:AA` determines if the line is to be drawn using antialiasing.
 * `:SURFACE` is the target [SURFACE](#surface).
-* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a). 
-* `:CLIPPING` when left as the default value `T` will ensure that the pixel is clipped to the dimensions of `SURFACE`. 
+* `:COLOR` is the pixel color, of [COLOR](#color) or [COLOR-A](#color-a).
+* `:CLIPPING` when left as the default value `T` will ensure that the pixel is clipped to the dimensions of `SURFACE`.
 SDL will core dump if pixels are drawn outside a surface. It is slower, but safer to leave `CLIPPING` as `T`.
 
 ##### Packages
@@ -1196,7 +1196,7 @@ Use [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*) to draw a filled ellipse.
   (declare (ignorable x y rx ry surface color aa))
   (if gfx-loaded-p
     (gfx-draw-ellipse-* x y rx ry :surface surface :color color :aa aa)))
-  
+
 (defun draw-filled-ellipse (p1 rx ry &key (surface sdl:*default-surface*) (color sdl:*default-color*) (gfx-loaded-p sdl-cffi::*gfx-loaded-p*))
   "See [DRAW-FILLED-ELLIPSE-*](#draw-filled-ellipse-*).
 
@@ -1308,11 +1308,11 @@ Use [DRAW-FILLED-PIE-*](#draw-filled-pie-*) to draw a filled pie.
 
 ##### Parameters
 
-* `DEGREES` is the rotation in degrees. 
+* `DEGREES` is the rotation in degrees.
 * `:SURFACE` is the surface to rotate [SURFACE](#surface).
 * `:FREE` when `T` will free `SURFACE`.
 * `:ZOOMX` and `ZOOMY` are the the scaling factors.
-A negative scaling factor will flip the corresponding axis. 
+A negative scaling factor will flip the corresponding axis.
 _Note_: Flipping is only supported with anti-aliasing turned off.
 * `:SMOOTH` when `T` will anti-aliase the new surface.
 
@@ -1347,8 +1347,8 @@ _Note_: Flipping is only supported with anti-aliasing turned off.
 
 ##### Parameters
 
-* `:ZOOMX` and `ZOOMY` are the scaling factors. 
-A negative scaling factor will flip the corresponding axis. 
+* `:ZOOMX` and `ZOOMY` are the scaling factors.
+A negative scaling factor will flip the corresponding axis.
 _Note_: Flipping is only supported with anti-aliasing turned off.
 * `:SURFACE` is the surface to rotate [SURFACE](#surface).
 * `:FREE` when `T` will free `SURFACE`.
@@ -1373,7 +1373,7 @@ _Note_: Flipping is only supported with anti-aliasing turned off.
 
 ##### Parameters
 
-* `DEGREES` is the rotation in degrees. 
+* `DEGREES` is the rotation in degrees.
 * `:SURFACE` is the surface to rotate [SURFACE](#surface).
 * `:FREE` when `T` will free `SURFACE`.
 * `:ZOOM` is the scaling factor.
@@ -1382,7 +1382,7 @@ _Note_: Flipping is only supported with anti-aliasing turned off.
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_
-* _LISPBUILDER-SDL_ supports rotations of only `0`, `90`, `180`, or `270` degrees. 
+* _LISPBUILDER-SDL_ supports rotations of only `0`, `90`, `180`, or `270` degrees.
 _LISPBUILDER-SDL-GFX_ supports any rotation.
 * _LISPBUILDER-SDL_ ignores `:SMOOTH`. _LISPBUILDER-SDL-GFX_ supports `:SMOOTH`.
 * _LISPBUILDER-SDL_ ignores `:ZOOM`. _LISPBUILDER-SDL-GFX_ supports `:ZOOM`.

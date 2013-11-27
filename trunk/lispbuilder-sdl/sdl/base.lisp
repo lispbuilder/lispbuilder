@@ -10,12 +10,12 @@ The difference between FP and THIS-FP, is that FP can be overriden, for example
 to refer to the TARGET-NODE of a META-NODE."))
 
 (defgeneric free (foreign-object)
-  (:documentation "The general explicit cleanup method for the 
-FOREIGN-OBJECT wrapper class. Objects that subclass FOREIGN-OBJECT should 
+  (:documentation "The general explicit cleanup method for the
+FOREIGN-OBJECT wrapper class. Objects that subclass FOREIGN-OBJECT should
 specify an :AFTER method on FREE to clean up any additional fields, if necessary."))
 
 (defgeneric (setf gc-p) (value foreign-object)
-  (:documentation "Turns on garbage collection for the FOREIGN-OBJECT when T, or turns off 
+  (:documentation "Turns on garbage collection for the FOREIGN-OBJECT when T, or turns off
 garbage collection when NIL."))
 
 (defclass foreign-object ()

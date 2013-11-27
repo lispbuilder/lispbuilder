@@ -1,6 +1,6 @@
 ;;; -*- lisp -*-
 
-(in-package #:lispbuilder-sdl-cffi) 
+(in-package #:lispbuilder-sdl-cffi)
 
 ;; cffi:foreign-library-loaded-p is not yet in the released version of CFFI
 ;;(defparameter *image-loaded-p* (cffi:foreign-library-loaded-p 'sdl-image))

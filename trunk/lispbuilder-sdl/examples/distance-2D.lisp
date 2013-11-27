@@ -2,7 +2,7 @@
 ;;;;; http://www.processing.org/learning/examples/distance2d.html
 ;;;;; (C)2006 Luke J Crook
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defun distance-2D ()
   ;; Make sure the libraries are loaded on startup.

@@ -2,7 +2,7 @@
 ;;;;; "http://www.processing.org/learning/examples/widthheight.html"
 ;;;;; (C)2006 Luke J Crook
 
-(in-package #:sdl-gfx-examples) 
+(in-package #:sdl-gfx-examples)
 
 (defun width-height ()
   (let ((width 200) (height 200))
@@ -19,4 +19,4 @@
       (sdl:with-events ()
 	(:quit-event () t)
 	(:video-expose-event () (sdl:update-display))))))
-  
+

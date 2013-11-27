@@ -1,42 +1,42 @@
-/* Copyright (c) 2009, Luke J Crook.  All rights reserved. 
+/* Copyright (c) 2009, Luke J Crook.  All rights reserved.
 
-   Redistribution and use in source and binary forms, with or without 
-   modification, are permitted provided that the following conditions 
-   are met: 
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions
+   are met:
 
-     * Redistributions of source code must retain the above copyright 
-       notice, this list of conditions and the following disclaimer. 
+     * Redistributions of source code must retain the above copyright
+       notice, this list of conditions and the following disclaimer.
 
-     * Redistributions in binary form must reproduce the above 
-       copyright notice, this list of conditions and the following 
-       disclaimer in the documentation and/or other materials 
-       provided with the distribution. 
+     * Redistributions in binary form must reproduce the above
+       copyright notice, this list of conditions and the following
+       disclaimer in the documentation and/or other materials
+       provided with the distribution.
 
-   THIS SOFTWARE IS PROVIDED BY THE AUTHOR 'AS IS' AND ANY EXPRESSED 
-   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
-   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
-   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY 
-   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL 
-   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE 
-   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
-   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, 
-   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+   THIS SOFTWARE IS PROVIDED BY THE AUTHOR 'AS IS' AND ANY EXPRESSED
+   OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+   ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+   DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE
+   GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+   WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+   NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 #include <SDL.h>
 
-// The following ifdef block is the standard way of creating macros which make exporting 
+// The following ifdef block is the standard way of creating macros which make exporting
 // from a DLL simpler. All files within this DLL are compiled with the LISPBUILDERSDLGLUE_EXPORTS
 // symbol defined on the command line. this symbol should not be defined on any project
-// that uses this DLL. This way any other project whose source files include this file see 
+// that uses this DLL. This way any other project whose source files include this file see
 // LISPBUILDERSDLGLUE_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
 #ifdef WIN32
 #define LISPBUILDERSDLGLUE_API extern __declspec(dllexport)
 #else
 #define LISPBUILDERSDLGLUE_API extern DECLSPEC
-#endif 
+#endif
 
 /* Set up for C function definitions, even when using C++ */
 #ifdef __cplusplus
@@ -72,4 +72,3 @@ LISPBUILDERSDLGLUE_API void (SDLCALL *callback)(void *userdata, Uint8 *stream, i
 #ifdef __cplusplus
 }
 #endif
-

@@ -29,7 +29,7 @@
         (progn
           (sdl-mixer:play-music *music*)
           (setf *music-status* (format nil "Music \"~A\": Playing..." *music-file*))))))
-    
+
 (defun handle-key(key)
   "handle key presses"
   (cond
@@ -41,7 +41,7 @@
      (sdl-mixer:play-sample *sample*))))
 
 (defun clean-up ()
-  (when *music*    
+  (when *music*
     (when (sdl-mixer:music-playing-p)
       (sdl-mixer:Pause-Music)
       (sdl-mixer:Halt-Music))
@@ -81,7 +81,7 @@
     (sdl-mixer:init-mixer :mp3)
 
     (setf *status* "Unable to open Audio Mixer.")
-    
+
     (setf *mixer-opened* (sdl-mixer:OPEN-AUDIO :chunksize 1024 :enable-callbacks nil))
     (when *mixer-opened*
       (setf *status* "Opened Audio Mixer.")

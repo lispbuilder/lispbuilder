@@ -147,7 +147,7 @@
 	result))))
 
 (defmethod image-supported-p (source)
-  
+
   (let* ((source (if (pathnamep source)
                    (namestring source)
                    source))
@@ -266,8 +266,8 @@
     (make-instance 'surface :fp (sdl-cffi::sdl-load-bmp-rw (sdl-cffi::sdl-rw-from-mem mem-array (length array)) 1))))
 
 (defmethod load-and-convert-image ((source string) &key color-key alpha (color-key-at nil) image-type force &allow-other-keys)
-  "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*), 
- converts this image to the current display format using `CONVERT-SURFACE`. 
+  "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*),
+ converts this image to the current display format using `CONVERT-SURFACE`.
 
 Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `CONVERT-IMAGE`. "
   (sdl:convert-to-display-format :surface (load-image source
@@ -281,8 +281,8 @@ Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `CO
                                  :inherit t))
 
 (defmethod load-and-convert-image ((source pathname) &key color-key alpha (color-key-at nil) image-type force &allow-other-keys)
-  "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*), 
- converts this image to the current display format using `CONVERT-SURFACE`. 
+  "Loads an image from the filename `SOURCE` as per [LOAD-IMAGE-*](#load-image-*),
+ converts this image to the current display format using `CONVERT-SURFACE`.
 
 Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `CONVERT-IMAGE`. "
   (load-and-convert-image (namestring source)

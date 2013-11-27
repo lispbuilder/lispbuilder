@@ -55,8 +55,8 @@
   (flood-fill-* (x point) (y point) :surface surface :color color))
 
 (defun flood-fill-* (x y &key (surface *default-surface*) (color *default-color*))
-  "Performs a flood fill of surface `SURFACE` with color `COLOR`. The fill starts at the 
-position specified by the `X` and `Y` coordinates. Uses a stack based flood fill that does a 
+  "Performs a flood fill of surface `SURFACE` with color `COLOR`. The fill starts at the
+position specified by the `X` and `Y` coordinates. Uses a stack based flood fill that does a
 lot of consing because it uses PUSH/POP as the stack.  This function is fast.
 
 ##### Parameters
@@ -96,7 +96,7 @@ lot of consing because it uses PUSH/POP as the stack.  This function is fast.
                                           (= (read-pixel pixels (- x 1) y1)
                                              old-color))
                                      (progn (push (- x 1) stack)
-                                            (push y1 stack)                                            
+                                            (push y1 stack)
                                             (setf span-left T))
                                      (if (and span-left
                                               (> x 0)

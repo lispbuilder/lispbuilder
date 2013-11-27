@@ -828,7 +828,7 @@
   (a :uint8))
 
 (defcfun ("gfxPrimitivesSetFont" gfx-Primitives-Set-Font) :void
-  "Sets the font to use. Only a single font is supported at any one time. 
+  "Sets the font to use. Only a single font is supported at any one time.
 Subsequent calls to gfx-Primitives-Set-Font will replace the previous font.
 No function exists to free the font data."
   (fontdata sdl-gfx-font-data)

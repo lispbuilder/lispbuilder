@@ -61,7 +61,7 @@
   ;; Set the number of output channels.
   (setf (requested-output-channels self) output-channels)
   ;; Set the output buffer size
-  (setf (requested-audio-buffer-size self) audio-buffer-size)  
+  (setf (requested-audio-buffer-size self) audio-buffer-size)
   ;; Set a default callback function, if not specified.
   (unless (slot-value self 'callback)
     (setf (slot-value self 'callback) (cffi:callback default-fill-audio-buffer)))
@@ -96,7 +96,7 @@
 (defmethod audio-buffer-size ((self mixer))
   (if (mixer-opened-p self)
     (audio-buffer-size (audio-spec self))
-    (requested-audio-buffer-size self)))   
+    (requested-audio-buffer-size self)))
 
 
 (defun open-audio (&key
@@ -113,7 +113,7 @@
      ;; Configure Lispworks to allow
      ;; callbacks from unknown foreign threads
      #+(and lispworks (not lispworks5.1) (not lispworks4.3)(not lispworks6))(system:setup-for-alien-threads)
- 
+
      (setf *mixer* (make-instance 'mixer
 				  :audio-volume volume
 				  :audio-format format
@@ -151,7 +151,7 @@
 				      '(:struct sdl-cffi::SDL-Audio-Spec)
 				      'sdl-cffi::callback)
 	     (slot-value *mixer* 'callback))
-  
+
        (if (eql -1 (sdl-cffi::open-audio requested-audio-spec (sdl:fp (audio-spec *mixer*))))
 	   (setf (slot-value *mixer* 'mixer-opened-p) nil)
 	   (setf (slot-value *mixer* 'mixer-opened-p) t))
@@ -286,7 +286,7 @@
         ;; (sdl-cffi::sdl-free-wav #|wave|# (cffi:mem-aref wave :pointer))
         ;;(sdl-cffi::sdl-free-wav (cffi:make-pointer (cffi:pointer-address (cffi:mem-aref wav-buffer-handle :pointer))))
         ;;(sdl-cffi::sdl-free-wav sample-handle)
-	
+
 	;; LJC
 	(sdl-cffi::sdl-free-wav (cffi:make-pointer (cffi:pointer-address (cffi:mem-aref sample-handle :pointer))))
         ;; LJC
@@ -370,13 +370,13 @@
                 (setf (mem-aref sdl-cffi::buf :unsigned-char y) (logand uval #xFF)
                       (mem-aref sdl-cffi::buf :unsigned-char x) (logand (ash uval -8)
                                                                  #xFF)))))
-        
+
         ;; Need to fix this to convert from source format to destination format.
         ;; Assumes source is uint8 right now.
         ;(dotimes (i (audio-length audio))
         ;  (setf (cffi:mem-aref sdl-cffi::buf :unsigned-char i)
         ;        (aref (audio-buffer audio) i)))
-        
+
         (when (> (sdl-cffi::sdl-convert-audio audio-cvt) -1)
           (let* ((cvt-buffer
                   (make-pointer
@@ -502,7 +502,7 @@
       (if (/= len (length (output-buffer *mixer*)))
         (setf (output-buffer *mixer*)
               (make-array len
-                          :initial-element 
+                          :initial-element
                           (audio-silence (audio-spec *mixer*))
                           :element-type 'fixnum))
         ;; Write silence to the output buffer

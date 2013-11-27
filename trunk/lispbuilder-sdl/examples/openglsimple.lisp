@@ -6,7 +6,7 @@
 
 ;(asdf:oos 'asdf:load-op 'cl-opengl)
 ;(asdf:oos 'asdf:load-op 'cl-glu)
-;(asdf:oos 'asdf:load-op 'cl-glut) ; not needed 
+;(asdf:oos 'asdf:load-op 'cl-glut) ; not needed
 
 ;; Application specific parameters
 (defparameter *screen-width* 400)
@@ -14,7 +14,7 @@
 
 ; Many thanks, Chris Double for macros
 ; Justinhj NOTE these are not used here but they're handy
-; and a useful pattern 
+; and a useful pattern
 (defmacro with-glBegin (type &body body)
   `(progn
     (gl::begin ,type)
@@ -28,7 +28,7 @@
     (unwind-protect
 	 (progn ,@body)
       (gl::pop-matrix))))
- 
+
 (defun init (width height)
   "Basic OpenGL setup"
   (gl::viewport 0 0 width height))
@@ -79,7 +79,7 @@
       (:key-down-event (:key key)
 		       (if (sdl:key= key :SDL-KEY-ESCAPE)
 			   (sdl:push-quit-event)))
-      (:idle ()         
+      (:idle ()
 	     (draw)
 	     (sdl:update-display)))))
 

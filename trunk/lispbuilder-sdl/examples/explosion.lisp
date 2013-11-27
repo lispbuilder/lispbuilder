@@ -8,7 +8,7 @@
   (sdl:with-init ()
     (sdl:window 200 100 :title-caption "Explosion" :icon-caption "Explosion")
     (setf (sdl:frame-rate) 25)
-    
+
     (let* ((sprite-sheet (sdl:load-image (merge-pathnames "ani2.bmp" sdl:*default-asset-path*)))
            ;; Create the list of cells
            ;; Each 'cell' is the x/y width/height of an image in the sprite sheet
@@ -19,7 +19,7 @@
 
       ;; Set the the cells for the sprite-sheet
       (setf (sdl:cells sprite-sheet) sprite-cells)
-      
+
       (sdl:with-events ()
         (:quit-event () t)
         (:key-down-event ()
@@ -62,7 +62,7 @@
   (sdl:with-init ()
     (sdl:window 200 100 :title-caption "Explosion" :icon-caption "Explosion")
     (setf (sdl:frame-rate) 25)
-    
+
     (let* ((sprite-sheet (sdl:load-image (merge-pathnames "ani2.bmp" sdl:*default-asset-path*)))
            ;; Create the list of cells
            ;; Each 'cell' is the x/y width/height of an image in the sprite sheet
@@ -72,7 +72,7 @@
            (sprite-list (loop for cell in sprite-cells
                               collect (subsect-image sprite-sheet cell))))
       (let ((draw-frame (generate-draw-frame sprite-list)))
-      
+
         (sdl:with-events ()
           (:quit-event () t)
           (:key-down-event ()

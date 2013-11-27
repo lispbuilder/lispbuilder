@@ -9,7 +9,7 @@
 
 (declaim (inline rectangle))
 (defun rectangle (&key (x 0) (y 0) (w 0) (h 0) src)
-  "Creates a new rectangle initialized with values x, y, width W and height H, 
+  "Creates a new rectangle initialized with values x, y, width W and height H,
 or the contents of rectangle SRC if specified."
   (if src
       (clone-rectangle src)

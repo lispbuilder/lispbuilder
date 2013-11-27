@@ -20,4 +20,3 @@ $(SHLIB_NAME).$(SHLIB_SUFFIX): $(LIB_NAME).$(OBJ_SUFFIX)
 
 clean:
 	rm -f $(STUBS)
-

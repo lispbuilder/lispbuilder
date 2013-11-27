@@ -1,5 +1,5 @@
 
-(in-package #:sdl-examples) 
+(in-package #:sdl-examples)
 
 (defvar *current-y* 0)
 (defvar *prev-font-height* 0)
