@@ -11,14 +11,14 @@
 	(unused :int))
 
 #+windows(defcstruct SDL-Sys-WM-msg
-           (version SDL-version)
+           (version (:struct SDL-version))
            (hwnd :pointer)
            (msg :pointer)
            (wParam :unsigned-int)
            (lParam :long))
 
 #+windows(defcstruct SDL-Sys-WM-info
-           (version SDL-version)
+           (version (:struct SDL-version))
            (window :pointer)
            (hglrc :pointer))
 
