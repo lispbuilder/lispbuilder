@@ -182,7 +182,7 @@ The display is updated when `UPDATE` is `T`."
     (sdl-cffi::set-sdl-version (cffi:foreign-slot-value wm-info '(:struct sdl-cffi::SDL-Sys-WM-info) 'sdl-cffi::version))
     (sdl-cffi::SDL-Get-WM-Info wm-info)
     ;; For Windows
-    #+windows(cffi:foreign-slot-value wm-info 'sdl-cffi::SDL-Sys-WM-info 'sdl-cffi::window)
+    #+windows(cffi:foreign-slot-value wm-info '(:struct sdl-cffi::SDL-Sys-WM-info) 'sdl-cffi::window)
     ;; For X
     #-windows(cffi:foreign-slot-pointer (cffi:foreign-slot-pointer (cffi:foreign-slot-pointer wm-info
                                                                                             '(:struct sdl-cffi::SDL-Sys-WM-info)
