@@ -7,6 +7,9 @@ SDL_CFLAGS=$(CFLAGS) -D_GNU_SOURCE=1 -D_THREAD_SAFE -I/Library/Frameworks/SDL.fr
 SDL_LDFLAGS=$(LDFLAGS) -framework SDL -framework Cocoa
 endif
 
+.PHONY: all
+all: cocoahelper.framework
+
 cocoahelper.dylib : cocoahelper.m
 	gcc -fPIC $(SDL_CFLAGS) -c cocoahelper.m -o cocoahelper.o
 	gcc -dynamiclib $(SDL_LDFLAGS) -o cocoahelper.dylib cocoahelper.o
@@ -29,6 +32,7 @@ cocoahelper.framework: cocoahelper.dylib
 # framework rather than relative to the executable that loaded the framework.
 	install_name_tool -change @executable_path/../Frameworks/SDL.framework/Versions/A/SDL @loader_path/../../../../SDL.framework/Versions/A/SDL cocoahelper.framework/cocoahelper
 
+.PHONY: clean
 clean:
 	rm -rf cocoahelper.dylib cocoahelper.o cocoahelper.framework
 
