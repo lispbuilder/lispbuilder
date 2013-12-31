@@ -22,11 +22,11 @@
 (cffi:define-foreign-library zlib
   (:windows (:or "zlib1.dll")))
 (cffi:define-foreign-library libpng
-  (:windows (:or "libpng12-0.dll")))
+  (:windows (:or "libpng15-15.dll" "libpng12-0.dll")))
 (cffi:define-foreign-library libjpg
-  (:windows (:or "jpeg.dll")))
+  (:windows (:or "libjpeg-8.dll" "jpeg.dll")))
 (cffi:define-foreign-library libtiff
-  (:windows (:or "libtiff-3.dll")))
+  (:windows (:or "libtiff-5.dll" "libtiff-3.dll")))
 
 (defun load-library ()
   (cffi:use-foreign-library sdl-image)
