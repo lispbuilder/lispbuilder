@@ -100,7 +100,7 @@ The above can be shortened by setting `\*DEFAULT-FONT\*` to `a-font`.
 (defparameter *quit-on-exit* t)
 
 (defparameter *default-ttf-font*
-  (merge-pathnames "vera.ttf" *default-asset-path*))
+  (merge-pathnames "Vera.ttf" *default-asset-path*))
 
 (defparameter *default-font-path* *default-asset-path*)
 (defparameter *default-image-path* *default-asset-path*)
