@@ -11,17 +11,21 @@
   * [Screenshots](https://github.com/lispbuilder/lispbuilder/wiki/Screenshots)
   * Documentation
     * [User Guide](https://github.com/lispbuilder/lispbuilder/wiki/UsingLispbuilderSDL)
-    * [API Reference Manual](https://lispbuilder.github.io/documentation/lispbuilder-sdl.html#contents)
+    * [API Reference Manual](https://lispbuilder.github.io/documentation)
     * [How-To's](https://github.com/lispbuilder/lispbuilder/wiki/HowTos)
   * [Community](https://github.com/lispbuilder/lispbuilder/wiki/Community)
   * [License](https://github.com/lispbuilder/lispbuilder/wiki/License)
   * [Contributors](https://github.com/lispbuilder/lispbuilder/wiki/Contributors)
-  * [FAQ](https://github.com/lispbuilder/lispbuilder/wiki/Faq)
 
 ## Introduction
 
-Lispbuilder is an umbrella project that provides cross-platform
-packages for building large, interactive applications in Common Lisp.
+Lispbuilder, or Common Lisp Application Builder, is an umbrella
+project that provides cross-platform packages for building large,
+interactive applications in Common Lisp. The most notable of these is
+Lispbuilder-SDL, a wrapper for [SDL](https://www.libsdl.org/), a
+library commonly used for game development. Other packages provide 3D
+graphics and animation, networking, text processing, and other
+miscellaneous functionality.
 
 ### Game and Multimedia Development
 
@@ -34,7 +38,7 @@ packages for building large, interactive applications in Common Lisp.
       * Bitmap and True type font support.
   * **lispbuilder-opengl:** OpenGL 3d graphics
   * **lispbuilder-openrm:** OpenRM 3d scene graph
-  * **lispbuilder-cal3dL** Cal3d character animation
+  * **lispbuilder-cal3d:** Cal3d character animation
 
 ### Text Processing
 
