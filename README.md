@@ -22,10 +22,11 @@
 Lispbuilder, or Common Lisp Application Builder, is an umbrella
 project that provides cross-platform packages for building large,
 interactive applications in Common Lisp. The most notable of these is
-Lispbuilder-SDL, a wrapper for [SDL](https://www.libsdl.org/), a
-library commonly used for game development. Other packages provide 3D
-graphics and animation, networking, text processing, and other
-miscellaneous functionality.
+[Lispbuilder-SDL](https://github.com/lispbuilder/lispbuilder/wiki/LispbuilderSDL),
+a wrapper for [SDL](https://www.libsdl.org/), a library commonly used
+for game development. Other packages provide 3D graphics and
+animation, networking, text processing, and other miscellaneous
+functionality.
 
 ### Game and Multimedia Development
 
