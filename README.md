@@ -1,10 +1,10 @@
-= Common Lisp Application Builder =
+# Common Lisp Application Builder
 
 *Provides several useful cross-platform packages for Common Lisp*
 
 [http://code.google.com/p/lispbuilder/wiki/Welcome](Click here for the lispbuilder project wiki)
 
-==Game and multimedia development==
+## Game and multimedia development
 
   * [LispbuilderSDL](lispbuilder-sdl) SDL game and multimedia library.
       * Straightforward event loop, supporting either event polling or event waiting,
@@ -17,17 +17,17 @@
   * lispbuilder-openrm OpenRM 3d scene graph
   * lispbuilder-cal3d Cal3d character animation
 
-==Text processing==
+## Text processing
 
   * lispbuilder-regex Regular expression support
   * lispbuilder-clawk Awk in CL
   * lispbuilder-lexer Lex in CL
   * lispbuilder-yacc Yacc in CL
 
-==Networking==
+## Networking
 
   * lispbuilder-net
 
-==Windows==
+## Windows
 
   * lispbuilder-windows (windows.h wrapper)
