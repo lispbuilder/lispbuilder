@@ -18,6 +18,7 @@
   (:unix (:or "libSDL_gfx"
 	      "libSDL_gfx.so"
 	      "libSDL_gfx.so.4"
+	      "libSDL_gfx.so.5"
 	      "libSDL_gfx.so.13"
 	      "libSDL_gfx.so.13.0.0")))
 
