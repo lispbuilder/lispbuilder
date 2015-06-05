@@ -10,7 +10,7 @@
     "lispbuilder-sdl-mixer is a wrapper for the SDL_mixer 1.2.11 library."
     :version "0.4"
     :author "Luke Crook <luke@balooga.com>"
-    :maintainer "Application Builder <application-builder@lispniks.com>"
+    :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :licence "MIT"
     :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-mixer-binaries)
     :components

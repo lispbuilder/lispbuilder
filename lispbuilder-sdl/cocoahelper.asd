@@ -9,7 +9,7 @@
   :description "cocoahelper system for SDL"
   :version "0.1"
   :author "Brad Beveridge"
-  :maintainer "Application Builder <application-builder@lispniks.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "BSD"
   :depends-on (cffi lispbuilder-sdl-binaries)
   :components ((:module "cocoahelper"

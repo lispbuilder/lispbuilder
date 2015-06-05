@@ -8,7 +8,7 @@
   :description "lispbuilder-sdl-image-binaries: The windows binary for the SDL_image v1.2.10 library"
   :version "1.2.10"
   :author "Sam Lantinga <slouken@libsdl.org>"
-  :maintainer "Application Builder <application-builder@lispniks.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "LGPL"
   :components
   ((:module "bin"

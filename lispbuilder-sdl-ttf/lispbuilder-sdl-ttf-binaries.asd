@@ -8,7 +8,7 @@
   :description "lispbuilder-sdl-ttf-binaries: The windows binary for the SDL_ttf v2.0.9 library"
   :version "2.0.9"
   :author "Sam Lantinga <slouken@libsdl.org>"
-  :maintainer "Application Builder <application-builder@lispniks.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "LGPL"
   :components
   ((:module "bin"

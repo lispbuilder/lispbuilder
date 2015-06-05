@@ -8,7 +8,7 @@
   :description "lispbuilder-sdl-assets: Assets"
   :version "0.9.8"
   :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
-  :maintainer "Application Builder <application-builder@lispniks.com>, Luke J Crook <luke@balooga.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>, Luke J Crook <luke@balooga.com>"
   :licence "MIT"
   :components
   ((:module "assets"

@@ -8,7 +8,7 @@
   :description "lispbuilder-sdl-binaries: The windows binary for the SDL v1.2.14 library"
   :version "1.2.14"
   :author "Sam Lantinga <slouken@libsdl.org>"
-  :maintainer "Application Builder <application-builder@lispniks.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "LGPL"
   ;;    :perform (load-op :after (op lispbuilder-sdl-binaries)
   ;;		    (pushnew :sdl-bin *features*))

@@ -10,7 +10,7 @@
     "The lispbuilder-sdl-cffi package uses CFFI to provide a very low-level set of Lisp bindings to the SDL library."
     :version "0.9.8"
     :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
-    :maintainer "Application Builder <application-builder@lispniks.com>"
+    :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :licence "MIT"
     :depends-on (cffi lispbuilder-sdl-binaries #+(or darwin macos macosx)cocoahelper)
     :components

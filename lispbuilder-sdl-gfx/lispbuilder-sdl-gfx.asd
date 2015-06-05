@@ -14,7 +14,7 @@
     compatible across lisp implementations."
   :version "0.8.0"
   :author "Luke Crook <luke@balooga.com>"
-  :maintainer "Application Builder <application-builder@lispniks.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "MIT"
   :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-gfx-cffi)
   :perform (load-op :after (op lispbuilder-sdl-gfx)

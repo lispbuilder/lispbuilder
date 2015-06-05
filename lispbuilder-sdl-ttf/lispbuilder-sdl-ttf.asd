@@ -11,7 +11,7 @@
   "lispbuilder-sdl-ttf is a wrapper for the SDL_ttf 2.0.9 library."
   :version "0.3.0"
   :author "Luke J Crook <luke@balooga.com>"
-  :maintainer "Application Builder <application-builder@lispniks.com>, Luke J Crook <luke@balooga.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>, Luke J Crook <luke@balooga.com>"
   :licence "BSD"
   :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-ttf-cffi)
   :perform (load-op :after (op lispbuilder-sdl-ttf)

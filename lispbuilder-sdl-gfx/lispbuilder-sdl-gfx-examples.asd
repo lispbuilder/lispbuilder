@@ -8,7 +8,7 @@
     :description "Examples describing the use of lispbuilder-sdl-gfx."
     :version "0.6.2"
     :author "Luke Crook <luke@balooga.com>"
-    :maintainer "Application Builder <application-builder@lispniks.com>"
+    :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :licence "MIT"
     :depends-on (lispbuilder-sdl-gfx)
     :components

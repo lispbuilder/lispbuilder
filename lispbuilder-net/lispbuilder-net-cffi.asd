@@ -5,7 +5,7 @@
 (defsystem lispbuilder-net-cffi
   :description "lispbuilder-net-cffi: Basic Lisp wrapper for the net library."
   :author "Frank Buss <fb@frank-buss.de>"
-  :maintainer "Application Builder <application-builder@lispniks.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "MIT"
   :depends-on (cffi)
   :components

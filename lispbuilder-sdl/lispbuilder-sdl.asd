@@ -12,7 +12,7 @@
     game programming in Common Lisp."
   :version "0.9.8.2"
   :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
-  :maintainer "Application Builder <application-builder@lispniks.com>, Luke J Crook <luke@balooga.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>, Luke J Crook <luke@balooga.com>"
   :licence "MIT"
   :depends-on (cffi trivial-garbage lispbuilder-sdl-base lispbuilder-sdl-assets)
   :perform (load-op :after (op lispbuilder-sdl)
