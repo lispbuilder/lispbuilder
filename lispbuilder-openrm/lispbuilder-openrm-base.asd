@@ -5,8 +5,9 @@
 (in-package #:lispbuilder-openrm-base-system)
 
 (defsystem lispbuilder-openrm-base
+    :description "lispbuilder-openrm-base: OpenRM library wrapper and tools"
     :version "0.1"
-    :author "Luke Crook <luke@balooga.com>"
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :licence "BSD"
     :depends-on (cffi lispbuilder-openrm-cffi)

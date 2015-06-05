@@ -7,8 +7,8 @@
 (defsystem lispbuilder-openrm-binaries
   :description "lispbuilder-openrm-binaries: The windows binary for the OPENRM v1.8.0 library"
   :version "1.8.0"
-  :author "Luke Crook <luke@balooga.com>"
-  :maintainer "Luke Crook <luke@balooga.com>"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "BSD"
   :components
   ((:module "bin"

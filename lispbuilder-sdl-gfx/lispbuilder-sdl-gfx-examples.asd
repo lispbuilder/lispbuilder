@@ -7,7 +7,7 @@
 (defsystem lispbuilder-sdl-gfx-examples
     :description "Examples describing the use of lispbuilder-sdl-gfx."
     :version "0.6.2"
-    :author "Luke Crook <luke@balooga.com>"
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :licence "MIT"
     :depends-on (lispbuilder-sdl-gfx)

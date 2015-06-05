@@ -11,7 +11,7 @@
     implementations. It includes a selection of utilities to assist  
     game programming in Common Lisp."
   :version "0.1"
-  :author "Luke Crook <luke@balooga.com>"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "BSD"
   :depends-on (cffi lispbuilder-openrm-cffi lispbuilder-openrm-base trivial-garbage log5 simple-finalizer)

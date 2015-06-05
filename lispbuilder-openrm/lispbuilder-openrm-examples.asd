@@ -7,6 +7,9 @@
 (defsystem lispbuilder-openrm-examples
   :description "Examples for the lispbuilder-openrm package."
   :version "0.1"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+  :licence "BSD"
   :depends-on (cffi lispbuilder-sdl lispbuilder-openrm)
   :components
   ((:module "examples"

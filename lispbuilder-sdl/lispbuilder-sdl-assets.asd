@@ -7,8 +7,8 @@
 (defsystem lispbuilder-sdl-assets
   :description "lispbuilder-sdl-assets: Assets"
   :version "0.9.8"
-  :author "Justin Heyes-Jones <justinhj@gmail.com>, Luke J Crook <luke@balooga.com>"
-  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>, Luke J Crook <luke@balooga.com>"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "MIT"
   :components
   ((:module "assets"

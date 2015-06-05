@@ -7,7 +7,7 @@
 (defsystem lispbuilder-sdl-gfx-binaries
   :description "lispbuilder-sdl-gfx-binaries: The windows binary for the SDL_gfx v2.0.13 library"
   :version "2.0.13"
-  :author "Andreas Schiffler <aschiffler@appwares.com>"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "LGPL"
   :components

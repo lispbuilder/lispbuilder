@@ -11,7 +11,7 @@
     implementations. It includes a selection of utilities to assist
     game programming in Common Lisp."
   :version "0.5.0"
-  :author "Luke Crook <luke@balooga.com>"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "MIT"
   :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-mixer-cffi)

@@ -11,7 +11,7 @@
     The wrapper is implemeted using CFFI to be highly 
     compatible across lisp implementations."
     :version "0.1"
-    :author "Luke Crook <luke@balooga.com>"
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :licence "BSD"
     :depends-on (cffi lispbuilder-opengl-1-2)

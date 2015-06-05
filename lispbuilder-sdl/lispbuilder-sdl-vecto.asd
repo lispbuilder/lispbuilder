@@ -7,6 +7,9 @@
 (defsystem lispbuilder-sdl-vecto
   :description "VECTO v1.0.2 glue for LISPBUILDER-SDL"
   :version "0.0.1"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+  :license "MIT"
   :depends-on (lispbuilder-sdl-cl-vectors vecto lispbuilder-sdl)
   :components
   ((:module "glue-vecto"

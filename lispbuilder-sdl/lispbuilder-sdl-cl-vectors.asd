@@ -7,6 +7,9 @@
 (defsystem lispbuilder-sdl-cl-vectors
     :description "CL-VECTORS v0.1.3 glue for LISPBUILDER-SDL"
     :version "0.0.1"
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+    :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+    :license "MIT"
     :depends-on (cl-paths-ttf cl-aa-misc cl-vectors zpb-ttf lispbuilder-sdl)
     :components
     ((:module "glue-cl-vectors"

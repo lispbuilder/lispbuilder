@@ -10,7 +10,7 @@
   :long-description
   "lispbuilder-sdl-image is a wrapper for the SDL_image 1.2.10 library."
   :version "0.6.0"
-  :author "Luke Crook <luke@balooga.com>"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "MIT"
   :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-image-cffi)

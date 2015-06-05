@@ -7,6 +7,9 @@
 (defsystem lispbuilder-sdl-examples
     :description "Examples for the lispbuilder-sdl package."
     :version "0.9.2"
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+    :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+    :license "MIT"
     :depends-on (lispbuilder-sdl)
     :components
     ((:module "examples"

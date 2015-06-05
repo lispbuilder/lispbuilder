@@ -7,8 +7,8 @@
 (defsystem lispbuilder-windows
   :description "lispbuilder-windows: Windows library wrapper and tools"
   :version "0.1"
-  :author "Frank Buss <fb@frank-buss.de>"
-  :maintainer "Common Lisp Application Builder http://www.lispbuilder.org"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+  :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "BSD"
   :depends-on (cffi)
   :components

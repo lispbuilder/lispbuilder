@@ -6,6 +6,9 @@
 
 (defsystem lispbuilder-opengl-examples
     :description "Examples for the lispbuilder-opengl package."
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+    :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+    :licence "BSD"
     :depends-on (cffi lispbuilder-sdl lispbuilder-opengl-1-1)
     :components
     ((:module "examples"

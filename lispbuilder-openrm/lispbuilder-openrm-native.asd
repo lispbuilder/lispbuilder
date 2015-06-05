@@ -7,7 +7,7 @@
 (defsystem lispbuilder-openrm-native
     :description "lispbuilder-openrm-window: Native OS support"
     :version "0.1"
-    :author "Luke Crook <luke@balooga.com>"
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :licence "BSD"
     :depends-on (cffi lispbuilder-openrm lispbuilder-windows)

@@ -4,7 +4,7 @@
 
 (defsystem lispbuilder-net
   :description "lispbuilder-net: asynchronous sockets library"
-  :author "Frank Buss <fb@frank-buss.de>"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "MIT"
   :depends-on (cffi lispbuilder-net-cffi)

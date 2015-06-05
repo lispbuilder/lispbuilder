@@ -13,7 +13,7 @@
     MMX image filters. The wrapper is implemeted using CFFI to be highly
     compatible across lisp implementations."
   :version "0.8.0"
-  :author "Luke Crook <luke@balooga.com>"
+  :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
   :licence "MIT"
   :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-gfx-cffi)

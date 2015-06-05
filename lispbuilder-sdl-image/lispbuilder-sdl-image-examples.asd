@@ -7,7 +7,7 @@
 (defsystem lispbuilder-sdl-image-examples
     :description "Examples describing the use of lispbuilder-sdl-image."
     :version "0.5.0"
-    :author "Luke Crook <luke@balooga.com>"
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
     :licence "MIT"
     :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-image)

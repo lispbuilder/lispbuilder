@@ -10,6 +10,9 @@
 (defsystem lispbuilder-sdl-mixer-examples
     :description "Examples for the lispbuilder-sdl-mixer package."
     :version "0.4"
+    :author "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+    :maintainer "Lispbuilder Mailing List <lispbuilder@googlegroups.com>"
+    :licence "MIT"
     :depends-on (cffi lispbuilder-sdl lispbuilder-sdl-mixer)
     :components
     ((:module "examples"
