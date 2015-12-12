@@ -283,7 +283,11 @@ Returns `T` if any dimension will support the pixel format and video flags.
           (listmodes (sdl-cffi::SDL-List-Modes (cffi:null-pointer) (apply #'logior flags))))
     (cond
       ((cffi:null-pointer-p listmodes) nil)
-      ((equal (cffi:pointer-address listmodes) 4294967295) t)
+      ((equal (cffi:pointer-address listmodes)
+              (load-time-value (cffi:pointer-address
+                                (cffi:inc-pointer
+                                 (cffi:make-pointer 0) -1))))
+       t)
       (t
        (do ((i 0 (1+ i)))
              ((cffi:null-pointer-p (cffi:mem-aref listmodes :pointer i)) (reverse modes))
