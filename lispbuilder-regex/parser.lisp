@@ -20,6 +20,7 @@
 
 (defun fix-escape-char (chr)
   (case chr
+    ((#\]) #\])
     ((#\t #\T) #\Tab)
     ((#\n #\N) #\Newline)
     ((#\r #\R) #\Return)
@@ -463,7 +464,7 @@
     (make-range-node expr (car value) (cdr value) t))
    ((eq token 'ngrange)
     (make-range-node expr (car value) (cdr value) nil))
-   (t 
+   (t
     (throw 'regex-parse-error
            (list "quantify: Unexpected quantifier ~S ~S" token value)))))
 
@@ -491,7 +492,7 @@
    ((eq token 'or)
     (unget scanner token value)
     nil)
-   (t 
+   (t
     (throw 'regex-parse-error
            (list "parse-group: Unexpected token ~S ~S" token value)))))
 
@@ -572,6 +573,3 @@
                (characterp lastchar) (char= lastchar #\:))
       (let ((scname (string-downcase (coerce chars 'string))))
         (second (assoc scname +special-class-names+ :test #'string=))))))
-
-
-
