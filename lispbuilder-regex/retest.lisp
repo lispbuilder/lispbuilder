@@ -66,7 +66,7 @@
   (test "(ABC)*DEF" "ABCABCABCDEF" t t)
 
   ;; test character patterns and anchors
-  (test "[\]]" "]" t t)
+  (test "[\\]]" "]" t t)
   (test "[a-z][0-9][z-a][9-0]" "a0a0" t t)
   (test "[a-z][0-9][z-a][9-0]" "A0A0" nil t)
   (test "[^a-z][0-9]" "A0" t t)
