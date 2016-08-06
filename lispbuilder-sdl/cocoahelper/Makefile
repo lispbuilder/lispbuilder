@@ -4,15 +4,15 @@ SDL_CFLAGS=$(CFLAGS) $(shell sdl-config --cflags)
 SDL_LDFLAGS=$(LDFLAGS) $(shell sdl-config --libs)
 else
 SDL_CFLAGS=$(CFLAGS) -D_GNU_SOURCE=1 -D_THREAD_SAFE -I/Library/Frameworks/SDL.framework/Headers/
-SDL_LDFLAGS=$(LDFLAGS) -framework SDL -framework Cocoa
+SDL_LDFLAGS=$(LDFLAGS) -F/Library/Frameworks -framework SDL -framework Cocoa
 endif
 
 .PHONY: all
 all: cocoahelper.framework
 
 cocoahelper.dylib : cocoahelper.m
-	gcc -fPIC $(SDL_CFLAGS) -c cocoahelper.m -o cocoahelper.o
-	gcc -dynamiclib $(SDL_LDFLAGS) -o cocoahelper.dylib cocoahelper.o
+	clang -fPIC $(SDL_CFLAGS) -c cocoahelper.m -o cocoahelper.o
+	clang -dynamiclib $(SDL_LDFLAGS) -o cocoahelper.dylib cocoahelper.o
 
 cocoahelper.framework: cocoahelper.dylib
 	rm -rf cocoahelper.framework
