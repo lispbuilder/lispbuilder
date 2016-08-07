@@ -37,7 +37,7 @@ functionality.
       * Load diverse image types,
       * Play samples and stream music including mp3 and OGG,
       * Bitmap and True type font support.
-  * **lispbuilder-opengl:** OpenGL 3d graphics
+  * **lispbuilder-opengl:** deprecated, use [cl-opengl](https://common-lisp.net/project/cl-opengl/) instead
   * **lispbuilder-openrm:** OpenRM 3d scene graph
   * **lispbuilder-cal3d:** Cal3d character animation
 
@@ -50,8 +50,8 @@ functionality.
 
 ### Networking
 
-  * **lispbuilder-net**
+  * **lispbuilder-net**: deprecated, use [usocket](https://common-lisp.net/project/usocket/) instead
 
 ### Windows
 
-  * **lispbuilder-windows** (windows.h wrapper)
+  * **lispbuilder-windows:** windows.h wrapper
