@@ -81,7 +81,8 @@
    ))
 
 (defpackage LISPBUILDER-REGEX-TEST
-  (:use COMMON-LISP LISPBUILDER-REGEX))
+  (:use COMMON-LISP LISPBUILDER-REGEX)
+  (:export "RUN-TESTS"))
 
 (defun delete-lispbuilder-regex ()
   (delete-package :LISPBUILDER-REGEX-TEST)
