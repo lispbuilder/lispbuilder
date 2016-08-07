@@ -12,9 +12,7 @@ functionality.
 ## Links
 
   * [Wiki](https://github.com/lispbuilder/lispbuilder/wiki)
-  * [Download & Installation](https://github.com/lispbuilder/lispbuilder/wiki/DownloadInstallationIntro)
-    * [Windows](https://github.com/lispbuilder/lispbuilder/wiki/WindowsInstallation)
-    * [OS X, Linux, and BSD](https://github.com/lispbuilder/lispbuilder/wiki/DownloadInstallation)
+  * [Download & Install](https://github.com/lispbuilder/lispbuilder/wiki/DownloadInstallationIntro)
   * [Screenshots](https://github.com/lispbuilder/lispbuilder/wiki/Screenshots)
   * Documentation
     * [User Guide](https://github.com/lispbuilder/lispbuilder/wiki/UsingLispbuilderSDL)
