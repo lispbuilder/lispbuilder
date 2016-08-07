@@ -1,8 +1,15 @@
 # Lispbuilder
 
-*Provides several useful cross-platform packages for Common Lisp*
+Lispbuilder, or Common Lisp Application Builder, is an umbrella
+project that provides cross-platform packages for building large,
+interactive applications in Common Lisp. The most notable of these is
+[lispbuilder-sdl](https://github.com/lispbuilder/lispbuilder/wiki/LispbuilderSDL),
+a wrapper for [SDL](https://www.libsdl.org/), a library commonly used
+for game development. Other packages provide 3D graphics and
+animation, networking, text processing, and other miscellaneous
+functionality.
 
-## Quick Links
+## Links
 
   * [Wiki](https://github.com/lispbuilder/lispbuilder/wiki)
   * [Download & Installation](https://github.com/lispbuilder/lispbuilder/wiki/DownloadInstallationIntro)
@@ -17,16 +24,20 @@
   * [License](https://github.com/lispbuilder/lispbuilder/wiki/License)
   * [Contributors](https://github.com/lispbuilder/lispbuilder/wiki/Contributors)
 
-## Introduction
+## Quickstart for Ubuntu
 
-Lispbuilder, or Common Lisp Application Builder, is an umbrella
-project that provides cross-platform packages for building large,
-interactive applications in Common Lisp. The most notable of these is
-[Lispbuilder-SDL](https://github.com/lispbuilder/lispbuilder/wiki/LispbuilderSDL),
-a wrapper for [SDL](https://www.libsdl.org/), a library commonly used
-for game development. Other packages provide 3D graphics and
-animation, networking, text processing, and other miscellaneous
-functionality.
+Assuming you have a Common Lisp implementation with
+[Quicklisp](https://www.quicklisp.org/) installed, run the following
+to install and run a lispbuilder-sdl example.
+
+```bash
+$ sudo apt-get install libsdl1.2-dev
+$ sbcl # or your own Lisp
+* (ql:quickload :lispbuilder-sdl-examples)
+* (sdl-examples:mandelbrot)
+```
+
+## Packages
 
 ### Game and Multimedia Development
 
@@ -37,9 +48,10 @@ functionality.
       * Load diverse image types,
       * Play samples and stream music including mp3 and OGG,
       * Bitmap and True type font support.
-  * **lispbuilder-opengl:** deprecated, use [cl-opengl](https://common-lisp.net/project/cl-opengl/) instead
   * **lispbuilder-openrm:** OpenRM 3d scene graph
   * **lispbuilder-cal3d:** Cal3d character animation
+  * **lispbuilder-opengl:** deprecated, use [cl-opengl](https://common-lisp.net/project/cl-opengl/) instead
+      * Note: OpenGL by itself does not provide windowing support; lispbuilder-sdl can be used with cl-opengl to provide windowing support for OpenGL
 
 ### Text Processing
 
