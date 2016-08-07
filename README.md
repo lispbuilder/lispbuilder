@@ -39,6 +39,8 @@ $ sbcl # or your own Lisp
 
 ## Packages
 
+All packages can be installed with [Quicklisp](https://www.quicklisp.org/).
+
 ### Game and Multimedia Development
 
   * [**lispbuilder-sdl:**](https://github.com/lispbuilder/lispbuilder/wiki/LispbuilderSDL) SDL game and multimedia library.
