@@ -37,7 +37,10 @@ $ sbcl # or your own Lisp
 
 ## Packages
 
-All packages can be installed with [Quicklisp](https://www.quicklisp.org/).
+All packages can be installed with
+[Quicklisp](https://www.quicklisp.org/). Dependencies which are C/C++
+libraries must be [installed
+separately](https://github.com/lispbuilder/lispbuilder/wiki/DownloadInstallationIntro).
 
 ### Game and Multimedia Development
 
