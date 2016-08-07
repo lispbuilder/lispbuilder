@@ -1,4 +1,6 @@
 
+(in-package #:lispbuilder-sdl-cffi)
+
 (setf (documentation 'SDL-WM-GRAB-INPUT 'function)
       "The mouse is confined to the application window, and nearly all keyboard input is passed directly
 to the application, and not interpreted by a window manager, if any.
