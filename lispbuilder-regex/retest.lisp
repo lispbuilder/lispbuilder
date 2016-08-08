@@ -45,17 +45,17 @@
   (test "A+" "" nil t)
   (test "A+" "A" t t)
   (test "A+" "AA" t t)
-  
+
   ;; test '.' and '?'
   (test ".BC" "ABC" t t)
   (test ".BC" "BC" nil t)
   (test "A?BC" "ABC" t t)
   (test "A?BC" "BC" t t)
-  
+
   ;; test alternation
   (test "A|B" "A" t t)
   (test "(A)|(B)" "B" t t)
-  
+
   ;; more complicated test
   (test "((A*B)|(AC))D" "BD" t t)
   (test "((A*B)|(AC))D" "ABD" t t)
@@ -64,8 +64,9 @@
   (test "((A*B)|(AC))D" "AAABC" nil t)
   (test "((A*B)|(AC))D" "ACD" t t)
   (test "(ABC)*DEF" "ABCABCABCDEF" t t)
-  
+
   ;; test character patterns and anchors
+  (test "[\\]]" "]" t t)
   (test "[a-z][0-9][z-a][9-0]" "a0a0" t t)
   (test "[a-z][0-9][z-a][9-0]" "A0A0" nil t)
   (test "[^a-z][0-9]" "A0" t t)
@@ -73,14 +74,14 @@
   (test "^[abcdefg]*$" "abcdefg" t t)
   (test "^[abcdefg]*$" "abcdefgh" nil t)
   (test "^[abcdefg]*$" "ABCDEFG" nil t)
-  
+
   ;; test special character patterns
   (test "[:lower:][:digit:][:upper:][:xdigit:]" "a0A0" t t)
   (test "[:lower:][:digit:][:upper:][:xdigit:]" "a0Aa" t t)
   (test "[:lower:][:digit:][:upper:][:xdigit:]" "a0AA" t t)
   (test "[:lower:][:digit:][:upper:][:xdigit:]" "a0Af" t t)
   (test "[:lower:][:digit:][:upper:][:xdigit:]" "a0AF" t t)
-  
+
   ;; test compiler errors
   (format t "~%~%All of the following should generate compiler errors!")
   (test "(abc" "(abc" nil t)
@@ -89,7 +90,7 @@
   (test "abc)def" "abc" nil t)
   (test "[abc" "[abc" nil t)
   (test "[abc" "abc" nil t)
-;; Unlike the C++ parser, this one treats unattached ] as a normal character 
+;; Unlike the C++ parser, this one treats unattached ] as a normal character
 ;;  (test "abc]def" "abc]def" nil t)
 ;;  (test "abc]def" "abc" nil t)
   (test "[:digit]*" "012345" nil t)
@@ -212,4 +213,3 @@
   (speedtest)
   (format t "~%Done~%")
 )
-
