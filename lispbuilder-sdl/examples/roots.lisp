@@ -74,12 +74,14 @@
       (vecto:set-rgb-fill 0 0 0)
       (vecto:clear-canvas)
       (root nil 350 350 (random 360) depth)
-      (sdl:vecto->surface vecto::*graphics-state* sdl:*default-display* 0 0))
+      (sdl:vecto->surface sdl:*default-display*
+                          :vecto-image vecto::*graphics-state*
+                          :x 0 :y 0))
     (sdl:update-display)
     (sdl:with-events ()
       (:quit-event () t)
       (:video-expose-event ()
-       (sdl:update-display))
+                           (sdl:update-display))
       (:key-down-event (:key key)
-       (when (sdl:key= key :sdl-key-escape)
-         (sdl:push-quit-event))))))
+                       (when (sdl:key= key :sdl-key-escape)
+                         (sdl:push-quit-event))))))
