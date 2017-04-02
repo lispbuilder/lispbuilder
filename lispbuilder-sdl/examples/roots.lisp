@@ -69,7 +69,9 @@
 
 (defun roots (&key (depth 7))
   (sdl:with-init ()
-    (sdl:window 400 400 :title-caption "Roots: Please be patient - this takes a while." :icon-caption "Roots: Please be patient - this takes a while.")
+    (sdl:window 400 400
+                :title-caption "Roots: Patience - this takes a few seconds."
+                :icon-caption "Roots: Patience - this takes a few seconds.")
     (vecto:with-canvas (:width 400 :height 400)
       (vecto:set-rgb-fill 0 0 0)
       (vecto:clear-canvas)
