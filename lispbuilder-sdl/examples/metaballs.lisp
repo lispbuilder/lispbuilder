@@ -353,8 +353,8 @@
 	  (:mouse-button-up-event ()
 				  (setf mb-pressed? nil))
 	  (:mouse-motion-event (:x x :y y)
-			       (when mb-pressed?
-				 (handle-mouse-moved x y (first meta-balls))))
+			       (when t ;;mb-pressed?
+                                 (handle-mouse-moved x y (first meta-balls))))
 	  (:idle ()
 		 (if *draw-gridp*
 		     (sdl:blit-surface grid sdl:*default-display*)
@@ -365,7 +365,8 @@
 
 		 ;; Optimization; Draw the font each frame,
 		 ;; but only render the font once every 100 frames.
-		 (draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
-			   10 10 sdl:*default-font* sdl:*default-display*
-			   (funcall 100-frames-p))
+		 #-sbcl(draw-fps (format nil "FPS : ~2$" (sdl:average-fps))
+                                 10 10 sdl:*default-font* sdl:*default-display*
+                                 (funcall 100-frames-p))
+                 
 		 (sdl:update-display)))))))
