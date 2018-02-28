@@ -1,0 +1,12 @@
+language: minimal
+sudo: required
+dist: trusty
+os:
+  - linux
+install:
+  - sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
+  - wget http://prdownloads.sourceforge.net/sbcl/sbcl-1.4.4-x86-64-linux-binary.tar.bz2
+  - wget https://beta.quicklisp.org/quicklisp.lisp
+  - sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql::without-prompting (ql:add-to-init-file))' --eval '(quit)'
+script:
+  - sbcl --eval '(ql:quickload :lispbuilder-sdl-examples)' --eval '(quit)'
