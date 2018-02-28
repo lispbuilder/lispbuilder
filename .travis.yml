@@ -18,7 +18,12 @@ install:
   # Install Quicklisp
   - wget https://beta.quicklisp.org/quicklisp.lisp
   - sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql::without-prompting (ql:add-to-init-file))' --eval '(quit)'
-  - echo '(dolist (dir (directory (merge-pathnames "*/" *default-pathname-defaults*))) (pushnew dir asdf:*central-registry* :test #\'equal))' >> ~/.sbclrc
+  - |
+    cat >> ~/.sbclrc <<EOF
+    (dolist (dir (directory (merge-pathnames "*/" *default-pathname-defaults*)))
+      (pushnew dir asdf:*central-registry* :test #'equal))
+    EOF
+  - cat ~/.sbclrc
 
 script:
   - sbcl --eval '(ql:quickload :lispbuilder-sdl-examples)' --eval '(quit)'
