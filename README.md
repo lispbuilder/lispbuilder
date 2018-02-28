@@ -1,4 +1,4 @@
-# Lispbuilder
+# Lispbuilder [![Build Status](https://travis-ci.org/lispbuilder/lispbuilder.svg?branch=master)](https://travis-ci.org/lispbuilder/lispbuilder)
 
 Lispbuilder, or Common Lisp Application Builder, is an umbrella
 project that provides cross-platform packages for building large,
