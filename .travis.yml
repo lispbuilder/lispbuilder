@@ -13,6 +13,7 @@ install:
   - tar xfj sbcl-1.4.4-x86-64-linux-binary.tar.bz2
   - cd sbcl-1.4.4-x86-64-linux && INSTALL_ROOT=$HOME sh ./install.sh && cd ..
   - export PATH="$PATH:$HOME/bin"
+  - sbcl --eval '(format "Sanity check that SBCL works~%")' --eval '(quit)'
 
   # Install Quicklisp
   - wget https://beta.quicklisp.org/quicklisp.lisp
