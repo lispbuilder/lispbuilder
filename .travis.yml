@@ -7,14 +7,6 @@ install:
   # Install SDL
   - sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev sbcl
 
-  # # Install SBCL
-  # - wget http://prdownloads.sourceforge.net/sbcl/sbcl-1.4.4-x86-64-linux-binary.tar.bz2
-  # - echo '45a94e1f62af40fee637ddce9a7d8ec7fb5054fd  sbcl-1.4.4-x86-64-linux-binary.tar.bz2' | shasum -c
-  # - tar xfj sbcl-1.4.4-x86-64-linux-binary.tar.bz2
-  # - cd sbcl-1.4.4-x86-64-linux && INSTALL_ROOT=$HOME sh ./install.sh && cd ..
-  # - export PATH="$PATH:$HOME/bin"
-  - sbcl --disable-debugger --eval '(format t "Sanity check that SBCL works~%")' --eval '(quit)'
-
   # Install Quicklisp
   - wget https://beta.quicklisp.org/quicklisp.lisp
   - sbcl --disable-debugger --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql::without-prompting (ql:add-to-init-file))' --eval '(quit)'
@@ -23,7 +15,6 @@ install:
    (dolist (dir (directory (merge-pathnames "*/" *default-pathname-defaults*)))
      (pushnew dir asdf:*central-registry* :test #'equal))
   # Hack: This works because it terminates when it fails to see the EOF
-  - cat ~/.sbclrc
 
 script:
   - sbcl --disable-debugger --eval '(ql:quickload :lispbuilder-sdl-examples)' --eval '(quit)'
