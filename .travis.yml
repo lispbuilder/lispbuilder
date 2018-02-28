@@ -19,10 +19,10 @@ install:
   - wget https://beta.quicklisp.org/quicklisp.lisp
   - sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --eval '(ql::without-prompting (ql:add-to-init-file))' --eval '(quit)'
   - |
-    cat >> ~/.sbclrc <<EOF
-    (dolist (dir (directory (merge-pathnames "*/" *default-pathname-defaults*)))
-      (pushnew dir asdf:*central-registry* :test #'equal))
-    EOF
+  cat >> ~/.sbclrc <<EOF
+  (dolist (dir (directory (merge-pathnames "*/" *default-pathname-defaults*)))
+    (pushnew dir asdf:*central-registry* :test #'equal))
+  EOF
   - cat ~/.sbclrc
 
 script:
