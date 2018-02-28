@@ -22,7 +22,7 @@ install:
    cat >> ~/.sbclrc <<EOF
    (dolist (dir (directory (merge-pathnames "*/" *default-pathname-defaults*)))
      (pushnew dir asdf:*central-registry* :test #'equal))
-   # Hack: This works because it terminates when it fails to see the EOF
+  # Hack: This works because it terminates when it fails to see the EOF
   - cat ~/.sbclrc
 
 script:
