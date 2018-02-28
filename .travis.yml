@@ -5,14 +5,14 @@ os:
   - linux
 install:
   # Install SDL
-  - sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev
+  - sudo apt-get install libsdl1.2-dev libsdl-gfx1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libsdl-ttf2.0-dev sbcl
 
-  # Install SBCL
-  - wget http://prdownloads.sourceforge.net/sbcl/sbcl-1.4.4-x86-64-linux-binary.tar.bz2
-  - echo '45a94e1f62af40fee637ddce9a7d8ec7fb5054fd  sbcl-1.4.4-x86-64-linux-binary.tar.bz2' | shasum -c
-  - tar xfj sbcl-1.4.4-x86-64-linux-binary.tar.bz2
-  - cd sbcl-1.4.4-x86-64-linux && INSTALL_ROOT=$HOME sh ./install.sh && cd ..
-  - export PATH="$PATH:$HOME/bin"
+  # # Install SBCL
+  # - wget http://prdownloads.sourceforge.net/sbcl/sbcl-1.4.4-x86-64-linux-binary.tar.bz2
+  # - echo '45a94e1f62af40fee637ddce9a7d8ec7fb5054fd  sbcl-1.4.4-x86-64-linux-binary.tar.bz2' | shasum -c
+  # - tar xfj sbcl-1.4.4-x86-64-linux-binary.tar.bz2
+  # - cd sbcl-1.4.4-x86-64-linux && INSTALL_ROOT=$HOME sh ./install.sh && cd ..
+  # - export PATH="$PATH:$HOME/bin"
   - sbcl --eval '(format "Sanity check that SBCL works~%")' --eval '(quit)'
 
   # Install Quicklisp
