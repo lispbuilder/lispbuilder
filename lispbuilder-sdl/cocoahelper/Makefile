@@ -1,10 +1,10 @@
-# look for sdl-config; else assume framework is in /Library/Frameworks
+# look for sdl-config; else assume framework is in /Library/Frameworks or ~/Library/Frameworks
 ifneq ($(shell which sdl-config),)
 SDL_CFLAGS=$(CFLAGS) $(shell sdl-config --cflags)
 SDL_LDFLAGS=$(LDFLAGS) $(shell sdl-config --libs)
 else
-SDL_CFLAGS=$(CFLAGS) -D_GNU_SOURCE=1 -D_THREAD_SAFE -I/Library/Frameworks/SDL.framework/Headers/
-SDL_LDFLAGS=$(LDFLAGS) -F/Library/Frameworks -framework SDL -framework Cocoa
+SDL_CFLAGS=$(CFLAGS) -D_GNU_SOURCE=1 -D_THREAD_SAFE -I/Library/Frameworks/SDL.framework/Headers/ -I$(HOME)/Library/Frameworks/SDL.framework/Headers/
+SDL_LDFLAGS=$(LDFLAGS) -F/Library/Frameworks -F$(HOME)/Library/Frameworks -framework SDL -framework Cocoa
 endif
 
 .PHONY: all
