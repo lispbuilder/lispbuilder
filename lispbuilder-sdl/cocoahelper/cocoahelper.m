@@ -17,23 +17,6 @@
 /* Use this flag to determine whether we use SDLMain.nib or not */
 #define		SDL_USE_NIB_FILE	0
 
-/* Use this flag to determine whether we use CPS (docking) or not */
-#define		SDL_USE_CPS		1
-#undef SDL_USE_CPS
-#ifdef SDL_USE_CPS
-/* Portions of CPS.h */
-typedef struct CPSProcessSerNum
-{
-	UInt32		lo;
-	UInt32		hi;
-} CPSProcessSerNum;
-
-extern OSErr	CPSGetCurrentProcess( CPSProcessSerNum *psn);
-extern OSErr 	CPSEnableForegroundOperation( CPSProcessSerNum *psn, UInt32 _arg2, UInt32 _arg3, UInt32 _arg4, UInt32 _arg5);
-extern OSErr	CPSSetFrontProcess( CPSProcessSerNum *psn);
-
-#endif /* SDL_USE_CPS */
-
 static int    gArgc;
 static char  **gArgv;
 static BOOL   gFinderLaunch;
@@ -87,7 +70,7 @@ static NSString *getApplicationName(void)
         char parentdir[MAXPATHLEN];
 		CFURLRef url = CFBundleCopyBundleURL(CFBundleGetMainBundle());
 		CFURLRef url2 = CFURLCreateCopyDeletingLastPathComponent(0, url);
-		if (CFURLGetFileSystemRepresentation(url2, true, parentdir, MAXPATHLEN)) {
+		if (CFURLGetFileSystemRepresentation(url2, true, (unsigned char *)parentdir, MAXPATHLEN)) {
 	        assert ( chdir (parentdir) == 0 );   /* chdir to the binary app's parent */
 		}
 		CFRelease(url);
@@ -144,7 +127,7 @@ static void setApplicationMenu(void)
     [appleMenu addItemWithTitle:title action:@selector(hide:) keyEquivalent:@"h"];
 
     menuItem = (NSMenuItem *)[appleMenu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
-    [menuItem setKeyEquivalentModifierMask:(NSAlternateKeyMask|NSCommandKeyMask)];
+    [menuItem setKeyEquivalentModifierMask:(NSEventModifierFlagOption|NSEventModifierFlagCommand)];
 
     [appleMenu addItemWithTitle:@"Show All" action:@selector(unhideAllApplications:) keyEquivalent:@""];
 
@@ -195,7 +178,7 @@ static void setupWindowMenu(void)
 }
 
 /* Replacement for NSApplicationMain */
-static void CustomApplicationMain (argc, argv)
+static void CustomApplicationMain (int argc, const char **argv)
 {
     NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
     SDLMain				*sdlMain;
@@ -203,16 +186,8 @@ static void CustomApplicationMain (argc, argv)
     /* Ensure the application object is initialised */
     [SDLApplication sharedApplication];
 
-#ifdef SDL_USE_CPS
-    {
-        CPSProcessSerNum PSN;
-        /* Tell the dock about us */
-        if (!CPSGetCurrentProcess(&PSN))
-            if (!CPSEnableForegroundOperation(&PSN,0x03,0x3C,0x2C,0x1103))
-                if (!CPSSetFrontProcess(&PSN))
-                    [SDLApplication sharedApplication];
-    }
-#endif /* SDL_USE_CPS */
+    ProcessSerialNumber psn = { 0, kCurrentProcess };
+    (void) TransformProcessType(&psn, kProcessTransformToForegroundApplication);
 
     /* Set up the menubar */
     [NSApp setMainMenu:[[NSMenu alloc] init]];
@@ -290,9 +265,6 @@ void cocoahelper_init ()
 {
     ProcessSerialNumber processSerialNum;
     CustomApplicationMain (0, NULL);
-    GetCurrentProcess(&processSerialNum);
-    CPSEnableForegroundOperation (&processSerialNum);
-    SetFrontProcess(&processSerialNum);
 }
 
 /* Called when the internal event loop has just started running */
