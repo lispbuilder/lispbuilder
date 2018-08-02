@@ -127,7 +127,11 @@ static void setApplicationMenu(void)
     [appleMenu addItemWithTitle:title action:@selector(hide:) keyEquivalent:@"h"];
 
     menuItem = (NSMenuItem *)[appleMenu addItemWithTitle:@"Hide Others" action:@selector(hideOtherApplications:) keyEquivalent:@"h"];
+    #if MAC_OS_X_VERSION_MAX_ALLOWED >= 101200
     [menuItem setKeyEquivalentModifierMask:(NSEventModifierFlagOption|NSEventModifierFlagCommand)];
+    #else
+    [menuItem setKeyEquivalentModifierMask:(NSAlternateKeyMask|NSCommandKeyMask)];
+    #endif
 
     [appleMenu addItemWithTitle:@"Show All" action:@selector(unhideAllApplications:) keyEquivalent:@""];
 
