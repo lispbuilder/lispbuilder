@@ -24,7 +24,8 @@
 
 (cffi:define-foreign-library sdl-ttf
   (:darwin (:or (:framework "SDL_ttf")
-            (:framework "libSDL_ttf-2.0")))
+                (:framework "libSDL_ttf-2.0")
+                (:default "libSDL_ttf-2.0.0")))
   (:windows (:or "SDL_ttf.dll"))
   (:unix (:or "libSDL_ttf" "libSDL_ttf2.0" "libSDL_ttf-2.0.so.0")))
 

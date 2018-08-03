@@ -13,7 +13,8 @@
 	   :test #'equal))
 
 (cffi:define-foreign-library sdl-mixer
-  (:darwin (:framework "SDL_mixer"))
+  (:darwin (:or (:framework "SDL_mixer")
+                (:default "libSDL_mixer")))
   (:windows "SDL_mixer.dll")
   (:unix (:or "libSDL_mixer"
 	      "libSDL_mixer.so"
