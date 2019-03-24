@@ -79,7 +79,7 @@
     (declare (optimize (safety 0) (speed 3) (space 1))
 	   (type fixnum strength)
 	   (type float ival))
-  (setf (metaball-r mball) (sdl:cast float (sqrt (/ strength ival))))
+  (setf (metaball-r mball) (sdl:cast float (realpart (sqrt (/ strength ival)))))
   ;; Note: (/ 256 64) probably needs to change to screen-width and squares.
   (setf (metaball-sqr mball) (sdl:cast float (/ (metaball-r mball) (/ 256 64)))))
 
