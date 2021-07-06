@@ -13,7 +13,7 @@
   (screen-width 0 :type fixnum)
   (screen-height 0 :type fixnum)
   (iso-value 0.0 :type float)
-  (viscosity 0.0 :type float)
+  (viscosity 0.0 :type (float 0.0))
   (min-viscosity 0.0 :type float)
   (max-viscosity 0.0 :type float)
   (d-viscosity 0.0 :type float)
@@ -70,16 +70,16 @@
 (defstruct metaball
   (center-x 0 :type fixnum) (center-y 0 :type fixnum)
   (center-i 0.0 :type float) (center-j 0.0 :type float)
-  (strength 0 :type fixnum)
-  (iso-value 0.0 :type float)
-  (r 0.0 :type float)
+  (strength 0 :type (and fixnum (integer 0)))
+  (iso-value 0.0 :type (float 0.0))
+  (r 0.0 :type (float 0.0))
   (sqr 0.0 :type float))
 
 (defun set-radius (mball strength ival)
     (declare (optimize (safety 0) (speed 3) (space 1))
-	   (type fixnum strength)
-	   (type float ival))
-  (setf (metaball-r mball) (sdl:cast float (realpart (sqrt (/ strength ival)))))
+	   (type (and fixnum (integer 0)) strength)
+	   (type (real 0.0) ival))
+  (setf (metaball-r mball) (sdl:cast float (sqrt (/ strength ival))))
   ;; Note: (/ 256 64) probably needs to change to screen-width and squares.
   (setf (metaball-sqr mball) (sdl:cast float (/ (metaball-r mball) (/ 256 64)))))
 
@@ -212,10 +212,9 @@
 	(line (mmanager-line manager))
 	(square-edge (mmanager-square-edge manager)))
     (declare (type fixnum grid-size-y grid-size-x x-resolution y-resolution)
-	     (type float iso-value viscosity)
+	     (type (real 0.0) iso-value viscosity)
 	     (type (array fixnum *) square-flag offset line square-edge)
-	     (type (array float *) meta-grid))
-
+	     (type (array float *) meta-grid)) ;; the upgraded element type of this array is t
     (loop for y from 0 below grid-size-y
        do (loop for x from 0 below grid-size-x
 	     do (let ((meta-grid-target 0.0))
@@ -224,8 +223,8 @@
 		  (dolist (meta-ball meta-balls)
 		    (incf meta-grid-target (get-field-at meta-ball (* x-resolution x) (* y-resolution y))))
 		  (incf (aref meta-grid x y) (sdl:cast float (/ (- meta-grid-target
-							      (aref meta-grid x y))
-							   viscosity))))))
+                                                                   (the float (aref meta-grid x y)))
+                                                                viscosity))))))
 
     (let ((scan-imin 0) (scan-imax (mmanager-x-squares manager))
 	  (scan-jmin 0) (scan-jmax (mmanager-y-squares manager)))
@@ -237,7 +236,7 @@
 			(iso-p1-x 0) (iso-p1-y 0) (iso-p2-x 0) (iso-p2-y 0)
 			(p1-idx 0) (p2-idx 0))
 		    (declare (type fixnum iso-p1-x iso-p1-y iso-p2-x iso-p2-y p1-idx p2-idx)
-			     (type float temp val1 val1))
+			     (type float temp val1 val2))
 		    (unless (= (aref square-flag i j) 1)
 		      (when (< (aref meta-grid i j) iso-value)
 			(setf square-idx (logior square-idx 1)))
@@ -271,7 +270,7 @@
 					     (+ j (aref offset p2-idx 1))))
 			    (if (not (= (- val2 val1) 0))
 				(setf temp (sdl:cast float (/ (- iso-value val1)
-							 (- val2 val1))))
+                                                              (- val2 val1))))
 				(setf temp 0.5))
 			    (setf iso-p1-x (sdl:cast-to-int (* x-resolution
 							  (+ (* temp (- (+ i (aref offset p2-idx 0))
