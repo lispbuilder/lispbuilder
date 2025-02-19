@@ -617,7 +617,10 @@
    #:render-string-solid
    #:draw-string-solid
    #:draw-string-solid-*
-
+   #:render-utf8-solid
+   #:draw-utf8-solid
+   #:draw-utf8-solid-*
+   
    ;; string-shaded.lisp
    #:render-string-shaded
    #:draw-string-shaded
