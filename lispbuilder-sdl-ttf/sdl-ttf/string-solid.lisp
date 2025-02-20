@@ -26,7 +26,7 @@
       (setf (cached-surface font) surf))
     surf))
 
-;;; UTF8.
+;;; UTF8 wrappers
 
 (defmethod _draw-utf8-solid-*_ ((string string) (x integer) (y integer)
                                 justify (surface sdl-surface)
