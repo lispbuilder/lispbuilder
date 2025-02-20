@@ -13,7 +13,7 @@
     (unless (sdl:initialise-default-font sdl:*ttf-font-vera*)
       (error "FONT-EXAMPLE: Cannot initialize the default font."))
 
-    ;; Couldn't load the library if I explictedly mentioned extended latin characters like æøå, so use the character macros instead.
+    ;; Couldn't load the library if I explictedly mentioned extended latin characters like ï¿½ï¿½ï¿½, so use the character macros instead.
     (sdl::draw-string-solid-* (format nil "Extended Latin[~a~a~a] - solid"
 				    #\LATIN_SMALL_LETTER_AE
 				    #\LATIN_SMALL_LETTER_O_WITH_STROKE
