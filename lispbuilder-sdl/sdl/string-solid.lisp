@@ -121,6 +121,11 @@ The text is keyed onto `SURFACE`.
 
 ;;; UTF8 wrappers
 
+(defmethod _render-utf8-solid_ :around ((string string) (font font) (color color) free cache)
+  (declare (ignore cache))
+  (when free
+    (free-cached-surface font))
+  (call-next-method))
 
 (defmethod _render-utf8-solid_  ((string string) (font bitmap-font) (color color) free cache)
   (_render-string-solid_ string font color free cache))

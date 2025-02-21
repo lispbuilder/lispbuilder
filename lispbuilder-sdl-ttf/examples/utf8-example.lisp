@@ -40,19 +40,21 @@
 			    0 350
                             :color sdl:*black*
 			    :utf8 t)
-    (sdl:draw-utf8-shaded-* (format nil "Extended Latin[~a~a~a] - utf8 - Shaded" 
+    (sdl:draw-string-shaded-* (format nil "Extended Latin[~a~a~a] - utf8 - Shaded" 
 				    #\LATIN_SMALL_LETTER_AE
 				    #\LATIN_SMALL_LETTER_O_WITH_STROKE
 				    #\LATIN_SMALL_LETTER_A_WITH_RING_ABOVE)
 			      0 450
                               sdl:*black*
-                              sdl:*yellow*)
-    (sdl:draw-utf8-blended-*(format nil "Extended Latin[~a~a~a] - utf8 - Blended" 
+                              sdl:*yellow*
+			      :utf8 t)
+    (sdl:draw-string-blended-*(format nil "Extended Latin[~a~a~a] - utf8 - Blended" 
 				    #\LATIN_SMALL_LETTER_AE
 				    #\LATIN_SMALL_LETTER_O_WITH_STROKE
 				    #\LATIN_SMALL_LETTER_A_WITH_RING_ABOVE)
 			      0 550
-                              :color sdl:*black*)
+                              :color sdl:*black*
+			      :utf8 t)
 
     (sdl:update-display)
     (sdl:with-events ()
