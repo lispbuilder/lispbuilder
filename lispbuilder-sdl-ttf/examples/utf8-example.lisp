@@ -34,9 +34,10 @@
 			      0 250
                               :color sdl:*black*)
     (sdl::draw-string-solid-* (format nil "Extended Latin[~a~a~a] - utf8 - solid"
-				    #\LATIN_SMALL_LETTER_AE
-				    #\LATIN_SMALL_LETTER_O_WITH_STROKE
-				    #\LATIN_SMALL_LETTER_A_WITH_RING_ABOVE)
+				     #\GREEK_SMALL_LETTER_LAMDA ;; 
+				      #\LATIN_SMALL_LETTER_AE
+				      #\LATIN_SMALL_LETTER_O_WITH_STROKE
+				      #\LATIN_SMALL_LETTER_A_WITH_RING_ABOVE)
 			    0 350
                             :color sdl:*black*
 			    :utf8 t)

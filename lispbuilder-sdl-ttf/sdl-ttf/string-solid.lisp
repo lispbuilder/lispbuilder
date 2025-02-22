@@ -41,7 +41,7 @@
     (with-foreign-color-copy (col-struct color)
       (setf surf (make-instance 'surface :fp (sdl-ttf-cffi::render-utf8-solid (fp font)
                                                                               string
-                                                                              (if (cffi:foreign-symbol-pointer "TTF_glue_RenderText_Solid")
+                                                                              (if (cffi:foreign-symbol-pointer "TTF_glue_RenderUtf8_Solid")
                                                                                 col-struct
                                                                                 (+ (ash (b color) 16)
                                                                                    (ash (g color) 8)

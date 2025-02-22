@@ -617,25 +617,16 @@
    #:render-string-solid
    #:draw-string-solid
    #:draw-string-solid-*
-   #:render-utf8-solid
-   #:draw-utf8-solid
-   #:draw-utf8-solid-*
    
    ;; string-shaded.lisp
    #:render-string-shaded
    #:draw-string-shaded
    #:draw-string-shaded-*
-   #:render-utf8-shaded
-   #:draw-utf8-shaded
-   #:draw-utf8-shaded-*
 
    ;; string-blended.lisp
    #:render-string-blended
    #:draw-string-blended
    #:draw-string-blended-*
-   #:render-utf8-blended
-   #:draw-utf8-blended
-   #:draw-utf8-blended-*
 
    ;; gfx-string-solid.lisp
    #:draw-character-solid
