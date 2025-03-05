@@ -5,4 +5,5 @@
 (defpackage #:lispbuilder-sdl-ttf-examples
   (:use #:cl #:cffi)
   (:nicknames #:sdl-ttf-examples)
-  (:export #:font-example))
+  (:export #:font-example
+           #:utf8-example))

@@ -617,7 +617,7 @@
    #:render-string-solid
    #:draw-string-solid
    #:draw-string-solid-*
-
+   
    ;; string-shaded.lisp
    #:render-string-shaded
    #:draw-string-shaded

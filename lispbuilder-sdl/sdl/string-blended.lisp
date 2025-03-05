@@ -19,7 +19,8 @@
                                      (font *default-font*)
                                      (color sdl:*default-color*)
                                      (free nil)
-                                     (cache nil))
+                                     (cache nil)
+				     (utf8 nil))
   "Render the string `STRING` using font `FONT` with text color `COLOR` to a new `SURFACE`.
 The dimensions of the new surface are height == `FONT` height, and width == `FONT` width * `STRING` length.
 The surface background is transparent and therefore can be keyed over other surfaces.
@@ -47,13 +48,16 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-TTF_"
-  (_render-string-blended_ string font color free cache))
+  (if utf8
+      (_render-utf8-blended_ string font color free cache)
+      (_render-string-blended_ string font color free cache)))
 
 (defun draw-string-blended (string p1 &key
                                    (justify :left)
                                    (surface *default-surface*)
                                    (font *default-font*)
-                                   (color sdl:*default-color*))
+                                   (color sdl:*default-color*)
+				   (utf8 nil))
   "See [DRAW-STRING-BLENDED-*](#draw-string-blended-*).
 
 ##### Parameters
@@ -63,13 +67,16 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-TTF_"
-  (_draw-string-blended-*_ string (x p1) (y p1) justify (if surface surface *default-display*) font color))
+  (if utf8
+      (_draw-utf8-blended-*_ string (x p1) (y p1) justify (if surface surface *default-display) font color)
+      (_draw-string-blended-*_ string (x p1) (y p1) justify (if surface surface *default-display*) font color)))
 
 (defun draw-string-blended-* (string x y &key
                                      (justify :left)
                                      (surface *default-surface*)
                                      (font *default-font*)
-                                     (color sdl:*default-color*))
+                                     (color sdl:*default-color*)
+				     (utf8 nil))
   "Draw text `STRING` at location `X` `Y` using font `FONT` with color `COLOR` onto surface `SURFACE`.
 The text is keyed onto `SURFACE`.
 
@@ -92,4 +99,21 @@ The text is keyed onto `SURFACE`.
 ##### Packages
 
 * Supported in _LISPBUILDER-SDL-TTF_"
-  (_draw-string-blended-*_ string x y justify (if surface surface *default-display*) font color))
+  (if utf8
+      (_draw-utf8-blended-*_ string x y justify (if surface surface *default-display*) font color)
+      (_draw-string-blended-*_ string x y justify (if surface surface *default-display*) font color)))
+
+
+;;; UTF8 wrappers
+
+(defmethod _render-utf8-blended_ :around ((string string) (font font) (color color) free cache)
+  (declare (ignore cache))
+  (when free
+    (free-cached-surface font))
+  (call-next-method))
+
+(defmethod _render-utf8-blended_ ((string string) (font font) (color color) free cache)
+  (_render-string-blended_ string font color free cache))
+
+(defmethod _draw-utf8-blended-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font font) (color color))
+  (_draw-string-blended-*_ string x y justify surface font color))

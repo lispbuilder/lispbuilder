@@ -15,4 +15,5 @@
     ((:module "examples"
 	      :components
 	      ((:file "package")
-	       (:file "font-example" :depends-on ("package"))))))
+	       (:file "font-example" :depends-on ("package"))
+	       (:file "utf8-example")))))

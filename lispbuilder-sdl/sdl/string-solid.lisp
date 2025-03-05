@@ -32,7 +32,8 @@
                                    (font *default-font*)
                                    (color *default-color*)
                                    (free nil)
-                                   (cache nil))
+                                   (cache nil)
+				   (utf8 nil))
   "Render the string `STRING` using font `FONT` with text color `COLOR` to a new `SURFACE`.
 The dimensions of the new surface are height == `FONT` height, and width == `FONT` width * `STRING` length.
 The surface background is transparent and therefore can be keyed over other surfaces.
@@ -47,6 +48,7 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 * `COLOR` color is the text color, of type `COLOR`.
 * `FREE` when `T` will free any exisitng cached surface in `FONT`.
 * `CACHE` when `T` will cache the newly created SURFACE in `FONT`. Any cached surface can be accessed using
+* `UTF8` when `T` will use the 'utf8' sdl-ttf-cffi::render-utf8-solid for text drawing, instead of sdl-ttf-cffi::render-string-solid
 [CACHED-SURFACE](#cached-surface) and can be blitted to a target surface using [DRAW-FONT](#draw-font).
 
 ##### Returns
@@ -60,13 +62,16 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"
-  (_render-string-solid_ string font color free cache))
+  (if utf8
+      (_render-utf8-solid_ string font color free cache)
+      (_render-string-solid_ string font color free cache)))
 
 (defun draw-string-solid (string p1 &key
                                  (justify :left)
                                  (surface *default-surface*)
                                  (font *default-font*)
-                                 (color *default-color*))
+                                 (color *default-color*)
+				 (utf8 nil))
   "See [DRAW-STRING-SOLID-*](#draw-string-solid-*).
 
 ##### Parameters
@@ -76,13 +81,16 @@ When `:FREE NIL` the caller is responsible for freeing any existing cached surfa
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"
-  (_draw-string-solid-*_ string (x p1) (y p1) justify (if surface surface *default-display*) font color))
+  (if utf8
+      (_draw-utf8-solid-*_ string (x p1) (y p1) justify (if surface surface *default-display*) font color)
+      (_draw-string-solid-*_ string (x p1) (y p1) justify (if surface surface *default-display*) font color)))
 
 (defun draw-string-solid-* (string x y &key
                                    (justify :left)
                                    (surface *default-surface*)
                                    (font *default-font*)
-                                   (color *default-color*))
+                                   (color *default-color*)
+				   (utf8 nil))
   "Draw text `STRING` at location `X` `Y` using font `FONT` with color `COLOR` onto surface `SURFACE`.
 The text is keyed onto `SURFACE`.
 
@@ -93,6 +101,7 @@ The text is keyed onto `SURFACE`.
 * `FONT` is the font face used to render the string. Of type `FONT`.  Bound to `*DEFAULT-FONT*` if unspecified.
 * `SURFACE` is the target surface, of type `SDL-SURFACE`. Bound to `\*DEFAULT-SURFACE\*` if unspecified.
 * `COLOR` color is the text color, of type `COLOR`.
+* `UTF8` when `T` will use the 'utf8' sdl-ttf-cffi::render-utf8-solid for text drawing, instead of sdl-ttf-cffi::render-string-solid
 
 ##### Returns
 
@@ -105,4 +114,22 @@ The text is keyed onto `SURFACE`.
 ##### Packages
 
 * Also supported in _LISPBUILDER-SDL-GFX_, and _LISPBUILDER-SDL-TTF_"
-  (_draw-string-solid-*_ string x y justify (if surface surface *default-display*) font color))
+  (if utf8
+      (_draw-utf8-solid-*_ string x y justify (if surface surface *default-display*) font color)
+      (_draw-string-solid-*_ string x y justify (if surface surface *default-display*) font color)))
+
+
+;;; UTF8 wrappers
+
+(defmethod _render-utf8-solid_ :around ((string string) (font font) (color color) free cache)
+  (declare (ignore cache))
+  (when free
+    (free-cached-surface font))
+  (call-next-method))
+
+(defmethod _render-utf8-solid_  ((string string) (font bitmap-font) (color color) free cache)
+  (_render-string-solid_ string font color free cache))
+
+(defmethod _draw_utf8-solid-*_ ((string string) (x integer) (y integer) justify (surface sdl-surface) (font bitmap-font) (color color))
+  _draw-string-solid-*_ string x y justify surface  font color)
+
