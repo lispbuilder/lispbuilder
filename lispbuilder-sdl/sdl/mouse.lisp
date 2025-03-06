@@ -103,3 +103,7 @@
 (defun mouse-x2-p (&optional (button (get-mouse-button)))
   "Returns `T` when the X2 mouse button is depressed."
   (/= 0 (logand button (sdl-cffi::sdl-button-x2mask))))
+
+(defun mouse-warp (&key (x (mouse-x)) (y (mouse-y)))
+  "Moves the mouse cursor to the supplied X/Y position."
+  (sdl-cffi::sdl-warp-mouse x y))
