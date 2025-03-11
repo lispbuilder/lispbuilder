@@ -108,7 +108,30 @@
   "Moves the mouse cursor to the supplied X/Y position."
   (sdl-cffi::sdl-warp-mouse x y))
 
-(defun create-cursor (cursor-shape &key (hot-x 0) (hot-y 0))
+
+(defun mouse-set-cursor (cursor)
+  (sdl-cffi::sdl-set-cursor cursor))
+
+
+;;; Should remove free-cursor and instead make it part of SDL:Free like all other SDL foreign objects.
+(defun free-cursor (cursor)
+  (sdl-cffi::sdl-free-cursor cursor))
+
+(defun multiples-of-8? (cursor-sequence-length)
+  "Check if the square root of the length of cursor-shape is indeed multiple of 8.
+if it is, returns the truncated square root
+CURSOR-SEQUENCE-LENGTH - The total count of elements in the sequence of pixles to make into a cursor"
+  (let ((grid-size (truncate (sqrt cursor-sequence-length))))
+    (if (= (mod grid-size 8) 0)
+	grid-size
+	(error "the provided pixle-list must be multiples of 8!"))))
+
+;;; Helpers for mouse-cursor
+(defun shift-left (byte &optional (shift-count 1))
+  "Shifts all bits of the byte to the left by shift-count."
+  (ash byte shift-count))
+
+(defun mouse-create-cursor (cursor-shape &key (hot-x 0) (hot-y 0))
   "Creates an SDL hardware cursor
 CURSOR-SHAPE: Must be a grid with width and height being the same and multiple of 8.
     The cursor sequence (list or vector) should contain numbers:
@@ -117,23 +140,36 @@ CURSOR-SHAPE: Must be a grid with width and height being the same and multiple o
     2 = black
     3 = inverted (if supported)"
   (multiple-value-bind (data mask size)
-      (decode-cursor cursor-shape (truncate (sqrt (length cursor-shape))))
+      (decode-cursor cursor-shape (multiples-of-8? (length cursor-shape)))
     (let ((cursor (sdl-cffi::sdl-create-cursor data mask size size hot-x hot-y)))
       (cffi:foreign-free data)
       (cffi:foreign-free mask)
-      cursor)))
+      (mouse-set-cursor cursor))))
 
-(defun set-cursor (cursor)
-  (sdl-cffi::sdl-set-cursor cursor))
+(defun decode-case (fdata fmask byte image image-bit)
+  (case (elt image image-bit)
+    ;; White
+    (1
+     (setf #1=(cffi:mem-aref fmask :uint8 byte) (logior #1# #x01)))
+    ;; Black
+    (2
+     (cond ((setf #2=(cffi:mem-aref fdata :uint8 byte) (logior #2# #x01))
+	    (setf #1# (logior #1# #x01)))))
+    ;; Transparent
+    (3
+     (setf #2# (logior #2# #x01)))))
 
-(defun free-cursor (cursor)
-  (sdl-cffi::sdl-free-cursor cursor))
-
-;;; Helpers for create-cursor
-
-(defun shift-left (byte &optional (shift-count 1))
-  "Shifts all bits of the byte to the left by shift-count."
-  (ash byte shift-count))
+(defun decode-body (col byte fdata fmask)
+  (if (/= (mod col 8) 0)
+      (progn
+	(setf #1=(cffi:mem-aref fmask :uint8 byte) (shift-left #1#))
+	(setf #2=(cffi:mem-aref fdata :uint8 byte) (shift-left #2#)))
+      
+      (progn
+	(incf byte)
+	(setf #1# 0
+	      #2# 0)))
+  byte)
 
 (defun decode-cursor (image size)
   "Translate a CL sequence into data/mask pointers (uint8) for C.
@@ -142,41 +178,13 @@ IMAGE: must be multiples of 8 (8, 16, 32, 64)"
   (let* ((fdata (cffi:foreign-alloc :uint8 :count (* size 4)))
          (fmask (cffi:foreign-alloc :uint8 :count (* size 4))) 
          (image-bit 0)
-         (bit -1))
-    (when (/= (mod size 8) 0)
-      (cffi:foreign-free fdata)
-      (cffi:foreign-free fmask)
-      (error "the provided pixle-list must be multiples of 8!"))
-    
+         (byte -1))  
     (loop for row from 0 below size do
       (loop for col from 0 below size do
-        (if (/= (mod col 8) 0)
-            (progn
-              (setf #1=(cffi:mem-aref fdata :uint8 bit)
-		    (shift-left #1#))
-              (setf #2=(cffi:mem-aref fmask :uint8 bit)
-                    (shift-left #2#)))
-	    
-            (progn
-              (incf bit)
-              (setf #1# 0)
-              (setf #2# 0)))
+        (setf byte (decode-body col byte fdata fmask))
 	
-        
-        (case (elt image image-bit)
-	  ;; White
-          (1
-           (setf #2# (logior (cffi:mem-aref fmask :uint8 bit) #x01)))
-	  ;; Black
-          (2
-	   (cond ((setf #1# (logior (cffi:mem-aref fdata :uint8 bit) #x01))
-		  (setf #2# (logior (cffi:mem-aref fmask :uint8 bit) #x01)))))
-	  ;; Transparent
-	  (3
-	   (setf #1# (logior #1# #x01))))
+        (decode-case fdata fmask byte image image-bit)
 
 	;; Increment for the next bit-information
 	(incf image-bit)))
-    
-    ;; End row loop
     (values fdata fmask size)))
