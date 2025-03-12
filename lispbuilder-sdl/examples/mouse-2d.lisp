@@ -75,3 +75,42 @@
 
        ;; Redraw the display
        (sdl:update-display)))))
+
+(defparameter *cursor*
+  '(2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    2 2 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    2 1 2 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    2 1 1 2 0 0 0 0 0 0 0 1 1 0 0 0
+    2 1 1 1 2 0 0 0 0 0 0 1 1 0 0 0 
+    2 1 1 1 1 2 0 0 0 0 0 0 0 0 0 0 
+    2 1 1 1 1 1 2 0 0 0 0 0 0 0 0 0
+    2 1 1 1 2 2 2 0 0 0 0 0 0 0 0 0 
+    2 1 1 1 1 2 0 0 0 0 0 0 0 0 0 0 
+    2 2 0 2 1 2 2 0 0 0 0 0 0 0 0 0
+    2 0 0 0 2 1 2 0 0 0 0 0 0 0 0 0 
+    0 0 0 0 2 2 0 0 0 0 0 0 0 0 0 0 
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+    0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0))
+
+(defun mouse-cursor-and-warp ()
+  (sdl:with-init ()
+    (sdl:window 200 200 :title-caption "Mouse-cursor")
+    (setf (sdl:frame-rate) 60)
+    
+    ;; Takes any CL sequence of x*x (x must be multiples of 8).
+    ;;   1 = white,  2 = black, 3 = inverted, any other value = transparent.
+    (sdl:mouse-create-cursor *cursor*)
+    (sdl:with-events ()
+      (:quit-event () t)
+      (:key-down-event (:key key)
+		       (cond ((equal key :sdl-key-x)
+			      ;; Moves the mouse to the select pixle position relative the window's pixle. Must be a positive integer.
+			      (sdl:mouse-warp :x 500))
+			     ((equal key :sdl-key-y)
+			      (sdl:mouse-warp :y 50))
+			     (t (sdl:mouse-warp :x 75 :y 75))))
+      (:idle
+       (sdl:clear-display sdl:*blue*)
+       (sdl:update-display)))))

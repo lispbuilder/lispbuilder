@@ -787,7 +787,6 @@
    #:mouse-x2-p
    #:mouse-warp
    #:mouse-create-cursor
-   #:mouse-set-cursor
 
    ;; active.lisp
    #:mouse-gain-focus-p

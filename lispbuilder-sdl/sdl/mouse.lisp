@@ -109,28 +109,6 @@
   (sdl-cffi::sdl-warp-mouse x y))
 
 
-(defun mouse-set-cursor (cursor)
-  (sdl-cffi::sdl-set-cursor cursor))
-
-
-;;; Should remove free-cursor and instead make it part of SDL:Free like all other SDL foreign objects.
-(defun free-cursor (cursor)
-  (sdl-cffi::sdl-free-cursor cursor))
-
-(defun multiples-of-8? (cursor-sequence-length)
-  "Check if the square root of the length of cursor-shape is indeed multiple of 8.
-if it is, returns the truncated square root
-CURSOR-SEQUENCE-LENGTH - The total count of elements in the sequence of pixles to make into a cursor"
-  (let ((grid-size (truncate (sqrt cursor-sequence-length))))
-    (if (= (mod grid-size 8) 0)
-	grid-size
-	(error "the provided pixle-list must be multiples of 8!"))))
-
-;;; Helpers for mouse-cursor
-(defun shift-left (byte &optional (shift-count 1))
-  "Shifts all bits of the byte to the left by shift-count."
-  (ash byte shift-count))
-
 (defun mouse-create-cursor (cursor-shape &key (hot-x 0) (hot-y 0))
   "Creates an SDL hardware cursor
 CURSOR-SHAPE: Must be a grid with width and height being the same and multiple of 8.
@@ -138,28 +116,36 @@ CURSOR-SHAPE: Must be a grid with width and height being the same and multiple o
     0 = Transparent
     1 = white
     2 = black
-    3 = inverted (if supported)"
+    3 = inverted (if supported)
+HOT-X/Y: The upper-left corner of the cursor pixels.
+Returns cursor as `FOREIGN-OBJECT`."
   (multiple-value-bind (data mask size)
-      (decode-cursor cursor-shape (multiples-of-8? (length cursor-shape)))
-    (let ((cursor (sdl-cffi::sdl-create-cursor data mask size size hot-x hot-y)))
+      (decode-cursor cursor-shape (multiples-of-8? cursor-shape))
+    (let ((cursor (make-instance 'foreign-object :fp (sdl-cffi::sdl-create-cursor data mask size size hot-x hot-y)
+				 :free 'sdl-cffi::sdl-free-cursor)))
       (cffi:foreign-free data)
       (cffi:foreign-free mask)
-      (mouse-set-cursor cursor))))
+      (sdl-cffi::sdl-set-cursor (fp cursor))
+      cursor)))
 
-(defun decode-case (fdata fmask byte image image-bit)
-  (case (elt image image-bit)
-    ;; White
-    (1
-     (setf #1=(cffi:mem-aref fmask :uint8 byte) (logior #1# #x01)))
-    ;; Black
-    (2
-     (cond ((setf #2=(cffi:mem-aref fdata :uint8 byte) (logior #2# #x01))
-	    (setf #1# (logior #1# #x01)))))
-    ;; Transparent
-    (3
-     (setf #2# (logior #2# #x01)))))
+;;; Helpers for mouse-cursor
+
+(defun multiples-of-8? (cursor-shape)
+  "Check if the square root of the cursor-shape's length is indeed multiple of 8.
+Returns said square root as an `INTEGER`."
+  (let ((grid-size (truncate (sqrt (length cursor-shape)))))
+    (if (= (mod grid-size 8) 0)
+	grid-size
+	(error "the provided pixle-list must be multiples of 8!"))))
+
+(defun shift-left (byte &optional (shift-count 1))
+  "Returns the byte shifted left by shift-count positions as an `INTEGER`."
+  (ash byte shift-count))
+
 
 (defun decode-body (col byte fdata fmask)
+  "Processes the next bit in the BYTE, updating the foreign FDATA and FMASK pointers.
+returns the byte as `INTEGER`"
   (if (/= (mod col 8) 0)
       (progn
 	(setf #1=(cffi:mem-aref fmask :uint8 byte) (shift-left #1#))
@@ -169,22 +155,38 @@ CURSOR-SHAPE: Must be a grid with width and height being the same and multiple o
 	(incf byte)
 	(setf #1# 0
 	      #2# 0)))
+  ;; Returns the byte index
   byte)
 
+
+(defun decode-case (fdata fmask byte pixle)
+  "Check what the current pixle (from the cursor-image sequence) is, then set the bit in the array(s)."
+  (case pixle
+    ;; White
+    (1
+     (setf #1=(cffi:mem-aref fmask :uint8 byte) (logior #1# #x01)))
+    ;; Black
+    (2
+     (cond ((setf #2=(cffi:mem-aref fdata :uint8 byte) (logior #2# #x01))
+	    (setf #1# (logior #1# #x01)))))
+    ;; Inverted
+    (3
+     (setf #2# (logior #2# #x01)))))
+
 (defun decode-cursor (image size)
-  "Translate a CL sequence into data/mask pointers (uint8) for C.
-This is to create the mouse cursor.
-IMAGE: must be multiples of 8 (8, 16, 32, 64)"
+  "Decodes a cursor shape of pixel sequence into SDL-compatible data and mask bitmaps.
+Returns three values: The DATA bitmap `UINT8-ARRAY`, The MASK bitmap `UINT8-ARRAY`,
+  and the cursor's grid size as `INTEGER`"
   (let* ((fdata (cffi:foreign-alloc :uint8 :count (* size 4)))
          (fmask (cffi:foreign-alloc :uint8 :count (* size 4))) 
-         (image-bit 0)
-         (byte -1))  
+         (image-pixle 0)
+         (byte -1))
     (loop for row from 0 below size do
       (loop for col from 0 below size do
         (setf byte (decode-body col byte fdata fmask))
 	
-        (decode-case fdata fmask byte image image-bit)
-
+        (decode-case fdata fmask byte (elt image image-pixle))
+	
 	;; Increment for the next bit-information
-	(incf image-bit)))
+	(incf image-pixle)))
     (values fdata fmask size)))
