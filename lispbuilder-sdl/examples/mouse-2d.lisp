@@ -106,7 +106,7 @@
       (:quit-event () t)
       (:key-down-event (:key key)
 		       (cond ((equal key :sdl-key-x)
-			      ;; Moves the mouse to the select pixle position relative the window's pixle. Must be a positive integer.
+			      ;; Moves the mouse to the select pixel position relative the window's pixel. Must be a positive integer.
 			      (sdl:mouse-warp :x 500))
 			     ((equal key :sdl-key-y)
 			      (sdl:mouse-warp :y 50))

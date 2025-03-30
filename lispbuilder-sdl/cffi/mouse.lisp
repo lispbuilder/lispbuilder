@@ -39,7 +39,7 @@
 
 (cl:defconstant SDL-BUTTON-LEFT 1)
 (cl:defconstant SDL-BUTTON-MIDDLE 2)
-(cl:defconstant SDL-BUTTON-RIGHT 3)
+(cl:defconstant SDL-BUTTON-RIGHT 3) 
 (cl:defconstant SDL-BUTTON-WHEEL-UP 4)
 (cl:defconstant SDL-BUTTON-WHEEL-DOWN 5)
 (cl:defconstant SDL-BUTTON-X1 6)

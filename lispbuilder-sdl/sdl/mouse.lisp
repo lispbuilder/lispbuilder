@@ -136,7 +136,7 @@ Returns said square root as an `INTEGER`."
   (let ((grid-size (truncate (sqrt (length cursor-shape)))))
     (if (= (mod grid-size 8) 0)
 	grid-size
-	(error "the provided pixle-list must be multiples of 8!"))))
+	(error "the provided pixel-list must be multiples of 8!"))))
 
 (defun shift-left (byte &optional (shift-count 1))
   "Returns the byte shifted left by shift-count positions as an `INTEGER`."
@@ -159,9 +159,9 @@ returns the byte as `INTEGER`"
   byte)
 
 
-(defun decode-case (fdata fmask byte pixle)
-  "Check what the current pixle (from the cursor-image sequence) is, then set the bit in the array(s)."
-  (case pixle
+(defun decode-case (fdata fmask byte pixel)
+  "Check what the current pixel (from the cursor-image sequence) is, then set the bit in the array(s)."
+  (case pixel
     ;; White
     (1
      (setf #1=(cffi:mem-aref fmask :uint8 byte) (logior #1# #x01)))
@@ -179,14 +179,14 @@ Returns three values: The DATA bitmap `UINT8-ARRAY`, The MASK bitmap `UINT8-ARRA
   and the cursor's grid size as `INTEGER`"
   (let* ((fdata (cffi:foreign-alloc :uint8 :count (* size 4)))
          (fmask (cffi:foreign-alloc :uint8 :count (* size 4))) 
-         (image-pixle 0)
+         (image-pixel 0)
          (byte -1))
     (loop for row from 0 below size do
       (loop for col from 0 below size do
         (setf byte (decode-body col byte fdata fmask))
 	
-        (decode-case fdata fmask byte (elt image image-pixle))
+        (decode-case fdata fmask byte (elt image image-pixel))
 	
 	;; Increment for the next bit-information
-	(incf image-pixle)))
+	(incf image-pixel)))
     (values fdata fmask size)))
