@@ -103,3 +103,90 @@
 (defun mouse-x2-p (&optional (button (get-mouse-button)))
   "Returns `T` when the X2 mouse button is depressed."
   (/= 0 (logand button (sdl-cffi::sdl-button-x2mask))))
+
+(defun mouse-warp (&key (x (mouse-x)) (y (mouse-y)))
+  "Moves the mouse cursor to the supplied X/Y position."
+  (sdl-cffi::sdl-warp-mouse x y))
+
+
+(defun mouse-create-cursor (cursor-shape &key (hot-x 0) (hot-y 0))
+  "Creates an SDL hardware cursor
+CURSOR-SHAPE: Must be a grid with width and height being the same and multiple of 8.
+    The cursor sequence (list or vector) should contain numbers:
+    0 = Transparent
+    1 = white
+    2 = black
+    3 = inverted (if supported)
+HOT-X/Y: The upper-left corner of the cursor pixels.
+Returns cursor as `FOREIGN-OBJECT`."
+  (multiple-value-bind (data mask size)
+      (decode-cursor cursor-shape (multiples-of-8? cursor-shape))
+    (let ((cursor (make-instance 'foreign-object :fp (sdl-cffi::sdl-create-cursor data mask size size hot-x hot-y)
+				 :free 'sdl-cffi::sdl-free-cursor)))
+      (cffi:foreign-free data)
+      (cffi:foreign-free mask)
+      (sdl-cffi::sdl-set-cursor (fp cursor))
+      cursor)))
+
+;;; Helpers for mouse-cursor
+
+(defun multiples-of-8? (cursor-shape)
+  "Check if the square root of the cursor-shape's length is indeed multiple of 8.
+Returns said square root as an `INTEGER`."
+  (let ((grid-size (truncate (sqrt (length cursor-shape)))))
+    (if (= (mod grid-size 8) 0)
+	grid-size
+	(error "the provided pixel-list must be multiples of 8!"))))
+
+(defun shift-left (byte &optional (shift-count 1))
+  "Returns the byte shifted left by shift-count positions as an `INTEGER`."
+  (ash byte shift-count))
+
+
+(defun decode-body (col byte fdata fmask)
+  "Processes the next bit in the BYTE, updating the foreign FDATA and FMASK pointers.
+returns the byte as `INTEGER`"
+  (if (/= (mod col 8) 0)
+      (progn
+	(setf #1=(cffi:mem-aref fmask :uint8 byte) (shift-left #1#))
+	(setf #2=(cffi:mem-aref fdata :uint8 byte) (shift-left #2#)))
+      
+      (progn
+	(incf byte)
+	(setf #1# 0
+	      #2# 0)))
+  ;; Returns the byte index
+  byte)
+
+
+(defun decode-case (fdata fmask byte pixel)
+  "Check what the current pixel (from the cursor-image sequence) is, then set the bit in the array(s)."
+  (case pixel
+    ;; White
+    (1
+     (setf #1=(cffi:mem-aref fmask :uint8 byte) (logior #1# #x01)))
+    ;; Black
+    (2
+     (cond ((setf #2=(cffi:mem-aref fdata :uint8 byte) (logior #2# #x01))
+	    (setf #1# (logior #1# #x01)))))
+    ;; Inverted
+    (3
+     (setf #2# (logior #2# #x01)))))
+
+(defun decode-cursor (image size)
+  "Decodes a cursor shape of pixel sequence into SDL-compatible data and mask bitmaps.
+Returns three values: The DATA bitmap `UINT8-ARRAY`, The MASK bitmap `UINT8-ARRAY`,
+  and the cursor's grid size as `INTEGER`"
+  (let* ((fdata (cffi:foreign-alloc :uint8 :count (* size 4)))
+         (fmask (cffi:foreign-alloc :uint8 :count (* size 4))) 
+         (image-pixel 0)
+         (byte -1))
+    (loop for row from 0 below size do
+      (loop for col from 0 below size do
+        (setf byte (decode-body col byte fdata fmask))
+	
+        (decode-case fdata fmask byte (elt image image-pixel))
+	
+	;; Increment for the next bit-information
+	(incf image-pixel)))
+    (values fdata fmask size)))

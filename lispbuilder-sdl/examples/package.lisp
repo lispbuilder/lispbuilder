@@ -92,7 +92,7 @@
    ;; mouse-2d.lisp
    #:mouse-2d
    #:mouse-surface-2d
-
+   #:mouse-cursor-and-warp
    ;; squashed.lisp
    #:squashed
 
