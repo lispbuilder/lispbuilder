@@ -425,9 +425,53 @@ SDL will core dump if pixels are drawn outside a surface. It is slower, but safe
    (t
     (when clipping
       ;; simple clipping, should be improved with Cohen-Sutherland line clipping
-      (sdl-base::check-bounds 0 (- (width surface) 1) x0 x1)
-      (sdl-base::check-bounds 0 (- (height surface) 1) y0 y1))
+      (let ((inside 0)
+            (left 1)
+            (right 2)
+            (bottom 4)
+            (top 8)
 
+            (xmax (width surface))
+            (ymax (height surface)))
+
+        (flet ((out-code (x y)
+                 (let ((code inside))
+                   (cond ((< x 0) (setq code (logior left code)))
+                         ((< xmax x) (setq code (logior right code))))
+                   (cond ((< y 0) (setq code (logior top code)))
+                         ((< ymax y) (setq code (logior bottom code))))
+                   code)))
+          (let ((oc0 (out-code x0 y0))
+                (oc1 (out-code x1 y1))
+                (accept nil))
+            (loop
+               (cond ((= 0 (logior oc0 oc1))
+                      (progn
+                        (format t "accepted~%")
+                        (setq accept t)
+                        (return)))
+                     ((\= 0 (logand oc0 oc1)) (return)))
+               (let* (x y
+                        (first (\= oc0 0)) 
+                        (oco (if first oc0 oc1)))
+                 (cond ((\= 0 (logand oco bottom))
+                        (setq x (+ x0 (* (- x1 x0) (floor (/ (- ymax y0) (- y1 y0)))))
+                              y ymax))
+                       ((\= 0 (logand oco top))
+                        (setq x (+ x0 (* (- x1 x0) (floor (/ (- y0) (- y1 y0)))))
+                              y 0))
+                       ((\= 0 (logand oco right))
+                        (setq y (+ y0 (* (- y1 y0) (floor (/ (- xmax x0) (- x1 x0)))))
+                              x xmax))
+                       ((\= 0 (logand oco left))
+                        (setq y (+ y0 (* (- y1 y0) (floor (/ (- x0) (- x1 x0)))))
+                              x 0)))
+                 (if first
+                     (setq x0 x y0 y oc0 (out-code x y))
+                     (setq x1 x y1 y oc1 (out-code x y)))))
+            (unless accept (return-from _draw-line-*_))))))
+    (format t "accepted?~%")
+    
     ;; draw line with Bresenham algorithm
     (let ((x 0) (y 0) (e 0) (dx 0) (dy 0)
           (color (map-color color surface)))
