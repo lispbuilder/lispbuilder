@@ -294,17 +294,18 @@ Parameters supported are the same as those for [LOAD-IMAGE](#load-image) and `CO
                           :free-rwops t))
 
 (defun set-icon (source &optional mask)
-  "Loads a BMP image from `SOURCE` and sets it as the window icon.
+  "Loads a BMP image from `SOURCE` and sets it as the window icon (must be exactly 32x32 pixels).
 
 Returns the icon as `FOREIGN-OBJECT`.
 
-if `MASK` is passed, it must be an `UINT8` foreign pointer to an 32x32 (128) bitmask array. 
-       - Note; had issues with 128, so suggest 255 just to be safe. Make no difference since 255 is allocated anyway."
-  (let* ((icon (make-instance 'foreign-object :fp (sdl-cffi::sdl-load-bmp source)
+if `MASK` is passed, it must be an `UINT8` foreign pointer to a 32x32 (128 bytes) bitmask array."
+  (let* ((icon (make-instance 'foreign-object :fp (sdl-cffi::sdl-load-bmp (namestring source))
 					      :free 'sdl-cffi::sdl-free-surface)))
     (if mask
 	(sdl-cffi::SDL-WM-Set-Icon (fp icon) mask)
-	(let ((tmp-mask (cffi:foreign-alloc :uint8 :count 255 :initial-element 255)))
+	
+	;; If no mask is passed, we just set all bits to 1 making entire image visible.
+	(let ((tmp-mask (cffi:foreign-alloc :uint8 :count 128 :initial-element 255)))
 	  (sdl-cffi::SDL-WM-Set-Icon (fp icon) tmp-mask)
 	  (cffi:foreign-free tmp-mask)))
     icon))
