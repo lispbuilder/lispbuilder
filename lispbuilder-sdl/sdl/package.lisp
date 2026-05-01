@@ -521,6 +521,7 @@
    #:set-gl-attribute
    #:set-caption
    #:get-caption
+   #:set-icon
    #:any-format-p
    #:opengl-context-p
    #:double-buffered-p
